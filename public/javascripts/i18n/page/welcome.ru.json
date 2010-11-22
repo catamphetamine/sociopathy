@@ -1,0 +1,43 @@
+$.i18n.ru.strings.page.welcome =
+{
+	dialog:
+	{
+		join:
+		{
+			title: "Присоединиться",
+			
+			"name request": "Назовитесь",
+			"gender request": "Если хотите, можете указать свой пол",
+			"origin request": "В какой местности вы проживаете?",
+			
+			error:
+			{
+				name:
+				{
+					empty: "Вам нужно представиться",
+					duplicate: "Такое имя уже занято. " +
+						"Попробуйте добавить к нему какую-нибудь подробность о себе. " +
+						"Например, «Василий» → «Василий (музыкант)»" + 
+						"Например, «Иван Иванович» → «Иван Иванович из Москвы»" +
+						"Например, «Кот» → «Кот, который гуляет сам по себе»"
+				} 
+			}
+		}
+	}
+	
+	/*
+	date : 'dd/mm/yy',
+	monetary: 'nn,nnnn.nn',
+	currency: 'rs',
+	numeralBase : 2406,
+	numeralPrefix:"u0"
+
+	* additional values that could be added
+	* 
+	* monetary format
+	* non-monetary numeric format
+	* date format
+	* time format
+	* yes, no  for yes, no questions
+	*/
+}; 

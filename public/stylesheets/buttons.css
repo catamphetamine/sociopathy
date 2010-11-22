@@ -1,0 +1,120 @@
+/**
+ * Button Fader
+ * 
+ * This script styles the buttons. 
+ * 
+ * height: 59px = height of the button image
+ * padding-left: 44px; padding-right: 44px = width of the "xxx right.png" image (button side)
+ * 
+ * padding-bottom: 8px; line-height: 51px = 8 + 51 = 59px = height: 59px
+ * 
+ * padding-top: 1px; padding-bottom: 7px = 1 + 7 = 8px = padding-bottom: 8px (pushed text effect)
+ *
+ * Distributed under GNU General Public License
+ * http://www.gnu.org/licenses/gpl.html
+ * 
+ * @author Kuchumov Nikolay
+ * @email kuchumovn@gmail.com
+ * @github kuchumovn
+ */
+
+.button, .button_ready, .button_pushed
+{
+	height: 59px;
+
+	margin: 0px;
+	padding-right: 44px;
+}
+
+.button, .button_ready, .button_pushed, .button span, .button_ready span, .button_pushed span
+{
+	cursor: default;
+		
+	-webkit-user-select: none;
+	-moz-user-select: none;
+}
+
+.button .button_label, .button_ready .button_label, .button_pushed .button_label
+{
+	display: block;
+	
+	min-height: 59px;
+	max-height: 59px;
+
+	line-height: 51px;
+
+	padding-top: 0px;
+	padding-bottom: 8px;
+	padding-left: 44px;
+
+	font-family: Tahoma;
+	font-size: 28px;
+	color: #4f4f4f;
+}
+
+.button .button_label, .button_ready .button_label
+{
+	text-shadow: 0px 1px 0px #ffffff;
+}
+
+.button_pushed .button_label
+{
+	text-shadow: 0px 1px 0px #dfdfdf;
+}
+
+.button_ready, .button_pushed, .image_button_ready, .image_button_pushed
+{
+	position: absolute;
+	top: 0;
+	left: 0;
+	
+	display: none;
+}
+
+.button, .image_button
+{
+	position: relative;
+	
+	display: block;
+}
+
+.button_pushed .button_label
+{
+	padding-top: 1px;
+	padding-bottom: 7px;
+}
+
+.image_button, .image_button_ready, .image_button_pushed
+{
+	background-repeat: no-repeat;
+}
+
+.buttons
+{
+	-webkit-user-select: none;
+	-moz-user-select: none;	
+}
+
+/* button backgrounds */
+
+.button, .button_ready, .button_pushed  
+{
+	background-attachment: scroll;
+	background-position: top right;
+}
+
+.button, .button_ready, .button_pushed, .button .button_label, .button_ready .button_label, .button_pushed .button_label
+{
+	background-color: transparent;
+	background-repeat: no-repeat;
+}
+
+.caution_button
+{
+	color: #4f4f4f;
+}
+
+.caution_button_ready, .caution_button_pushed
+{
+	color: #ad1c00;
+}

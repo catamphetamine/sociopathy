@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+	
+<html>
+	<head>
+		<meta name="author" content="kuchumovn@gmail.com"> 
+		<meta name="designer" content="kuchumovn@gmail.com">
+		
+		<meta name="description" content="Sociopathy is an unusual social network"> 
+		
+		<meta http-equiv="Content-Language" content="ru">
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+		<title class="translated" label="title"></title>
+
+		<!-- less (css preprocessor) -->
+		<script type="text/javascript" src="javascripts/less-1.0.35.min.js"></script>
+		<!-- <link rel="stylesheet/less" href="style.less" type="text/css" /> -->
+		 
+		<!-- Coffee Script 0.9.4 -->
+		<script type="text/javascript" src="javascripts/coffee script/coffee-script.js"></script>
+		<!--<script type="text/coffeescript" src="javascripts/coffee script/"></script>-->
+
+		<!-- jQuery -->
+		<script type="text/javascript" src="javascripts/jquery/jquery-1.4.4.min.js"></script>
+
+		<!-- jQuery color -->
+		<script type="text/javascript" src="javascripts/jquery/jquery.color.min.js"></script>
+		
+		<!-- jQuery hover attribute -->
+		<script type="text/javascript" src="javascripts/jquery/jquery.hoverattribute.js"></script>
+		
+		<!-- jQuery text-shadow -->
+		<script type="text/javascript" src="javascripts/jquery/jquery.text-shadow.js"></script>
+
+		<!-- jQuery i18n -->
+		<script type="text/javascript" src="javascripts/jquery/jquery.i18n.js"></script>
+		
+		<!-- Russian language -->
+		<script type="text/javascript" src="javascripts/i18n/generic.ru.json"></script>
+		<script type="text/javascript" src="javascripts/i18n/page/welcome.ru.json"></script>
+
+		<!-- jQuery UI -->
+		<script type="text/javascript" src="javascripts/jquery/jquery-ui-1.8.6.custom.min.js"></script>
+		<link rel="stylesheet" href="stylesheets/jquery ui/jquery.ui.all.css" type="text/css"/>
+		<link rel="stylesheet" href="stylesheets/jquery ui/jquery.ui.dialog.custom.css" type="text/css"/>
+
+		<!-- jQuery watermark input -->
+		<script type="text/javascript" src="javascripts/jquery/jquery.watermarkinput.js"></script>
+		 
+		<!-- javascript template engine -->
+		<script type="text/javascript" src="ejs_production.js"></script>
+
+		<!-- loading indicator -->
+		<script type="text/javascript" src="javascripts/gui/loading_indicator.js"></script> 
+
+		<!-- button fader -->
+		<script type="text/javascript" src="javascripts/gui/fader/button_fader.js"></script> 
+		<script type="text/javascript" src="javascripts/gui/fader/text_button_fader.js"></script> 
+		<script type="text/javascript" src="javascripts/gui/fader/image_button_fader.js"></script> 
+		<script type="text/javascript" src="javascripts/gui/fader/image_chooser.js"></script> 
+		<link rel="stylesheet" href="stylesheets/buttons.css" type="text/css"/>
+
+		<!-- panel -->
+		<script type="text/javascript" src="javascripts/gui/panel.js"></script> 
+		<link rel="stylesheet" href="stylesheets/panel.css" type="text/css"/>
+
+		<!-- slider -->
+		<script type="text/javascript" src="javascripts/gui/slider/slider.js"></script> 
+		<script type="text/javascript" src="javascripts/gui/slider/form_slider.js"></script> 
+		<link rel="stylesheet" href="stylesheets/slider.css" type="text/css"/>
+
+		<!-- generic -->
+		<script type="text/javascript" src="javascripts/generic.js"></script> 
+		<link rel="stylesheet" href="stylesheets/generic.css" type="text/css"/>
+
+		<!-- browser checker -->
+		<script type="text/javascript" src="javascripts/browser checker.js"></script> 
+
+		<!-- page initialization -->
+		<script type="text/javascript" src="javascripts/page/welcome/initialization.js"></script> 
+
+		<style type="text/css">
+
+			#concept
+			{
+				width: 400px;
+				height: 321px;
+
+				margin-left: auto;
+				margin-right: auto;		
+
+				margin-top: 100px;
+
+				background-image: url('images/community.png');
+				background-repeat: no-repeat;
+			}
+
+			#join_dialog label.glowable, #join_dialog .glowable_input_wrapper
+			{
+				padding-left: 10px;
+				padding-right: 10px;
+			}
+
+			#join_dialog input
+			{
+				width: 614px;
+			}
+
+			#join_dialog .glowable_input_wrapper input
+			{
+				width: 594px;
+			}
+		</style>
+			
+		<script type="text/javascript">
+
+			// submit join request
+			function join_submission(data)
+			{
+				loading_indicator.show()
+				setTimeout(function() {loading_indicator.hide(); join_dialog.dialog('close'); join_form_slider.reset(); alert("Здесь будет отсылаться PUT AJAX-запрос с данными:\n\n" + info(data));}, 4000)
+				return
+				
+				// ajax PUT
+				$.ajax
+				({
+					url: '/join', 
+					type: 'PUT',
+					data: data, 
+					success: function(json, textStatus)
+					{
+						joined_message.dialog('open')
+					},
+					error: function(json, textStatus)
+					{
+						alert("error " + textStatus)
+					},
+					dataType: 'json'
+				})
+			}
+
+			// initialize
+			$(document).ready(function()
+			{
+				panel.initialize()
+				initialize_page()	
+				check_browser_support()
+			})
+		</script>
+
+		<!-- they say it must be here, at the end of the head -->
+		<link rel="icon" type="image/png" href="images/icon.png" />
+	</head>
+
+	<body>
+		<header>
+			<div id="panel">
+				<ul id="panel_menu">
+					<li name="reading" class="translated" label="panel, reading"></li>
+					<li name="people" link="people.html" class="translated" label="panel, people"></li>
+					<li name="help" class="translated" label="panel, help"></li>
+				</ul>
+	
+				<a href="/"><img id="panel_logo" src="images/panel/logo.png"/></a>
+			</div>
+		</header>
+
+		<section>
+			<div id="concept"></div>
+	
+			<br/>
+	
+			<span id="join_button" class="centered"></span>
+	
+			<div id="join_dialog" class="translated_title jquery_ui_dialog" label="page 'welcome', dialog 'join', title">
+				<p>
+					<div class="no_word_carrying dialog_container">
+						
+						<form>
+							<div id="join_dialog_slider" class="slider">
+								<div class="slide">
+									<label for="name" class="translated glowable" label="page 'welcome', dialog 'join', name request"></label>
+									
+									<div style="padding-top: 10px"></div>
+									
+									<div class="glowable_input_wrapper">
+										<input id="join_dialog_name_field" name="name" class="field" type="text"/>
+									</div>
+								</div>
+	
+								<div class="slide">
+									<label for="gender" class="translated" label="page 'welcome', dialog 'join', gender request"></label>
+									
+									<div id="join_form_gender_chooser" class="center">
+										<div class="float_centerer">
+											<div style="padding-top: 40px"></div>
+											
+											<div class="clear"></div>
+											<span style="display: block; float: left; margin-right: 40px" name="male" value="male"></span>
+											<span style="display: block; float: left" name="female" value="female"></span>
+										</div>
+									</div>
+									
+									<input id="join_form_gender" name="gender" type="hidden"/>
+								</div>
+		
+								<div class="slide">
+									<label for="origin" class="translated" label="page 'welcome', dialog 'join', origin request"></label>
+									
+									<div style="padding-top: 10px"></div>
+									
+									<input name="origin" class="field" type="text"/>
+								</div>
+							</div>
+						</form>
+						
+						<div class="buttons dialog_buttons">		
+							<span class="button left" type="caution" subtype="cancel">
+								<span class="translated" label="button 'cancel'"></span>
+							</span>
+										
+							<span class="button right" subtype="next">
+								<span class="translated" label="button 'next'"></span>
+							</span>
+	
+							<span class="button right" subtype="done">
+								<span class="translated" label="button 'done'"></span>
+							</span>
+						</div>
+						
+						<div class="clear"></div>						
+					</div>
+				</p>
+			</div>
+		</section>
+			
+		<div id="joined_message" title="Готово" class="jquery_ui_dialog">
+			Отныне вы - равноправный член СоБрания
+		</div>
+			
+		<div id="loading_indicator" class=" translated_title jquery_ui_dialog" label="page, dialog 'loading', title">
+			<p>
+				<div class="dialog_container" style="text-align: center">
+					<a class="loading_indicator_image_source" href="">
+						<img class="loading_indicator_image" src=""/>
+					</a>
+				</div>
+			</p>
+		</div> 
+
+		<div id="unsupported_browser_message" class="translated_title jquery_ui_dialog" label="page, dialog 'unsupported browser', title">
+			<p>
+				<div class="no_word_carrying dialog_container">
+					<div class="translated" label="page, dialog 'unsupported browser', content"></div>
+					
+					<br/>
+					<br/>
+					
+					<div class="float_centerer">
+						<a class='image' style="display: block; float: left; margin-right: 200px" href="http://www.google.com/chrome?hl=ru"><img src="images/page/welcome/chrome.png"/></a>
+						<a class='image' style=" float: left" href="http://www.mozilla-europe.org/ru/firefox/"><img src="images/page/welcome/firefox.png"/></a>
+					</div>
+				</div>
+			</p>
+		</div>
+
+		<div id="field_watermark" class="field_watermark" style="display: none"></div>
+
+		<div id="background_stretcher"></div>
+	</body>
+</html>

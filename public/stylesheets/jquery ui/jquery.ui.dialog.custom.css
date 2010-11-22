@@ -1,0 +1,90 @@
+.ui-dialog 
+{
+	padding: 0;
+
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;				
+	border-radius: 10px;			
+
+	border-bottom-left-radius: 0;
+	border-bottom-right-radius: 0;
+
+	border: 1px solid #a7a7a7;
+	border-top: 0;
+
+	-webkit-box-shadow: 0px 16px 100px rgba(0,0,0,0.1), 0px 16px 80px rgba(0,0,0,0.1), 0px 16px 60px rgba(0,0,0,0.1), 0px 16px 40px rgba(0,0,0,0.1), 0px 16px 30px rgba(0,0,0,0.1), 0px 16px 20px rgba(0,0,0,0.1);
+	-moz-box-shadow: 0px 16px 100px rgba(0,0,0,0.1), 0px 16px 80px rgba(0,0,0,0.1), 0px 16px 60px rgba(0,0,0,0.1), 0px 16px 40px rgba(0,0,0,0.1), 0px 16px 30px rgba(0,0,0,0.1), 0px 16px 20px rgba(0,0,0,0.1);
+	-o-box-shadow: 0px 16px 100px rgba(0,0,0,0.1), 0px 16px 80px rgba(0,0,0,0.1), 0px 16px 60px rgba(0,0,0,0.1), 0px 16px 40px rgba(0,0,0,0.1), 0px 16px 30px rgba(0,0,0,0.1), 0px 16px 20px rgba(0,0,0,0.1);
+	box-shadow: 0px 16px 100px rgba(0,0,0,0.1), 0px 16px 80px rgba(0,0,0,0.1), 0px 16px 60px rgba(0,0,0,0.1), 0px 16px 40px rgba(0,0,0,0.1), 0px 16px 30px rgba(0,0,0,0.1), 0px 16px 20px rgba(0,0,0,0.1);
+
+	background-color: #efefef;
+	background: url('../../images/window/top bar.png') repeat-x 0 0px;
+}
+
+.ui-dialog-titlebar span
+{
+	width: 100%;
+}
+
+.ui-dialog .ui-dialog-titlebar
+{
+	padding: 0;
+	padding-top: 3px;
+
+	height: 46px;
+
+	background: none;
+	border: 0;
+
+	text-align: center;
+}
+
+.ui-dialog-titlebar-close
+{
+	display: none;
+}
+
+.ui-dialog-title
+{
+	font-family: Tahoma;
+	font-size: 30px;
+	font-weight: normal;
+			
+	color: #2f2f2f;
+	text-shadow: 0px 1px 0px #dfdfdf;
+	
+	
+	width: auto;
+}
+
+.ui-dialog-content p
+{
+	display: none;
+}
+
+.ui-dialog-content div p
+{
+	display: inline;
+}
+
+.ui-dialog-content div, .ui-dialog-content input
+{
+	/* font settings here */
+}
+
+.ui-dialog-content div
+{
+	margin: 0;
+	padding: 0;
+}
+
+.ui-dialog-content div.dialog_container
+{
+	background-color: #ededed;
+	background: -webkit-gradient(linear, 0 50%, 0 100%, from(#efefef), to(#ededed));
+	background-image: -moz-linear-gradient(top, #efefef, #ededed);
+
+	border: 0;
+	
+	padding: 40px;	
+}

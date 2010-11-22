@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+	
+<html>
+	<head>
+		<meta http-equiv="Content-Language" content="ru">
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+		<title class="translated" label="title"></title>
+
+		<!-- less (css preprocessor) -->
+		<script type="text/javascript" src="javascripts/less-1.0.35.min.js"></script>
+		<!-- <link rel="stylesheet/less" href="style.less" type="text/css" /> -->
+		 
+		<!-- Coffee Script 0.9.4 -->
+		<script type="text/javascript" src="javascripts/coffee script/coffee-script.js"></script>
+		<!--<script type="text/coffeescript" src="javascripts/coffee script/"></script>-->
+
+		<!-- jQuery -->
+		<script type="text/javascript" src="javascripts/jquery/jquery-1.4.4.min.js"></script>
+
+		<!-- jQuery i18n -->
+		<script type="text/javascript" src="javascripts/jquery/jquery.i18n.js"></script>
+		
+		<!-- Russian language -->
+		<script type="text/javascript" src="javascripts/i18n/generic.ru.json"></script>
+		<script type="text/javascript" src="javascripts/i18n/page/welcome.ru.json"></script>
+
+		<!-- jQuery UI -->
+		<script type="text/javascript" src="javascripts/jquery/jquery-ui-1.8.6.custom.min.js"></script>
+		<link rel="stylesheet" href="stylesheets/jquery ui/jquery.ui.all.css" type="text/css"/>
+		<link rel="stylesheet" href="stylesheets/jquery ui/jquery.ui.dialog.custom.css" type="text/css"/>
+
+		<!-- jQuery watermark input -->
+		<script type="text/javascript" src="javascripts/jquery/jquery.watermarkinput.js"></script>
+		 
+		<!-- javascript template engine -->
+		<script type="text/javascript" src="ejs_production.js"></script>
+
+		<!-- button fader -->
+		<script type="text/javascript" src="javascripts/gui/fader/button_fader.js"></script> 
+		<script type="text/javascript" src="javascripts/gui/fader/text_button_fader.js"></script> 
+		<script type="text/javascript" src="javascripts/gui/fader/image_button_fader.js"></script> 
+		<script type="text/javascript" src="javascripts/gui/fader/image_chooser.js"></script> 
+		<link rel="stylesheet" href="stylesheets/buttons.css" type="text/css"/>
+
+		<!-- panel -->
+		<script type="text/javascript" src="javascripts/gui/panel.js"></script> 
+		<link rel="stylesheet" href="stylesheets/panel.css" type="text/css"/>
+
+		<!-- slider -->
+		<script type="text/javascript" src="javascripts/gui/slider/slider.js"></script> 
+		<script type="text/javascript" src="javascripts/gui/slider/form_slider.js"></script> 
+		<link rel="stylesheet" href="stylesheets/slider.css" type="text/css"/>
+
+		<!-- generic -->
+		<script type="text/javascript" src="javascripts/generic.js"></script> 
+		<link rel="stylesheet" href="stylesheets/generic.css" type="text/css"/>
+
+		<style type="text/css">
+
+			#concept
+			{
+				width: 400px;
+				height: 321px;
+
+				margin-left: auto;
+				margin-right: auto;		
+
+				margin-top: 100px;
+
+				background-image: url('images/community.png');
+				background-repeat: no-repeat;
+			}
+					
+			#join_dialog
+			{
+				padding: 0;
+				border: 0;
+				display: none;
+			}
+			
+			#join_dialog input
+			{
+				width: 600px;
+			}
+		</style>
+			
+		<script type="text/javascript">
+
+			function join_submission(data)
+			{
+				alert(info(data))
+				// ajax post
+			}
+
+			$(document).ready(function()
+			{
+				// create join dialog
+				var join_dialog = $("#join_dialog").dialog
+				({
+					modal: true,
+					width: 720,
+					autoOpen: false,
+					closeOnEscape: false,
+					draggable: false,
+					resizable: false
+				})
+
+				// activate join button
+				image_button_fader.activate
+				(
+					"join_button", 
+					{
+						path: "images/page/welcome",
+						"button name": "join button",
+						width: 345,
+						height: 59
+					},
+					{				
+						action: function(button) { join_dialog.dialog('open') },
+						delay: "2x"
+					}
+				)
+
+				// create gender chooser
+				var gender_chooser = new image_chooser()
+				gender_chooser.activate
+				(
+					"join_form_gender_chooser",
+					{
+						path: "images/page/welcome/dialog/join/gender",
+						width: 64,
+						height: 64,
+						target: "join_form_gender"
+					}
+				)
+
+				// create join dialog slider
+				var join_form_slider = new form_slider
+				({
+					id: "join_dialog_slider",
+					width: 640,
+					height: 200,
+					"next button": $("#" + join_dialog.attr('id') + " span[subtype='next']"),
+					"done button": $("#" + join_dialog.attr('id') + " span[subtype='done']"),
+					"fader": button_fader,
+					fields:
+					{
+						name:
+						{
+							validate: function(name) { if (name.length == 0) throw $._("page 'welcome', dialog 'join', error, name, empty") }
+						},
+						gender:
+						{
+							control: gender_chooser,
+						}
+					}
+				})
+				
+				join_form_slider.activate()
+
+				// activate buttons
+				text_button_fader.activate_all("images/button", 
+				{
+					cancel: 
+					{
+						icon: "cross",
+						"top offset": 13,
+						action: function() { join_dialog.dialog('close'); join_form_slider.reset(); },
+						delay: "2x"
+					},
+					next: 
+					{
+						icon: "right arrows",
+						floating: "right",
+						"top offset": 14,
+						action: function() { join_form_slider.next(this) }
+					},
+					done: 
+					{
+						icon: "check",
+						floating: "left",
+						"top offset": 15,
+						action: function() { join_submission(join_form_slider.data()) }								
+					}
+				})
+								
+//				$("#join_dialog_name_field").Watermark($._("page 'welcome', dialog 'join', name"), $("#field_watermark").css("color"))			
+			})
+		</script>
+
+		<script type="text/javascript">
+			
+			$(document).ready(function()
+			{
+				// initialize panel	
+				panel.activate_buttons("images/panel/menu")
+				panel.activate_tooltips()
+
+				// check for proper web browser
+				if (unsupported_browser)
+				{
+					$("#unsupported_browser_message").dialog
+					({
+						modal: true,
+						width: 1400,
+						closeOnEscape: true,
+						draggable: false,
+						resizable: false
+						/*
+						,
+						show: {effect: 'fade' , duration: 1000},
+						show: "slide",
+						hide: "slide"
+						*/
+					})
+				}
+			})
+		</script>
+
+		<link rel="icon" type="image/png" href="images/icon.png" />
+	</head>
+
+	<body>
+		<header>
+			<div id="panel">
+				<ul id="panel_menu">
+					<li name="reading" class="translated" label="panel, reading"></li>
+					<li name="people" link="people.html" class="translated" label="panel, people"></li>
+					<li name="help" class="translated" label="panel, help"></li>
+				</ul>
+	
+				<a href="/"><img id="panel_logo" src="images/panel/logo.png"/></a>
+			</div>
+		</header>
+
+		<section>
+			<div id="concept"></div>
+	
+			<br/>
+	
+			<span id="join_button" class="centered"></span>
+	
+			<div id="join_dialog" class="translated_title" label="page 'welcome', dialog 'join', title">
+				<p>
+					<div class="no_word_carrying dialog_container">
+						
+						<form>
+							<div id="join_dialog_slider" class="slider">
+								<div class="slide">
+									<label for="name" class="translated" label="page 'welcome', dialog 'join', name request"></label>
+									<div style="padding-top: 10px"></div>
+									<input id="join_dialog_name_field" name="name" class="field" type="text"/>
+								</div>
+	
+								<div class="slide">
+									<label for="gender" class="translated" label="page 'welcome', dialog 'join', gender request"></label>
+									
+									<div id="join_form_gender_chooser" class="center">
+										<div class="float_centerer">
+											<div style="padding-top: 40px"></div>
+											<div class="clear"></div>
+											<span style="display: block; float: left; margin-right: 40px" name="male" value="male"></span>
+											<span style="display: block; float: left" name="female" value="female"></span>
+										</div>
+									</div>
+									
+									<input id="join_form_gender" name="gender" type="hidden"/>
+								</div>
+		
+								<div class="slide">
+									<label for="origin" class="translated" label="page 'welcome', dialog 'join', origin request"></label>
+									<div style="padding-top: 10px"></div>
+									<input name="origin" class="field" type="text"/>
+								</div>
+							</div>
+						</form>
+						
+						<div class="buttons dialog_buttons">		
+							<span class="button left" type="caution" subtype="cancel">
+								<span class="translated" label="button 'cancel'"></span>
+							</span>
+										
+							<span class="button right" subtype="next">
+								<span class="translated" label="button 'next'"></span>
+							</span>
+	
+							<span class="button right" subtype="done">
+								<span class="translated" label="button 'done'"></span>
+							</span>
+						</div>
+						
+						<div class="clear"></div>						
+					</div>
+				</p>
+			</div>
+		</section>
+			
+		<div id="unsupported_browser_message" class="translated_title" label="page, dialog 'unsupported browser', title">
+			<p>
+				<div class="no_word_carrying dialog_container">
+					<div class="translated" label="page, dialog 'unsupported browser', content"></div>
+					
+					<br/>
+					<br/>
+					
+					<div class="float_centerer">
+						<a class='image' style="display: block; float: left; margin-right: 200px" href="http://www.google.com/chrome?hl=ru"><img src="images/page/welcome/chrome.png"/></a>
+						<a class='image' style=" float: left" href="http://www.mozilla-europe.org/ru/firefox/"><img src="images/page/welcome/firefox.png"/></a>
+					</div>
+				</div>
+			</p>
+		</div>
+
+		<div id="field_watermark" class="field_watermark" style="display: none"></div>
+
+		<div id="background_stretcher"></div>
+	</body>
+</html>
+
+<!--
+			.window
+			{
+				-moz-border-radius: 10px;
+				-webkit-border-radius: 10px;				
+				border-radius: 10px;				
+
+				background-image: url('images/window/top bar.png');
+				background-repeat: repeat-x;
+
+				border: 1px solid #a7a7a7;
+				border-top: 0;
+
+				-webkit-box-shadow: 0px 16px 100px rgba(0,0,0,0.1), 0px 16px 80px rgba(0,0,0,0.1), 0px 16px 60px rgba(0,0,0,0.1), 0px 16px 40px rgba(0,0,0,0.1), 0px 16px 30px rgba(0,0,0,0.1), 0px 16px 20px rgba(0,0,0,0.1);
+				-moz-box-shadow: 0px 16px 100px rgba(0,0,0,0.1), 0px 16px 80px rgba(0,0,0,0.1), 0px 16px 60px rgba(0,0,0,0.1), 0px 16px 40px rgba(0,0,0,0.1), 0px 16px 30px rgba(0,0,0,0.1), 0px 16px 20px rgba(0,0,0,0.1);
+				-o-box-shadow: 0px 16px 100px rgba(0,0,0,0.1), 0px 16px 80px rgba(0,0,0,0.1), 0px 16px 60px rgba(0,0,0,0.1), 0px 16px 40px rgba(0,0,0,0.1), 0px 16px 30px rgba(0,0,0,0.1), 0px 16px 20px rgba(0,0,0,0.1);
+				box-shadow: 0px 16px 100px rgba(0,0,0,0.1), 0px 16px 80px rgba(0,0,0,0.1), 0px 16px 60px rgba(0,0,0,0.1), 0px 16px 40px rgba(0,0,0,0.1), 0px 16px 30px rgba(0,0,0,0.1), 0px 16px 20px rgba(0,0,0,0.1);
+			}
+			
+			.window_top_bar
+			{
+				width: 100%;
+				height: 46px;
+				
+				padding-top: 4px;
+				
+				font-family: Tahoma;
+				font-size: 30px;
+				
+				color: #2f2f2f;
+				text-shadow: 0px 1px 0px #dfdfdf;
+				
+				text-align: center;
+			}
+			
+			.window_content
+			{
+				font-family: serif, Times New Roman;
+				font-size: 33px;
+				line-height: 40px; 
+
+				background-color: #efefef;
+				background: -webkit-gradient(linear, 0 50%, 0 100%, from(#efefef), to(#ededed));
+				background-image: -moz-linear-gradient(top, #efefef, #ededed);
+				
+				padding: 40px;
+			}
+-->
+
+		<!--
+		<div class="window" style="width: 1400px;">
+			<div class="window_top_bar">Здравствуйте</div>
+			<div class="window_content">
+				Оболочка нашей сети может отображаться правильно только в современных обозревателях.<br/>
+				Если быть более точным, в обозревателях на движках <a href="http://ru.wikipedia.org/wiki/WebKit">WebKit</a> или <a href="http://ru.wikipedia.org/wiki/Gecko">Gecko</a>.<br/>
+				<br/> 
+				Мы не смогли подтвердить совместимость вашего обозревателя с нашей оболочкой,<br/> 
+				и поэтому предлагаем вам попробовать зайти сюда снова из-под другого обозревателя.<br/>
+				<br/> 
+				Если вы пользуетесь <b>Internet Explorer</b>, мы советуем вам пересесть на любой другой.<br/> 
+				<br/> 
+				Попробуйте, например, один из этих:<br/>
+				<br/>
+				<br/>
+				<div class="float_centerer">
+					<a class='image' style="display: block; float: left; margin-right: 200px" href="http://www.google.com/chrome?hl=ru"><img src="images/pages/welcome/chrome.png"/></a>
+					<a class='image' style=" float: left" href="http://www.mozilla-europe.org/ru/firefox/"><img src="images/pages/welcome/firefox.png"/></a>
+					<hr class="float_centerer" />
+				</div>
+			</div>
+		</div>
+		-->
+
+		<!--
+		<div class="float_centerer">
+			<span class="button">
+				<span class="button_label">Да</span>
+			</span>
+			
+			<span class="button">
+				<span class="button_label">Отмена</span>
+			</span>
+			
+			<hr class="float_centerer" />
+		</div>
+		-->		
