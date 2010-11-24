@@ -132,12 +132,16 @@ function form_slider(_)
 
 		try
 		{
-			// if there is any validation - validate this field value
-			if (field.validate)
-				field.validate(field.value())
-				
-			// mark field as valid
-			field.valid()
+			if (field)
+			{
+				// if there is any validation - validate this field value
+				if (field.validate)
+					field.validate(field.value())
+					
+					// mark field as valid
+					field.valid()
+			}
+			
 			// go to the next slide
 			this.slider.next() 
 		}

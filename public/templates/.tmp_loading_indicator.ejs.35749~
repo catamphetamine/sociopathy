@@ -1,7 +1,0 @@
-<div id="loading_indicator_<%= index %>" title="Теперь ждите" class="jquery_ui_dialog">
-	<p>
-		<div class="dialog_container" style="text-align: center;">
-			<a href="<%= link %>"><img src="images/window/loading/<%= name %>"/></a>
-		</div>
-	</p>
-</div> 
