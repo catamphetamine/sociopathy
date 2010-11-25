@@ -1,4 +1,4 @@
-$.i18n.ru = {};
+$.i18n.ru = {}
 
 $.i18n.ru.strings = 
 {
@@ -49,4 +49,4 @@ $.i18n.ru.strings =
 			}
 		}
 	}
-};
+}

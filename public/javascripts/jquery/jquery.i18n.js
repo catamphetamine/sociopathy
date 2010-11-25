@@ -15,11 +15,9 @@
  * 
  * in javascript:
  * 
- * $.i18n.setLocale("en");
- * $.i18n.translate_page();
- * 
- * alert($._("page 'welcome', dialog 'join', title"));
- * 
+ * $.i18n.setLocale("en")
+ * alert($._("page 'welcome', dialog 'join', title"))
+ *
  * in json:
  * 
  * $.i18n.ru.strings =
@@ -110,13 +108,13 @@
 	$.i18n.translate_page = function()
 	{
 		// translate labels
-		$(".translated").each(function(index) 
+		$(".translated").each(function() 
 		{
 			$(this).append($.i18n($(this).attr("label")));
 		})
 		
 		// translate titles
-		$(".translated_title").each(function(index) 
+		$(".translated_title").each(function() 
 		{
 			$(this).attr("title", $.i18n($(this).attr("label")));
 		})
@@ -168,6 +166,9 @@
       * conversion functions for monetary and numeric 
       * sorting functions (collation) for different locales
       */
- })(jQuery);
+})(jQuery)
 
-
+jQuery(document).ready(function()
+{
+	$.i18n.translate_page()
+})

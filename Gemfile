@@ -1,4 +1,7 @@
 source 'http://rubygems.org'
+source 'http://gemcutter.org'
+
+gem "mongo_mapper"
 
 gem 'rails', '3.0.1'
 
