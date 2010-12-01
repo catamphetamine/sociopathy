@@ -124,6 +124,7 @@ function parse_text_shadow(element)
 	$.fn.glow = function(element)
 	{
 		$.proxy(glow_sample, this)()
+		return this
 	}
 	
 	function glow_sample()

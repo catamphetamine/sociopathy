@@ -204,15 +204,3 @@ label.error
 	
 	text-shadow: rgba(255, 0, 0, 0.1) 0 0 20px;
 }
-
-.dialog_buttons
-{
-	padding: 40px;
-}
-
-div.ui-dialog div.jquery_ui_dialog, div.jquery_ui_dialog
-{
-	padding: 0;
-	border: 0;
-	display: none;
-}

@@ -4,7 +4,7 @@
 	<head>
 		<meta name="author" content="kuchumovn@gmail.com"> 
 		<meta name="designer" content="kuchumovn@gmail.com">
-		
+		<meta name='copyright' content='2010 - Nikolay Kuchumov' />
 		<meta name="description" content="Sociopathy is an unusual social network"> 
 		
 		<meta http-equiv="Content-Language" content="ru">
@@ -23,9 +23,16 @@
 		<!-- jQuery -->
 		<script type="text/javascript" src="javascripts/jquery/jquery-1.4.4.min.js"></script>
 
+		<!-- MooTools -->
+		<script type="text/javascript" src="javascripts/mootools/core-1.3.js"></script>
+
+		<!-- jQuery animation easing functions -->
+		<!-- http://vremenno.net/examples/easingPlugin/ -->
+		<script type="text/javascript" src="javascripts/jquery/jquery.easing.min.1.3.js"></script>
+
 		<!-- jQuery i18n -->
 		<script type="text/javascript" src="javascripts/jquery/jquery.i18n.js"></script>
-		
+
 		<!-- jQuery color -->
 		<script type="text/javascript" src="javascripts/jquery/jquery.color.min.js"></script>
 		
@@ -41,9 +48,10 @@
 
 		<!-- jQuery UI -->
 		<script type="text/javascript" src="javascripts/jquery/jquery-ui-1.8.6.custom.min.js"></script>
+		<script type="text/javascript" src="javascripts/jquery/jquery.ui.dialog.js"></script>
 		<link rel="stylesheet" href="stylesheets/jquery ui/jquery.ui.all.css" type="text/css"/>
 		<link rel="stylesheet" href="stylesheets/jquery ui/jquery.ui.dialog.custom.css" type="text/css"/>
-
+		 
 		<!-- jQuery watermark input -->
 		<script type="text/javascript" src="javascripts/jquery/jquery.watermarkinput.js"></script>
 		 
@@ -57,6 +65,15 @@
 
 		<!-- loading indicator -->
 		<script type="text/javascript" src="javascripts/gui/loading_indicator.js"></script> 
+
+		<!-- dialog window
+		<script type="text/javascript" src="javascripts/gui/dialog window.js"></script> 
+		<link rel="stylesheet" href="stylesheets/dialog window.css" type="text/css"/>
+		 -->
+
+		<!-- buttons -->
+		<script type="text/javascript" src="javascripts/gui/button/button.js"></script> 
+		<script type="text/javascript" src="javascripts/gui/button/image_button.js"></script> 
 
 		<!-- button fader -->
 		<script type="text/javascript" src="javascripts/gui/fader/button_fader.js"></script> 
@@ -119,7 +136,7 @@
 			function join_submission(data)
 			{
 				loading_indicator.show()
-				setTimeout(function() {loading_indicator.hide(); join_dialog.dialog('close'); join_form_slider.reset(); alert("Здесь будет отсылаться PUT AJAX-запрос с данными:\n\n" + info(data));}, 4000)
+				setTimeout(function() {loading_indicator.hide(); close_window(join_dialog); join_form_slider.reset(); alert("Здесь будет отсылаться PUT AJAX-запрос с данными:\n\n" + info(data));}, 4000)
 				return
 				
 				// ajax PUT
@@ -214,23 +231,25 @@
 								</div>
 							</div>
 						</form>
-						
-						<div class="buttons dialog_buttons">		
-							<span class="button left" type="caution" subtype="cancel">
+					</div>
+
+						<div class="pre_buttons"></div>
+					
+						<div class="no_word_carrying dialog_container buttons dialog_buttons">
+							<span class="button minor_button left" level="minor" type="caution" subtype="cancel">
 								<span class="translated" label="button 'cancel'"></span>
 							</span>
 										
-							<span class="button right" subtype="next">
+							<span class="button right" type="dark generic" subtype="next">
 								<span class="translated" label="button 'next'"></span>
 							</span>
 	
-							<span class="button right" subtype="done">
+							<span class="button right" type="dark generic" subtype="done">
 								<span class="translated" label="button 'done'"></span>
 							</span>
+							
+							<div class="clear"></div>
 						</div>
-						
-						<div class="clear"></div>						
-					</div>
 				</p>
 			</div>
 		</section>
@@ -242,7 +261,7 @@
 		<div id="loading_indicator" class="translated_title jquery_ui_dialog" label="page, dialog 'loading', title">
 			<p>
 				<div class="dialog_container" style="text-align: center">
-					<a class="loading_indicator_image_source" href="">
+					<a class="loading_indicator_image_source" href="" target="_blank">
 						<img class="loading_indicator_image" src=""/>
 					</a>
 				</div>

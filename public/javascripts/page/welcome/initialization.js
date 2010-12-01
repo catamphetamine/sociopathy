@@ -6,6 +6,20 @@ var join_form_slider
 // activate join button
 function initialize_join_button()
 {
+	new image_button
+	(
+		"join_button", 
+		{
+			path: "images/page/welcome",
+			"button name": "join button",
+			width: 345,
+			height: 59,
+			action: function(button) { open_window(join_dialog); button.let_unlock(); },
+			delay: "1x"
+		}
+	)
+	
+	/*
 	image_button_fader.activate
 	(
 		"join_button", 
@@ -16,10 +30,11 @@ function initialize_join_button()
 			height: 59
 		},
 		{				
-			action: function(button) { join_dialog.dialog('open') },
+			action: function(button) { open_window(join_dialog) },
 			delay: "2x"
 		}
 	)
+	*/
 }
 
 // create join dialog
@@ -32,8 +47,9 @@ function initialize_join_dialog()
 		autoOpen: false,
 		closeOnEscape: false,
 		draggable: false,
-		resizable: false
+		resizable: false, stack: false
 	})
+	
 }
 
 // create join dialog slider
@@ -101,7 +117,7 @@ function activate_buttons()
 		cancel: 
 		{
 			icon: "cross",
-			"top offset": 13,
+			"top offset": 5,
 			action: function() { close_window(join_dialog); join_form_slider.reset(); },
 			delay: "2x"
 		},
@@ -109,14 +125,14 @@ function activate_buttons()
 		{
 			icon: "right arrows",
 			floating: "right",
-			"top offset": 14,
+			"top offset": 6,
 			action: function() { join_form_slider.next(this) }
 		},
 		done: 
 		{
 			icon: "check",
 			floating: "left",
-			"top offset": 15,
+			"top offset": 7,
 			action: function() { join_submission(join_form_slider.data()) },
 			delay: "2x"						
 		}

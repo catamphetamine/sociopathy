@@ -84,3 +84,47 @@
 			<hr class="float_centerer" />
 		</div>
 		-->		
+
+		
+				<!-- IP address detection
+		<script type="text/javascript">
+			function detect_ip(data)
+			{
+				console.log(data.ip)
+
+				var query = 		
+						
+				"<ipquery>" +
+					"<fields>" +
+						"<city/>" +
+					"</fields>" +
+					"<ip-list>" +
+						"<ip>" + data.ip + "</ip>" +
+					"</ip-list>" +
+				"</ipquery>"
+				
+				// ajax POST
+				$.ajax
+				({
+					url: 'http://ipgeobase.ru:8090/geo/geo.html', 
+					type: 'POST',
+					data: query, 
+					success: function(text, textStatus)
+					{
+						alert(text)
+					},
+					error: function(XMLHttpRequest, textStatus, errorThrown)
+					{
+						alert("error " + errorThrown)
+					},
+					dataType: 'text',
+					timeout: 1000
+				})
+			}
+		</script>
+
+		<!-- IP address detection service
+		<script type="application/javascript" src="http://jsonip.appspot.com/?callback=detect_ip"></script>
+		 -->
+		 
+		

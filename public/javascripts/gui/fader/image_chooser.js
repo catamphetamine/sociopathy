@@ -62,8 +62,8 @@
  * 
  * Requires jQuery, Image Button Fader. 
  * 
- * Distributed under GNU General Public License
- * http://www.gnu.org/licenses/gpl.html
+ * Copyright (c) 2010 Nikolay Kuchumov
+ * Licensed under MIT (http://en.wikipedia.org/wiki/MIT_License)
  * 
  * @author Kuchumov Nikolay
  * @email kuchumovn@gmail.com

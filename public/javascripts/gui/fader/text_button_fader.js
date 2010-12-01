@@ -71,8 +71,8 @@
  * 
  * Requires jQuery. 
  * 
- * Distributed under GNU General Public License
- * http://www.gnu.org/licenses/gpl.html
+ * Copyright (c) 2010 Nikolay Kuchumov
+ * Licensed under MIT (http://en.wikipedia.org/wiki/MIT_License)
  * 
  * @author Kuchumov Nikolay
  * @email kuchumovn@gmail.com
@@ -113,7 +113,7 @@ var text_button_fader = new (function()
 	}
 	
 	// initialize each button
-	this.for_each = function(action, _)
+	this.for_each_button = function(action, _)
 	{
 		// parent container
 		var parent
@@ -138,7 +138,7 @@ var text_button_fader = new (function()
 			var parent = this
 			
 			// initialize each button
-			text_button_fader.for_each(function()
+			text_button_fader.for_each_button(function()
 			{
 				this.button_initializer = new button_initializer($(this), parent)
 				this.button_initializer.initialize()
@@ -202,11 +202,11 @@ var text_button_fader = new (function()
 			this.clone_button_content = function()
 			{											
 				this.button_content = $(":first-child", this.button)
-				this.button_content.addClass("button_label")
+				this.button_content.addClass("left_part_of_background")
 			
 				var message_node = this.button_content.contents().get(0)
-				this.button_content.append("<span style='display: block; float: left'></span>")
-				$(":first-child", this.button_content).append(message_node)
+				this.button_content.append("<div class='button_contents'><span style='display: block; float: left'></span></div>")
+				$(":first :first", this.button_content).append(message_node)
 				
 				this.button_ready_content = this.button_content.clone()
 				this.button_pushed_content = this.button_content.clone()
@@ -287,16 +287,23 @@ var text_button_fader = new (function()
 			// user can customize button icon and text color
 			this.customize = function()
 			{
+				// for every subtype
 				for (var subtype in this._)
 				{
+					// if this button belongs to a subtype
 					if (button.attr("subtype") !== subtype)
 						continue
 					
+					// set text color
 					this.customize_text_color(this._[subtype])
+					// set icon
 					this.customize_icon(this._[subtype])
 					
+					// set 'on push' action
 					this.additional_options.action = this._[subtype].action
 					this.additional_options.delay = this._[subtype].delay
+					
+					// exit
 					return
 				}
 			}
@@ -332,9 +339,9 @@ var text_button_fader = new (function()
 				this.spacing = safely_get(options["spacing"], default_icon_spacing)
 				
 				// add the icon to button
-				this.add_icon(this.button_content)
-				this.add_icon(this.button_ready_content, ready_image_postfix)
-				this.add_icon(this.button_pushed_content, pushed_image_postfix)
+				this.add_icon($(":first", this.button_content))
+				this.add_icon($(":first", this.button_ready_content), ready_image_postfix)
+				this.add_icon($(":first", this.button_pushed_content), pushed_image_postfix)
 			}
 			
 			this.add_icon = function(element, postfix)
@@ -353,13 +360,16 @@ var text_button_fader = new (function()
 			
 				// generate icon code
 				var code = 
-				"<img " + 
+				"<span " + 
 					"style='" +
-						"display: block; float: " + this.floating + "; " + 
-						"padding-top: " + this.top_offset + "px; " + 
-						"margin-" + margin_type + ": " + this.spacing + "px;' " + 
-					"src='" + this.images_path + "/icon/" + this.icon + "/" + this.icon + postfix + "." + image_format + "'" + 
-				"/>"
+						"display: block; float: " + this.floating + ";'>" + 
+					"<img " + 
+						"style='" + 
+							"padding-top: " + this.top_offset + "px; " + 
+							"margin-" + margin_type + ": " + this.spacing + "px;'  " + 
+						"src='" + this.images_path + "/icon/" + this.icon + "/" + this.icon + postfix + "." + image_format + "'" + 
+					"/>" + 
+				"</span>"
 				
 				// place the icon on the page
 				if (this.floating == "right")

@@ -10,8 +10,8 @@
  * 
  * Requires jQuery. 
  * 
- * Distributed under GNU General Public License
- * http://www.gnu.org/licenses/gpl.html
+ * Copyright (c) 2010 Nikolay Kuchumov
+ * Licensed under MIT (http://en.wikipedia.org/wiki/MIT_License)
  * 
  * @author Kuchumov Nikolay
  * @email kuchumovn@gmail.com
@@ -23,54 +23,53 @@ var button_fader = new (function()
 	this.fading_time = 200
 		
 	// any button fading activation
-	this.activate_fading = function(_, additional_options)
+	this.activate_fading = function(_, __)
 	{
-		activate_mouse_over(_, additional_options)
-		activate_mouse_out(_, additional_options)
-		activate_push(_, additional_options)
+		activate_mouse_enter(_, __)
+		activate_mouse_leave(_, __)
+		activate_push(_, __)
 	}
 	
-	function activate_mouse_over(_, additional_options)
+	function activate_mouse_enter(_, __)
 	{
 		// prepare roll over animation
-		var on_mouse_over = get_on_mouse_over(additional_options)
+		var on_mouse_enter = get_on_mouse_enter(__)
 		
 		// roll over animation
 		activate_fading
 		({
 			"element": _["button"],
 			"faded element": _["ready frame"],
-			trigger: "mouseover",
+			trigger: "mouseenter",
 			"triggered functions":
 			[
-				function() { on_mouse_over(_) }
+				function() { on_mouse_enter(_) }
 			]
 		})
 	}
 	
-	function activate_mouse_out(_, additional_options)
+	function activate_mouse_leave(_, __)
 	{
 		// prepare roll out animation
-		var on_mouse_out = get_on_mouse_out(additional_options)
+		var on_mouse_leave = get_on_mouse_leave(__)
 		
 		// roll out animation
 		activate_fading
 		({
 			"element": _["button"],
 			"faded element": _["ready frame"],
-			trigger: "mouseout",
+			trigger: "mouseleave",
 			"triggered functions":
 			[
-			
-				function() { on_mouse_out(_) }
+				function() { on_mouse_leave(_) }
 			]
 		})
 	}
 	
-	function activate_push(_, additional_options)
+	function activate_push(_, __)
 	{
 		// prepare push animation
-		var on_push = get_on_push(additional_options)
+		var on_push = get_on_push(__)
 		
 		// push animation
 		activate_fading
@@ -84,84 +83,83 @@ var button_fader = new (function()
 				{						
 					// animate push
 					on_push(_)
-					// on_mouse_out(_)
 							
-					// if no options - exit
-					if (!additional_options)
+					// if no additional options - exit
+					if (!__)
 						return;
 						
 					// if this button has an action - do it
-					execute_action(_["button"], additional_options);
+					execute_action(_["button"], __);
 				}
 			]
 		});
 	}
 	
 	// get on mouse over function
-	function get_on_mouse_over(additional_options)
+	function get_on_mouse_enter(_)
 	{
-		if (additional_options)
-			if (additional_options['on mouse over'])
-				return additional_options['on mouse over']
+		if (_)
+			if (_['on mouse over'])
+				return _['on mouse over']
 				
-		return on_mouse_over_generic
+		return on_mouse_enter_default
 	}
 	
 	// get on mouse out function
-	function get_on_mouse_out(additional_options)
+	function get_on_mouse_leave(_)
 	{
-		if (additional_options)
-			if (additional_options['on mouse out'])
-				return additional_options['on mouse out']
+		if (_)
+			if (_['on mouse out'])
+				return _['on mouse out']
 				
-		return on_mouse_out_generic
+		return on_mouse_leave_default
 	}
 	
 	// get on push function
-	function get_on_push(additional_options)
+	function get_on_push(_)
 	{
-		if (additional_options)
-			if (additional_options['on push'])
-				return additional_options['on push']
+		if (_)
+			if (_['on push'])
+				return _['on push']
 				
-		return on_push_generic
+		return on_push_default
 	}
 	
 	// for generic button - show the activation frame
-	function on_mouse_over_generic(_)
+	function on_mouse_enter_default(_)
 	{
 		button_fader.fade_in(_['ready frame'])
 	}
 	
 	// for generic button - hide the activation frame
-	function on_mouse_out_generic(_)
+	function on_mouse_leave_default(_)
 	{
 		button_fader.fade_out(_['ready frame'])
 	}
 	
 	// for a generic button - animate smooth pushing
-	function on_push_generic(_)
+	function on_push_default(_)
 	{	
 		button_fader.fade_in(_['pushed frame'])
 		button_fader.fade_out(_['pushed frame'])
 	}
 	
-	function get_button_type(additional_options)
+	function get_button_type(_)
 	{
-		if (additional_options)
-			if (additional_options["type"])
-				return additional_options["type"]
+		if (_)
+			if (_["type"])
+				return _["type"]
 			
 		return "generic"
 	}
 	
-	function execute_action(button, additional_options)
+	function execute_action(button, _)
 	{
-		if (!additional_options["action"])
+		if (!_["action"])
 			return
 		
-		var action = additional_options["action"]
-		var delay = additional_options["delay"]
+		var action = _["action"]
+		var delay = _["delay"]
 		
 		// if no delay - execute action and exit
 		if (!delay)
@@ -172,10 +170,8 @@ var button_fader = new (function()
 			
 		// if delay is in units (1 unit = 1 fading_time)
 		if (delay.ends_with("x"))
-		{
 			// convert units to milliseconds
 			delay = button_fader.fading_time * parseInt(delay)
-		}
 		
 		// execute action after delay
 		setTimeout(function() { action(button) }, delay)
@@ -184,13 +180,14 @@ var button_fader = new (function()
 	// core fading activation
 	function activate_fading(_)
 	{
-		var element = _["element"]
-		var faded_element = _["faded element"]
+//		var element = _["element"]
+//		var faded_element = _["faded element"]
 		
 		// triggered functions (supplied upon button creation)
-		var triggered_functions = []
+//		var triggered_functions = _["triggered functions"]
 		
 		// prepare triggered functions to be executed 'on fade'
+		/*
 		for (var index in _["triggered functions"])
 		{
 			var triggered_function = _["triggered functions"][index];
@@ -200,8 +197,6 @@ var button_fader = new (function()
 				triggered_functions.push(
 					function()
 					{
-						if ($.bind(faded_element, button_fader.is_being_animated)())
-							$.bind(faded_element, button_fader.stop_animation)()
 						
 						//$.bind(faded_element, triggered_function)()
 						triggered_function()
@@ -209,14 +204,16 @@ var button_fader = new (function()
 				)
 			})(triggered_function)
 		}
+		*/
 		
 		// set triggered functions to be executed 'on fade'
-		element[_["trigger"]].apply(element, triggered_functions)
+		_["element"][_["trigger"]].apply(_["element"], _["triggered functions"])
 	}
 	
 	// animation helpers
 	
 	// will be bound to a jquery element
+	/*
 	this.is_being_animated = function() 
 	{
 		return this.is(":animated")
@@ -225,17 +222,16 @@ var button_fader = new (function()
 	// will be bound to a jquery element
 	this.stop_animation = function()
 	{
-		this.stop(true, true) // clearQueue, jumpToEnd
+		this.stop() // clearQueue, jumpToEnd
 	}
+	*/
 	
 	var opaque = 1
 	var transparent = 0
 	
+	// slowly show
 	this.fade_in = function(element, _)
 	{
-//		if (!element)
-//			return
-			
 		// check options
 		if (!_)
 			_ = {}
@@ -245,15 +241,16 @@ var button_fader = new (function()
 			element.delay(_.timing)
 			
 		// animate
-		element.fadeIn(this.fading_time, _.callback)
-		//element.animate({opacity: opaque}, this.fading_time)
+console.log("show " + element.attr("id"))
+console.log(element)
+		element.fadeTo(this.fading_time, opaque)
+//		element.fadeIn(this.fading_time, _.callback)
+//		element.animate({opacity: opaque}, this.fading_time, _.callback)
 	}
 	
+	// slowly hide
 	this.fade_out = function(element, _)
 	{
-//		if (!element)
-//			return
-
 		// check options
 		if (!_)
 			_ = {}
@@ -263,13 +260,19 @@ var button_fader = new (function()
 			element.delay(_.timing)
 
 		// animate
+//		element.fadeTo(this.fading_time, transparent, function() { $(this).hide() })
+console.log("hide " + element.attr("id"))
+console.log(element)
 		element.fadeOut(this.fading_time, _.callback)
-		//element.animate({opacity: transparent}, this.fading_time)
+//		element.animate({opacity: transparent}, this.fading_time, _.callback)
 	}
 	
 	// kill focus
 	this.kill_focus = function(element)
 	{
-		element.data("events").mouseout[0].handler()
+		while (element.is(":animated"))
+			element.stop(false, true)
+			
+		element.data("events").mouseleave[0].handler()
 	}
 })()

@@ -29,8 +29,6 @@ var loading_indicator = new (function()
 	// available loading indicators
 	var loading_indicators = []
 	
-	// tiger
-	loading_indicators.push({image: "i_am_a_tiger__by_crazysexyfoosa.gif", image_source: "http://crazysexyfoosa.deviantart.com/art/i-am-a-tiger-27353780"})
 	// rainy
 	loading_indicators.push({image: "rainy_by_hardware-requiem.gif", image_source: "http://hardware-requiem.deviantart.com/art/naruto-25542487"})
 	// fox

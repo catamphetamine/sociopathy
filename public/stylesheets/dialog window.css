@@ -1,0 +1,44 @@
+/***** jtDialogBox - BEGIN REQUIRED *********************************/
+DIV.jtDialogBox {
+	position: absolute;
+	display: none;
+	}
+DIV.jtDialogBox .tbLeft {
+	background: url(dialogTL.gif) no-repeat left top;
+	width: 10px;
+	}
+DIV.jtDialogBox .tbRight {
+	background: url(dialogTR.gif) no-repeat right top;
+	width: 16px;
+	padding: 8px 4px 3px 0;
+	vertical-align: top;
+	}
+DIV.jtDialogBox .Title {
+	background: url(dialogTM.gif) top;
+	background-color: #a9a9a9;
+	font-size: 10pt;
+	font-weight: bold;
+	white-space: nowrap;
+	color: #000000;
+	padding: 4px 0px 2px 0px;
+	cursor:move;
+	}
+/***** jtDialogBox - END REQUIRED *********************************/
+
+
+/***** jtDialogBox - BEGIN SUGGESTED *********************************/
+DIV.jtDialogBox {
+	border-top	 : 1px solid #EDEDED;
+	border-right : 1px solid #ABABAB;
+	border-bottom: 1px solid #ABABAB;
+	border-left	: 1px solid #EDEDED;
+	}
+DIV.jtDialogBox .MainPanel {
+	border-top	 : 1px solid #898989;
+	border-right : 1px solid #4E4E4E;
+	border-bottom: 1px solid #4E4E4E;
+	border-left	: 1px solid #898989;
+	background-color: #ffffff;
+	}
+DIV.jtDialogBox .MainPanel .ContentArea {margin: 16px;}
+/***** jtDialogBox - END SUGGESTED *********************************/

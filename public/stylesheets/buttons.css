@@ -34,30 +34,24 @@
 	-moz-user-select: none;
 }
 
-.button .button_label, .button_ready .button_label, .button_pushed .button_label
+.button .left_part_of_background, .button_ready .left_part_of_background, .button_pushed .left_part_of_background
 {
 	display: block;
 	
 	min-height: 59px;
 	max-height: 59px;
 
-	line-height: 51px;
-
-	padding-top: 0px;
-	padding-bottom: 8px;
+	padding-top: 8px;
+	/*padding-bottom: 8px;*/
 	padding-left: 44px;
-
-	font-family: Tahoma;
-	font-size: 28px;
-	color: #4f4f4f;
 }
 
-.button .button_label, .button_ready .button_label
+.button .button_contents, .button_ready .button_contents
 {
 	text-shadow: 0px 1px 0px #ffffff;
 }
 
-.button_pushed .button_label
+.button_pushed .button_contents
 {
 	text-shadow: 0px 1px 0px #dfdfdf;
 }
@@ -78,10 +72,9 @@
 	display: block;
 }
 
-.button_pushed .button_label
+.button_pushed .button_contents span
 {
 	padding-top: 1px;
-	padding-bottom: 7px;
 }
 
 .image_button, .image_button_ready, .image_button_pushed
@@ -103,7 +96,7 @@
 	background-position: top right;
 }
 
-.button, .button_ready, .button_pushed, .button .button_label, .button_ready .button_label, .button_pushed .button_label
+.button, .button_ready, .button_pushed, .button .left_part_of_background, .button_ready .left_part_of_background, .button_pushed .left_part_of_background
 {
 	background-color: transparent;
 	background-repeat: no-repeat;
@@ -117,4 +110,27 @@
 .caution_button_ready, .caution_button_pushed
 {
 	color: #ad1c00;
+}
+
+.button_contents
+{
+	line-height: normal
+	line-height: 51px;	
+	
+	font-family: Tahoma;
+	font-size: 28px;
+	color: #4f4f4f;
+}
+
+.button_contents:after
+{
+	content: ""; 
+	display: block; 
+	height: 0; 
+	clear: both;
+}
+
+.minor_button
+{
+	cursor: pointer;
 }
