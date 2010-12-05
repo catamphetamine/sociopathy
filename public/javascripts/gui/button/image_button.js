@@ -13,7 +13,7 @@
  * 
  *	$(document).ready(function()
  *	{
- *		button_fader.activate
+ *		new image_button
  *		(
  *			"fancy_button", 
  *			{
@@ -33,7 +33,7 @@
  * 		/images/fancy button.png
  * (frames (top to bottom): idle, ready, pushed)
  * 
- * Requires jQuery and Button. 
+ * Requires: jQuery, MooTools, Button. 
  * 
  * Copyright (c) 2010 Nikolay Kuchumov
  * Licensed under MIT (http://en.wikipedia.org/wiki/MIT_License)
@@ -47,9 +47,9 @@ var image_button = new Class
 ({
 	Extends: button,
 	
-	initialize: function(id, options)
+	initialize: function(id_or_element, options)
 	{
-		this.parent(id, options)
+		this.parent(id_or_element, options)
 	},
 	
 	build_idle_frame: function()
@@ -113,5 +113,5 @@ var image_button = new Class
 	get_image_path: function()
 	{
 		return "url('" + this.options.path + "/" + this.options["button name"] + "." + this.options['image format'] + "')"
-	}
+	}.protect()
 })

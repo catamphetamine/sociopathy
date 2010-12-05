@@ -1,5 +1,6 @@
 // jQuery customization
 
+// function binding
 $.bind = function(scope, fn /*, variadic arguments to curry */)
 {
 	var args = Array.prototype.slice.call(arguments, 2)
@@ -8,6 +9,15 @@ $.bind = function(scope, fn /*, variadic arguments to curry */)
 	{
 		return fn.apply(scope, args.concat($.makeArray(arguments)))
 	}
+}
+
+// get jQuery element
+function get_element(id_or_element)
+{
+	if (typeof id_or_element === "string")
+		return $("#" + id_or_element)
+		
+	return id_or_element
 }
 
 // print debug info about object's contents

@@ -28,15 +28,11 @@
  * 
  * In filesystem:
  * 
- * create images (60 pixels by 60 pixels):
+ * create image sprites (60 pixels by 180 pixels in this example):
+ * (frames (top to bottom): idle, ready, pushed)
  * 
- * 		/images/panel/menu/home/home.png
- * 		/images/panel/menu/home/home ready.png
- * 		/images/panel/menu/home/home pushed.png
- * 
- * 		/images/panel/menu/contacts/contacts.png
- * 		/images/panel/menu/contacts/contacts ready.png
- * 		/images/panel/menu/contacts/contacts pushed.png
+ * 		/images/panel/menu/home.png
+ * 		/images/panel/menu/contacts.png
  * 
  * Requires jQuery and Button Fader. 
  * 
@@ -88,11 +84,11 @@ var panel = new (function()
 			$("em", $(this)).append(text_node)
 			
 			// activate panel menu item fading
-			image_button_fader.activate
+			new image_button
 			(
 				$("> a", $(this)), 
 				{
-					path: images_path + "/" + title,
+					path: images_path,
 					"button name": title,
 					width: icon_size,
 					height: icon_size

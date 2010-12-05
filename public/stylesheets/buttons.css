@@ -1,54 +1,22 @@
 /**
- * Button Fader
+ * Button
  * 
  * This script styles the buttons. 
- * 
- * height: 59px = height of the button image
- * padding-left: 44px; padding-right: 44px = width of the "xxx right.png" image (button side)
- * 
- * padding-bottom: 8px; line-height: 51px = 8 + 51 = 59px = height: 59px
- * 
- * padding-top: 1px; padding-bottom: 7px = 1 + 7 = 8px = padding-bottom: 8px (pushed text effect)
- *
- * Distributed under GNU General Public License
- * http://www.gnu.org/licenses/gpl.html
+ * You can edit this file to style to buttons.
  * 
  * @author Kuchumov Nikolay
  * @email kuchumovn@gmail.com
  * @github kuchumovn
  */
 
-.button, .button_ready, .button_pushed
-{
-	height: 59px;
-
-	margin: 0px;
-	padding-right: 44px;
-}
-
-.button, .button_ready, .button_pushed, .button span, .button_ready span, .button_pushed span
-{
-	cursor: default;
-		
-	-webkit-user-select: none;
-	-moz-user-select: none;
-}
-
-.button .left_part_of_background, .button_ready .left_part_of_background, .button_pushed .left_part_of_background
-{
-	display: block;
-	
-	min-height: 59px;
-	max-height: 59px;
-
-	padding-top: 8px;
-	/*padding-bottom: 8px;*/
-	padding-left: 44px;
-}
-
 .button .button_contents, .button_ready .button_contents
 {
 	text-shadow: 0px 1px 0px #ffffff;
+}
+
+.button_contents span
+{
+	padding-top: 8px;
 }
 
 .button_pushed .button_contents
@@ -56,50 +24,15 @@
 	text-shadow: 0px 1px 0px #dfdfdf;
 }
 
-.button_ready, .button_pushed, .image_button_ready, .image_button_pushed
-{
-	position: absolute;
-	top: 0;
-	left: 0;
-	
-	display: none;
-}
-
-.button, .image_button
-{
-	position: relative;
-	
-	display: block;
-}
-
 .button_pushed .button_contents span
 {
-	padding-top: 1px;
-}
-
-.image_button, .image_button_ready, .image_button_pushed
-{
-	background-repeat: no-repeat;
+	padding-top: 9px;
 }
 
 .buttons
 {
 	-webkit-user-select: none;
 	-moz-user-select: none;	
-}
-
-/* button backgrounds */
-
-.button, .button_ready, .button_pushed  
-{
-	background-attachment: scroll;
-	background-position: top right;
-}
-
-.button, .button_ready, .button_pushed, .button .left_part_of_background, .button_ready .left_part_of_background, .button_pushed .left_part_of_background
-{
-	background-color: transparent;
-	background-repeat: no-repeat;
 }
 
 .caution_button

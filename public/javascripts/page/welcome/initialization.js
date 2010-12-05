@@ -6,7 +6,7 @@ var join_form_slider
 // activate join button
 function initialize_join_button()
 {
-	new image_button
+	button.classic_button(new image_button
 	(
 		"join_button", 
 		{
@@ -14,27 +14,10 @@ function initialize_join_button()
 			"button name": "join button",
 			width: 345,
 			height: 59,
-			action: function(button) { open_window(join_dialog); button.let_unlock(); },
+			action: function(button) { open_window(join_dialog) },
 			delay: "1x"
 		}
-	)
-	
-	/*
-	image_button_fader.activate
-	(
-		"join_button", 
-		{
-			path: "images/page/welcome",
-			"button name": "join button",
-			width: 345,
-			height: 59
-		},
-		{				
-			action: function(button) { open_window(join_dialog) },
-			delay: "2x"
-		}
-	)
-	*/
+	))
 }
 
 // create join dialog
@@ -60,8 +43,8 @@ function initialize_join_form_slider()
 		id: "join_dialog_slider",
 		width: 640,
 		height: 200,
-		"next button": $("#" + join_dialog.attr('id') + " span[subtype='next']"),
-		"done button": $("#" + join_dialog.attr('id') + " span[subtype='done']"),
+		"next button": $("#join_dialog_next_button"),
+		"done button": $("#join_dialog_done_button"),
 		"fader": button_fader,
 		fields:
 		{
@@ -82,8 +65,7 @@ function initialize_join_form_slider()
 // create gender chooser
 function initialize_gender_chooser()
 {
-	gender_chooser = new image_chooser()
-	gender_chooser.activate
+	gender_chooser = new image_chooser
 	(
 		"join_form_gender_chooser",
 		{
@@ -109,33 +91,25 @@ function initialize_joined_message()
 	})				
 }
 
-// activate buttons
 function activate_buttons()
 {
-	text_button_fader.activate_all("images/button", 
+	Array.prototype.slice.call(arguments).each(function(options)
 	{
-		cancel: 
-		{
-			icon: "cross",
-			"top offset": 5,
-			action: function() { close_window(join_dialog); join_form_slider.reset(); },
-			delay: "2x"
-		},
-		next: 
-		{
-			icon: "right arrows",
-			floating: "right",
-			"top offset": 6,
-			action: function() { join_form_slider.next(this) }
-		},
-		done: 
-		{
-			icon: "check",
-			floating: "left",
-			"top offset": 7,
-			action: function() { join_submission(join_form_slider.data()) },
-			delay: "2x"						
-		}
+		var element = $('#' + options.id)
+
+		button.classic_button(new text_button
+		(
+			element,
+			{
+				path: 'images/button',
+				height: 59,
+				'side bar size': 44,
+				
+				'button name':  element.attr('type') || 'generic',
+				action: options.action,
+				delay: options.delay,
+			}
+		))
 	})
 }
 
@@ -143,10 +117,28 @@ function initialize_page()
 {
 	initialize_join_button()
 	initialize_join_dialog()
-	initialize_join_form_slider()
 	initialize_gender_chooser()
 	initialize_joined_message()
-	activate_buttons()
+	
+	activate_buttons
+	(
+		{
+			id: 'join_dialog_cancel_button',
+			action: function() { close_window(join_dialog); join_form_slider.reset(); },
+			delay: "1x"
+		},
+		{
+			id: 'join_dialog_next_button',
+			action: function() { join_form_slider.next(this) }
+		},
+		{
+			id: 'join_dialog_done_button',
+			action: function() { join_submission(join_form_slider.data()) },
+			delay: "1x"
+		}
+	)
+
+	initialize_join_form_slider()
 }
 
 //	$("#input_field").Watermark('text', $("#field_watermark").css("color"))			
