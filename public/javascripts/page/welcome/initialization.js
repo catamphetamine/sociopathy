@@ -45,7 +45,7 @@ function initialize_join_form_slider()
 		height: 200,
 		"next button": $("#join_dialog_next_button"),
 		"done button": $("#join_dialog_done_button"),
-		"fader": button_fader,
+		fader: button.fader,
 		fields:
 		{
 			name:
@@ -105,7 +105,7 @@ function activate_buttons()
 				height: 59,
 				'side bar size': 44,
 				
-				'button name':  element.attr('type') || 'generic',
+				'button name':  element.attr('type'), // || 'generic',
 				action: options.action,
 				delay: options.delay,
 			}

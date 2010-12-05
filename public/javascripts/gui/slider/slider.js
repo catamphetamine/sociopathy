@@ -29,7 +29,7 @@
  *			"previous button": $("#previous"),
  *			"next button": $("#next"),
  *			"done button": $("#done"),
- *			fader: button_fader, // if you have it included
+ *			fader: button.fader, // if you have it included
  *		});
  *
  *		the_slider.activate();
@@ -49,6 +49,8 @@
 
 function slider(_)
 {
+	var fade_duration = 400
+	
 	this.index = 1
 	
 	this._ = _
@@ -167,13 +169,13 @@ function slider(_)
 	// show a button
 	this.show_button = function(name, timing, callback)
 	{
-		this.show_hide_template(name, function(element) { element.show() }, this._["fader"].fade_in, timing, callback)
+		this.show_hide_template(name, function(element) { element.show() }, this._["fader"].fade_in.bind(this._["fader"]), timing, callback)
 	}
 	
 	// hide a button
 	this.hide_button = function(name, timing, callback)
 	{
-		this.show_hide_template(name, function(element) { element.hide() }, this._["fader"].fade_out, timing, callback)
+		this.show_hide_template(name, function(element) { element.hide() }, this._["fader"].fade_out.bind(this._["fader"]), timing, callback)
 	}
 	
 	// show / hide template
@@ -198,7 +200,7 @@ function slider(_)
 		}
 			
 		// fade (in / out)
-		animated_show_hide(this._[name], { timing: timing * this._["fader"].fading_time, callback: callback })
+		animated_show_hide(this._[name], { duration: timing * fade_duration, callback: callback, hide: true })
 	} 
 	
 	// hide one button and show the other button

@@ -77,10 +77,9 @@
 		<script type="text/javascript" src="javascripts/gui/button/image_button.js"></script> 
 		<script type="text/javascript" src="javascripts/gui/button/image_chooser.js"></script> 
 
-		<!-- button fader -->
-		<script type="text/javascript" src="javascripts/gui/fader/button_fader.js"></script> 
-		<script type="text/javascript" src="javascripts/gui/fader/text_button_fader.js"></script> 
-		<link rel="stylesheet" href="stylesheets/buttons.css" type="text/css"/>
+		<link rel="stylesheet" href="stylesheets/button/generic.css" type="text/css"/>
+		<link rel="stylesheet" href="stylesheets/button/caution.css" type="text/css"/>
+		<link rel="stylesheet" href="stylesheets/button/minor.css" type="text/css"/>
 
 		<!-- panel -->
 		<script type="text/javascript" src="javascripts/gui/panel.js"></script> 
@@ -235,16 +234,16 @@
 
 						<div class="pre_buttons"></div>
 					
-						<div class="no_word_carrying dialog_container buttons dialog_buttons">
-							<span id="join_dialog_cancel_button" class="minor_button left" level="minor" type="caution">
+						<div class="no_word_carrying dialog_container non_selectable dialog_buttons">
+							<span id="join_dialog_cancel_button" class="left" styles="minor, caution">
 								<span class="translated" label="button 'cancel'"></span>
 							</span>
 										
-							<span id="join_dialog_next_button" class="right" type="dark generic">
+							<span id="join_dialog_next_button" class="right" type="dark generic" styles="generic">
 								<span class="translated" label="button 'next'"></span>
 							</span>
 	
-							<span id="join_dialog_done_button" class="right" type="dark generic">
+							<span id="join_dialog_done_button" class="right" type="dark generic" styles="generic">
 								<span class="translated" label="button 'done'"></span>
 							</span>
 							

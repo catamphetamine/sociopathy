@@ -60,6 +60,9 @@ var button = new Class
 		// get the element
 		this.$element = get_element(id_or_element)
 		
+		// custom preparations
+		this.prepare()
+		
 		// build frames
 		
 		this.frames.idle = this.build_idle_frame()
@@ -89,6 +92,8 @@ var button = new Class
 				self.let_unlock()
 		})
 	},
+	
+	prepare: function() {},
 	
 	// locking
 	handle_lock: function()
@@ -217,7 +222,7 @@ var button = new Class
 
 	fade_in: function(frame_name, callback)
 	{
-		this.fader.fade_in(this.frames[frame_name],
+		button.fader.fade_in(this.frames[frame_name],
 		{
 			duration: this.options[frame_name + ' frame fade in duration'],
 			easing: this.options[frame_name + ' frame fade in easing'],
@@ -227,99 +232,97 @@ var button = new Class
 	
 	fade_out: function(frame_name, callback)
 	{
-		this.fader.fade_out(this.frames[frame_name], 
+		button.fader.fade_out(this.frames[frame_name], 
 		{
 			duration: this.options[frame_name + ' frame fade out duration'],
 			easing: this.options[frame_name + ' frame fade out easing'],
 			callback: callback
 		})
 	}.protect(),
-	
-	// fading
-	
-	fader: new (function(button)
-	{
-		var fade_for = button.fade_for
-		
-		var opaque = 1
-		var transparent = 0
-		
-		// slowly show
-		this.fade_in = function($element, _)
-		{
-			// options
-			_ = _ || {}
-			
-			// if delay animation
-			if (_.delay)
-				element.delay(_.delay)
-				
-			// animate
-			$element.show()
-			$element.fadeTo(_.duration, opaque, _.easing, _.callback)
-//			$element.fadeIn(_.duration, _.easing, _.callback)
-		}
-		
-		// slowly hide
-		this.fade_out = function($element, _)
-		{
-			// options
-			_ = _ || {}
-
-			// if delay animation
-			if (_.delay)
-				element.delay(_.delay)
-	
-			// animate
-			$element.fadeTo(_.duration, transparent, _.easing, this.get_callback(_))
-//			$element.fadeOut(_.duration, _.easing, _.callback)
-		}
-		
-		this.get_callback = function(_)
-		{
-			if (!_.callback)
-			{
-				if (!_.hide)
-					return
-				
-				return function() { $element.hide() }
-			}
-			
-			if (!_.hide)
-				return _.callback
-			
-			return function()
-			{
-				$element.hide()
-				_.callback()
-			}
-		}
-		
-		// generic
-		
-		function get_number(variable)
-		{
-			if (is_number(variable))
-				return variable
-		}
-		
-		function is_number(variable)
-		{
-			return typeof variable == "number"
-		}
-		
-		function get_function(variable)
-		{
-			if (is_function(variable))
-				return variable
-		}
-		
-		function is_function(variable)
-		{
-			return typeof variable == "function"
-		}
-	})(this)
 })
+
+// fading
+button.fader = new (function(button)
+{
+	var opaque = 1
+	var transparent = 0
+	
+	// slowly show
+	this.fade_in = function($element, _)
+	{
+		// options
+		_ = _ || {}
+		
+		// if delay animation
+		if (_.delay)
+			element.delay(_.delay)
+			
+		// animate
+		$element.show()
+		$element.fadeTo(_.duration, opaque, _.easing, _.callback)
+//			$element.fadeIn(_.duration, _.easing, _.callback)
+	}
+	
+	// slowly hide
+	this.fade_out = function($element, _)
+	{
+		// options
+		_ = _ || {}
+
+		// if delay animation
+		if (_.delay)
+			element.delay(_.delay)
+
+		// animate
+		$element.fadeTo(_.duration, transparent, _.easing, this.get_callback($element, _))
+//			$element.fadeOut(_.duration, _.easing, _.callback)
+	}
+	
+	this.get_callback = function($element, _)
+	{
+		if (!_.callback)
+		{
+			if (!_.hide)
+				return
+			
+			return function() { $element.hide() }
+		}
+		
+		if (!_.hide)
+			return _.callback
+		
+		return function()
+		{
+			$element.hide()
+			_.callback()
+		}
+	}
+	
+	// generic
+	
+	function get_number(variable)
+	{
+		if (is_number(variable))
+			return variable
+	}
+	
+	function is_number(variable)
+	{
+		return typeof variable == "number"
+	}
+	
+	function get_function(variable)
+	{
+		if (is_function(variable))
+			return variable
+	}
+	
+	function is_function(variable)
+	{
+		return typeof variable == "function"
+	}
+})(this)
+
 
 button.classic_button = function(the_button)
 {

@@ -204,3 +204,9 @@ label.error
 	
 	text-shadow: rgba(255, 0, 0, 0.1) 0 0 20px;
 }
+
+.non_selectable
+{
+	-webkit-user-select: none;
+	-moz-user-select: none;	
+}

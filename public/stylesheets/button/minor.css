@@ -1,0 +1,20 @@
+/**
+ * Button
+ * 
+ * This script styles minor buttons. 
+ * You can edit this file to style to buttons.
+ * 
+ * @author Kuchumov Nikolay
+ * @email kuchumovn@gmail.com
+ * @github kuchumovn
+ */
+
+.minor_button
+{
+	cursor: pointer;
+}
+
+.minor_button .button_contents span, .minor_button_ready .button_contents span, .minor_button_pushed .button_contents span
+{
+	padding-top: 8px;
+}

@@ -43,7 +43,12 @@ String.prototype.count_occurences = function(substring)
 
 String.prototype.trim = function()
 {
-	return (this.replace(/^[\s\xA0]+/, "").replace(/[\s\xA0]+$/, ""))
+	return this.replace(/^[\s\xA0]+/, "").replace(/[\s\xA0]+$/, "")
+}
+
+String.prototype.underscore = function()
+{
+	return this.replace(/[\s]+/, "_")
 }
 
 String.prototype.starts_with = function(substring) 

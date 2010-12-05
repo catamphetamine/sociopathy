@@ -1,0 +1,20 @@
+/**
+ * Button
+ * 
+ * This script styles caution buttons. 
+ * You can edit this file to style to buttons.
+ * 
+ * @author Kuchumov Nikolay
+ * @email kuchumovn@gmail.com
+ * @github kuchumovn
+ */
+
+.caution_button
+{
+	color: #4f4f4f;
+}
+
+.caution_button_ready, .caution_button_pushed
+{
+	color: #ad1c00;
+}
