@@ -124,3 +124,16 @@ function safely_get(source, default_value)
 	return default_value
 }
 
+// generic
+
+function get_number(variable)
+{
+	if (typeof variable == "number")
+		return variable
+}
+
+function get_function(variable)
+{
+	if (typeof variable == "function")
+		return variable
+}

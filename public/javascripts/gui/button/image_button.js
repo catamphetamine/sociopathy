@@ -54,58 +54,54 @@ var image_button = new Class
 	
 	build_idle_frame: function()
 	{
-		this.$element.css("width", this.options.width + "px")
-		this.$element.css("height", this.options.height + "px")
+		this.$element.css
+		({
+			"width": this.options.width + "px",
+			"height": this.options.height + "px",
+				
+			"position": "relative",
+			"display": "block",
 			
-		this.$element.css("position", "relative")
-		this.$element.css("display", "block")
+			"background-repeat": "no-repeat",
+			"background-color": "transparent",
+			"background-position": "0 0",
+			"background-image": this.get_image_path()
+		})
 		
-		this.$element.css("background-repeat", "no-repeat")
-		this.$element.css("background-color", "transparent")
-		this.$element.css("background-position", "0 0")
-		this.$element.css("background-image", this.get_image_path())
+		return this.$element
 	},
 	
 	build_ready_frame: function()
 	{
-		var $frame = $('<span></span>')
-		this.$element.append($frame)
-
-		$frame.css("width", this.options.width + "px")
-		$frame.css("height", this.options.height + "px")
-			
-		$frame.css("position", "absolute")
-		$frame.css("top", "0")
-		$frame.css("left", "0")
-		$frame.css("display", "none")
-		$frame.css("opacity", "0")
-
-		$frame.css("background-repeat", "no-repeat")
-		$frame.css("background-color", "transparent")
-		$frame.css("background-position", "0 -" + this.options.height + "px")
-		$frame.css("background-image", this.get_image_path())
-
-		return $frame
+		return this.build_hidden_frame({ height: this.options.height })
 	},
 	
 	build_pushed_frame: function()
 	{
+		return this.build_hidden_frame({ height: this.options.height * 2 })
+	},
+	
+	build_hidden_frame: function(options)
+	{
 		var $frame = $('<span></span>')
 		this.$element.append($frame)
 
-		$frame.css("width", this.options.width + "px")
-		$frame.css("height", this.options.height + "px")
-			
-		$frame.css("position", "absolute")
-		$frame.css("top", "0")
-		$frame.css("left", "0")
-		$frame.css("display", "none")
-		$frame.css("opacity", "0")
-
-		$frame.css("background-repeat", "no-repeat")
-		$frame.css("background-color", "transparent")
-		$frame.css("background-position", "0 -" + this.options.height * 2 + "px")
-		$frame.css("background-image", this.get_image_path())
+		$frame.css
+		({
+			"width": this.options.width + "px",
+			"height": this.options.height + "px",
+				
+			"position": "absolute",
+			"top": "0",
+			"left": "0",
+			"display": "none",
+			"opacity": "0",
+	
+			"background-repeat": "no-repeat",
+			"background-color": "transparent",
+			"background-position": "0 -" + options.height + "px",
+			"background-image": this.get_image_path()
+		})
 
 		return $frame
 	},

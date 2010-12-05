@@ -9,12 +9,19 @@
  * @github kuchumovn
  */
 
-.caution_button
-{
-	color: #4f4f4f;
-}
-
-.caution_button_ready, .caution_button_pushed
+.caution_button_ready .button_contents, .caution_button_pushed .button_contents
 {
 	color: #ad1c00;
+}
+
+.caution_button_ready .button_contents
+{
+	text-shadow: rgba(255, 0, 0, 0.5) 0 0 20px;
+	overflow: hidden;
+}
+
+.caution_button_pushed .button_contents
+{
+	text-shadow: rgba(255, 0, 0, 0.6) 0 0 30px;
+	overflow: hidden;
 }

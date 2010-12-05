@@ -7,15 +7,16 @@
  * 
  * In html:
  * 
+ * // align buttons to the center
  * <div class="float_centerer">
- * 		<span id="yes" type="generic" styles="generic">Yes</span>
- * 		<span id="no" type="generic" styles="generic">No</span>
+ * 		<span id="yes" type="generic" styles="greenish">Yes</span>
+ * 		<span id="no" type="generic" styles="reddish">No</span>
  * 		
  * 		<hr class="float_centerer" />
  * 	</div>
  * 
- * <span id="back" ... style="float: left">Back</span>
- * <span id="next" ... style="float: right">Next</span>
+ * <span id="back" ... style="float: left">Back</span> // align button to the left
+ * <span id="next" ... style="float: right">Next</span> // align button to the right
  *
  * In javascript:
  * 
@@ -23,12 +24,24 @@
  *	{
  *		new text_button
  *		(
- *			"yes"
+ *			"yes",
+ *			{
+ *				path: 'images/button',
+ *				height: 100,
+ *				'side bar size': 10,
+ *				action: function() { alert('yes') }
+ *			}
  *		)
  *
  *		new text_button
  *		(
- *			"no"
+ *			"no",
+ *			{
+ *				path: 'images/button',
+ *				height: 100,
+ *				'side bar size': 10,
+ *				action: function() { alert('no') }
+ *			}
  *		)
  *	})
  *
@@ -50,27 +63,38 @@
  * 
  * In filesystem:
  * 
- * graphics for generic buttons is described in the buttons.css file 
- * and is included in the distribution
+ * create sprite image for the left part of the button (100 pixels high and, for example, 500 pixels wide):
+ * 		/images/button/generic/left.png
+ * (frames (top to bottom): idle, ready, pushed)
+ * 
+ * create sprite image for the right part of the button (100 pixels high and 10 pixels wide, in this example):
+ * 		/images/button/generic/right.png
+ * (frames (top to bottom): idle, ready, pushed)
+ * 
+ * create style sheet for 'greenish' and 'reddish' buttons, and include them in your html page
+ * (the order of css file inclusion matters, because the latest css file will overwrite styling of the previous css file)
  * 
  * Advanced usage example:
  * 
  * new text_button('fancy_button', 
  *	{
  *		icon: "cross",
- *		"top offset": 13,
- *		spacing: 10,
- *		"text color": "#ad1c00",
+ *		'icon width': 30,
+ *		'icon height': 40,
+ *		'icon top offset': 7,
+ *		'icon spacing': 10,
  *		action: function() { alert('cancel') },
- *		delay: "2x"
+ *		delay: '1x'
  *	})
  *
  *	new text_button('another_fancy_button',
  *	{
  *		icon: "right arrows",
- *		floating: "right",
- *		"top offset": 14,
- *		spacing: 10
+ *		'icon width': 32,
+ *		'icon height': 32,
+ *		'icon floating': "right",
+ *		'icon top offset': 8,
+ *		'icon spacing': 10
  *	})
  * 
  * Requires jQuery, MooTools, Button. 
@@ -83,31 +107,20 @@
  * @github kuchumovn
  */
 
-// style preset
-$(document).ready(function()
-{
-	$("body").append
-	(
-		"<div id='style_preset' style='display: none'>" +
-			"<span class='caution_button'></span>" +  
-			"<span class='caution_button_ready'></span>" +  
-			"<span class='caution_button_pushed'></span>" +  
-		"</div>"
-	)
-})
-
 var text_button = new Class
 ({
 	Extends: button,
 	
 	default_options:
 	{
-		'icon spacing': 10
+		'icon spacing': 10,
+		'icon top offset': 0,
+		'icon floating': 'left'
 	},
 	
 	initialize: function(id_or_element, options)
 	{
-		this.parent(id_or_element, options)		
+		this.parent(id_or_element, $.extend({}, this.default_options, options))		
 	},
 	
 	prepare: function()
@@ -144,7 +157,6 @@ var text_button = new Class
 		// style left part
 
 		var $left_part = $(':first', this.$element)
-		$left_part.addClass('button_contents')
 
 		$left_part.css
 		({
@@ -158,10 +170,11 @@ var text_button = new Class
 			'background-color': 'transparent',
 			'background-repeat': 'no-repeat',
 		})
-		
+
 		// style content
 		
 		var $content = $(':first :first', this.$element)
+		$content.addClass('button_contents')
 
 		$content.css
 		({
@@ -174,6 +187,9 @@ var text_button = new Class
 			'-moz-user-select': 'none'
 		})
 
+		if (this.options.icon)
+			this.add_icon($content)
+		
 		// style right part (and container)
 
 		this.$element.css('background-position', 'right top')
@@ -186,6 +202,8 @@ var text_button = new Class
 		})
 
 		this.content = this.$element.html()
+		
+		return this.$element
 	},
 	
 	build_ready_frame: function()
@@ -197,7 +215,7 @@ var text_button = new Class
 			 styles.push(style_name + '_button_ready')			
 		})
 
-		return this.build_hidden_frame({ styles: styles, height: this.options.height })
+		return this.build_hidden_frame({ styles: styles, 'image index': 2 })
 	},
 	
 	build_pushed_frame: function()
@@ -209,7 +227,7 @@ var text_button = new Class
 			 styles.push(style_name + '_button_pushed')			
 		})
 
-		return this.build_hidden_frame({ styles: styles, height: this.options.height * 2 })
+		return this.build_hidden_frame({ styles: styles, 'image index': 3 })
 	},
 	
 	build_hidden_frame: function(options)
@@ -225,7 +243,7 @@ var text_button = new Class
 		$frame.append($content)
 	
 		var $left_part = $(':first', $frame)
-		$left_part.css('background-position', "left -" + options.height + "px")
+		$left_part.css('background-position', "left -" + this.options.height * (options['image index'] - 1) + "px")
 	
 		$frame.css
 		({
@@ -236,9 +254,13 @@ var text_button = new Class
 			'opacity': 0
 		})
 	
-		$frame.css("background-position", "right -" + options.height + "px")
+		$frame.css("background-position", "right -" + this.options.height * (options['image index'] - 1) + "px")
 		$frame.css(this.get_right_part_style())
 		
+		// adjust the icon image
+		$('.button_icon', $content).css('background-position', 'left -' + this.options['icon height'] * (options['image index'] - 1) + 'px')
+
+		// result		
 		this.$element.append($frame)
 		return $frame
 	},
@@ -247,7 +269,6 @@ var text_button = new Class
 	{
 		var style = 
 		{
-			'background-attachment': 'scroll',
 			'background-image': this.get_image_path('right'),
 			'background-color': 'transparent',
 			'background-repeat': 'no-repeat',
@@ -266,124 +287,66 @@ var text_button = new Class
 	get_image_path: function(image_name)
 	{
 		return "url('" + this.options.path + "/" + this.options["button name"] + "/" + image_name + "." + this.options['image format'] + "')"
+	}.protect(),
+	
+	get_icon_path: function(icon_name)
+	{
+		return "url('" + this.options.path + "/icon/" + icon_name + "." + this.options['image format'] + "')"
+	}.protect(),
+	
+	add_icon: function($element)
+	{
+		// set icon margin type
+		
+		var margin_type
+		
+		if (this.options['icon floating'] == "right")
+			margin_type = "left"
+		else
+			margin_type = "right"
+	
+		// float the preceeding element to the opposite direction
+		
+		var previous_element_float
+		
+		if (this.options['icon floating'] == "right")
+			previous_element_float = "left"
+		else
+			previous_element_float = "right"
+			
+		$(':first', $element).css('float', previous_element_float)
+	
+		// create icon image
+		
+		var $image = $('<span></span>')
+		
+		$image.css
+		({
+			'display': 'block',
+			
+			'width': this.options['icon width'] + 'px',
+			'height': this.options['icon height'] + 'px',
+			
+			'margin-top': this.options['icon top offset'] + 'px',
+			
+			'background-color': 'transparent',
+			'background-repeat': 'no-repeat',
+			'background-position': 'left top',
+			'background-image': this.get_icon_path(this.options.icon),
+		})
+
+		$image.css('margin-' + margin_type, this.options['icon spacing'] + 'px')
+		
+		$image.addClass('button_icon')
+	
+		// create icon element
+		var $icon = $('<span style="display: block; float: ' + this.options['icon floating'] + '"></span>')
+		$icon.append($image)
+		
+		// place the icon on the page
+		if (this.options['icon floating'] == "right")
+			$element.append($icon)
+		else
+			$element.prepend($icon)
 	}.protect()
 })
-
-/*
- 			// if there is standard text color for this button frame - apply it
-			this.set_text_color = function(button_content, postfix)
-			{
-				// check postfix
-				if (!postfix)
-					postfix = ""
-				
-				// get style presets
-				var preset = $("#style_preset > ." + this.type + "_button" + postfix)
-				
-				if (preset.length == 0)
-					return
-	
-				// get preset text color
-				var color = preset.css("color")
-												
-				if (!color)
-					return
-					
-				// apply the text color
-				button_content.css("color", color)
-			}
-			
-			// user can customize button icon and text color
-			this.customize = function()
-			{
-				// for every subtype
-				for (var subtype in this._)
-				{
-					// if this button belongs to a subtype
-					if (button.attr("subtype") !== subtype)
-						continue
-					
-					// set text color
-					this.customize_text_color(this._[subtype])
-					// set icon
-					this.customize_icon(this._[subtype])
-					
-					// set 'on push' action
-					this.additional_options.action = this._[subtype].action
-					this.additional_options.delay = this._[subtype].delay
-					
-					// exit
-					return
-				}
-			}
-		
-			this.customize_text_color = function(options)
-			{
-				// check text color
-				var text_color = options["text color"]
-				
-				if (!text_color)
-						return
-					
-				// set text color for ready button
-				if (text_color.ready) 
-					this.button_ready_content.css("color", text_color.ready)
-	
-				// set text color for pushed button
-				if (text_color.pushed) 
-					this.button_pushed_content.css("color", text_color.pushed)
-			}
-				
-			this.customize_icon = function(options)
-			{
-				// check icon
-				this.icon = options["icon"]
-				
-				if (!this.icon)
-					return
-					
-				// apply options
-				this.floating = safely_get(options["floating"], "left")
-				this.top_offset = safely_get(options["top offset"], 0)
-				this.spacing = safely_get(options["spacing"], default_icon_spacing)
-				
-				// add the icon to button
-				this.add_icon($(":first", this.button_content))
-				this.add_icon($(":first", this.button_ready_content), ready_image_postfix)
-				this.add_icon($(":first", this.button_pushed_content), pushed_image_postfix)
-			}
-			
-			this.add_icon = function(element, postfix)
-			{
-				// check postfix
-				if (!postfix)
-					postfix = ""
-			
-				// set icon margin type
-				var margin_type
-				
-				if (this.floating == "right")
-					margin_type = "left"
-				else
-					margin_type = "right"
-			
-				// generate icon code
-				var code = 
-				"<span " + 
-					"style='" +
-						"display: block; float: " + this.floating + ";'>" + 
-					"<img " + 
-						"style='" + 
-							"padding-top: " + this.top_offset + "px; " + 
-							"margin-" + margin_type + ": " + this.spacing + "px;'  " + 
-						"src='" + this.images_path + "/icon/" + this.icon + "/" + this.icon + postfix + "." + image_format + "'" + 
-					"/>" + 
-				"</span>"
-				
-				// place the icon on the page
-				if (this.floating == "right")
-					element.append(code)
-				else
-					element.prepend(code)
-			}
-*/

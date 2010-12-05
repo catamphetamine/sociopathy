@@ -22,6 +22,8 @@
 
 		var self = this
 		
+		var controls = []
+		
 		var namespace = "window"
 		
 		var top_z = 0
@@ -200,6 +202,17 @@
 			})
 		}
 		
+		this.reset = function()
+		{
+			// reset controls
+			this.controls.each(function(control) { control.reset() })			
+		}
+		
+		this.add_controls = function()
+		{
+			controls.combine(Array.prototype.slice.call(arguments).flatten())
+		}
+		
 		create()
 	}
 	
@@ -212,7 +225,7 @@
 			top_z = this.calculate_top_z()
 		}
 		
-		this.calculate_top_z()
+		this.calculate_top_z = function()
 		{
 			var top_z = 0
 			
@@ -403,6 +416,16 @@
 	}
 	
 	// from jQuery UI
+
+	function visible( element ) 
+	{
+		return !$( element ).parents().andSelf().filter(function() 
+		{
+			return $.curCSS( this, "visibility" ) === "hidden" ||
+				$.expr.filters.hidden( this );
+		}).length;
+	}
+	
 	$.extend( $.expr[ ":" ], 
 	{
 		focusable: function( element ) 

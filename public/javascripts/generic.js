@@ -15,9 +15,8 @@ function open_window(window)
 
 function close_window(window)
 {
-	// reset rolled over buttons
-	alert('for_each_button(function() { button_fader.kill_focus($(this)) }, { parent: window })')
-	
 	// close the dialog window
 	window.dialog('close')
+	
+	window.reset()
 }

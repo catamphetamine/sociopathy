@@ -239,6 +239,11 @@ var button = new Class
 			callback: callback
 		})
 	}.protect(),
+	
+	reset: function()
+	{
+		this.on_roll_out()
+	}
 })
 
 // fading
@@ -248,78 +253,54 @@ button.fader = new (function(button)
 	var transparent = 0
 	
 	// slowly show
-	this.fade_in = function($element, _)
+	this.fade_in = function($element, options)
 	{
 		// options
-		_ = _ || {}
+		options = options || {}
 		
 		// if delay animation
-		if (_.delay)
-			element.delay(_.delay)
+		if (options.delay)
+			element.delay(options.delay)
 			
 		// animate
 		$element.show()
-		$element.fadeTo(_.duration, opaque, _.easing, _.callback)
+		$element.fadeTo(options.duration, opaque, options.easing, options.callback)
 //			$element.fadeIn(_.duration, _.easing, _.callback)
 	}
 	
 	// slowly hide
-	this.fade_out = function($element, _)
+	this.fade_out = function($element, options)
 	{
 		// options
-		_ = _ || {}
+		options = options || {}
 
 		// if delay animation
-		if (_.delay)
-			element.delay(_.delay)
+		if (options.delay)
+			element.delay(options.delay)
 
 		// animate
-		$element.fadeTo(_.duration, transparent, _.easing, this.get_callback($element, _))
+		$element.fadeTo(options.duration, transparent, options.easing, this.get_callback($element, options))
 //			$element.fadeOut(_.duration, _.easing, _.callback)
 	}
 	
-	this.get_callback = function($element, _)
+	this.get_callback = function($element, options)
 	{
-		if (!_.callback)
+		if (!options.callback)
 		{
-			if (!_.hide)
+			if (!options.hide)
 				return
 			
 			return function() { $element.hide() }
 		}
 		
-		if (!_.hide)
-			return _.callback
+		if (!options.hide)
+			return options.callback
 		
 		return function()
 		{
 			$element.hide()
-			_.callback()
+			options.callback()
 		}
-	}
-	
-	// generic
-	
-	function get_number(variable)
-	{
-		if (is_number(variable))
-			return variable
-	}
-	
-	function is_number(variable)
-	{
-		return typeof variable == "number"
-	}
-	
-	function get_function(variable)
-	{
-		if (is_function(variable))
-			return variable
-	}
-	
-	function is_function(variable)
-	{
-		return typeof variable == "function"
 	}
 })(this)
 
@@ -336,4 +317,6 @@ button.classic_button = function(the_button)
 		'pushed frame fade in easing': 'easeInOutCubic',
 		'pushed frame fade out easing': 'swing'
 	})
+	
+	return the_button
 }
