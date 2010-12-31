@@ -33,10 +33,6 @@
 		<!-- jQuery i18n -->
 		<script type="text/javascript" src="javascripts/jquery/jquery.i18n.js"></script>
 
-		<!-- jQuery glow
-		<script type="text/javascript" src="javascripts/jquery/jquery.glow.js"></script>
-		 -->
-
 		<!-- jQuery color -->
 		<script type="text/javascript" src="javascripts/jquery/jquery.color.min.js"></script>
 		
@@ -97,7 +93,7 @@
 		<script type="text/javascript" src="javascripts/browser checker.js"></script> 
 
 		<!-- page initialization -->
-		<script type="text/javascript" src="javascripts/page/welcome.js"></script> 
+		<script type="text/javascript" src="javascripts/page/welcome/initialization.js"></script> 
 
 		<style type="text/css">
 
@@ -115,13 +111,49 @@
 				background-repeat: no-repeat;
 			}
 
+			#join_dialog label.glowable, #join_dialog .glowable_input_wrapper
+			{
+				padding-left: 10px;
+				padding-right: 10px;
+			}
+
 			#join_dialog input
 			{
 				width: 614px;
 			}
+
+			#join_dialog .glowable_input_wrapper input
+			{
+				width: 594px;
+			}
 		</style>
 			
 		<script type="text/javascript">
+
+			// submit join request
+			function join_submission(data)
+			{
+				loading_indicator.show()
+				setTimeout(function() {loading_indicator.hide(); join_dialog.close(); alert("Здесь будет отсылаться PUT AJAX-запрос с данными:\n\n" + info(data));}, 3000)
+				return
+				
+				// ajax PUT
+				$.ajax
+				({
+					url: '/join', 
+					type: 'PUT',
+					data: data, 
+					success: function(json, textStatus)
+					{
+						joined_message.dialog('open')
+					},
+					error: function(json, textStatus)
+					{
+						alert("error " + textStatus)
+					},
+					dataType: 'json'
+				})
+			}
 
 			// initialize
 			$(document).ready(function()
@@ -174,11 +206,13 @@
 						<div id="join_dialog_slider" class="slider">
 							<!-- 1st slide: name -->
 							<div class="slide">
-								<label for="name" class="translated" label="page 'welcome', dialog 'join', name request"></label>
+								<label for="name" class="translated glowable" label="page 'welcome', dialog 'join', name request"></label>
 								
 								<div style="padding-top: 10px"></div>
 								
-								<input id="join_dialog_name_field" name="name" class="field" type="text"/>
+								<div class="glowable_input_wrapper">
+									<input id="join_dialog_name_field" name="name" class="field" type="text"/>
+								</div>
 							</div>
 
 							<!-- 2nd slide: gender -->
@@ -217,19 +251,19 @@
 				<div class="no_word_carrying dialog_container non_selectable dialog_window_buttons">
 					<!-- cancel button -->
 					<span id="join_dialog_cancel_button" class="left" type="minor" styles="generic, minor, caution">
-						<span type="icon" icon="cross" width="30" height="30" top_offset="5"></span>
+						<span type="icon" icon="cross" width="30" height="30" top_offset="4"></span>
 						<span class="translated" label="button 'cancel'"></span>
 					</span>
 					
 					<!-- next button -->			
 					<span id="join_dialog_next_button" class="right" type="dark generic" styles="generic">
 						<span class="translated" label="button 'next'"></span>
-						<span type="icon" icon="right arrows" width="40" height="30" top_offset="7"></span>
+						<span type="icon" icon="right arrows" width="40" height="30" top_offset="6"></span>
 					</span>
 
 					<!-- done button -->
 					<span id="join_dialog_done_button" class="right" type="dark generic" styles="generic">
-						<span type="icon" icon="check" width="24" height="24" top_offset="8"></span>
+						<span type="icon" icon="check" width="24" height="24" top_offset="7"></span>
 						<span class="translated" label="button 'done'"></span>
 					</span>
 				</div>
@@ -253,7 +287,7 @@
 		<!-- Unsupported browser popup -->
 		<div id="unsupported_browser_message" class="translated_title" label="page, dialog 'unsupported browser', title">
 			<div class="no_word_carrying dialog_window_container">
-				<div class="translated text" label="page, dialog 'unsupported browser', content"></div>
+				<div class="translated" label="page, dialog 'unsupported browser', content"></div>
 				
 				<br/>
 				<br/>

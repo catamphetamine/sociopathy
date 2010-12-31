@@ -65,8 +65,8 @@ $.cssHooks['text_shadow_opacity'] =
 	set: function(element, opacity) 
 	{
 		var parameters = parse_text_shadow($(element))
-		parameters.color = set_opacity(parameters.color, parseFloat(opacity)) 
-		
+		parameters.color = set_opacity(parameters.color, parseFloat(opacity))
+	
 		$(element).css({'text-shadow': to_text_shadow(parameters)})
 	}
 }
@@ -121,18 +121,30 @@ function parse_text_shadow(element)
 	var minimum_opacity = 0.3
 	var maximum_opacity = 0.8
 			
-	$.fn.glow = function(element)
+	$.fn.glow = function()
 	{
-		$.proxy(glow_sample, this)()
+		$.proxy(glow_in_out, this)()
 		return this
 	}
 	
-	function glow_sample()
+	function glow_in_out()
 	{
 //		$(this).animate({text_shadow_radius: 20}, glow_timing)
 //		$(this).animate({text_shadow_radius: 0}, glow_timing, glow_sample)
 
-		$(this).animate({text_shadow_opacity: maximum_opacity}, glow_timing)
-		$(this).animate({text_shadow_opacity: minimum_opacity}, glow_timing, glow_sample)
+		var $self = $(this)
+		 
+		$self.animate({text_shadow_opacity: maximum_opacity}, glow_timing)
+		$self.animate({text_shadow_opacity: minimum_opacity}, glow_timing, glow_in_out)
+	}
+	
+	$.fn.glow_in = function()
+	{
+		$self.animate({text_shadow_opacity: 1}, glow_timing)
+	}
+	
+	$.fn.glow_out = function()
+	{
+		$self.animate({text_shadow_opacity: 0}, glow_timing)
 	}
 })(jQuery)

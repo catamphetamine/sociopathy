@@ -1,5 +1,18 @@
 // browser checker
 
+// the popup
+var unsupported_browser_message
+
+// construct the popup window
+$(document).ready(function() 
+{
+	unsupported_browser_message = $("#unsupported_browser_message").dialog_window
+	({
+		width: 1400,
+		'close on escape': true
+	})
+})
+
 // detects current web browser
 var browser_engine_detector = new (function()
 {
@@ -40,21 +53,6 @@ function is_browser_supported()
 // check for proper web browser
 function check_browser_support()
 {
-	if (is_browser_supported())
-		return
-
-	$("#unsupported_browser_message").dialog
-	({
-		modal: true,
-		width: 1400,
-		closeOnEscape: true,
-		draggable: false,
-		resizable: false
-		/*
-		,
-		show: {effect: 'fade' , duration: 1000},
-		show: "slide",
-		hide: "slide"
-		*/
-	})
+	if (!is_browser_supported())
+		unsupported_browser_message.open()
 }

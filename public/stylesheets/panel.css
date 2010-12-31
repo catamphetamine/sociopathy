@@ -11,6 +11,13 @@
  * @github kuchumovn
  */
 
+/* this fix removes the scroll bars in Fire Fox */
+#panel_box_shadow_fixer
+{
+	overflow: hidden;
+	padding-bottom: 2px;
+}
+
 #panel
 {
 	margin: 0;

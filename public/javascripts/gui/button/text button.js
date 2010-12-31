@@ -9,8 +9,23 @@
  * 
  * // align buttons to the center
  * <div class="float_centerer">
- * 		<span id="yes" type="generic" styles="greenish">Yes</span>
- * 		<span id="no" type="generic" styles="reddish">No</span>
+ * 		<!-- cancel button -->
+ *		<span id="join_dialog_cancel_button" class="left" type="minor" styles="generic, minor, caution">
+ *			<span type="icon" icon="cross" width="30" height="30" top_offset="5"></span>
+ *			<span class="translated" label="button 'cancel'"></span>
+ *		</span>
+ *		
+ *		<!-- next button -->			
+ *		<span id="join_dialog_next_button" class="right" type="dark generic" styles="generic">
+ *			<span class="translated" label="button 'next'"></span>
+ *			<span type="icon" icon="right arrows" width="40" height="30" top_offset="7"></span>
+ *		</span>
+ *
+ *		<!-- done button -->
+ *		<span id="join_dialog_done_button" class="right" type="dark generic" styles="generic">
+ *			<span type="icon" icon="check" width="24" height="24" top_offset="8"></span>
+ *			<span class="translated" label="button 'done'"></span>
+ *		</span>
  * 		
  * 		<hr class="float_centerer" />
  * 	</div>
@@ -26,9 +41,7 @@
  *		(
  *			"yes",
  *			{
- *				path: 'images/button',
- *				height: 100,
- *				'side bar size': 10,
+ *				skin: 'aqua',
  *				action: function() { alert('yes') }
  *			}
  *		)
@@ -37,9 +50,7 @@
  *		(
  *			"no",
  *			{
- *				path: 'images/button',
- *				height: 100,
- *				'side bar size': 10,
+ *				skin: 'aqua',
  *				action: function() { alert('no') }
  *			}
  *		)
@@ -71,31 +82,8 @@
  * 		/images/button/generic/right.png
  * (frames (top to bottom): idle, ready, pushed)
  * 
- * create style sheet for 'greenish' and 'reddish' buttons, and include them in your html page
+ * create style sheets for 'generic', 'minor' and 'caution' buttons (see the default examples), and include them in your html page
  * (the order of css file inclusion matters, because the latest css file will overwrite styling of the previous css file)
- * 
- * Advanced usage example:
- * 
- * new text_button('fancy_button', 
- *	{
- *		icon: "cross",
- *		'icon width': 30,
- *		'icon height': 40,
- *		'icon top offset': 7,
- *		'icon spacing': 10,
- *		action: function() { alert('cancel') },
- *		delay: '1x'
- *	})
- *
- *	new text_button('another_fancy_button',
- *	{
- *		icon: "right arrows",
- *		'icon width': 32,
- *		'icon height': 32,
- *		'icon floating': "right",
- *		'icon top offset': 8,
- *		'icon spacing': 10
- *	})
  * 
  * Requires jQuery, MooTools, Button. 
  * 
@@ -113,9 +101,12 @@ var text_button = new Class
 	
 	default_options:
 	{
-		'icon spacing': 10,
-		'icon top offset': 0,
-		'icon floating': 'left'
+		icon:
+		{
+			spacing: 10,
+			'top offset': 0,
+			floating: 'left'
+		}
 	},
 	
 	initialize: function(id_or_element, options)
@@ -125,7 +116,42 @@ var text_button = new Class
 	
 	prepare: function()
 	{
+		// set button styles
 		this.options.styles = this.get_styles()
+		
+		// set button skin
+		this.skin = this.skins[this.options.skin]
+		
+		// set button icon options
+		this.set_icon_options()
+	},
+	
+	set_icon_options: function()
+	{
+		// initialize icon options
+		this.options.icon = this.options.icon || {}
+		
+		// shortcut
+		var icon = this.options.icon
+		
+		var $icon = this.get_icon_element()
+		
+		icon.name = $icon.attr('icon')
+		
+		icon.width = $icon.attr('width')
+		icon.height = $icon.attr('height')
+		
+		icon['top offset'] = $icon.attr('top_offset')
+		
+		if ($icon.prev().length == 0)
+			icon.floating = 'left'
+		else
+			icon.floating = 'right' 
+	},
+	
+	get_icon_element: function()
+	{
+		return $('span[type="icon"]', this.$element)
 	},
 		
 	get_styles: function()
@@ -147,7 +173,7 @@ var text_button = new Class
 	{
 		var $element = this.$element
 		
-		this.options['styles'].each(function(style_name)
+		this.options.styles.each(function(style_name)
 		{
 			$element.addClass(style_name + '_button')			
 		})
@@ -162,8 +188,8 @@ var text_button = new Class
 		({
 			'display': 'block',
 			
-			'min-height': this.options.height + 'px',
-			'max-height': this.options.height + 'px',
+			'min-height': this.skin.height + 'px',
+			'max-height': this.skin.height + 'px',
 
 			'background-position': 'left 0',
 			'background-image': this.get_image_path('left'),
@@ -181,7 +207,7 @@ var text_button = new Class
 			'display': 'block',
 			'float': 'left',
 
-			'padding-left': this.options['side bar size'] + 'px',
+			'padding-left': this.skin['side bar size'] + 'px',
 
 			'-webkit-user-select': 'none',
 			'-moz-user-select': 'none'
@@ -243,7 +269,7 @@ var text_button = new Class
 		$frame.append($content)
 	
 		var $left_part = $(':first', $frame)
-		$left_part.css('background-position', "left -" + this.options.height * (options['image index'] - 1) + "px")
+		$left_part.css('background-position', "left -" + this.skin.height * (options['image index'] - 1) + "px")
 	
 		$frame.css
 		({
@@ -254,11 +280,11 @@ var text_button = new Class
 			'opacity': 0
 		})
 	
-		$frame.css("background-position", "right -" + this.options.height * (options['image index'] - 1) + "px")
+		$frame.css("background-position", "right -" + this.skin.height * (options['image index'] - 1) + "px")
 		$frame.css(this.get_right_part_style())
 		
 		// adjust the icon image
-		$('.button_icon', $content).css('background-position', 'left -' + this.options['icon height'] * (options['image index'] - 1) + 'px')
+		$('.button_icon', $content).css('background-position', 'left -' + this.options.icon.height * (options['image index'] - 1) + 'px')
 
 		// result		
 		this.$element.append($frame)
@@ -273,9 +299,9 @@ var text_button = new Class
 			'background-color': 'transparent',
 			'background-repeat': 'no-repeat',
 				
-			'height': this.options.height + 'px',
+			'height': this.skin.height + 'px',
 			'margin': 0,
-			'padding-right': this.options['side bar size'] + 'px',
+			'padding-right': this.skin['side bar size'] + 'px',
 	
 			'-webkit-user-select': 'none',
 			'-moz-user-select': 'none'
@@ -286,12 +312,12 @@ var text_button = new Class
 	
 	get_image_path: function(image_name)
 	{
-		return "url('" + this.options.path + "/" + this.options["button name"] + "/" + image_name + "." + this.options['image format'] + "')"
+		return "url('" + this.skin.path + "/" + this.options["button type"] + "/" + image_name + "." + this.skin['image format'] + "')"
 	}.protect(),
 	
 	get_icon_path: function(icon_name)
 	{
-		return "url('" + this.options.path + "/icon/" + icon_name + "." + this.options['image format'] + "')"
+		return "url('" + this.skin.path + "/icon/" + icon_name + "." + this.skin['image format'] + "')"
 	}.protect(),
 	
 	add_icon: function($element)
@@ -300,7 +326,7 @@ var text_button = new Class
 		
 		var margin_type
 		
-		if (this.options['icon floating'] == "right")
+		if (this.options.icon.floating == "right")
 			margin_type = "left"
 		else
 			margin_type = "right"
@@ -309,11 +335,11 @@ var text_button = new Class
 		
 		var previous_element_float
 		
-		if (this.options['icon floating'] == "right")
+		if (this.options.icon.floating == "right")
 			previous_element_float = "left"
 		else
 			previous_element_float = "right"
-			
+
 		$(':first', $element).css('float', previous_element_float)
 	
 		// create icon image
@@ -324,29 +350,42 @@ var text_button = new Class
 		({
 			'display': 'block',
 			
-			'width': this.options['icon width'] + 'px',
-			'height': this.options['icon height'] + 'px',
+			'width': this.options.icon.width + 'px',
+			'height': this.options.icon.height + 'px',
 			
-			'margin-top': this.options['icon top offset'] + 'px',
+			'margin-top': this.options.icon['top offset'] + 'px',
 			
 			'background-color': 'transparent',
 			'background-repeat': 'no-repeat',
 			'background-position': 'left top',
-			'background-image': this.get_icon_path(this.options.icon),
+			'background-image': this.get_icon_path(this.options.icon.name),
 		})
 
-		$image.css('margin-' + margin_type, this.options['icon spacing'] + 'px')
+		$image.css('margin-' + margin_type, this.options.icon.spacing + 'px')
 		
 		$image.addClass('button_icon')
 	
 		// create icon element
-		var $icon = $('<span style="display: block; float: ' + this.options['icon floating'] + '"></span>')
-		$icon.append($image)
+		var $icon = this.get_icon_element()
+		$icon.css
+		({
+			display: 'block',
+			'float': this.options.icon.floating
+		})
+		.append($image)
 		
 		// place the icon on the page
-		if (this.options['icon floating'] == "right")
+		if (this.options.icon.floating == "right")
 			$element.append($icon)
 		else
 			$element.prepend($icon)
 	}.protect()
 })
+
+// skinning
+text_button.add_skin = function(name, settings)
+{
+	button.prototype.skins = button.prototype.skins || {}
+	
+	button.prototype.skins[name] = settings
+}

@@ -47,36 +47,49 @@
  * @github kuchumovn
  */
 
-function slider(_)
+function slider(options)
 {
+	var self = this
+	
 	var fade_duration = 400
 	
 	this.index = 1
 	
-	this._ = _
-	this.width = _['width']
-	this.height = _['height']
+	this.options = options
 		
-	this.activate = function()
+	/**
+	 * constructor
+	 */
+	this.initialize = function()
 	{
-		var slideshow = $('#' + _['id'])
-		var slides = slideshow.children()
-		this.count = slides.length
+		this.$element = $('#' + this.options['id'])
+		var $slides = this.$element.children()
+		this.count = $slides.length
 
 		// create the strip
-		slides.wrapAll('<div id="strip" style="width: ' + this.width * this.count + 'px; height: ' + this.height + 'px"></div>')
-		this.strip = $('#strip')
+		
+		$slides.wrapAll('<div></div>')
+		this.$strip = $(':first', this.$element)
+		this.$strip.css
+		({
+			width: this.options.width * this.count + 'px',
+			height: this.options.height + 'px'
+		})
 
 		// size the container
-		slideshow.width(this.width)
-		slideshow.height(this.height)
+		this.$element.width(this.options.width)
+		this.$element.height(this.options.height)
 		
 		// size the slides
-		slides.width(this.width)
-		slides.height(this.height)
+		$slides.width(this.options.width)
+		$slides.height(this.options.height)
 
 		// adjust controls visibility
-		this.hide_or_show_controls({ "no one sees": true })
+		this.hide_or_show_controls({ immediately: true })
+		
+		// set up buttons
+//		if (!this.options.buttons.previous.does())
+//			this.options.buttons.previous.does(this.next(), '1x')
 	}
 	
 	// go to slide
@@ -89,43 +102,64 @@ function slider(_)
 		// set index
 		this.index = index
 		
-		// animate scrolling, refresh buttons
-		this.animate()
+		// perform scrolling, refresh buttons
+		this.scroll()
 		this.hide_or_show_controls()
 	}
 	
 	// next slide
 	this.next = function()
 	{
+		// if we are in the end - push the done button
+		if (this.index == this.count)
+			this.options.buttons.done.push()
+	
+		// go to the next slide	
 		this.go_to(this.index + 1)
 	}
 	
 	// previous slide
 	this.previous = function()
 	{
+		// if we are in the beginning - push the cancel button
+		if (this.index == 1)
+			this.options.buttons.cancel.push()
+	
+		// go to the previous slide	
 		this.go_to(this.index - 1)
 	}
 		
 	// smoothly move the strip using margin-left
-	this.animate = function()
-	{	
-		this.strip.animate
-		({
-			'marginLeft': -this.width * (this.index - 1)
-		})
-	};
+	this.scroll = function()
+	{
+		// the new scrolling property
+		var marginLeft = -this.options.width * (this.index - 1) + 'px'
+		
+		// if no need to animate - just set the new scrolling property
+		if (this.no_animation)
+		{
+			this.$strip.css({ marginLeft: marginLeft })
+			return
+		}
+
+		// else - animate
+		this.$strip.animate({ marginLeft: marginLeft })
+	}
 	
 	// Hides and shows controls depending on current position
-	this.hide_or_show_controls = function(_)
+	this.hide_or_show_controls = function(options)
 	{
+		// options
+		options = options || {}
+		
 		// if no one sees - don't animate
-		if (_ && _["no one sees"]) 
+		if (options.immediately) 
 			this.no_animation = true
 		
 		// if there's only one slide - that's a special case
 		if (this.count < 2)
 			this.singleton()
-		
+
 		// determine whether we are at the beginning, ending or elsewhere
 		if (this.index == 1)
 			this.beginning()
@@ -134,90 +168,115 @@ function slider(_)
 		else
 			this.elsewhere()
 
-		// now someone may see, so animate
-		this.no_animation = false
+		// from now on - animate
+		if (options.immediately) 
+			this.no_animation = false
 	}
 	
 	// if we are at the start
 	this.beginning = function()
 	{
-		this.hide_button("previous button")
-		this.switch_buttons({ from: "done button", to: "next button", delay: 2 })
+		this.hide_button("previous")
+		this.switch_buttons({ from: "done", to: "next" })
 	}
 
 	// if we are in the end				
 	this.ending = function()
 	{
-		this.show_button("previous button")
-		this.switch_buttons({ from: "next button", to: "done button", delay: 2 })
+		this.show_button("previous")
+		this.switch_buttons({ from: "next", to: "done" })
 	}
 	
 	// if we are elsewhere
 	this.elsewhere = function()
 	{
-		this.show_button("previous button")
-		this.switch_buttons({ from: "done button", to: "next button", delay: 2 })
+		this.show_button("previous")
+		this.switch_buttons({ from: "done", to: "next" })
 	}
 	
 	// if there is only one slide		
 	this.singleton = function()
 	{
-		this.hide_button("previous button")
-		this.switch_buttons({ from: "next button", to: "done button", delay: 2 })
+		this.hide_button("previous")
+		this.switch_buttons({ from: "next", to: "done" })
 	}
+	
+	// get button
+	this.get_button = function(name) { return this.options.buttons[name] }
 	
 	// show a button
-	this.show_button = function(name, timing, callback)
+	this.show_button = function(name, callback)
 	{
-		this.show_hide_template(name, function(element) { element.show() }, this._["fader"].fade_in.bind(this._["fader"]), timing, callback)
-	}
-	
-	// hide a button
-	this.hide_button = function(name, timing, callback)
-	{
-		this.show_hide_template(name, function(element) { element.hide() }, this._["fader"].fade_out.bind(this._["fader"]), timing, callback)
-	}
-	
-	// show / hide template
-	this.show_hide_template = function(name, simple_show_hide, animated_show_hide, timing, callback)
-	{
-		// if there is no button to (show / hide) - exit
-		if (!this._[name])
-			return
+		// get the button by name
+		var button = this.get_button(name)
 		
-		// if there is no button fader, or if it's the first time - don't animate, just (show / hide) the button
-		if (!this._["fader"] || this.no_animation)
-		{
-			// just show / hide
-			simple_show_hide(this._[name])
+		// if the button doesn't exist - exit
+		if (!button)
+			return
 			
-			// if there was any callback function - call it
-			if (callback)
-				callback()
-				
+		// executes the call back function
+		var execute_callback = function() { if (callback) callback() }
+		
+		// if no need to animate
+		if (this.no_animation)
+		{
+			// show the button immediately
+			button.show()
+			
+			execute_callback()
+			
 			// exit
 			return
 		}
+
+		// else - animate the button (lock before the animation, and unlock after the animation)
+		button.show_animated(callback)
+	}
+	
+	// hide a button
+	this.hide_button = function(name, callback)
+	{
+		// get the button by name
+		var button = this.get_button(name)
+	
+		// if the button doesn't exist - exit
+		if (!button)
+			return
+		
+		// executes the call back function
+		var execute_callback = function() { if (callback) callback() }
+		
+		// if no need to animate
+		if (this.no_animation)
+		{
+			// show the button immediately
+			button.hide()
 			
-		// fade (in / out)
-		animated_show_hide(this._[name], { duration: timing * fade_duration, callback: callback, hide: true })
-	} 
+			execute_callback()
+			
+			// exit
+			return
+		}
+
+		// else - animate the button (lock before the animation, and unlock after the animation)
+		button.hide_animated(callback)
+	}
 	
 	// hide one button and show the other button
-	this.switch_buttons = function(_)
+	this.switch_buttons = function(options)
 	{
-		// animation delay
-		var delay = safely_get(_.delay, 0)
-		
 		// animate
-		this.hide_button(_.from, delay, $.proxy(function() { this.show_button(_.to, 1) }, this))
+		this.hide_button(options.from, function() { self.show_button(options.to) })
 	}
 	
 	// reset state
 	this.reset = function()
 	{
 		this.index = 1
-		this.strip.css('margin-left', 0)
-		this.hide_or_show_controls({ "no one sees": true })
+		this.$strip.css('margin-left', 0)
+		this.hide_or_show_controls({ immediately: true })
 	}
+	
+	// call the constructor
+	this.initialize()
 }

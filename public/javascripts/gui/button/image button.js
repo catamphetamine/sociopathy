@@ -21,7 +21,7 @@
  *				"button name": "fancy button",
  *				width: 100,
  *				height: 100,	
- *				action: function(button) { alert('button pressed: ' + button); button.let_unlock(); },
+ *				action: function() { alert('action') },
  *				delay: "1x"
  *			}
  *		)
@@ -49,6 +49,8 @@ var image_button = new Class
 	
 	initialize: function(id_or_element, options)
 	{
+		this.options['image format'] = 'png'
+
 		this.parent(id_or_element, options)
 	},
 	
@@ -56,11 +58,11 @@ var image_button = new Class
 	{
 		this.$element.css
 		({
-			"width": this.options.width + "px",
-			"height": this.options.height + "px",
+			width: this.options.width + "px",
+			height: this.options.height + "px",
 				
-			"position": "relative",
-			"display": "block",
+			position: "relative",
+			display: "block",
 			
 			"background-repeat": "no-repeat",
 			"background-color": "transparent",
@@ -88,14 +90,14 @@ var image_button = new Class
 
 		$frame.css
 		({
-			"width": this.options.width + "px",
-			"height": this.options.height + "px",
+			width: this.options.width + "px",
+			height: this.options.height + "px",
 				
-			"position": "absolute",
-			"top": "0",
-			"left": "0",
-			"display": "none",
-			"opacity": "0",
+			position: "absolute",
+			top: 0,
+			left: 0,
+			display: "none",
+			opacity: 0,
 	
 			"background-repeat": "no-repeat",
 			"background-color": "transparent",

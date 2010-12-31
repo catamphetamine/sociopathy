@@ -10,7 +10,7 @@
 		<meta http-equiv="Content-Language" content="ru">
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 
-		<title class="translated" label="title"></title>
+		<title>Члены Собрания</title>
 
 		<!-- less (css preprocessor) -->
 		<script type="text/javascript" src="javascripts/less-1.0.35.min.js"></script>
@@ -156,90 +156,25 @@
 		</header>
 
 		<section>
-			<!-- picture -->
-			<div id="concept"></div>
-	
-			<br/>
-	
-			<!-- Registration button -->
-			<span id="join_button" class="centered"></span>
-	
-			<!-- Registration window -->
-			<div id="join_dialog" class="translated_title" label="page 'welcome', dialog 'join', title">
-
-				<div class="no_word_carrying dialog_window_container">
-					
-					<!-- register form slider -->
-					<form>
-						<div id="join_dialog_slider" class="slider">
-							<!-- 1st slide: name -->
-							<div class="slide">
-								<label for="name" class="translated" label="page 'welcome', dialog 'join', name request"></label>
-								
-								<div style="padding-top: 10px"></div>
-								
-								<input id="join_dialog_name_field" name="name" class="field" type="text"/>
-							</div>
-
-							<!-- 2nd slide: gender -->
-							<div class="slide">
-								<label for="gender" class="translated" label="page 'welcome', dialog 'join', gender request"></label>
-								
-								<div id="join_form_gender_chooser" class="center">
-									<div class="float_centerer">
-										<div style="padding-top: 40px"></div>
-										
-										<div class="clear"></div>
-										<span style="display: block; float: left; margin-right: 40px" name="male" value="male"></span>
-										<span style="display: block; float: left" name="female" value="female"></span>
-									</div>
-								</div>
-								
-								<input id="join_form_gender" name="gender" type="hidden"/>
-							</div>
-	
-							<!-- 3rd slide: origin (country, city, etc) -->
-							<div class="slide">
-								<label for="origin" class="translated" label="page 'welcome', dialog 'join', origin request"></label>
-								
-								<div style="padding-top: 10px"></div>
-								
-								<input name="origin" class="field" type="text"/>
-							</div>
-						</div>
-					</form>
+			<!-- ID card -->
+			<div id="id">
+				<div id="gender"></div>
+				
+				<div>
+					<div id="name"></div>
+					<div id="summary"></div>
+					<div id="photo"></div>
 				</div>
-
-				<!-- dialog window buttons block starts -->
-				<div class="pre_buttons"></div>
-			
-				<!-- dialog window buttons -->
-				<div class="no_word_carrying dialog_container non_selectable dialog_window_buttons">
-					<!-- cancel button -->
-					<span id="join_dialog_cancel_button" class="left" type="minor" styles="generic, minor, caution">
-						<span type="icon" icon="cross" width="30" height="30" top_offset="5"></span>
-						<span class="translated" label="button 'cancel'"></span>
-					</span>
-					
-					<!-- next button -->			
-					<span id="join_dialog_next_button" class="right" type="dark generic" styles="generic">
-						<span class="translated" label="button 'next'"></span>
-						<span type="icon" icon="right arrows" width="40" height="30" top_offset="7"></span>
-					</span>
-
-					<!-- done button -->
-					<span id="join_dialog_done_button" class="right" type="dark generic" styles="generic">
-						<span type="icon" icon="check" width="24" height="24" top_offset="8"></span>
-						<span class="translated" label="button 'done'"></span>
-					</span>
+				
+				<div>
+					<div id="origin"></div>
 				</div>
+				
+				<div id="mood"></div>
+				
+				<div id="small_logo"></div>
 			</div>
 		</section>
-			
-		<!-- registration finished message -->
-		<div id="joined_message" title="Готово" class="">
-			Добро пожаловать в Собрание
-		</div>
 			
 		<!-- AJAX loading window -->
 		<div id="loading_indicator" class="translated_title" label="page, dialog 'loading', title">

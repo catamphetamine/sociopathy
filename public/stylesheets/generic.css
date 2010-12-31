@@ -2,11 +2,19 @@ html, body
 {
 	margin: 0;
 	padding: 0;
-	
-	font-family: Helvetica, Arial, sans-serif;
-	font-size: 26px;
-	line-height: 34px;
+
 	color: #1f1f1f;
+}
+
+html, input
+{
+	font-family: Helvetica, Arial, sans-serif;
+	font-size: 30px;
+}
+
+.text
+{
+	line-height: 50px;
 }
 
 html, #background_stretcher
@@ -55,14 +63,18 @@ a, a:visited, a:hover
 {
 	text-decoration: none;
 
-	color: #004b7b;
-	/* border-bottom: 1px dotted #004b7b; */
+	color: inherit;
+	/*color: #004b7b;*/
+	
+	border-bottom: 1px dotted #004b7b;
 }
 
+/*
 a:visited
 {
 	color: #1f1f1f;
 }
+*/
 
 /*
 a:visited
@@ -115,9 +127,10 @@ div.clear
 
 #unsupported_browser_message
 {
+	/*
 	font-family: serif, Times New Roman;
 	font-size: 33px;
-	line-height: 40px; 
+	*/
 }
 
 /* input field */
@@ -140,13 +153,6 @@ input.field
 	border-right-color: #bfbfbf;
 	border-bottom-color: #cfcfcf;
 	
-	/*
-	border-color: #dfdfdf;
-	border-left-color: #e7e7e7;
-	border-right-color: #e7e7e7;
-	border-bottom-color: #efefef;
-	*/
-	
 	border-width: 2px;
 	border-style: solid;
 	
@@ -154,49 +160,21 @@ input.field
 	background-image: url('../images/input field/background.png');
 	background-repeat: repeat-x;
 	background-position: top;
+
+	-webkit-border-radius: 5px; 
+	-moz-border-radius: 5px; 
+	border-radius: 5px;
 }
 
-/*
-input.field:hover
+input.field:focus
 {
-	border-top-color: #efefef;
-	border-left-color: #f7f7f7;
-	border-right-color: #f7f7f7;
-	border-bottom-color: #ffffff;
+	/*
+	-webkit-box-shadow: 0 0 10px rgba(0, 150, 255, 1.0);
+	-moz-box-shadow: 0 0 10px rgba(0, 150, 255, 1.0);
+	-o-box-shadow: 0 0 10px rgba(0, 150, 255, 1.0);
+	box-shadow: 0 0 10px rgba(0, 150, 255, 1.0);
+	*/
 }
-
-input.field:focus 
-{
-	border-top-color: #afafaf;
-	border-left-color: #bfbfbf;
-	border-right-color: #bfbfbf;
-	border-bottom-color: #cfcfcf;
-}
-*/
-
-/* input field with error */
-
-/*
-input.field_error
-{
-	border-top-color: #cf0000;
-	border-left-color: #d70000;
-	border-right-color: #d70000;
-	border-bottom-color: #df0000;
-	
-	background-image: url('../images/input field/error background.png');
-}
-
-input.field_error:hover
-{
-	border-top-color: #df0000;
-	border-left-color: #e70000;
-	border-right-color: #e70000;
-	border-bottom-color: #efefef;
-
-	background-image: url('../images/input field/error background.png');
-}
-*/
 
 label.error
 {

@@ -1,44 +1,129 @@
-/***** jtDialogBox - BEGIN REQUIRED *********************************/
-DIV.jtDialogBox {
-	position: absolute;
+/**
+ * Dialog Window script styling
+ * 
+ * Copyright (c) 2010 Nikolay Kuchumov
+ * Licensed under MIT (http://en.wikipedia.org/wiki/MIT_License)
+ * 
+ * @author Kuchumov Nikolay
+ * @email kuchumovn@gmail.com
+ * @github kuchumovn
+ */
+ 
+.dialog_window
+{
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;				
+	border-radius: 10px;				
+
+	border-bottom-left-radius: 0;
+	-moz-border-radius-bottomleft: 0;
+
+	border-bottom-right-radius: 0;
+	-moz-border-radius-bottomright: 0;
+	
+	background-image: url('../images/window/top bar.png');
+	background-repeat: repeat-x;
+
+	border: 1px solid #a7a7a7;
+	border-top: 0;
+
+	-webkit-box-shadow: 0px 16px 100px rgba(0,0,0,0.1), 0px 16px 80px rgba(0,0,0,0.1), 0px 16px 60px rgba(0,0,0,0.1), 0px 16px 40px rgba(0,0,0,0.1), 0px 16px 30px rgba(0,0,0,0.1), 0px 16px 20px rgba(0,0,0,0.1);
+	-moz-box-shadow: 0px 16px 100px rgba(0,0,0,0.1), 0px 16px 80px rgba(0,0,0,0.1), 0px 16px 60px rgba(0,0,0,0.1), 0px 16px 40px rgba(0,0,0,0.1), 0px 16px 30px rgba(0,0,0,0.1), 0px 16px 20px rgba(0,0,0,0.1);
+	-o-box-shadow: 0px 16px 100px rgba(0,0,0,0.1), 0px 16px 80px rgba(0,0,0,0.1), 0px 16px 60px rgba(0,0,0,0.1), 0px 16px 40px rgba(0,0,0,0.1), 0px 16px 30px rgba(0,0,0,0.1), 0px 16px 20px rgba(0,0,0,0.1);
+	box-shadow: 0px 16px 100px rgba(0,0,0,0.1), 0px 16px 80px rgba(0,0,0,0.1), 0px 16px 60px rgba(0,0,0,0.1), 0px 16px 40px rgba(0,0,0,0.1), 0px 16px 30px rgba(0,0,0,0.1), 0px 16px 20px rgba(0,0,0,0.1);
+}
+
+.dialog_window_top_bar
+{
+	height: 46px;
+	
+	padding-top: 4px;
+
+	padding-left: 30px;
+	padding-right: 30px;
+	
+	font-family: Tahoma;
+	font-size: 30px;
+	line-height: normal;
+	
+	color: #2f2f2f;
+	text-shadow: 0px 1px 0px #dfdfdf;
+	
+	text-align: center;
+}
+
+.dialog_window_content
+{
+	background-color: #efefef;
+	background: -webkit-gradient(linear, 0 50%, 0 100%, from(#efefef), to(#ededed));
+	background-image: -moz-linear-gradient(top, #efefef, #ededed);
+	
+	padding: 40px;
+}
+
+/*
+.dialog_window_content, .dialog_window_content input
+{
+	font-family: Arial;
+	font-size: 30px;
+}
+*/
+
+div.pre_buttons
+{
+	height: 2px;
+
+	background-image: url('../images/window/pre buttons.png'); 
+	background-repeat: repeat-x;  
+}
+
+.dialog_window_content
+{
+	margin: 0;
+	padding: 0;
+}
+
+.dialog_window_container
+{
+	background-color: #ededed;
+	background: -webkit-gradient(linear, 0 50%, 0 100%, from(#efefef), to(#ededed));
+	background-image: -moz-linear-gradient(top, #efefef, #ededed);
+
+	border: 0;
+	
+	padding: 40px;	
+}
+
+.dialog_window_buttons
+{
+	background: #E5E5E5; /* old browsers */
+	background: -moz-linear-gradient(top, #E5E5E5 0%, #D8D8D8 36%, #CCCCCC 58%, #A8A8A8 100%); /* firefox */
+	
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#E5E5E5), color-stop(36%,#D8D8D8), color-stop(58%,#CCCCCC), color-stop(100%,#A8A8A8)); /* webkit */
+	
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#E5E5E5', endColorstr='#A8A8A8',GradientType=0 ); /* ie */
+
+	padding: 20px;	
+}
+
+.dialog_window_buttons:after
+{
+	content: ""; 
+	display: block; 
+	height: 0; 
+	clear: both;
+}
+
+/*
+div.ui-dialog div.jquery_ui_dialog, div.jquery_ui_dialog
+{
+	padding: 0;
+	border: 0;
 	display: none;
-	}
-DIV.jtDialogBox .tbLeft {
-	background: url(dialogTL.gif) no-repeat left top;
-	width: 10px;
-	}
-DIV.jtDialogBox .tbRight {
-	background: url(dialogTR.gif) no-repeat right top;
-	width: 16px;
-	padding: 8px 4px 3px 0;
-	vertical-align: top;
-	}
-DIV.jtDialogBox .Title {
-	background: url(dialogTM.gif) top;
-	background-color: #a9a9a9;
-	font-size: 10pt;
-	font-weight: bold;
-	white-space: nowrap;
-	color: #000000;
-	padding: 4px 0px 2px 0px;
-	cursor:move;
-	}
-/***** jtDialogBox - END REQUIRED *********************************/
+}
+*/
 
-
-/***** jtDialogBox - BEGIN SUGGESTED *********************************/
-DIV.jtDialogBox {
-	border-top	 : 1px solid #EDEDED;
-	border-right : 1px solid #ABABAB;
-	border-bottom: 1px solid #ABABAB;
-	border-left	: 1px solid #EDEDED;
-	}
-DIV.jtDialogBox .MainPanel {
-	border-top	 : 1px solid #898989;
-	border-right : 1px solid #4E4E4E;
-	border-bottom: 1px solid #4E4E4E;
-	border-left	: 1px solid #898989;
-	background-color: #ffffff;
-	}
-DIV.jtDialogBox .MainPanel .ContentArea {margin: 16px;}
-/***** jtDialogBox - END SUGGESTED *********************************/
+.dialog_window_veil
+{
+	background-color: rgba(0, 0, 0, 0.5)
+}

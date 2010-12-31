@@ -39,25 +39,18 @@ var loading_indicator = new (function()
 	this.initialize = function()
 	{
 		// create the pop up window
-		loading_indicator = $("#loading_indicator").dialog
-		({
-			modal: true,
-			autoOpen: false,
-			closeOnEscape: false,
-			draggable: false,
-			resizable: false
-		})
+		loading_indicator = $("#loading_indicator").dialog_window()
 	}
 	
 	this.show = function()
 	{
 		refresh_loading_indicator()
-		loading_indicator.dialog('open')
+		loading_indicator.open()
 	}
 	
 	this.hide = function()
 	{
-		loading_indicator.dialog('close')
+		loading_indicator.close()
 	}
 	
 	function refresh_loading_indicator()

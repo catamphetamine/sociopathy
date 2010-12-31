@@ -1,5 +1,25 @@
 // jQuery customization
 
+// finding external links
+
+(function($) 
+{
+	$.extend($.expr[':'], 
+	{
+	    external: function(element) 
+		{
+	        return element.hostname !== window.location.hostname && element.hostname
+	    }
+	})
+	
+	/*
+	$.fn.external = function() 
+	{
+	    return this.filter(':external')
+	}
+	*/
+}(this.jQuery))
+
 // function binding
 $.bind = function(scope, fn /*, variadic arguments to curry */)
 {
@@ -9,6 +29,11 @@ $.bind = function(scope, fn /*, variadic arguments to curry */)
 	{
 		return fn.apply(scope, args.concat($.makeArray(arguments)))
 	}
+}
+
+$.fn.belongs_to = function(parent)
+{
+    return (this.parents(parent).length > 0)
 }
 
 // get jQuery element
@@ -136,4 +161,21 @@ function get_function(variable)
 {
 	if (typeof variable == "function")
 		return variable
+}
+
+// remove an element from array
+
+Array.prototype.remove = function(element) 
+{
+	var i = 0
+    while (i < this.length) 
+	{
+        if (this[i] === element) 
+		{
+            this.splice(i, 1)
+            return
+        }
+		
+		i++
+    }
 }

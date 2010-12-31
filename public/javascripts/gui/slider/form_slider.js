@@ -29,10 +29,12 @@
  *			id: "the_slider",
  *			width: 560,
  *			height: 263,
- *			"previous button": $("#previous"),
- *			"next button": $("#next"),
- *			"done button": $("#done"),
- *			fader: button_fader, // if you have it included
+ *			buttons:
+ *			{
+ *				previous: new text_button('previous'),
+ *				next: new text_button('next'),
+ *				done: new text_button('done')
+ *			},
  *			fields:
  *			{
  *				song:
@@ -45,10 +47,10 @@
  *					// this control must have a reset() function - that's the purpose of passing it here as an argument
  *				}
  *			}
- *		});
+ *		})
  *
- *		the_slider.activate();
- *	});
+ *		the_slider.activate()
+ *	})
  *
  * Requires the original Slider
  * 
@@ -62,27 +64,39 @@
  * @github kuchumovn
  */
 
-function form_slider(_) 
+function form_slider(options) 
 {
-	this.slider = new slider(_)
-	
-	this.activate = function()
+	/**
+	 * constructor
+	 */
+	this.initialize = function()
 	{
-		this.slider.activate()
-		this.parse_fields(_)
+		this.slider = new slider(options)
+		this.parse_fields(options)
+		
+		var self = this
+		
+		this.slider.$element.keydown(function(event) 
+		{
+			// if Enter key pressed
+			if (event.keyCode == key_code.enter) 
+			{
+				self.next()
+			}
+		})
 	}
 	
 	// determine which form fields do the slides contain
-	this.parse_fields = function(_)
+	this.parse_fields = function(options)
 	{
 		// the data fields
 		this.fields = []
 				
-		var form_slider = this;
+		var self = this
 		
 		// for all the slides
 		var slide_index = 1
-		$("#" + _["id"] + " .slide").each(function() 
+		$("#" + options.id + " .slide").each(function() 
 		{
 			var slide = $(this);
 			
@@ -90,12 +104,12 @@ function form_slider(_)
 			$("input[name]", slide).each(function() 
 			{
 				var form_field = new field($(this))
-				form_slider.fields.push(form_field)
+				self.fields.push(form_field)
 	
 				form_field.label = $("label[for='" + form_field.name + "']", slide)
 				form_field.slide_index = slide_index
 				
-				apply_options(form_field, _)
+				apply_options(form_field, options)
 			})
 			
 			// slide No counter (1, 2, ...)
@@ -104,23 +118,23 @@ function form_slider(_)
 	}
 
 	// apply specific options to a field, if there are any
-	function apply_options(field, _)
+	function apply_options(field, options)
 	{
 		// if there are no combined field options - exit
-		if (!_["fields"])
+		if (!options.fields)
 			return
 
 		// this field options, passed upon form slider creation
-		var field_options = _["fields"][field.name];
+		var field_options = options.fields[field.name]
 		
 		// if there are no this field options - exit
 		if (!field_options)
 			return
 		
 		// specific control, which controls the value of this field
-		field.control = field_options['control']
+		field.control = field_options.control
 		// any validator can be passed for this field
-		field.validate = field_options['validate']
+		field.validate = field_options.validate
 	}
 	
 	// go to the next slide
@@ -167,11 +181,11 @@ function form_slider(_)
 		// the result will be placed here
 		var current_field
 		
-		$.each(this.fields, function()
+		this.fields.each(function(field)
 		{
 			// search the slide by it's index (1, 2, ...)
-			if (this.slide_index == slider.index)
-				current_field = this
+			if (field.slide_index == slider.index)
+				current_field = field
 		})
 		
 		// result
@@ -185,9 +199,9 @@ function form_slider(_)
 		this.slider.reset()
 		
 		// reset each field
-		$.each(this.fields, function()
+		this.fields.each(function(field)
 		{
-			this.reset()
+			field.reset()
 		})
 	}
 	
@@ -221,7 +235,7 @@ function form_slider(_)
 		{
 			// if there is any custom fancy control, controlling this field value - reset this control too
 			if (this.control)
-				$.bind(this.control, this.control.reset)()
+				this.control.reset.bind(this.control)()
 
 			// set empty value
 			this.element.val('')
@@ -260,7 +274,7 @@ function form_slider(_)
 				   wrapLength: "auto",
 				   styles: ['error'],
 				   hover: false,
-				   on_appear: this.label.glow,
+				   'on appear': this.label.glow,
 				   "indention style name": "glowable"
 				})
 				
@@ -284,4 +298,7 @@ function form_slider(_)
 			this.element.focus()
 		}
 	}
+	
+	// call the constructor
+	this.initialize()
 }

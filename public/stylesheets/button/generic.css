@@ -33,11 +33,10 @@
 
 .generic_button .button_contents, .generic_button_ready .button_contents, .generic_button_pushed .button_contents
 {
-	line-height: normal
-	line-height: 51px;	
-	
 	font-family: Tahoma;
 	font-size: 28px;
+	line-height: normal;
+	
 	color: #4f4f4f;
 }
 

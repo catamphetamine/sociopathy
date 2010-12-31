@@ -5,18 +5,70 @@ $.i18n.setLocale("ru")
 
 //$.ajaxError(show_error_message)
 
-// dialog windows
+// dimensions
 
-function open_window(window)
+function get_page_height()
 {
-	// open the dialog window
-	window.dialog('open')
+	return $(document).height();
 }
 
-function close_window(window)
+function get_page_width()
 {
-	// close the dialog window
-	window.dialog('close')
+	return $(document).width();
+}
 	
-	window.reset()
+function get_viewport_height()
+{
+	return $(window).height();
+}
+
+function get_viewport_width()
+{
+	return $(window).width();
+}
+
+function get_scroll_x() 
+{
+	if (document.documentElement && document.documentElement.scrollLeft)
+		return document.documentElement.scrollLeft
+		
+	if (document.body && document.body.scrollLeft)
+		return document.body.scrollLeft
+		
+	if (window.pageXOffset)
+		return window.pageXOffset
+		
+	if (window.scrollX)
+		return window.scrollX
+		
+	return 0
+}
+
+function get_scroll_y() 
+{
+	if (document.documentElement && document.documentElement.scrollTop)
+		return document.documentElement.scrollTop
+		
+	if (document.body && document.body.scrollTop)
+		return document.body.scrollTop
+		
+	if (window.pageYOffset)
+		return window.pageYOffset
+		
+	if (window.scrollY)
+		return window.scrollY
+		
+	return 0
+}
+
+var opaque = 1
+var transparent = 0
+
+// key codes
+
+var key_code = 
+{
+	escape: 27,
+	tabulation: 9,
+	enter: 13
 }

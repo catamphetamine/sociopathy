@@ -1,0 +1,179 @@
+/**
+ * Welcome page initialization
+ */
+
+var join_dialog
+var gender_chooser
+var joined_message
+var join_form_slider
+
+var join_dialog_cancel_button
+var join_dialog_next_button
+var join_dialog_done_button
+
+// activate join button
+function initialize_join_button()
+{
+	button.physics.classic(new image_button
+	(
+		"join_button", 
+		{
+			path: "images/page/welcome",
+			"button name": "join button",
+			width: 345,
+			height: 59,
+			action: function(button) { join_dialog.open() }
+		}
+	))
+}
+
+// create join dialog
+function initialize_join_dialog()
+{
+	join_dialog = $("#join_dialog").dialog_window
+	({
+		width: 720,
+		'close on escape': true
+	})
+	
+	join_dialog.register_controls
+	(
+		join_dialog_cancel_button,
+		join_dialog_next_button,
+		join_dialog_done_button, 
+		join_form_slider
+	)
+}
+
+// create join dialog buttons
+function initialize_join_dialog_buttons()
+{
+	join_dialog_cancel_button = activate_button('join_dialog_cancel_button', { 'prevent double submission': true })
+	.does(function() { join_dialog.close() })
+	
+	join_dialog_next_button = activate_button('join_dialog_next_button')
+	.does(function() { join_form_slider.next() })
+	
+	join_dialog_done_button = activate_button('join_dialog_done_button', { 'prevent double submission': true })
+	.does(function() { join_submission(join_form_slider.data()) })
+}
+
+// create join dialog slider
+function initialize_join_form_slider()
+{
+	join_form_slider = new form_slider
+	({
+		id: "join_dialog_slider",
+		width: 640,
+		height: 200,
+		buttons:
+		{
+			next: join_dialog_next_button,
+			done: join_dialog_done_button
+		},
+		fields:
+		{
+			name:
+			{
+				validate: function(name) { if (name.length == 0) throw new custom_error($._("page 'welcome', dialog 'join', error, name, empty")) }
+			},
+			gender:
+			{
+				control: gender_chooser,
+			}
+		}
+	})
+}
+
+// create gender chooser
+function initialize_gender_chooser()
+{
+	gender_chooser = new image_chooser
+	(
+		"join_form_gender_chooser",
+		{
+			path: "images/page/welcome/dialog/join/gender",
+			width: 64,
+			height: 64,
+			target: "join_form_gender"
+		}
+	)
+}
+
+// create joined message dialog
+function initialize_joined_message()
+{
+	joined_message = $("#joined_message").dialog_window()
+}
+
+function activate_buttons()
+{
+	return Array.prototype.slice.call(arguments).map(function(options)
+	{
+		return activate_button(options)
+	})
+}
+
+function activate_button(id, options)
+{
+	var element = $('#' + id)
+
+	options = options || {}
+	options.id = id
+
+	return button.physics.classic(new text_button
+	(
+		element,
+		Object.append
+		(
+			{
+				skin: 'sociopathy',
+				
+				// miscellaneous
+				'button type':  element.attr('type'), // || 'generic',
+			},
+			options
+		)
+	))
+}
+
+function initialize_page()
+{
+	initialize_join_button()
+
+	initialize_join_dialog_buttons()
+	initialize_gender_chooser()
+	initialize_join_form_slider()
+	initialize_join_dialog()
+
+	initialize_joined_message()
+}
+
+//	$("#input_field").Watermark('text', $("#field_watermark").css("color"))			
+
+// actions
+
+// submit join request
+function join_submission(data)
+{
+	loading_indicator.show()
+	setTimeout(function() {loading_indicator.hide(); join_dialog.close(); alert("Здесь будет отсылаться PUT AJAX-запрос с данными:\n\n" + info(data));}, 3000)
+	return
+	
+	// ajax PUT
+	$.ajax
+	({
+		url: '/join', 
+		type: 'PUT',
+		data: data, 
+		success: function(json, textStatus)
+		{
+			joined_message.dialog('open')
+		},
+		error: function(json, textStatus)
+		{
+			alert("error " + textStatus)
+		},
+		dataType: 'json'
+	})
+}
