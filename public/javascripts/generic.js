@@ -61,14 +61,6 @@ function get_scroll_y()
 	return 0
 }
 
+// fading opacity values
 var opaque = 1
 var transparent = 0
-
-// key codes
-
-var key_code = 
-{
-	escape: 27,
-	tabulation: 9,
-	enter: 13
-}

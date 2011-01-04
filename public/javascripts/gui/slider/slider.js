@@ -24,8 +24,6 @@
  *		var the_slider = new slider
  *		({
  *			id: "the_slider",
- *			width: 560,
- *			height: 263,
  *			"previous button": $("#previous"),
  *			"next button": $("#next"),
  *			"done button": $("#done"),
@@ -35,6 +33,14 @@
  *		the_slider.activate();
  *	});
  *
+ * In Css:
+ * 
+ * #the_slider
+ * {
+ *			width: 560px;
+ *			height: 263px;
+ * }
+ * 
  * The stylesheet is included ('slider.css')
  * 
  * Requires jQuery. 
@@ -65,6 +71,11 @@ function slider(options)
 		this.$element = $('#' + this.options['id'])
 		var $slides = this.$element.children()
 		this.count = $slides.length
+		
+		// get dimensions
+		
+		this.options.width = this.$element.width()
+		this.options.height = this.$element.height()
 
 		// create the strip
 		
@@ -134,7 +145,7 @@ function slider(options)
 	{
 		// the new scrolling property
 		var marginLeft = -this.options.width * (this.index - 1) + 'px'
-		
+
 		// if no need to animate - just set the new scrolling property
 		if (this.no_animation)
 		{

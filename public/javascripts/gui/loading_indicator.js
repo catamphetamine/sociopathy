@@ -63,7 +63,8 @@ var loading_indicator = new (function()
 	
 	function choose_loading_indicator()
 	{
-		return loading_indicators[Math.floor(Math.random() * loading_indicators.length)]
+		return loading_indicators[Number.random(0, loading_indicators.length - 1)]
+//		return loading_indicators[Math.floor(Math.random() * loading_indicators.length)]
 	}
 })()
 

@@ -202,9 +202,12 @@
 			// also longer/wider) will be fully visible.
 			if (self.options.cssSettings.canExpandToFullWidth) 
 			{
-				$(this).css('width', self.$element.$parent.width() + 'px');
-			}
+//				$(this).css('width', self.$element.$parent.width() + 'px');
 
+				$(this).css('width', 0)
+				$(this).css('width', 'auto')
+			}
+			
 			// Hide default text
 			self.title
 				.stop().animate(self.hidden_style, animation_duration, easing);
@@ -266,7 +269,7 @@
 		cssSettings: {
 			canExpandToFullWidth: true
 		}
-	};
+	}
 	
 	// for multiple labels
 	$.fn.label_slider = function(options)

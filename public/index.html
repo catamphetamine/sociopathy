@@ -115,9 +115,60 @@
 				background-repeat: no-repeat;
 			}
 
+			#join_dialog
+			{
+				width: 890px;
+			}
+			
+			#join_dialog_slider
+			{
+				width: 790px;
+				height: 200px;
+			}
+
 			#join_dialog input
 			{
 				width: 614px;
+			}
+			
+			#guy_fawkes_mask
+			{
+				float: left;
+				
+				width: 128px;
+				
+				min-width: 128px;
+				min-height: 128px;
+				
+				padding-right: 20px;
+				
+				background-image: url('images/page/welcome/dialog/join/Guy Fawkes mask.png');
+				background-repeat: no-repeat;
+			}
+			
+			#join_dialog_name_form
+			{
+				padding-top: 10px;
+			}
+			
+			#earth_icon
+			{
+				float: left;
+				
+				width: 128px;
+				
+				min-width: 128px;
+				min-height: 128px;
+				
+				padding-right: 20px;
+				
+				background-image: url('images/page/welcome/dialog/join/earth.png');
+				background-repeat: no-repeat;
+			}
+			
+			#join_dialog_origin_form
+			{
+				padding-top: 5px;
 			}
 		</style>
 			
@@ -165,20 +216,24 @@
 			<span id="join_button" class="centered"></span>
 	
 			<!-- Registration window -->
-			<div id="join_dialog" class="translated_title" label="page 'welcome', dialog 'join', title">
+			<div id="join_dialog" set_width="true" class="translated_title" label="page 'welcome', dialog 'join', title">
 
 				<div class="no_word_carrying dialog_window_container">
 					
 					<!-- register form slider -->
 					<form>
 						<div id="join_dialog_slider" class="slider">
+			
 							<!-- 1st slide: name -->
 							<div class="slide">
-								<label for="name" class="translated" label="page 'welcome', dialog 'join', name request"></label>
-								
-								<div style="padding-top: 10px"></div>
-								
-								<input id="join_dialog_name_field" name="name" class="field" type="text"/>
+								<div id="guy_fawkes_mask"></div>
+								<div id="join_dialog_name_form">
+									<label for="name" class="translated" label="page 'welcome', dialog 'join', name request"></label>
+									
+									<div style="padding-top: 10px"></div>
+									
+									<input id="join_dialog_name_field" name="name" class="field" type="text"/>
+								</div>
 							</div>
 
 							<!-- 2nd slide: gender -->
@@ -200,11 +255,14 @@
 	
 							<!-- 3rd slide: origin (country, city, etc) -->
 							<div class="slide">
-								<label for="origin" class="translated" label="page 'welcome', dialog 'join', origin request"></label>
-								
-								<div style="padding-top: 10px"></div>
-								
-								<input name="origin" class="field" type="text"/>
+								<div id="earth_icon"></div>
+								<div id="join_dialog_origin_form">
+									<label for="origin" class="translated" label="page 'welcome', dialog 'join', origin request"></label>
+									
+									<div style="padding-top: 10px"></div>
+									
+									<input name="origin" class="field" type="text"/>
+								</div>
 							</div>
 						</div>
 					</form>

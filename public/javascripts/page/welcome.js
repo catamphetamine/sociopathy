@@ -32,7 +32,6 @@ function initialize_join_dialog()
 {
 	join_dialog = $("#join_dialog").dialog_window
 	({
-		width: 720,
 		'close on escape': true
 	})
 	
@@ -64,8 +63,6 @@ function initialize_join_form_slider()
 	join_form_slider = new form_slider
 	({
 		id: "join_dialog_slider",
-		width: 640,
-		height: 200,
 		buttons:
 		{
 			next: join_dialog_next_button,

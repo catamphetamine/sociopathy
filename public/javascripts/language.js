@@ -20,8 +20,9 @@
 	*/
 }(this.jQuery))
 
+/*
 // function binding
-$.bind = function(scope, fn /*, variadic arguments to curry */)
+$.bind = function(scope, fn)// , variadic arguments to curry )
 {
 	var args = Array.prototype.slice.call(arguments, 2)
 
@@ -30,6 +31,7 @@ $.bind = function(scope, fn /*, variadic arguments to curry */)
 		return fn.apply(scope, args.concat($.makeArray(arguments)))
 	}
 }
+*/
 
 $.fn.belongs_to = function(parent)
 {
@@ -66,11 +68,6 @@ String.prototype.count_occurences = function(substring)
     return (this.length - this.replace(new RegExp(substring, "g"), '').length) / substring.length
 }
 
-String.prototype.trim = function()
-{
-	return this.replace(/^[\s\xA0]+/, "").replace(/[\s\xA0]+$/, "")
-}
-
 String.prototype.underscore = function()
 {
 	return this.replace(/[\s]+/, "_")
@@ -84,6 +81,13 @@ String.prototype.starts_with = function(substring)
 String.prototype.ends_with = function(substring) 
 {
 	return (this.match(substring + "$") == substring)
+}
+
+// HTML escaping
+
+String.prototype.escape_html = function() 
+{
+	return this.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
 }
 
 // OOP
@@ -110,13 +114,6 @@ function extend(child, parent)
 function debug(message)
 {
 	alert(message)
-}
-
-// HTML escaping
-
-String.prototype.escape_html = function() 
-{
-	return this.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
 }
 
 // error
@@ -161,21 +158,4 @@ function get_function(variable)
 {
 	if (typeof variable == "function")
 		return variable
-}
-
-// remove an element from array
-
-Array.prototype.remove = function(element) 
-{
-	var i = 0
-    while (i < this.length) 
-	{
-        if (this[i] === element) 
-		{
-            this.splice(i, 1)
-            return
-        }
-		
-		i++
-    }
 }

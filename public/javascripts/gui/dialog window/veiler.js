@@ -13,8 +13,6 @@
 
 var veiler = new (function()
 {
-	var escape_key_code = 27
-	
 	var namespace = "veiler" 
 
 	// veil collection
@@ -120,7 +118,7 @@ var veiler = new (function()
 			// prevent use of anchors and inputs
 			// we use a setTimeout in case the overlay is created from an
 			// event that we're going to be cancelling
-//			setTimeout(this.start_underneath_event_muting.bind(this), 1)
+//			this.start_underneath_event_muting.delay(1, this)
 			
 			// allow closing current dialog window by pressing the escape key
 			this.allow_closing_on_escape()
@@ -143,7 +141,7 @@ var veiler = new (function()
 			'keydown.' +namespace, 
 			function(event)
 			{
-				if (!event.keyCode || event.keyCode !== escape_key_code)
+				if (!event.keyCode || event.keyCode !== Event.Keys.esc)
 					return 
 				
 				var dialog_window = z_indexer.get_top_dialog_window()
@@ -162,7 +160,7 @@ var veiler = new (function()
 	 */
 	this.unregister = function($veil)
 	{
-		$veils.remove($veil)
+		$veils.erase($veil)
 
 		if (no_veils())
 			this.unbind()

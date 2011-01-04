@@ -44,7 +44,7 @@ var z_indexer = new (function()
 	 */
 	this.unregister = function(dialog_window)
 	{
-		dialog_windows.remove(dialog_window)
+		dialog_windows.erase(dialog_window)
 		this.refresh_top_z()
 	}
 	

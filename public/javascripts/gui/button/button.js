@@ -39,9 +39,13 @@ var button = new Class
 	{
 		'auto unlock': true,
 		'prevent double submission': false,
+
+		'idle frame fade in duration': 500,
+		'idle frame fade out duration': 500,
 		
 		'ready frame fade in duration': 500,
 		'ready frame fade out duration': 500,
+		
 		'pushed frame fade in duration': 200,
 		'pushed frame fade out duration': 200,
 	},
@@ -116,8 +120,8 @@ var button = new Class
 		this.$element.bind('mouseenter.' + this.namespace, function() 
 		{
 			self.is_rolled_over = true
-			
-			// if is locked - exit
+		
+			// if is locked - exself.locks.erase(this)it
 			if (self.is_locked())
 				return false
 			
@@ -134,7 +138,7 @@ var button = new Class
 				
 			self.on_roll_out()
 		})
-		
+
 		this.$element.bind('click.' + this.namespace, function() 
 		{
 			// if is locked - exit
@@ -143,7 +147,7 @@ var button = new Class
 		
 			self.pushing.lock()
 	
-			// *after the button is pushed - executes the callback
+			// *after the button is pushed - executes the after pushed actions
 			self.on_push(function() 
 			{
 				self.execute_action()
@@ -181,12 +185,12 @@ var button = new Class
 	lock: function()
 	{
 		var self = this
-		
+	
 		var lock = new (function()
 		{
 			this.unlock = function()
 			{
-				self.locks.remove(this)
+				self.locks.erase(this)
 				
 				if (self.is_rolled_over)
 					self.$element.trigger('mouseenter.' + self.namespace)
@@ -263,15 +267,14 @@ var button = new Class
 		this.fade_out('ready')
 	},
 	
-	on_push: function(callback) 
+	on_push: function(after_pushed_actions) 
 	{
 		var self = this
 		this.fade_in('pushed', function() 
 		{ 
 			self.on_roll_out()
 			
-			if (callback)
-				callback()
+			after_pushed_actions()
 				
 			self.fade_out('pushed', self.handle_unlock_after_pushed.bind(self))
 		})

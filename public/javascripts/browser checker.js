@@ -47,7 +47,18 @@ var browser_engine_detector = new (function()
 // if this browser is not supported - set the flag on
 function is_browser_supported()
 {
-	return browser_engine_detector.is_web_kit() || browser_engine_detector.is_gecko()
+	var is_supported = true
+		&& !Browser.ie
+		&& !Browser.opera
+		&& 
+		(
+			(Browser.firefox && !Browser.firefox2)
+			|| browser_engine_detector.is_web_kit()
+		)
+	
+	return is_supported
+	
+//	return browser_engine_detector.is_web_kit() || browser_engine_detector.is_gecko()
 }
 
 // check for proper web browser

@@ -83,17 +83,18 @@ var image_chooser = function(id_or_element, options)
 	// initialize each choosable image
 	choises.each(function(index) 
 	{
+		var $this = $(this)
+		
 		// initialize choosable image
 		var choise_option = new choosable_image
 		(
 			// choise
-			$(this),
+			$this,
 			// options
 			$.extend
 			(
 				{
-					'button name': $(this).attr("name"),
-					'auto unlock': true,
+					'button name': $this.attr("name"),
 					action: self.choose
 				},
 				options
@@ -155,7 +156,7 @@ var choosable_image = new Class
 		this.parent()
 	},
 	
-	on_push: function()
+	on_push: function(after_pushed_actions)
 	{
 		// if some option is currently chosen
 		if (this.chooser.choise != null)
@@ -167,6 +168,8 @@ var choosable_image = new Class
 				this.chooser.choise.unselect()
 				
 		this.select()
+		
+		after_pushed_actions()
 	},
 	
 	select: function()
@@ -178,7 +181,7 @@ var choosable_image = new Class
 	
 	unselect: function()
 	{
-		this.fade_out('pushed', $.bind(this, this.handle_unlock_after_pushed))
+		this.fade_out('pushed', this.handle_unlock_after_pushed.bind(this))
 		this.chooser.choise = null
 	}
  })

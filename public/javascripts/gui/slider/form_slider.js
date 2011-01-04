@@ -79,7 +79,7 @@ function form_slider(options)
 		this.slider.$element.keydown(function(event) 
 		{
 			// if Enter key pressed
-			if (event.keyCode == key_code.enter) 
+			if (event.keyCode == Event.Keys.enter) 
 			{
 				self.next()
 			}

@@ -1,6 +1,22 @@
 /**
  * Dialog Window class
  * 
+ * Usage:
+ * 
+ * In Html:
+ * 
+ * <div id="the_dialog_window" title="Hello">Greetings</div>
+ * 
+ * In javascript:
+ * 
+ * $("#the_dialog_window").dialog_window
+ * ({
+ * 		'close on escape': true
+ * })
+ * .open()
+ * 
+ * The stylesheet ("dialog window.css") is included.
+ * 
  * Requires jQuery and MooTools.
  * 
  * Copyright (c) 2010 Nikolay Kuchumov
@@ -27,9 +43,21 @@ function dialog_window($element, options)
 		modal: true,
 //		stack: true,
 		'close on escape': false,
+		
 		width: 'auto',
 		height: 'auto'
 	}
+	
+	// if dialog window width is set manually
+	if ($element.attr('set_width'))
+		this.options.width = $element.width()
+		
+	// if dialog window height is set manually
+	if ($element.attr('set_height'))
+		this.options.height = $element.height()
+	
+//	this.options.width = $element.css('width')
+//	this.options.height = $element.css('height')
 	
 	Object.append(this.options, options)
 
@@ -69,7 +97,7 @@ function dialog_window($element, options)
 			{
 				// close on escape key
 				if (self.options['close on escape'] && event.keyCode &&
-					event.keyCode === key_code.escape) 
+					event.keyCode === Event.Keys.esc) 
 				{	
 					self.close(event)
 					event.preventDefault()
@@ -91,6 +119,7 @@ function dialog_window($element, options)
 		$element
 			.addClass("dialog_window_content")
 			.appendTo($dialog_window)
+			.css({ width: 'auto' })
 
 		// set dialog title bar
 		$('<div></div>')
@@ -154,7 +183,7 @@ function dialog_window($element, options)
 	// prevent tabbing out of modal dialog windows
 	this.swallow_outer_tabulation = function(event) 
 	{	
-		if (event.keyCode !== key_code.tabulation)
+		if (event.keyCode !== Event.Keys.tab)
 			return
 
 		var tabbables = $(':tabbable', this)
