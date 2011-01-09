@@ -1,20 +1,188 @@
+.center_business_card
+{
+	text-align: center;
+}
+
 .business_card
 {
-	-webkit-box-shadow: 0px 16px 100px rgba(0,0,0,0.1), 0px 16px 80px rgba(0,0,0,0.1), 0px 16px 60px rgba(0,0,0,0.1), 0px 16px 40px rgba(0,0,0,0.1), 0px 16px 30px rgba(0,0,0,0.1), 0px 16px 20px rgba(0,0,0,0.1);
-	-moz-box-shadow: 0px 16px 100px rgba(0,0,0,0.1), 0px 16px 80px rgba(0,0,0,0.1), 0px 16px 60px rgba(0,0,0,0.1), 0px 16px 40px rgba(0,0,0,0.1), 0px 16px 30px rgba(0,0,0,0.1), 0px 16px 20px rgba(0,0,0,0.1);
-	-o-box-shadow: 0px 16px 100px rgba(0,0,0,0.1), 0px 16px 80px rgba(0,0,0,0.1), 0px 16px 60px rgba(0,0,0,0.1), 0px 16px 40px rgba(0,0,0,0.1), 0px 16px 30px rgba(0,0,0,0.1), 0px 16px 20px rgba(0,0,0,0.1);
-	box-shadow: 0px 16px 100px rgba(0,0,0,0.1), 0px 16px 80px rgba(0,0,0,0.1), 0px 16px 60px rgba(0,0,0,0.1), 0px 16px 40px rgba(0,0,0,0.1), 0px 16px 30px rgba(0,0,0,0.1), 0px 16px 20px rgba(0,0,0,0.1);
+	font-family: Tahoma;
+	
+	position: relative;
+	
+	text-align: left;
+	
+	display: inline-block;
+	
+	margin-left: auto;
+	margin-right: auto;
+	
+	padding-top: 40px;
+	padding-bottom: 40px;
+
+	padding-left: 60px;
+	padding-right: 60px;
+	
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;				
+	border-radius: 10px;				
+	
+	background-color: #efefef;
+	background: -webkit-gradient(linear, center top, center bottom, from(#fcfcfc), to(#ededed));
+	background-image: -moz-linear-gradient(top, #fcfcfc, #ededed);
+	
+	-webkit-box-shadow: 0px 4px 20px rgba(0,0,0,0.1), 0px 4px 8px rgba(0,0,0,0.1), 0px 4px 12px rgba(0,0,0,0.1), 0px 4px 8px rgba(0,0,0,0.1), 0px 4px 6px rgba(0,0,0,0.1), 0px 4px 4px rgba(0,0,0,0.1);
+	-moz-box-shadow: 0px 4px 20px rgba(0,0,0,0.1), 0px 4px 8px rgba(0,0,0,0.1), 0px 4px 12px rgba(0,0,0,0.1), 0px 4px 8px rgba(0,0,0,0.1), 0px 4px 6px rgba(0,0,0,0.1), 0px 4px 4px rgba(0,0,0,0.1);
+	-o-box-shadow: 0px 4px 20px rgba(0,0,0,0.1), 0px 4px 8px rgba(0,0,0,0.1), 0px 4px 12px rgba(0,0,0,0.1), 0px 4px 8px rgba(0,0,0,0.1), 0px 4px 6px rgba(0,0,0,0.1), 0px 4px 4px rgba(0,0,0,0.1);
+	box-shadow: 0px 4px 20px rgba(0,0,0,0.1), 0px 4px 8px rgba(0,0,0,0.1), 0px 4px 12px rgba(0,0,0,0.1), 0px 4px 8px rgba(0,0,0,0.1), 0px 4px 6px rgba(0,0,0,0.1), 0px 4px 4px rgba(0,0,0,0.1);
 }
 
-.business_card .stripe
+.business_card [type=photo]
 {
-	background-color: #222222;
+	width: 160px;
+	height: 160px;
+	
+	-webkit-box-shadow: 0px 1px 3px rgb(0,0,0);
+	-moz-box-shadow: 0px 1px 3px rgb(0,0,0);
+	-o-box-shadow: 0px 1px 3px rgb(0,0,0);
+	box-shadow: 0px 1px 3px rgb(0,0,0);	
 }
 
-.business_card .photo
+.business_card [type=name]
 {
-	-webkit-box-shadow: 0px 1px 5px rgba(0,0,0);
-	-moz-box-shadow: 0px 1px 5px rgba(0,0,0);
-	-o-box-shadow: 0px 1px 5px rgba(0,0,0);
-	box-shadow: 0px 1px 5px rgba(0,0,0);	
+	font-size: 30px;
+	font-weight: bold;
+	color: #e81f95;
+}
+
+.business_card [type=summary]
+{
+	margin-top: -6px;
+	margin-left: 4px;
+	
+	font-size: 24px;
+	color: #989898;
+}
+
+.business_card [type=info]
+{
+	padding-left: 70px;
+}
+
+.business_card [type=info_type]
+{
+	width: 100%;
+	text-align: right;
+	
+	font-size: 16px;
+	color: #7d7b7b;
+}
+
+.business_card [type=info_value]
+{
+	width: 100%;
+	text-align: right;
+	
+	margin-top: -6px;
+	
+	font-size: 20px;
+	color: #e81f95;
+}
+
+.business_card [type=last_column]
+{
+	margin-left: 180px;
+	padding-top: 10px;
+	
+	min-width: 157px;
+	height: 100%; 
+
+	position: relative; 
+}
+
+.business_card [type=small_logo_placeholder]
+{
+	min-width: 157px;
+	min-height: 35px;
+}
+
+.business_card [type=mood]
+{
+	margin-left: auto;
+	margin-right: auto;
+	
+	width: 88px;
+	height: 88px;
+	
+	background-image: url('../images/business card/mood.png');
+	background-repeat: no-repeat;
+	background-color: transparent;
+}
+	
+.business_card
+{
+	position: relative;
+}
+
+.business_card [type=personal_info]
+{
+	 margin-top: 40px;
+}
+
+.business_card [type=info_spacer]
+{
+	 margin-top: 26px;
+}
+
+.business_card [type=small_logo]
+{
+	position: absolute;
+
+	left: 0;
+	top: 0;
+	
+	width: 100%;
+	height: 100%;
+	
+	min-width: 157px;
+	min-height: 35px;
+	
+	background-image: url('../images/business card/small logo.png');
+	background-position: bottom right;
+	background-repeat: no-repeat;
+	background-color: transparent;
+}
+
+/*
+.business_card [type=gender]
+{
+	position: absolute;
+
+	left: 0;
+	top: 0;
+	
+	width: 100%;
+	height: 100%;
+	
+	min-width: 17px;
+	min-height: 22px;
+	
+	margin-top: 17px;
+	margin-left: -15px;
+	
+	background-image: url('../images/business card/gender/male.png');
+	background-position: top right;
+	background-repeat: no-repeat;
+	background-color: transparent;	
+}
+*/
+
+.business_card [type=gender]
+{
+	min-width: 17px;
+	min-height: 22px;
+	
+	background-image: url('../images/business card/gender/male.png');
+	background-position: top right;
+	background-repeat: no-repeat;
+	background-color: transparent;	
 }

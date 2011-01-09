@@ -36,6 +36,21 @@ html, #background_stretcher
 	z-index: -1;
 }
 
+.high
+{
+	height: 100%;
+}
+
+.wide
+{
+	width: 100%;
+}
+
+.bottom
+{
+	vertical-align: bottom;
+}
+
 .centered, div.float_centerer
 {
 	margin-left: auto;
@@ -91,6 +106,11 @@ a:hover
 */
 
 a:focus
+{
+	outline: none;
+}
+
+input:focus
 {
 	outline: none;
 }

@@ -44,7 +44,7 @@ var loading_indicator = new (function()
 	
 	this.show = function()
 	{
-		refresh_loading_indicator()
+		this.refresh_loading_indicator()
 		loading_indicator.open()
 	}
 	
@@ -53,22 +53,22 @@ var loading_indicator = new (function()
 		loading_indicator.close()
 	}
 	
-	function refresh_loading_indicator()
+	this.refresh_loading_indicator = function()
 	{
-		var choise = choose_loading_indicator()
+		var choise = this.choose_loading_indicator()
 		
-		$("img.loading_indicator_image", loading_indicator).attr('src', images_path + "/" + choise.image)
-		$("a.loading_indicator_image_source", loading_indicator).attr("href", choise.image_source)
+		$("img.loading_indicator_image", loading_indicator.$element).attr('src', images_path + "/" + choise.image)
+
+		$("a.loading_indicator_image_source", loading_indicator.$element).attr("href", choise.image_source)
 	}
 	
-	function choose_loading_indicator()
+	this.choose_loading_indicator = function()
 	{
 		return loading_indicators[Number.random(0, loading_indicators.length - 1)]
-//		return loading_indicators[Math.floor(Math.random() * loading_indicators.length)]
 	}
 })()
 
-$(document).ready(function()
+$(function()
 {
 	loading_indicator.initialize()
 })

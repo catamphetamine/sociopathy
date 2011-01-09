@@ -4,7 +4,7 @@
 var unsupported_browser_message
 
 // construct the popup window
-$(document).ready(function() 
+$(function() 
 {
 	unsupported_browser_message = $("#unsupported_browser_message").dialog_window
 	({

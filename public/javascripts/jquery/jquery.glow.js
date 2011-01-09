@@ -26,7 +26,7 @@
 		})
 	}
 	
-	$(document).ready(function()
+	$(function()
 	{
 		$.make_external_links_glowable()
 	})

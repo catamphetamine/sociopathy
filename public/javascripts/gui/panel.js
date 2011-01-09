@@ -20,7 +20,7 @@
  *
  * in javascript:
  * 
- * $(document).ready(function()
+ * $(function()
  *	{
  *		panel.activate_buttons("/images/panel/menu");
  *		panel.activate_tooltips();

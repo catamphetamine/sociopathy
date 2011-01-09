@@ -35,7 +35,7 @@
  *
  * In javascript:
  * 
- *	$(document).ready(function()
+ *	$(function()
  *	{
  *		new text_button
  *		(

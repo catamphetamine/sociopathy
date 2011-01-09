@@ -11,7 +11,7 @@
  * 
  * In javascript:
  * 
- *	$(document).ready(function()
+ *	$(function()
  *	{
  *		new image_button
  *		(

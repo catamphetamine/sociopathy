@@ -19,7 +19,7 @@
  *
  * In javascript:
  * 
- *	$(document).ready(function()
+ *	$(function()
  *	{
  *		var the_slider = new slider
  *		({

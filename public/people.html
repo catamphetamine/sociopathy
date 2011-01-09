@@ -97,34 +97,17 @@
 		<script type="text/javascript" src="javascripts/browser checker.js"></script> 
 
 		<!-- page initialization -->
-		<script type="text/javascript" src="javascripts/page/welcome.js"></script> 
+		<script type="text/javascript" src="javascripts/page/people.js"></script> 
+		<link rel="stylesheet" href="stylesheets/business card.css" type="text/css"/>
 
 		<style type="text/css">
 
-			#concept
-			{
-				width: 400px;
-				height: 321px;
-
-				margin-left: auto;
-				margin-right: auto;		
-
-				margin-top: 100px;
-
-				background-image: url('images/community.png');
-				background-repeat: no-repeat;
-			}
-
-			#join_dialog input
-			{
-				width: 614px;
-			}
 		</style>
 			
 		<script type="text/javascript">
 
 			// initialize
-			$(document).ready(function()
+			$(function()
 			{
 				panel.initialize()
 				initialize_page()	
@@ -156,23 +139,69 @@
 		</header>
 
 		<section>
-			<!-- ID card -->
-			<div id="id">
-				<div id="gender"></div>
-				
-				<div>
-					<div id="name"></div>
-					<div id="summary"></div>
-					<div id="photo"></div>
+			<div style="height: 100px"></div>
+			
+			<!-- ID card centerer -->
+			<div class="center_business_card">
+				<!-- ID card -->
+				<div class="business_card" class="high" >
+					<!-- gender -->
+					<!-- <div type="gender"></div> -->
+					
+					<!-- main -->
+					<div class="left high" style="display: table">
+						<div style="display: table-row">
+							<div style="display: table-cell">
+						
+								<div class="left">
+									<!-- who is -->
+									<div type="name">Николай Кучумов</div>
+									<div type="summary">управляющий</div>
+									
+									<!-- personal info -->
+									<div style="display: table" type="personal_info">
+										<div style="display: table-row">
+											<!-- photo -->
+											<div class="bottom" style="display: table-cell">
+												<div type="photo"></div>
+											</div>
+											
+											<!-- miscellaneous info -->
+											<div class="bottom" style="display: table-cell" type="info">
+												
+												<!-- gender -->
+												<div type="gender"></div>
+					
+												<div type="info_spacer"></div>
+					
+												<!-- origin -->
+												<div type="info_type">откуда</div>
+												<div type="info_value">Москва</div>
+												
+												<div type="info_spacer"></div>
+												
+												<!-- interests -->
+												<div type="info_type">увлечения</div>
+												<div type="info_value">...</div>
+											</div>
+										</div>
+									</div>						
+								</div>
+									
+							</div>
+							
+							<!-- last column of data -->
+							<div type="last_column">
+								<!-- person's mood -->
+								<div type="mood"></div>	
+							
+								<!-- Sobranie logo -->
+								<div type="small_logo"></div>		
+							</div>
+						</div>						
+					</div>
+
 				</div>
-				
-				<div>
-					<div id="origin"></div>
-				</div>
-				
-				<div id="mood"></div>
-				
-				<div id="small_logo"></div>
 			</div>
 		</section>
 			

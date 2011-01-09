@@ -1,14 +1,13 @@
 <!DOCTYPE html>
 	
-<html>
+<html lang="ru">
 	<head>
 		<meta name="author" content="kuchumovn@gmail.com"> 
 		<meta name="designer" content="kuchumovn@gmail.com">
 		<meta name='copyright' content='2010 - Nikolay Kuchumov' />
 		<meta name="description" content="Sociopathy is an unusual social network"> 
 		
-		<meta http-equiv="Content-Language" content="ru">
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<meta charset="utf-8" />
 
 		<title class="translated" label="title"></title>
 
@@ -175,7 +174,7 @@
 		<script type="text/javascript">
 
 			// initialize
-			$(document).ready(function()
+			$(function()
 			{
 				panel.initialize()
 				initialize_page()	
@@ -188,24 +187,26 @@
 	</head>
 
 	<body>
-		<header>
-			<!-- top menu panel -->
-			<!-- fixes the box-shadow scroll bar bug in Fire Fox -->
-			<div id="panel_box_shadow_fixer">
-				<div id="panel">
-					<!-- the menu -->
-					<ul id="panel_menu">
-						<li name="reading" class="translated" label="panel, reading"></li>
-						<li name="people" link="people.html" class="translated" label="panel, people"></li>
-						<li name="help" class="translated" label="panel, help"></li>
-					</ul>
-		
-					<!-- logo -->
-					<a href="/"><img id="panel_logo" src="images/panel/logo.png"/></a>
+		<aside>
+			<nav>
+				<!-- top menu panel -->
+				<!-- fixes the box-shadow scroll bar bug in Fire Fox -->
+				<div id="panel_box_shadow_fixer">
+					<div id="panel">
+						<!-- the menu -->
+						<ul id="panel_menu">
+							<li name="reading" class="translated" label="panel, reading"></li>
+							<li name="people" link="people.html" class="translated" label="panel, people"></li>
+							<li name="help" class="translated" label="panel, help"></li>
+						</ul>
+			
+						<!-- logo -->
+						<a href="/"><img id="panel_logo" src="images/panel/logo.png"/></a>
+					</div>
 				</div>
-			</div>
-		</header>
-
+			</nav>
+		</aside>
+	
 		<section>
 			<!-- picture -->
 			<div id="concept"></div>
@@ -302,7 +303,7 @@
 		<!-- AJAX loading window -->
 		<div id="loading_indicator" class="translated_title" label="page, dialog 'loading', title">
 			<div class="dialog_window_container" style="text-align: center">
-				<a class="loading_indicator_image_source" href="" target="_blank">
+				<a class="loading_indicator_image_source image" href="" target="_blank">
 					<img class="loading_indicator_image" src=""/>
 				</a>
 			</div>

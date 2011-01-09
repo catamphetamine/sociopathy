@@ -42,6 +42,8 @@ function initialize_join_dialog()
 		join_dialog_done_button, 
 		join_form_slider
 	)
+	
+	join_form_slider.set_container(join_dialog.$element)
 }
 
 // create join dialog buttons

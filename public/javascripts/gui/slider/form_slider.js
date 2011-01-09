@@ -22,7 +22,7 @@
  *
  * In javascript:
  * 
- *	$(document).ready(function()
+ *	$(function()
  *	{
  *		var the_slider = new form_slider
  *		({
@@ -75,13 +75,28 @@ function form_slider(options)
 		this.parse_fields(options)
 		
 		var self = this
+	}
+	
+	this.set_container = function($container)
+	{
+//		this.$container = $container
 		
-		this.slider.$element.keydown(function(event) 
+		var self = this
+		
+		//this.slider.$element
+		$container.keydown(function(event) 
 		{
 			// if Enter key pressed
 			if (event.keyCode == Event.Keys.enter) 
 			{
 				self.next()
+				return
+			}
+			
+			// if Tab key pressed
+			if (event.keyCode == Event.Keys.tab) 
+			{
+				return false
 			}
 		})
 	}
