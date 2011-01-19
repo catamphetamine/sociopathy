@@ -25,6 +25,10 @@
 
 		<!-- MooTools -->
 		<script type="text/javascript" src="javascripts/mootools/core-1.3.js"></script>
+		<script type="text/javascript" src="javascripts/mootools/more.js"></script>
+
+		<!-- animation -->
+		<script type="text/javascript" src="javascripts/animation.js"></script>
 
 		<!-- jQuery animation easing functions -->
 		<!-- http://vremenno.net/examples/easingPlugin/ -->
@@ -53,8 +57,11 @@
 		<!-- jQuery watermark input -->
 		<script type="text/javascript" src="javascripts/jquery/jquery.watermarkinput.js"></script>
 		 
+		<!-- jQuery template engine -->
+		<script type="text/javascript" src="javascripts/jquery/jquery.tmpl.min.js"></script>
+		 
 		<!-- javascript template engine -->
-		<script type="text/javascript" src="ejs_production.js"></script>
+		<script type="text/javascript" src="javascripts/template.js"></script> 
 
 		<!-- generic -->
 		<script type="text/javascript" src="javascripts/language.js"></script> 
@@ -141,67 +148,21 @@
 		<section>
 			<div style="height: 100px"></div>
 			
-			<!-- ID card centerer -->
-			<div class="center_business_card">
-				<!-- ID card -->
-				<div class="business_card" class="high" >
-					<!-- gender -->
-					<!-- <div type="gender"></div> -->
-					
-					<!-- main -->
-					<div class="left high" style="display: table">
-						<div style="display: table-row">
-							<div style="display: table-cell">
-						
-								<div class="left">
-									<!-- who is -->
-									<div type="name">Николай Кучумов</div>
-									<div type="summary">управляющий</div>
-									
-									<!-- personal info -->
-									<div style="display: table" type="personal_info">
-										<div style="display: table-row">
-											<!-- photo -->
-											<div class="bottom" style="display: table-cell">
-												<div type="photo"></div>
-											</div>
-											
-											<!-- miscellaneous info -->
-											<div class="bottom" style="display: table-cell" type="info">
-												
-												<!-- gender -->
-												<div type="gender"></div>
-					
-												<div type="info_spacer"></div>
-					
-												<!-- origin -->
-												<div type="info_type">откуда</div>
-												<div type="info_value">Москва</div>
-												
-												<div type="info_spacer"></div>
-												
-												<!-- interests -->
-												<div type="info_type">увлечения</div>
-												<div type="info_value">...</div>
-											</div>
-										</div>
-									</div>						
-								</div>
-									
-							</div>
-							
-							<!-- last column of data -->
-							<div type="last_column">
-								<!-- person's mood -->
-								<div type="mood"></div>	
-							
-								<!-- Sobranie logo -->
-								<div type="small_logo"></div>		
-							</div>
-						</div>						
-					</div>
+			<!-- left arrow -->
+			<div id="previous_person_button" class="left"></div>
 
-				</div>
+			<!-- right arrow -->
+			<div id="next_person_button" class="right"></div>
+			
+			<!-- first ID card placeholder -->
+			<div id="first_id_card_placeholder" class="center_business_card">
+				
+			</div>
+			
+
+			<!-- second ID card placeholder -->
+			<div id="second_id_card_placeholder" class="center_business_card">
+				
 			</div>
 		</section>
 			

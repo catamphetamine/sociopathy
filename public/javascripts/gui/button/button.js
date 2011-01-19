@@ -22,6 +22,8 @@ var button = new Class
 ({
 	Implements: [Options, Events],
 	
+	Binds: ['can_unlock_the_pushing_lock'],
+	
 	namespace: "button",
 	
 	frames: 
@@ -37,6 +39,11 @@ var button = new Class
 
 	options:
 	{
+		style:
+		{
+			cursor: 'pointer'
+		},
+		
 		'auto unlock': true,
 		'prevent double submission': false,
 
@@ -47,7 +54,7 @@ var button = new Class
 		'ready frame fade out duration': 500,
 		
 		'pushed frame fade in duration': 200,
-		'pushed frame fade out duration': 200,
+		'pushed frame fade out duration': 500,
 	},
 
 	// locking button while being pushed
@@ -88,6 +95,16 @@ var button = new Class
 				this.unlock()
 		},
 		
+		can_now_unlock: function()
+		{
+			// now the button can be unlocked (has finished the push animation), if the caller permits
+			this.can_unlock = true
+
+			// if the caller permits - unlock
+			if (this.may_unlock)
+				this.unlock()
+		},
+		
 		is_locked: function()
 		{
 			return (this.locker || false)
@@ -102,7 +119,7 @@ var button = new Class
 		// back reference		
 		var self = this
 		this.pushing.self = this
-		
+
 		// get the element
 		this.$element = get_element(id_or_element)
 		
@@ -115,13 +132,17 @@ var button = new Class
 		this.frames.ready = this.build_ready_frame()
 		this.frames.pushed = this.build_pushed_frame()
 		
+		// stylize
+		
+		Object.each(this.frames, function($frame) { $frame.css(self.options.style) })
+		
 		// bind events
 		
 		this.$element.bind('mouseenter.' + this.namespace, function() 
 		{
 			self.is_rolled_over = true
 		
-			// if is locked - exself.locks.erase(this)it
+			// if is locked - exit
 			if (self.is_locked())
 				return false
 			
@@ -172,14 +193,10 @@ var button = new Class
 	prepare: function() {},
 
 	// you can call this method back after the push animation to handle button unlocking
-	handle_unlock_after_pushed: function()
+	can_unlock_the_pushing_lock: function()
 	{
 		// now the button can be unlocked (has finished the push animation), if the caller permits
-		this.pushing.can_unlock = true
-
-		// if the caller permits - unlock
-		if (this.pushing.may_unlock)
-			this.pushing.unlock()
+		this.pushing.can_now_unlock()
 	},
 	
 	lock: function()
@@ -257,13 +274,13 @@ var button = new Class
 	
 	on_roll_over: function() 
 	{
-		this.frames.ready.stop(true, false) // clearQueue, jumpToEnd
+		animator.stop(this.frames.ready)
 		this.fade_in('ready') 
 	},
 	
 	on_roll_out: function() 
 	{
-		this.frames.ready.stop(true, false) // clearQueue, jumpToEnd
+		animator.stop(this.frames.ready)
 		this.fade_out('ready')
 	},
 	
@@ -276,7 +293,7 @@ var button = new Class
 			
 			after_pushed_actions()
 				
-			self.fade_out('pushed', self.handle_unlock_after_pushed.bind(self))
+			self.fade_out('pushed', self.can_unlock_the_pushing_lock)
 		})
 	},
 	
@@ -359,7 +376,7 @@ var button = new Class
 
 	fade_in: function(frame_name, callback)
 	{
-		button.fader.fade_in(this.frames[frame_name],
+		animator.fade_in(this.frames[frame_name],
 		{
 			duration: this.options[frame_name + ' frame fade in duration'],
 			easing: this.options[frame_name + ' frame fade in easing'],
@@ -369,7 +386,7 @@ var button = new Class
 	
 	fade_out: function(frame_name, callback)
 	{
-		button.fader.fade_out(this.frames[frame_name], 
+		animator.fade_out(this.frames[frame_name], 
 		{
 			duration: this.options[frame_name + ' frame fade out duration'],
 			easing: this.options[frame_name + ' frame fade out easing'],
@@ -397,61 +414,6 @@ var button = new Class
 		return this
 	}
 })
-
-// fading
-button.fader = new (function(button)
-{
-	// slowly show
-	this.fade_in = function($element, options)
-	{
-		// options
-		options = options || {}
-		
-		// if delay animation
-		if (options.delay)
-			element.delay(options.delay)
-			
-		// animate
-		$element.show()
-		$element.fadeTo(options.duration, opaque, options.easing, options.callback)
-//		$element.fadeIn(_.duration, _.easing, _.callback)
-	}
-	
-	// slowly hide
-	this.fade_out = function($element, options)
-	{
-		// options
-		options = options || {}
-
-		// if delay animation
-		if (options.delay)
-			element.delay(options.delay)
-
-		// animate
-		$element.fadeTo(options.duration, transparent, options.easing, this.get_callback($element, options))
-//		$element.fadeOut(_.duration, _.easing, _.callback)
-	}
-	
-	this.get_callback = function($element, options)
-	{
-		if (!options.callback)
-		{
-			if (!options.hide)
-				return
-			
-			return function() { $element.hide() }
-		}
-		
-		if (!options.hide)
-			return options.callback
-		
-		return function()
-		{
-			$element.hide()
-			options.callback()
-		}
-	}
-})(this)
 
 button.physics = 
 {

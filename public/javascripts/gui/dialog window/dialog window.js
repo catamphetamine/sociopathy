@@ -27,18 +27,18 @@
  * @github kuchumovn
  */
 
-function dialog_window($element, options)
-{
-	var self = this
+var dialog_window = new Class
+({
+	Implements: [Options],
 	
-	this.controls = []
-	this.control_locks = []
+	controls: [],
+	control_locks: [],
 	
-	var namespace = "window"
+	namespace: "window",
 
-	var is_open = false
+	is_open: false,
 	
-	this.options = 
+	options: 
 	{
 		modal: true,
 //		stack: true,
@@ -46,36 +46,32 @@ function dialog_window($element, options)
 		
 		width: 'auto',
 		height: 'auto'
-	}
+	},
 	
-	// if dialog window width is set manually
-	if ($element.attr('set_width'))
-		this.options.width = $element.width()
-		
-	// if dialog window height is set manually
-	if ($element.attr('set_height'))
-		this.options.height = $element.height()
-	
-//	this.options.width = $element.css('width')
-//	this.options.height = $element.css('height')
-	
-	Object.append(this.options, options)
-
 	// dialog window padding inside the viewport
-	this.padding = {}
+	padding: {},
 	
 	/**
 	 * Constructor:
 	 * creates new dialog window
 	 */
-	this.create = function() 
+	initialize: function($element, options)
 	{
+		// apply options
+		this.setOptions(options)
+		
+		// back reference
+		var self = this
+		
+		// set width and height
+		this.set_dimensions($element)
+
 		// get the title
 		var title = $element.attr('title')
 		$element.removeAttr('title')
 
 		// create the dialog element
-		this.$element = $('<div></div>')
+		this.$element = $('<article/>')
 		
 		// set up the dialog element
 		this.$element.appendTo(document.body)
@@ -93,7 +89,7 @@ function dialog_window($element, options)
 				// setting overflow to hidden fixes the box-shadow scroll bar bug in Fire Fox
 				overflow: 'hidden'
 			})
-			.bind('keydown.' + namespace, function(event) 
+			.bind('keydown.' + this.namespace, function(event) 
 			{
 				// close on escape key
 				if (self.options['close on escape'] && event.keyCode &&
@@ -111,7 +107,7 @@ function dialog_window($element, options)
 			*/
 			
 		// the wrapped dialog window (fixes the box-shadow scroll bar bug in Fire Fox)
-		var $dialog_window = $('<div></div>')
+		var $dialog_window = $('<section/>')
 			.addClass("dialog_window")
 			.appendTo(this.$element)
 
@@ -122,30 +118,41 @@ function dialog_window($element, options)
 			.css({ width: 'auto' })
 
 		// set dialog title bar
-		$('<div></div>')
+		$('<header/>')
 			.addClass("dialog_window_top_bar")
 			.text(title)
 			.prependTo($dialog_window)
 			
 		// when scrolling page - reposition the dialog
 //			$(document).bind('scroll.' + namespace, dialog_window_manager.reposition)				
-	}
+	},
+
+	set_dimensions: function($element)
+	{
+		// if dialog window width is set manually
+		if ($element.attr('set_width'))
+			this.options.width = $element.width()
+			
+		// if dialog window height is set manually
+		if ($element.attr('set_height'))
+			this.options.height = $element.height()
+	},
 	
 	/**
 	 * shows the dialog window
 	 */
-	this.show = function()
+	show: function()
 	{
 		this.$element.show()
 //		this.$element.fadeIn()
 
 		this.$element.focus()
-	}
+	},
 	
 	/**
 	 * hides the dialog window
 	 */
-	this.hide = function(callback)
+	hide: function(callback)
 	{
 		this.$element.hide()
 		
@@ -153,12 +160,12 @@ function dialog_window($element, options)
 			callback()
 			
 //		this.$element.fadeOut()
-	}
+	},
 	
 	// opens the dialog window
-	this.open = function() 
+	open: function() 
 	{
-		if (is_open)
+		if (this.is_open)
 			return
 		
 //		disable_scroll()
@@ -173,15 +180,15 @@ function dialog_window($element, options)
 
 		// prevent tabbing out of modal dialog windows
 		if (this.options.modal)
-			this.$element.bind('keypress.' + namespace, this.swallow_outer_tabulation)
+			this.$element.bind('keypress.' + this.namespace, this.swallow_outer_tabulation)
 					
 		z_indexer.register(this)
 
-		is_open = true
-	}
+		this.is_open = true
+	},
 	
 	// prevent tabbing out of modal dialog windows
-	this.swallow_outer_tabulation = function(event) 
+	swallow_outer_tabulation: function(event) 
 	{	
 		if (event.keyCode !== Event.Keys.tab)
 			return
@@ -200,14 +207,14 @@ function dialog_window($element, options)
 			last.focus(1)
 			return false
 		}
-	}
+	},
 	
 	// closes the dialog window
-	this.close = function(event) 
+	close: function(event) 
 	{
 		this.veil.destroy()
 		
-		this.$element.unbind('keypress.' + namespace)
+		this.$element.unbind('keypress.' + this.namespace)
 		
 		this.hide()
 		
@@ -219,8 +226,8 @@ function dialog_window($element, options)
 
 		this.reset()
 
-		is_open = false
-	}
+		this.is_open = false
+	},
 
 	/*
 	this.destroy = function() 
@@ -242,7 +249,7 @@ function dialog_window($element, options)
 	 */
 	// the force parameter allows us to move modal dialogs 
 	// to their correct position on open
-	this.rise = function()//force, event) 
+	rise: function()//force, event) 
 	{
 		/*
 		if ((this.options.modal && !force) ||
@@ -252,12 +259,12 @@ function dialog_window($element, options)
 
 		this.veil.set_z_index(z_indexer.acquire_top_z())
 		this.$element.css('z-index', z_indexer.acquire_top_z())
-	}
+	},
 			
 	/**
 	 * sizes the dialog window
 	 */
-	this.size = function() 
+	size: function() 
 	{
 		// reset content sizing
 		this.$element.show().css
@@ -279,12 +286,12 @@ function dialog_window($element, options)
 			this.$element.css({ height: "auto" })
 		else
 			this.$element.height(Math.max(this.options.height - non_content_elements_height, 0))
-	}
+	},
 	
 	/**
 	 * positions the dialog window at the center of the screen
 	 */
-	this.position = function()
+	position: function()
 	{
 		this.padding.left = parseInt((get_viewport_width() - this.$element.width()) / 2)
 		this.padding.right = get_viewport_width() - this.$element.width() - this.padding.left
@@ -310,68 +317,32 @@ function dialog_window($element, options)
 			top: get_scroll_y() + top_padding + 'px'
 		})
 		*/
-	}
+	},
 	
 	/**
 	 * resets all the registered controls
 	 */
-	this.reset = function()
+	reset: function()
 	{
 		// reset controls
 		this.controls.each(function(control) { control.reset() })			
-	}
+	},
 	
 	/**
 	 * registers controls
 	 */
-	this.register_controls = function()
+	register_controls: function()
 	{
 		this.controls.combine(Array.prototype.slice.call(arguments).flatten())
-	}
-
-	// page scrolling helpers
-	
-	/**
-	 * retrieves the current scroll position: (left, top)
-	 */
-	function get_scroll_position()
-	{
-		var scroll_position = 
-		{
-			x: get_scroll_x(),
-			y: get_scroll_y()
-		}
-		
-		return scroll_position
-	}
-	
-	/**
-	 * disables page scrolling
-	 */
-	function disable_scroll()
-	{
-		$(window).bind('scroll.' + namespace, {scroll_position: get_scroll_position()}, function(event) 
-		{
-    		window.scrollTo(event.data.scroll_position.x, event.data.scroll_position.y)
-	    	return false
-		})
-	}
-	
-	/**
-	 * enables page scrolling
-	 */
-	function enable_scroll()
-	{
-		$(window).unbind('scroll.' + namespace)
-	}
+	},
 	
 	// locking
-	this.is_locked = false
+	is_locked: false,
 	
 	/**
 	 * locks the dialog window (and all of its controls)
 	 */
-	function lock()
+	lock: function()
 	{
 		if (this.is_locked)
 			return
@@ -385,12 +356,12 @@ function dialog_window($element, options)
 				return control.lock() 
 		})
 		.clear()
-	}
+	},
 	
 	/**
 	 * unlocks the dialog window (and all of its controls)
 	 */
-	function unlock()
+	unlock: function()
 	{
 		if (!this.is_locked)
 			return
@@ -400,7 +371,4 @@ function dialog_window($element, options)
 		// unlock controls
 		this.control_locks.each(function(lock) { lock.unlock() })
 	}
-
-	// call the constructor
-	this.create()
-}	
+})

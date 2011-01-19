@@ -176,13 +176,22 @@
 }
 */
 
-.business_card [type=gender]
+.business_card [type=gender_male], .business_card [type=gender_female]
 {
-	min-width: 17px;
-	min-height: 22px;
+	width: 17px;
+	height: 22px;
 	
-	background-image: url('../images/business card/gender/male.png');
 	background-position: top right;
 	background-repeat: no-repeat;
 	background-color: transparent;	
+}
+
+.business_card [type=gender_male]
+{
+	background-image: url('../images/business card/gender/male.png');
+}
+
+.business_card [type=gender_female]
+{
+	background-image: url('../images/business card/gender/female.png');
 }

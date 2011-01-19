@@ -11,15 +11,15 @@
  * @github kuchumovn
  */
 
-function veil()
-{
+var veil = new Class
+({
 	/**
 	 * Constructor
 	 * creates a new veil
 	 */
-	this.create = function() 
+	initialize: function() 
 	{
-		var $veil = $('<div></div>')
+		this.$element = $('<div></div>')
 			.appendTo(document.body)
 			.hide()
 			.css
@@ -35,25 +35,26 @@ function veil()
 				height: get_page_height() + 'px'
 			})
 			
-		$veil.addClass('dialog_window_veil')
+		this.$element.addClass('dialog_window_veil')
+				
+		veiler.register(this.$element)
 		
-		veiler.register($veil)
-		return $veil
-	}
+		this.show()
+	},
 	
 	/**
 	 * shows the veil
 	 */
-	this.show = function()
+	show: function()
 	{
 		this.$element.show()
 //		this.$element.fadeIn()
-	}
+	},
 	
 	/**
 	 * hides the veil
 	 */
-	this.hide = function(callback)
+	hide: function(callback)
 	{
 		this.$element.hide()
 		
@@ -61,27 +62,23 @@ function veil()
 			callback()
 			
 //		this.$element.fadeOut()
-	}
+	},
 	
 	/**
 	 * destroys the veil
 	 */
-	this.destroy = function()
+	destroy: function()
 	{			
 		veiler.unregister(this.$element)
 	
 		this.hide(this.$element.remove)
-	}
+	},
 	
 	/**
 	 * sets z-index
 	 */
-	this.set_z_index = function(top_z)
+	set_z_index: function(top_z)
 	{
 		this.$element.css('z-index', top_z)
 	}
-
-	// call the constructor	
-	this.$element = this.create()
-	this.show()
-}
+})

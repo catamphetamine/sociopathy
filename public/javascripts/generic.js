@@ -61,6 +61,38 @@ function get_scroll_y()
 	return 0
 }
 
-// fading opacity values
-var opaque = 1
-var transparent = 0
+// page scrolling helpers
+
+/**
+ * retrieves the current scroll position: (left, top)
+ */
+function get_scroll_position()
+{
+	var scroll_position = 
+	{
+		x: get_scroll_x(),
+		y: get_scroll_y()
+	}
+	
+	return scroll_position
+}
+
+/**
+ * disables page scrolling
+ */
+function disable_scroll()
+{
+	$(window).bind('scroll.' + namespace, {scroll_position: get_scroll_position()}, function(event) 
+	{
+		window.scrollTo(event.data.scroll_position.x, event.data.scroll_position.y)
+    	return false
+	})
+}
+
+/**
+ * enables page scrolling
+ */
+function enable_scroll()
+{
+	$(window).unbind('scroll.' + namespace)
+}

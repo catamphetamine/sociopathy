@@ -22,9 +22,9 @@
  * 
  * $(function()
  *	{
- *		panel.activate_buttons("/images/panel/menu");
- *		panel.activate_tooltips();
- * });
+ *		panel.activate_buttons("/images/panel/menu")
+ *		panel.activate_tooltips()
+ * })
  * 
  * In filesystem:
  * 
@@ -36,8 +36,8 @@
  * 
  * Requires jQuery and Button Fader. 
  * 
- * Distributed under GNU General Public License
- * http://www.gnu.org/licenses/gpl.html
+ * Copyright (c) 2010 Nikolay Kuchumov
+ * Licensed under MIT (http://en.wikipedia.org/wiki/MIT_License)
  * 
  * @author Kuchumov Nikolay
  * @email kuchumovn@gmail.com
@@ -61,32 +61,35 @@ var panel = new (function()
 	this.activate_buttons = function(images_path)
 	{
 		// for every panel menu item
-		$("#" + menu_id + " > li").each(function(index)
+		$("#" + menu_id + " > li").each(function()
 		{
-			// initialize variables
-			var title = $(this).attr("name");
-			var link = $(this).attr("link");
-					
-			// panel menu item hyperlink
-			var link_code = ""
+			var $menu_item = $(this)
 			
-			if (link)
-				link_code = " href='" + link + "'"
+			// initialize variables
+			var title = $menu_item.attr("name");
+			var link = $menu_item.attr("link");
 
 			// tooltip text
-			var text_node = $(this).contents()
+			var text_node = $menu_item.contents()
 
 			// place the panel menu item
-			$(this).append("<a class='image' " + link_code + "></a>")
-			$(this).append("<em></em>")
+			var $hyperlink = $("<a/>")
+			$hyperlink.appendTo($menu_item)
+			$hyperlink.addClass('image')
+			
+			if (link)
+				$hyperlink.attr('href', link)
+			
+			// tooltip
+			$menu_item.append("<em></em>")
 			
 			// place the tooltip text
-			$("em", $(this)).append(text_node)
+			$("em", $menu_item).append(text_node)
 			
 			// activate panel menu item fading
 			new image_button
 			(
-				$("> a", $(this)), 
+				$("> a", $menu_item), 
 				{
 					path: images_path,
 					"button name": title,
