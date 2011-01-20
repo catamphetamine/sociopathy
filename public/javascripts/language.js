@@ -47,6 +47,12 @@ function get_element(id_or_element)
 	return id_or_element
 }
 
+// get current time
+var $time = Date.now || function() 
+{
+	return +new Date
+}
+
 // print debug info about object's contents
 function info(object) 
 {

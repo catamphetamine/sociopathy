@@ -1,7 +1,7 @@
 /**
  * Javascript animation engine
  * 
- * Animator: fade_in(element, options), fade_out(element, options)
+ * Animator: fade_in(element, options), fade_out(element, options), stop(element), roll_left(element, options)
  * 
  * Requires MooTools (Core), (and jQuery). 
  * 
@@ -80,9 +80,9 @@ var fx_animator = new Class
 	}
 })
 
-animation.data_key = 'animation'
+fx_animator.data_key = 'animation'
 
-animation.of = function($element)
+fx_animator.of = function($element)
 {
 	var back_reference = $element.data(animation.data_key)
 	
@@ -149,6 +149,127 @@ var jquery_animator = new Class
 // this is what it's for
 var my_animator = new Class
 ({
+	options:
+	{
+		target_frames_per_second: 30,
+	},
+	
+	animate: function(property, options)
+	{
+		var animation_cycle_delay = 1000 / this.options.target_frames_per_second
+		
+		var scheduled_time = options.duration
+		var started_at = $time()
+		
+		// TO DO: prevent step from creation each time
+		var step = function step()
+		{
+			var elapsed_time = $time() - started_at
+			var current_time_value = ((scheduled_time - elapsed_time) / scheduled_time) * (options.to - options.from)
+			property.set(current_time_value)
+			
+			step.delay(animation_cycle_delay)
+		}
+		
+		step.delay(animation_cycle_delay)
+	},
+
+	stop: function($element)
+	{
+		$element.stop(true /* clear queue */, false /* don't jump to queue end */)
+	},
+	
+	fade_in: function($element, options)
+	{
+		// options
+		options = options || {}
+		
+		options.from = 0
+		options.to = 1
+		
+		// if delay animation
+		if (options.delay)
+			element.delay(options.delay)
+
+		$element.show()
+		this.properties($element).opacity.set(0)
+		
+		this.animate(this.properties($element).opacity, options)
+		
+		//$element.fadeTo(options.duration, 1, options.easing, options.callback)
+	},
+	
+	fade_out: function($element, options)
+	{
+		// options
+		options = options || {}
+
+		options.from = 1
+		options.to = 0
+		
+		// if delay animation
+		if (options.delay)
+			element.delay(options.delay)
+
+		options.callback =  this.get_callback($element, options)
+		this.animate(this.properties($element).opacity, options)
+		
+//		$element.fadeTo(options.duration, 0, options.easing, this.get_callback($element, options))
+	},
+	
+	get_callback: function($element, options)
+	{
+		if (!options.callback)
+		{
+			if (!options.hide)
+				return
+			
+			return function() { $element.hide() }
+		}
+		
+		if (!options.hide)
+			return options.callback
+		
+		return function()
+		{
+			$element.hide()
+			options.callback()
+		}
+	},
+	
+	properties: function($element)
+	{
+		var properties =
+		{
+			opacity: function()
+			{
+				this.get = function()
+				{
+					$element.css('opacity')
+				}
+				
+				this.set = function(value)
+				{
+					$element.css('opacity', value)
+				}
+			},
+			
+			left_margin: function()
+			{
+				this.get = function()
+				{
+					$element.css('margin-left')
+				}
+				
+				this.set = function(value)
+				{
+					$element.css('margin-left', value)
+				}
+			}
+		}
+		
+		return properties
+	}
 })
 
 // the animator being used

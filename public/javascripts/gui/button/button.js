@@ -305,7 +305,7 @@ var button = new Class
 			return
 			
 		this.frames.idle.show()
-		this.frames.idle.css({ opacity: opaque })
+		this.frames.idle.css({ opacity: 1 })
 		this.is_shown = true
 	},
 	

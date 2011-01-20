@@ -181,7 +181,7 @@ var choosable_image = new Class
 	
 	unselect: function()
 	{
-		this.fade_out('pushed', this.handle_unlock_after_pushed.bind(this))
+		this.fade_out('pushed', this.can_unlock_the_pushing_lock)
 		this.chooser.choise = null
 	}
  })
