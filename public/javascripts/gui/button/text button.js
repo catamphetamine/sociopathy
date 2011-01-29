@@ -191,7 +191,8 @@ var text_button = new Class
 			'min-height': this.skin.height + 'px',
 			'max-height': this.skin.height + 'px',
 
-			'background-position': 'left 0',
+			'background_position_x': 'left',
+			'background_position_y': 'top',
 			'background-image': this.get_image_path('left'),
 			'background-color': 'transparent',
 			'background-repeat': 'no-repeat',
@@ -218,7 +219,12 @@ var text_button = new Class
 		
 		// style right part (and container)
 
-		this.$element.css('background-position', 'right top')
+		this.$element.css
+		({
+			'background_position_x': 'right',
+			'background_position_y': 'top'
+		})
+		
 		this.$element.css(this.get_right_part_style())
 	
 		this.$element.css
@@ -269,7 +275,7 @@ var text_button = new Class
 		$frame.append($content)
 	
 		var $left_part = $(':first', $frame)
-		$left_part.css('background-position', "left -" + this.skin.height * (options['image index'] - 1) + "px")
+		$left_part.css('background_position_y', "-" + this.skin.height * (options['image index'] - 1) + "px")
 	
 		$frame.css
 		({
@@ -280,11 +286,11 @@ var text_button = new Class
 			'opacity': 0
 		})
 	
-		$frame.css("background-position", "right -" + this.skin.height * (options['image index'] - 1) + "px")
+		$frame.css("background_position_y", "-" + this.skin.height * (options['image index'] - 1) + "px")
 		$frame.css(this.get_right_part_style())
 		
 		// adjust the icon image
-		$('.button_icon', $content).css('background-position', 'left -' + this.options.icon.height * (options['image index'] - 1) + 'px')
+		$('.button_icon', $content).css('background_position_y', '-' + this.options.icon.height * (options['image index'] - 1) + 'px')
 
 		// result		
 		this.$element.append($frame)
@@ -357,7 +363,8 @@ var text_button = new Class
 			
 			'background-color': 'transparent',
 			'background-repeat': 'no-repeat',
-			'background-position': 'left top',
+			'background_position_x': 'left',
+			'background_position_y': 'top',
 			'background-image': this.get_icon_path(this.options.icon.name),
 		})
 

@@ -143,6 +143,11 @@ var jquery_animator = new Class
 			$element.hide()
 			options.callback()
 		}
+	},
+	
+	roll_left: function($element, amount)
+	{
+		$element.animate({ marginLeft: amount })
 	}
 })
 
@@ -156,6 +161,9 @@ var my_animator = new Class
 	
 	animate: function(property, options)
 	{
+		if (!options.from)
+			options.from = property.get()
+		
 		var animation_cycle_delay = 1000 / this.options.target_frames_per_second
 		
 		var scheduled_time = options.duration
@@ -235,6 +243,13 @@ var my_animator = new Class
 			$element.hide()
 			options.callback()
 		}
+	},
+	
+	roll_left: function($element, amount)
+	{
+		var options = { amount: amount }
+		
+		this.animate(this.properties($element).left_margin, options)
 	},
 	
 	properties: function($element)

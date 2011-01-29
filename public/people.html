@@ -50,6 +50,9 @@
 		<!-- jQuery text-shadow -->
 		<script type="text/javascript" src="javascripts/jquery/jquery.text-shadow.js"></script>
 
+		<!-- jQuery background-position-x/y -->
+		<script type="text/javascript" src="javascripts/jquery/jquery.background.position.x.y.js"></script>
+
 		<!-- Russian language -->
 		<script type="text/javascript" src="javascripts/i18n/generic.ru.json"></script>
 		<script type="text/javascript" src="javascripts/i18n/page/welcome.ru.json"></script>
@@ -108,7 +111,20 @@
 		<link rel="stylesheet" href="stylesheets/business card.css" type="text/css"/>
 
 		<style type="text/css">
-
+			
+			#person_slideshow
+			{
+				height: 100%;
+				width: 1000px;
+				
+				margin-left: auto;
+				margin-right: auto;
+			}
+			
+			#previous_person_button, #next_person_button
+			{
+				top: 50%;
+			}
 		</style>
 			
 		<script type="text/javascript">
@@ -127,6 +143,7 @@
 	</head>
 
 	<body>
+					
 		<header>
 			<!-- top menu panel -->
 			<!-- fixes the box-shadow scroll bar bug in Fire Fox -->
@@ -145,27 +162,23 @@
 			</div>
 		</header>
 
-		<section>
-			<div style="height: 100px"></div>
-			
-			<!-- left arrow -->
-			<div id="previous_person_button" class="left"></div>
-
-			<!-- right arrow -->
-			<div id="next_person_button" class="right"></div>
-			
-			<!-- first ID card placeholder -->
-			<div id="first_id_card_placeholder" class="center_business_card">
+		<section id="content">	
+			<div id="person_slideshow">
+				<!-- left arrow -->
+				<div id="previous_person_button" class="left"></div>
 				
-			</div>
-			
-
-			<!-- second ID card placeholder -->
-			<div id="second_id_card_placeholder" class="center_business_card">
+				<!-- right arrow -->
+				<div id="next_person_button" class="right"></div>
 				
+				<!-- first ID card placeholder -->
+				<div id="first_id_card_placeholder" class="center_business_card"></div>
+	
+				<!-- second ID card placeholder -->
+				<div id="second_id_card_placeholder" class="center_business_card"></div>
 			</div>
 		</section>
-			
+
+
 		<!-- AJAX loading window -->
 		<div id="loading_indicator" class="translated_title" label="page, dialog 'loading', title">
 			<div class="dialog_window_container" style="text-align: center">

@@ -66,7 +66,8 @@ var image_button = new Class
 			
 			"background-repeat": "no-repeat",
 			"background-color": "transparent",
-			"background-position": "0 0",
+			"background_position_x": 'left',
+			"background_position_y": 'top',
 			"background-image": this.get_image_path()
 		})
 		
@@ -101,7 +102,7 @@ var image_button = new Class
 	
 			"background-repeat": "no-repeat",
 			"background-color": "transparent",
-			"background-position": "0 -" + options.height + "px",
+			"background_position_y": "-" + options.height + "px",
 			"background-image": this.get_image_path()
 		})
 

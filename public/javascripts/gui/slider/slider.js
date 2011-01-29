@@ -154,7 +154,7 @@ function slider(options)
 		}
 
 		// else - animate
-		this.$strip.animate({ marginLeft: marginLeft })
+		animator.roll_left(this.$strip, marginLeft)
 	}
 	
 	// Hides and shows controls depending on current position

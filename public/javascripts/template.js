@@ -68,6 +68,11 @@ var template = new Class
 	{
 		Elements.from(this.markup).inject(document.id(element_id))
 	},
+	
+	inject_in_place_of: function(element_id)
+	{
+		Elements.from(this.markup).replaces(document.id(element_id))
+	},
 
 	// replaces '#{city}' with 'Moscow' (assuming data = { city: 'Moscow' })
 	replace_property_inline: function(markup, property)

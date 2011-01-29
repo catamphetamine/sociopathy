@@ -40,6 +40,7 @@ $.cssHooks['text_shadow_radius'] =
 	{
 		return parse_text_shadow($(element)).radius
 	},
+	
 	set: function(element, radius) 
 	{
 		var parameters = parse_text_shadow($(element))

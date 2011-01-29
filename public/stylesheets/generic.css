@@ -4,12 +4,43 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
 	display: block;
 }
 
+html
+{
+	height: 100%;
+}
+
+body 
+{
+	position: relative;
+	height: 100%;
+}
+
 html, body
 {
 	margin: 0;
 	padding: 0;
 
 	color: #1f1f1f;
+}
+
+.table
+{
+	display: table;
+}
+
+.row
+{
+	display: table-row;
+}
+
+.cell
+{
+	display: table-cell;
+}
+
+.middle
+{
+	vertical-align: middle;
 }
 
 html, input
@@ -190,16 +221,27 @@ input.field
 	-webkit-border-radius: 5px; 
 	-moz-border-radius: 5px; 
 	border-radius: 5px;
+	
+	-webkit-transition-property: all;
+	-moz-transition-property: all;
+	-o-transition-property: all;
+	transition-property: all;
+
+	-webkit-transition-duration: 0.5s;
+	-moz-transition-duration: 0.5s;
+	-o-transition-duration: 0.5s;
+	transition-duration: 0.5s;
 }
 
-input.field:focus
+input.focusable_field:focus
 {
-	/*
-	-webkit-box-shadow: 0 0 10px rgba(0, 150, 255, 1.0);
-	-moz-box-shadow: 0 0 10px rgba(0, 150, 255, 1.0);
-	-o-box-shadow: 0 0 10px rgba(0, 150, 255, 1.0);
-	box-shadow: 0 0 10px rgba(0, 150, 255, 1.0);
-	*/
+	background-color: #f2faff;
+	border-color: #96c0d8;
+	
+	-webkit-box-shadow: 0 0 5px rgba(0, 150, 255, 1.0);
+	-moz-box-shadow: 0 0 5px rgba(0, 150, 255, 1.0);
+	-o-box-shadow: 0 0 5px rgba(0, 150, 255, 1.0);
+	box-shadow: 0 0 5px rgba(0, 150, 255, 1.0);	
 }
 
 label.error
