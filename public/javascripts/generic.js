@@ -80,6 +80,9 @@ function get_scroll_position()
 /**
  * disables page scrolling
  */
+
+var namespace = 'main'
+
 function disable_scroll()
 {
 	$(window).bind('scroll.' + namespace, {scroll_position: get_scroll_position()}, function(event) 
@@ -95,4 +98,66 @@ function disable_scroll()
 function enable_scroll()
 {
 	$(window).unbind('scroll.' + namespace)
+}
+
+/**
+ * centers elements vertically
+ */
+
+var content_top_padding = 0 // will be computed on document load
+
+$(function()
+{
+	content_top_padding = $('#panel').height()
+	$('#content_top_padding').height(content_top_padding)
+})
+
+function center_vertically()
+{
+	$(".middle").each(function()
+	{
+		var $element = $(this)
+		
+		var parent_height = parseInt($element.parent().height())
+		var height = parseInt($element.height())
+		
+		if (parent_height <= height)
+		{
+			$element.css({ top: 'auto' })
+			return
+		}
+
+		var content_padding_amendment = 0
+		
+		if ($element.attr('parent') === 'content')
+			content_top_padding
+		
+		$element.css
+		({
+			top: Math.round((parent_height - content_padding_amendment - height) / 2) + 'px'
+		})
+	})
+}
+
+$(window).resize(center_vertically)
+
+/**
+ * show loading screen
+ */
+function loading_page()
+{
+	$("body").css({ overflow: 'hidden' })
+}
+
+/**
+ * hide loading screen
+ */
+function page_loaded()
+{
+	$('#loading_screen').remove()
+	
+//	var $content = $('#content')
+//	$content.height((parseInt($content.height()) - parseInt($content.css('padding-top'))) + 'px')
+	
+	$("body").css({ overflow: 'auto' })
 }

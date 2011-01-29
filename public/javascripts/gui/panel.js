@@ -127,7 +127,9 @@ var panel = new (function()
 	
 	// initialize panel
 	this.initialize = function()
-	{
+	{			
+		$('#panel').wrap('<div id="panel_container"/>').wrap('<div id="panel_box_shadow_fixer"/>')
+		
 		this.activate_buttons(images_path)
 		this.activate_tooltips()
 	} 

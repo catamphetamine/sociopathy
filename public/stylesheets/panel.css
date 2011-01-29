@@ -18,14 +18,24 @@
 	padding-bottom: 2px;
 }
 
+#panel_container
+{
+	position: absolute;
+	top: 0;
+	left: 0;
+	
+	width: 100%;	
+}
+
 #panel
 {
 	margin: 0;
 	padding: 0;
-	padding-left: 15px;
 
 	height: 60px;
 
+	padding-left: 15px;
+	
 	background-image: url('../images/panel/background.png');
 	background-repeat: repeat-x;
 

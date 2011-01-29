@@ -120,11 +120,6 @@
 				margin-left: auto;
 				margin-right: auto;
 			}
-			
-			#previous_person_button, #next_person_button
-			{
-				top: 50%;
-			}
 		</style>
 			
 		<script type="text/javascript">
@@ -132,8 +127,19 @@
 			// initialize
 			$(function()
 			{
+				loading_page()
+				
 				panel.initialize()
 				initialize_page()	
+				
+				var delayed = function() 
+				{
+					center_vertically()
+					page_loaded()
+				}
+
+				delayed.delay(1)
+				
 				check_browser_support()
 			})
 		</script>
@@ -143,32 +149,32 @@
 	</head>
 
 	<body>
+		<div id="loading_screen"></div>
 					
 		<header>
 			<!-- top menu panel -->
-			<!-- fixes the box-shadow scroll bar bug in Fire Fox -->
-			<div id="panel_box_shadow_fixer">
-				<div id="panel">
-					<!-- the menu -->
-					<ul id="panel_menu">
-						<li name="reading" class="translated" label="panel, reading"></li>
-						<li name="people" link="people.html" class="translated" label="panel, people"></li>
-						<li name="help" class="translated" label="panel, help"></li>
-					</ul>
-		
-					<!-- logo -->
-					<a href="/"><img id="panel_logo" src="images/panel/logo.png"/></a>
-				</div>
+			<div id="panel">
+				<!-- the menu -->
+				<ul id="panel_menu">
+					<li name="reading" class="translated" label="panel, reading"></li>
+					<li name="people" link="people.html" class="translated" label="panel, people"></li>
+					<li name="help" class="translated" label="panel, help"></li>
+				</ul>
+	
+				<!-- logo -->
+				<a href="/"><img id="panel_logo" src="images/panel/logo.png"/></a>
 			</div>
 		</header>
 
 		<section id="content">	
-			<div id="person_slideshow">
+			<div id="content_top_padding"></div>
+		
+			<div id="person_slideshow" class="middle" parent="content">
 				<!-- left arrow -->
-				<div id="previous_person_button" class="left"></div>
+				<div id="previous_person_button" class="left middle"></div>
 				
 				<!-- right arrow -->
-				<div id="next_person_button" class="right"></div>
+				<div id="next_person_button" class="right middle"></div>
 				
 				<!-- first ID card placeholder -->
 				<div id="first_id_card_placeholder" class="center_business_card"></div>
