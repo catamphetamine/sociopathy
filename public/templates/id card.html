@@ -1,5 +1,5 @@
 <!-- ID card -->
-<article id="id_card" class="high business_card" >
+<article class="high business_card" >
 	<!-- gender -->
 	<!-- <div type="gender"></div> -->
 	
@@ -10,8 +10,8 @@
 		
 				<section class="left">
 					<!-- who is -->
-					<div type="name"><property name='name'>Николай</property></div>
-					<div type="summary"><property name='summary'>участник</property></div>
+					<div type="name">${name}</div>
+					<div type="summary">${summary}</div>
 					
 					<!-- personal info -->
 					<div style="display: table" type="personal_info">
@@ -25,13 +25,13 @@
 							<div class="bottom" style="display: table-cell" type="info">
 								
 								<!-- gender -->
-								<div type="gender_#{gender}"></div>
+								<div type="gender_${gender}"></div>
 	
 								<div type="info_spacer"></div>
 	
 								<!-- origin -->
 								<div type="info_type">откуда</div>
-								<div type="info_value"><property name='origin'>город</property></div>
+								<div type="info_value">${origin}</div>
 								
 								<div type="info_spacer"></div>
 								

@@ -7,15 +7,13 @@
 {
 	font-family: Tahoma;
 	
-	position: relative;
-	
 	text-align: left;
 	
-	display: inline-block;
+	display: block;
 	
 	min-width: 650px;
 	max-width: 650px;
-	overflow: hidden
+	overflow: hidden;
 	
 	margin-left: auto;
 	margin-right: auto;
@@ -89,7 +87,7 @@
 	width: 100%;
 	text-align: right;
 	
-	margin-top: -6px;
+	margin-top: -4px;
 	
 	font-size: 20px;
 	color: #e81f95;
@@ -123,11 +121,6 @@
 	background-image: url('../images/business card/mood.png');
 	background-repeat: no-repeat;
 	background-color: transparent;
-}
-	
-.business_card
-{
-	position: relative;
 }
 
 .business_card [type=personal_info]

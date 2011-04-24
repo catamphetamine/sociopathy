@@ -20,7 +20,8 @@
 		<!--<script type="text/coffeescript" src="javascripts/coffee script/"></script>-->
 
 		<!-- jQuery -->
-		<script type="text/javascript" src="javascripts/jquery/jquery-1.4.4.min.js"></script>
+		<script type="text/javascript" src="javascripts/jquery/jquery-1.5.2.min.js"></script>
+		<script type="text/javascript" src="javascripts/jquery/waypoints.js"></script>
 
 		<!-- MooTools -->
 		<script type="text/javascript" src="javascripts/mootools/core-1.3.js"></script>
@@ -189,6 +190,7 @@
 				
 				var delayed = function() 
 				{
+					center_horizontally()
 					center_vertically()
 					page_loaded()
 				}
@@ -212,9 +214,9 @@
 				<div id="panel">
 					<!-- the menu -->
 					<ul id="panel_menu">
-						<li name="reading" class="translated" label="panel, reading"></li>
+						<li name="reading" link="reading.html" class="translated" label="panel, reading"></li>
 						<li name="people" link="people.html" class="translated" label="panel, people"></li>
-						<li name="help" class="translated" label="panel, help"></li>
+						<li name="help" link="help.html" class="translated" label="panel, help"></li>
 					</ul>
 		
 					<!-- logo -->

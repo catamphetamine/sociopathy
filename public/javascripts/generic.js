@@ -112,6 +112,25 @@ $(function()
 	$('#content_top_padding').height(content_top_padding)
 })
 
+function center_horizontally()
+{
+	$('[center~="horizontally"]').each(function()
+	{
+		var $element = $(this)
+		var position = $element.css('position')
+		
+		switch (position)
+		{
+			case 'absolute':
+				$element.css('left', parseInt(($(window).width() - $element.width()) / 2) + 'px')
+				return
+				
+			default:
+				return
+		}		
+	})
+}
+
 function center_vertically()
 {
 	$(".middle").each(function()
@@ -161,3 +180,6 @@ function page_loaded()
 	
 	$("body").css({ overflow: 'auto' })
 }
+
+// placeholder - will be overridden
+function initialize_page() {}
