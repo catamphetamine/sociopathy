@@ -66,6 +66,8 @@
 	{
 		get: function(element, computed, extra) 
 		{
+			var $element = $(element)
+		
 			var x = get_coordinate(1, $element)
 			
 			if (!x)
@@ -91,10 +93,14 @@
 	{
 		get: function(element, computed, extra) 
 		{
+			var $element = $(element)
+			
 			var y = get_coordinate(2, $element)
 			
 			if (!y)
 				return
+				
+			return y
 		},
 		
 		set: function(element, y) 

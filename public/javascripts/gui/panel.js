@@ -91,8 +91,7 @@ var panel = new (function()
 			(
 				$("> a", $menu_item), 
 				{
-					path: images_path,
-					"button name": title,
+					skin: 'url(\'' + images_path + '/' + title + '.png' + '\')',
 					width: icon_size,
 					height: icon_size
 				}

@@ -18,10 +18,6 @@ function initialize_join_button()
 	(
 		"join_button", 
 		{
-			path: "images/page/welcome",
-			"button name": "join button",
-			width: 345,
-			height: 59,
 			action: function() { join_dialog.open() }
 		}
 	))

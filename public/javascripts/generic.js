@@ -1,6 +1,9 @@
 // internationalization
 $.i18n.setLocale("ru")
 
+if (!$.fn.prop)
+	$.fn.prop = $.fn.attr
+
 // show error message on error
 
 //$.ajaxError(show_error_message)
@@ -148,7 +151,7 @@ function center_vertically()
 
 		var content_padding_amendment = 0
 		
-		if ($element.attr('parent') === 'content')
+		if ($element.prop('parent') === 'content')
 			content_top_padding
 		
 		$element.css

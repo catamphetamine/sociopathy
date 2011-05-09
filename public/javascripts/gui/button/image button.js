@@ -51,17 +51,29 @@ var image_button = new Class
 	{
 		this.options['image format'] = 'png'
 
+		var element = get_element(id_or_element)
+
+		this.options.width = element.width()
+		this.options.height = element.height()
+
+		this.options.skin = element.css('background-image') //element.attr('skin')
+		
 		this.parent(id_or_element, options)
 	},
 	
 	build_idle_frame: function()
 	{
+		var position = this.$element.css('position')
+		
+		if (position !== 'absolute')
+			position = 'relative'
+		
 		this.$element.css
 		({
 			width: this.options.width + "px",
 			height: this.options.height + "px",
 				
-			position: "relative",
+			position: position,
 			display: "block",
 			
 			"background-repeat": "no-repeat",
@@ -111,6 +123,8 @@ var image_button = new Class
 	
 	get_image_path: function()
 	{
-		return "url('" + this.options.path + "/" + this.options["button name"] + "." + this.options['image format'] + "')"
+		return this.options.skin
+		//return "url('" + this.options.skin + "." + this.options['image format'] + "')"
+		//return "url('" + this.options.path + "/" + this.options["button name"] + "." + this.options['image format'] + "')"
 	}.protect()
 })

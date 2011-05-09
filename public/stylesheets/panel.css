@@ -43,9 +43,12 @@
 	-moz-box-shadow: 0px 1px 2px #7f7f7f;
 	-o-box-shadow: 0px 1px 2px #7f7f7f;
 	box-shadow: 0px 1px 2px #7f7f7f;
-
+	
 	-webkit-user-select: none;
+	-khtml-user-select: none;
 	-moz-user-select: none;
+	-o-user-select: none;
+	user-select: none;
 }
 
 #panel_menu
@@ -56,7 +59,18 @@
 	text-indent: 0;
 }
 
-#panel_menu, #panel_menu li
+#panel_menu
+{
+	position: absolute;
+	left: 15px;
+	right: 0;
+	z-index: 10;
+
+	margin: 0;
+	padding: 0;
+}
+
+#panel_menu li
 {
 	margin: 0;
 	padding: 0;
@@ -109,6 +123,9 @@
 
 #panel_logo
 {
+	position: relative;
+	z-index: 10;
+	
 	margin: 0;
 	margin-right: 12px;
 

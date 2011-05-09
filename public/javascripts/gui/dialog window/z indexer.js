@@ -23,9 +23,29 @@ var z_indexer = new (function()
 	 */
 	this.acquire_top_z = function()
 	{
+		this.update_top_z()
+		
 		old_top_z = this.top_z
 		this.top_z++
 		return old_top_z
+	}
+	
+	/**
+	 * Get the real top z-index
+	 */
+	this.update_top_z = function()
+	{
+		var top_z = this.top_z
+		
+		$('body *').each(function() 
+		{
+			var z_index = parseInt($(this).css('z-index'))
+			if (z_index)
+				if (top_z < z_index)
+					top_z = z_index
+		})
+		
+		this.top_z = top_z
 	}
 
 	// all the opened dialog windows on the page

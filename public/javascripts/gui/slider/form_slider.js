@@ -89,7 +89,8 @@ function form_slider(options)
 			// if Enter key pressed
 			if (event.keyCode == Event.Keys.enter) 
 			{
-				self.next()
+				options.buttons.next.push()
+				//self.next()
 				return
 			}
 			

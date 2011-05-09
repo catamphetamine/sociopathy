@@ -275,6 +275,7 @@ var text_button = new Class
 		$frame.append($content)
 	
 		var $left_part = $(':first', $frame)
+		$left_part.css('background_position_x', 'left')
 		$left_part.css('background_position_y', "-" + this.skin.height * (options['image index'] - 1) + "px")
 	
 		$frame.css
@@ -286,6 +287,7 @@ var text_button = new Class
 			'opacity': 0
 		})
 	
+		$frame.css('background_position_x', 'right')
 		$frame.css("background_position_y", "-" + this.skin.height * (options['image index'] - 1) + "px")
 		$frame.css(this.get_right_part_style())
 		

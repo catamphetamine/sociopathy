@@ -10,7 +10,7 @@
 		<meta http-equiv="Content-Language" content="ru">
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 
-		<title>Члены Собрания</title>
+		<title>Читальня</title>
 
 		<!-- less (css preprocessor) -->
 		<script type="text/javascript" src="javascripts/less-1.0.35.min.js"></script>
@@ -107,20 +107,23 @@
 		<!-- browser checker -->
 		<script type="text/javascript" src="javascripts/browser checker.js"></script> 
 
+		<!-- search bar -->
+		<script type="text/javascript" src="javascripts/gui/search bar.js"></script> 
+		<link rel="stylesheet" href="stylesheets/search bar.css" type="text/css"/>
+
 		<!-- page initialization -->
-		<script type="text/javascript" src="javascripts/page/people.js"></script> 
-		<link rel="stylesheet" href="stylesheets/page/people.css" type="text/css"/>
+		<script type="text/javascript" src="javascripts/page/reading.js"></script> 
+		<link rel="stylesheet" href="stylesheets/page/reading.css" type="text/css"/>
 		<link rel="stylesheet" href="stylesheets/business card.css" type="text/css"/>
 
 		<style type="text/css">
-			
-			#person_slideshow
+			#search
 			{
-				height: 100%;
-				width: 1000px;
+				position: absolute;
+				right: 20px;
+				top: 6px;
 				
-				margin-left: auto;
-				margin-right: auto;
+				z-index: 10;
 			}
 		</style>
 			
@@ -165,15 +168,15 @@
 				</ul>
 	
 				<!-- logo -->
-				<a href="/"><img id="panel_logo" src="images/panel/logo.png"/></a>
+				<a id="logo" href="/"><img id="panel_logo" src="images/panel/logo.png"/></a>
 			</div>
 		</header>
 
 		<section id="content">	
 			<!-- maybe obsolete -->
 			<div id="content_top_padding"></div>
-			
-			<h2 id="page_header" center="horizontally">Читальня</h2>
+
+			<h2 id="page_header">Читальня</h2>
 		
 			<div id="categories">
 			</div>

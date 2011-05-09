@@ -77,12 +77,15 @@ var button = new Class
 			if (!this.locker)
 				return
 			
+			if (this.self.options['prevent double submission'] === true)
+				return
+
 			this.locker.unlock()
 			this.locker = null
 			
 			// reset the flags
 			this.can_unlock = false
-			this.may_unlock = false
+			this.may_unlock = false			
 		},
 		
 		let_unlock: function()
@@ -140,51 +143,45 @@ var button = new Class
 		
 		this.$element.bind('mouseenter.' + this.namespace, function() 
 		{
-			self.is_rolled_over = true
-		
+			this.is_rolled_over = true
+
 			// if is locked - exit
-			if (self.is_locked())
-				return false
-			
-			self.on_roll_over()
-		})
+			if (this.is_locked())
+				return false	
+	
+			this.on_roll_over()
+		}.
+		bind(this))
 		
 		this.$element.bind('mouseleave.' + this.namespace, function() 
 		{
-			self.is_rolled_over = false
+			this.is_rolled_over = false
 			
 			// if is locked - exit
-			if (self.is_locked())
+			if (this.is_locked())
 				return false
 				
-			self.on_roll_out()
-		})
+			this.on_roll_out()
+		}.
+		bind(this))
 
 		this.$element.bind('click.' + this.namespace, function() 
 		{
 			// if is locked - exit
-			if (self.is_locked())
+			if (this.is_locked())
 				return false
-		
-			self.pushing.lock()
-	
-			// *after the button is pushed - executes the after pushed actions
-			self.on_push(function() 
-			{
-				self.execute_action()
 				
-				// maybe unlock the push lock
-				self.handle_push_lock()
-			})	
-		})
+			// lock the button
+			this.pushing.lock()
+			
+			// *after the button is pushed - executes the after pushed actions
+			this.on_push()
+		}.
+		bind(this))
 	},
-	
-	handle_push_lock: function()
+
+	let_unlock: function()
 	{
-		// if prevent double submission - leave the button locked
-		if (this.options['prevent double submission'])
-			return
-		
 		// if auto unlock - unlock the button immediately
 		if (this.options['auto unlock'])
 			this.pushing.let_unlock()
@@ -210,7 +207,8 @@ var button = new Class
 				self.locks.erase(this)
 				
 				if (self.is_rolled_over)
-					self.$element.trigger('mouseenter.' + self.namespace)
+					self.on_roll_over()
+					//self.$element.trigger('mouseenter.' + self.namespace)
 			}
 		})()
 		
@@ -274,27 +272,28 @@ var button = new Class
 	
 	on_roll_over: function() 
 	{
-		animator.stop(this.frames.ready)
+//		animator.stop(this.frames.ready)
 		this.fade_in('ready') 
 	},
 	
 	on_roll_out: function() 
 	{
-		animator.stop(this.frames.ready)
+//		animator.stop(this.frames.ready)
 		this.fade_out('ready')
 	},
 	
-	on_push: function(after_pushed_actions) 
+	on_push: function()
 	{
-		var self = this
 		this.fade_in('pushed', function() 
-		{ 
-			self.on_roll_out()
+		{
+			this.on_roll_out()
 			
-			after_pushed_actions()
-				
-			self.fade_out('pushed', self.can_unlock_the_pushing_lock)
-		})
+			this.execute_action()
+			this.let_unlock()
+
+			this.fade_out('pushed', this.can_unlock_the_pushing_lock)
+		}.
+		bind(this))
 	},
 	
 	// show immediately
