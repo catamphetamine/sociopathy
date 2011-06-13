@@ -31,9 +31,13 @@ var jquery_animator = new Class
 		if (options.delay)
 			$element.delay(options.delay)
 
+		var maximum_opacity = 1
+		if (options.maximum_opacity)
+			maximum_opacity = options.maximum_opacity
+			
 		$element.show()
 		this.stop($element)
-		$element.fadeTo(options.duration, 1, options.easing, options.callback)
+		$element.fadeTo(options.duration, maximum_opacity, options.easing, options.callback)
 	},
 	
 	fade_out: function($element, options)
@@ -119,8 +123,12 @@ var moo_tools_animator = new Class
 
 		this.stop($element)
 		
+		var maximum_opacity = 1
+		if (options.maximum_opacity)
+			maximum_opacity = options.maximum_opacity
+		
 		$element.data('animation_effect', effect)
-		effect.start(1)
+		effect.start(maximum_opacity)
 	},
 	
 	fade_out: function($element, options)

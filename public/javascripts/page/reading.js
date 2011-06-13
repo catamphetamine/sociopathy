@@ -5,10 +5,15 @@
 	
 	$('#categories').disableTextSelect();
 	
-	show_categories({data: [{id: 1, name: 'История'}, {id: 2, name: 'Строительство'}, {id: 3, name: 'Механизация'}, {id: 4, name: 'Литература'}, {id: 5, name: 'Политика'}, {id: 6, name: 'Душеведение'}, {id: 7, name: 'Общество'}]}.data)
+	show_categories({data: [{id: 1, name: 'История', url_name: 'history'}, {id: 2, name: 'Строительство', url_name: 'architecture'}, {id: 3, name: 'Механизация', url_name: 'machinery'}, {id: 4, name: 'Литература', url_name: 'literature'}, {id: 5, name: 'Политика', url_name: 'politics'}, {id: 6, name: 'Душеведение', url_name: 'psychology'}, {id: 7, name: 'Общество', url_name: 'society'}]}.data)
 	
 	$(window).resize(resize_categories_list)
 	resize_categories_list()
+	
+	$('#categories li').each(function()
+	{
+		new category_button($(this))
+	})
 }
 
 function resize_categories_list()
@@ -47,7 +52,7 @@ function show_categories(categories)
 	{
 		var list_item = $('<li/>').appendTo(target)
 		
-		var link = $('<a/>').attr('href', 'http://google.ru/categories/' + category.id).css('background-image', 'url(\'' + get_category_icon_url(category.id) + '\')').appendTo(list_item)
+		var link = $('<a/>').attr('href', 'http://sobranie.net/library/' + category.id + '. ' + category.url_name).css('background-image', 'url(\'' + get_category_icon_url(category.id) + '\')').appendTo(list_item)
 		$('<span/>').text(category.name).appendTo(link)
 		
 		//list_item.click(function(event) { event.preventDefault(); })

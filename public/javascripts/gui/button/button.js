@@ -296,6 +296,14 @@ var button = new Class
 		bind(this))
 	},
 	
+	get_maximum_opacity: function(frame)
+	{
+		if (frame.data('maximum opacity'))
+			return frame.data('maximum opacity')
+		else
+			return 1
+	},
+	
 	// show immediately
 	show: function()
 	{
@@ -304,7 +312,7 @@ var button = new Class
 			return
 			
 		this.frames.idle.show()
-		this.frames.idle.css({ opacity: 1 })
+		this.frames.idle.css({ opacity: this.get_maximum_opacity(this.frames.idle) })
 		this.is_shown = true
 	},
 	
@@ -379,7 +387,8 @@ var button = new Class
 		{
 			duration: this.options[frame_name + ' frame fade in duration'],
 			easing: this.options[frame_name + ' frame fade in easing'],
-			callback: callback
+			callback: callback,
+			maximum_opacity: this.get_maximum_opacity(this.frames[frame_name])
 		})
 	},
 	

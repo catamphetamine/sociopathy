@@ -332,3 +332,14 @@ label.error
 	-webkit-user-select: none;
 	-moz-user-select: none;	
 }
+
+.hidden_button_frame
+{
+	display: block;
+	position: absolute;
+	top: 0;
+	left: 0;
+	display: none;
+	opacity: 0;
+}
+			

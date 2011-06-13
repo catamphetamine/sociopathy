@@ -41,7 +41,7 @@
 	border-radius: 10px;	
 }
 
-.reading ul#categories li, .reading ul#categories li a
+.reading ul#categories li, .reading ul#categories li a, .reading ul#categories li .frame
 {
 	-moz-border-radius: 10px;
 	-webkit-border-radius: 10px;				
