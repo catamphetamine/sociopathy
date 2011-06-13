@@ -128,11 +128,25 @@ function center_horizontally()
 				$element.css('left', parseInt(($(window).width() - $element.width()) / 2) + 'px')
 				return
 				
+			case 'relative':
+				var pixels = parseInt(($(window).width() - $element.width()) / 2)
+				$element.css('left', pixels + 'px')
+				$element.css('margin-right', '-' + pixels + 'px')
+				return
+				
 			default:
+				if ($element.attr('class'))
+					var classes =  '.' + $element.attr('class')
+				else
+					var classes =  ''
+				
+				alert('Unable to center ' + $element.get(0).tagName.toLowerCase() + '#' + $element.attr('id') + classes + ' horizontally')
 				return
 		}		
 	})
 }
+
+$(window).resize(center_horizontally)
 
 function center_vertically()
 {
@@ -176,7 +190,7 @@ function loading_page()
  */
 function page_loaded()
 {
-	$('#loading_screen').remove()
+	$('#loading_screen').fadeOut(300, function() { $('#loading_screen').remove() });
 	
 //	var $content = $('#content')
 //	$content.height((parseInt($content.height()) - parseInt($content.css('padding-top'))) + 'px')

@@ -130,8 +130,10 @@ html, input
 #content, #background_stretcher, #loading_screen
 {
 	background-color: #f0f0f0;
+	/*
 	background: -webkit-gradient(radial, 60% 10%, 10, 60% 10%, 1500, from(#ffffff), to(#e5e4e4));
 	background-image: -moz-radial-gradient(60% 10% 45deg, circle farthest-side, #ffffff 0%, #e5e4e4 100%);
+	*/
 }
 
 #background_stretcher
@@ -191,7 +193,7 @@ a, a:visited, a:hover
 	color: inherit;
 	/*color: #004b7b;*/
 	
-	border-bottom: 1px dashed #004b7b;
+	border-bottom: 1px solid #004b7b;
 }
 
 /*
