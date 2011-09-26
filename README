@@ -1,8 +1,25 @@
 Sociopathy
-   an unusual social network
+   необычная социальная сеть
 
-author: Kuchumov Nikolay
-email: kuchumovn@gmail.com
-github: kuchumovn
+Изпользуемые технологии:
+   Html 5
+   Css 3 (Less)
+   Javascript (jQuery, Mootools, Node.js, Express, WebSocket)
+   Ruby
+   MongoDB
+   NginX
+   
+Доступна под GNU General Public License (см. "license.txt")
 
-distributed under GNU General Public License (see the "license.txt" file)
+=========================================================
+
+Запуск:
+
+//поставить mongodb
+поставить node.js
+поставить nginx, и в nginx.conf в разделе "http" добавить "include c:\путь к папаке sociopathy\enginex.conf;"
+
+//"запустить mongodb.bat" (прописав в нём правильный путь)
+"запустить node.js.bat" (прописав в нём правильный путь)
+"запустить nginx.bat" (прописав в нём правильный путь)
+зайти обозревателем по адресу localhost:8081
