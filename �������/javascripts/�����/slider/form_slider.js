@@ -79,18 +79,14 @@ function form_slider(options)
 	
 	this.set_container = function($container)
 	{
-//		this.$container = $container
-		
 		var self = this
 		
-		//this.slider.$element
 		$container.keydown(function(event) 
 		{
 			// if Enter key pressed
 			if (event.keyCode == Event.Keys.enter) 
 			{
 				options.buttons.next.push()
-				//self.next()
 				return
 			}
 			

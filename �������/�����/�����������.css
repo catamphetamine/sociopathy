@@ -1,0 +1,57 @@
+@import "/облик/вспомогательный.less";
+
+.message()
+{
+	display: inline-block;
+			
+	margin-top: 20px;
+	margin-right: 20px;
+	
+	padding-top: 15px;
+	padding-bottom: 15px;
+	
+	padding-left: 30px;
+	padding-right: 30px;
+	
+	opacity: 0.85;
+	
+	border-style: solid;
+	border-width: 2px;
+	
+	.shadow(4px, 5px, 7px, 0.4);
+	.rounded-corners(10px);
+}
+
+.message_container
+{
+	position: absolute;
+	right: 0;
+	top: 0;
+
+	.info
+	{
+		.message();
+		
+		color: #000000;
+		border-color: #4f4f4f;
+		background-color: #c9c9c9;
+	}
+
+	.error
+	{
+		.message();
+		
+		color: #faefef;
+		border-color: #400500;
+		background-color: #7f2f2f;
+	}
+
+	.warning
+	{
+		.message();
+		
+		color: #281b00;
+		border-color: #3b3200;
+		background-color: #ca9f41;
+	}
+}

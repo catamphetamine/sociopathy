@@ -142,11 +142,7 @@ function initialize_page()
 	
 	$('.slider label').disableTextSelect()
 	$('#join_form_gender_chooser').disableTextSelect()
-
-	//Ajax.put('/приложение/прописать', { 'test': '1' }, { error: 'Не удалось прописаться', ok: function(данные) { alert(данные.ключ) } })
 }
-
-//	$("#input_field").Watermark('text', $("#field_watermark").css("color"))			
 
 // actions
 
@@ -154,8 +150,14 @@ function initialize_page()
 function join_submission(data)
 {
 	loading_indicator.show()
-//	setTimeout(function() {loading_indicator.hide(); join_dialog.close(); alert("Здесь будет отсылаться PUT AJAX-запрос с данными:\n\n" + info(data));}, 3000)
-//	return
-
-	Ajax.put('/приложение/прописать', data, { error: 'Не удалось прописаться', ok: function(данные) { loading_indicator.hide(); join_dialog.close(); Message.info('Ваш номер: ' + данные.ключ) } })
+	Ajax.put('/приложение/прописать', data, 
+	{ 
+		error: 'Не удалось прописаться', 
+		ok: function(данные) 
+		{ 
+			loading_indicator.hide()
+			join_dialog.close()
+			Message.info('Ваш номер: ' + данные.ключ) 
+		} 
+	})
 }

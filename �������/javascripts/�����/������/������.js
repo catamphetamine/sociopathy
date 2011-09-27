@@ -38,6 +38,8 @@ var dialog_window = new Class
 
 	is_open: false,
 	
+	smooth: true,
+	
 	options: 
 	{
 		modal: true,
@@ -93,7 +95,7 @@ var dialog_window = new Class
 				if (self.options['close on escape'] && event.keyCode &&
 					event.keyCode === Event.Keys.esc) 
 				{	
-					self.close(event)
+					self.close()
 					event.preventDefault()
 				}
 			})
@@ -132,7 +134,15 @@ var dialog_window = new Class
 	 */
 	show: function()
 	{
-		this.$element.show()
+		if (this.smooth)
+		{
+			this.$element.hide()
+			this.$element.fadeIn(500)
+		}
+		else
+		{
+			this.$element.show()
+		}
 
 		this.$element.focus()
 	},
@@ -142,10 +152,17 @@ var dialog_window = new Class
 	 */
 	hide: function(callback)
 	{
-		this.$element.hide()
-		
-		if (callback)
-			callback()
+		if (this.smooth)
+		{
+			this.$element.fadeOut(500, callback)
+		}
+		else
+		{
+			this.$element.hide()
+			
+			if (callback)
+				callback()
+		}
 	},
 	
 	// opens the dialog window
@@ -157,7 +174,7 @@ var dialog_window = new Class
 //		disable_scroll()
 
 		if (this.options.modal)
-			this.veil = new veil()
+			this.veil = new veil({ smooth: this.smooth })
 			
 		this.size()
 		this.position()
@@ -196,19 +213,23 @@ var dialog_window = new Class
 	},
 	
 	// closes the dialog window
-	close: function(event) 
+	close: function(callback) 
 	{
 		this.veil.destroy()
 		
 		this.$element.unbind('keypress.' + this.namespace)
 		
-		this.hide()
-		
-		z_indexer.unregister(this)
+		this.hide((function()
+		{
+			if (callback)
+				callback()
+			
+			z_indexer.unregister(this)
 
-		this.reset()
+			this.reset()
 
-		this.is_open = false
+			this.is_open = false
+		}).bind(this))
 	},
 
 	/**

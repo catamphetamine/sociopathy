@@ -17,8 +17,10 @@ var veil = new Class
 	 * Constructor
 	 * creates a new veil
 	 */
-	initialize: function() 
+	initialize: function(options) 
 	{
+		this.smooth = options.smooth
+	
 		this.$element = $('<div></div>')
 			.appendTo(document.body)
 			.hide()
@@ -47,8 +49,10 @@ var veil = new Class
 	 */
 	show: function()
 	{
-		this.$element.show()
-//		this.$element.fadeIn()
+		if (this.smooth)
+			this.$element.fadeIn()
+		else
+			this.$element.show()
 	},
 	
 	/**
@@ -56,12 +60,15 @@ var veil = new Class
 	 */
 	hide: function(callback)
 	{
-		this.$element.hide()
-		
-		if (callback)
-			callback()
+		if (this.smooth)
+			this.$element.fadeOut()
+		else
+		{
+			this.$element.hide()
 			
-//		this.$element.fadeOut()
+			if (callback)
+				callback()
+		}
 	},
 	
 	/**
