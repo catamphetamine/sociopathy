@@ -1,3 +1,4 @@
+/*
 var persons = 
 [
 	{
@@ -55,41 +56,63 @@ var persons =
 		origin: "Baghdad"
 	}
 ]
+*/
 
-var people = new (new Class
-({
-	count: persons.length,
+var people =
+{
+	are_there_more: true,
 	index: 1,
-	
-	previous: function()
-	{
-		var person = this.get_person()
-		this.index--
-		return person
-	},
 	
 	next: function()
 	{
-		var person = this.get_person()
-		this.index++
-		return person
+		var count = 1
+		var callback
+		
+		switch (arguments.length)
+		{
+			case 1:
+				callback = arguments[0]
+				break
+			case 2:
+				count = arguments[0]
+				callback = arguments[1]
+				break
+			default:
+				alert('people.next: invalid argument count')
+		}
+			
+		this.get_persons(count, function(persons)
+		{
+			this.index += persons.length
+			callback(persons)
+		})
 	},
 	
-	get_person: function()
+	get_person: function(callback)
 	{
-		return persons[this.index - 1]
+		get_persons(1, callback)
 	},
 	
-	has_next: function()
+	get_persons: function(count, callback)
 	{
-		return this.index < this.count
+		Ajax.get('/приложение/люди', { с: this.index, сколько: count }, 
+		{ 
+			error: 'Не удалось получить список людей', 
+			ok: function(data)
+			{
+				if (!data['есть ещё?'])
+					this.are_there_more = false
+					
+				callback(data['люди'])
+			}
+		})
 	},
 	
-	has_previous: function()
+	are_there_more: function()
 	{
-		return this.index > 0
+		return this.are_there_more
 	}
-}))
+}
 
 /*
 var previous_arrow
@@ -105,7 +128,7 @@ function initialize_arrows()
 	(
 		"previous_person_button", 
 		{
-			path: "картинки/на страницах/people/button",
+			path: "/картинки/на страницах/people/button",
 			"button name": "previous",
 			width: 64,
 			height: 64,
@@ -118,7 +141,7 @@ function initialize_arrows()
 	(
 		"next_person_button", 
 		{
-			path: "картинки/на страницах/people/button",
+			path: "/картинки/на страницах/people/button",
 			"button name": "next",
 			width: 64,
 			height: 64,
@@ -169,7 +192,7 @@ var id_card_template
 
 function add_id_card(person)
 {
-	var id_card = $.tmpl('id card', person)
+	var id_card = $.tmpl('личная карточка', person)
 	var wrapper = $('<li/>')
 	wrapper.append(id_card).appendTo($id_cards)
 }
@@ -188,19 +211,23 @@ function initialize_page()
 	$.ajax
 	({
 		cache: false,
-		url: 'лекала/личная карточка.html',
+		url: '/лекала/личная карточка.html',
 		dataType: 'html'
 	}).
-	success(function (template) 
+	success(function(template) 
 	{
-		id_card_template = $.template('id card', template)
+		id_card_template = $.template('личная карточка', template)
 		
-		add_id_card(people.next())
-		add_id_card(people.next())
-		add_id_card(people.next())
-		add_id_card(people.next())
+		people.next(4, function(люди)
+		{
+			люди.forEach(function(man)
+			{
+				add_id_card(man)
+			})
+		})
 
-		activate_id_card_loader()
+		if (people.are_there_more())
+			activate_id_card_loader()
 	}).
 	error(function () 
 	{

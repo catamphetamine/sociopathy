@@ -178,8 +178,7 @@ $(window).resize(center_vertically)
  */
 function loading_page()
 {
-	$('#loading_screen').remove()
-	//$("body").css({ overflow: 'hidden' })
+	$("body").css({ overflow: 'hidden' })
 }
 
 /**
@@ -187,11 +186,11 @@ function loading_page()
  */
 function page_loaded()
 {
-	//$('#loading_screen').fadeOut(300, function() { $('#loading_screen').remove() })
-	//$("body").css({ overflow: 'auto' })
+	$('#loading_screen').fadeOut(300, function() { $('#loading_screen').remove() })
+	$("body").css({ overflow: 'auto' })
 	
-//	var $content = $('#content')
-//	$content.height((parseInt($content.height()) - parseInt($content.css('padding-top'))) + 'px')
+	var $content = $('#content')
+	$content.height((parseInt($content.height()) - parseInt($content.css('padding-top'))) + 'px')
 }
 
 // placeholder - will be overridden
@@ -277,13 +276,24 @@ $(function()
 
 var Ajax = 
 {
+	get: function(url, data, options)
+	{
+		this.request('GET', url, data, options);
+	},
+	
 	put: function(url, data, options)
+	{
+		this.request('POST', url, Object.merge(data, { _method: 'put' }), options);
+	},
+	
+	request: function(method, url, data, options)
 	{
 		$.ajax
 		({
 			url: url, 
-			type: 'POST',
-			data: Object.merge(data, { _method: 'put' }), 
+			type: method,
+			cache: false,
+			data: data, 
 			success: function(json, textStatus)
 			{
 				if (json.ошибка)

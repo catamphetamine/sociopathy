@@ -1,55 +1,48 @@
-var express = require('express')
-var приложение = express.createServer()
+express = require 'express'
+приложение = express.createServer()
 
-var mongo = require('mongoskin')
-var хранилище = mongo.db('localhost:27017/sociopathy')
+mongo = require 'mongoskin'
+хранилище = mongo.db 'localhost:27017/sociopathy'
 
-var выполнить = require('seq')
-var http = require('./express')(приложение).http
+выполнить = require 'seq'
+http = require('./express')(приложение).http
 
-http.put('/прописать', function(ввод, вывод)
-{
+require 'coffee-script'
+лекальщик = require './templater'
+
+http.put '/прописать', (ввод, вывод) ->
 	выполнить()
-		.seq(function () {
+		.seq ->
 			хранилище.collection('people').save(ввод.body, this)
-		})
-		.catch(function (ошибка) {
-			вывод.send({ ошибка: ошибка })
-		})
-		.seq(function (пользователь) {
-			вывод.send({ ключ: пользователь._id })
-		})
-})
-
-http.get('/люди', function(ввод, вывод)
-{
-	выполнить()
-		.seq(function () {
-			хранилище.collection('people').find().toArray(this)
-		})
-		.catch(function (ошибка) {
-			вывод.send({ ошибка: ошибка })
-		})
-		.seq(function (люди) {
-			вывод.send(люди)
-		})
-})
-
-http.get('/страница/люди', function(ввод, вывод)
-{
-	выполнить()
-		.seq(function () {
+		
+		.catch (ошибка) ->
+			console.error ошибка
+			вывод.send ошибка: ошибка
+			break: true
 			
+		.seq (пользователь) ->
+			вывод.send ключ: пользователь._id
 
-			считать файл /ресурсы/лекала/основа.html
-			подставить в jquery templates в переменную "содержимое" файл считать файл /ресурсы/страницы/люди.html
-		})
-		.catch(function (ошибка) {
-			вывод.send({ ошибка: ошибка })
-		})
-		.seq(function (люди) {
-			вывод.send(люди)
-		})
-})
+http.get '/люди', (ввод, вывод) ->
+	выполнить()
+		.seq ->
+			#ввод.body.с
+			#ввод.body.сколько
+			
+			хранилище.collection('people').find().toArray(this)
+		
+		.catch (ошибка) ->
+			console.error ошибка
+			вывод.send ошибка: ошибка
+			break: true
+		
+		.seq (люди) ->
+			вывод.send люди: люди, 'есть ещё?': no
 
-приложение.listen(8080, '0.0.0.0')
+страницы = ['physics', 'люди', 'настройки', 'почта', 'обложка', 'помощь', 'статья', 'читальня']
+
+страницы.forEach (страница) ->
+	http.get "/страница/#{страница}", (ввод, вывод) ->
+		лекальщик.собрать_и_отдать_страницу(страница, вывод)
+
+приложение.listen 8080, '0.0.0.0'

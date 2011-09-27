@@ -8,6 +8,8 @@ function insert_search_bar_into($element)
 		'</span>'
 	)
 	
+	$('#logo').hide()
+	
 	initialize_search_bar()
 }
 

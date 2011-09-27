@@ -50,6 +50,7 @@
 	text-shadow: 0px 1px 0px #dfdfdf;
 	
 	text-align: center;
+	white-space: nowrap;
 }
 
 .dialog_window_content

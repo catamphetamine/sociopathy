@@ -1,4 +1,5 @@
 @echo off
 rem coffee --bare --nodejs code\web\main.coffee
-node "code/web/main.js"
+rem node "code/web/main.js"
+call coffee.cmd "code/web/main.js"
 pause

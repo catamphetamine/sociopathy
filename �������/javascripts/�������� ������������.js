@@ -1,12 +1,12 @@
 // browser checker
 
 // the popup
-var unsupported_browser_message
+var unsupported_browser_warning
 
 // construct the popup window
 $(function() 
 {
-	unsupported_browser_message = $("#unsupported_browser_message").dialog_window
+	unsupported_browser_warning = $("#unsupported_browser_warning").dialog_window
 	({
 		width: 1400,
 		'close on escape': true
@@ -65,5 +65,5 @@ function is_browser_supported()
 function check_browser_support()
 {
 	if (!is_browser_supported())
-		unsupported_browser_message.open()
+		unsupported_browser_warning.open()
 }

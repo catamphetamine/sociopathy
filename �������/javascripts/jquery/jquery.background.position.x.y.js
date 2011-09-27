@@ -81,11 +81,11 @@
 			var $element = $(element)
 			
 			var y = get_coordinate(2, $element)
-			
-			if (!y)
+		
+			if (typeof(y) === 'undefined')
 				return
-				
-			$element.css('background-position', get_position([x, y]))
+
+			$element.css('background-position', get_position([x, y]))				
 		}
 	}
 		

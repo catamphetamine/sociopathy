@@ -15,7 +15,7 @@
  * })
  * .open()
  * 
- * The stylesheet ("dialog window.css") is included.
+ * The stylesheet ("окошко.css") is included.
  * 
  * Requires jQuery and MooTools.
  * 
@@ -112,8 +112,8 @@ var dialog_window = new Class
 		// set dialog title bar
 		$('<header/>')
 			.addClass("dialog_window_top_bar")
-			.text(title)
 			.prependTo($dialog_window)	
+			.text(title)
 	},
 
 	set_dimensions: function($element)

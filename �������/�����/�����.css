@@ -29,18 +29,6 @@ html *::selection, html *::-moz-selection, html *::-webkit-selection
 	background: #7f7f7f;
 }
 
-#loading_screen
-{
-	position: absolute;
-	top: 0;
-	left: 0;
-	
-	z-index: 100;
-	
-	width: 100%;
-	height: 100%;
-}
-
 #page_header
 {
 	position: absolute;
@@ -112,7 +100,7 @@ html, input
 	line-height: 50px;
 }
 
-#content, #background_stretcher, #loading_screen
+#content, #background_stretcher
 {
 	background-color: #f0f0f0;
 	/*
@@ -228,7 +216,7 @@ div.clear
 	color: #7f7f7f;
 }
 
-#unsupported_browser_message
+#unsupported_browser_warning
 {
 	/*
 	font-family: serif, Times New Roman;

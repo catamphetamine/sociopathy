@@ -157,5 +157,5 @@ function join_submission(data)
 //	setTimeout(function() {loading_indicator.hide(); join_dialog.close(); alert("Здесь будет отсылаться PUT AJAX-запрос с данными:\n\n" + info(data));}, 3000)
 //	return
 
-	Ajax.put('/приложение/прописать', { 'test': '1' }, { error: 'Не удалось прописаться', ok: function() { loading_indicator.hide(); join_dialog.close(); Message.info('Ваш номер: ' + данные.ключ) } })
+	Ajax.put('/приложение/прописать', data, { error: 'Не удалось прописаться', ok: function(данные) { loading_indicator.hide(); join_dialog.close(); Message.info('Ваш номер: ' + данные.ключ) } })
 }

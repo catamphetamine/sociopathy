@@ -53,7 +53,7 @@ function show_categories(categories)
 		var list_item = $('<li/>').appendTo(target)
 		
 		if (category.id === 1)
-			var link = $('<a/>').attr('href', encodeURIComponent(category.url_name) + '.html').css('background-image', 'url(\'' + get_category_icon_url(category.id) + '\')').appendTo(list_item)
+			var link = $('<a/>').attr('href', encodeURIComponent(category.url_name)).css('background-image', 'url(\'' + get_category_icon_url(category.id) + '\')').appendTo(list_item)
 		else
 			var link = $('<a/>').attr('href', 'http://sobranie.net/читальня/' + /*category.id + '. ' +*/ encodeURIComponent(category.url_name)).css('background-image', 'url(\'' + get_category_icon_url(category.id) + '\')').appendTo(list_item)
 		
@@ -71,31 +71,31 @@ function get_category_icon_url(id)
 	switch (id)
 	{
 		case 1:
-			return 'картинки/temporary/categories/physics.jpg';
+			return '/картинки/temporary/categories/physics.jpg';
 		 
 		case 2:
-			return 'картинки/temporary/categories/architecture.jpg';
+			return '/картинки/temporary/categories/architecture.jpg';
 		 
 		case 3:
-			return 'картинки/temporary/categories/machinery.jpg';
+			return '/картинки/temporary/categories/machinery.jpg';
 		 
 		case 4:
-			return 'картинки/temporary/categories/literature.jpg';
+			return '/картинки/temporary/categories/literature.jpg';
 		 
 		case 5:
-			return 'картинки/temporary/categories/politics.jpg';
+			return '/картинки/temporary/categories/politics.jpg';
 		 
 		case 6:
-			return 'картинки/temporary/categories/psychology.jpg';
+			return '/картинки/temporary/categories/psychology.jpg';
 		 
 		case 7:
-			return 'картинки/temporary/categories/history.jpg';
+			return '/картинки/temporary/categories/history.jpg';
 
 		case 8:
-			return 'картинки/temporary/categories/sociology.jpg';
+			return '/картинки/temporary/categories/sociology.jpg';
 
 		case 9:
-			return 'картинки/temporary/categories/electromagnetism.jpg';
+			return '/картинки/temporary/categories/electromagnetism.jpg';
 	}
 }
 

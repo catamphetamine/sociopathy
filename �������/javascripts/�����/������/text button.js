@@ -287,8 +287,11 @@ var text_button = new Class
 			'opacity': 0
 		})
 	
+		// a fix for Chrome
+		$frame.css('background-position', '0 0')
+
 		$frame.css('background_position_x', 'right')
-		$frame.css("background_position_y", "-" + this.skin.height * (options['image index'] - 1) + "px")
+		$frame.css('background_position_y', "-" + this.skin.height * (options['image index'] - 1) + "px")
 		$frame.css(this.get_right_part_style())
 		
 		// adjust the icon image

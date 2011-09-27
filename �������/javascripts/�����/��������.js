@@ -49,7 +49,7 @@ var panel = new (function()
 	var menu_id = "panel_menu"
 	var tooltip_tag = "em"
 
-	var images_path = "картинки/навершие/menu"
+	var images_path = "/картинки/навершие/menu"
 	
 	var tooltip_show_bottom = 76
 	var tooltip_hide_bottom = 86
