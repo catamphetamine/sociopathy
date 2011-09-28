@@ -201,6 +201,8 @@ var Message =
 	}
 }
 
+/*
+// testing
 $(function()
 {
 	Message.info('долгое уведомление', { время: 3 })
@@ -212,3 +214,4 @@ $(function()
 
 	setTimeout(function() { Message.warning('не добавится во время анимации') }, 7000)
 })
+*/
