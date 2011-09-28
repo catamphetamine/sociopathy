@@ -20,6 +20,8 @@
 	
 	.shadow(4px, 5px, 7px, 0.4);
 	.rounded-corners(10px);
+	
+	cursor: default;
 }
 
 .message_container
