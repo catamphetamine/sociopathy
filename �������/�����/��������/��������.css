@@ -22,7 +22,7 @@
 		li
 		{
 			cursor: pointer;
-			.rounded-corners(10px);
+			.rounded_corners(10px);
 			overflow: hidden;
 
 			display: inline-block;
@@ -53,7 +53,7 @@
 			
 			a
 			{
-				.rounded-corners(10px);
+				.rounded_corners(10px);
 				overflow: hidden;
 				
 				text-align: center;
@@ -91,7 +91,7 @@
 					background-color: #ffffff;
 					opacity: 0.95;
 
-					.rounded-corners(10px);
+					.rounded_corners(10px);
 				}
 			}
 			
@@ -102,7 +102,7 @@
 
 			.frame
 			{
-				.rounded-corners(10px);
+				.rounded_corners(10px);
 				overflow: hidden;
 			}
 		}

@@ -1,10 +1,14 @@
-﻿.center_business_card
+@import "/облик/вспомогательный.less";
+
+.center_business_card
 {
 	text-align: center;
 }
 
 .business_card
 {
+	position: relative;
+
 	font-family: Tahoma;
 	
 	text-align: left;
@@ -27,9 +31,7 @@
 	padding-left: 60px;
 	padding-right: 60px;
 	
-	-moz-border-radius: 10px;
-	-webkit-border-radius: 10px;				
-	border-radius: 10px;				
+	.rounded_corners(10px);
 	
 	background-color: #efefef;
 	background: -webkit-gradient(linear, center top, center bottom, from(#fcfcfc), to(#ededed));
@@ -40,166 +42,163 @@
 	-o-box-shadow: 0px 4px 20px rgba(0,0,0,0.1), 0px 4px 8px rgba(0,0,0,0.1), 0px 4px 12px rgba(0,0,0,0.1), 0px 4px 8px rgba(0,0,0,0.1), 0px 4px 6px rgba(0,0,0,0.1), 0px 4px 4px rgba(0,0,0,0.1);
 	box-shadow: 0px 4px 20px rgba(0,0,0,0.1), 0px 4px 8px rgba(0,0,0,0.1), 0px 4px 12px rgba(0,0,0,0.1), 0px 4px 8px rgba(0,0,0,0.1), 0px 4px 6px rgba(0,0,0,0.1), 0px 4px 4px rgba(0,0,0,0.1);
 
-	.photo
+	section
 	{
-		background-image: url('../картинки/avatar/male.png');
-		background-repeat: no-repeat;
-		
-		width: 160px;
-		height: 160px;
-		
-		margin-top: 30px;
-		margin-right: 50px;
-		
-		-webkit-box-shadow: 0px 1px 3px rgb(0,0,0);
-		-moz-box-shadow: 0px 1px 3px rgb(0,0,0);
-		-o-box-shadow: 0px 1px 3px rgb(0,0,0);
-		box-shadow: 0px 1px 3px rgb(0,0,0);	
-	}
-
-	.name
-	{
-		font-size: 30px;
-		font-weight: bold;
-		color: #e81f95;
-	}
-
-	.summary
-	{
-		margin-top: -6px;
-		margin-left: 4px;
-		
-		font-size: 24px;
-		color: #989898;
-	}
-
-	.info
-	{
-		padding-left: 70px;
-	}
-
-	.info_type
-	{
-		width: 100%;
-		text-align: right;
-		
-		font-size: 16px;
-		color: #7d7b7b;
-	}
-
-	.info_value
-	{
-		width: 100%;
-		text-align: right;
-		
-		margin-top: -4px;
-		
-		font-size: 20px;
-		color: #e81f95;
-	}
-
-	.last_column
-	{
-		margin-left: 180px;
-		padding-top: 10px;
-		
-		min-width: 157px;
-		height: 100%; 
-
-		position: relative; 
-	}
-
-	.small_logo_placeholder
-	{
-		min-width: 157px;
-		min-height: 35px;
-	}
-
-	.mood
-	{
-		margin-left: auto;
-		margin-right: auto;
-		
-		width: 88px;
-		height: 88px;
-		
-		background-image: url('../картинки/business card/mood.png');
-		background-repeat: no-repeat;
-		background-color: transparent;
+		display: inline-block;
+		vertical-align: top;
 	}
 
 	.personal_info
 	{
-		 margin-top: 40px;
+		.photo
+		{
+			background-image: url('/картинки/avatar/male.png');
+			background-repeat: no-repeat;
+			
+			width: 120px;
+			height: 120px;
+			
+			margin-top: 30px;
+			margin-right: 50px;
+			
+			.shadow(0px, 1px, 3px);
+		}
+
+		.name
+		{
+			font-size: 30px;
+			color: #e81f95;
+		}
+
+		.description
+		{
+			margin-top: -8px;
+			margin-left: 12px;
+			
+			font-size: 24px;
+			color: #989898;
+		}
+
+		/*
+		.gender
+		{
+			position: absolute;
+
+			left: 0;
+			top: 0;
+			
+			width: 100%;
+			height: 100%;
+			
+			min-width: 17px;
+			min-height: 22px;
+			
+			margin-top: 17px;
+			margin-left: -15px;
+			
+			background-image: url('../картинки/business card/gender/male.png');
+			background-position: top right;
+			background-repeat: no-repeat;
+			background-color: transparent;	
+		}
+		*/
+
+		.gender_male, .gender_female
+		{
+			width: 17px;
+			height: 22px;
+			
+			background-position: top right;
+			background-repeat: no-repeat;
+			background-color: transparent;	
+		}
+
+		.gender_male
+		{
+			background-image: url('/картинки/business card/gender/male.png');
+		}
+
+		.gender_female
+		{
+			background-image: url('/картинки/business card/gender/female.png');
+		}
+	}
+	
+	.info
+	{
+		margin-top: 100px;
+		margin-left: 100px;
+
+		.type
+		{
+			width: 100%;
+			text-align: right;
+			
+			font-size: 16px;
+			color: #7d7b7b;
+			
+			cursor: default;
+		}
+		
+		.spacer
+		{
+			height: 12px;
+		}
+
+		.value
+		{
+			width: 100%;
+			text-align: right;
+			
+			margin-top: -4px;
+			
+			font-size: 20px;
+			color: #e81f95;
+		}
 	}
 
-	.info_spacer
+	.miscellaneous
 	{
-		 margin-top: 26px;
-	}
+		margin-left: 130px;
+		
+		.small_logo_placeholder
+		{
+			min-width: 157px;
+			min-height: 35px;
+		}
+		
+		.small_logo
+		{
+			display: block;
+			border: 0;
+			
+			position: absolute;
 
-	.small_logo
-	{
-		position: absolute;
+			right: 30px;
+			bottom: 20px;
+			
+			min-width: 157px;
+			min-height: 35px;
+			
+			background-image: url('/картинки/business card/small logo.png');
+			background-position: bottom right;
+			background-repeat: no-repeat;
+			background-color: transparent;
+		}
 
-		left: 0;
-		top: 0;
+		.mood
+		{
+			margin-top: 100px;
 		
-		width: 100%;
-		height: 100%;
-		
-		min-width: 157px;
-		min-height: 35px;
-		
-		background-image: url('../картинки/business card/small logo.png');
-		background-position: bottom right;
-		background-repeat: no-repeat;
-		background-color: transparent;
-	}
-
-	/*
-	.gender
-	{
-		position: absolute;
-
-		left: 0;
-		top: 0;
-		
-		width: 100%;
-		height: 100%;
-		
-		min-width: 17px;
-		min-height: 22px;
-		
-		margin-top: 17px;
-		margin-left: -15px;
-		
-		background-image: url('../картинки/business card/gender/male.png');
-		background-position: top right;
-		background-repeat: no-repeat;
-		background-color: transparent;	
-	}
-	*/
-
-	.gender_male, .gender_female
-	{
-		width: 17px;
-		height: 22px;
-		
-		width: 100%;
-		
-		background-position: top right;
-		background-repeat: no-repeat;
-		background-color: transparent;	
-	}
-
-	.gender_male
-	{
-		background-image: url('../картинки/business card/gender/male.png');
-	}
-
-	.gender_female
-	{
-		background-image: url('../картинки/business card/gender/female.png');
+			margin-left: auto;
+			margin-right: auto;
+			
+			width: 88px;
+			height: 88px;
+			
+			background-image: url('/картинки/business card/mood.png');
+			background-repeat: no-repeat;
+			background-color: transparent;
+		}
 	}
 }

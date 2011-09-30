@@ -19,14 +19,14 @@
 	border-width: 2px;
 	
 	.shadow(4px, 5px, 7px, 0.4);
-	.rounded-corners(10px);
+	.rounded_corners(10px);
 	
 	cursor: default;
 }
 
 .message_container
 {
-	position: absolute;
+	position: fixed;
 	right: 0;
 	top: 0;
 

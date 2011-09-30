@@ -1,60 +1,38 @@
-<!-- ID card -->
-<article class="high business_card">
+<article class="business_card">
 	<!-- gender -->
 	<!-- <div class="gender"></div> -->
 	
-	<!-- main -->
-	<div class="left high" style="display: table">
-		<div class="row">
-			<div class="cell high">
+	<section class="personal_info">
+		<!-- who is -->
+		<div class="name">${name}</div>
+		<div class="description">участник</div>
 		
-				<section class="left">
-					<!-- who is -->
-					<div class="name">${name}</div>
-					<div class="summary">${summary}</div>
-					
-					<!-- personal info -->
-					<div class="table" class="personal_info">
-						<div class="row">
-							<!-- photo -->
-							<div class="cell bottom">
-								<div class="photo"></div>
-							</div>
-							
-							<!-- miscellaneous info -->
-							<div class="cell bottom" class="info">
-								
-								<!-- gender -->
-								<div class="gender_${gender}"></div>
+		<!-- avatar -->
+		<div class="photo"></div>
+	</section>
 	
-								<div class="info_spacer"></div>
+	<section class="info">					
+		<!-- gender -->
+		<div class="gender_${gender}"></div>
+		
+		<!-- origin -->
+		<div {{if origin}}{{else}}style="visibility: hidden"{{/if}}>
+			<div class="type">откуда</div>
+			<div class="value">{{if origin}}${origin}{{else}}&nbsp;{{/if}}</div>
+		</div>
+		
+		<div class="spacer"></div>
+		
+		<!-- interests -->
+		<div class="type">увлечения</div>
+		<div class="value">...</div>
+	</section>
 	
-								<!-- origin -->
-								<div class="info_type">откуда</div>
-								<div class="info_value">${origin}</div>
-								
-								<div class="info_spacer"></div>
-								
-								<!-- interests -->
-								<div class="info_type">увлечения</div>
-								<div class="info_value">...</div>
-							</div>
-						</div>
-					</div>						
-				</section>
-					
-			</div>
-			
-			<!-- last column of data -->
-			<div class="last_column">
-				<!-- person's mood -->
-				<div class="mood"></div>	
-			
-				<!-- Sobranie logo -->
-				<div class="small_logo"></div>		
-			</div>
-			
-		</div>						
-	</div>
+	<section class="miscellaneous">
+		<!-- person's mood -->
+		<div class="mood"></div>	
 	
+		<!-- Sobranie logo -->
+		<!-- <a href="#" class="small_logo"></a> -->
+	</section>
 </article>

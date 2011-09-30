@@ -21,6 +21,8 @@ html, body
 {
 	margin: 0;
 	padding: 0;
+	
+	height: 100%;
 }
 	
 html *::selection, html *::-moz-selection, html *::-webkit-selection
@@ -53,10 +55,13 @@ html *::selection, html *::-moz-selection, html *::-webkit-selection
 
 #content
 {
-	min-height: 100%; /* for Fire Fox */
-	
-	position: relative;
+	min-height: 100%;
 	z-index: 100;
+}
+
+* html #content 
+{
+	height: 100%;	
 }
 
 .fix_margin_bug, .fix_shadow_margins
@@ -100,7 +105,7 @@ html, input
 	line-height: 50px;
 }
 
-#content, #background_stretcher
+html, #content, #background_stretcher
 {
 	background-color: #f0f0f0;
 	/*
@@ -498,4 +503,9 @@ label.error
 h1, h2, h3, h4, h5, h6
 {
 	font-family: Helvetica, Arial, sans-serif;
+}
+
+.dialog_window
+{
+	display: none;
 }

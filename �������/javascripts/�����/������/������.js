@@ -75,8 +75,8 @@ var dialog_window = new Class
 		this.$element = $('<article/>')
 		
 		// set up the dialog element
-		this.$element.appendTo(document.body)
-			.hide()
+		this.$element.hide()
+			.appendTo(document.body)
 			// setting tabIndex makes the div focusable
 			.attr('tabIndex', -1)
 			.css
@@ -102,18 +102,19 @@ var dialog_window = new Class
 			
 		// the wrapped dialog window (fixes the box-shadow scroll bar bug in Fire Fox)
 		var $dialog_window = $('<section/>')
-			.addClass("dialog_window")
+			.addClass('dialog_window_content_container')
 			.appendTo(this.$element)
 
 		// set dialog content
 		$element
-			.addClass("dialog_window_content")
+			.removeClass('dialog_window')
+			.addClass('dialog_window_content')
 			.appendTo($dialog_window)
 			.css({ width: 'auto' })
 
 		// set dialog title bar
 		$('<header/>')
-			.addClass("dialog_window_top_bar")
+			.addClass("dialog_window_top_bar non_selectable")
 			.prependTo($dialog_window)	
 			.text(title)
 	},

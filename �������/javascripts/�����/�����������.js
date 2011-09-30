@@ -139,9 +139,8 @@ var Message =
 	{
 		Message.state_machine.transit_to('show', (function() 
 		{ 
-			this.add_message(type, text, options)
-		})
-		.bind(this))
+			Message.add_message(type, text, options)
+		}))
 	},
 	
 	add_message: function(type, text, options)
@@ -161,7 +160,9 @@ var Message =
 			
 		var duration = this.awareness_enter_time + show_time + this.awareness_leave_time
 		
-		var message = $('<div class="' + type + ' non_selectable"/>').text(text)
+		text = text.split('. ').join('.<br/>')
+		
+		var message = $('<div class="' + type + ' non_selectable"/>').html(text)
 		var opacity = message.css('opacity')
 		message.css('opacity', 0)
 		
@@ -200,6 +201,11 @@ var Message =
 		this.message('warning', text, options)
 	}
 }
+
+function show(text) { Message.info(text) }
+function info(text) { Message.info(text) }
+function warning(text) { Message.warning(text) }
+function error(text) { Message.error(text) }
 
 /*
 // testing

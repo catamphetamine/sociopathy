@@ -37,8 +37,9 @@ var veil = new Class
 				height: get_page_height() + 'px'
 			})
 			
-		this.$element.addClass('dialog_window_veil')
-				
+		this.$element
+			.addClass('dialog_window_veil')
+			
 		veiler.register(this.$element)
 		
 		this.show()

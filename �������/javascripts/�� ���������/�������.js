@@ -92,12 +92,6 @@ function initialize_gender_chooser()
 	)
 }
 
-// create joined message dialog
-function initialize_joined_message()
-{
-	joined_message = $("#joined_message").dialog_window()
-}
-
 function activate_buttons()
 {
 	return Array.prototype.slice.call(arguments).map(function(options)
@@ -131,17 +125,30 @@ function activate_button(id, options)
 
 function initialize_page()
 {
-	initialize_join_button()
-
-	initialize_join_dialog_buttons()
-	initialize_gender_chooser()
-	initialize_join_form_slider()
-	initialize_join_dialog()
-
-	initialize_joined_message()
+	var приглашение = получить_настройку_запроса('приглашение')
 	
-	$('.slider label').disableTextSelect()
-	$('#join_form_gender_chooser').disableTextSelect()
+	if (приглашение)
+		Ajax.get('/приложение/приглашение/проверить', { приглашение: приглашение },
+		{
+			error: 'Не удалось установить Вашу личность. Попробуйте позже',
+			ok: function(данные)
+			{
+				console.log(данные)
+			
+				if (!данные.приглашение)
+					return
+					
+				initialize_join_button()
+
+				initialize_join_dialog_buttons()
+				initialize_gender_chooser()
+				initialize_join_form_slider()
+				initialize_join_dialog()
+
+				$('.slider label').disableTextSelect()
+				$('#join_form_gender_chooser').disableTextSelect()
+			}
+		})	
 }
 
 // actions

@@ -1,67 +1,15 @@
-/*
-var persons = 
-[
-	{
-		name: "Иван Петров",
-		summary: "раз два три",
-		gender: "male",
-		origin: "Москва"
-	},
-	{
-		name: "Two",
-		summary: "second",
-		gender: "female",
-		origin: "Moscow"
-	},
-	{
-		name: "Three",
-		summary: "third",
-		gender: "male",
-		origin: "Baghdad"
-	},
-	{
-		name: "Two",
-		summary: "second",
-		gender: "female",
-		origin: "Moscow"
-	},
-	{
-		name: "Three",
-		summary: "third",
-		gender: "male",
-		origin: "Baghdad"
-	},
-	{
-		name: "Two",
-		summary: "second",
-		gender: "female",
-		origin: "Moscow"
-	},
-	{
-		name: "Three",
-		summary: "third",
-		gender: "male",
-		origin: "Baghdad"
-	},
-	{
-		name: "Two",
-		summary: "second",
-		gender: "female",
-		origin: "Moscow"
-	},
-	{
-		name: "Three",
-		summary: "third",
-		gender: "male",
-		origin: "Baghdad"
-	}
-]
-*/
-
 var people =
 {
-	are_there_more: true,
+	есть_ли_ещё: true,
 	index: 1,
+	
+	batch: function(возврат)
+	{
+		people.next(8, function(люди)
+		{
+			возврат(люди)
+		})
+	},
 	
 	next: function()
 	{
@@ -78,7 +26,7 @@ var people =
 				callback = arguments[1]
 				break
 			default:
-				alert('people.next: invalid argument count')
+				Message.error('people.next: invalid argument count')
 		}
 			
 		this.get_persons(count, function(persons)
@@ -101,16 +49,12 @@ var people =
 			ok: function(data)
 			{
 				if (!data['есть ещё?'])
-					this.are_there_more = false
+					people.есть_ли_ещё = false
 					
-				callback(data['люди'])
+				people.index += data.люди.length
+				callback(data.люди)
 			}
 		})
-	},
-	
-	are_there_more: function()
-	{
-		return this.are_there_more
 	}
 }
 
@@ -193,8 +137,9 @@ var id_card_template
 function add_id_card(person)
 {
 	var id_card = $.tmpl('личная карточка', person)
-	var wrapper = $('<li/>')
-	wrapper.append(id_card).appendTo($id_cards)
+	//id_card.find('.personal_info .name').enableTextSelect()
+	//id_card.find('.personal_info .description').enableTextSelect()
+	$('<li/>').append(id_card).appendTo($id_cards)
 }
 
 function initialize_page()
@@ -204,103 +149,63 @@ function initialize_page()
 //	dont_animate = true
 //	refresh_arrows()
 //	dont_animate = false
-	
+
 	$content = $('#content')
 	$id_cards = $('#id_cards')
+	
+	$content.disableTextSelect()
 
-	$.ajax
-	({
-		cache: false,
-		url: '/лекала/личная карточка.html',
-		dataType: 'html'
-	}).
-	success(function(template) 
+	Ajax.get('/лекала/личная карточка.html', 
 	{
-		id_card_template = $.template('личная карточка', template)
+		cache: false,
+		type: 'html',
+		error: 'Не удалось загрузить страницу',
+		ok: function(template) 
+		{
+			id_card_template = $.template('личная карточка', template)
+			
+			people.batch(function(люди)
+			{
+				люди.forEach(function(man)
+				{
+					add_id_card(man)
+				})
+				
+				$('#people_loading').remove()
+				activate_id_card_loader()
+			})			
+		}
+	})
+}
+
+function activate_id_card_loader()
+{
+	var $loading = $('#more_people_loading')
+	var $scroll_detector = $('#scroll_detector')
+
+	var options = { offset: '100%' }
+	
+	$scroll_detector.waypoint(function(event, direction)
+	{
+		$scroll_detector.waypoint('remove')
 		
-		people.next(4, function(люди)
+		people.batch(function(люди)
 		{
 			люди.forEach(function(man)
 			{
 				add_id_card(man)
 			})
-		})
-
-		if (people.are_there_more())
-			activate_id_card_loader()
-	}).
-	error(function () 
-	{
-		alert('error loading id card template')
-	})
-
-/*		
-	template.load('templates/личная карточка.html', function(template) 
-	{
-		id_card_template = template
-		
-		//template.apply(people.get_person()).inject_into('id_card_placeholder')
-		add_id_card(people.next())
-		add_id_card(people.next())
-
-		activate_id_card_loader()
-	})
-*/
-}
-
-function activate_id_card_loader()
-{
-	$(function()
-	{
-		var $loading = $("#people_loading")
-		//$loading.hide()
-		var $footer = $('footer')
-
-		var options = 
-		{
-			offset: '100%'
-		}
-		
-		$footer.waypoint(function(event, direction)
-		{
-			$footer.waypoint('remove')
-			//$id_cards.after($loading)
-			$loading.show()
-
-			//
 			
-			var person = people.next();
-			
-			if (typeof(person) === "undefined")
+			if (!people.есть_ли_ещё)
 			{
-				//$loading.detach()
-				$footer.waypoint('remove')
 				$loading.hide()
 				return
 			}
-				
-			add_id_card(person)
-			//$loading.detach()
-			$loading.hide()
-			
-			$footer.waypoint(options)
-					
-			/*
-			$.get
-			(
-				url: '/people/', 
-				data: { after: after_person_id },
-				success: function(data)
-				{
-					alert(data)
-					$id_cards.append(format_people(data))
-					$loading.detach()
-					
-					$footer.waypoint(options)
-				},
-				dataType: 'json'
-			)
-			*/
-		}, options)
-	})
+						
+			$scroll_detector.waypoint(options)
+		})
+	}, 
+	options)
+	
+	$loading.show()
 }

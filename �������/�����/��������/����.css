@@ -32,7 +32,7 @@
 	margin-right: auto;
 }
 
-#people_loading
+#people_loading, #more_people_loading
 {
 	color: #afafaf;
 	text-align: center;

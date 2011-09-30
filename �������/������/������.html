@@ -59,6 +59,7 @@
 		 
 		<!-- generic -->
 		<script src="/javascripts/многоязычие.js"></script> 
+		<script src="/javascripts/снасти.js"></script> 
 		<script src="/javascripts/общее.js"></script> 
 		<link rel="stylesheet/less" type="text/css" href="/облик/общее.css">
 		
@@ -189,7 +190,7 @@
 				Если вы пропишетесь, вы сможете писать новые статьи и править текущие, <br/>
 				а также общаться и выражать своё мнение.
 				<div class="actions">
-					<a href="/" class="register">Прописаться</a>
+					<a href="/?приглашение=проверка" class="register">Прописаться</a>
 					или
 					<a href="/вход" class="login">Войти</a>
 				</div>
@@ -199,7 +200,7 @@
 		{{html содержимое}}
 		
 		<!-- AJAX loading window -->
-		<div id="loading_indicator" class="translated_title" label="page, dialog 'loading', title">
+		<div id="loading_indicator" class="dialog_window translated_title" label="page, dialog 'loading', title">
 			<div class="dialog_window_container" style="text-align: center">
 				<a class="loading_indicator_image_source image" href="" target="_blank">
 					<img class="loading_indicator_image" src=""/>
@@ -208,7 +209,7 @@
 		</div> 
 			
 		<!-- Unsupported browser popup -->
-		<div id="unsupported_browser_warning" class="translated_title" label="page, dialog 'unsupported browser', title">
+		<div id="unsupported_browser_warning" class="non_selectable dialog_window translated_title" label="page, dialog 'unsupported browser', title">
 			<div class="no_word_carrying dialog_window_container">
 				<div class="translated text" label="page, dialog 'unsupported browser', content"></div>
 				
@@ -221,6 +222,8 @@
 				</div>
 			</div>
 		</div>
+		
+		<footer></footer>
 
 		<!-- stretches the gradient background to the height of the entire page -->
 		<div id="background_stretcher" class="non_selectable"></div>
