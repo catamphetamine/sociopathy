@@ -172,7 +172,9 @@ function initialize_page()
 				})
 				
 				$('#people_loading').remove()
-				activate_id_card_loader()
+				
+				if (people.есть_ли_ещё)
+					activate_id_card_loader()
 			})			
 		}
 	})
@@ -206,6 +208,4 @@ function activate_id_card_loader()
 		})
 	}, 
 	options)
-	
-	$loading.show()
 }

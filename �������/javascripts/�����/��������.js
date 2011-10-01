@@ -56,8 +56,6 @@ var panel = new (function()
 
 	var icon_size = 60
 	
-	var tooltip_shifting_step = 70
-	
 	this.activate_buttons = function(images_path)
 	{
 		// for every panel menu item
@@ -69,6 +67,9 @@ var panel = new (function()
 			var title = $menu_item.attr("name");
 			var link = $menu_item.attr("link");
 
+			if (!title)
+				return
+			
 			// tooltip text
 			var text_node = $menu_item.contents()
 
@@ -102,12 +103,13 @@ var panel = new (function()
 	this.activate_tooltips = function()
 	{
 		// for every tooltip
-		$('#' + menu_id + ' > li > a').each(function(index)
+		$('#' + menu_id + ' > li > a').each(function()
 		{
 			// get the tooltip and position it appropriately
 			var tooltip = $(this).next(tooltip_tag)
 			tooltip.disableTextSelect()
-			tooltip.css('left', tooltip_shifting_step * index + 'px')
+			
+			tooltip.css('left', ($(this).position().left + 10) + 'px')
 			tooltip.addClass('panel_menu_tooltip')
 			$(document).find('body').append(tooltip)
 			

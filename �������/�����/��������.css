@@ -11,6 +11,8 @@
  * @github kuchumovn
  */
 
+@import "/облик/вспомогательный.less";
+
 /* this fix removes the scroll bars in Fire Fox */
 #panel_box_shadow_fixer
 {
@@ -70,18 +72,27 @@
 
 		display: inline;
 
-		a
+		a, .divider
 		{
 			display: block;
 			float: left;
 			
 			margin-left: 2px;
 			margin-right: 2px;
-			
+		}
+		
+		a
+		{
 			width: 60px;
 			height: 60px;
 			
 			border: 0;
+		}
+		
+		.divider
+		{
+			width: 60px;
+			height: 1px;
 		}
 	}
 }
@@ -113,10 +124,7 @@ em.panel_menu_tooltip
 	-webkit-border-radius: 15px;
 	border-radius: 15px;
 	
-	-webkit-box-shadow: 0px 2px 6px rgba(180, 180, 180, 0.5);
-	-moz-box-shadow: 0px 2px 6px rgba(180, 180, 180, 0.5);
-	-o-box-shadow: 0px 2px 6px rgba(180, 180, 180, 0.5);
-	box-shadow: 0px 2px 6px rgba(180, 180, 180, 0.5);
+	.beautiful_shadow(2px, 5px, 5px, 7px, 10px, 14px, 20px, 0.05);
 }
 
 #panel_logo

@@ -4,21 +4,23 @@
 	
 	<section class="personal_info">
 		<!-- who is -->
-		<div class="name">${name}</div>
-		<div class="description">участник</div>
+		<div class="name">${имя}</div>
+		<div class="description">{{if описание}}${описание}{{else}}участник{{/if}}</div>
 		
 		<!-- avatar -->
-		<div class="photo"></div>
+		{{if картинка}}
+			<div class="picture" style="background-image: url('${картинка}')"></div>
+		{{/if}}
 	</section>
 	
 	<section class="info">					
 		<!-- gender -->
-		<div class="gender_${gender}"></div>
+		<div class="gender_${пол}"></div>
 		
 		<!-- origin -->
-		<div {{if origin}}{{else}}style="visibility: hidden"{{/if}}>
+		<div {{if откуда}}{{else}}style="visibility: hidden"{{/if}}>
 			<div class="type">откуда</div>
-			<div class="value">{{if origin}}${origin}{{else}}&nbsp;{{/if}}</div>
+			<div class="value">{{if откуда}}${откуда}{{else}}&nbsp;{{/if}}</div>
 		</div>
 		
 		<div class="spacer"></div>

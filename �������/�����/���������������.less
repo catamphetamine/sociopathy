@@ -14,3 +14,13 @@
 	-o-box-shadow: @value;
 	box-shadow: @value;
 }
+
+.beautiful_shadow (@left: 0px, @top: 0px, @first_radius, @second_radius, @third_radius, @fourth_radius, @fifth_radius, @opacity: 0.1)
+{
+	@value: @left @top @first_radius rgba(0, 0, 0, @opacity), @left @top @second_radius rgba(0, 0, 0, @opacity), @left @top @third_radius rgba(0, 0, 0, @opacity), @left @top @fourth_radius rgba(0, 0, 0, @opacity), @left @top @fifth_radius rgba(0, 0, 0, @opacity);
+
+	-webkit-box-shadow: @value;
+	-moz-box-shadow: @value;
+	-o-box-shadow: @value;
+	box-shadow: @value;
+}
