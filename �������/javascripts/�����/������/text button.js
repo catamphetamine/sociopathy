@@ -109,9 +109,9 @@ var text_button = new Class
 		}
 	},
 	
-	initialize: function(id_or_element, options)
+	initialize: function(selector_or_element, options)
 	{
-		this.parent(id_or_element, $.extend({}, this.default_options, options))		
+		this.parent(selector_or_element, $.extend({}, this.default_options, options))		
 	},
 	
 	prepare: function()
@@ -287,9 +287,6 @@ var text_button = new Class
 			'opacity': 0
 		})
 	
-		// a fix for Chrome
-		$frame.css('background-position', '0 0')
-
 		$frame.css('background_position_x', 'right')
 		$frame.css('background_position_y', "-" + this.skin.height * (options['image index'] - 1) + "px")
 		$frame.css(this.get_right_part_style())

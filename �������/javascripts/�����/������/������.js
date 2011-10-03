@@ -102,19 +102,19 @@ var dialog_window = new Class
 			
 		// the wrapped dialog window (fixes the box-shadow scroll bar bug in Fire Fox)
 		var $dialog_window = $('<section/>')
-			.addClass('dialog_window_content_container')
+			.addClass('dialog_window')
 			.appendTo(this.$element)
 
 		// set dialog content
 		$element
-			.removeClass('dialog_window')
-			.addClass('dialog_window_content')
+			.removeClass('collapsed')
+			.addClass('content')
 			.appendTo($dialog_window)
 			.css({ width: 'auto' })
 
 		// set dialog title bar
 		$('<header/>')
-			.addClass("dialog_window_top_bar non_selectable")
+			.addClass("top_bar non_selectable")
 			.prependTo($dialog_window)	
 			.text(title)
 	},
@@ -135,6 +135,9 @@ var dialog_window = new Class
 	 */
 	show: function()
 	{
+		if (this.options['on open'])
+			this.options['on open'].bind(this.$element)()
+	
 		if (this.smooth)
 		{
 			this.$element.hide()
@@ -144,8 +147,6 @@ var dialog_window = new Class
 		{
 			this.$element.show()
 		}
-
-		this.$element.focus()
 	},
 	
 	/**

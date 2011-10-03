@@ -10,50 +10,55 @@
 	<span id="join_button" class="centered"></span>
 
 	<!-- Registration window -->
-	<div id="join_dialog" set_width="true" class="dialog_window translated_title" label="page 'welcome', dialog 'join', title">
+	<div id="join_dialog" set_width="true" class="collapsed dialog_window translated_title" label="page 'welcome', dialog 'join', title">
 
-		<div class="no_word_carrying dialog_window_container">
+		<div class="no_word_carrying container">
 
 			<!-- register form slider -->
 			<form>
-				<div id="join_dialog_slider" class="slider">
+				<div class="slider">
 
-					<!-- 1st slide: ËÏˇ -->
-					<div class="slide">
-						<div id="guy_fawkes_mask"></div>
-						<div id="join_dialog_name_form">
-							<label for="ËÏˇ" class="translated" label="page 'welcome', dialog 'join', name request"></label>
+					<!-- 1st slide: –∏–º—è -->
+					<div class="slide name">
+						<div class="icon"></div>
+						<div class="form">
+							<label for="–∏–º—è" class="translated" label="page 'welcome', dialog 'join', name request"></label>
 
-							<div style="padding-top: 10px"></div>
-
-							<input id="join_dialog_name_field" name="ËÏˇ" class="field" type="text"/>
+							<input name="–∏–º—è" class="field" type="text"/>
 						</div>
 					</div>
 
-					<!-- 2nd slide: ÔÓÎ -->
-					<div class="slide">
-						<label for="ÔÓÎ" class="translated" label="page 'welcome', dialog 'join', gender request"></label>
+					<!-- 2nd slide: –ø–æ–ª -->
+					<div class="slide gender">
+						<label for="–ø–æ–ª" class="translated" label="page 'welcome', dialog 'join', gender request"></label>
 
-						<div id="join_form_gender_chooser" class="center">
+						<div class="chooser" class="center">
 							<div style="padding-top: 40px"></div>
 
 							<div class="clear"></div>
-							<span name="male" value="ÏÛÊÒÍÓÈ"></span>
-							<span name="female" value="ÊÂÌÒÍËÈ"></span>
+							<span name="male" value="–º—É–∂—Å–∫–æ–π"></span>
+							<span name="female" value="–∂–µ–Ω—Å–∫–∏–π"></span>
 						</div>
 
-						<input id="join_form_gender" name="ÔÓÎ" type="hidden"/>
+						<input name="–ø–æ–ª" type="hidden"/>
 					</div>
 
-					<!-- 3rd slide: ÓÚÍÛ‰‡ (country, city, etc) -->
-					<div class="slide">
-						<div id="earth_icon"></div>
-						<div id="join_dialog_origin_form">
-							<label for="ÓÚÍÛ‰‡" class="translated" label="page 'welcome', dialog 'join', origin request"></label>
+					<!-- 3rd slide: –æ—Ç–∫—É–¥–∞ (country, city, etc) -->
+					<div class="slide origin">
+						<div class="icon"></div>
+						<div class="form">
+							<label for="–æ—Ç–∫—É–¥–∞" class="translated" label="page 'welcome', dialog 'join', origin request"></label>
 
-							<div style="padding-top: 10px"></div>
-
-							<input name="ÓÚÍÛ‰‡" class="field" type="text"/>
+							<input name="–æ—Ç–∫—É–¥–∞" class="field" type="text"/>
+						</div>
+					</div>
+					
+					<!-- –ø–∞—Ä–æ–ª—å -->
+					<div class="slide password">
+						<div class="icon"></div>
+						<div class="form">
+							<label for="–ø–∞—Ä–æ–ª—å">–ü—Ä–∏–¥—É–º–∞–π—Ç–µ —Å–µ–±–µ –ø–∞—Ä–æ–ª—å</label>
+							<input name="–ø–∞—Ä–æ–ª—å" class="field" type="text"/>
 						</div>
 					</div>
 				</div>
@@ -64,21 +69,21 @@
 		<div class="pre_buttons"></div>
 
 		<!-- dialog window buttons -->
-		<div class="no_word_carrying dialog_container non_selectable dialog_window_buttons">
+		<div class="no_word_carrying dialog_container non_selectable buttons">
 			<!-- cancel button -->
-			<span id="join_dialog_cancel_button" class="left" type="minor" styles="generic, minor, caution">
+			<span class="cancel left" type="minor" styles="generic, minor, caution">
 				<span type="icon" icon="cross" width="30" height="30" top_offset="5"></span>
 				<span class="translated" label="button 'cancel'"></span>
 			</span>
 
 			<!-- next button -->			
-			<span id="join_dialog_next_button" class="right" type="dark generic" styles="generic">
+			<span class="next right" type="dark generic" styles="generic">
 				<span class="translated" label="button 'next'"></span>
 				<span type="icon" icon="right arrows" width="40" height="30" top_offset="7"></span>
 			</span>
 
 			<!-- done button -->
-			<span id="join_dialog_done_button" class="right" type="dark generic" styles="generic">
+			<span class="done right" type="dark generic" styles="generic">
 				<span type="icon" icon="check" width="24" height="24" top_offset="8"></span>
 				<span class="translated" label="button 'done'"></span>
 			</span>

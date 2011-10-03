@@ -29,7 +29,7 @@ dev_server = {
         sys.debug('DEVSERVER: Starting server');
         that.watchFiles();
 
-        this.process = child_process.spawn("node", ["../node/coffee-script/bin/coffee", "../sociopathy/code/web/main.coffee"]);
+        this.process = child_process.spawn("node", ["..\node\coffee-script\bin\coffee", "code\web\main.coffee"]);
 
         this.process.stdout.addListener('data', function (data) {
 		sys.print(data);

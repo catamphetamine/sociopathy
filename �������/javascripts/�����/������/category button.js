@@ -11,11 +11,9 @@ var category_button = new Class
 ({
 	Extends: button,
 	
-	initialize: function(id_or_element, options)
+	initialize: function(selector_or_element, options)
 	{
-		var element = get_element(id_or_element)
-		
-		this.parent(id_or_element, options)
+		this.parent(selector_or_element, options)
 	},
 	
 	build_idle_frame: function()

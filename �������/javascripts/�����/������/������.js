@@ -114,7 +114,7 @@ var button = new Class
 		}
 	},
 		
-	initialize: function(id_or_element, options)
+	initialize: function(selector_or_element, options)
 	{
 		// apply options
 		this.setOptions(options)
@@ -124,7 +124,7 @@ var button = new Class
 		this.pushing.self = this
 
 		// get the element
-		this.$element = get_element(id_or_element)
+		this.$element = get_element(selector_or_element)
 		
 		// custom preparations
 		this.prepare()
@@ -225,8 +225,7 @@ var button = new Class
 	{
 		this.pushing.unlock()
 		this.locks.each(function(lock) { lock.unlock() })
-	}
-	.protect(),
+	},
 	
 	is_locked: function()
 	{

@@ -26,6 +26,7 @@ var Message =
 			
 			if (messages.length === 0)
 			{
+				$element.remove()
 				Message.state_machine.next()
 				return
 			}

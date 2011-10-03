@@ -38,15 +38,6 @@ $.fn.belongs_to = function(parent)
     return (this.parents(parent).length > 0)
 }
 
-// get jQuery element
-function get_element(id_or_element)
-{
-	if (typeof id_or_element === "string")
-		return $("#" + id_or_element)
-		
-	return id_or_element
-}
-
 // get current time
 var $time = Date.now || function() 
 {

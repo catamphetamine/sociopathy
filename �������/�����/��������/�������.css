@@ -23,84 +23,111 @@
 #join_dialog
 {
 	width: 890px;
-}
+	
+	.slider
+	{
+		width: 790px;
+		height: 200px;
+	}
 
-#join_dialog_slider
-{
-	width: 790px;
-	height: 200px;
-}
+	input[type="text"]
+	{
+		width: 614px;
+		display: block;
+		margin-top: 10px;
+	}
 
-#join_dialog input
-{
-	width: 614px;
-}
-
-#guy_fawkes_mask
-{
-	float: left;
-	
-	width: 128px;
-	
-	min-width: 128px;
-	min-height: 128px;
-	
-	padding-right: 20px;
-	
-	background-image: url('/картинки/на страницах/welcome/dialog/join/Guy Fawkes mask.png');
-	background-repeat: no-repeat;
-}
-
-#join_dialog_name_form
-{
-	padding-top: 10px;
-}
-
-#earth_icon
-{
-	float: left;
-	
-	width: 128px;
-	
-	min-width: 128px;
-	min-height: 128px;
-	
-	padding-right: 20px;
-	
-	background-image: url('/картинки/на страницах/welcome/dialog/join/earth.png');
-	background-repeat: no-repeat;
-}
-
-#join_form_gender_chooser 
-{
-	text-align: center;
-}
+	.name
+	{
+		.icon
+		{
+			float: left;
 			
-#join_form_gender_chooser [name="male"]
-{
-	display: inline-block;
+			width: 128px;
+			height: 128px;
+			
+			padding-right: 20px;
+			
+			background-image: url('/картинки/на страницах/welcome/dialog/join/Guy Fawkes mask.png');
+			background-repeat: no-repeat;
+		}
 
-	width: 64px;
-	height: 64px;
+		.form
+		{
+			padding-top: 10px;
+		}
+	}
+	
+	.origin
+	{
+		.icon
+		{
+			float: left;
+			
+			width: 128px;
+			height: 128px;
+			
+			padding-right: 20px;
+			
+			background-image: url('/картинки/на страницах/welcome/dialog/join/earth.png');
+			background-repeat: no-repeat;
+		}
+		
+		.form
+		{
+			padding-top: 5px;
+		}	
+	}
+	
+	.gender
+	{
+		.chooser 
+		{
+			text-align: center;
+			
+			[name="male"]
+			{
+				display: inline-block;
 
-	margin-right: 40px;
- 
-	background-image: url('/картинки/на страницах/welcome/dialog/join/gender/male.png');
-	background-repeat: no-repeat;
-}
+				width: 64px;
+				height: 64px;
 
-#join_form_gender_chooser [name="female"]
-{
-	display: inline-block;
+				margin-right: 40px;
+			 
+				background-image: url('/картинки/на страницах/welcome/dialog/join/gender/male.png');
+				background-repeat: no-repeat;
+			}
 
-	width: 64px;
-	height: 64px;
+			[name="female"]
+			{
+				display: inline-block;
 
-	background-image: url('/картинки/на страницах/welcome/dialog/join/gender/female.png');
-	background-repeat: no-repeat;
-}
+				width: 64px;
+				height: 64px;
 
-#join_dialog_origin_form
-{
-	padding-top: 5px;
+				background-image: url('/картинки/на страницах/welcome/dialog/join/gender/female.png');
+				background-repeat: no-repeat;
+			}
+		}
+	}
+
+	.password
+	{
+		.icon
+		{
+			width: 128px;
+			height: 128px;
+
+			background-image: url('/картинки/на страницах/welcome/dialog/join/ключи.png');
+			background-repeat: no-repeat;
+			
+			float: left;
+			padding-right: 20px;
+		}
+		
+		.form
+		{
+			padding-top: 5px;
+		}
+	}
 }

@@ -1,0 +1,156 @@
+
+/*
+var previous_arrow
+var next_arrow
+
+var dont_animate = false
+
+// activate arrows
+function initialize_arrows()
+{
+	// previous
+	previous_arrow = new image_button
+	(
+		"previous_person_button", 
+		{
+			path: "/картинки/на страницах/people/button",
+			"button name": "previous",
+			width: 64,
+			height: 64,
+			action: function() { people.previous() }
+		}
+	)
+	
+	// next
+	next_arrow = new image_button
+	(
+		"next_person_button", 
+		{
+			path: "/картинки/на страницах/people/button",
+			"button name": "next",
+			width: 64,
+			height: 64,
+			action: function() { people.next() }
+		}
+	)
+}
+
+function refresh_arrows()
+{
+	// previous
+	if (people.has_previous())
+	{
+		if (!dont_animate)
+			previous_arrow.show()
+		else
+			previous_arrow.show_animated()
+	}
+	else
+	{
+		if (!dont_animate)
+			previous_arrow.hide()
+		else
+			previous_arrow.hide_animated()
+	}
+	
+	// next
+	if (people.has_next())
+	{
+		if (!dont_animate)
+			next_arrow.show()
+		else
+			next_arrow.show_animated()
+	}
+	else
+	{
+		if (!dont_animate)
+			next_arrow.hide()
+		else
+			next_arrow.hide_animated()
+	}
+}
+*/
+
+
+
+function initialize_page()
+{
+//	initialize_arrows()
+	
+//	dont_animate = true
+//	refresh_arrows()
+//	dont_animate = false
+}
+
+
+
+
+
+
+		
+				<!-- IP address detection
+		<script type="text/javascript">
+			function detect_ip(data)
+			{
+				console.log(data.ip)
+
+				var query = 		
+						
+				"<ipquery>" +
+					"<fields>" +
+						"<city/>" +
+					"</fields>" +
+					"<ip-list>" +
+						"<ip>" + data.ip + "</ip>" +
+					"</ip-list>" +
+				"</ipquery>"
+				
+				// ajax POST
+				$.ajax
+				({
+					url: 'http://ipgeobase.ru:8090/geo/geo.html', 
+					type: 'POST',
+					data: query, 
+					success: function(text, textStatus)
+					{
+						alert(text)
+					},
+					error: function(XMLHttpRequest, textStatus, errorThrown)
+					{
+						alert("error " + errorThrown)
+					},
+					dataType: 'text',
+					timeout: 1000
+				})
+			}
+		</script>
+
+		<!-- IP address detection service
+		<script type="application/javascript" src="http://jsonip.appspot.com/?callback=detect_ip"></script>
+		 -->
+		 
+		
+		
+		
+		
+		
+		
+		
+		
+		
+/*
+var connect = require('connect');
+
+connect(
+  connect.static(require('path').join(__dirname, '../..'))
+).listen(8080, '0.0.0.0');
+*/
+
+/*
+var http = require('http');
+http.createServer(function (req, res) {
+  res.writeHead(200, {'Content-Type': 'text/plain'});
+  res.end(decodeURI(req.url) + '\n');
+}).listen(1337, "127.0.0.1");
+console.log('Server running at http://127.0.0.1:1337/');
+*/

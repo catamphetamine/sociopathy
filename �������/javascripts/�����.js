@@ -195,3 +195,12 @@ function page_loaded()
 
 // placeholder - will be overridden
 function initialize_page() {}
+
+// get jQuery element
+function get_element(selector_or_element)
+{
+	if (typeof selector_or_element === "string")
+		return $(selector_or_element)
+		
+	return selector_or_element
+}

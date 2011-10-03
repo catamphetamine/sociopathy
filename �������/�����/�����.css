@@ -107,7 +107,7 @@ html, input
 
 html, #content, #background_stretcher
 {
-	background-color: #f0f0f0;
+	background-color: #f2f2f2;
 	/*
 	background: -webkit-gradient(radial, 60% 10%, 10, 60% 10%, 1500, from(#ffffff), to(#e5e4e4));
 	background-image: -moz-radial-gradient(60% 10% 45deg, circle farthest-side, #ffffff 0%, #e5e4e4 100%);
@@ -407,7 +407,9 @@ label.error
 
 .textual, .textual_content, .article article
 {
-	font-family: Times New Roman, Serif;
+	font-family: Georgia, Times New Roman, Serif;
+	font-size: 34px;
+	line-height: 49px;
 }
 
 .textual_content
@@ -415,8 +417,11 @@ label.error
 	margin-top: 60px;
 	padding-left: 40px;
 	padding-right: 40px;
+}
 
-	h2
+.textual_content, .article article
+{
+	h1, h2, h3, h4, h5, h6
 	{
 		color: #4f4f4f;
 	}
@@ -444,6 +449,7 @@ label.error
 	article
 	{
 		font-size: 40px;
+		line-height: 57px;
 
 		p
 		{
@@ -505,7 +511,7 @@ h1, h2, h3, h4, h5, h6
 	font-family: Helvetica, Arial, sans-serif;
 }
 
-.dialog_window
+.collapsed
 {
 	display: none;
 }

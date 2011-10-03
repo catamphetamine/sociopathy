@@ -68,7 +68,9 @@ function slider(options)
 	 */
 	this.initialize = function()
 	{
-		this.$element = $('#' + this.options['id'])
+		if (this.options.selector)
+			this.$element = $(this.options.selector)
+			
 		var $slides = this.$element.children()
 		this.count = $slides.length
 		
@@ -104,7 +106,7 @@ function slider(options)
 	}
 	
 	// go to slide
-	this.go_to = function(index)
+	this.go_to = function(index, callback)
 	{
 		// out of bounds. exit
 		if (index < 1 || index > this.count)
@@ -114,19 +116,19 @@ function slider(options)
 		this.index = index
 		
 		// perform scrolling, refresh buttons
-		this.scroll()
+		this.scroll(callback)
 		this.hide_or_show_controls()
 	}
 	
 	// next slide
-	this.next = function()
+	this.next = function(callback)
 	{
 		// if we are in the end - push the done button
 		if (this.index == this.count)
 			this.options.buttons.done.push()
 	
 		// go to the next slide	
-		this.go_to(this.index + 1)
+		this.go_to(this.index + 1, callback)
 	}
 	
 	// previous slide
@@ -141,7 +143,7 @@ function slider(options)
 	}
 		
 	// smoothly move the strip using margin-left
-	this.scroll = function()
+	this.scroll = function(callback)
 	{
 		// the new scrolling property
 		var marginLeft = -this.options.width * (this.index - 1) + 'px'
@@ -154,7 +156,7 @@ function slider(options)
 		}
 
 		// else - animate
-		animator.roll_left(this.$strip, marginLeft)
+		animator.roll_left(this.$strip, marginLeft, { callback: callback })
 	}
 	
 	// Hides and shows controls depending on current position

@@ -80,6 +80,10 @@
 		{
 			var $element = $(element)
 			
+			// fix for Chrome
+			if (!$element.css('background-position'))
+				$element.css('background-position', '0 0')
+			
 			var y = get_coordinate(2, $element)
 		
 			if (typeof(y) === 'undefined')
@@ -106,6 +110,10 @@
 		set: function(element, y) 
 		{
 			var $element = $(element)
+			
+			// fix for Chrome
+			if (!$element.css('background-position'))
+				$element.css('background-position', '0 0')
 			
 			var x = get_coordinate(1, $element)
 			

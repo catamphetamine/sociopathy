@@ -108,7 +108,7 @@ function form_slider(options)
 		
 		// for all the slides
 		var slide_index = 1
-		$("#" + options.id + " .slide").each(function() 
+		$(options.selector + " .slide").each(function() 
 		{
 			var slide = $(this);
 			
@@ -150,7 +150,7 @@ function form_slider(options)
 	}
 	
 	// go to the next slide
-	this.next = function()
+	this.next = function(callback)
 	{
 		// get the field for this slide
 		// (currently there can be only one field per slide)
@@ -163,13 +163,15 @@ function form_slider(options)
 				// if there is any validation - validate this field value
 				if (field.validate)
 					field.validate(field.value())
-					
-					// mark field as valid
-					field.valid()
+				
+				// mark field as valid
+				field.valid()
 			}
 			
 			// go to the next slide
-			this.slider.next() 
+			this.slider.next(callback) 
+			
+			return true
 		}
 		// if there were any errors
 		catch (error)
@@ -181,7 +183,25 @@ function form_slider(options)
 			// if that's our custom error - focus on the field and display the error message
 			field.focus()
 			field.error(error)
+			
+			return false
 		}
+	}
+	
+	this.done = function()
+	{
+		if (!this.next())
+		{
+			options.buttons.done.unlock()
+			return
+		}
+		
+		return this.final_actions()
+	}
+	
+	this.when_done = function(actions)
+	{
+		this.final_actions = actions
 	}
 	
 	// get the field for this slide

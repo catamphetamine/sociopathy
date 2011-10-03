@@ -16,7 +16,7 @@ function initialize_join_button()
 {
 	button.physics.classic(new image_button
 	(
-		"join_button", 
+		"#join_button", 
 		{
 			action: function() { join_dialog.open() }
 		}
@@ -28,7 +28,8 @@ function initialize_join_dialog()
 {
 	join_dialog = $("#join_dialog").dialog_window
 	({
-		'close on escape': true
+		'close on escape': true,
+		'on open': function() { $('#join_dialog input:first').focus() }
 	})
 	
 	join_dialog.register_controls
@@ -40,19 +41,20 @@ function initialize_join_dialog()
 	)
 	
 	join_form_slider.set_container(join_dialog.$element)
+	join_form_slider.when_done(function() { join_submission(join_form_slider.data()) })
 }
 
 // create join dialog buttons
 function initialize_join_dialog_buttons()
 {
-	join_dialog_cancel_button = activate_button('join_dialog_cancel_button', { 'prevent double submission': true })
+	join_dialog_cancel_button = activate_button('#join_dialog .buttons .cancel', { 'prevent double submission': true })
 	.does(function() { join_dialog.close() })
 	
-	join_dialog_next_button = activate_button('join_dialog_next_button')
-	.does(function() { join_form_slider.next() })
+	join_dialog_next_button = activate_button('#join_dialog .buttons .next')
+	.does(function() { join_form_slider.next(function() { $('#join_dialog .slider .slide:eq(' + (join_form_slider.slider.index - 1) + ') input:first').focus() }) })
 	
-	join_dialog_done_button = activate_button('join_dialog_done_button', { 'prevent double submission': true })
-	.does(function() { join_submission(join_form_slider.data()) })
+	join_dialog_done_button = activate_button('#join_dialog .buttons .done', { 'prevent double submission': true })
+	.does(function() { join_form_slider.done() })
 }
 
 // create join dialog slider
@@ -60,7 +62,7 @@ function initialize_join_form_slider()
 {
 	join_form_slider = new form_slider
 	({
-		id: "join_dialog_slider",
+		selector: "#join_dialog .slider",
 		buttons:
 		{
 			next: join_dialog_next_button,
@@ -68,13 +70,20 @@ function initialize_join_form_slider()
 		},
 		fields:
 		{
-			name:
+			имя:
 			{
 				validate: function(name) { if (name.length == 0) throw new custom_error($._("page 'welcome', dialog 'join', error, name, empty")) }
 			},
-			gender:
+			пол:
 			{
 				control: gender_chooser,
+			},
+			откуда:
+			{
+			},
+			пароль:
+			{
+				validate: function(name) { if (name.length == 0) throw new custom_error('Пароль будет нужен для входа') }
 			}
 		}
 	})
@@ -85,9 +94,9 @@ function initialize_gender_chooser()
 {
 	gender_chooser = new image_chooser
 	(
-		"join_form_gender_chooser",
+		"#join_dialog .gender .chooser",
 		{
-			target: "join_form_gender"
+			target: "#join_dialog .gender input[type=hidden]"
 		}
 	)
 }
@@ -100,12 +109,12 @@ function activate_buttons()
 	})
 }
 
-function activate_button(id, options)
+function activate_button(selector, options)
 {
-	var element = $('#' + id)
+	var element = $(selector)
 
 	options = options || {}
-	options.id = id
+	options.selector = selector
 
 	return button.physics.classic(new text_button
 	(
@@ -133,8 +142,6 @@ function initialize_page()
 			error: 'Не удалось установить Вашу личность. Попробуйте позже',
 			ok: function(данные)
 			{
-				console.log(данные)
-			
 				if (!данные.приглашение)
 					return
 					
@@ -146,7 +153,7 @@ function initialize_page()
 				initialize_join_dialog()
 
 				$('.slider label').disableTextSelect()
-				$('#join_form_gender_chooser').disableTextSelect()
+				$('#join_form .gender .chooser').disableTextSelect()
 			}
 		})	
 }

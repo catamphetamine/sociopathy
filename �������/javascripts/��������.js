@@ -215,9 +215,12 @@ var moo_tools_animator = new Class
 		}
 	},
 	
-	roll_left: function($element, amount)
+	roll_left: function($element, amount, options)
 	{
-		$element.animate({ marginLeft: amount })
+		// options
+		options = options || {}
+		
+		$element.animate({ marginLeft: amount }, options.callback)
 	}
 })
 

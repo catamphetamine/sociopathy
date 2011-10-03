@@ -63,16 +63,16 @@
  * @github kuchumovn
  */
 
-var image_chooser = function(id_or_element, options)
+var image_chooser = function(selector_or_element, options)
 {
 	// get the element
-	var $element = get_element(id_or_element)
+	var $element = get_element(selector_or_element)
 	
 	// the set of choosable images
 	var choises = $("span[value]", $element)
 	
 	// the target (hidden input value container)
-	this.target = $("#" + options.target)
+	this.target = $(options.target)
 	
 	// back reference
 	var self = this
