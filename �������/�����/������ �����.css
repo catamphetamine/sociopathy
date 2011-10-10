@@ -1,0 +1,35 @@
+#enter_window
+{
+	input[type="text"]
+	{
+		width: 500px;
+		display: block;
+		margin-top: 10px;
+	}
+
+	.password
+	{
+		height: 170px;
+		padding-top: 30px;
+		padding-left: 30px;
+		padding-right: 30px;
+		
+		.icon
+		{
+			width: 128px;
+			height: 128px;
+
+			background-image: url('/картинки/на страницах/welcome/dialog/join/ключи.png');
+			background-repeat: no-repeat;
+			
+			float: left;
+			padding-right: 20px;
+		}
+		
+		.form
+		{
+			display: inline-block;
+			padding-top: 5px;
+		}
+	}
+}

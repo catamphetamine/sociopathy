@@ -98,6 +98,9 @@
 		<script src="/javascripts/облик/slider/form_slider.js"></script> 
 		<link rel="stylesheet/less" href="/облик/slider.css"/>
 
+		<script src="/javascripts/на страницах/основа.js"></script> 
+		<link rel="stylesheet/less" href="/облик/окошко входа.css"/>
+
 		<!-- browser checker -->
 		<script src="/javascripts/проверка обозревателя.js"></script> 
 			
@@ -121,7 +124,7 @@
 				check_browser_support()
 				
 				$('.non_selectable').disableTextSelect()
-				$('#page_header').disableTextSelect()				
+				$('#page_header').disableTextSelect()
 			})
 		</script>
 		
@@ -175,7 +178,7 @@
 			</nav>
 		</aside>
 	
-			<div class="centered_on_the_panel">
+		<div class="centered_on_the_panel">
 			<!--
 			<div class="authenticated_user">
 				<div class="photo"></div>
@@ -192,7 +195,7 @@
 				<div class="actions">
 					<a href="/прописка" class="register">Прописаться</a>
 					или
-					<a href="/вход" class="login">Войти</a>
+					<a href="#" class="enter">Войти</a>
 				</div>
 			</div>
 		</div>
@@ -200,7 +203,7 @@
 		{{html содержимое}}
 		
 		<!-- AJAX loading window -->
-		<div id="loading_indicator" class="collapsed dialog_window translated_title" label="page, dialog 'loading', title">
+		<div id="loading_indicator" class="collapsed non_selectable translated_title" label="page, dialog 'loading', title">
 			<div class="container" style="text-align: center">
 				<a class="loading_indicator_image_source image" href="" target="_blank">
 					<img class="loading_indicator_image" src=""/>
@@ -209,17 +212,45 @@
 		</div> 
 			
 		<!-- Unsupported browser popup -->
-		<div id="unsupported_browser_warning" class="collapsed non_selectable dialog_window translated_title" label="page, dialog 'unsupported browser', title">
-			<div class="no_word_carrying dialog_window_container">
-				<div class="translated text" label="page, dialog 'unsupported browser', content"></div>
-				
-				<br/>
-				<br/>
-				
-				<div class="float_centerer">
-					<a class='image' style="display: block; float: left; margin-right: 200px" href="http://www.google.com/chrome?hl=ru"><img src="/картинки/на страницах/welcome/chrome.png"/></a>
-					<a class='image' style=" float: left" href="http://www.mozilla-europe.org/ru/firefox/"><img src="/картинки/на страницах/welcome/firefox.png"/></a>
+		<div id="unsupported_browser_warning" class="collapsed no_word_carrying non_selectable translated_title" label="page, dialog 'unsupported browser', title">
+			<div class="translated text" label="page, dialog 'unsupported browser', content"></div>
+			
+			<br/>
+			<br/>
+			
+			<div class="float_centerer">
+				<a class='image' style="display: block; float: left; margin-right: 200px" href="http://www.google.com/chrome?hl=ru"><img src="/картинки/на страницах/welcome/chrome.png"/></a>
+				<a class='image' style=" float: left" href="http://www.mozilla-europe.org/ru/firefox/"><img src="/картинки/на страницах/welcome/firefox.png"/></a>
+			</div>
+		</div>
+			
+		<!-- Вход -->
+		<div id="enter_window" class="collapsed no_word_carrying non_selectable" title="Вход">
+			<!-- пароль -->
+			<div class="password">
+				<div class="icon"></div>
+				<div class="form">
+					<label for="пароль">Введите свой пароль</label>
+					<input name="пароль" class="field" type="text"/>
 				</div>
+			</div>
+			
+			<!-- начинаются кнопки -->
+			<div class="pre_buttons"></div>
+	
+			<!-- кнопки -->
+			<div class="no_word_carrying dialog_container non_selectable buttons">
+				<!-- отмена -->
+				<span class="cancel left" type="minor" styles="generic, minor, caution">
+					<span type="icon" icon="cross" width="30" height="30" top_offset="5"></span>
+					<span>Отмена</span>
+				</span>
+	
+				<!-- войти -->			
+				<span class="enter right" type="dark generic" styles="generic">
+					<span>Войти</span>
+					<span type="icon" icon="right arrows" width="40" height="30" top_offset="7"></span>
+				</span>
 			</div>
 		</div>
 		

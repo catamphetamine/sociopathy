@@ -234,8 +234,7 @@ div.clear
 input 
 {
 	border: none;
-	float: left;
-
+	
 	&.field
 	{
 		padding-left: 10px;

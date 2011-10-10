@@ -101,14 +101,6 @@ function initialize_gender_chooser()
 	)
 }
 
-function activate_buttons()
-{
-	return Array.prototype.slice.call(arguments).map(function(options)
-	{
-		return activate_button(options)
-	})
-}
-
 function activate_button(selector, options)
 {
 	var element = $(selector)
@@ -129,7 +121,7 @@ function activate_button(selector, options)
 			},
 			options
 		)
-	))
+	))	
 }
 
 function initialize_page()

@@ -135,6 +135,8 @@ var dialog_window = new Class
 	 */
 	show: function()
 	{
+		this.$element.focus()
+		
 		if (this.options['on open'])
 			this.options['on open'].bind(this.$element)()
 	
