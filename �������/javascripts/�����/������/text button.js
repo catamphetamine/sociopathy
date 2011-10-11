@@ -8,7 +8,7 @@
  * In html:
  * 
  * // align buttons to the center
- * <div class="float_centerer">
+ * <div class="centered">
  * 		<!-- cancel button -->
  *		<span id="join_dialog_cancel_button" class="left" type="minor" styles="generic, minor, caution">
  *			<span type="icon" icon="cross" width="30" height="30" top_offset="5"></span>
@@ -27,7 +27,7 @@
  *			<span class="translated" label="button 'done'"></span>
  *		</span>
  * 		
- * 		<hr class="float_centerer" />
+ * 		<hr class="centered" />
  * 	</div>
  * 
  * <span id="back" ... style="float: left">Back</span> // align button to the left
@@ -58,7 +58,7 @@
  *
  * In stylesheet:
  * 
- *	div.float_centerer
+ *	div.centered
  *	{
  *		margin-left: auto;
  *		margin-right: auto;
@@ -66,7 +66,7 @@
  *		display: table;
  *	}
  *
- *	hr.float_centerer
+ *	hr.centered
  *	{
  *		clear: left; 
  *		visibility: hidden;

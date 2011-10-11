@@ -126,28 +126,43 @@ function activate_button(selector, options)
 
 function initialize_page()
 {
+	if (получить_настройку_запроса('приглашение'))
+		initialize_conditional($('[type=conditional]'))()
+}
+
+function check_invite(conditional)
+{
 	var приглашение = получить_настройку_запроса('приглашение')
 	
-	if (приглашение)
-		Ajax.get('/приложение/приглашение/проверить', { приглашение: приглашение },
+	conditional.fatal = function()
+	{
+		error('Не удалось установить Вашу личность. Попробуйте позже')
+	}
+	
+	Ajax.get('/приложение/приглашение/проверить', { приглашение: приглашение },
+	{
+		error: function()
 		{
-			error: 'Не удалось установить Вашу личность. Попробуйте позже',
-			ok: function(данные)
-			{
-				if (!данные.приглашение)
-					return
-					
-				initialize_join_button()
+			conditional.callback('connection error')
+		},
+		ok: function(данные)
+		{
+			if (!данные.приглашение)
+				return conditional.callback('no invite')
+				
+			initialize_join_button()
 
-				initialize_join_dialog_buttons()
-				initialize_gender_chooser()
-				initialize_join_form_slider()
-				initialize_join_dialog()
+			initialize_join_dialog_buttons()
+			initialize_gender_chooser()
+			initialize_join_form_slider()
+			initialize_join_dialog()
 
-				$('.slider label').disableTextSelect()
-				$('#join_form .gender .chooser').disableTextSelect()
-			}
-		})	
+			$('.slider label').disableTextSelect()
+			$('#join_form .gender .chooser').disableTextSelect()
+			
+			conditional.callback()
+		}
+	})
 }
 
 // actions

@@ -204,3 +204,76 @@ function get_element(selector_or_element)
 		
 	return selector_or_element
 }
+
+function initialize_conditional($this)
+{
+	var fade_in_duration = 500
+	var fade_out_duration = 200
+
+	var every = $this.children()
+	var waiting = $this.find('> [type=waiting]')
+	var ok = $this.find('> [type=ok]')
+	var error = $this.find('> [type=error]')
+	
+	var action = $this.attr('action')
+	eval('var action_function = ' + action)
+	var tries = $this.attr('tries')
+	
+	var conditional = {}
+	
+	conditional.callback = function(error)
+	{
+		if (error)
+			return on_error()
+			
+		on_ok()
+	}
+	
+	var action = function()
+	{
+		action_function(conditional)
+	}
+	
+	var hide_every = function()
+	{
+		every.each(function()
+		{
+			$(this).hide()
+		})
+	}
+	
+	hide_every()
+	waiting.show()
+	$this.fadeIn(fade_in_duration)
+	
+	var on_ok = function()
+	{
+		$this.fadeOut(fade_out_duration, function()
+		{
+			hide_every()
+			ok.show()
+			$this.fadeIn(fade_in_duration)
+		})
+	}
+	
+	var error_counter = 0
+	var on_error = function()
+	{
+		error_counter++
+		
+		if (error_counter < tries)
+			return action()
+		
+		if (conditional.fatal)
+			conditional.fatal()
+			
+		$this.fadeOut(fade_out_duration, function()
+		{
+			hide_every()
+			error.show()
+			$this.fadeIn(fade_in_duration)
+		})
+	}
+	
+	return action
+}

@@ -1,4 +1,3 @@
-
 var Ajax = 
 {
 	get: function(url, data, options)

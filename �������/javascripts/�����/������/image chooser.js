@@ -7,11 +7,11 @@
  * 
  * In html:
  * 
- * <div id="chooser" class="float_centerer">
+ * <div id="chooser" class="centered">
  *		<span name="apples" value="russian apples"></span>
  *		<span name="bananas" value="african bananas"></span>
  * 		
- * 		<hr class="float_centerer" />
+ * 		<hr class="centered" />
  * 	</div>
  * 
  * <input type="hidden" id="chosen_fruit" value="['russian apples' or 'african bananas' will be placed here]"/>
@@ -31,7 +31,7 @@
  *
  * In stylesheet:
  * 
- *	div.float_centerer
+ *	div.centered
  *	{
  *		margin-left: auto;
  *		margin-right: auto;
@@ -39,7 +39,7 @@
  *		display: table;
  *	}
  *
- *	hr.float_centerer
+ *	hr.centered
  *	{
  *		clear: left; 
  *		visibility: hidden;

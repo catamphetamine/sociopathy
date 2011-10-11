@@ -129,3 +129,14 @@
 		}
 	}
 }
+
+.join_button_block
+{
+	text-align: center;
+}
+
+.join_button_block [type=waiting]
+{
+	color: #9f9f9f;
+	margin-top: 10px;
+}
