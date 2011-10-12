@@ -134,16 +134,11 @@ function check_invite(conditional)
 {
 	var приглашение = получить_настройку_запроса('приглашение')
 	
-	conditional.fatal = function()
-	{
-		error('Не удалось установить Вашу личность. Попробуйте позже')
-	}
-	
 	Ajax.get('/приложение/приглашение/проверить', { приглашение: приглашение },
 	{
-		error: function()
+		error: function(message)
 		{
-			conditional.callback('connection error')
+			conditional.callback(message)
 		},
 		ok: function(данные)
 		{
@@ -165,6 +160,14 @@ function check_invite(conditional)
 	})
 }
 
+function check_invite_error(ошибка)
+{
+	if (typeof(ошибка) === 'string')
+		error(ошибка)
+	else
+		error('Не удалось установить Вашу личность. Произошла ошибка на сервере.')
+}
+
 // actions
 
 // submit join request
@@ -173,7 +176,7 @@ function join_submission(data)
 	loading_indicator.show()
 	Ajax.put('/приложение/прописать', data, 
 	{ 
-		error: 'Не удалось прописаться', 
+		ошибка: 'Не удалось прописаться', 
 		ok: function(данные) 
 		{ 
 			loading_indicator.hide()

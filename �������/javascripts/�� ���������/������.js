@@ -70,9 +70,14 @@ $(function()
 function войти(data)
 {
 	loading_indicator.show()
-	Ajax.put('/приложение/вход', data, 
+	Ajax.post('/приложение/вход', data, 
 	{ 
-		error: 'Не удалось войти', 
+		error: function()
+		{
+			loading_indicator.hide()
+			error('Не удалось войти')
+			кнопка_входа.unlock()
+		},
 		ok: function(данные)
 		{ 
 			loading_indicator.hide()

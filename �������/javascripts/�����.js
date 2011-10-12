@@ -211,20 +211,19 @@ function initialize_conditional($this)
 	var fade_out_duration = 200
 
 	var every = $this.children()
-	var waiting = $this.find('> [type=waiting]')
+	var loading = $this.find('> [type=loading]')
 	var ok = $this.find('> [type=ok]')
 	var error = $this.find('> [type=error]')
 	
-	var action = $this.attr('action')
-	eval('var action_function = ' + action)
-	var tries = $this.attr('tries')
+	eval('var action_function = ' + $this.attr('action'))
+	var tries = $this.attr('tries') || 1
 	
 	var conditional = {}
 	
 	conditional.callback = function(error)
 	{
 		if (error)
-			return on_error()
+			return on_error(error)
 			
 		on_ok()
 	}
@@ -243,7 +242,7 @@ function initialize_conditional($this)
 	}
 	
 	hide_every()
-	waiting.show()
+	loading.show()
 	$this.fadeIn(fade_in_duration)
 	
 	var on_ok = function()
@@ -256,8 +255,14 @@ function initialize_conditional($this)
 		})
 	}
 	
+	if ($this.attr('on_error'))
+	{
+		eval('var on_error_handler = ' + $this.attr('on_error'))
+		conditional.fatal = on_error_handler
+	}
+	
 	var error_counter = 0
-	var on_error = function()
+	var on_error = function(message)
 	{
 		error_counter++
 		
@@ -265,7 +270,7 @@ function initialize_conditional($this)
 			return action()
 		
 		if (conditional.fatal)
-			conditional.fatal()
+			conditional.fatal(message)
 			
 		$this.fadeOut(fade_out_duration, function()
 		{

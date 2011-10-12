@@ -1,9 +1,9 @@
 var Message = 
 {
 	appearance_duration: 0.5,
-	awareness_enter_time: 1.5,
+	awareness_enter_time: 1.0,
 	thinking_time: 1.0,
-	length_factor: 0.05,
+	length_factor: 0.01,
 	awareness_leave_time: 1.5,
 	disappearance_duration: 0.9,
 	

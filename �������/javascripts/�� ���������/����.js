@@ -45,7 +45,7 @@ var people =
 	{
 		Ajax.get('/приложение/люди', { с: this.index, сколько: count }, 
 		{ 
-			error: 'Не удалось получить список людей', 
+			ошибка: 'Не удалось получить список людей', 
 			ok: function(data)
 			{
 				if (!data['есть ещё?'])
@@ -81,7 +81,7 @@ function initialize_page()
 	{
 		cache: false,
 		type: 'html',
-		error: 'Не удалось загрузить страницу',
+		ошибка: 'Не удалось загрузить страницу',
 		ok: function(template) 
 		{
 			id_card_template = $.template('личная карточка', template)

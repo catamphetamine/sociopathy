@@ -11,6 +11,11 @@ var Ajax =
 		this.request('GET', url, data, options);
 	},
 	
+	post: function(url, data, options)
+	{
+		this.request('POST', url, data, options);
+	},
+	
 	put: function(url, data, options)
 	{
 		this.request('POST', url, Object.merge(data, { _method: 'put' }), options);
@@ -19,6 +24,9 @@ var Ajax =
 	request: function(method, url, data, options)
 	{
 		options.type = options.type || 'json'
+		
+		options.ошибка = options.ошибка || 'Ошибка связи с сервером'
+		options.error = options.error || function(message) { error(message) }
 		
 		$.ajax
 		({
@@ -30,7 +38,7 @@ var Ajax =
 			{
 				if (json.ошибка)
 				{
-					error(json.ошибка)
+					options.error(json.ошибка)
 					return
 				}
 
@@ -41,9 +49,9 @@ var Ajax =
 				else
 					error('Неправильная настройка ok: ' + ok)
 			},
-			error: function(json, textStatus)
+			error: function()
 			{
-				error(options.error)
+				options.error(options.ошибка)
 			},
 			dataType: options.type
 		})

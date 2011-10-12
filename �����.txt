@@ -154,3 +154,46 @@ http.createServer(function (req, res) {
 }).listen(1337, "127.0.0.1");
 console.log('Server running at http://127.0.0.1:1337/');
 */
+
+
+
+
+
+
+
+
+
+module.exports = () ->
+	цепь = выполнить()
+		
+	цепь.дальше = (inner_callback) ->
+		(ошибка) ->
+			console.log 'error occured: '
+			
+			if ошибка?
+				цепь.ошибка = ошибка
+
+			console.log цепь.ошибка
+
+			inner_callback.apply(null, arguments)
+		
+	старый_catch = цепь.catch
+	цепь.catch = (обработчик) ->
+		console.log 'проверка ошибки: '
+		console.log цепь.ошибка
+
+		if not цепь.ошибка?
+			return старый_catch(обработчик)
+		
+		console.log 'error: '
+		console.log цепь.ошибка
+			
+		обработчик(цепь.ошибка)
+		цепь.ошибка = null
+		
+		fake = {}
+		['seq', 'par', 'parEach', 'catch'].forEach (method) ->
+			fake[method] = () ->
+		fake
+		
+	цепь

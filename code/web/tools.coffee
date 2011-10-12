@@ -15,3 +15,6 @@
 	настройки
 	
 module.exports = снасти
+
+Array.prototype.is_empty = () ->
+	@length == 0

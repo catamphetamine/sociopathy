@@ -7,6 +7,7 @@ mongo = require 'mongoskin'
 хранилище = mongo.db 'localhost:27017/sociopathy?auto_reconnect'
 
 выполнить = require 'seq'
+цепь = require './conveyor'
 http = require('./express')(приложение).http
 
 лекальщик = require './templater'
@@ -53,22 +54,35 @@ http.get '/люди', (ввод, вывод) ->
 			вывод.send люди: @vars.люди, 'есть ещё?': есть_ли_ещё 
 
 http.get '/приглашение/проверить', (ввод, вывод) ->
-	выполнить()
-		.seq ->
-			хранилище.collection('invites').findOne({ 'key': ввод.настройки.приглашение }, this)
+	цепь()
+		.сделать ->
+			настройки =
+				query:
+					'ключ': ввод.настройки.приглашение
+					
+			options =
+				remove: yes
+			
+			хранилище.collection('invites').findAndModify настройки, [], {}, options, @
 		
-		.catch (ошибка) ->
+		.ошибка (ошибка) ->
 			console.error ошибка
 			вывод.send ошибка: ошибка
-			break: true
 		
-		.seq (приглашение) ->
-			вывод.send { приглашение: приглашение}
+		.сделать (приглашение) ->
+			if not приглашение?
+				return вывод.send ошибка: 'Нет такого приглашения в списке'
+				
+			if typeof приглашение == 'object' && приглашение.length
+				console.error "Больше одного приглашения по ключу #{ввод.настройки.приглашение}"
+				return вывод.send ошибка: 'Ошибка приглашения'
+			
+			вывод.send приглашение: приглашение
 			
 http.get '/хранилище/заполнить', (ввод, вывод) ->
 	выполнить()
 		.seq ->
-			хранилище.collection('people').drop(this)
+				хранилище.collection('people').drop(this)
 		
 		.catch (ошибка) ->
 			if ошибка.message != 'ns not found'
@@ -99,7 +113,7 @@ http.get '/хранилище/заполнить', (ввод, вывод) ->
 				break: true
 				
 		.seq ->
-			хранилище.collection('invites').save({ key: 'проверка' }, this)
+			хранилище.collection('invites').save({ ключ: 'проверка' }, this)
 		
 		.catch (ошибка) ->
 			console.error ошибка

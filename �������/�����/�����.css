@@ -1,5 +1,13 @@
 ﻿@link_color: #004b7b;
 
+/*
+@font-face
+{
+	font-family: Minion Pro;
+	src: url('/начертания/minion pro.ttf');
+}
+*/
+   
 /* correct Html 5 element styling for old browsers 
 article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section 
 {
