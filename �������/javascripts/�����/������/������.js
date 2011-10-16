@@ -303,7 +303,16 @@ var dialog_window = new Class
 	reset: function()
 	{
 		// reset controls
-		this.controls.each(function(control) { control.reset() })			
+		this.controls.each(function(control)
+		{
+			if (control instanceof jQuery)
+			{
+				control.val('')
+				return
+			}
+
+			control.reset()
+		})			
 	},
 	
 	/**

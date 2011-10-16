@@ -49,13 +49,34 @@ var Ajax =
 				else
 					error('Неправильная настройка ok: ' + ok)
 			},
-			error: function()
+			error: function(jqXHR, textStatus, errorThrown)
 			{
 				options.error(options.ошибка)
 			},
-			dataType: options.type
+			dataType: options.type,
+			
+			beforeSend: function() { disable_links() },
+			complete: function() { enable_links() },
+			timeout: 15000
 		})
 	}
+}
+
+function disable_links()
+{
+	$('a').each(function()
+	{
+		if ($(this).attr('href'))
+			$(this).data('href', $(this).attr('href')).removeAttr('href');
+	})
+}
+
+function enable_links()
+{
+	$('a').each(function()
+	{
+		$(this).attr('href', $(this).data('href'));
+	})
 }
 
 function get_highest_z_index(top_z)

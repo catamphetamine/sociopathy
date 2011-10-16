@@ -16,29 +16,28 @@
 	</div>
 
 	<!-- Registration window -->
-	<div id="join_dialog" set_width="true" class="collapsed dialog_window translated_title" label="page 'welcome', dialog 'join', title">
+	<div id="join_dialog" set_width="true" class="collapsed dialog_window" title="Присоединиться">
 
 		<div class="no_word_carrying container">
 
 			<!-- register form slider -->
-			<form>
-				<div class="slider">
+			<div class="slider">
 
-					<!-- 1st slide: имя -->
-					<div class="slide name">
-						<div class="icon"></div>
-						<div class="form">
-							<label for="имя" class="translated" label="page 'welcome', dialog 'join', name request"></label>
+				<!-- 1st slide: имя -->
+				<div class="slide name">
+					<div class="icon"></div>
+					<form>
+						<label for="имя">Назовитесь</label>
+						<input name="имя" class="field" type="text" validation="прописка.имя"/>
+					</form>
+				</div>
 
-							<input name="имя" class="field" type="text"/>
-						</div>
-					</div>
+				<!-- 2nd slide: пол -->
+				<div class="slide gender">
+					<form>
+						<label for="пол">Если хотите, можете указать свой пол</label>
 
-					<!-- 2nd slide: пол -->
-					<div class="slide gender">
-						<label for="пол" class="translated" label="page 'welcome', dialog 'join', gender request"></label>
-
-						<div class="chooser" class="center">
+						<div class="chooser non_selectable center">
 							<div style="padding-top: 40px"></div>
 
 							<div class="clear"></div>
@@ -47,28 +46,27 @@
 						</div>
 
 						<input name="пол" type="hidden"/>
-					</div>
-
-					<!-- 3rd slide: откуда (country, city, etc) -->
-					<div class="slide origin">
-						<div class="icon"></div>
-						<div class="form">
-							<label for="откуда" class="translated" label="page 'welcome', dialog 'join', origin request"></label>
-
-							<input name="откуда" class="field" type="text"/>
-						</div>
-					</div>
-					
-					<!-- пароль -->
-					<div class="slide password">
-						<div class="icon"></div>
-						<div class="form">
-							<label for="пароль">Придумайте себе пароль</label>
-							<input name="пароль" class="field" type="text"/>
-						</div>
-					</div>
+					</form>
 				</div>
-			</form>
+
+				<!-- 3rd slide: откуда (country, city, etc) -->
+				<div class="slide origin">
+					<div class="icon"></div>
+					<form>
+						<label for="откуда">В какой местности вы проживаете?</label>
+						<input name="откуда" class="field" type="text"/>
+					</form>
+				</div>
+				
+				<!-- пароль -->
+				<div class="slide password">
+					<div class="icon"></div>
+					<form>
+						<label for="пароль">Придумайте себе пароль</label>
+						<input name="пароль" class="field" type="text" validation="прописка.пароль"/>
+					</form>
+				</div>
+			</div>
 		</div>
 
 		<!-- dialog window buttons block starts -->
@@ -79,19 +77,19 @@
 			<!-- cancel button -->
 			<span class="cancel left" type="minor" styles="generic, minor, caution">
 				<span type="icon" icon="cross" width="30" height="30" top_offset="5"></span>
-				<span class="translated" label="button 'cancel'"></span>
+				<label>Отмена</label>
 			</span>
 
 			<!-- next button -->			
 			<span class="next right" type="dark generic" styles="generic">
-				<span class="translated" label="button 'next'"></span>
+				<label>Дальше</label>
 				<span type="icon" icon="right arrows" width="40" height="30" top_offset="7"></span>
 			</span>
 
 			<!-- done button -->
 			<span class="done right" type="dark generic" styles="generic">
 				<span type="icon" icon="check" width="24" height="24" top_offset="8"></span>
-				<span class="translated" label="button 'done'"></span>
+				<label>Готово</label>
 			</span>
 		</div>
 	</div>

@@ -161,7 +161,7 @@ var Message =
 			
 		var duration = this.awareness_enter_time + show_time + this.awareness_leave_time
 		
-		text = text.split('. ').join('.<br/>')
+		text = new String(text).split('. ').join('.<br/>')
 		
 		var message = $('<div class="' + type + ' non_selectable"/>').html(text)
 		var opacity = message.css('opacity')

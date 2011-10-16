@@ -20,8 +20,8 @@ module.exports = (приложение) ->
 		приложение.use express.bodyParser()
 		приложение.use express.methodOverride()
 		приложение.use express.cookieParser()
-		приложение.use приложение.router
 		приложение.use express.session secret: "какой-то ключ"
+		приложение.use приложение.router
 
 	приложение.configure 'development', ->
 		приложение.use(express.errorHandler({ dumpExceptions: true, showStack: true }))

@@ -39,7 +39,7 @@
  *			{
  *				song:
  *				{
- *					validate: function(song) { if (song.length == 0) throw "sing a song" }
+ *					// validate: function(song) { if (song.length == 0) throw "sing a song" }
  *				},
  *				drink:
  *				{
@@ -110,7 +110,8 @@ function form_slider(options)
 		var slide_index = 1
 		$(options.selector + " .slide").each(function() 
 		{
-			var slide = $(this);
+			var slide = $(this)
+			var form = new Form(slide.find('form').eq(0))
 			
 			// create a field object for each form input on a slide
 			$("input[name]", slide).each(function() 
@@ -121,6 +122,9 @@ function form_slider(options)
 				form_field.label = $("label[for='" + form_field.name + "']", slide)
 				form_field.slide_index = slide_index
 				
+				// any validator can be passed for this field
+				form_field.form = form
+		
 				apply_options(form_field, options)
 			})
 			
@@ -145,8 +149,6 @@ function form_slider(options)
 		
 		// specific control, which controls the value of this field
 		field.control = field_options.control
-		// any validator can be passed for this field
-		field.validate = field_options.validate
 	}
 	
 	// go to the next slide
@@ -158,32 +160,20 @@ function form_slider(options)
 
 		try
 		{
+			// if there is any validation - validate this field value
 			if (field)
-			{
-				// if there is any validation - validate this field value
-				if (field.validate)
-					field.validate(field.value())
-				
-				// mark field as valid
-				field.valid()
-			}
+				if (field.form)
+					field.form.validate()
 			
 			// go to the next slide
 			this.slider.next(callback) 
-			
 			return true
 		}
-		// if there were any errors
 		catch (error)
 		{
-			// if that's not our custom error - throw it further
-			if (!(error instanceof custom_error))
+			if (!error.is_form_validation)
 				throw error
-
-			// if that's our custom error - focus on the field and display the error message
-			field.focus()
-			field.error(error)
-			
+				
 			return false
 		}
 	}
@@ -235,6 +225,13 @@ function form_slider(options)
 		{
 			field.reset()
 		})
+		
+		// if there is any error message - hide it
+		this.fields.each(function(field)
+		{
+			if (field.form)
+				field.form.reset()
+		})
 	}
 	
 	// gather the form data
@@ -271,63 +268,12 @@ function form_slider(options)
 
 			// set empty value
 			this.element.val('')
-			
-			// if there is any error message - hide it
-			if (this.error_label)
-				this.error_label.slide_out()
 		}
 		
 		// get the field value
 		this.value = function()
 		{
 			return this.element.val()
-		}
-		
-		// mark the field as valid
-		this.valid = function()
-		{
-			if (this.error_label)
-				this.error_label.slide_out(1000)
-		}
-		
-		// if this field has an error
-		this.error = function(error)
-		{
-			// prepare the error label
-			this.label.attr("error", new String(error.message).escape_html())
-
-			// if the error label hasn't been created - create it
-			if (!this.error_label)
-			{
-				this.error_label = this.label.slide_label
-				({
-				   attribute: "error",
-				   tweenInFrom: "bottom",
-				   wrapLength: "auto",
-				   styles: ['error'],
-				   hover: false,
-				   'on appear': this.label.glow,
-				   "indention style name": "glowable"
-				})
-				
-				// and show it
-				this.error_label.slide_in()
-			}
-			// else - refresh the label
-			else
-			{
-				this.error_label.refresh()
-				
-				// and show it again, if it's hidden
-				if (this.error_label.hidden())
-					this.error_label.slide_in()
-			}
-		}
-		
-		// focus on the field
-		this.focus = function()
-		{
-			this.element.focus()
 		}
 	}
 	

@@ -3,6 +3,8 @@
  */
 
 var enter_window
+
+var поле_пароля
 var кнопка_отмены
 var кнопка_входа
 
@@ -15,8 +17,21 @@ function initialize_enter_window()
 		'on open': function() { $('#enter_window input:first').focus() }
 	})
 	
+	поле_пароля = enter_window.$element.find('input').eq(0)
+	
+	enter_window.$element.keydown(function(event) 
+	{
+		// if Enter key pressed
+		if (event.keyCode == Event.Keys.enter) 
+		{
+			кнопка_входа.push()
+			return false
+		}
+	})
+	
 	enter_window.register_controls
 	(
+		поле_пароля,
 		кнопка_отмены,
 		кнопка_входа
 	)
@@ -29,7 +44,7 @@ function initialize_enter_window_buttons()
 	.does(function() { enter_window.close() })
 	
 	кнопка_входа = activate_button('#enter_window .buttons .enter', { 'prevent double submission': true })
-	.does(function() { войти() })
+	.does(function() { войти({ пароль: поле_пароля.val() }) }).submits(new Form(enter_window.$element.find('form').eq(0)))
 }
 
 function activate_button(selector, options)
@@ -65,24 +80,62 @@ $(function()
 
     initialize_enter_window()
     initialize_enter_window_buttons()
+	
+	$('.logout').click(function(event)
+	{
+		event.preventDefault()
+		выйти()
+	})
 })
 
 function войти(data)
 {
 	loading_indicator.show()
 	Ajax.post('/приложение/вход', data, 
-	{ 
-		error: function()
+	{
+		ошибка: 'Не удалось войти',
+		error: function(ошибка)
 		{
 			loading_indicator.hide()
-			error('Не удалось войти')
-			кнопка_входа.unlock()
+			error(ошибка)
+			поле_пароля.focus()
+			кнопка_входа.unlock({ force: true })
 		},
 		ok: function(данные)
 		{ 
 			loading_indicator.hide()
 			enter_window.close()
-			Message.info('Ваше имя: ' + данные) 
+			
+			window.location.reload()
+			//info('Ваше имя: ' + данные.пользователь.имя) 
 		} 
 	})
+}
+
+function выйти()
+{
+	loading_indicator.show()
+	Ajax.post('/приложение/выход', {}, 
+	{
+		ошибка: 'Не удалось выйти',
+		error: function(ошибка)
+		{
+			loading_indicator.hide()
+			error(ошибка)
+		},
+		ok: function(данные)
+		{ 
+			loading_indicator.hide()
+			window.location.reload()
+		} 
+	})
+}
+
+Validation.вход =
+{
+	пароль: function(пароль)
+	{
+		if (пароль.length == 0)
+			throw new custom_error('Введите ваш пароль')
+	}
 }

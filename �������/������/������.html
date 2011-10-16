@@ -9,7 +9,7 @@
 		
 		<meta charset="utf-8" />
 
-		<title class="translated" label="title"></title>
+		<title>Собрание</title>
 
 		<!-- Coffee Script 0.9.4 -->
 		<!--<script src="/javascripts/coffee script/coffee-script.js"></script>--Ю
@@ -50,9 +50,10 @@
 		<!-- jQuery background-position-x/y -->
 		<script src="/javascripts/jquery/jquery.background.position.x.y.js"></script>
 
-		<!-- Russian language -->
+		<!-- Russian language
 		<script src="/javascripts/перевод/generic.ru.json"></script>
 		<script src="/javascripts/перевод/page/welcome.ru.json"></script>
+		 -->
 
 		<!-- jQuery watermark input -->
 		<!--<script src="/javascripts/jquery/jquery.watermarkinput.js"></script>-->
@@ -93,6 +94,8 @@
 		<script src="/javascripts/облик/навершие.js"></script> 
 		<link rel="stylesheet/less" href="/облик/навершие.css"/>
 
+		<script src="/javascripts/облик/form.js"></script> 
+
 		<!-- slider -->
 		<script src="/javascripts/облик/slider/slider.js"></script> 
 		<script src="/javascripts/облик/slider/form_slider.js"></script> 
@@ -112,19 +115,20 @@
 				panel.initialize()
 				initialize_page()	
 				
-				var delayed = function() 
-				{
+				//var delayed = function() 
+				//{
 					//center_horizontally()
 					//center_vertically()
 					page_loaded()
-				}
+				//}
 
-				delayed.delay(1)
+				//delayed.delay(1)
 				
 				check_browser_support()
 				
 				$('.non_selectable').disableTextSelect()
 				$('#page_header').disableTextSelect()
+				$('label').disableTextSelect()
 			})
 		</script>
 		
@@ -164,11 +168,13 @@
 				<div id="panel">
 					<!-- the menu -->
 					<ul id="panel_menu">
-						<li name="reading" link="читальня" class="translated" label="panel, reading"></li>
-						<li name="people" link="люди" class="translated" label="panel, people"></li>
-						<li name="help" link="помощь" class="translated" label="panel, help"></li>
+						<li name="reading" link="читальня">Читальня</li>
+						<li name="people" link="люди">Люди</li>
+						<li name="help" link="помощь">Помощь</li>
 						<li><span class="divider"></span></li>
+						<li name="болталка" link="болталка">Болталка</li>
 						<li name="mail" link="почта">Почта</li>
+						<li name="книги" link="книги">Книги</li>
 						<li name="settings" link="настройки">Настройки</li>
 					</ul>
 		
@@ -179,31 +185,31 @@
 		</aside>
 	
 		<div class="centered_on_the_panel">
-			<!--
-			<div class="authenticated_user">
-				<div class="photo"></div>
-				<div class="info">
-					<a href="#" class="name">Николай Кучумов</a>
-					<a href="#" class="logout">Выйти</a>
+			{{if пользователь}}
+				<div class="authenticated_user">
+					<div class="photo"></div>
+					<div class="info">
+						<a href="#" class="name">${пользователь.имя}</a>
+						<a href="#" class="logout">Выйти</a>
+					</div>
 				</div>
-			</div>
-			-->
-			
-			<div class="registration_hint non_selectable">
-				Если вы пропишетесь, вы сможете писать новые статьи и править текущие, <br/>
-				а также общаться и выражать своё мнение.
-				<div class="actions">
-					<a href="/прописка" class="register">Прописаться</a>
-					или
-					<a href="#" class="enter">Войти</a>
+			{{else}}
+				<div class="registration_hint non_selectable">
+					Если вы пропишетесь, вы сможете писать новые статьи и править текущие, <br/>
+					а также общаться и выражать своё мнение.
+					<div class="actions">
+						<a href="/прописка" class="register">Прописаться</a>
+						или
+						<a href="#" class="enter">Войти</a>
+					</div>
 				</div>
-			</div>
+			{{/if}}
 		</div>
 		
 		{{html содержимое}}
 		
 		<!-- AJAX loading window -->
-		<div id="loading_indicator" class="collapsed non_selectable translated_title" label="page, dialog 'loading', title">
+		<div id="loading_indicator" class="collapsed non_selectable" title="Теперь ждите...">
 			<div class="container" style="text-align: center">
 				<a class="loading_indicator_image_source image" href="" target="_blank">
 					<img class="loading_indicator_image" src=""/>
@@ -212,7 +218,7 @@
 		</div> 
 			
 		<!-- Unsupported browser popup -->
-		<div id="unsupported_browser_warning" class="collapsed no_word_carrying non_selectable translated_title" label="page, dialog 'unsupported browser', title">
+		<div id="unsupported_browser_warning" class="collapsed no_word_carrying non_selectable" title="Здравствуйте">
 			<div class="translated text" label="page, dialog 'unsupported browser', content"></div>
 			
 			<br/>
@@ -225,30 +231,30 @@
 		</div>
 			
 		<!-- Вход -->
-		<div id="enter_window" class="collapsed no_word_carrying non_selectable" title="Вход">
+		<div id="enter_window" class="collapsed no_word_carrying" title="Вход">
 			<!-- пароль -->
 			<div class="password">
 				<div class="icon"></div>
-				<div class="form">
+				<form>
 					<label for="пароль">Введите свой пароль</label>
-					<input name="пароль" class="field" type="text"/>
-				</div>
+					<input name="пароль" class="field" type="text" validation="вход.пароль"/>
+				</form>
 			</div>
 			
 			<!-- начинаются кнопки -->
 			<div class="pre_buttons"></div>
 	
 			<!-- кнопки -->
-			<div class="no_word_carrying dialog_container non_selectable buttons">
+			<div class="no_word_carrying dialog_container buttons">
 				<!-- отмена -->
 				<span class="cancel left" type="minor" styles="generic, minor, caution">
 					<span type="icon" icon="cross" width="30" height="30" top_offset="5"></span>
-					<span>Отмена</span>
+					<label>Отмена</label>
 				</span>
 	
 				<!-- войти -->			
 				<span class="enter right" type="dark generic" styles="generic">
-					<span>Войти</span>
+					<label>Войти</label>
 					<span type="icon" icon="right arrows" width="40" height="30" top_offset="7"></span>
 				</span>
 			</div>

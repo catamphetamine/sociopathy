@@ -18,3 +18,10 @@ module.exports = снасти
 
 Array.prototype.is_empty = () ->
 	@length == 0
+	
+Array.prototype.trim = () ->
+	array = []
+	@forEach (element) ->
+		if element?
+			array.push element
+	array

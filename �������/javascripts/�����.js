@@ -282,3 +282,11 @@ function initialize_conditional($this)
 	
 	return action
 }
+
+$(function()
+{
+	$('form').submit(function(event)
+	{
+		event.preventDefault()
+	})
+})

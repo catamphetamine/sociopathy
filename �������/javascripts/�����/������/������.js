@@ -67,19 +67,28 @@ var button = new Class
 		// the push animation is finished, and now the button can be unlocked, if the caller gives it permission to do this
 		can_unlock: false,
 		
+		force: false,
+		
 		lock: function()
 		{
 			this.locker = this.self.lock()
 		},
 		
-		unlock: function()
+		unlock: function(options)
 		{
 			if (!this.locker)
 				return
 			
+			if (options)
+				if (!this.force)
+					this.force = options.force
+			
 			if (this.self.options['prevent double submission'] === true)
-				return
-
+				if (!this.force)
+					return
+				else
+					this.force = false
+					
 			this.locker.unlock()
 			this.locker = null
 			
@@ -88,8 +97,12 @@ var button = new Class
 			this.may_unlock = false			
 		},
 		
-		let_unlock: function()
+		let_unlock: function(options)
 		{
+			if (options)
+				if (!this.force)
+					this.force = options.force
+				
 			// now the caller permits to unlock the button
 			this.may_unlock = true
 	
@@ -187,9 +200,9 @@ var button = new Class
 			return true
 	},
 	
-	let_unlock: function()
+	let_unlock: function(options)
 	{
-		this.pushing.let_unlock()
+		this.pushing.let_unlock(options)
 	},
 	
 	prepare: function() {},
@@ -221,9 +234,9 @@ var button = new Class
 		return lock
 	},
 	
-	unlock: function()
+	unlock: function(options)
 	{
-		this.pushing.unlock()
+		this.pushing.unlock(options)
 		this.locks.each(function(lock) { lock.unlock() })
 	},
 	
@@ -237,6 +250,20 @@ var button = new Class
 		// if no action - exit
 		if (!this.options.action)
 			return
+			
+		if (this.form)
+			try
+			{
+				this.form.validate()
+			}
+			catch (error)
+			{
+				if (!error.is_form_validation)
+					throw error
+				
+				this.let_unlock({ force: true })
+				return
+			}
 		
 		// back reference
 		var self = this
@@ -431,6 +458,12 @@ var button = new Class
 		options = options || {}
 		this.options.delay = options.delay
 		
+		return this
+	},
+	
+	submits: function(form)
+	{
+		this.form = form
 		return this
 	}
 })

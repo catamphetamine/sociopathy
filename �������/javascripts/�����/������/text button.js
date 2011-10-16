@@ -209,7 +209,7 @@ var text_button = new Class
 			'float': 'left',
 
 			'padding-left': this.skin['side bar size'] + 'px',
-
+			
 			'-webkit-user-select': 'none',
 			'-moz-user-select': 'none'
 		})

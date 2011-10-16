@@ -50,8 +50,12 @@
 			background-repeat: no-repeat;
 		}
 
-		.form
+		form
 		{
+			display: inline-block;
+			vertical-align: top;
+			
+			font-size: 1em;
 			padding-top: 10px;
 		}
 	}
@@ -71,8 +75,11 @@
 			background-repeat: no-repeat;
 		}
 		
-		.form
+		form
 		{
+			display: inline-block;
+			vertical-align: top;
+			
 			padding-top: 5px;
 		}	
 	}
@@ -113,18 +120,22 @@
 	{
 		.icon
 		{
+			float: left;
+			
 			width: 128px;
 			height: 128px;
 
 			background-image: url('/картинки/на страницах/welcome/dialog/join/ключи.png');
 			background-repeat: no-repeat;
 			
-			float: left;
 			padding-right: 20px;
 		}
 		
-		.form
+		form
 		{
+			display: inline-block;
+			vertical-align: top;
+			
 			padding-top: 5px;
 		}
 	}

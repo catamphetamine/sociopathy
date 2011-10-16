@@ -9,16 +9,6 @@
  * @github kuchumovn
  */
 
-/*
-.generic_button .button_contents, .generic_button_ready .button_contents
-{
-}
-
-.generic_button_pushed .button_contents
-{
-}
-*/
-
 .generic_button .button_contents, .generic_button_ready .button_contents
 {
 	padding-top: 8px;
@@ -40,17 +30,7 @@
 	color: #4f4f4f;
 }
 
-.generic_button
+.generic_button label
 {
-	cursor: default
+	cursor: pointer;
 }
-
-/*
-.button_contents:after
-{
-	content: ""; 
-	display: block; 
-	height: 0; 
-	clear: both;
-}
-*/

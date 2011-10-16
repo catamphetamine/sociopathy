@@ -72,7 +72,6 @@ function initialize_join_form_slider()
 		{
 			имя:
 			{
-				validate: function(name) { if (name.length == 0) throw new custom_error($._("page 'welcome', dialog 'join', error, name, empty")) }
 			},
 			пол:
 			{
@@ -83,10 +82,24 @@ function initialize_join_form_slider()
 			},
 			пароль:
 			{
-				validate: function(name) { if (name.length == 0) throw new custom_error('Пароль будет нужен для входа') }
 			}
 		}
 	})
+}
+
+Validation.прописка =
+{
+	имя: function(имя)
+	{
+		if (имя.length == 0)
+			throw new custom_error('Вам нужно представиться')
+	},
+	
+	пароль: function(пароль)
+	{
+		if (пароль.length == 0)
+			throw new custom_error('Пароль будет нужен для входа')
+	}
 }
 
 // create gender chooser
@@ -151,9 +164,6 @@ function check_invite(conditional)
 			initialize_gender_chooser()
 			initialize_join_form_slider()
 			initialize_join_dialog()
-
-			$('.slider label').disableTextSelect()
-			$('#join_form .gender .chooser').disableTextSelect()
 			
 			conditional.callback()
 		}
@@ -173,6 +183,8 @@ function check_invite_error(ошибка)
 // submit join request
 function join_submission(data)
 {
+	data.приглашение = получить_настройку_запроса('приглашение')
+
 	loading_indicator.show()
 	Ajax.put('/приложение/прописать', data, 
 	{ 
