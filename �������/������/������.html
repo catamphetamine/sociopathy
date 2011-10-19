@@ -17,7 +17,6 @@
 
 		<!-- jQuery -->
 		<script src="/javascripts/jquery/jquery-1.6.4.min.js"></script>
-		<script src="/javascripts/jquery/waypoints.js"></script>
 		<script src="/javascripts/jquery/jquery.disable.text.select.js"></script>
 		<script src="/javascripts/jquery/jquery.tmpl.js"></script>
 
@@ -60,6 +59,8 @@
 		 
 		<!-- generic -->
 		<script src="/javascripts/многоязычие.js"></script> 
+		<script src="/javascripts/клавиши.js"></script> 
+		<script src="/javascripts/прокрутка.js"></script> 
 		<script src="/javascripts/снасти.js"></script> 
 		<script src="/javascripts/общее.js"></script> 
 		<link rel="stylesheet/less" type="text/css" href="/облик/общее.css">
@@ -135,7 +136,10 @@
 		<!-- стили и javascript'ы этой страницы -->
 		<link rel="stylesheet/less" href="/облик/страницы/${название}.css"/>
 		<script src="/javascripts/на страницах/${название}.js"></script> 
+
+		<script src="/javascripts/режимы.js"></script> 
 		 
+		 <!-- не убирается в файл, так как less обрабатывает стили при загрузке страницы, поэтому был бы виден мусор -->
 		 <style>
 			#loading_screen
 			{
@@ -148,11 +152,7 @@
 				width: 100%;
 				height: 100%;
 				
-				background-color: #f0f0f0;
-				/*
-				background: -webkit-gradient(radial, 60% 10%, 10, 60% 10%, 1500, from(#ffffff), to(#e5e4e4));
-				background-image: -moz-radial-gradient(60% 10% 45deg, circle farthest-side, #ffffff 0%, #e5e4e4 100%);
-				*/
+				background-color: #ffffff;
 			}
 		</style>
 		 
@@ -171,12 +171,14 @@
 						<li name="reading" link="читальня">Читальня</li>
 						<li name="people" link="люди">Люди</li>
 						<li name="help" link="помощь">Помощь</li>
-						<li><span class="divider"></span></li>
-						<li name="болталка" link="болталка">Болталка</li>
-						<li name="беседы" link="беседы">Беседы</li>
-						<li name="mail" link="почта">Почта</li>
-						<li name="книги" link="книги">Книги</li>
-						<li name="settings" link="настройки">Настройки</li>
+						{{if пользователь}}
+							<li><span class="divider"></span></li>
+							<li name="болталка" link="болталка">Болталка</li>
+							<li name="беседы" link="беседы">Беседы</li>
+							<li name="mail" link="почта">Почта</li>
+							<li name="книги" link="книги">Книги</li>
+							<li name="settings" link="настройки">Настройки</li>
+						{{/if}}
 					</ul>
 		
 					<!-- logo -->

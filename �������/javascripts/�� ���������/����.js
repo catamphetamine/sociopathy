@@ -88,46 +88,55 @@ function initialize_page()
 			
 			people.batch(function(люди)
 			{
+				$('#people_loading').remove()
+
 				люди.forEach(function(man)
 				{
 					add_id_card(man)
 				})
-				
-				$('#people_loading').remove()
-				
+					
 				if (people.есть_ли_ещё)
 					activate_id_card_loader()
-			})			
+			})
 		}
 	})
 }
 
+var $scroll_detector
+	
 function activate_id_card_loader()
 {
+	$scroll_detector = $('#scroll_detector')
 	var $loading = $('#more_people_loading')
-	var $scroll_detector = $('#scroll_detector')
 
-	var options = { offset: '100%' }
-	
-	$scroll_detector.waypoint(function(event, direction)
+	$scroll_detector.bind('scroller.appearing_on_bottom', function(event)
 	{
-		$scroll_detector.waypoint('remove')
+		$loading.fadeIn(500)
 		
 		people.batch(function(люди)
 		{
+			$loading.fadeOut(500)
+			
 			люди.forEach(function(man)
 			{
 				add_id_card(man)
 			})
 			
-			if (!people.есть_ли_ещё)
-			{
-				$loading.hide()
-				return
-			}
-						
-			$scroll_detector.waypoint(options)
+			if (people.есть_ли_ещё)		
+				прокрутчик.reset($scroll_detector)
+			else
+				deactivate_id_card_loader()
 		})
-	}, 
-	options)
+			
+		event.stopPropagation()
+	})
+	
+	прокрутчик.watch($scroll_detector)
+	
+	$(window).scrollTop(0)
+}
+
+function deactivate_id_card_loader()
+{
+	прокрутчик.unwatch($scroll_detector)
 }

@@ -1,0 +1,180 @@
+@import "/облик/вспомогательный.less";
+
+@article_side_padding: 40px;
+
+#article_editor_tools_container
+{
+	position: relative;
+	height: 60px;
+	
+	margin-top: 30px;
+	
+	margin-left: -@article_side_padding;
+	margin-right: -@article_side_padding;
+	
+	overflow: hidden;
+}
+
+#article_editor_tools
+{
+	position: absolute;
+	top: 0;
+	left: 0;
+	
+	width: 100%;
+	
+	background-color: #3f3f3f;
+	color: #efefef;
+	
+	padding-top: 10px;
+	padding-bottom: 10px;
+
+	padding-left: 10px;
+	padding-right: 10px;
+	
+	text-align: center;
+
+	&.sticky
+	{
+		position: fixed;
+		width: 100%;
+		margin: 0;
+	}
+	
+	ul
+	{
+		padding: 0;
+		margin: 0;
+		
+		padding-top: 3px;
+		padding-bottom: 3px;
+		
+		li
+		{
+			display: inline-block;
+			
+			margin-left: 15px;
+			margin-right: 15px;
+
+	
+			&:first-child
+			{
+				border-left:0;
+			}
+			
+			cursor: pointer;
+			
+			&.main_heading
+			{
+				font-family: @headings_font;
+			}
+			
+			&.heading
+			{
+				font-family: @headings_font;
+				font-size: 26px;
+				border-bottom-style: solid;
+				border-bottom-width: 1px;
+				border-bottom-color: white;
+			}
+			
+			&.paragraph
+			{
+				font-family: @textual_font;
+			}
+			
+			&.link
+			{
+				font-family: @headings_font;
+				.hyperlink();
+				color: white;
+				border-color: white;
+			}
+			
+			&.picture
+			{
+			}
+		}
+	}
+}
+
+#content.article
+{
+	padding-left: @article_side_padding;
+	padding-right: @article_side_padding;
+	
+	padding-top: 40px;
+
+	> .edit
+	{
+		float: right;
+		margin-top: 105px;
+		padding-left: 40px;
+		
+		background-image: url('/картинки/на страницах/читальня/править.png');
+		background-position: left top;
+		background-repeat: no-repeat;
+		background-color: transparent;
+	}
+	
+	article
+	{
+		font-family: @textual_font;
+
+		font-size: 40px;
+		line-height: 57px;
+
+		p
+		{
+			text-indent: 1.35em;
+			/* text-align: justify; */
+		}
+
+		a
+		{
+			color: inherit;
+			border-bottom-width: 0;
+		}
+
+		a:hover
+		{
+			.hyperlink;
+		}
+
+		h1
+		{
+			font-size: 50px;
+		}
+
+		h2
+		{
+			font-size: 40px;
+
+			border-bottom-width: 1px;
+			border-bottom-color: black;
+			border-bottom-style: solid;
+		}
+		
+		h1, h2, a.reference
+		{
+			font-family: @headings_font;
+		}
+				
+		.references
+		{
+			list-style: none;
+			
+			li
+			{
+				margin-bottom: 20px;
+				
+				a
+				{
+					.hyperlink;
+					
+					display: inline-block;
+				}
+			}
+		}
+	}
+}

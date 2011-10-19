@@ -1,4 +1,4 @@
-﻿@link_color: #004b7b;
+﻿@import "/облик/вспомогательный.less";
 
 /*
 @font-face
@@ -115,8 +115,8 @@ html, input
 
 html, #content, #background_stretcher
 {
-	background-color: #f2f2f2;
 	/*
+	background-color: #f2f2f2;
 	background: -webkit-gradient(radial, 60% 10%, 10, 60% 10%, 1500, from(#ffffff), to(#e5e4e4));
 	background-image: -moz-radial-gradient(60% 10% 45deg, circle farthest-side, #ffffff 0%, #e5e4e4 100%);
 	*/
@@ -166,15 +166,6 @@ a.image
 {
 	border: 0;
 	display: block;
-}
-
-.hyperlink
-{
-	color: @link_color;
-	
-	border-bottom-width: 1px;
-	border-bottom-style: dashed;
-	border-bottom-color: @link_color;
 }
 
 a
@@ -361,15 +352,13 @@ label.error
 	{
 		display: inline-block;
 		
-		background-image: url('/картинки/avatar/male.png');
+		background-image: url('/картинки/temporary/картинка с навершия.jpg');
 		background-repeat: no-repeat;
+
+		.beautiful_shadow(0px, 1px, 2px, 3px, 4px, 0px, 0px, 0.2);
 
 		width: 48px;
 		height: 48px;
-		
-		border-color: #afafaf;
-		border-style: solid;
-		border-width: 1px;
 	}
 
 	.info
@@ -410,11 +399,11 @@ label.error
 	}
 }
 
-.textual, .textual_content, .article article
+.textual, .textual_content
 {
-	font-family: Georgia, Times New Roman, Serif;
-	font-size: 34px;
-	line-height: 49px;
+	font-family: @textual_font;
+	font-size: @textual_font_size;
+	line-height: @textual_line_height;
 }
 
 .textual_content
@@ -432,91 +421,19 @@ label.error
 	}
 }
 
-#content.article
-{
-	padding-left: 40px;
-	padding-right: 40px;
-	
-	padding-top: 40px;
-
-	> .edit
-	{
-		float: right;
-		margin-top: 105px;
-		padding-left: 40px;
-		
-		background-image: url('/картинки/на страницах/читальня/править.png');
-		background-position: left top;
-		background-repeat: no-repeat;
-		background-color: transparent;
-	}
-	
-	article
-	{
-		font-size: 40px;
-		line-height: 57px;
-
-		p
-		{
-			text-indent: 1.35em;
-			/* text-align: justify; */
-		}
-
-		a
-		{
-			color: inherit;
-			border-bottom-width: 0;
-		}
-
-		a:hover
-		{
-			.hyperlink;
-		}
-
-		h1
-		{
-			font-size: 50px;
-		}
-
-		h2
-		{
-			font-size: 40px;
-
-			border-bottom-width: 1px;
-			border-bottom-color: black;
-			border-bottom-style: solid;
-		}
-		
-		h1, h2, a.reference
-		{
-			font-family: Helvetica, Arial, sans-serif;
-		}
-				
-		.references
-		{
-			list-style: none;
-			
-			li
-			{
-				margin-bottom: 20px;
-				
-				a
-				{
-					.hyperlink;
-					
-					display: inline-block;
-				}
-			}
-		}
-	}
-}
-
 h1, h2, h3, h4, h5, h6
 {
-	font-family: Helvetica, Arial, sans-serif;
+	font-family: @headings_font;
 }
 
 .collapsed
 {
 	display: none;
+}
+
+.sticky
+{
+	position: fixed;
+	top: 0;
+	left: 0;
 }
