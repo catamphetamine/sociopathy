@@ -7,7 +7,7 @@
 	<br/>
 
 	<!-- Registration button -->
-	<div class="join_button_block" type="conditional" on_error="check_invite_error" action="check_invite" style="display: none">
+	<div class="join_button_block non_selectable" type="conditional" on_error="check_invite_error" action="check_invite" style="display: none">
 		<div type="ok">
 			<span id="join_button" class="centered"></span>
 		</div>
@@ -75,22 +75,22 @@
 		<!-- dialog window buttons -->
 		<div class="no_word_carrying dialog_container non_selectable buttons">
 			<!-- cancel button -->
-			<span class="cancel left" type="minor" styles="generic, minor, caution">
+			<div class="cancel left" type="minor" styles="generic, minor, caution">
 				<span type="icon" icon="cross" width="30" height="30" top_offset="5"></span>
 				<label>Отмена</label>
-			</span>
+			</div>
 
 			<!-- next button -->			
-			<span class="next right" type="dark generic" styles="generic">
+			<div class="next right" type="dark generic" styles="generic">
 				<label>Дальше</label>
-				<span type="icon" icon="right arrows" width="40" height="30" top_offset="7"></span>
-			</span>
+				<span type="icon" icon="right arrows" width="35" height="30" top_offset="7"></span>
+			</div>
 
 			<!-- done button -->
-			<span class="done right" type="dark generic" styles="generic">
+			<div class="done right" type="dark generic" styles="generic">
 				<span type="icon" icon="check" width="24" height="24" top_offset="8"></span>
 				<label>Готово</label>
-			</span>
+			</div>
 		</div>
 	</div>
 </section>

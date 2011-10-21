@@ -15,20 +15,20 @@
 		{
 			$(this)
 				.stop(true, false) // clearQueue, jumpToEnd
-				.glow_out()
+				.glow_in()
 		})
 		
-		$external_links.bind('mouseenter.' + namespace, function()
+		$external_links.bind('mouseleave.' + namespace, function()
 		{
 			$(this)
 				.stop(true, false) // clearQueue, jumpToEnd
-				.glow_in()
+				.glow_out()
 		})
 	}
 	
 	$(function()
 	{
-		$.make_external_links_glowable()
+		//$.make_external_links_glowable()
 	})
 })
 (jQuery)

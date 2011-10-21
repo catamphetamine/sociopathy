@@ -167,30 +167,35 @@ var text_button = new Class
 	clone_content: function()
 	{
 		return $(this.content)
-	}.protect(),
+	}
+	.protect(),
 	
 	build_idle_frame: function()
 	{
-		var $element = this.$element
+		this.$element.wrapInner('<div/>')
+		var idle_frame = this.$element.find(':first')
 		
 		this.options.styles.each(function(style_name)
 		{
-			$element.addClass(style_name + '_button')			
-		})
-			
-		this.$element.wrapInner('<span><span></span></span><div style="clear: both"></div>')
+			idle_frame.addClass(style_name + '_button')			
+			idle_frame.addClass(style_name + '_button_idle')			
+		},
+		this)
 
 		// style left part
 
-		var $left_part = $(':first', this.$element)
-
-		$left_part.css
+		var left_part = $('<div/>')
+		
+		left_part.css
 		({
-			'display': 'block',
+			'display': 'inline-block',
+			'vertical-align': 'top',
 			
 			'min-height': this.skin.height + 'px',
 			'max-height': this.skin.height + 'px',
 
+			'width': this.skin['side bar size'] + 'px',
+			
 			'background_position_x': 'left',
 			'background_position_y': 'top',
 			'background-image': this.get_image_path('left'),
@@ -200,40 +205,66 @@ var text_button = new Class
 
 		// style content
 		
-		var $content = $(':first :first', this.$element)
-		$content.addClass('button_contents')
-
-		$content.css
+		idle_frame.wrapInner('<div/>')
+		var middle_part = idle_frame.find(':first')
+	
+		middle_part.css
 		({
-			'display': 'block',
-			'float': 'left',
-
-			'padding-left': this.skin['side bar size'] + 'px',
+			'display': 'inline-block',
+			'vertical-align': 'top',
 			
-			'-webkit-user-select': 'none',
-			'-moz-user-select': 'none'
+			'min-height': this.skin.height + 'px',
+			'max-height': this.skin.height + 'px',
+			
+			'background_position_x': 'left',
+			'background_position_y': 'top',
+			'background-image': this.get_image_path('middle'),
+			'background-color': 'transparent',
+			'background-repeat': 'repeat-x',
 		})
+	
+		middle_part.wrapInner('<div/>')
+		var content = middle_part.find(':first')
+		content.addClass('button_contents')
 
 		if (this.options.icon)
-			this.add_icon($content)
+			this.add_icon(content)
+			
+		content.appendTo(middle_part)
 		
-		// style right part (and container)
+		// style right part
 
-		this.$element.css
-		({
-			'background_position_x': 'right',
-			'background_position_y': 'top'
-		})
+		var right_part = $('<div/>')
 		
-		this.$element.css(this.get_right_part_style())
-	
+		right_part.css
+		({
+			'display': 'inline-block',
+			'vertical-align': 'top',
+			
+			'min-height': this.skin.height + 'px',
+			'max-height': this.skin.height + 'px',
+
+			'width': this.skin['side bar size'] + 'px',
+
+			'background_position_x': 'left',
+			'background_position_y': 'top',
+			'background-image': this.get_image_path('right'),
+			'background-color': 'transparent',
+			'background-repeat': 'no-repeat',
+		})
+
+		idle_frame.prepend(left_part).append(right_part)
+
+		// for ready and pushed frames		
 		this.$element.css
 		({
 			'position': 'relative',
-			'display': 'block'
+			'white-space': 'nowrap'
 		})
-
-		this.content = this.$element.html()
+		
+		this.$element.disableTextSelect()
+		
+		this.content = idle_frame.html()
 		
 		return this.$element
 	},
@@ -244,6 +275,7 @@ var text_button = new Class
 		
 		this.options.styles.each(function(style_name)
 		{
+			 styles.push(style_name + '_button')			
 			 styles.push(style_name + '_button_ready')			
 		})
 
@@ -256,6 +288,7 @@ var text_button = new Class
 		
 		this.options.styles.each(function(style_name)
 		{
+			 styles.push(style_name + '_button')			
 			 styles.push(style_name + '_button_pushed')			
 		})
 
@@ -264,7 +297,7 @@ var text_button = new Class
 	
 	build_hidden_frame: function(options)
 	{
-		var $frame = $('<span></span>')
+		var $frame = $('<div></div>')
 		
 		options.styles.each(function(style_name)
 		{
@@ -274,10 +307,18 @@ var text_button = new Class
 		var $content = this.clone_content()
 		$frame.append($content)
 	
-		var $left_part = $(':first', $frame)
-		$left_part.css('background_position_x', 'left')
+		var $left_part = $frame.find(':first')
+		//$left_part.css('background_position_x', 'left')
 		$left_part.css('background_position_y', "-" + this.skin.height * (options['image index'] - 1) + "px")
 	
+		var $middle_part = $frame.children().eq(1)
+		//$left_part.css('background_position_x', 'left')
+		$middle_part.css('background_position_y', "-" + this.skin.height * (options['image index'] - 1) + "px")
+	
+		var $right_part = $frame.find(':last')
+		//$left_part.css('background_position_x', 'left')
+		$right_part.css('background_position_y', "-" + this.skin.height * (options['image index'] - 1) + "px")
+
 		$frame.css
 		({
 			'position': 'absolute',
@@ -286,13 +327,9 @@ var text_button = new Class
 			'display': 'none',
 			'opacity': 0
 		})
-	
-		$frame.css('background_position_x', 'right')
-		$frame.css('background_position_y', "-" + this.skin.height * (options['image index'] - 1) + "px")
-		$frame.css(this.get_right_part_style())
 		
 		// adjust the icon image
-		$('.button_icon', $content).css('background_position_y', '-' + this.options.icon.height * (options['image index'] - 1) + 'px')
+		$content.find('.button_icon').css('background_position_y', '-' + this.options.icon.height * (options['image index'] - 1) + 'px')
 
 		// result		
 		this.$element.append($frame)

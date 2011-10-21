@@ -1,21 +1,28 @@
-var режим = 'обычный'
+var режим
 var режимы = []
+
+$(function()
+{
+	перейти_в_режим('обычный')
+})
 
 режимы.push
 ({
 	название: 'обычный',
-	перейти: function()
+	перейти: function(из)
 	{
-		info('Обычный режим')
+//		if (из)
+//			info('Обычный режим')
 	}
 })
 
 режимы.push
 ({
 	название: 'правка',
-	перейти: function()
+	перейти: function(из)
 	{
-		info('Режим правки')
+//		if (из)
+//			info('Режим правки')
 		
 		$('[editable=true]').attr('contenteditable', true)
 	}
@@ -24,9 +31,10 @@ var режимы = []
 режимы.push
 ({
 	название: 'помощь',
-	перейти: function()
+	перейти: function(из)
 	{
-		info('Режим помощи')
+//		if (из)
+//			info('Режим помощи')
 	}
 })
 
@@ -43,17 +51,21 @@ function перейти_в_режим(mode)
 		$('[editable=true]').removeAttr('contenteditable')
 	}
 	
-	$('[mode=' + режим + ']').hide()
-			
-	режим = mode
-	
-	$('[mode=' + режим + ']').show()
+	if (режим)
+		$('[mode=' + режим + ']').hide()
 		
-	режимы.forEach(function(режим)
+	$('[mode=' + mode + ']').show()
+		
+	режимы.forEach(function(описание_режима)
 	{
-		if (режим.название ===  mode)
-			режим.перейти()
+		if (описание_режима.название ===  mode)
+			описание_режима.перейти(режим)
 	})
+	
+	$(document).trigger('режим.переход', [режим, mode])
+	$(document).trigger('режим.' + mode)
+
+	режим = mode
 }
 
 $(function()
@@ -75,19 +87,19 @@ $(document).ready(function()
 		{
 			switch(event.keyCode)
 			{ 
-				case Клавиши.DIGIT_1:
+				case Клавиши.Digit_1:
 					перейти_в_режим('обычный')
 					break
-				case Клавиши.DIGIT_2: 
+				case Клавиши.Digit_2: 
 					перейти_в_режим('правка')
 					break
-				case Клавиши.DIGIT_3: 
+				case Клавиши.Digit_3: 
 					перейти_в_режим('помощь')
 					break
 			}
 		}
 		
-		// hz
+		/*
 		if (!event.altKey && event.ctrlKey && event.shiftKey)
 		{
 			switch(event.keyCode)
@@ -100,5 +112,6 @@ $(document).ready(function()
 					break
 			}
 		}
+		*/
 	})
 })

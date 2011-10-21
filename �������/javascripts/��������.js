@@ -34,6 +34,9 @@ var jquery_animator = new Class
 		var maximum_opacity = 1
 		if (options.maximum_opacity)
 			maximum_opacity = options.maximum_opacity
+		
+		if ($element.css('opacity') >= maximum_opacity)
+			$element.css('opacity', 0)
 			
 		$element.show()
 		this.stop($element)
@@ -42,9 +45,6 @@ var jquery_animator = new Class
 	
 	fade_out: function($element, options)
 	{
-		if ($element.is(":animated")) 
-			$element.stop(true /* clear queue */, false /* don't jump to queue end */)
-
 		// options
 		options = options || {}
 		
@@ -225,5 +225,5 @@ var moo_tools_animator = new Class
 })
 
 // the animator being used
-//var animator = new jquery_animator()
 var animator = new moo_tools_animator()
+animator.jquery = new jquery_animator()

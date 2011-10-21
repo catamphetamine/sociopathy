@@ -23,7 +23,7 @@ var Scroller = new Class
 	
 	reset: function(element)
 	{
-		element.data('top_offset_in_window', -1)
+		element.data('top_offset_in_window', 0)
 		this.check_for_events(element)
 	},
 	
@@ -56,4 +56,9 @@ var Scroller = new Class
 	}
 })
 
-var прокрутчик = new Scroller()
+var прокрутчик
+
+$(function()
+{
+	прокрутчик = new Scroller()
+})

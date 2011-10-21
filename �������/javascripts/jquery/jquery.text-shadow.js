@@ -124,28 +124,24 @@ function parse_text_shadow(element)
 			
 	$.fn.glow = function()
 	{
-		$.proxy(glow_in_out, this)()
+		glow_in_out.bind(this)()
 		return this
 	}
 	
 	function glow_in_out()
 	{
-//		$(this).animate({text_shadow_radius: 20}, glow_timing)
-//		$(this).animate({text_shadow_radius: 0}, glow_timing, glow_sample)
-
-		var $self = $(this)
-		 
-		$self.animate({text_shadow_opacity: maximum_opacity}, glow_timing)
-		$self.animate({text_shadow_opacity: minimum_opacity}, glow_timing, glow_in_out)
+		this.animate({text_shadow_opacity: maximum_opacity}, glow_timing)
+		this.animate({text_shadow_opacity: minimum_opacity}, glow_timing, glow_in_out.bind(this))
 	}
 	
 	$.fn.glow_in = function()
 	{
-		$self.animate({text_shadow_opacity: 1}, glow_timing)
+		this.animate({text_shadow_opacity: 1}, glow_timing)
 	}
 	
 	$.fn.glow_out = function()
 	{
-		$self.animate({text_shadow_opacity: 0}, glow_timing)
+		// 0.001 to keep color data
+		this.animate({text_shadow_opacity: 0.01}, glow_timing)
 	}
 })(jQuery)

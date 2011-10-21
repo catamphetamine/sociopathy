@@ -19,6 +19,7 @@
 		<script src="/javascripts/jquery/jquery-1.6.4.min.js"></script>
 		<script src="/javascripts/jquery/jquery.disable.text.select.js"></script>
 		<script src="/javascripts/jquery/jquery.tmpl.js"></script>
+		<script src="/javascripts/jquery/jquery.extension.js"></script>
 
 		<!-- MooTools -->
 		<script src="/javascripts/mootools/core-1.3.js"></script>
@@ -133,9 +134,8 @@
 			})
 		</script>
 		
-		<!-- стили и javascript'ы этой страницы -->
+		<!-- стили этой страницы -->
 		<link rel="stylesheet/less" href="/облик/страницы/${название}.css"/>
-		<script src="/javascripts/на страницах/${название}.js"></script> 
 
 		<script src="/javascripts/режимы.js"></script> 
 		 
@@ -210,6 +210,9 @@
 		</div>
 		
 		{{html содержимое}}
+
+		<!-- javascript'ы этой страницы -->
+		<script src="/javascripts/на страницах/${название}.js"></script> 
 		
 		<!-- AJAX loading window -->
 		<div id="loading_indicator" class="collapsed non_selectable" title="Теперь ждите...">
@@ -266,7 +269,7 @@
 		<footer></footer>
 
 		<!-- stretches the gradient background to the height of the entire page -->
-		<div id="background_stretcher" class="non_selectable"></div>
+		<!--<div id="background_stretcher" class="non_selectable"></div>-->
 	</body>
 	
 	<!-- less (css preprocessor) -->
