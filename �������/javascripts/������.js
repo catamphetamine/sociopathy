@@ -9,6 +9,7 @@ $(function()
 режимы.push
 ({
 	название: 'обычный',
+	title: 'default',
 	перейти: function(из)
 	{
 //		if (из)
@@ -19,6 +20,7 @@ $(function()
 режимы.push
 ({
 	название: 'правка',
+	title: 'edit',
 	перейти: function(из)
 	{
 //		if (из)
@@ -31,6 +33,7 @@ $(function()
 режимы.push
 ({
 	название: 'помощь',
+	title: 'help',
 	перейти: function(из)
 	{
 //		if (из)
@@ -52,20 +55,39 @@ function перейти_в_режим(mode)
 	}
 	
 	if (режим)
-		$('[mode=' + режим + ']').hide()
+		$('[mode=' + режим + ']').each(function()
+		{
+			if (this.tagName.toLowerCase() !== 'body')
+				$(this).hide()
+		})
 		
-	$('[mode=' + mode + ']').show()
+	$('[mode=' + mode + ']').each(function(element)
+		{
+			if (this.tagName.toLowerCase() !== 'body')
+				$(this).show()
+		})
 		
-	режимы.forEach(function(описание_режима)
-	{
-		if (описание_режима.название ===  mode)
-			описание_режима.перейти(режим)
-	})
+	var описание_режима = найти_описание_режима(mode)
+	описание_режима.перейти(режим)
 	
 	$(document).trigger('режим.переход', [режим, mode])
 	$(document).trigger('режим.' + mode)
 
 	режим = mode
+	$('body').attr('mode', описание_режима.название)
+}
+
+function найти_описание_режима(название)
+{
+	var найденное
+	
+	режимы.forEach(function(описание_режима)
+	{
+		if (описание_режима.название ===  название)
+			найденное = описание_режима
+	})
+	
+	return найденное
 }
 
 $(function()

@@ -49,6 +49,7 @@ function setCursor(node, position)
 
 $.fn.slide_in_from_top = function(duration)
 {
+	this.stop_animation()
 	this.css({ top: -this.outerHeight() + 'px' })
 	this.show()
 	return this.animate({ top: 0 }, duration)
@@ -56,12 +57,14 @@ $.fn.slide_in_from_top = function(duration)
 
 $.fn.slide_out_upwards = function(duration)
 {
+	this.stop_animation()
 	this.css({ top: 0 })
 	return this.animate({ top: -this.outerHeight() + 'px' }, duration, function() { this.hide() })
 }
 
 $.fn.slide_in_from_bottom = function(duration)
 {
+	this.stop_animation()
 	this.css({ bottom: -this.outerHeight() + 'px' })
 	this.show()
 	return this.animate({ bottom: 0 }, duration)
@@ -69,6 +72,7 @@ $.fn.slide_in_from_bottom = function(duration)
 
 $.fn.slide_out_downwards = function(duration)
 {
+	this.stop_animation()
 	this.css({ bottom: 0 })
 	return this.animate({ bottom: -this.outerHeight() + 'px' }, duration, function() { this.hide() })
 }

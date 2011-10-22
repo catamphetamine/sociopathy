@@ -34,7 +34,7 @@ html, body
 	
 html *::selection, html *::-moz-selection, html *::-webkit-selection
 {
-	color: #f1f1f1;
+	color: #ffffff;
 	background: #7f7f7f;
 }
 

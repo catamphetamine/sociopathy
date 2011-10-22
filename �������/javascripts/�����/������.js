@@ -1,3 +1,4 @@
+/*
 var Modifier = new Class //(command, editDoc)
 ({
 	apply: function(value)
@@ -5,17 +6,18 @@ var Modifier = new Class //(command, editDoc)
 		editDoc.execCommand(command, false, value)
 	},
 	
-	getValue: function()
+	get_value: function()
 	{
 		return editDoc.queryCommandValue(command)
 	},
 	
-	isApplied: function()
+	is_applied: function()
 	{
 		var value = this.getValue()
 		return value !== null && typeof(value) !== 'undefined'
 	}
 })
+*/
 
 var Editor = new Class
 ({
@@ -26,19 +28,27 @@ var Editor = new Class
 	},
 	
 	move_caret_to: function(element)
-	{
+	{		
+		element = element.get(0)
+//		if (element.firstChild)
+//			element = element.firstChild
+
 		var range = document.createRange()
-		range.setStart(element.get(0).firstChild, 0)
+		range.setStart(element, 0)
 		range.collapse(true)
 		
-		var selection = window.getSelection()
-		selection.removeAllRanges()
-		selection.addRange(range)
+		this.apply_range(range)
+		return range
 	},
 	
-	insert: function(element)
+	insert: function(what, caret)
 	{
-		this.cursor().insertNode(element.get(0))
+		caret = caret || this.caret()
+	
+		if (what instanceof jQuery)
+			caret.insertNode(what.get(0))
+		else
+			caret.insertNode(what)
 	},
 	
 	'delete': function()
@@ -51,15 +61,96 @@ var Editor = new Class
 		this.selection().surroundContents(element.get(0))
 	},
 	
-	get_containing_element: function(tagName)
+	has_container: function(filter)
 	{
-		var filter = function(element)
-		{
-			return element.tagName.toLowerCase() === tagName
-		}
+		var container = this.get_container(filter)
+		return container.length !== 0
+	},
 	
+	get_container: function(filter)
+	{
 		var container = this.range().commonAncestorContainer
-		return getAncestor(container, filter)
+		return $(container).parents(filter)
+	},
+	
+	move_caret_to_container_end: function(filter)
+	{
+		var range = document.createRange()
+		range.setStartAfter(this.get_container(filter).get(0))
+		range.collapse(true)
+		
+		this.apply_range(range)
+		return range
+	},
+	
+	move_caret_to_container_start: function(filter)
+	{
+		var range = document.createRange()
+		range.setStartBefore(this.get_container(filter).get(0))
+		range.collapse(true)
+		
+		this.apply_range(range)
+		return range
+	},
+	
+	is_caret_in_the_beginning_of_container: function(filter)
+	{
+		var caret = this.caret()
+		
+		if (!caret.collapsed)
+			return false
+			
+		if (!Dom_tools.is_first_element(caret.startContainer, this.get_container(filter).get(0)))
+			return false
+			
+		if (caret.startOffset > 0)
+			return false
+			
+		return true
+	},
+	
+	is_caret_in_the_end_of_container: function(filter)
+	{
+		var caret = this.caret()
+					
+		if (!caret.collapsed)
+			return false
+
+		if (!Dom_tools.is_last_element(caret.startContainer, this.get_container(filter).get(0)))
+			return false
+			
+		//console.log("caret.startOffset = " + caret.startOffset)
+		var range = caret.cloneRange()
+		range.selectNodeContents(Dom_tools.get_last_child(this.get_container().get(0)))
+		//console.log("other endOffset = " + range.endOffset)
+		//console.log(range)
+		if (caret.startOffset < range.endOffset)
+			return false
+			
+		return true
+	},
+	
+	apply_range: function(range)
+	{
+		var selection = window.getSelection()
+		selection.removeAllRanges()
+		selection.addRange(range)
+	},
+	
+	cut: function()
+	{
+		this.buffer = this.range().extractContents()
+		return this.buffer
+	},
+	
+	paste: function()
+	{
+		this.insert(this.buffer)
+	},
+	
+	has_selection: function()
+	{
+		return !this.selection().collapsed
 	},
 	
 	range: function()
@@ -72,7 +163,7 @@ var Editor = new Class
 		return this.range()
 	},
 	
-	cursor: function()
+	caret: function()
 	{
 		return this.range()
 	}

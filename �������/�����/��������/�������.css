@@ -1,6 +1,6 @@
 @import "/облик/вспомогательный.less";
 
-@article_side_padding: 40px;
+@article_side_padding: 80px;
 
 #article_editor_tools_container
 {
@@ -66,12 +66,12 @@
 			
 			cursor: pointer;
 			
-			&.main_heading
+			&.heading
 			{
 				font-family: @headings_font;
 			}
 			
-			&.heading
+			&.subheading
 			{
 				font-family: @headings_font;
 				font-size: 26px;
@@ -191,6 +191,11 @@
 			}
 		}
 	}
+}
+
+body[mode="правка"] #content.article article a
+{
+	.hyperlink();
 }
 
 #edit_mode_actions
