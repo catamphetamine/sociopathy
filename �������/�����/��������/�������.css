@@ -124,8 +124,8 @@
 	{
 		font-family: @textual_font;
 
-		font-size: 40px;
-		line-height: 57px;
+		font-size: @textual_font_size;
+		line-height: @textual_line_height;
 
 		h1:focus, section:focus
 		{
@@ -134,7 +134,7 @@
 		
 		p
 		{
-			text-indent: 1.35em;
+			text-indent: @paragraph_indent;
 			/* text-align: justify; */
 		}
 

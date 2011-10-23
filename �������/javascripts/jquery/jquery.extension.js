@@ -49,17 +49,80 @@ function setCursor(node, position)
 
 $.fn.slide_in_from_top = function(duration)
 {
-	this.stop_animation()
-	this.css({ top: -this.outerHeight() + 'px' })
+	if (this.css('position') !== 'relative')
+	{
+		this.stop_animation()
+		this.css({ top: -this.outerHeight() + 'px' })
+		this.show()
+		return this.animate({ top: 0 }, duration)
+	}
+	
+	if (this.is(':animated'))
+		return
+
+	var container = $('<div/>')
+	container.css({ overflow: 'hidden' })
+	this.wrap(container)
+	
+	var initial_margin_bottom = parseInt(this.css('margin-bottom'))
+	
+	this.css({ top: -this.outerHeight(true) + 'px' })
+	this.css({ 'margin-bottom': (-this.outerHeight(true) + initial_margin_bottom) + 'px' })	
 	this.show()
-	return this.animate({ top: 0 }, duration)
+	
+	return this.animate
+	(
+		{
+			top: 0,
+			'margin-bottom': initial_margin_bottom
+		},
+		duration,
+		(function()
+		{
+			this.appendTo(container.parent())
+			container.remove()
+		})
+		.bind(this)
+	)
 }
 
 $.fn.slide_out_upwards = function(duration)
 {
-	this.stop_animation()
+	if (this.css('position') !== 'relative')
+	{
+		this.stop_animation()
+		this.css({ top: 0 })
+		this.show()
+		return this.animate({ top: -this.outerHeight() + 'px' }, duration, (function() { this.hide() }).bind(this))
+	}
+	
+	if (this.is(':animated'))
+		return
+		
+	var container = $('<div/>')
+	container.css({ overflow: 'hidden' })
+	this.wrap(container)
+	
+	var initial_margin_bottom = parseInt(this.css('margin-bottom'))
+
 	this.css({ top: 0 })
-	return this.animate({ top: -this.outerHeight() + 'px' }, duration, function() { this.hide() })
+	
+	return this.animate
+	(
+		{
+			top: -this.outerHeight(true) + 'px',
+			'margin-bottom': (-this.outerHeight(true) + initial_margin_bottom) + 'px'
+		},
+		duration,
+		(function()
+		{
+			this.hide()
+			this.appendTo(container.parent())
+			container.remove()
+			this.css('margin-bottom', initial_margin_bottom)
+		})
+		.bind(this)
+	)
 }
 
 $.fn.slide_in_from_bottom = function(duration)
@@ -74,7 +137,14 @@ $.fn.slide_out_downwards = function(duration)
 {
 	this.stop_animation()
 	this.css({ bottom: 0 })
-	return this.animate({ bottom: -this.outerHeight() + 'px' }, duration, function() { this.hide() })
+	return this.animate
+	(
+		{
+			bottom: -this.outerHeight() + 'px'
+		},
+		duration,
+		function() { this.hide() }
+	)
 }
 
 $.fn.stop_animation = function()
