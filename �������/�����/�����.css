@@ -441,3 +441,18 @@ h1, h2, h3, h4, h5, h6
 {
 	cursor: default;
 }
+
+[type=loading], [type=loading_more]
+{
+	color: #9f9f9f;
+}
+
+[type=error], [type=loading_more_error]
+{
+	color: #9c4646;
+}
+
+[type=conditional]
+{
+	display: none
+}

@@ -168,14 +168,43 @@
 				height: 100%;
 				
 				background-color: #ffffff;
+				
+				cursor: wait;
+				
+				text-align: center;
 			}
+			
+			/*
+			#loading_screen .text
+			{
+				display: inline-block;
+				font-family: Helvetica, Arial, sans-serif;
+				font-size: 30px;
+				color: #afafaf;
+				opacity: 0;
+			}
+			*/
 		</style>
 		 
 		<link rel="shortcut icon" href="/картинки/значок.png">
 	</head>
 
 	<body>
-		<div id="loading_screen"></div>
+		<div id="loading_screen">
+			<!--
+			<span class="text">Страница загружается</span>
+			-->
+		</div>
+		
+		<!--
+		<script>
+			$('#loading_screen .text').css
+			({
+				'margin-top': (($(window).height() - 30) / 2) + 'px',
+				opacity: 1
+			})
+		</script>
+		-->
 		
 		<aside>
 			<nav>

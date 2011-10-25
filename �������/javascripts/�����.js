@@ -205,32 +205,38 @@ function get_element(selector_or_element)
 	return selector_or_element
 }
 
-function initialize_conditional($this)
+function initialize_conditional($this, options)
 {
+	var conditional
+
 	var fade_in_duration = 500
 	var fade_out_duration = 200
-
-	var every = $this.children()
-	var loading = $this.find('> [type=loading]')
-	var ok = $this.find('> [type=ok]')
-	var error = $this.find('> [type=error]')
 	
-	eval('var action_function = ' + $this.attr('action'))
+	var every = $this.children()
+
+	var ok = $this.find('> [type=ok]')
+	
+	var error = $this.find('> [type=error]')
+	error.attr('default_message', error.text())
+
+	var loading = $this.find('> [type=loading]')
+	var loading_more = $this.find('> [type=loading_more]')
+
+	var loading_more_error = $this.find('> [type=loading_more_error]')
+
+	if (loading_more_error.length === 0)
+		loading_more_error = error
+	else
+		loading_more_error.attr('default_message', loading_more_error.text())
+	
 	var tries = $this.attr('tries') || 1
 	
-	var conditional = {}
-	
-	conditional.callback = function(error)
+	var callback = function(error, callback)
 	{
 		if (error)
-			return on_error(error)
+			return on_error(error, callback)
 			
-		on_ok()
-	}
-	
-	var action = function()
-	{
-		action_function(conditional)
+		on_ok(callback)
 	}
 	
 	var hide_every = function()
@@ -242,45 +248,75 @@ function initialize_conditional($this)
 	}
 	
 	hide_every()
-	loading.show()
-	$this.fadeIn(fade_in_duration)
+	$this.show()
+	loading.fadeIn(fade_in_duration)
 	
-	var on_ok = function()
+	var switch_elements = function(from, to, callback)
 	{
-		$this.fadeOut(fade_out_duration, function()
+		from.fadeOut(fade_out_duration, function()
 		{
-			hide_every()
-			ok.show()
-			$this.fadeIn(fade_in_duration)
+			to.fadeIn(fade_in_duration, callback)
 		})
 	}
 	
-	if ($this.attr('on_error'))
+	var on_ok = function(callback)
 	{
-		eval('var on_error_handler = ' + $this.attr('on_error'))
-		conditional.fatal = on_error_handler
+		if (conditional.state !== 'loading')
+		{
+			loading = loading_more
+		}
+		
+		switch_elements(loading, ok, function()
+		{
+			conditional.state = 'loaded'
+			
+			if (callback)
+				callback()
+		})
 	}
 	
 	var error_counter = 0
-	var on_error = function(message)
+	var on_error = function(message, on_error_callback)
 	{
 		error_counter++
 		
 		if (error_counter < tries)
-			return action()
+			return action(callback)
 		
-		if (conditional.fatal)
-			conditional.fatal(message)
-			
-		$this.fadeOut(fade_out_duration, function()
+		if (conditional.state !== 'loading')
 		{
-			hide_every()
-			error.show()
-			$this.fadeIn(fade_in_duration)
+			error = loading_more_error
+			loading = loading_more
+		}
+		
+		if (message && typeof(message) === 'string')
+			error.text(message)
+		else
+			error.text(error.attr('default_message'))
+		
+		switch_elements(loading, error, function()
+		{
+			conditional.state = 'error'
+			
+			if (on_error_callback)
+				on_error_callback()
 		})
 	}
 	
-	return action
+	var loading_more_function = function()
+	{
+		conditional.state = 'loading more'
+		loading_more.fadeIn(fade_in_duration)
+	}
+	
+	conditional =
+	{
+		callback: callback,
+		state: 'loading',
+		loading_more: loading_more_function
+	}
+	
+	return conditional
 }
 
 $(function()

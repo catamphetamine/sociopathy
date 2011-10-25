@@ -148,6 +148,5 @@
 
 .join_button_block [type=loading], .join_button_block [type=error]
 {
-	color: #9f9f9f;
 	margin-top: 10px;
 }

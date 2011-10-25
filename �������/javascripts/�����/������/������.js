@@ -117,6 +117,13 @@ var dialog_window = new Class
 			.addClass("top_bar non_selectable")
 			.prependTo($dialog_window)	
 			.text(title)
+			
+		$(window).resize((function()
+		{
+			if (this.is_open)
+				this.position()
+		})
+		.bind(this))
 	},
 
 	set_dimensions: function($element)
@@ -174,9 +181,7 @@ var dialog_window = new Class
 	{
 		if (this.is_open)
 			return
-		
-//		disable_scroll()
-
+			
 		if (this.options.modal)
 			this.veil = new veil({ smooth: this.smooth })
 			
@@ -285,6 +290,7 @@ var dialog_window = new Class
 		this.padding.top = parseInt((get_viewport_height() - this.$element.height()) / 2)
 		this.padding.bottom = get_viewport_height() - this.$element.height() - this.padding.top
 		
+		/*
 		this.$element.css
 		({
 			left: 0,
@@ -294,6 +300,13 @@ var dialog_window = new Class
 			'padding-right': this.padding.right,
 			'padding-top': this.padding.top,
 			'padding-bottom': this.padding.bottom
+		})
+		*/
+		
+		this.$element.css
+		({
+			left: this.padding.left,
+			top: this.padding.top,
 		})
 	},
 	

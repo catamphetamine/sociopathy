@@ -14,6 +14,13 @@
 	}
 }
 
+[type=loading], [type=error]
+{
+	text-align: center;
+	margin-bottom: 50px;
+	margin-top: 150px;
+}
+
 ul.chat
 {
 	display: table;
@@ -98,6 +105,8 @@ ul.chat
 				
 				.when
 				{
+					position: relative;
+					
 					padding-left: @inter_column_padding;
 					padding-right: 80px;
 					
@@ -105,6 +114,7 @@ ul.chat
 					color: #afafaf;
 					
 					font-size: 20px;
+					top: -3px;
 				}
 			}
 		}

@@ -32,10 +32,21 @@
 	margin-right: auto;
 }
 
-#people_loading, #more_people_loading
+#people_list_block
 {
-	color: #afafaf;
-	text-align: center;
-	margin-bottom: 50px;
-	margin-top: 50px;
+	[type=loading], [type=loading_more], [type=error], [type=loading_more_error]
+	{
+		text-align: center;
+		margin-bottom: 50px;
+	}
+	
+	[type=loading_more], [type=loading_more_error]
+	{
+		margin-top: 50px;
+	}
+	
+	[type=loading], [type=error]
+	{
+		margin-top: 150px;
+	}
 }

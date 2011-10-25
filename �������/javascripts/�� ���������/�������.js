@@ -13,19 +13,19 @@ $(function()
 	{
 		var tools_wrapper = $('#article_editor_tools_wrapper')
 	
-		tools_wrapper.bind('scroller.disappearing_upwards', function(event)
+		tools_wrapper.bind('disappearing_upwards.scroller', function(event)
 		{
 			tools.addClass('sticky')
 			event.stopPropagation()
 		})
 		
-		tools_wrapper.bind('scroller.fully_appeared_on_top', function(event)
+		tools_wrapper.bind('fully_appeared_on_top.scroller', function(event)
 		{
 			tools.removeClass('sticky')
 			event.stopPropagation()
 		})
 		
-		прокрутчик.watch(tools_wrapper)
+		прокрутчик.watch(tools_wrapper, 0)
 		
 		// toolbar
 		

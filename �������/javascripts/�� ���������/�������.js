@@ -137,13 +137,17 @@ function activate_button(selector, options)
 	))	
 }
 
+var conditional
 function initialize_page()
 {
 	if (получить_настройку_запроса('приглашение'))
-		initialize_conditional($('[type=conditional]'))()
+	{
+		conditional = initialize_conditional($('[type=conditional]'))
+		check_invite(conditional.callback)
+	}	
 }
 
-function check_invite(conditional)
+function check_invite(callback)
 {
 	var приглашение = получить_настройку_запроса('приглашение')
 	
@@ -151,12 +155,12 @@ function check_invite(conditional)
 	{
 		error: function(message)
 		{
-			conditional.callback(message)
+			callback(message)
 		},
 		ok: function(данные)
 		{
 			if (!данные.приглашение)
-				return conditional.callback('no invite')
+				return callback('no invite')
 				
 			initialize_join_button()
 
@@ -165,17 +169,9 @@ function check_invite(conditional)
 			initialize_join_form_slider()
 			initialize_join_dialog()
 			
-			conditional.callback()
+			callback()
 		}
 	})
-}
-
-function check_invite_error(ошибка)
-{
-	if (typeof(ошибка) === 'string')
-		error(ошибка)
-	else
-		error('Не удалось установить Вашу личность. Произошла ошибка на сервере.')
 }
 
 // actions

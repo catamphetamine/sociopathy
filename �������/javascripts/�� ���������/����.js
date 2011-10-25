@@ -5,10 +5,7 @@ var people =
 	
 	batch: function(возврат)
 	{
-		people.next(8, function(люди)
-		{
-			возврат(люди)
-		})
+		people.next(8, возврат)
 	},
 	
 	next: function()
@@ -29,30 +26,31 @@ var people =
 				Message.error('people.next: invalid argument count')
 		}
 			
-		this.get_persons(count, function(persons)
-		{
-			this.index += persons.length
-			callback(persons)
-		})
+		this.get_persons(count, callback)
 	},
 	
+	/*
 	get_person: function(callback)
 	{
 		get_persons(1, callback)
 	},
+	*/
 	
 	get_persons: function(count, callback)
 	{
 		Ajax.get('/приложение/люди', { с: this.index, сколько: count }, 
 		{ 
-			ошибка: 'Не удалось получить список людей', 
+			ошибка: function(ошибка)
+			{
+				callback(ошибка)
+			},
 			ok: function(data)
 			{
 				if (!data['есть ещё?'])
 					people.есть_ли_ещё = false
 					
 				people.index += data.люди.length
-				callback(data.люди)
+				callback(null, data.люди)
 			}
 		})
 	}
@@ -64,13 +62,45 @@ var $id_cards
 function add_id_card(person)
 {
 	var id_card = $.tmpl('личная карточка', person)
+	$('<li/>').append(id_card).appendTo($id_cards)
+	
 	//id_card.find('.personal_info .name').enableTextSelect()
 	//id_card.find('.personal_info .description').enableTextSelect()
-	$('<li/>').append(id_card).appendTo($id_cards)
 }
+
+function load_people(callback)
+{
+	people.batch(function(ошибка, люди)
+	{
+		if (ошибка)
+		{
+			callback(ошибка)
+			return
+		}
+		
+		люди.forEach(function(man)
+		{
+			add_id_card(man)
+		})
+		
+		callback(null, function()
+		{
+			if (people.есть_ли_ещё)
+				activate_id_card_loader()
+		})
+	})
+}
+
+var conditional
+var $scroll_detector
 
 function initialize_page()
 {
+	$(window).scrollTop(0)
+	$scroll_detector = $('#scroll_detector')
+	
+	conditional = initialize_conditional($('[type=conditional]'))
+	
 	$content = $('#content')
 	$id_cards = $('#id_cards')
 	
@@ -80,64 +110,34 @@ function initialize_page()
 	{
 		//cache: false,
 		type: 'html',
-		ошибка: 'Не удалось загрузить страницу',
+		error: function()
+		{
+			conditional.callback('Не удалось загрузить страницу')
+		},
 		ok: function(template) 
 		{
 			$.template('личная карточка', template)
-			
-			people.batch(function(люди)
-			{
-				$('#people_loading').fadeOut('fast')
-
-				$id_cards.hide()
-				люди.forEach(function(man)
-				{
-					add_id_card(man)
-				})
-				$id_cards.fadeIn('fast')
-					
-				if (people.есть_ли_ещё)
-					activate_id_card_loader()
-			})
+			load_people(conditional.callback)
 		}
 	})
 }
-
-var $scroll_detector
 	
 function activate_id_card_loader()
 {
-	$scroll_detector = $('#scroll_detector')
-	var $loading = $('#more_people_loading')
-
-	$scroll_detector.bind('scroller.appearing_on_bottom', function(event)
+	$scroll_detector.bind('appearing_on_bottom.scroller', function(event)
 	{
-		$loading.fadeIn(500)
-		
-		people.batch(function(люди)
-		{
-			$loading.fadeOut(500)
-			
-			люди.forEach(function(man)
-			{
-				add_id_card(man)
-			})
-			
-			if (people.есть_ли_ещё)		
-				прокрутчик.reset($scroll_detector)
-			else
-				deactivate_id_card_loader()
-		})
+		deactivate_id_card_loader()
+		conditional.loading_more()
+		load_people(conditional.callback)
 			
 		event.stopPropagation()
 	})
 	
-	прокрутчик.watch($scroll_detector)
-	
-	$(window).scrollTop(0)
+	прокрутчик.watch($scroll_detector, $(window).height() + 1)
 }
 
 function deactivate_id_card_loader()
 {
+	$scroll_detector.unbind('.scroller')
 	прокрутчик.unwatch($scroll_detector)
 }

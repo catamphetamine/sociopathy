@@ -1,10 +1,17 @@
+var conditional
+
 function initialize_page()
-{			
+{
+	conditional = initialize_conditional($('[type=conditional]'))
+	
 	Ajax.get('/лекала/болталка.html', 
 	{
 		//cache: false,
 		type: 'html',
-		ошибка: 'Не удалось загрузить страницу',
+		error: function()
+		{
+			conditional.callback('Не удалось загрузить страницу')
+		},
 		ok: function(template) 
 		{
 			$.template('болталка', template)
@@ -64,15 +71,10 @@ function initialize_page()
 				})
 				
 				var chat = $.tmpl('болталка', данные)
+				chat.appendTo($('#chat'))
 				
-				$('#loading').fadeOut('fast', function()
-				{
-					chat.hide()
-					chat.appendTo($('#chat'))
-					chat.fadeIn('fast')
-					
-					connect_to_chat()
-				})
+				conditional.callback()
+					connect_to_chat()				
 		}
 	})
 }

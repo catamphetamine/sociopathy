@@ -19,8 +19,8 @@ var veil = new Class
 	 */
 	initialize: function(options) 
 	{
-		this.smooth = options.smooth
-	
+		//this.smooth = options.smooth
+		
 		this.$element = $('<div></div>')
 			.appendTo(document.body)
 			.hide()
@@ -32,11 +32,14 @@ var veil = new Class
 				top: 0,
 
 				'z-index': z_indexer.acquire_top_z(),
-				
-				width: get_page_width() + 'px',
-				height: get_page_height() + 'px'
 			})
-			
+		
+		$(window).resize((function()
+		{
+			this.size()
+		})
+		.bind(this))
+		
 		this.$element
 			.addClass('dialog_window_veil')
 			
@@ -45,15 +48,22 @@ var veil = new Class
 		this.show()
 	},
 	
+	size: function()
+	{
+		this.$element.css
+		({
+			width: get_page_width() + 'px',
+			height: get_page_height() + 'px'
+		})
+	},
+	
 	/**
 	 * shows the veil
 	 */
 	show: function()
 	{
-		if (this.smooth)
-			this.$element.fadeIn()
-		else
-			this.$element.show()
+		this.size()
+		this.$element.fadeIn()
 	},
 	
 	/**
@@ -61,15 +71,11 @@ var veil = new Class
 	 */
 	hide: function(callback)
 	{
-		if (this.smooth)
-			this.$element.fadeOut()
-		else
+		this.$element.fadeOut(function()
 		{
-			this.$element.hide()
-			
 			if (callback)
 				callback()
-		}
+		})
 	},
 	
 	/**
