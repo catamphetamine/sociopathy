@@ -25,6 +25,8 @@
 		<script src="/javascripts/mootools/core-1.3.js"></script>
 		<script src="/javascripts/mootools/more.js"></script>
 
+		<script src="/javascripts/date.js"></script>
+
 		<!-- animation -->
 		<script src="/javascripts/движение.js"></script>
 
@@ -109,8 +111,20 @@
 
 		<!-- browser checker -->
 		<script src="/javascripts/проверка обозревателя.js"></script> 
-			
+
+		<script src="/javascripts/socket.io.js"></script>
+		<!--
+		<script src="http://localhost:8080/socket.io/socket.io.js"></script>
+		-->
+					
 		<script>
+			{{if пользователь}}
+				var пользователь =
+				{
+					id: '${пользователь._id}'
+				}
+			{{/if}}
+		
 			$(function()
 			{
 				loading_page()
@@ -193,7 +207,7 @@
 				<div class="authenticated_user">
 					<div class="photo"></div>
 					<div class="info">
-						<a href="#" class="name">${пользователь.имя}</a>
+						<a href="/люди/${пользователь.имя}" class="name">${пользователь.имя}</a>
 						<a href="#" class="logout">Выйти</a>
 					</div>
 				</div>
@@ -216,8 +230,8 @@
 		<script src="/javascripts/на страницах/${название}.js"></script> 
 		
 		<!-- AJAX loading window -->
-		<div id="loading_indicator" class="collapsed non_selectable" title="Теперь ждите...">
-			<div class="container" style="text-align: center">
+		<div id="loading_indicator" class="collapsed main_content non_selectable" title="Теперь ждите...">
+			<div style="text-align: center">
 				<a class="loading_indicator_image_source image" href="" target="_blank">
 					<img class="loading_indicator_image" src=""/>
 				</a>
@@ -225,8 +239,16 @@
 		</div> 
 			
 		<!-- Unsupported browser popup -->
-		<div id="unsupported_browser_warning" class="collapsed no_word_carrying non_selectable" title="Здравствуйте">
-			<div class="translated text" label="page, dialog 'unsupported browser', content"></div>
+		<div id="unsupported_browser_warning" class="collapsed main_content multiline_text no_word_carrying non_selectable" title="Здравствуйте">
+			Оболочка нашей сети может отображаться правильно только в современных обозревателях.<br/>
+			Точнее, в обозревателях свежего выпуска на движках <a href="http://ru.wikipedia.org/wiki/WebKit">WebKit</a> или <a href="http://ru.wikipedia.org/wiki/Gecko">Gecko</a>.<br/>
+			<br/>
+			Мы не смогли подтвердить совместимость вашего обозревателя с нашей оболочкой,<br/>
+			и поэтому предлагаем вам попробовать зайти сюда снова из-под другого обозревателя.<br/>
+			<br/>
+			Если вы пользуетесь <b>Internet Explorer</b>'ом, мы советуем вам пересесть на любой другой.<br/>
+			<br/>
+			Попробуйте, например, один из этих:
 			
 			<br/>
 			<br/>
@@ -235,12 +257,13 @@
 				<a class='image' style="display: block; float: left; margin-right: 200px" href="http://www.google.com/chrome?hl=ru"><img src="/картинки/на страницах/welcome/chrome.png"/></a>
 				<a class='image' style=" float: left" href="http://www.mozilla-europe.org/ru/firefox/"><img src="/картинки/на страницах/welcome/firefox.png"/></a>
 			</div>
+			
 		</div>
 			
 		<!-- Вход -->
 		<div id="enter_window" class="collapsed no_word_carrying" title="Вход">
 			<!-- пароль -->
-			<div class="password">
+			<div class="password main_content">
 				<div class="icon"></div>
 				<form>
 					<label for="пароль">Введите свой пароль</label>

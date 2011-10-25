@@ -173,6 +173,13 @@ var text_button = new Class
 	build_idle_frame: function()
 	{
 		this.$element.wrapInner('<div/>')
+		
+		this.$element.css
+		({
+			'min-height': this.skin.height + 'px',
+			'max-height': this.skin.height + 'px',
+		})
+		
 		var idle_frame = this.$element.find(':first')
 		
 		this.options.styles.each(function(style_name)
@@ -230,7 +237,7 @@ var text_button = new Class
 		if (this.options.icon)
 			this.add_icon(content)
 			
-		content.appendTo(middle_part)
+		//content.appendTo(middle_part)
 		
 		// style right part
 

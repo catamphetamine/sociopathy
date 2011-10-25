@@ -1,4 +1,6 @@
-﻿/**
+﻿@import "/облик/вспомогательный.less";
+
+/**
  * Dialog Window script styling
  * 
  * Copyright (c) 2010 Nikolay Kuchumov
@@ -27,11 +29,8 @@
 	border: 1px solid #a7a7a7;
 	border-top: 0;
 
-	-webkit-box-shadow: 0px 16px 100px rgba(0,0,0,0.1), 0px 16px 80px rgba(0,0,0,0.1), 0px 16px 60px rgba(0,0,0,0.1), 0px 16px 40px rgba(0,0,0,0.1), 0px 16px 30px rgba(0,0,0,0.1), 0px 16px 20px rgba(0,0,0,0.1);
-	-moz-box-shadow: 0px 16px 100px rgba(0,0,0,0.1), 0px 16px 80px rgba(0,0,0,0.1), 0px 16px 60px rgba(0,0,0,0.1), 0px 16px 40px rgba(0,0,0,0.1), 0px 16px 30px rgba(0,0,0,0.1), 0px 16px 20px rgba(0,0,0,0.1);
-	-o-box-shadow: 0px 16px 100px rgba(0,0,0,0.1), 0px 16px 80px rgba(0,0,0,0.1), 0px 16px 60px rgba(0,0,0,0.1), 0px 16px 40px rgba(0,0,0,0.1), 0px 16px 30px rgba(0,0,0,0.1), 0px 16px 20px rgba(0,0,0,0.1);
-	box-shadow: 0px 16px 100px rgba(0,0,0,0.1), 0px 16px 80px rgba(0,0,0,0.1), 0px 16px 60px rgba(0,0,0,0.1), 0px 16px 40px rgba(0,0,0,0.1), 0px 16px 30px rgba(0,0,0,0.1), 0px 16px 20px rgba(0,0,0,0.1);
-	 
+	.beautiful_shadow(0px, 16px, 100px, 80px, 60px, 40px, 30px, 20px, 0.1)
+
 	.top_bar
 	{
 		height: 46px;
@@ -54,15 +53,6 @@
 		cursor: default;
 	}
 
-	.content
-	{
-		background-color: #efefef;
-		background: -webkit-gradient(linear, 0 50%, 0 100%, from(#efefef), to(#ededed));
-		background-image: -moz-linear-gradient(top, #efefef, #ededed);
-		
-		padding: 40px;
-	}
-
 	div.pre_buttons
 	{
 		height: 2px;
@@ -77,11 +67,10 @@
 		padding: 0;
 	}
 
-	.container
+	.main_content
 	{
 		background-color: #ededed;
-		background: -webkit-gradient(linear, 0 50%, 0 100%, from(#efefef), to(#ededed));
-		background-image: -moz-linear-gradient(top, #efefef, #ededed);
+		.top_to_bottom_gradient(#efefef, #ededed);
 
 		border: 0;
 		
@@ -92,12 +81,10 @@
 
 	.buttons
 	{
-		background: #E5E5E5; /* old browsers */
-		background: -moz-linear-gradient(top, #E5E5E5 0%, #D8D8D8 36%, #CCCCCC 58%, #A8A8A8 100%); /* firefox */
+		background-color: #e5e5e5;
 		
-		background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#E5E5E5), color-stop(36%,#D8D8D8), color-stop(58%,#CCCCCC), color-stop(100%,#A8A8A8)); /* webkit */
-		
-		/* filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#E5E5E5', endColorstr='#A8A8A8',GradientType=0 ); */
+		background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#E5E5E5), color-stop(36%,#D8D8D8), color-stop(58%,#CCCCCC), color-stop(100%,#A8A8A8));
+		background: -moz-linear-gradient(top, #E5E5E5 0%, #D8D8D8 36%, #CCCCCC 58%, #A8A8A8 100%);
 
 		padding: 20px;	
 	}
@@ -109,15 +96,6 @@
 		height: 0; 
 		clear: both;
 	}
-
-	/*
-	div.ui-dialog div.jquery_ui_dialog, div.jquery_ui_dialog
-	{
-		padding: 0;
-		border: 0;
-		display: none;
-	}
-	*/
 }
 
 .dialog_window_veil

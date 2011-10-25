@@ -107,9 +107,9 @@ html, input
 	font-size: 30px;
 }
 
-.text
+.multiline_text
 {
-	line-height: 50px;
+	line-height: 48px;
 }
 
 html, #content, #background_stretcher
@@ -435,4 +435,9 @@ h1, h2, h3, h4, h5, h6
 	position: fixed;
 	top: 0;
 	left: 0;
+}
+
+.non_selectable
+{
+	cursor: default;
 }

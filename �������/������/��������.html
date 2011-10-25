@@ -1,0 +1,22 @@
+<ul class="chat">
+	{{each сообщения}}
+		<li>
+			<div class="author no_word_carrying">
+				<a href="/люди/${отправитель}">${отправитель}</a>
+				<div class="picture"></div>
+			</div>
+			<div class="messages">
+				<ul>
+					{{each сообщения}}
+						<li>
+							<div class="text multiline_text">
+								${сообщение}
+							</div>
+							<div class="when no_word_carrying">${время}</div>
+						</li>
+					{{/each}}
+				</ul>
+			</div>
+		</li>
+	{{/each}}
+</ul>

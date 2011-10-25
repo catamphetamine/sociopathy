@@ -1,4 +1,6 @@
-@link_color: #004b7b;
+@blue_color: #004b7b;
+
+@link_color: @blue_color;
 
 @headings_font: Helvetica, Arial, sans-serif;
 
@@ -8,6 +10,12 @@
 	
 @paragraph_indent: 1.35em;
 	
+.top_to_bottom_gradient(@from_color, @to_color)
+{
+		background: -webkit-gradient(linear, left top, left bottom, from(@from_color), to(@to_color));
+		background-image: -moz-linear-gradient(top, @from_color, @to_color);
+}
+
 .hyperlink
 {
 	color: @link_color;

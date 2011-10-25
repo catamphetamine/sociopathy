@@ -33,7 +33,7 @@
 	
 	.rounded_corners(10px);
 	
-	background-color: #efefef;
+	background-color: #fafafa;
 	background: -webkit-gradient(linear, center top, center bottom, from(#fcfcfc), to(#ededed));
 	background-image: -moz-linear-gradient(top, #fcfcfc, #ededed);
 	

@@ -60,7 +60,6 @@ var people =
 
 var $content
 var $id_cards
-var id_card_template
 
 function add_id_card(person)
 {
@@ -79,21 +78,23 @@ function initialize_page()
 
 	Ajax.get('/лекала/личная карточка.html', 
 	{
-		cache: false,
+		//cache: false,
 		type: 'html',
 		ошибка: 'Не удалось загрузить страницу',
 		ok: function(template) 
 		{
-			id_card_template = $.template('личная карточка', template)
+			$.template('личная карточка', template)
 			
 			people.batch(function(люди)
 			{
-				$('#people_loading').remove()
+				$('#people_loading').fadeOut('fast')
 
+				$id_cards.hide()
 				люди.forEach(function(man)
 				{
 					add_id_card(man)
 				})
+				$id_cards.fadeIn('fast')
 					
 				if (people.есть_ли_ещё)
 					activate_id_card_loader()

@@ -1,0 +1,112 @@
+@import "/облик/вспомогательный.less";
+
+#chat
+{
+	margin-top: 100px;
+	margin-bottom: 100px;
+	
+	#loading
+	{
+		color: #afafaf;
+		text-align: center;
+		margin-bottom: 50px;
+		margin-top: 250px;
+	}
+}
+
+ul.chat
+{
+	display: table;
+	width: 100%;
+	
+	margin: 0;
+	padding: 0;
+
+	li
+	{
+		display: table-row;
+
+		@inter_column_padding: 25px;
+		@message_bottom_padding: 26px;
+		
+		.author, .messages
+		{
+			display: table-cell;
+			padding-bottom: @message_bottom_padding;
+		}
+		
+		.author
+		{
+			padding-left: 80px;
+			padding-right: @inter_column_padding;
+			
+			max-width: 40%;
+			
+			overflow: hidden;
+			text-overflow: ellipsis;
+			
+			text-align: right;
+			color: @blue_color;
+			
+			a
+			{
+				border: 0;
+			}
+			
+			a:after
+			{
+				content: "\A";
+				white-space: pre;
+			}
+			
+			.picture
+			{
+				display: inline-block;
+				margin-top: 10px;
+		
+				background-image: url('/картинки/temporary/картинка с навершия.jpg');
+				background-repeat: no-repeat;
+		
+				.beautiful_shadow(0px, 1px, 2px, 3px, 4px, 0px, 0px, 0.2);
+		
+				width: 48px;
+				height: 48px;
+			}
+		}
+		
+		.messages
+		{
+			ul
+			{
+				display: table;
+				width: 100%;
+				
+				margin: 0;
+				padding: 0;
+				
+				.text, .when
+				{
+					display: table-cell;
+					padding-bottom: @message_bottom_padding;
+				}
+				
+				.text
+				{
+					padding-left: @inter_column_padding;
+					padding-right: @inter_column_padding;
+				}
+				
+				.when
+				{
+					padding-left: @inter_column_padding;
+					padding-right: 80px;
+					
+					text-align: right;
+					color: #afafaf;
+					
+					font-size: 20px;
+				}
+			}
+		}
+	}
+}
