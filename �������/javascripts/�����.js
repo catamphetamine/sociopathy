@@ -214,15 +214,16 @@ function initialize_conditional($this, options)
 	
 	var every = $this.children()
 
-	var ok = $this.find('> [type=ok]')
+	var ok = $this.find('> [type=ok]').eq(0)
 	
-	var error = $this.find('> [type=error]')
+	console.log($this.find('> [type=ok]'))
+	var error = $this.find('> [type=error]').eq(0)
 	error.attr('default_message', error.text())
 
-	var loading = $this.find('> [type=loading]')
-	var loading_more = $this.find('> [type=loading_more]')
+	var loading = $this.find('> [type=loading]').eq(0)
+	var loading_more = $this.find('> [type=loading_more]').eq(0)
 
-	var loading_more_error = $this.find('> [type=loading_more_error]')
+	var loading_more_error = $this.find('> [type=loading_more_error]').eq(0)
 
 	if (loading_more_error.length === 0)
 		loading_more_error = error
