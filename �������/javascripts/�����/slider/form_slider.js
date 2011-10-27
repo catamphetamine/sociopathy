@@ -77,6 +77,11 @@ function form_slider(options)
 		var self = this
 	}
 	
+	this.bind = function(event, handler)
+	{
+		this.slider.bind(event, handler)
+	}
+	
 	this.set_container = function($container)
 	{
 		var self = this

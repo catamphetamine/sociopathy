@@ -105,6 +105,11 @@ function slider(options)
 //			this.options.buttons.previous.does(this.next(), '1x')
 	}
 	
+	this.bind = function(event, handler)
+	{
+		this.$element.bind(event, handler)
+	}
+	
 	// go to slide
 	this.go_to = function(index, callback)
 	{
@@ -114,6 +119,8 @@ function slider(options)
 			
 		// set index
 		this.index = index
+		
+		this.$element.trigger('slide_No_' + index)
 		
 		// perform scrolling, refresh buttons
 		this.scroll(callback)

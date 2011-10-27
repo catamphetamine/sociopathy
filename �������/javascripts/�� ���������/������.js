@@ -72,15 +72,27 @@ function activate_button(selector, options)
         
 $(function()
 {
-    $('.registration_hint .actions .enter').click(function(event)
-    {
-        event.preventDefault()
-        enter_window.open()
-    })
-
     initialize_enter_window()
     initialize_enter_window_buttons()
 	
+	function проверить_адрес_на_вход()
+	{
+		if (!пользователь)
+			if (get_hash() === "войти")
+				enter_window.open()
+	}
+	
+	проверить_адрес_на_вход()
+	//window.onhashchange = проверить_адрес_на_вход
+	
+	$('.enter').live('click', function(event)
+	{
+		event.preventDefault()
+		
+		if (!пользователь)
+			enter_window.open()
+	})
+		
 	$('.logout').click(function(event)
 	{
 		event.preventDefault()

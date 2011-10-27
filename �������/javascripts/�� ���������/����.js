@@ -96,6 +96,8 @@ var $scroll_detector
 
 function initialize_page()
 {
+	помощь('Здесь вы можете посмотреть список участников нашей сети. Список подгружается по мере того, как вы прокручиваете его вниз.')
+
 	$(window).scrollTop(0)
 	$scroll_detector = $('#scroll_detector')
 	

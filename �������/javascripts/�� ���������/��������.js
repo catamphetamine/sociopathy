@@ -1,5 +1,7 @@
 ﻿function initialize_page()
 {
+	помощь('В этом разделе вы можете читать и писать заметки на всевозможные темы.')
+
 	$('#logo').remove()
 	insert_search_bar_into($('#panel'))
 	

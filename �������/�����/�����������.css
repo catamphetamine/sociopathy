@@ -34,9 +34,12 @@
 	{
 		.message();
 		
-		color: #000000;
-		border-color: #4f4f4f;
-		background-color: #c9c9c9;
+		color: #303030;
+		text-shadow: 1px 1px 0px #ffffff;
+		
+		border-color: #7f7f7f;
+		
+		.top_to_bottom_gradient(#eef2f4, #d6dde0);
 	}
 
 	.error
@@ -44,8 +47,11 @@
 		.message();
 		
 		color: #faefef;
+		text-shadow: 1px 1px 0px #000000;
+		
 		border-color: #400500;
-		background-color: #7f2f2f;
+		
+		.top_to_bottom_gradient(#a42e2e, #742b2b);
 	}
 
 	.warning
@@ -53,7 +59,10 @@
 		.message();
 		
 		color: #281b00;
-		border-color: #3b3200;
-		background-color: #ca9f41;
+		text-shadow: 1px 1px 0px #f3e69f;
+		
+		border-color: #918658;
+		
+		.top_to_bottom_gradient(#f7dc72, #d6b52f);
 	}
 }

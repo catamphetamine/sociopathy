@@ -178,7 +178,7 @@ $(window).resize(center_vertically)
  */
 function loading_page()
 {
-	$("body").css({ overflow: 'hidden' })
+	$("body").css({ height: '100%', overflow: 'hidden' })
 }
 
 /**
@@ -216,7 +216,6 @@ function initialize_conditional($this, options)
 
 	var ok = $this.find('> [type=ok]').eq(0)
 	
-	console.log($this.find('> [type=ok]'))
 	var error = $this.find('> [type=error]').eq(0)
 	error.attr('default_message', error.text())
 
@@ -327,3 +326,59 @@ $(function()
 		event.preventDefault()
 	})
 })
+
+RegExp.escape = function(string)
+{
+	var specials = new RegExp("[.*+?|()\\[\\]{}\\\\]", "g")
+	return string.replace(specials, "\\$&")
+}
+
+String.prototype.replace_all = function(what, with_what)
+{
+	var regexp = new RegExp(RegExp.escape(what), "g")
+	return this.replace(regexp, with_what)
+}
+
+String.prototype.set_character_at = function(index, character)
+{
+	if (index > this.length - 1)
+		return this
+		
+	return this.substr(0, index) + character + this.substr(index + 1)
+}
+
+String.prototype.beautify = function()
+{
+	var string = this + ''
+	
+	function replace_quotes(which, string)
+	{
+		var quote_index = -1
+		var found_quote_type
+		while ((quote_index = string.indexOf(which, quote_index + 1)) >= 0)
+		{
+			if (found_quote_type === 'odd')
+				found_quote_type = 'even'
+			else
+				found_quote_type = 'odd'
+		
+			var beautiful_quote
+			if (found_quote_type === 'odd')
+				beautiful_quote = '«'
+			else
+				beautiful_quote = '»'
+				
+			string = string.set_character_at(quote_index, beautiful_quote)
+		}
+		
+		return string
+	}
+	
+	string = replace_quotes('"', string)
+	//string = replace_quotes("'", string)
+	
+	string = string.replace_all(' - ', ' — ')
+	string = string.replace_all('...', '…')
+	
+	return string
+}

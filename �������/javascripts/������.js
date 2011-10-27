@@ -42,7 +42,7 @@ var Ajax =
 					return
 				}
 
-				if (typeof(options.ok) === 'function')
+				if ($.isFunction(options.ok))
 					options.ok(json)
 				else if (typeof(options.ok) === 'string')
 					info(options.ok)
@@ -297,4 +297,10 @@ function number_ending(число, настройки)
 function last_digit(число)
 {
 	return число % 10
+}
+
+function get_hash()
+{
+  var hash = decodeURIComponent(window.location.hash)
+  return hash.substring(1)
 }

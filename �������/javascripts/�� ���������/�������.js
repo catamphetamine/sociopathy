@@ -23,6 +23,8 @@ function initialize_join_button()
 	))
 }
 
+var прописан = false
+
 // create join dialog
 function initialize_join_dialog()
 {
@@ -39,6 +41,33 @@ function initialize_join_dialog()
 		join_dialog_done_button, 
 		join_form_slider
 	)
+	
+	join_dialog.bind('open', function()
+	{
+		запомнить_помощь('вне_окошка')
+		помощь('Выберите себе имя в нашей сети. Например, "Иван Петрович Сидоров".')
+	})
+	
+	join_dialog.bind('close', function()
+	{
+		if (!прописан)
+			помощь(возстановить_помощь('вне_окошка'))
+	})
+	
+	join_form_slider.bind('slide_No_2', function()
+	{
+		помощь('Нажмите на картинку, соответствующую вашему полу.')
+	})
+	
+	join_form_slider.bind('slide_No_3', function()
+	{
+		помощь('Разскажите нам, откуда вы. Например: "Москва", "Где-то на границе с Монголией", "Кольский полуостров".')
+	})
+	
+	join_form_slider.bind('slide_No_4', function()
+	{
+		помощь('По этому паролю вы будете входить в нашу сеть. Например: "белый слон жуёт морковь", "кто не спрятался - я не виноват", "у меня везде один пароль".')
+	})
 	
 	join_form_slider.set_container(join_dialog.$element)
 	join_form_slider.when_done(function() { join_submission(join_form_slider.data()) })
@@ -140,6 +169,8 @@ function activate_button(selector, options)
 var conditional
 function initialize_page()
 {
+	помощь('Это заглавная страница нашей сети. Воспользуйтесь меню слева сверху для перехода в какой-либо раздел сети.')
+	
 	if (получить_настройку_запроса('приглашение'))
 	{
 		conditional = initialize_conditional($('[type=conditional]'))
@@ -150,11 +181,16 @@ function initialize_page()
 function check_invite(callback)
 {
 	var приглашение = получить_настройку_запроса('приглашение')
-	
+
 	Ajax.get('/приложение/приглашение/проверить', { приглашение: приглашение },
 	{
 		error: function(message)
 		{
+			if (message === "Нет такого приглашения в списке")
+				помощь('Ваше приглашение не найдено в списке. Возможно кто-то уже прописался по нему. Возможно эта ссылка неправильная. Напишите нам об этом, и мы вам поможем.')
+			else
+				помощь('Произошла ошибка в ходе проверки вашего приглашения. Напишите нам об этом, и мы вам поможем.')
+
 			callback(message)
 		},
 		ok: function(данные)
@@ -169,6 +205,7 @@ function check_invite(callback)
 			initialize_join_form_slider()
 			initialize_join_dialog()
 			
+			помощь('Теперь вы можете прописаться, нажав на кнопку "Присоединиться" внизу страницы.')
 			callback()
 		}
 	})
@@ -184,12 +221,18 @@ function join_submission(data)
 	loading_indicator.show()
 	Ajax.put('/приложение/прописать', data, 
 	{ 
-		ошибка: 'Не удалось прописаться', 
+		error: function()
+		{
+			error('Не удалось прописаться')
+			помощь('Произошла какая-то ошибка. Напишите нам об этом, и мы вам поможем.')
+		}, 
 		ok: function(данные) 
 		{ 
+			прописан = true
+			помощь('Сейчас страница будет перезагружена.')
+
 			loading_indicator.hide()
 			join_dialog.close()
-			Message.info('Ваш номер: ' + данные.ключ) 
 		} 
 	})
 }

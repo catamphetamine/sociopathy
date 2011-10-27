@@ -1,10 +1,10 @@
 var Message = 
 {
 	appearance_duration: 0.5,
-	awareness_enter_time: 1.0,
-	thinking_time: 1.0,
-	length_factor: 0.01,
-	awareness_leave_time: 1.5,
+	awareness_enter_time: 0.5,
+	thinking_time: 0.5,
+	length_factor: 0.10,
+	awareness_leave_time: 0.5,
 	disappearance_duration: 0.9,
 	
 	z_index: 0,
@@ -161,7 +161,12 @@ var Message =
 			
 		var duration = this.awareness_enter_time + show_time + this.awareness_leave_time
 		
-		text = new String(text).split('. ').join('.<br/>')
+		text = new String(text).beautify()
+			.split('. ').join('.<br/>')
+			.split(' \n ').join('<br/>')
+			.split(' \n').join('<br/>')
+			.split('\n ').join('<br/>')
+			.split('\n').join('<br/>')
 		
 		var message = $('<div class="' + type + ' non_selectable"/>').html(text)
 		var opacity = message.css('opacity')

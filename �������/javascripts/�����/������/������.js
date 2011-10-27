@@ -176,6 +176,11 @@ var dialog_window = new Class
 		}
 	},
 	
+	bind: function(event, handler)
+	{
+		this.$element.bind(event, handler)
+	},
+	
 	// opens the dialog window
 	open: function() 
 	{
@@ -197,6 +202,7 @@ var dialog_window = new Class
 		z_indexer.register(this)
 
 		this.is_open = true
+		this.$element.trigger('open')
 	},
 	
 	// prevent tabbing out of modal dialog windows
@@ -238,7 +244,9 @@ var dialog_window = new Class
 			this.reset()
 
 			this.is_open = false
-		}).bind(this))
+			this.$element.trigger('close')
+		})
+		.bind(this))
 	},
 
 	/**

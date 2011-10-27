@@ -64,6 +64,7 @@ html *::selection, html *::-moz-selection, html *::-webkit-selection
 {
 	min-height: 100%;
 	z-index: 100;
+	overflow: hidden;
 }
 
 * html #content 
