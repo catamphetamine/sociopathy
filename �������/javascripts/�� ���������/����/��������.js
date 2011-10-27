@@ -43,6 +43,7 @@ function initialize_page()
 					}
 					*/
 					
+					data.сообщения.reverse()
 					var chat = $.tmpl('болталка', приготовить_данные_для_лекала(data.сообщения))
 					chat.appendTo($('#chat'))
 					

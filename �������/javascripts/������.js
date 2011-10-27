@@ -262,13 +262,16 @@ function неточное_время(время)
 
 function number_ending(число, настройки)
 {
-	if (число > 9)
-		число = last_digit(число)
+	//if (число > 9)
+		//число = last_digit(число)
 	
 	switch (настройки.вопрос)
 	{
 		case 'чем':
-			switch (число)
+			if (число > 10 && число < 20)
+				return 'ю'
+
+			switch (last_digit(число))
 			{
 				case 0:
 					return 'ю'

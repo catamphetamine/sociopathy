@@ -189,8 +189,8 @@ function page_loaded()
 	$('#loading_screen').fadeOut(300, function() { $('#loading_screen').remove() })
 	$("body").css({ overflow: 'auto' })
 	
-	var $content = $('#content')
-	$content.height((parseInt($content.height()) - parseInt($content.css('padding-top'))) + 'px')
+	//var $content = $('#content')
+	//$content.height((parseInt($content.height()) - parseInt($content.css('padding-top'))) + 'px')
 }
 
 // placeholder - will be overridden
@@ -382,3 +382,70 @@ String.prototype.beautify = function()
 	
 	return string
 }
+
+function go_to_anchor()
+{
+	var anchor = get_hash()
+	
+	if (!anchor)
+		return
+
+	var header
+	var container = $('#content');
+	
+	['h1', 'h2', 'h3', 'h4', 'h5', 'h6'].forEach(function(tag)
+	{
+		container.find(tag).each(function()
+		{
+			if (header)
+				return
+			
+			var element = $(this)
+			if (element.children().length > 0)
+				return
+				
+			if (element.text() === anchor)
+				header = element
+		})
+		
+		if (header)
+			return
+	})
+	
+	if (header)
+		прокрутчик.scroll_to(header)
+}
+
+function add_anchor_to_url(anchor)
+{
+	window.location.hash = anchor
+	return
+	
+	var hash_index = window.location.indexOf('#')
+	if (hash_index)
+		window.location = window.location.substring(0, hash_index) + '#' + anchor
+	else
+		window.location = window.location + '#' + anchor
+}
+
+$(function()
+{
+	var container = $('#content');
+	
+	['h1', 'h2', 'h3', 'h4', 'h5', 'h6'].forEach(function(tag)
+	{
+		container.find(tag).each(function()
+		{
+			var element = $(this)
+			if (element.children().length > 0)
+				return
+				
+			element.click(function(event)
+			{
+				event.preventDefault()
+				add_anchor_to_url(element.text())
+				прокрутчик.scroll_to(element)
+			})
+		})
+	})
+})

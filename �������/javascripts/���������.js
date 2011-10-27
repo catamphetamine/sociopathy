@@ -58,6 +58,17 @@ var Scroller = new Class
 		else if (previous_top_offset_in_window > window_height
 					&& top_offset_in_window <=  window_height)
 			element.trigger('appearing_on_bottom.scroller')
+	},
+	
+	scroll_to: function(element)
+	{
+		var top = element.offset().top
+		var line_height = parseInt(element.css('line-height'))
+		
+		if (top - line_height >= 0)
+			top -= line_height
+		
+		$('html').animate({ scrollTop: top + 'px' }, 1000, 'easeInOutCubic')
 	}
 })
 
