@@ -70,5 +70,114 @@ var Dom_tools =
 			element = contents[contents.length - 1]
 		}
 		while (true)
+	},
+	
+	outer_html: function(node)
+	{
+		// if IE, Chrome take the internal method otherwise build one
+		return node.outerHTML || (
+			function(node)
+			{
+				var div = document.createElement('div')
+				div.appendChild(node.cloneNode(true))
+				var html = div.innerHTML
+				div = null
+				return html
+			})
+			(node)
+	},
+	
+	clone: function(node)
+	{
+		return node.cloneNode(true)
+	},
+	
+	remove_children: function(node)
+	{
+		if (node.hasChildNodes())
+			while (node.childNodes.length >= 1)
+				node.removeChild(node.firstChild)
+	},
+	
+	boundary_html: function(node)
+	{
+		var div = document.createElement('div')
+		var clone = this.clone(node)
+		this.remove_children(clone)
+		
+		div.appendChild(clone)
+		var html = div.innerHTML
+		div = null
+		
+		var closing_tag_index = html.indexOf('</')	
+		var htmls =
+		{
+			opening: html.substring(0, closing_tag_index),
+			closing: html.substring(closing_tag_index)
+		}
+		
+		return htmls
+	},
+	
+	inject_html: function(injected_html, node_chain)
+	{
+		node_chain[0].innerHTML = Dom_tools.get_inner_html_with_injection(injected_html, node_chain)
+	},
+	
+	get_html_before_and_after: function(node)
+	{
+		var parent = node.parentNode
+		var child = node
+	
+		var html = { before: '', after: '' }
+		
+		var found = false
+		
+		var index = 0
+		while (index < parent.childNodes.length)
+		{
+			var child_node = parent.childNodes[index]
+			
+			if (child_node === child)
+			{
+				found = true
+				index++
+				continue
+			}
+			
+			if (!found)
+				html.before += Dom_tools.outer_html(child_node)
+			else
+				html.after += Dom_tools.outer_html(child_node)
+			
+			index++
+		}
+		
+		return html
+	},
+	
+	get_inner_html_with_injection: function(injected_html, node_chain, chain_index)
+	{
+		if (typeof(chain_index) === 'undefined')
+			chain_index = 0
+			
+		if (chain_index + 1 === node_chain.length)
+			return injected_html
+	
+		var parent = node_chain[chain_index]
+		var child = node_chain[chain_index + 1]
+	
+		var html = this.get_html_before_and_after(child)
+	
+//		if (chain_index === 0)
+//			boundary_html = { opening: '', closing: '' }
+
+		var boundary_html = Dom_tools.boundary_html(child)
+			
+		return html.before +
+			boundary_html.opening + 
+			Dom_tools.get_inner_html_with_injection(injected_html, node_chain, chain_index + 1) +
+			boundary_html.closing +
+			html.after
 	}
 }

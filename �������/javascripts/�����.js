@@ -449,3 +449,13 @@ $(function()
 		})
 	})
 })
+
+String.prototype.count = function(what)
+{
+	var count = 0
+	var index = -1
+	while ((index = this.indexOf(what, index + 1)) >= 0)
+		count++
+	
+	return count
+}

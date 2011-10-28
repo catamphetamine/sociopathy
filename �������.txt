@@ -235,5 +235,5 @@ http://chart.apis.google.com/chart?cht=tx&chl=\displaystyle\int_{-\infty}^{\inft
 
 автологин (remember me)
 
-вставка любого html в contenteditable
 undo и redo в contenteditable
+

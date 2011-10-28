@@ -9,12 +9,10 @@ function initialize_page()
 		var question = question_and_answer.find('.question')
 		var answer = question_and_answer.find('.answer')
 		
+		answer.move_out_upwards()
 		question.disableTextSelect()
 		question.click(function()
 		{
-			if (answer.is(':animated'))
-				return
-		
 			if (collapsed)
 				answer.slide_in_from_top()
 			else

@@ -52,38 +52,57 @@ $.fn.slide_in_from_top = function(duration)
 	if (this.css('position') !== 'relative')
 	{
 		this.stop_animation()
-		this.css({ top: -this.outerHeight() + 'px' })
 		this.show()
 		return this.animate({ top: 0 }, duration)
 	}
-	
-	if (this.is(':animated'))
-		return
 
-	var container = $('<div/>')
-	container.css({ overflow: 'hidden' })
-	this.wrap(container)
+	this.stop_animation()
+
+	if (this.parent().css('overflow') !== 'hidden')
+	{
+		var container = $('<div/>')
+		container.css({ overflow: 'hidden' })
+		this.wrap(container)
+	}
 	
-	var initial_margin_bottom = parseInt(this.css('margin-bottom'))
+	var top = parseFloat(this.css('top'))
+	var margin_bottom = parseFloat(this.css('margin-bottom'))
+	var height = this.outerHeight(true) + top
 	
-	this.css({ top: -this.outerHeight(true) + 'px' })
-	this.css({ 'margin-bottom': (-this.outerHeight(true) + initial_margin_bottom) + 'px' })	
+	if (top === 0)
+	{
+		this.css({ top: -height + 'px' })
+		this.css({ 'margin-bottom': (margin_bottom - height) + 'px' })
+	}
+	
 	this.show()
 	
 	return this.animate
 	(
 		{
 			top: 0,
-			'margin-bottom': initial_margin_bottom
+			'margin-bottom': (margin_bottom - top) + 'px'
 		},
-		duration,
-		(function()
-		{
-			this.appendTo(container.parent())
-			container.remove()
-		})
-		.bind(this)
+		duration
 	)
+}
+
+$.fn.move_out_upwards = function(duration)
+{
+	if (this.css('position') !== 'relative')
+	{
+		var height = this.outerHeight(true)
+		return this.css({ top: -height + 'px' })
+	}
+	
+	var margin_bottom = parseFloat(this.css('margin-bottom'))
+	var height = this.outerHeight(true)
+	
+	return this.css
+	({
+		top: -height + 'px',
+		'margin-bottom': (margin_bottom - height) + 'px'
+	})
 }
 
 $.fn.slide_out_upwards = function(duration)
@@ -91,56 +110,52 @@ $.fn.slide_out_upwards = function(duration)
 	if (this.css('position') !== 'relative')
 	{
 		this.stop_animation()
-		this.css({ top: 0 })
 		this.show()
-		return this.animate({ top: -this.outerHeight() + 'px' }, duration, (function() { this.hide() }).bind(this))
+		return this.animate({ top: -this.outerHeight(true) + 'px' }, duration, (function() { this.hide() }).bind(this))
+	}
+
+	this.stop_animation()
+	
+	if (this.parent().css('overflow') !== 'hidden')
+	{
+		var container = $('<div/>')
+		container.css({ overflow: 'hidden' })
+		this.wrap(container)
 	}
 	
-	if (this.is(':animated'))
-		return
-		
-	var container = $('<div/>')
-	container.css({ overflow: 'hidden' })
-	this.wrap(container)
-	
-	var initial_margin_bottom = parseInt(this.css('margin-bottom'))
-
-	this.css({ top: 0 })
+	var top = parseFloat(this.css('top')) // < 0
+	var margin_bottom = parseFloat(this.css('margin-bottom'))
+	var height = this.outerHeight(true) - top
 	
 	return this.animate
 	(
 		{
-			top: -this.outerHeight(true) + 'px',
-			'margin-bottom': (-this.outerHeight(true) + initial_margin_bottom) + 'px'
+			top: -height + 'px',
+			'margin-bottom': (margin_bottom - (height + top)) + 'px'
 		},
-		duration,
-		(function()
-		{
-			this.hide()
-			this.appendTo(container.parent())
-			container.remove()
-			this.css('margin-bottom', initial_margin_bottom)
-		})
-		.bind(this)
+		duration
 	)
 }
 
 $.fn.slide_in_from_bottom = function(duration)
 {
 	this.stop_animation()
-	this.css({ bottom: -this.outerHeight() + 'px' })
 	this.show()
 	return this.animate({ bottom: 0 }, duration)
+}
+
+$.fn.move_out_downwards = function(duration)
+{
+	return this.css({ bottom: -this.outerHeight(true) + 'px' })
 }
 
 $.fn.slide_out_downwards = function(duration)
 {
 	this.stop_animation()
-	this.css({ bottom: 0 })
 	return this.animate
 	(
 		{
-			bottom: -this.outerHeight() + 'px'
+			bottom: -this.outerHeight(true) + 'px'
 		},
 		duration,
 		function() { this.hide() }
@@ -169,4 +184,9 @@ $.fn.fade_out = function(duration, callback)
 $.fn.opaque = function()
 {
 	return this.css({ opacity: 1 })
+}
+
+$.fn.outer_html = function()
+{
+	return $('<div/>').append(this.eq(0).clone()).html()
 }

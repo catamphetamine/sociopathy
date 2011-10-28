@@ -27,20 +27,6 @@ var Editor = new Class
 	{
 	},
 	
-	move_caret_to: function(element)
-	{		
-		element = element.get(0)
-//		if (element.firstChild)
-//			element = element.firstChild
-
-		var range = document.createRange()
-		range.setStart(element, 0)
-		range.collapse(true)
-		
-		this.apply_range(range)
-		return range
-	},
-	
 	insert: function(what, caret)
 	{
 		caret = caret || this.caret()
@@ -51,6 +37,54 @@ var Editor = new Class
 			caret.insertNode(what)
 	},
 	
+	insert: function(what)
+	{
+		if (typeof(what) === 'string')
+			return this.insert_html(what)
+			
+		if (what instanceof jQuery)
+			return this.insert_html(what.outer_html())
+		
+		throw 'Unexpected argument type'
+	},
+	
+	insert_html: function(html)
+	{
+		var container = this.get_native_container()
+		var caret_offset = this.caret_offset()
+		
+		if (!Dom_tools.is_text_node(container))
+			return 'Unpredicted scenario in function insert_html'
+		
+		var text = container.nodeValue
+		
+		var before = text.substring(0, caret_offset)
+		var after = text.substring(caret_offset)
+		
+		var parent = container.parentNode
+			
+		var node_chain = [parent]
+		var how_much_parent_tags_to_close = html.count('</')	
+		while (how_much_parent_tags_to_close > 0)
+		{
+			parent = parent.parentNode
+			node_chain.push(parent)
+			how_much_parent_tags_to_close--
+		}
+		
+		node_chain.reverse()
+		
+		var before_and_after = Dom_tools.get_html_before_and_after(container)
+		
+		html = before_and_after.before +
+			before +
+			html +
+			after + 
+			before_and_after.after
+		
+		Dom_tools.inject_html(html, node_chain)
+	},
+	
 	'delete': function()
 	{
 		this.selection().deleteContents()
@@ -58,7 +92,10 @@ var Editor = new Class
 	
 	wrap: function(element)
 	{
-		this.selection().surroundContents(element.get(0))
+		if (element instanceof jQuery)
+			element = element[0]
+			
+		this.selection().surroundContents(element)
 	},
 	
 	has_container: function(filter)
@@ -69,8 +106,39 @@ var Editor = new Class
 	
 	get_container: function(filter)
 	{
-		var container = this.range().commonAncestorContainer
-		return $(container).parents(filter)
+		var container = this.get_native_container()
+		return $(container).parents(filter).filter(':first')
+	},
+	
+	get_native_container: function()
+	{
+		return this.range().commonAncestorContainer
+	},
+	
+	move_caret_to: function(element)
+	{		
+		if (element instanceof jQuery)
+			element = element[0]
+
+		var range = document.createRange()
+		range.setStart(element, 0)
+		range.collapse(true)
+		
+		this.apply_range(range)
+		return range
+	},
+	
+	move_caret_to_the_end_of: function(element)
+	{		
+		if (element instanceof jQuery)
+			element = element[0]
+
+		var range = document.createRange()
+		range.setStartAfter(element)
+		range.collapse(true)
+		
+		this.apply_range(range)
+		return range
 	},
 	
 	move_caret_to_container_end: function(filter)
@@ -103,7 +171,7 @@ var Editor = new Class
 		if (!Dom_tools.is_first_element(caret.startContainer, this.get_container(filter).get(0)))
 			return false
 			
-		if (caret.startOffset > 0)
+		if (this.caret_offset(caret) > 0)
 			return false
 			
 		return true
@@ -119,12 +187,10 @@ var Editor = new Class
 		if (!Dom_tools.is_last_element(caret.startContainer, this.get_container(filter).get(0)))
 			return false
 			
-		//console.log("caret.startOffset = " + caret.startOffset)
 		var range = caret.cloneRange()
 		range.selectNodeContents(Dom_tools.get_last_child(this.get_container().get(0)))
-		//console.log("other endOffset = " + range.endOffset)
-		//console.log(range)
-		if (caret.startOffset < range.endOffset)
+		
+		if (this.caret_offset(caret) < range.endOffset)
 			return false
 			
 		return true
@@ -153,6 +219,13 @@ var Editor = new Class
 		return !this.selection().collapsed
 	},
 	
+	caret_offset: function(caret)
+	{
+		if (!caret)
+			caret = this.caret()
+		return caret.startOffset
+	},
+	
 	range: function()
 	{
 		return this.window.getSelection().getRangeAt(0)
@@ -166,5 +239,10 @@ var Editor = new Class
 	caret: function()
 	{
 		return this.range()
+	},
+	
+	deselect: function()
+	{
+		window.getSelection().removeAllRanges()
 	}
 })

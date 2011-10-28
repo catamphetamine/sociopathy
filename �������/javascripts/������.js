@@ -1,3 +1,5 @@
+var режим
+
 var помощь
 var запомнить_помощь
 var возстановить_помощь
@@ -5,8 +7,8 @@ var переход_в_режим
 
 (function()
 {
-	var режим
 	var режимы = []
+	var editor = new Editor()
 	
 	$(function()
 	{
@@ -62,7 +64,7 @@ var переход_в_режим
 		if (режим === 'правка')
 		{
 			if ($.browser.mozilla)
-				window.getSelection().removeAllRanges()
+				editor.deselect()
 	
 			$('[editable=true]').removeAttr('contenteditable')
 		}

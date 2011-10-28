@@ -67,6 +67,11 @@ var Scroller = new Class
 		
 		if (top - line_height >= 0)
 			top -= line_height
+			
+		var document_height = parseInt($(document).height())
+		var window_height = parseInt($(window).height())
+		if (top + window_height > document_height)
+			top = document_height - window_height
 		
 		$('html').animate({ scrollTop: top + 'px' }, 1000, 'easeInOutCubic')
 	}

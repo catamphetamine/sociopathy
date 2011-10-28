@@ -2,26 +2,53 @@ $(function()
 {
 	var editor = new Editor()
 	var tools = $('#article_editor_tools')
+		
+	var content = get_content()
 	
 	var tags_with_prohibited_line_break = ['a', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']
 
 	initialize_tools()
 	initialize_editor()
 	initialize_actions()
+	
+	function get_content()
+	{
+		return $('#content > article > section')
+	}
+
+	function mark(element)
+	{
+		if (content.find('[mark=temporary]').length > 0)
+			throw 'Some element is already marked'
+			
+		element.attr('mark', 'temporary')
+		return element
+	}
+	
+	function unmark()
+	{
+		var element = content.find('[mark=temporary]')
 		
+		if (element.length > 1)
+			throw 'More than one element was marked'
+			
+		element.removeAttr('mark')
+		return element
+	}
+	
 	function initialize_tools()
 	{
 		var tools_wrapper = $('#article_editor_tools_wrapper')
 	
 		tools_wrapper.bind('disappearing_upwards.scroller', function(event)
 		{
-			tools.addClass('sticky')
+			tools.opaque().addClass('sticky')
 			event.stopPropagation()
 		})
 		
 		tools_wrapper.bind('fully_appeared_on_top.scroller', function(event)
 		{
-			tools.removeClass('sticky')
+			tools.css({ top: 0 }).removeClass('sticky')
 			event.stopPropagation()
 		})
 		
@@ -40,6 +67,7 @@ $(function()
 				hide_tools()
 		})
 		
+		// при нажатии Ввода на основном заголовке - перейти к первому абзацу
 		$('article h1').bind('keypress', function(event)
 		{
 			if (режим !== 'правка')
@@ -53,8 +81,6 @@ $(function()
 					break
 			}
 		})
-		
-		var content = $('article section')
 			
 		function cut_off_whitespaces(original_text)
 		{
@@ -68,6 +94,18 @@ $(function()
 				return cut_off_whitespaces(text)
 		}
 		
+		function reload_content()
+		{
+			var html = content.outer_html()
+			
+			var parent = content.parent()
+			content.remove()
+			content = $(html).appendTo(parent)
+			
+			if ($.browser.mozilla)
+				content.focus()
+		}
+		
 		content.bind('keypress', function(event)
 		{
 			if (режим !== 'правка')
@@ -75,14 +113,37 @@ $(function()
 				
 			switch (event.which)
 			{
-				case Клавиши.Enter:
-					if (editor.is_caret_in_the_beginning_of_container())
-						break
-						
-					if (editor.is_caret_in_the_end_of_container())
-						break
-						
+				case Клавиши.Enter:	
 					var container = editor.get_container()
+					
+					if (editor.is_caret_in_the_beginning_of_container())
+					{
+						return
+					}
+					
+					if (editor.is_caret_in_the_end_of_container())
+					{
+						if (!container.is('h2, h3, h4, h5, h6'))
+							return
+							
+						event.preventDefault()
+					
+						var next_paragraph = container.next('p')
+						if (next_paragraph.length === 0)
+						{
+							next_paragraph = $('<p mark="temporary"/>')
+							//next_paragraph.text('123')
+							container.after(next_paragraph)
+							
+							reload_content()
+							
+							next_paragraph = content.find('p[mark=temporary]')
+							next_paragraph.removeAttr('mark')
+						}
+							
+						editor.move_caret_to(next_paragraph)
+						return
+					}
 					
 					tags_with_prohibited_line_break.forEach(function(tag)
 					{
@@ -93,7 +154,7 @@ $(function()
 			}
 		})
 		
-		content.bind('keyup', function(event)
+		content.bind('keypress', function(event)
 		{
 			if (режим !== 'правка')
 				return
@@ -101,13 +162,27 @@ $(function()
 			switch (event.which)
 			{
 				case Клавиши.Enter:
-					//event.preventDefault()
+					event.preventDefault()
 					
+					if (!editor.get_container().is('p'))
+						return
+						
+					editor.insert_html('</p><p mark="temporary">')
+					
+					reload_content()
+					
+					var next_paragraph = content.find('p[mark=temporary]')
+					next_paragraph.removeAttr('mark')
+					editor.move_caret_to(next_paragraph)
+					
+					/*
 					if ($.browser.mozilla)
 					{
 						content.find('p[_moz_dirty]').removeAttr('_moz_dirty')
-						content.find('br[_moz_dirty]').remove()
+						//content.find('br[_moz_dirty]').remove()
+						content.find('br').remove()
 					}
+					*/
 						
 					content.find('p').each(function()
 					{
@@ -118,26 +193,9 @@ $(function()
 						
 						if (html.length > trimmed_html.length)
 							paragraph.html(trimmed_html)
-							
-						/*
-						do
-						{
-							var last_node = Dom_tools.get_last_child(paragraph.get(0))
-							
-							console.log(last_node)
-							console.log(Dom_tools.is_text_node(last_node))
-							
-							if (Dom_tools.is_text_node(last_node))
-								break
-							
-							if (last_node.tagName.toLowerCase() === 'br')
-								Dom_tools.remove(last_node)
-						}
-						while (true)
-						*/
 					})
 					
-					break
+					return
 			}
 		})
 		
@@ -152,7 +210,14 @@ $(function()
 	function show_tools()
 	{
 		if (tools.hasClass('sticky'))
+		{
+			tools.stop_animation()
+		
+			if (parseFloat(tools.css('top')) === 0)
+				tools.move_out_upwards()
+				
 			tools.opaque().slide_in_from_top()
+		}
 		else
 			tools.css({ top: 0 }).fade_in(0.3)
 			
@@ -171,7 +236,7 @@ $(function()
 	
 	function initialize_actions()
 	{
-		$('#edit_mode_actions').appendTo($('body'))
+		$('#edit_mode_actions').appendTo($('body')).move_out_downwards()
 		
 		cancel_button = activate_button('#edit_mode_actions .cancel', { 'prevent double submission': true })
 		.does(function() { info('cancel') })
@@ -191,16 +256,10 @@ $(function()
 		apply: function()
 		{
 			if (editor.has_selection())
-			{
-				info('Не нужно ничего выделять')
-				return
-			}
+				return info('Не нужно ничего выделять')
 			
 			if (!editor.has_container('p'))
-			{
-				info('Нельзя поместить подзаголовок здесь 1')
-				return
-			}
+				return info('Подзаголовок можно помещать только в абзаце')
 			
 			var caret
 			if (editor.is_caret_in_the_beginning_of_container('p'))
@@ -209,7 +268,7 @@ $(function()
 				caret = editor.move_caret_to_container_end('p')
 			else
 			{
-				info('Нельзя поместить подзаголовок здесь')
+				info('Подзаголовок можно поместить только в начале или в конце абзаца')
 				return
 			}
 			
@@ -225,8 +284,45 @@ $(function()
 		
 		on_success: function(subheading)
 		{
-			$('article section').focus()
+			if ($.browser.mozilla)
+				content.focus()
+				
 			editor.move_caret_to(subheading)
+		}
+	}
+	
+	Tools.Picture =
+	{
+		selector: '.picture',
+		
+		apply: function()
+		{
+			if (editor.has_selection())
+				return info('Не нужно ничего выделять')
+			
+			var picture = $('<img/>')
+			picture.addClass('picture')
+			picture.css
+			({
+				'background-image': "url('/картинки/temporary/картинка с личной карточки.jpg')",
+				width: '120px',
+			    height: '120px'
+			})
+			
+			editor.insert(mark(picture))
+			return unmark()
+		},
+		
+		on_error: function()
+		{
+		},
+		
+		on_success: function(picture)
+		{
+			if ($.browser.mozilla)
+				content.focus()
+				
+			editor.move_caret_to_the_end_of(picture)
 		}
 	}
 	
@@ -243,21 +339,4 @@ $(function()
 				tool.on_error()
 		})
 	})
-	
-	/*
-	tools.find('.paragraph').bind('click', function(event)
-	{
-		event.preventDefault()
-		
-		if (editor.has_selection())
-		{
-			info('Не нужно ничего выделять')
-			return
-			//editor.wrap($('<p/>'))
-		}
-		
-		editor.move_caret_to_container_end('p')
-		editor.insert($('<p/>'))
-	})
-	*/
 })

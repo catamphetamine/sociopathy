@@ -5,7 +5,7 @@
 #article_editor_tools_container
 {
 	position: relative;
-	height: 60px;
+	height: 50px;
 	
 	margin-top: 30px;
 	
@@ -28,8 +28,8 @@
 	background-color: #3f3f3f;
 	color: #efefef;
 	
-	padding-top: 8px;
-	padding-bottom: 10px;
+	padding-top: 1px;
+	padding-bottom: 7px;
 
 	padding-left: 10px;
 	padding-right: 10px;
@@ -57,11 +57,21 @@
 			
 			margin-left: 15px;
 			margin-right: 15px;
-
 	
-			&:first-child
+			font-size: 26px;
+				
+			-webkit-transition: all 200ms ease-in-out;
+			-moz-transition: all 200ms ease-in-out;
+			
+			@hover_color: #8d0031;
+			
+			&:hover
 			{
-				border-left:0;
+				/*
+				color: @hover_color !important;
+				border-color: @hover_color !important;
+				*/
+				text-shadow: 0px 0px 20px @hover_color;
 			}
 			
 			cursor: pointer;
@@ -74,7 +84,6 @@
 			&.subheading
 			{
 				font-family: @headings_font;
-				font-size: 26px;
 				border-bottom-style: solid;
 				border-bottom-width: 1px;
 				border-bottom-color: white;
@@ -130,6 +139,11 @@
 		h1:focus, section:focus
 		{
 			outline: 0px solid transparent;
+		}
+		
+		.picture
+		{
+			.beautiful_shadow(0px, 4px, 20px, 8px, 12px, 8px, 0px, 0.1);
 		}
 		
 		p
