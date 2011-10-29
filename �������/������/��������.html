@@ -2,7 +2,7 @@
 	{{each сообщения}}
 		<li>
 			<div class="author no_word_carrying">
-				<a href="/люди/${отправитель}">${отправитель}</a>
+				<a href="/люди/${отправитель['адресное имя']}">${отправитель.имя}</a>
 				<div class="picture"></div>
 			</div>
 			<div class="messages">

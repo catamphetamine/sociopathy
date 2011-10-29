@@ -43,7 +43,7 @@ $(function()
 		// при нажатии Ввода на основном заголовке - перейти к первому абзацу
 		$('article h1').bind('keypress', function(event)
 		{
-			if (режим !== 'правка')
+			if (Pежим.текущий !== 'правка')
 				return
 				
 			switch (event.which)
@@ -69,7 +69,7 @@ $(function()
 				
 		editor.content.live('keypress', function(event)
 		{
-			if (режим !== 'правка')
+			if (Pежим.текущий !== 'правка')
 				return
 				
 			switch (event.which)
@@ -116,7 +116,7 @@ $(function()
 		
 		editor.content.live('keypress', function(event)
 		{
-			if (режим !== 'правка')
+			if (Pежим.текущий !== 'правка')
 				return
 			
 			if (event.charCode)

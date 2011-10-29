@@ -1,0 +1,16 @@
+<link rel="stylesheet/less" href="/облик/личная карточка.css"/>
+
+<script>
+	var пользователь_сети = {{html данные_пользователя}}
+</script>
+
+<section id="content">
+	<div id="id_card_block" type="conditional">
+		<div type="ok">
+			<div id="id_card"></div>
+		</div>
+		
+		<div type="loading">Загружаем личную карточку</div>
+		<div type="error">Не удалось загрузить личную карточку</div>
+	</div>	
+</section>

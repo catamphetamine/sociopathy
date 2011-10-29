@@ -62,7 +62,7 @@ html *::selection, html *::-moz-selection, html *::-webkit-selection
 
 #content
 {
-	min-height: 100%;
+	/* min-height: 100%; */
 	z-index: 100;
 }
 
