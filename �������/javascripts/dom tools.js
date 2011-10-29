@@ -124,7 +124,7 @@ var Dom_tools =
 		node_chain[0].innerHTML = Dom_tools.get_inner_html_with_injection(injected_html, node_chain)
 	},
 	
-	get_html_before_and_after: function(node)
+	html_before_and_after: function(node)
 	{
 		var parent = node.parentNode
 		var child = node
@@ -167,11 +167,8 @@ var Dom_tools =
 		var parent = node_chain[chain_index]
 		var child = node_chain[chain_index + 1]
 	
-		var html = this.get_html_before_and_after(child)
+		var html = this.html_before_and_after(child)
 	
-//		if (chain_index === 0)
-//			boundary_html = { opening: '', closing: '' }
-
 		var boundary_html = Dom_tools.boundary_html(child)
 			
 		return html.before +
@@ -179,5 +176,38 @@ var Dom_tools =
 			Dom_tools.get_inner_html_with_injection(injected_html, node_chain, chain_index + 1) +
 			boundary_html.closing +
 			html.after
+	},
+	
+	get_node_backtrack: function(node, till)
+	{
+		if (node.parentNode === till)
+			return [this.get_child_index(node)]
+	
+		var backtrack = this.get_node_backtrack(node.parentNode, till)
+		backtrack.push(this.get_child_index(node))
+	
+		return backtrack
+	},
+	
+	get_node_by_backtrack: function(backtrack, start)
+	{
+		if (backtrack.is_empty())
+			return start
+			
+		return this.get_node_by_backtrack(backtrack, start.childNodes[backtrack.shift()])
+	},
+	
+	get_child_index: function(child)
+	{
+		var parent = child.parentNode
+		
+		var index = 0
+		while (index < parent.childNodes.length)
+		{
+			if (parent.childNodes[index] === child)
+				return index
+				
+			index++
+		}
 	}
 }

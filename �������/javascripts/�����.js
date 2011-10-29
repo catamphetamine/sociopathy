@@ -459,3 +459,13 @@ String.prototype.count = function(what)
 	
 	return count
 }
+
+function now()
+{
+	return new Date()
+}
+
+Array.prototype.is_empty = function()
+{
+	return this.length === 0
+}

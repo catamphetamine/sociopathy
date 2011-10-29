@@ -63,15 +63,24 @@
 			-webkit-transition: all 200ms ease-in-out;
 			-moz-transition: all 200ms ease-in-out;
 			
-			@hover_color: #8d0031;
+			@hover_glow_color: #8d0031;
+			@hover_text_color: #fff2f7;
+			
+			@active_glow_color: #cb0026;
+			@active_text_color: #ffe3e8;
 			
 			&:hover
 			{
-				/*
-				color: @hover_color !important;
-				border-color: @hover_color !important;
-				*/
-				text-shadow: 0px 0px 20px @hover_color;
+				color: @hover_text_color !important;
+				border-color: @hover_text_color !important;
+				text-shadow: 0px 0px 20px @hover_glow_color;
+			}
+			
+			&:active
+			{
+				color: @active_text_color !important;
+				border-color: @active_text_color !important;
+				text-shadow: 0px 0px 20px @active_glow_color;
 			}
 			
 			cursor: pointer;
@@ -104,6 +113,36 @@
 			
 			&.picture
 			{
+			}
+			
+			&.undo > span, &.redo > span
+			{
+				position: relative;
+				margin-top: -10px;
+				top: 9px;
+			
+				width: 36px;
+				height: 36px;				
+			}
+
+			&.undo > span
+			{
+				background-image: url('/картинки/на страницах/заметка/undo.png');
+			}
+			
+			&.redo > span
+			{
+				background-image: url('/картинки/на страницах/заметка/redo.png');
+			}
+			
+			&.undo
+			{
+				margin-right: 0;
+			}
+			
+			&.redo
+			{
+				margin-left: 0;
 			}
 		}
 	}

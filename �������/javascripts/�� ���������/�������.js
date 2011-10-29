@@ -1,40 +1,15 @@
 $(function()
 {
-	var editor = new Editor()
 	var tools = $('#article_editor_tools')
-		
-	var content = get_content()
+	tools.disableTextSelect()
+	
+	var editor = new Editor($('#content > article > section'))
 	
 	var tags_with_prohibited_line_break = ['a', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']
 
 	initialize_tools()
 	initialize_editor()
 	initialize_actions()
-	
-	function get_content()
-	{
-		return $('#content > article > section')
-	}
-
-	function mark(element)
-	{
-		if (content.find('[mark=temporary]').length > 0)
-			throw 'Some element is already marked'
-			
-		element.attr('mark', 'temporary')
-		return element
-	}
-	
-	function unmark()
-	{
-		var element = content.find('[mark=temporary]')
-		
-		if (element.length > 1)
-			throw 'More than one element was marked'
-			
-		element.removeAttr('mark')
-		return element
-	}
 	
 	function initialize_tools()
 	{
@@ -55,8 +30,6 @@ $(function()
 		прокрутчик.watch(tools_wrapper, 0)
 		
 		// toolbar
-		
-		//tools.find('')
 	}
 	
 	function initialize_editor()
@@ -77,7 +50,7 @@ $(function()
 			{
 				case Клавиши.Enter:
 					event.preventDefault()
-					editor.move_caret_to(content.find('p:first'))
+					editor.move_caret_to(editor.content.find('p:first'))
 					break
 			}
 		})
@@ -93,20 +66,8 @@ $(function()
 			else
 				return cut_off_whitespaces(text)
 		}
-		
-		function reload_content()
-		{
-			var html = content.outer_html()
-			
-			var parent = content.parent()
-			content.remove()
-			content = $(html).appendTo(parent)
-			
-			if ($.browser.mozilla)
-				content.focus()
-		}
-		
-		content.bind('keypress', function(event)
+				
+		editor.content.live('keypress', function(event)
 		{
 			if (режим !== 'правка')
 				return
@@ -131,14 +92,13 @@ $(function()
 						var next_paragraph = container.next('p')
 						if (next_paragraph.length === 0)
 						{
-							next_paragraph = $('<p mark="temporary"/>')
-							//next_paragraph.text('123')
+							next_paragraph = $('<p/>')
+							editor.mark(next_paragraph)
 							container.after(next_paragraph)
 							
-							reload_content()
+							editor.reload_content()
 							
-							next_paragraph = content.find('p[mark=temporary]')
-							next_paragraph.removeAttr('mark')
+							next_paragraph = editor.unmark()
 						}
 							
 						editor.move_caret_to(next_paragraph)
@@ -154,11 +114,22 @@ $(function()
 			}
 		})
 		
-		content.bind('keypress', function(event)
+		editor.content.live('keypress', function(event)
 		{
 			if (режим !== 'правка')
 				return
-				
+			
+			if (event.charCode)
+			{
+				if (event.altKey || event.ctrlKey)
+					return
+			
+				event.preventDefault()
+				//alert(String.fromCharCode(event.charCode))
+				editor.insert(String.fromCharCode(event.charCode))
+				return
+			}
+			
 			switch (event.which)
 			{
 				case Клавиши.Enter:
@@ -167,12 +138,9 @@ $(function()
 					if (!editor.get_container().is('p'))
 						return
 						
-					editor.insert_html('</p><p mark="temporary">')
+					editor.insert_html('</p><p ' + editor.get_marker_html() + '>')
 					
-					reload_content()
-					
-					var next_paragraph = content.find('p[mark=temporary]')
-					next_paragraph.removeAttr('mark')
+					var next_paragraph = editor.unmark()
 					editor.move_caret_to(next_paragraph)
 					
 					/*
@@ -184,7 +152,7 @@ $(function()
 					}
 					*/
 						
-					content.find('p').each(function()
+					editor.content.find('p').each(function()
 					{
 						paragraph = $(this)
 						
@@ -203,7 +171,7 @@ $(function()
 		{
 			show_tools()
 				
-			editor.move_caret_to(content.find('p:first'))
+			editor.caret.move_to(editor.content.find('p:first'))
 		})
 	}
 	
@@ -236,7 +204,7 @@ $(function()
 	
 	function initialize_actions()
 	{
-		$('#edit_mode_actions').appendTo($('body')).move_out_downwards()
+		$('#edit_mode_actions').appendTo($('body')).move_out_downwards().disableTextSelect()
 		
 		cancel_button = activate_button('#edit_mode_actions .cancel', { 'prevent double submission': true })
 		.does(function() { info('cancel') })
@@ -249,45 +217,42 @@ $(function()
 	
 	var Tools = {}
 	
+	Tools.Error = function(message)
+	{
+		this.message = message
+	}
+	
 	Tools.Subheading =
 	{
 		selector: '.subheading',
 		
 		apply: function()
 		{
-			if (editor.has_selection())
-				return info('Не нужно ничего выделять')
+			if (editor.selection.exists())
+				throw new Tools.Error('Не нужно ничего выделять')
 			
-			if (!editor.has_container('p'))
-				return info('Подзаголовок можно помещать только в абзаце')
+			if (!editor.caret.has_container('p'))
+				throw new Tools.Error('Подзаголовок можно помещать только в абзаце')
 			
 			var caret
-			if (editor.is_caret_in_the_beginning_of_container('p'))
-				caret = editor.move_caret_to_container_start('p')
-			else if (editor.is_caret_in_the_end_of_container('p'))
-				caret = editor.move_caret_to_container_end('p')
+			if (editor.caret.is_in_the_beginning_of_container('p'))
+				caret = editor.caret.move_to_container_start('p')
+			else if (editor.caret.is_in_the_end_of_container('p'))
+				caret = editor.caret.move_to_container_end('p')
 			else
 			{
-				info('Подзаголовок можно поместить только в начале или в конце абзаца')
+				throw new Tools.Error('Подзаголовок можно поместить только в начале или в конце абзаца')
 				return
 			}
 			
 			var subheading = $('<h2/>')
-			editor.insert(subheading, caret)
-			return subheading
-		},
-		
-		on_error: function()
-		{
-			$('article section').focus()
+			//editor.insert(subheading, caret)
+			return editor.insert(subheading)
 		},
 		
 		on_success: function(subheading)
 		{
-			if ($.browser.mozilla)
-				content.focus()
-				
-			editor.move_caret_to(subheading)
+			editor.caret.move_to(subheading)
 		}
 	}
 	
@@ -297,8 +262,8 @@ $(function()
 		
 		apply: function()
 		{
-			if (editor.has_selection())
-				return info('Не нужно ничего выделять')
+			if (editor.selection.exists())
+				throw new Tools.Error('Не нужно ничего выделять')
 			
 			var picture = $('<img/>')
 			picture.addClass('picture')
@@ -309,34 +274,99 @@ $(function()
 			    height: '120px'
 			})
 			
-			editor.insert(mark(picture))
-			return unmark()
-		},
-		
-		on_error: function()
-		{
+			return editor.insert(picture)
 		},
 		
 		on_success: function(picture)
 		{
-			if ($.browser.mozilla)
-				content.focus()
-				
-			editor.move_caret_to_the_end_of(picture)
+			editor.caret.move_to_the_end_of(picture)
+		}
+	}
+	
+	Tools.Undo =
+	{
+		button: new image_button(tools.find('.undo span')),
+		
+		apply: function()
+		{
+			if (editor.selection.exists())
+				throw new Tools.Error('Не нужно ничего выделять')
+			
+			if (!editor.time_machine.undo())
+				info('Это самая ранняя версия заметки')
+		},
+		
+		on_success: function()
+		{
+		}
+	}
+	
+	Tools.Redo =
+	{
+		button: new image_button(tools.find('.redo span')),
+		
+		apply: function()
+		{
+			if (editor.selection.exists())
+				throw new Tools.Error('Не нужно ничего выделять')
+			
+			if (!editor.time_machine.redo())
+				info('Это самая поздняя версия заметки')
+		},
+		
+		on_success: function()
+		{
 		}
 	}
 	
 	Object.each(Tools, function(tool, key)
 	{
-		tools.find(tool.selector).bind('click', function(event)
+		var on_success = tool.on_success || $.noop
+		tool.on_success = function(result)
 		{
-			event.preventDefault()
+			if ($.browser.mozilla)
+				editor.content.focus()
+				
+			on_success(result)
+		}
+		
+		if (!tool.on_error)
+		{
+			tool.on_error = function(error)
+			{
+				info(error.message)
+				
+				//if ($.browser.mozilla)
+					//editor.content.focus()
+			}
+		}
 			
-			var result = tool.apply()
-			if (result)
-				tool.on_success(result)
-			else
-				tool.on_error()
-		})
+		var action = function()
+		{
+			try
+			{
+				tool.on_success(tool.apply())
+			}
+			catch (error)
+			{
+				if (error instanceof Tools.Error)
+					tool.on_error(error)
+				else
+					throw error
+			}
+		}
+				
+		if (tool.selector)
+		{
+			tools.find(tool.selector).bind('click', function(event)
+			{
+				event.preventDefault()
+				action()
+			})
+		}
+		else if (tool.button)
+		{
+			tool.button.does(action)
+		}
 	})
 })

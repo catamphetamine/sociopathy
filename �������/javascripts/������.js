@@ -8,7 +8,6 @@ var переход_в_режим
 (function()
 {
 	var режимы = []
-	var editor = new Editor()
 	
 	$(function()
 	{
@@ -64,7 +63,7 @@ var переход_в_режим
 		if (режим === 'правка')
 		{
 			if ($.browser.mozilla)
-				editor.deselect()
+				Editor.deselect()
 	
 			$('[editable=true]').removeAttr('contenteditable')
 		}
