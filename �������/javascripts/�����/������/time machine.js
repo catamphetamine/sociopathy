@@ -95,6 +95,7 @@ Editor.Time_machine = new Class
 		var caret = editor.caret.get()
 		if (caret)
 		{
+		//alert(editor.caret.native_container())
 			snapshot.caret =
 			{
 				offset: editor.caret.offset(),

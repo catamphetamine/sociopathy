@@ -293,10 +293,10 @@ var dialog_window = new Class
 	position: function()
 	{
 		this.padding.left = parseInt((get_viewport_width() - this.$element.width()) / 2)
-		this.padding.right = get_viewport_width() - this.$element.width() - this.padding.left
+		//this.padding.right = get_viewport_width() - this.$element.width() - this.padding.left
 		
 		this.padding.top = parseInt((get_viewport_height() - this.$element.height()) / 2)
-		this.padding.bottom = get_viewport_height() - this.$element.height() - this.padding.top
+		//this.padding.bottom = get_viewport_height() - this.$element.height() - this.padding.top
 		
 		/*
 		this.$element.css
@@ -313,8 +313,8 @@ var dialog_window = new Class
 		
 		this.$element.css
 		({
-			left: this.padding.left,
-			top: this.padding.top,
+			left: this.padding.left + 'px',
+			top: this.padding.top + 'px',
 		})
 	},
 	

@@ -71,9 +71,9 @@ var Message =
 			this.check()
 		},
 		
-		remove: function()
+		remove: function($element)
 		{
-			this.messages.shift()
+			this.messages.erase($element)
 			this.check()
 		},
 		
@@ -91,8 +91,13 @@ var Message =
 	
 		vanish: function($element)
 		{
+			if ($element.css('display') === 'none')
+			{
+				this.remove($element)
+				return
+			}
+				
 			var self = this
-			
 			animator.fade_out($element, 
 			{
 				duration: Message.disappearance_duration, 
@@ -100,7 +105,7 @@ var Message =
 				{
 					$element.hide()
 					Message.bubble_after($element)
-					self.remove()
+					self.remove($element)
 
 					//Message.state_machine.next()
 				} 
@@ -172,9 +177,15 @@ var Message =
 		var opacity = message.css('opacity')
 		message.css('opacity', 0)
 		
+		var close_button = $('<span></span>')
+		close_button.addClass('close')
+		close_button.prependTo(message)
+		
 		message_container.append(message).appendTo('body')
 		message_container.css('top', top)
-		
+
+		new image_button(close_button).does(function() { Message.vanisher.schedule(message_container) })
+	
 		animator.fade_in(message, 
 		{ 
 			duration: this.appearance_duration, 

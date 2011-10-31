@@ -22,8 +22,23 @@
 	.rounded_corners(10px);
 	
 	cursor: default;
-}
 
+	.close
+	{
+		position: relative;
+		float: right;
+
+		left: 10px;
+		top: 4px;
+		
+		margin-left: 4px;
+			
+		width: 30px;
+		height: 30px;
+		
+		background-image: url('/картинки/уведомления/закрыть.png');	
+	}	
+}
 .message_container
 {
 	position: fixed;
@@ -52,6 +67,11 @@
 		border-color: #400500;
 		
 		.top_to_bottom_gradient(#a42e2e, #742b2b);
+		
+		.close
+		{
+			background-image: url('/картинки/уведомления/закрыть ошибку.png');	
+		}
 	}
 
 	.warning
