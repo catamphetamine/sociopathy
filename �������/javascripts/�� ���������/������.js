@@ -4,6 +4,7 @@
 
 var enter_window
 
+var поле_имени
 var поле_пароля
 var кнопка_отмены
 var кнопка_входа
@@ -17,7 +18,8 @@ function initialize_enter_window()
 		'on open': function() { $('#enter_window input:first').focus() }
 	})
 	
-	поле_пароля = enter_window.$element.find('input').eq(0)
+	поле_имени = enter_window.$element.find('input').eq(0)
+	поле_пароля = enter_window.$element.find('input').eq(1)
 	
 	enter_window.$element.keydown(function(event) 
 	{
@@ -31,6 +33,7 @@ function initialize_enter_window()
 	
 	enter_window.register_controls
 	(
+		поле_имени,
 		поле_пароля,
 		кнопка_отмены,
 		кнопка_входа
@@ -44,7 +47,7 @@ function initialize_enter_window_buttons()
 	.does(function() { enter_window.close() })
 	
 	кнопка_входа = activate_button('#enter_window .buttons .enter', { 'prevent double submission': true })
-	.does(function() { войти({ пароль: поле_пароля.val() }) }).submits(new Form(enter_window.$element.find('form').eq(0)))
+	.does(function() { войти({ имя: поле_имени.val(), пароль: поле_пароля.val() }) }).submits(new Form(enter_window.$element.find('form').eq(0)))
 }
 
 function activate_button(selector, options)
@@ -119,7 +122,6 @@ function войти(data)
 			enter_window.close()
 			
 			window.location.reload()
-			//info('Ваше имя: ' + данные.пользователь.имя) 
 		} 
 	})
 }
@@ -145,6 +147,12 @@ function выйти()
 
 Validation.вход =
 {
+	имя: function(имя)
+	{
+		if (имя.length == 0)
+			throw new custom_error('Введите ваше имя')
+	},
+	
 	пароль: function(пароль)
 	{
 		if (пароль.length == 0)

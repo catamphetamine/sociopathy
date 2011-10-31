@@ -1,6 +1,7 @@
 express = require 'express'
 адрес = require 'url'
 io = require 'socket.io'
+пользовательское = require './user_tools'
 
 получатель_настроек = (ввод, вывод, следующий) ->
 	настройки = адрес.parse(ввод.url, true).query
@@ -15,17 +16,37 @@ io = require 'socket.io'
 	ввод.настройки = настройки
 	следующий()
 	
+remember_me = (ввод, вывод, следующий) ->
+	if ввод.session.пользователь?
+		return следующий()
+		
+	remember_me = ввод.cookies['remember me']
+	if not remember_me?
+		return следующий()
+	
+	номер_пользователя = ввод.cookies.user
+	if not номер_пользователя?
+		return следующий()
+		
+	пользовательское.проверить номер_пользователя, remember_me, (ошибка, пользователь) ->
+		if ошибка?
+			пользовательское.выйти ввод, вывод
+		else
+			пользовательское.войти пользователь, ввод, вывод
+		следующий()
+			
 module.exports = (приложение) ->
 	if not приложение?
 		приложение = express.createServer()
 		global.application = приложение
 
 		приложение.configure ->
-			приложение.use получатель_настроек
 			приложение.use express.bodyParser()
 			приложение.use express.methodOverride()
 			приложение.use express.cookieParser()
 			приложение.use express.session secret: "какой-то ключ"
+			приложение.use получатель_настроек
+			приложение.use remember_me
 			приложение.use приложение.router
 	
 		приложение.configure 'development', ->

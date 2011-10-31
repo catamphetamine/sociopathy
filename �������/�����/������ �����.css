@@ -7,13 +7,13 @@
 		margin-top: 10px;
 	}
 
-	.password
+	.main_content
 	{
-		height: 170px;
+		height: 290px;
 		
 		padding-top: 30px;
-		padding-left: 30px;
-		padding-right: 30px;
+		padding-left: 50px;
+		padding-right: 50px;
 		
 		.icon
 		{
@@ -25,7 +25,8 @@
 			background-image: url('/картинки/на страницах/welcome/dialog/join/ключи.png');
 			background-repeat: no-repeat;
 			
-			padding-right: 20px;
+			padding-right: 40px;
+			margin-top: 20px;
 		}
 		
 		form
@@ -34,6 +35,12 @@
 			vertical-align: top;
 		
 			padding-top: 5px;
+			
+			label[for="пароль"]
+			{
+				display: block;
+				margin-top: 60px;
+			}
 		}
 	}
 }

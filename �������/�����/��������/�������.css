@@ -12,3 +12,13 @@
 		margin-top: 250px;
 	}
 }
+
+#content
+{
+	> .error
+	{
+		text-align: center;
+		margin-bottom: 50px;
+		margin-top: 250px;
+	}
+}

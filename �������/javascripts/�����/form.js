@@ -3,22 +3,34 @@ var Validation = {}
 function Form(element)
 {
 	this.element = element
+	this.inputs = []
 	
 	this.validate = function()
 	{
-		if (this.input)
-			this.input.validate()
+		this.inputs.forEach(function(input)
+		{
+			input.validate()
+		})
 	}
 	
 	this.reset = function()
 	{
-		if (this.input)
-			this.input.reset()
+		this.inputs.forEach(function(input)
+		{
+			input.reset()
+		})
 	}
 	
-	var input = element.find('input').eq(0)
-	if (input.attr('validation'))
-		this.input = new (function(element, form)
+	var form = this
+	
+	element.find('input').each(function()
+	{
+		var input = $(this)
+		
+		if (!input.attr('validation'))
+			return
+			
+		form.inputs.push(new (function(element, form)
 		{
 			this.element = element
 		
@@ -97,5 +109,6 @@ function Form(element)
 				}
 			}
 		})
-		(input, this)
+		(input, form))
+	})
 }

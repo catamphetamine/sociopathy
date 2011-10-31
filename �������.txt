@@ -233,8 +233,6 @@ http://chart.apis.google.com/chart?cht=tx&chl=\displaystyle\int_{-\infty}^{\inft
 
 //очищать значения в полях ввода от подставляемых
 
-автологин (remember me)
-
 undo и redo на ctrl + z и ctrl + shift + z
 can_undo, can_redo: disabled и enabled
 
@@ -245,6 +243,6 @@ ctrl или alt - не символ
 при redo картинки курсор глючит
 
 менять личные данные может только сам пользователь (на сервере)
-
+// при смене пароля - менять и remember me
 
 
