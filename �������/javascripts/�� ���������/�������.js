@@ -66,7 +66,13 @@ $(function()
 			else
 				return cut_off_whitespaces(text)
 		}
-				
+		
+		editor.content.live('contextmenu',function(event)
+		{
+			if (Режим.правка())
+				event.preventDefault()
+		})
+			  	
 		editor.content.live('keypress', function(event)
 		{
 			if (!Режим.правка())
@@ -120,12 +126,33 @@ $(function()
 				return
 			
 			if (event.charCode)
-			{
+			{	
+				if (Клавиши.is('Ctrl', 'z', event))
+				{
+					Tools.Undo.apply()
+					event.preventDefault()
+				}
+				
+				if (Клавиши.is('Ctrl', 'Shift', 'z', event) || Клавиши.is('Ctrl', 'y', event))
+				{
+					Tools.Redo.apply()
+					event.preventDefault()
+				}
+				
+				if (Клавиши.is('Ctrl', 'x', event))
+				{
+					event.preventDefault()
+				}
+				
+				if (Клавиши.is('Ctrl', 'v', event))
+				{
+					event.preventDefault()
+				}
+					
 				if (event.altKey || event.ctrlKey)
 					return
 			
 				event.preventDefault()
-				//alert(String.fromCharCode(event.charCode))
 				editor.insert(String.fromCharCode(event.charCode))
 				return
 			}

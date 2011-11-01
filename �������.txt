@@ -237,8 +237,6 @@ undo и redo на ctrl + z и ctrl + shift + z
 can_undo, can_redo: disabled и enabled
 
 undo и redo на заголовке
-ctrl или alt - не символ
-убрать меню (правая кнопка), только в правке
 
 при redo картинки курсор глючит
 
