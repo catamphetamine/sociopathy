@@ -2,6 +2,12 @@ var Dom_tools =
 {
 	is_first_element: function(child, parent)
 	{
+		if (child instanceof jQuery)
+			child = child[0]
+			
+		if (parent instanceof jQuery)
+			parent = parent[0]
+	
 		if (child === parent)
 			return true
 	
@@ -29,8 +35,25 @@ var Dom_tools =
 		node.parentNode.removeChild(node)
 	},
 	
+	down_to_text_node: function(node)
+	{
+		if (this.is_text_node(node))
+			return node
+		
+		if (!node.firstChild)
+			throw 'No text node found'
+			
+		return this.down_to_text_node(node.firstChild)
+	},
+	
 	is_last_element: function(child, parent)
 	{
+		if (child instanceof jQuery)
+			child = child[0]
+			
+		if (parent instanceof jQuery)
+			parent = parent[0]
+	
 		if (child === parent)
 			return true
 			
@@ -209,5 +232,10 @@ var Dom_tools =
 				
 			index++
 		}
+	},
+	
+	next: function(node)
+	{
+		return node.nextSibling
 	}
 }

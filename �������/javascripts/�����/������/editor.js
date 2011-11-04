@@ -3,13 +3,22 @@
  */
 var Editor = new Class
 ({
-	initialize: function(element)
+	initialize: function(container, content_selector)
 	{
-		this.content = element
+		this.container = container
+		this.content_selector = content_selector
+		
+		this.content = container.find(content_selector)
 		
 		this.caret = new Editor.Caret(this)
 		this.selection = new Editor.Selection(this)
 		this.time_machine = new Editor.Time_machine(this)
+	},
+	
+	bind: function(event, handler)
+	{
+		//this.container.find(this.content_selector).live(event, handler) //.bind(this))
+		this.container.on(event, this.content_selector, handler) //.bind(this))
 	},
 	
 	reload_content: function()
@@ -60,12 +69,7 @@ var Editor = new Class
 	content_changed: function(options)
 	{
 		this.content_changed_on = now().getTime()
-		
-		options = options || {}
-		if (options.undo || options.redo)
-			return
-		else
-			this.time_machine.redo_snapshots.empty()
+		this.content.trigger('content_changed.editor', options || {})		
 	},
 	
 	insert: function(what)
@@ -105,12 +109,15 @@ var Editor = new Class
 	
 	insert_html: function(html)
 	{
-		var container = this.caret.native_container()
+		var container = this.caret.native_textual_container()
 		var text = this.caret.text_before_and_after()
 		var parent = container.parentNode
 			
 		var node_chain = [parent]
-		var how_much_parent_tags_to_close = html.count('</')	
+		var how_much_parent_tags_to_close = 0
+		if (html.starts_with('</'))
+			how_much_parent_tags_to_close = html.count('</')
+		
 		while (how_much_parent_tags_to_close > 0)
 		{
 			parent = parent.parentNode
@@ -121,7 +128,7 @@ var Editor = new Class
 		node_chain.reverse()
 		
 		var before_and_after = Dom_tools.html_before_and_after(container)
-		
+			
 		html = before_and_after.before +
 			text.before +
 			html +

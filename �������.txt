@@ -233,14 +233,34 @@ http://chart.apis.google.com/chart?cht=tx&chl=\displaystyle\int_{-\infty}^{\inft
 
 //очищать значения в полях ввода от подставляемых
 
-undo и redo на ctrl + z и ctrl + shift + z
 can_undo, can_redo: disabled и enabled
 
 undo и redo на заголовке
 
 при redo картинки курсор глючит
 
+advanced tools: formula, subscript, superscript, code (+ languages)
+
 менять личные данные может только сам пользователь (на сервере)
 // при смене пароля - менять и remember me
 
+encodeURI для url-ов картинок
+и для формул тоже
 
+disable всё, когда blur
+
+loading_indicator не по центру
+
+position_after - переписать нормально
+
+каретка на картинках - особая (+ delete, свойства)
+передвижение каретки стрелками отлавливать и делать самому
+функцию get_next_caret_position, где position - особый (свой), и функцию place_caret_at_position
+
+сделать focus (onclick) на картинке.
+там будет меню - слева, по середине, справа
+и если что-то начать печатать, что это будет сразу после картинки (символ), или enter
+
+свойства tooltip="xxx" и tooltip_shown="true"
+когда keypress: если tooltip_shown, то content = ''
+когда blur - если content === '', to tooltip_shown (blur элемента, клик в другом месте или навигация стрелками (+ pgdown, pgup - запретить))

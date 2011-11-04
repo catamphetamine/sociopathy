@@ -16,7 +16,7 @@
 		<!--<script type="text/coffeescript" src="javascripts/coffee script/"></script>-->
 
 		<!-- jQuery -->
-		<script src="/javascripts/jquery/jquery-1.6.4.min.js"></script>
+		<script src="/javascripts/jquery/jquery-1.7.js"></script>
 		<script src="/javascripts/jquery/jquery.disable.text.select.js"></script>
 		<script src="/javascripts/jquery/jquery.tmpl.js"></script>
 		<script src="/javascripts/jquery/jquery.extension.js"></script>
@@ -68,7 +68,7 @@
 		<script src="/javascripts/снасти.js"></script> 
 		<script src="/javascripts/общее.js"></script>
 		<link rel="stylesheet/less" type="text/css" href="/облик/общее.css">
-
+		
 		<!-- писарь -->
 		<script src="/javascripts/облик/писарь/editor.js"></script>
 		<script src="/javascripts/облик/писарь/time machine.js"></script>
@@ -101,6 +101,10 @@
 		<script src="/javascripts/облик/уведомления.js"></script> 
 		<link rel="stylesheet/less" href="/облик/уведомления.css"/>
 
+		<script src="/javascripts/облик/правка заметок/правщик.js"></script>
+		<script src="/javascripts/облик/правка заметок/клавиши.js"></script>
+		<script src="/javascripts/облик/правка заметок/снасти.js"></script>
+		
 		<!-- panel -->
 		<script src="/javascripts/облик/навершие.js"></script> 
 		<link rel="stylesheet/less" href="/облик/навершие.css"/>
@@ -245,7 +249,7 @@
 				<div class="authenticated_user">
 					<div class="photo"></div>
 					<div class="info">
-						<a href="/люди/${пользователь.имя}" class="name">${пользователь.имя}</a>
+						<a href="/люди/${пользователь['адресное имя']}" class="name">${пользователь.имя}</a>
 						<a href="#" class="logout">Выйти</a>
 					</div>
 				</div>

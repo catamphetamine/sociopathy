@@ -19,7 +19,7 @@ var Scroller = new Class
 	{
 		this.elements.push(element)
 		element.data('top_offset_in_window', previous_top_offset_in_window)
-		this.check_for_events(element)
+		this.check_for_events(element, { initialization: true })
 	},
 	
 	unwatch: function(element)
@@ -40,8 +40,11 @@ var Scroller = new Class
 		this)
 	},
 
-	check_for_events: function(element)
+	check_for_events: function(element, options)
 	{
+		options = options || {}
+		var initialization = options.initialization
+	
 		var top_offset_in_window = element.offset().top - $(window).scrollTop()
 		
 		var previous_top_offset_in_window = element.data('top_offset_in_window')
@@ -51,13 +54,13 @@ var Scroller = new Class
 		var window_height = $(window).height()
 		
 		if (top_offset_in_window < 0 && previous_top_offset_in_window >= 0)
-			element.trigger('disappearing_upwards.scroller')
+			element.trigger('disappearing_upwards.scroller', initialization)
 		else if (previous_top_offset_in_window < 0 && top_offset_in_window >= 0
 					&& top_offset_in_window + element.height() <=  window_height)
-			element.trigger('fully_appeared_on_top.scroller')
+			element.trigger('fully_appeared_on_top.scroller', initialization)
 		else if (previous_top_offset_in_window > window_height
 					&& top_offset_in_window <=  window_height)
-			element.trigger('appearing_on_bottom.scroller')
+			element.trigger('appearing_on_bottom.scroller', initialization)
 	},
 	
 	scroll_to: function(element)

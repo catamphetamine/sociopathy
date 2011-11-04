@@ -22,12 +22,17 @@ Editor.Caret = new Class
 	container: function(filter)
 	{
 		var container = this.native_container()
-		return $(container).parents(filter).filter(':first')
+		return $(container).find_parent(filter)
 	},
 	
 	native_container: function()
 	{
 		return this.get().commonAncestorContainer
+	},
+	
+	native_textual_container: function()
+	{
+		return Dom_tools.down_to_text_node(this.native_container())
 	},
 	
 	move_to: function(element)
@@ -43,7 +48,7 @@ Editor.Caret = new Class
 		return range
 	},
 	
-	move_to_the_end_of: function(element)
+	position_after: function(element)
 	{		
 		if (element instanceof jQuery)
 			element = element[0]
@@ -131,19 +136,40 @@ Editor.Caret = new Class
 	position: function(container, offset)
 	{
 		var caret = this.get()
-		caret.setStart(container, offset)
-		this.editor.collapse(caret)
+		
+		if (Dom_tools.is_text_node(container))
+		{
+			caret.setStart(container, offset)
+			this.editor.collapse(caret)
+			return
+		}
+		
+		if (container.childNodes.length === 0)
+			throw 'illegal state'
+			
+		if (container.childNodes.length === 1)
+		{
+			caret.setStart(container, 0)
+			this.editor.collapse(caret)
+		}
+		else
+		{
+			this.position_after(container.childNodes[offset - 1])
+		}
 	},
 	
 	text_before_and_after: function()
 	{
-		var container = this.native_container()
+		var container = this.native_textual_container()
 		var offset = this.offset()
 		
 		if (!Dom_tools.is_text_node(container))
-			return 'Unpredicted scenario in function insert_html'
+			throw 'Unpredicted scenario in function insert_html'
 		
 		var text = container.nodeValue
+		
+		if (!text)
+			return { before: '', after: '' }
 		
 		var result =
 		{

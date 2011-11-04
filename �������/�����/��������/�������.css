@@ -69,6 +69,8 @@
 			@active_glow_color: #cb0026;
 			@active_text_color: #ffe3e8;
 			
+			cursor: pointer;
+			
 			&:hover
 			{
 				color: @hover_text_color !important;
@@ -83,7 +85,11 @@
 				text-shadow: 0px 0px 20px @active_glow_color;
 			}
 			
-			cursor: pointer;
+			&.disabled
+			{
+				cursor: default;
+				opacity: 0.5;
+			}
 			
 			&.heading
 			{
@@ -111,8 +117,41 @@
 				border-color: white;
 			}
 			
-			&.picture
+			&.citation
 			{
+				font-style: italic;
+			}
+			
+			&.citation:before
+			{
+				content: '«';
+			}
+			
+			&.citation:after
+			{
+				content: '»';
+			}
+			
+			&.list > span
+			{
+				position: relative;
+				margin-top: -12px;
+				top: 11px;
+				
+				background-image: url('/картинки/на страницах/заметка/список.png');
+				width: 40px;
+				height: 40px;
+			}
+			
+			&.picture > span
+			{
+				position: relative;
+				margin-top: -12px;
+				top: 11px;
+				
+				background-image: url('/картинки/на страницах/заметка/картинка.png');
+				width: 40px;
+				height: 40px;
 			}
 			
 			&.undo > span, &.redo > span
@@ -122,7 +161,10 @@
 				top: 9px;
 			
 				width: 36px;
-				height: 36px;				
+				height: 36px;
+				
+				-webkit-transition: all 200ms ease-in-out;
+				-moz-transition: all 200ms ease-in-out;
 			}
 
 			&.undo > span
@@ -130,6 +172,11 @@
 				background-image: url('/картинки/на страницах/заметка/undo.png');
 			}
 			
+			&.undo > span.disabled, &.redo > span.disabled
+			{
+				cursor: default !important;
+			}
+
 			&.redo > span
 			{
 				background-image: url('/картинки/на страницах/заметка/redo.png');
@@ -180,9 +227,48 @@
 			outline: 0px solid transparent;
 		}
 		
+		.citation
+		{
+			padding-left: 100px;
+			
+			padding-top: 49px;
+			padding-bottom: 58px;
+		
+			.text:before
+			{
+				content: '«';
+			}
+			
+			.text:after
+			{
+				content: '»';
+			}
+			
+			.author
+			{
+				margin-left: 100px;
+				text-align: right;
+				white-space: nowrap;
+				text-overflow: ellipsis;
+				
+				/* font-family: @headings_font; */
+				font-size: 26px;
+				line-height: 40px;
+			}
+		}
+		
 		.picture
 		{
-			.beautiful_shadow(0px, 4px, 20px, 8px, 12px, 8px, 0px, 0.1);
+			/* .beautiful_shadow(0px, 4px, 20px, 8px, 12px, 8px, 0px, 0.1); */
+			/*.beautiful_shadow(0px, 0px, 4px, 4px, 4px, 4px, 0px, 1, 0, 120, 255); */
+			
+				
+			&.cursor
+			{
+				border-width: 4px;
+				border-color: #0078ff;
+				border-style: solid;
+			}
 		}
 		
 		p
@@ -226,7 +312,7 @@
 		{
 			font-family: @headings_font;
 		}
-				
+			
 		.references
 		{
 			list-style: none;
@@ -241,6 +327,19 @@
 					
 					display: inline-block;
 				}
+			}
+		}
+		
+		h1[contenteditable="true"]
+		{
+			cursor: text;
+		}
+			
+		section[contenteditable="true"]
+		{
+			h2
+			{
+				cursor: text;
 			}
 		}
 	}

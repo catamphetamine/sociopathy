@@ -1,9 +1,9 @@
 var Клавиши =
 {
-    BACKSPACE: 8,
-    TAB: 9,
+    Backspace: 8,
+    Tab: 9,
     Enter: 13,
-	PAUSE: 19,
+	Pause: 19,
     Escape: 27,
 	Spacebar: 32,
     
@@ -12,12 +12,13 @@ var Клавиши =
     END: 35,
     HOME: 36,
     
-	LEFT: 37,
-    UP: 38,
-    RIGHT: 39,
-    DOWN: 40,
+	Left: 37,
+    Up: 38,
+    Right: 39,
+    Down: 40,
 	
-    HELP: 47,	
+    HELP: 47,
+	
 	Digit_0: 48,
 	Digit_1: 49,
 	Digit_2: 50,

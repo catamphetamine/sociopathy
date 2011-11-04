@@ -378,7 +378,11 @@ String.prototype.beautify = function()
 	//string = replace_quotes("'", string)
 	
 	string = string.replace_all(' - ', ' — ')
-	string = string.replace_all('...', '…')
+
+	string = string.replace(/[^\.]+...[^\.]+/g, '…')
+	string = string.replace(/^...[^\.]+/g, '…')
+	string = string.replace(/[^\.]+...$/g, '…')
+	string = string.replace(/^...$/g, '…')
 	
 	return string
 }
@@ -443,6 +447,10 @@ $(function()
 			element.click(function(event)
 			{
 				event.preventDefault()
+				
+				if (Режим.правка())
+					return
+				
 				add_anchor_to_url(element.text())
 				прокрутчик.scroll_to(element)
 			})
@@ -468,4 +476,24 @@ function now()
 Array.prototype.is_empty = function()
 {
 	return this.length === 0
+}
+
+String.prototype.starts_with = function(substring) 
+{
+	return this.indexOf(substring) === 0
+}
+
+String.prototype.ends_with = function(substring) 
+{
+	return this.lastIndexOf(substring) === this.length - substring.length
+}
+
+String.prototype.trim_trailing_comma = function()
+{
+	var text = this.trim()
+	
+	if (text.match(/[^\.]+\.$/))
+		text = text.substring(0, text.length - 1)
+		
+	return text
 }

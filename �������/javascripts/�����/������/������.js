@@ -69,6 +69,14 @@ var button = new Class
 		
 		force: false,
 		
+		is_being_pushed: function()
+		{
+			if (this.locker)
+				return true
+			else
+				return false
+		},
+		
 		lock: function()
 		{
 			this.locker = this.self.lock()
@@ -106,6 +114,12 @@ var button = new Class
 			// now the caller permits to unlock the button
 			this.may_unlock = true
 	
+			if (!this.locker)
+			{
+				this.unlock()
+				return
+			}
+
 			// if the button can now be unlocked (has finished the push animation) - unlock it
 			if (this.can_unlock)
 				this.unlock()
@@ -157,7 +171,7 @@ var button = new Class
 		this.$element.bind('mouseenter.' + this.namespace, function() 
 		{
 			this.is_rolled_over = true
-
+			
 			// if is locked - exit
 			if (this.is_locked())
 				return false	
@@ -171,8 +185,8 @@ var button = new Class
 			this.is_rolled_over = false
 			
 			// if is locked - exit
-			if (this.is_locked())
-				return false
+			//if (this.is_locked())
+			//	return false
 				
 			this.on_roll_out()
 		}.
@@ -200,6 +214,14 @@ var button = new Class
 			return true
 	},
 	
+	try_unlock: function()
+	{
+		if (this.pushing.is_being_pushed())
+			this.let_unlock({ force: true })
+		else
+			this.unlock({ force: true })
+	},
+	
 	let_unlock: function(options)
 	{
 		this.pushing.let_unlock(options)
@@ -216,28 +238,33 @@ var button = new Class
 	
 	lock: function()
 	{
-		var self = this
+		var button = this
 	
 		var lock = new (function()
 		{
-			this.unlock = function()
+			//this.time = new Date().getTime()
+			
+			this.unlock = (function()
 			{
-				self.locks.erase(this)
+				button.locks.erase(this)
 				
-				if (self.is_rolled_over)
-					self.on_roll_over()
-					//self.$element.trigger('mouseenter.' + self.namespace)
-			}
+				if (button.is_rolled_over)
+					button.on_roll_over()
+			})
+			.bind(this)
 		})()
 		
 		this.locks.push(lock)
+		
+		this.$element.trigger('mouseleave')
+		
 		return lock
 	},
 	
 	unlock: function(options)
 	{
 		this.pushing.unlock(options)
-		this.locks.each(function(lock) { lock.unlock() })
+		this.locks.clone().forEach(function(lock) { lock.unlock() })
 	},
 	
 	is_locked: function()
@@ -465,6 +492,20 @@ var button = new Class
 	{
 		this.form = form
 		return this
+	},
+	
+	disable: function(reason)
+	{
+		this.$element.addClass('disabled')
+		this.lock()
+		this.frames.idle.attr('title', reason)
+	},
+	
+	enable: function()
+	{
+		this.$element.removeClass('disabled')
+		this.try_unlock()
+		this.frames.idle.removeAttr('title')
 	}
 })
 

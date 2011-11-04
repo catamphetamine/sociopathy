@@ -190,3 +190,16 @@ $.fn.outer_html = function()
 {
 	return $('<div/>').append(this.eq(0).clone()).html()
 }
+
+$.fn.find_parent = function(filter)
+{
+	return this.parents(filter).filter(':first')
+}
+
+$.fn.search_upwards = function(filter)
+{
+	if (this.is(filter))
+		return this
+	
+	return this.find_parent(filter)
+}

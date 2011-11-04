@@ -16,6 +16,15 @@ Editor.Time_machine = new Class
 		this.editor = editor
 		
 		//this.snapshot()
+		
+		this.editor.content.bind('content_changed.editor', (function(event, options)
+		{
+			if (options.undo || options.redo)
+				return
+			
+			this.redo_snapshots.empty()
+		})
+		.bind(this))
 	},
 
 	undo: function()
@@ -95,7 +104,6 @@ Editor.Time_machine = new Class
 		var caret = editor.caret.get()
 		if (caret)
 		{
-		//alert(editor.caret.native_container())
 			snapshot.caret =
 			{
 				offset: editor.caret.offset(),
