@@ -66,7 +66,7 @@ var image_button = new Class
 			position = 'relative'
 		
 		var display = this.$element.css('display')
-		if (display !== 'block' && display !== 'inline-block')
+		if (display !== 'block' && display !== 'inline-block' && display !== 'none')
 			display = 'block';
 		
 		this.$element.css

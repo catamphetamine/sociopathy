@@ -10,19 +10,11 @@ var Dom_tools =
 	
 		if (child === parent)
 			return true
-	
-		do
-		{
-			var semichild = parent.firstChild
-
-			if (child === semichild)
-				return true
-				
-			parent = semichild
-		}
-		while (semichild)
-		
-		return false
+			
+		if (child !== child.parentNode.firstChild)
+			return false
+			
+		return this.is_first_element(child.parentNode, parent)
 	},
 	
 	is_text_node: function(node)

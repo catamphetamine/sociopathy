@@ -239,8 +239,6 @@ undo и redo на заголовке
 
 при redo картинки курсор глючит
 
-advanced tools: formula, subscript, superscript, code (+ languages)
-
 менять личные данные может только сам пользователь (на сервере)
 // при смене пароля - менять и remember me
 
@@ -264,3 +262,9 @@ position_after - переписать нормально
 свойства tooltip="xxx" и tooltip_shown="true"
 когда keypress: если tooltip_shown, то content = ''
 когда blur - если content === '', to tooltip_shown (blur элемента, клик в другом месте или навигация стрелками (+ pgdown, pgup - запретить))
+
+
+get selected text и replace selected with html
+
+
+enter можно чтобы было жать на границе текста и элемента с любой стороны, а не с одной

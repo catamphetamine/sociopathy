@@ -45,7 +45,32 @@ Article_editor.implement
 				editor.caret.move_to(subheading)
 			}
 		}
-		
+
+		Tools.Link =
+		{
+			selector: '.link',
+			
+			apply: function()
+			{
+				if (editor.selection.exists())
+					throw new Tools.Error('Не нужно ничего выделять')
+					// на самом деле - брать выделенное и переводить в ссылку
+				
+				var link = 'http://google.ru'
+				
+				var element = $('<a/>')
+				element.attr('href', correct_uri(link))
+				element.text('one two three')
+				
+				return editor.insert(element)
+			},
+			
+			on_success: function(link)
+			{
+				editor.caret.position_after(link)
+			}
+		}
+						
 		Tools.Citation =
 		{
 			selector: '.citation',
@@ -137,10 +162,6 @@ Article_editor.implement
 				
 				if (!editor.time_machine.undo())
 					info('Это самая ранняя версия заметки')
-			},
-			
-			on_success: function()
-			{
 			}
 		}
 		
@@ -155,12 +176,108 @@ Article_editor.implement
 				
 				if (!editor.time_machine.redo())
 					info('Это самая поздняя версия заметки')
-			},
-			
-			on_success: function()
-			{
 			}
 		}
+	
+		// additional tools
+		
+		Tools.Formula =
+		{
+			selector: '.formula',
+			
+			apply: function()
+			{
+				if (editor.selection.exists())
+					throw new Tools.Error('Не нужно ничего выделять')
+				
+				var formula = '\\[ f(x,y,z) = 3y^2 z \\left( 3 + \\frac{7x+5}{1 + y^2} \\right).\\]'
+				var picture = $('<img/>')
+				picture.attr('src', 'http://chart.apis.google.com/chart?cht=tx&chl=' + encodeURIComponent(formula))
+				
+				return editor.insert(picture)
+			},
+			
+			on_success: function(picture)
+			{
+				editor.caret.position_after(picture)
+			}
+		}
+		
+		Tools.Subscript =
+		{
+			selector: '.subscript',
+			
+			apply: function()
+			{
+				if (editor.selection.exists())
+					throw new Tools.Error('Не нужно ничего выделять')
+					// на самом деле - брать выделенное и переводить его в регистр
+				
+				var subscript = $('<sub/>')
+				subscript.text('y')
+				
+				return editor.insert(subscript)
+			},
+			
+			on_success: function(subscript)
+			{
+				editor.caret.position_after(subscript)
+			}
+		}
+		
+		Tools.Superscript =
+		{
+			selector: '.superscript',
+			
+			apply: function()
+			{
+				if (editor.selection.exists())
+					throw new Tools.Error('Не нужно ничего выделять')
+					// на самом деле - брать выделенное и переводить его в регистр
+				
+				var superscript = $('<sup/>')
+				superscript.text('y')
+				
+				return editor.insert(superscript)
+			},
+			
+			on_success: function(superscript)
+			{
+				editor.caret.position_after(superscript)
+			}
+		}
+		
+		Tools.Code =
+		{
+			selector: '.code',
+			
+			apply: function()
+			{
+				if (editor.selection.exists())
+					throw new Tools.Error('Не нужно ничего выделять')
+					// на самом деле - брать выделенное и переводить в код
+				
+				var code = 'var x = y(z)'
+				var tag
+				
+				if (code.is_multiline())
+					tag = 'pre'
+				else
+					tag = 'code'
+				
+				var element = $('<' + tag + '/>')
+				element.text(code)
+				
+				return editor.insert(element)
+			},
+			
+			on_success: function(code)
+			{
+				editor.caret.position_after(code)
+			}
+		}
+		
+		// helpers
 		
 		Object.each(Tools, function(tool, key)
 		{
@@ -231,4 +348,42 @@ Article_editor.implement
 		
 		this.Tools = Tools
 	}
+})
+
+$(function()
+{
+	var tools = $('#article_editor_tools')
+	var main_tools = tools.find('#main_tools')
+	var additional_tools = tools.find('#additional_tools')
+	
+	var main_tools_height = main_tools.height()
+
+	var show_all_tools = new image_button(tools.find('.more'), { 'auto unlock': false })
+	show_all_tools.does(function()
+	{
+		additional_tools.slide_in_from_top()
+		
+		show_all_tools.element.fadeOut(function()
+		{
+			hide_additional_tools.element.fadeIn(function()
+			{
+				hide_additional_tools.unlock()
+			})
+		})
+	})
+	
+	var hide_additional_tools = new image_button(tools.find('.less'), { 'auto unlock': false })
+	hide_additional_tools.lock()
+	hide_additional_tools.does(function()
+	{
+		additional_tools.slide_out_upwards()
+		
+		hide_additional_tools.element.fadeOut(function()
+		{
+			show_all_tools.element.fadeIn(function()
+			{
+				show_all_tools.unlock()
+			})
+		})
+	})
 })

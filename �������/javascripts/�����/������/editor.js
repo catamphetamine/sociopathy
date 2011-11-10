@@ -8,11 +8,16 @@ var Editor = new Class
 		this.container = container
 		this.content_selector = content_selector
 		
-		this.content = container.find(content_selector)
+		this.content = this.get_content()
 		
 		this.caret = new Editor.Caret(this)
 		this.selection = new Editor.Selection(this)
 		this.time_machine = new Editor.Time_machine(this)
+	},
+	
+	get_content: function()
+	{
+		return this.container.find(this.content_selector)
 	},
 	
 	bind: function(event, handler)
@@ -99,11 +104,14 @@ var Editor = new Class
 	
 	insert_text: function(inserted_text)
 	{
-		var caret_offset = this.caret.offset()
+		var caret = this.caret.get()
+		var caret_offset = this.caret.offset(caret)
 		
 		var text = this.caret.text_before_and_after()
-		this.caret.native_container().nodeValue = text.before + inserted_text + text.after
+		var container = this.caret.native_container()
+		container.nodeValue = text.before + inserted_text + text.after
 		
+		this.caret.move_to(container)
 		this.caret.offset(caret_offset + 1)
 	},
 	

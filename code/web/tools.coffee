@@ -25,3 +25,9 @@ Array.prototype.trim = () ->
 		if element?
 			array.push element
 	array
+	
+Object.prototype.where_am_i = () ->
+	try
+		this_variable_doesnt_exist['you are here'] += 0
+	catch error
+		console.log error.stack

@@ -13,6 +13,10 @@ class Цепь
 			switch вид
 				when 'web'
 					вывод = arguments[1]
+					if not вывод?
+						console.error 'no web output'
+						[].where_am_i()
+						throw 'no web output'
 					@обработчик_ошибок_по_умолчанию = (ошибка) ->
 						console.error ошибка
 						вывод.send ошибка: ошибка

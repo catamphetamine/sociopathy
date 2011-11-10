@@ -151,7 +151,8 @@ var button = new Class
 		this.pushing.self = this
 
 		// get the element
-		this.$element = get_element(selector_or_element)
+		this.element = get_element(selector_or_element)
+		this.$element = this.element
 		
 		// custom preparations
 		this.prepare()
@@ -207,7 +208,7 @@ var button = new Class
 		bind(this))
 	},
 
-	may_unlock: function()
+	is_auto_unlock: function()
 	{
 		// if auto unlock - unlock the button immediately
 		if (this.options['auto unlock'])
@@ -347,12 +348,10 @@ var button = new Class
 			this.on_roll_out()
 			
 			this.execute_action()
+			this.unpush()
 			
-			if (this.may_unlock())
-			{
+			if (this.is_auto_unlock())
 				this.let_unlock()
-				this.unpush()
-			}
 		}.
 		bind(this))
 	},

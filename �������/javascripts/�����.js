@@ -379,10 +379,11 @@ String.prototype.beautify = function()
 	
 	string = string.replace_all(' - ', ' — ')
 
-	string = string.replace(/[^\.]+...[^\.]+/g, '…')
-	string = string.replace(/^...[^\.]+/g, '…')
-	string = string.replace(/[^\.]+...$/g, '…')
-	string = string.replace(/^...$/g, '…')
+	// заменить три точки на троеточие
+	string = string.replace(/([^\.]+)\.\.\.([^\.]+)/g, '$1…$2')
+	string = string.replace(/^\.\.\.([^\.]+)/g, '…$1')
+	string = string.replace(/([^\.]+)\.\.\.$/g, '$1…')
+	string = string.replace(/^\.\.\.$/g, '…')
 	
 	return string
 }
@@ -496,4 +497,14 @@ String.prototype.trim_trailing_comma = function()
 		text = text.substring(0, text.length - 1)
 		
 	return text
+}
+
+String.prototype.is_multiline = function()
+{
+	return this.contains('\n')
+}
+
+String.prototype.contains = function(what)
+{
+	return this.indexOf(what) >= 0
 }

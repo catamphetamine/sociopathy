@@ -13,6 +13,19 @@ Editor.Caret = new Class
 		return this.editor.range()
 	},
 	
+	set: function(caret)
+	{
+		this.editor.apply_range(caret)
+		
+		/*
+		var range = this.editor.create_range()
+		range.setStart(caret.startContainer, caret.startOffset)
+		this.editor.collapse(range)
+		
+		this.editor.apply_range(range)
+		*/
+	},
+	
 	has_container: function(filter)
 	{
 		var container = this.container(filter)
@@ -87,10 +100,10 @@ Editor.Caret = new Class
 		
 		if (!caret.collapsed)
 			return false
-			
-		if (!Dom_tools.is_first_element(caret.startContainer, this.container(filter).get(0)))
+		
+		if (!Dom_tools.is_first_element(caret.startContainer, this.container(filter)))
 			return false
-			
+		
 		if (this.offset(caret) > 0)
 			return false
 			
@@ -122,8 +135,14 @@ Editor.Caret = new Class
 		{
 			var offset = caret
 			caret = this.get()
+			
+			if (!caret)
+				throw 'Caret is in invalid state'
+			
 			caret.setStart(caret.startContainer, offset)
 			this.editor.collapse(caret)
+			
+			this.editor.apply_range(caret)
 			return
 		}
 		

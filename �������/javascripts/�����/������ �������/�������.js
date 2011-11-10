@@ -38,10 +38,12 @@ Article_editor.implement
 			{
 				var container = editor.caret.container()
 				var containing_paragraph = container.search_upwards('p')
+				
 				if (Dom_tools.is_first_element(container, containing_paragraph))
 				{
 					var new_paragraph = $('<p/>')
-					container.prepend(new_paragraph)
+					container.before(new_paragraph)
+					new_paragraph.text(1)
 					editor.caret.move_to(new_paragraph)
 				}
 				
@@ -55,7 +57,8 @@ Article_editor.implement
 				if (Dom_tools.is_last_element(container, containing_paragraph))
 				{
 					var new_paragraph = $('<p/>')
-					container.append(new_paragraph)
+					container.after(new_paragraph)
+					new_paragraph.text(1)
 					editor.caret.move_to(new_paragraph)
 				}
 				
@@ -74,11 +77,11 @@ Article_editor.implement
 				return
 				
 			editor.insert_html('</p><p ' + editor.get_marker_html() + '>')
-			
+
 			var next_paragraph = editor.unmark()
 			editor.caret.move_to(next_paragraph)
 				
-			editor.content.find('p').each(function()
+			editor.get_content().find('p').each(function()
 			{
 				paragraph = $(this)
 				
@@ -124,13 +127,24 @@ Article_editor.implement
 			{
 				event.preventDefault()
 			}
+		})
+		.bind(this))
+	},
+		
+	capture_characters: function()
+	{
+		var editor = this.editor
+		
+		editor.bind('keypress', (function(event)
+		{
+			if (!event.charCode)
+				return
 				
 			if (event.altKey || event.ctrlKey)
 				return
 		
 			event.preventDefault()
 			editor.insert(String.fromCharCode(event.charCode))
-			return
 		})
 		.bind(this))
 	}
@@ -139,9 +153,11 @@ Article_editor.implement
 function cut_off_whitespaces(original_text)
 {
 	var text = original_text
-	text = text.replace(/^\w/g, '').replace(/\w$/g, '')
-	text = text.replace(/^&nbsp;/g, '').replace(/&nbsp;$/g, '')
 
+	text = text.replace(/^\s/g, '').replace(/\s$/g, '')
+	text = text.replace(/^\n/g, '').replace(/\n$/g, '')
+	text = text.replace(/^&nbsp;/g, '').replace(/&nbsp;$/g, '')
+	
 	if (text.length == original_text.length)
 		return text
 	else

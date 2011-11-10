@@ -1,5 +1,7 @@
-$(function()
+function initialize_page()
 {
+	Режим.подсказка('Вы можете внести свои правки в эту заметку. Для этого потребуется перейти в режим правки.')
+
 	var tools = $('#article_editor_tools')
 	tools.disableTextSelect()
 	
@@ -7,6 +9,7 @@ $(function()
 	
 	var article_editor = new Article_editor(editor)
 	
+	article_editor.capture_characters()
 	article_editor.remap_editing_hotkeys()
 	article_editor.insert_line_break_on_enter()
 	article_editor.disable_context_menu()
@@ -59,8 +62,8 @@ $(function()
 		
 		if ($.browser.mozilla)
 			editor.content.focus()
-					
-		editor.caret.move_to(editor.content.find('p:first'))
+		
+		editor.caret.move_to(editor.content.find('p:first').get(0).firstChild)
 	})
 	
 	function initialize_editor()
@@ -124,4 +127,4 @@ $(function()
 		done_button = activate_button('#edit_mode_actions .done', { 'prevent double submission': true })
 		.does(function() { info('save') })
 	}
-})
+}
