@@ -3,6 +3,7 @@
  */
 var Editor = new Class
 ({
+	/*
 	initialize: function(container, content_selector)
 	{
 		this.container = container
@@ -19,13 +20,28 @@ var Editor = new Class
 	{
 		return this.container.find(this.content_selector)
 	},
-	
+
 	bind: function(event, handler)
 	{
-		//this.container.find(this.content_selector).live(event, handler) //.bind(this))
-		this.container.on(event, this.content_selector, handler) //.bind(this))
+		this.container.on(event, this.content_selector, handler)
 	},
+	*/
 	
+	initialize: function(content)
+	{
+		this.content = content
+		
+		this.caret = new Editor.Caret(this)
+		this.selection = new Editor.Selection(this)
+		this.time_machine = new Editor.Time_machine(this)
+	},
+
+	bind: function(event, handler)
+	{
+		this.content.on(event, handler)
+	},
+
+	/*	
 	reload_content: function()
 	{
 		this.load_content(this.content.outer_html())
@@ -39,6 +55,17 @@ var Editor = new Class
 		
 		this.content.attr('contenteditable', true)
 		this.focus()
+	},
+	*/
+	
+	reload_content: function()
+	{
+		this.load_content(this.content.html())
+	},
+	
+	load_content: function(html)
+	{
+		this.content.html(html)
 	},
 	
 	marker_attribute: 'mark',
@@ -75,6 +102,14 @@ var Editor = new Class
 	{
 		this.content_changed_on = now().getTime()
 		this.content.trigger('content_changed.editor', options || {})		
+	},
+	
+	was_content_changed: function()
+	{
+		if (this.content_changed_on)
+			return true
+		
+		return false
 	},
 	
 	insert: function(what)

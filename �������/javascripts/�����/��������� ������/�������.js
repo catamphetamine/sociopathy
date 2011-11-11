@@ -1,4 +1,4 @@
-Article_editor.implement
+Visual_editor.implement
 ({
 	disable_context_menu: function()
 	{

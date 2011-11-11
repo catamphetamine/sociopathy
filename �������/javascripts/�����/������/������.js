@@ -163,6 +163,8 @@ var button = new Class
 		this.frames.ready = this.build_ready_frame()
 		this.frames.pushed = this.build_pushed_frame()
 		
+		this.frames.idle.addClass('button')
+		
 		// stylize
 		
 		Object.each(this.frames, function($frame) { $frame.css(self.options.style) })

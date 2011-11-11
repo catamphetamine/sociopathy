@@ -98,7 +98,8 @@ Editor.Time_machine = new Class
 		var snapshot = 
 		{
 			time: now().getTime(),
-			content: editor.content.outer_html()
+			content: editor.content.html()
+//			content: editor.content.outer_html()
 		}
 		
 		var caret = editor.caret.get()

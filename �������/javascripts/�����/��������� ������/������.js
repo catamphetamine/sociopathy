@@ -1,5 +1,107 @@
-Article_editor.implement
+Visual_editor.implement
 ({
+	initialize_tool_elements: function()
+	{
+		var tools = $('#article_editor_tools')
+		tools.disableTextSelect()
+		
+		this.tools_element = tools
+	
+		var tools_wrapper = $('#article_editor_tools_wrapper')
+	
+		tools_wrapper.bind('disappearing_upwards.scroller', function(event, initialization)
+		{
+			tools.addClass('sticky')
+			event.stopPropagation()
+		})
+		
+		tools_wrapper.bind('fully_appeared_on_top.scroller', function(event, initialization)
+		{
+			tools.css({ top: 0 }).removeClass('sticky')
+			event.stopPropagation()
+		})
+		
+		прокрутчик.watch(tools_wrapper, 0)
+		
+		// toolbar
+
+		this.editor.bind('content_changed.editor', (function(событие, options)
+		{
+			this.set_proper_tools_state()
+		})
+		.bind(this))
+	},
+
+	set_proper_tools_state: function()
+	{
+		if (!this.editor.was_content_changed())
+		{
+			this.Tools.Undo.disable('Вы ещё не правили эту заметку')
+			this.Tools.Redo.disable('Вы ещё не правили эту заметку')
+		}
+		else
+		{
+			if (this.editor.time_machine.can_undo())
+				this.Tools.Undo.enable()
+			else
+				this.Tools.Undo.disable('Это самая ранняя версия заметки')
+			
+			if (this.editor.time_machine.can_redo())
+				this.Tools.Redo.enable()
+			else
+				this.Tools.Redo.disable('Это самая поздняя версия заметки')
+		}		
+	},
+	
+	show_tools: function()
+	{
+		var tools = this.tools_element
+		
+		if (tools.hasClass('sticky'))
+		{
+			tools.stop_animation()
+		
+			if (parseFloat(tools.css('top')) === 0)
+				tools.move_out_upwards()
+				
+			tools.opaque().slide_in_from_top()
+		}
+		else
+			tools.css({ top: 0 }).fade_in(0.3)
+			
+		$('#edit_mode_actions').slide_in_from_bottom()
+	},
+	
+	hide_tools: function()
+	{
+		var tools = this.tools_element
+	
+		if (tools.hasClass('sticky'))
+			tools.opaque().slide_out_upwards()
+		else
+			tools.css({ top: 0 }).fade_out(0.3)
+			
+		$('#edit_mode_actions').slide_out_downwards()
+	},
+	
+	disable_tools: function()
+	{
+		Object.each(this.Tools, function(tool)
+		{
+			tool.disable()
+		})
+	},
+	
+	enable_tools: function()
+	{
+		Object.each(this.Tools, function(tool)
+		{
+			tool.enable()
+		})
+		
+		this.set_proper_tools_state()
+	},
+	
 	initialize_tools: function()
 	{
 		var editor = this.editor
@@ -8,7 +110,7 @@ Article_editor.implement
 	
 		var Tools = {}
 		
-		Tools.Error = function(message)
+		var Error = function(message)
 		{
 			this.message = message
 		}
@@ -20,10 +122,10 @@ Article_editor.implement
 			apply: function()
 			{
 				if (editor.selection.exists())
-					throw new Tools.Error('Не нужно ничего выделять')
+					throw new Error('Не нужно ничего выделять')
 				
 				if (!editor.caret.has_container('p'))
-					throw new Tools.Error('Подзаголовок можно помещать только в абзаце')
+					throw new Error('Подзаголовок можно помещать только в абзаце')
 				
 				var caret
 				if (editor.caret.is_in_the_beginning_of_container('p'))
@@ -32,7 +134,7 @@ Article_editor.implement
 					caret = editor.caret.move_to_container_end('p')
 				else
 				{
-					throw new Tools.Error('Подзаголовок можно поместить только в начале или в конце абзаца')
+					throw new Error('Подзаголовок можно поместить только в начале или в конце абзаца')
 					return
 				}
 				
@@ -53,7 +155,7 @@ Article_editor.implement
 			apply: function()
 			{
 				if (editor.selection.exists())
-					throw new Tools.Error('Не нужно ничего выделять')
+					throw new Error('Не нужно ничего выделять')
 					// на самом деле - брать выделенное и переводить в ссылку
 				
 				var link = 'http://google.ru'
@@ -78,7 +180,7 @@ Article_editor.implement
 			apply: function()
 			{
 				if (editor.selection.exists())
-					throw new Tools.Error('Не нужно ничего выделять')
+					throw new Error('Не нужно ничего выделять')
 		
 				var citation = $('<div/>')
 				citation.addClass('citation')
@@ -111,7 +213,7 @@ Article_editor.implement
 			apply: function()
 			{
 				if (editor.selection.exists())
-					throw new Tools.Error('Не нужно ничего выделять')
+					throw new Error('Не нужно ничего выделять')
 		
 				var list = $('<ul/>')
 				$('<li/>').text('123').appendTo(list)
@@ -131,7 +233,7 @@ Article_editor.implement
 			apply: function()
 			{
 				if (editor.selection.exists())
-					throw new Tools.Error('Не нужно ничего выделять')
+					throw new Error('Не нужно ничего выделять')
 				
 				var picture = $('<img/>')
 				picture.addClass('picture')
@@ -158,7 +260,7 @@ Article_editor.implement
 			apply: function()
 			{
 				if (editor.selection.exists())
-					throw new Tools.Error('Не нужно ничего выделять')
+					throw new Error('Не нужно ничего выделять')
 				
 				if (!editor.time_machine.undo())
 					info('Это самая ранняя версия заметки')
@@ -172,7 +274,7 @@ Article_editor.implement
 			apply: function()
 			{
 				if (editor.selection.exists())
-					throw new Tools.Error('Не нужно ничего выделять')
+					throw new Error('Не нужно ничего выделять')
 				
 				if (!editor.time_machine.redo())
 					info('Это самая поздняя версия заметки')
@@ -188,7 +290,7 @@ Article_editor.implement
 			apply: function()
 			{
 				if (editor.selection.exists())
-					throw new Tools.Error('Не нужно ничего выделять')
+					throw new Error('Не нужно ничего выделять')
 				
 				var formula = '\\[ f(x,y,z) = 3y^2 z \\left( 3 + \\frac{7x+5}{1 + y^2} \\right).\\]'
 				var picture = $('<img/>')
@@ -210,7 +312,7 @@ Article_editor.implement
 			apply: function()
 			{
 				if (editor.selection.exists())
-					throw new Tools.Error('Не нужно ничего выделять')
+					throw new Error('Не нужно ничего выделять')
 					// на самом деле - брать выделенное и переводить его в регистр
 				
 				var subscript = $('<sub/>')
@@ -232,7 +334,7 @@ Article_editor.implement
 			apply: function()
 			{
 				if (editor.selection.exists())
-					throw new Tools.Error('Не нужно ничего выделять')
+					throw new Error('Не нужно ничего выделять')
 					// на самом деле - брать выделенное и переводить его в регистр
 				
 				var superscript = $('<sup/>')
@@ -254,7 +356,7 @@ Article_editor.implement
 			apply: function()
 			{
 				if (editor.selection.exists())
-					throw new Tools.Error('Не нужно ничего выделять')
+					throw new Error('Не нужно ничего выделять')
 					// на самом деле - брать выделенное и переводить в код
 				
 				var code = 'var x = y(z)'
@@ -284,8 +386,8 @@ Article_editor.implement
 			var element
 			if (tool.selector)
 				element = tools.find(tool.selector)
-			else if (tools.button)
-				element = tool.button.$element
+			else if (tool.button)
+				element = tool.button.$element.parent()
 			
 			var on_success = tool.on_success || $.noop
 			tool.on_success = function(result)
@@ -335,21 +437,52 @@ Article_editor.implement
 				tool.button.does(action)
 			}
 			
-			tool.disable = function()
-			{
-				element.addClass('disabled')
-			}
+			if (!tool.disable)
+				tool.disable = function(reason)
+				{
+					element.addClass('disabled')
+					
+					if (tool.button)
+						tool.button.disable(reason)
+				}
 			
-			tool.enable = function()
-			{
-				element.removeClass('disabled')
-			}
+			if (!tool.enable)
+				tool.enable = function()
+				{
+					element.removeClass('disabled')
+					
+					if (tool.button)
+						tool.button.enable()
+				}
 		})
 		
 		this.Tools = Tools
 	}
 })
 
+// disable on blur / enable on focus
+$(function()
+{
+	$(document).bind('focusin', function(event)
+	{
+		if (!window.visual_editors)
+			return
+			
+		window.visual_editors.forEach(function(visual_editor)
+		{
+			if (event.target !== visual_editor.editor.content.get(0))
+				visual_editor.disable_tools()
+		})
+		
+		window.visual_editors.forEach(function(visual_editor)
+		{
+			if (event.target === visual_editor.editor.content.get(0))
+				visual_editor.enable_tools()
+		})
+	})
+})
+
+// more tools / less tools
 $(function()
 {
 	var tools = $('#article_editor_tools')

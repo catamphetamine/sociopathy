@@ -508,3 +508,17 @@ String.prototype.contains = function(what)
 {
 	return this.indexOf(what) >= 0
 }
+
+/*
+Object.forEach = function(object, action)
+{
+	Object.each(object, function(value, key)
+	{
+		if (object.hasOwnProperty(key))
+		{
+			console.log(key)
+			action(value, key)
+		}
+	})
+}
+*/

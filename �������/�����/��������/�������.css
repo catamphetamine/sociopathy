@@ -124,14 +124,13 @@
 	#additional_tools_container
 	{
 		position: relative;
-		
-		.exact_height(@tools_panel_height);
-		overflow: hidden;
+		z-index: 0;
 	}
 		
 	ul#main_tools
 	{
 		position: relative;
+		z-index: 1;
 		
 		li
 		{
