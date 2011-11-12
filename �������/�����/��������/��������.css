@@ -41,12 +41,20 @@
 			margin-right: 15px;
 			
 			background-color: #efefef;
-			/*
-			background: -webkit-gradient(linear, center top, center bottom, from(#fcfcfc), to(#ededed));
-			background-image: -moz-linear-gradient(top, #fcfcfc, #ededed);
-			*/
 			
-			.beautiful_shadow(0px, 4px, 20px, 8px, 12px, 8px, 6px, 4px, 0.1)
+			.beautiful_shadow(0px, 4px, 20px, 8px, 12px, 8px, 4px, 0.1);
+			
+			a:hover span
+			{
+				background-color: #ffd0e6;
+				color: black;
+			}
+			
+			a:active span
+			{
+				background-color: #ffabd3;
+				color: black;
+			}
 			
 			a
 			{
@@ -89,6 +97,8 @@
 					opacity: 0.95;
 
 					.rounded_corners(10px);
+					
+					.css_transition(200ms);
 				}
 			}
 			

@@ -12,10 +12,12 @@ function initialize_page()
 	$(window).resize(resize_categories_list)
 	resize_categories_list()
 	
+	/*
 	$('#categories li').each(function()
 	{
 		new category_button($(this))
 	})
+	*/
 }
 
 function resize_categories_list()
@@ -100,14 +102,3 @@ function get_category_icon_url(id)
 			return '/картинки/temporary/categories/electromagnetism.jpg';
 	}
 }
-
-/*
-
-				<li class="category" name="history">История</li>
-				<li class="category" name="architecture">Строительство</li>
-				<li class="category" name="engineering">Механизация</li>
-				<li class="category" name="literature"></li>
-				<li class="category"></li>
-				<li class="category"></li>
-				<li class="category"></li>	
-*/

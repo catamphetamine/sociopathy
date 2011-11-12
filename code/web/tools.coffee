@@ -1,4 +1,8 @@
+http = require 'http'
 адрес = require 'url'
+
+Цепочка = require './conveyor'
+цепь = (вывод) -> new Цепочка('web', вывод)
 
 снасти = {}
 
@@ -13,7 +17,43 @@
 				настройки[ключ] = parseFloat(значение)
 
 	настройки
+
+снасти.отдать_страницу = (название, данные_для_страницы, ввод, вывод) ->
+	цепь(вывод)
+		.сделать ->
+			снасти.получить_страницу(название, данные_для_страницы, ввод, вывод, @)
+		.сделать (данные) ->
+			вывод.send(данные)
 	
+снасти.получить_страницу = (название, данные_для_страницы, ввод, вывод, callback) ->
+	if ввод.session?
+		данные_для_страницы.пользователь = ввод.session.пользователь
+		
+	if not callback?
+		callback = ->
+		
+	options = 
+		host: 'localhost'
+		port: 8082
+		path: '/page.sjs' + '?' + 'path=' + encodeURIComponent(название) + '&' + 'data=' + encodeURIComponent(JSON.stringify(данные_для_страницы))
+		
+	снасти.получить_данные options, callback
+	
+снасти.получить_данные = (options, callback) ->
+	request = http.get options, (response) =>
+		#headers = JSON.stringify(response.headers)
+
+		data = ''
+		response
+			.on 'data', (chunk) ->
+				data += chunk 
+				
+			.on 'end', =>
+				callback null, data
+				
+	request.on 'error', (error) ->
+		callback error
+		
 module.exports = снасти
 
 Array.prototype.is_empty = () ->
