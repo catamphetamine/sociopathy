@@ -251,15 +251,16 @@ var button = new Class
 			{
 				button.locks.erase(this)
 				
-				if (button.is_rolled_over)
-					button.on_roll_over()
+				if (button.locks.is_empty())
+					if (button.is_rolled_over)
+						button.on_roll_over()
 			})
 			.bind(this)
 		})()
 		
 		this.locks.push(lock)
 		
-		this.$element.trigger('mouseleave')
+		this.on_roll_out()
 		
 		return lock
 	},

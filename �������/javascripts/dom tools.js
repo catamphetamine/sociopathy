@@ -2,12 +2,9 @@ var Dom_tools =
 {
 	is_first_element: function(child, parent)
 	{
-		if (child instanceof jQuery)
-			child = child[0]
-			
-		if (parent instanceof jQuery)
-			parent = parent[0]
-	
+		child = this.normalize(child)
+		parent = this.normalize(parent)
+		
 		if (child === parent)
 			return true
 			
@@ -29,22 +26,49 @@ var Dom_tools =
 	
 	down_to_text_node: function(node)
 	{
+		node = this.normalize(node)
+		
 		if (this.is_text_node(node))
 			return node
 		
 		if (!node.firstChild)
-			throw 'No text node found'
+			return null
+			//throw 'No text node found'
 			
 		return this.down_to_text_node(node.firstChild)
 	},
 	
+	/**
+	 * этот алгоритм можно улучшить, помечая уже пройденные узлы,
+	 * чтобы не искать вглубь по нескольку раз (down_to_text_node)
+	 */
+	find_next_text_node: function(node, highest_parent)
+	{
+		node = this.normalize(node)
+		highest_parent = this.normalize(highest_parent)
+		
+		if (this.is_text_node(node))
+			return node
+		
+		if (node === highest_parent)
+			return null
+			
+		var next = this.next(node)
+		
+		if (!next)
+			return this.find_next_text_node(node.parentNode)
+		
+		var child_text_node = this.down_to_text_node(next)
+		if (child_text_node)
+			return child_text_node
+			
+		return this.find_next_text_node(next, highest_parent)
+	},
+	
 	is_last_element: function(child, parent)
 	{
-		if (child instanceof jQuery)
-			child = child[0]
-			
-		if (parent instanceof jQuery)
-			parent = parent[0]
+		child = this.normalize(child)
+		parent = this.normalize(parent)
 	
 		if (child === parent)
 			return true
@@ -89,6 +113,8 @@ var Dom_tools =
 	
 	outer_html: function(node)
 	{
+		node = this.normalize(node)
+		
 		// if IE, Chrome take the internal method otherwise build one
 		return node.outerHTML || (
 			function(node)
@@ -195,6 +221,9 @@ var Dom_tools =
 	
 	get_node_backtrack: function(node, till)
 	{
+		node = this.normalize(node)
+		till = this.normalize(till)
+	
 		if (node.parentNode === till)
 			return [this.get_child_index(node)]
 	
@@ -229,5 +258,13 @@ var Dom_tools =
 	next: function(node)
 	{
 		return node.nextSibling
+	},
+	
+	normalize: function(element)
+	{
+		if (element instanceof jQuery)
+			element = element[0]
+			
+		return element
 	}
 }

@@ -30,6 +30,16 @@ Sociopathy
 поставить nginx, и в nginx.conf в разделе "http" добавить "include c:\путь к папаке sociopathy\enginex.conf;"
 поставить apache (как службу; и сказать ему слушать 8082-ой порт), прикрутить к нему v8cgi, и в httpd.conf указать "DocumentRoot "c:/путь к папаке sociopathy/code/cgi""
 
+/*
+Listen 8082
+
+LoadModule v8cgi_module c:\work\v8cgi\mod_v8cgi.dll
+<IfModule mime_module>
+	AddHandler v8cgi-script .ssjs .sjs
+	ThreadsPerChild 1 
+</IfModule>
+*/
+
 настроить "run/mongodb.bat"
 настроить "run/node.js.bat"
 настроить "run/nginx.bat"

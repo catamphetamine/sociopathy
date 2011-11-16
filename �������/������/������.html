@@ -106,6 +106,9 @@
 		<script src="/javascripts/облик/наглядный писарь/наглядный писарь.js"></script>
 		<script src="/javascripts/облик/наглядный писарь/клавиши.js"></script>
 		<script src="/javascripts/облик/наглядный писарь/снасти.js"></script>
+
+		<link rel="stylesheet/less" href="/облик/наглядный писарь/наглядный писарь.css"/>
+		<link rel="stylesheet/less" href="/облик/наглядный писарь/sociopathy.css"/>
 		
 		<!-- panel -->
 		<script src="/javascripts/облик/навершие.js"></script> 
@@ -130,7 +133,7 @@
 			{{if пользователь}}
 				var пользователь =
 				{
-					id: '${пользователь._id}'
+					id: '${пользователь.id}'
 				}
 			{{else}}
 				var пользователь = null

@@ -34,9 +34,19 @@ Visual_editor.implement
 		
 			event.preventDefault()
 			
+			var container = editor.caret.container()
+			
+			if (container.is('li'))
+			{
+				var list_item = $('<li/>')
+				list_item.text('123')
+				container.after(list_item)
+				editor.caret.move_to(list_item)
+				return
+			}
+				
 			if (editor.caret.is_in_the_beginning_of_container())
 			{
-				var container = editor.caret.container()
 				var containing_paragraph = container.search_upwards('p')
 				
 				if (Dom_tools.is_first_element(container, containing_paragraph))
@@ -52,7 +62,6 @@ Visual_editor.implement
 			
 			if (editor.caret.is_in_the_end_of_container())
 			{
-				var container = editor.caret.container()
 				var containing_paragraph = container.search_upwards('p')
 				if (Dom_tools.is_last_element(container, containing_paragraph))
 				{
@@ -64,8 +73,6 @@ Visual_editor.implement
 				
 				return
 			}
-			
-			var container = editor.caret.container()
 			
 			tags_with_prohibited_line_break.forEach(function(tag)
 			{
@@ -81,7 +88,7 @@ Visual_editor.implement
 			var next_paragraph = editor.unmark()
 			editor.caret.move_to(next_paragraph)
 				
-			editor.get_content().find('p').each(function()
+			editor.content.find('p').each(function()
 			{
 				paragraph = $(this)
 				

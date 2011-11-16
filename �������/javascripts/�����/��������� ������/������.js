@@ -2,26 +2,30 @@ Visual_editor.implement
 ({
 	initialize_tool_elements: function()
 	{
-		var tools = $('#article_editor_tools')
+		var tools = $('.visual_editor_tools')
 		tools.disableTextSelect()
 		
 		this.tools_element = tools
 	
-		var tools_wrapper = $('#article_editor_tools_wrapper')
+		var tools_container = tools.parent()
 	
-		tools_wrapper.bind('disappearing_upwards.scroller', function(event, initialization)
+		//var tools_wrapper = $('<div/>')
+		//tools_wrapper.addClass('visual_editor_tools_wrapper')
+		//tools.wrapAll(tools_wrapper)
+	
+		tools_container.bind('disappearing_upwards.scroller', function(event, initialization)
 		{
 			tools.addClass('sticky')
 			event.stopPropagation()
 		})
 		
-		tools_wrapper.bind('fully_appeared_on_top.scroller', function(event, initialization)
+		tools_container.bind('fully_appeared_on_top.scroller', function(event, initialization)
 		{
 			tools.css({ top: 0 }).removeClass('sticky')
 			event.stopPropagation()
 		})
 		
-		прокрутчик.watch(tools_wrapper, 0)
+		прокрутчик.watch(tools_container, 0)
 		
 		// toolbar
 
@@ -106,7 +110,7 @@ Visual_editor.implement
 	{
 		var editor = this.editor
 	
-		var tools = $('#article_editor_tools')
+		var tools = $('.visual_editor_tools')
 	
 		var Tools = {}
 		
@@ -169,7 +173,7 @@ Visual_editor.implement
 			
 			on_success: function(link)
 			{
-				editor.caret.position_after(link)
+				editor.caret.move_to(link)
 			}
 		}
 						
@@ -249,7 +253,7 @@ Visual_editor.implement
 			
 			on_success: function(picture)
 			{
-				editor.caret.position_after(picture)
+				editor.caret.move_to(picture)
 			}
 		}
 		
@@ -301,7 +305,7 @@ Visual_editor.implement
 			
 			on_success: function(picture)
 			{
-				editor.caret.position_after(picture)
+				editor.caret.move_to(picture)
 			}
 		}
 		
@@ -323,7 +327,7 @@ Visual_editor.implement
 			
 			on_success: function(subscript)
 			{
-				editor.caret.position_after(subscript)
+				editor.caret.move_to(subscript)
 			}
 		}
 		
@@ -345,7 +349,7 @@ Visual_editor.implement
 			
 			on_success: function(superscript)
 			{
-				editor.caret.position_after(superscript)
+				editor.caret.move_to(superscript)
 			}
 		}
 		
@@ -375,7 +379,7 @@ Visual_editor.implement
 			
 			on_success: function(code)
 			{
-				editor.caret.position_after(code)
+				editor.caret.move_to(code)
 			}
 		}
 		
@@ -417,7 +421,7 @@ Visual_editor.implement
 				}
 				catch (error)
 				{
-					if (error instanceof Tools.Error)
+					if (error instanceof Error)
 						tool.on_error(error)
 					else
 						throw error
@@ -485,9 +489,9 @@ $(function()
 // more tools / less tools
 $(function()
 {
-	var tools = $('#article_editor_tools')
-	var main_tools = tools.find('#main_tools')
-	var additional_tools = tools.find('#additional_tools')
+	var tools = $('.visual_editor_tools')
+	var main_tools = tools.find('.main_tools')
+	var additional_tools = tools.find('.additional_tools')
 	
 	var main_tools_height = main_tools.height()
 

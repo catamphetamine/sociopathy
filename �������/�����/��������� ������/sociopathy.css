@@ -1,0 +1,198 @@
+@import "/облик/вспомогательный.less";
+
+.visual_editor_tools
+{
+	ul
+	{
+		li
+		{
+			.css_transition(200ms);				
+			
+			@hover_glow_color: #8d0031;
+			@hover_text_color: #fff2f7;
+			
+			@active_glow_color: #cb0026;
+			@active_text_color: #ffe3e8;
+			
+			&:hover
+			{
+				color: @hover_text_color !important;
+				border-color: @hover_text_color !important;
+				text-shadow: 0px 0px 20px @hover_glow_color;
+			}
+			
+			&:active
+			{
+				color: @active_text_color !important;
+				border-color: @active_text_color !important;
+				text-shadow: 0px 0px 20px @active_glow_color;
+			}
+		}
+	}
+}
+
+.visual_editor_tools
+{
+	ul
+	{
+		li
+		{
+			font-size: 26px;
+		}
+	}
+}
+
+.visual_editor_tools
+{
+	ul.main_tools
+	{
+		li
+		{
+			&.heading
+			{
+				font-family: @headings_font;
+			}
+			
+			&.subheading
+			{
+				font-family: @headings_font;
+				border-bottom-style: solid;
+				border-bottom-width: 1px;
+				border-bottom-color: white;
+			}
+			
+			&.paragraph
+			{
+				font-family: @textual_font;
+			}
+			
+			&.link
+			{
+				font-family: @headings_font;
+				.hyperlink();
+				color: white;
+				border-color: white;
+			}
+			
+			&.citation
+			{
+				font-style: italic;
+			}
+			
+			&.citation:before
+			{
+				content: '«';
+			}
+			
+			&.citation:after
+			{
+				content: '»';
+			}
+			
+			&.list > span
+			{
+				position: relative;
+				margin-top: -12px;
+				top: 11px;
+				
+				background-image: url('/картинки/на страницах/заметка/список.png');
+				width: 40px;
+				height: 40px;
+			}
+			
+			&.picture > span
+			{
+				position: relative;
+				margin-top: -12px;
+				top: 11px;
+				
+				background-image: url('/картинки/на страницах/заметка/картинка.png');
+				width: 40px;
+				height: 40px;
+			}
+			
+			&.undo > span, &.redo > span
+			{
+				position: relative;
+				margin-top: -10px;
+				top: 9px;
+			
+				width: 36px;
+				height: 36px;
+				
+				-webkit-transition: all 200ms ease-in-out;
+				-moz-transition: all 200ms ease-in-out;
+			}
+	
+			&.undo > span
+			{
+				background-image: url('/картинки/на страницах/заметка/undo.png');
+			}
+			
+			&.undo > span.disabled, &.redo > span.disabled
+			{
+				cursor: default !important;
+			}
+	
+			&.redo > span
+			{
+				background-image: url('/картинки/на страницах/заметка/redo.png');
+			}
+			
+			&.undo
+			{
+				margin-right: 0;
+			}
+			
+			&.redo
+			{
+				margin-left: 0;
+			}
+		}
+	}
+	
+	ul.additional_tools
+	{
+		li
+		{
+			&.code
+			{
+				font-weight: bold;
+			}
+			
+			&.subscript sub
+			{
+				position: relative;
+				top: -8px;
+			}
+			
+			&.subscript sub, &.superscript sup
+			{
+				font-size: 16px;
+			}
+		}
+	}
+	
+	.more, .less
+	{
+		position: absolute;
+		right: 12px;
+		top: 10px;
+		
+		z-index: 1;
+		
+		width: 30px;
+		height: 30px;
+	}
+	
+	.more
+	{
+		background-image: url('/картинки/на страницах/заметка/показать всё.png');
+	}
+
+	.less
+	{
+		display: none;
+		background-image: url('/картинки/на страницах/заметка/скрыть разширенное.png');
+	}
+}

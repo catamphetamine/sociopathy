@@ -145,8 +145,14 @@ var Editor = new Class
 		var text = this.caret.text_before_and_after()
 		var container = this.caret.native_container()
 		container.nodeValue = text.before + inserted_text + text.after
+			
+		caret = this.caret.get()
+		if (!caret)
+			caret = this.caret.create(container)
 		
-		this.caret.move_to(container)
+		if ($.browser.webkit)
+			this.caret.move_to(container)
+		
 		this.caret.offset(caret_offset + 1)
 	},
 	

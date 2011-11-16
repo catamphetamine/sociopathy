@@ -39,7 +39,7 @@ Editor.Time_machine = new Class
 		
 		if (snapshot.caret)
 			this.editor.caret.position(snapshot.caret.get_container(), snapshot.caret.offset)
-			
+	
 		return true
 	},
 	

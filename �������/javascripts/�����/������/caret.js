@@ -50,28 +50,32 @@ Editor.Caret = new Class
 	
 	move_to: function(element)
 	{		
-		if (element instanceof jQuery)
-			element = element[0]
-
-		var range = this.editor.create_range()
-		range.setStart(element, 0)
-		this.editor.collapse(range)
+		element = Dom_tools.normalize(element)
+			
+		if (!Dom_tools.is_text_node(element))
+		{
+			var text_node = Dom_tools.down_to_text_node(element)
+			
+			if (text_node)
+			{
+				element = text_node
+			}
+			else
+			{
+				element = Dom_tools.find_next_text_node(element, this.editor.content)
+				
+				if (!element)
+					error('Text node not found')
+			}
+		}
 		
-		this.editor.apply_range(range)
-		return range
-	},
-	
-	position_after: function(element)
-	{		
-		if (element instanceof jQuery)
-			element = element[0]
-
-		var range = this.editor.create_range()
-		range.setStartAfter(element)
-		this.editor.collapse(range)
-		
-		this.editor.apply_range(range)
-		return range
+		var caret = this.get()
+		if (!caret)
+			caret = this.create()
+			
+		caret.setStart(element, 0)
+		this.editor.collapse(caret)
+		return caret
 	},
 	
 	move_to_container_end: function(filter)
@@ -152,10 +156,28 @@ Editor.Caret = new Class
 		return caret.startOffset
 	},
 	
+	create: function(container, offset)
+	{
+		if (!container)
+			container = this.editor.content.get(0)
+			
+		if (!offset)
+			offset = 0
+	
+		var range = this.editor.create_range()
+		range.setStart(container, offset)
+		this.editor.collapse(range)
+		this.editor.apply_range(range)
+		return range
+	},
+	
 	position: function(container, offset)
 	{
 		var caret = this.get()
 		
+		if (!caret)
+			caret = this.create(container, offset)
+
 		if (Dom_tools.is_text_node(container))
 		{
 			caret.setStart(container, offset)
@@ -163,6 +185,9 @@ Editor.Caret = new Class
 			return
 		}
 		
+		throw 'Not a text node'
+		
+		/*
 		if (container.childNodes.length === 0)
 			throw 'illegal state'
 			
@@ -175,7 +200,22 @@ Editor.Caret = new Class
 		{
 			this.position_after(container.childNodes[offset - 1])
 		}
+		*/
 	},
+	
+	/*
+	position_after: function(element)
+	{
+		element = Dom_tools.normalize(element)
+
+		var range = this.editor.create_range()
+		range.setStartAfter(element)
+		this.editor.collapse(range)
+		
+		this.editor.apply_range(range)
+		return range
+	},
+	*/
 	
 	text_before_and_after: function()
 	{
