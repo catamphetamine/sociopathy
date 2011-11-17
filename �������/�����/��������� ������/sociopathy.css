@@ -159,13 +159,7 @@
 			{
 				/* font-weight: bold; */
 			}
-			
-			&.subscript sub
-			{
-				position: relative;
-				top: -8px;
-			}
-			
+						
 			&.subscript sub, &.superscript sup
 			{
 				font-size: 16px;
@@ -195,4 +189,22 @@
 		display: none;
 		background-image: url('/картинки/на страницах/заметка/скрыть разширенное.png');
 	}
+}
+
+.firefox .visual_editor_tools .subscript sub
+{
+	position: relative;
+	top: -8px;
+}
+
+.webkit .visual_editor_tools .subscript sub
+{
+	position: relative;
+	top: -2px;
+}
+
+.webkit .visual_editor_tools .superscript sup
+{
+	position: relative;
+	top: -2px;
 }

@@ -1,0 +1,18 @@
+<li>
+	<div class="author no_word_carrying">
+		<a href="/люди/${отправитель['адресное имя']}">${отправитель.имя}</a>
+		<div class="picture"></div>
+	</div>
+	<div class="messages">
+		<ul>
+			{{each сообщения}}
+				<li>
+					<div class="text multiline_text">
+						${сообщение}
+					</div>
+					<div class="when no_word_carrying intelligent_date" date="${точное_время}" updated_at="${сейчас}">${время}</div>
+				</li>
+			{{/each}}
+		</ul>
+	</div>
+</li>

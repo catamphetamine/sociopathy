@@ -1,9 +1,18 @@
 <section id="content">
 	<div id="chat_block" type="conditional">
-		<div type="ok" id="chat">
+		<div type="ok" id="chat_container">
+			<ul class="chat">
+			</ul>
 		</div>
 		
 		<div type="loading">Загружаем сообщения</div>
 		<div type="error">Не удалось загрузить сообщения</div>
+		
+		<div type="loading_more">Загружаем ещё сообщения</div>
+		<div type="loading_more_error">Не удалось догрузить сообщения</div>
 	</div>
+	
+	<div id="scroll_detector"></div>
+	
+	<p style="visibility: hidden">strange hack for Chrome</p>
 </section>

@@ -309,9 +309,10 @@ Visual_editor.implement
 				if (editor.selection.exists())
 					throw new Error('Не нужно ничего выделять')
 				
-				var formula = '\\[ f(x,y,z) = 3y^2 z \\left( 3 + \\frac{7x+5}{1 + y^2} \\right).\\]'
+				//var formula = '\\[ f(x,y,z) = 3y^2 z \\left( 3 + \\frac{7x+5}{1 + y^2} \\right).\\]'
+				var formula = 'E = mc^2'
 				var picture = $('<img/>')
-				picture.attr('src', 'http://chart.apis.google.com/chart?cht=tx&chl=' + encodeURIComponent(formula))
+				picture.attr('src', 'http://chart.apis.google.com/chart?cht=tx&chs=28&chl=' + encodeURIComponent(formula))
 				
 				return editor.insert(picture)
 			},

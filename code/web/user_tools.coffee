@@ -5,13 +5,15 @@ hash = require './whirlpool.hash'
 
 хранилище = global.db
 
+Cookie_expiration_date = new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 365 * 50)
+
 generate_remember_me = (пользователь) ->
 	hash(пользователь.имя + пользователь.пароль)
 
 exports.войти = (пользователь, ввод, вывод) ->
 	ввод.session.пользователь = пользователь
-	вывод.cookie 'user', пользователь._id, { expires: 0, httpOnly: true }
-	вывод.cookie 'remember me', generate_remember_me(пользователь), { expires: 0, httpOnly: true }
+	вывод.cookie 'user', пользователь._id, { expires: Cookie_expiration_date, httpOnly: true }
+	вывод.cookie 'remember me', generate_remember_me(пользователь), { expires: Cookie_expiration_date, httpOnly: true }
 	
 exports.выйти = (ввод, вывод) ->
 	вывод.clearCookie 'connect.sid'

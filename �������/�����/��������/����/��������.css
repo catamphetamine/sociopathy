@@ -1,6 +1,6 @@
 @import "/облик/вспомогательный.less";
 
-#chat
+#chat_container
 {
 	margin-top: 100px;
 	margin-bottom: 100px;
@@ -12,13 +12,6 @@
 		margin-bottom: 50px;
 		margin-top: 250px;
 	}
-}
-
-[type=loading], [type=error]
-{
-	text-align: center;
-	margin-bottom: 50px;
-	margin-top: 150px;
 }
 
 ul.chat
@@ -47,7 +40,7 @@ ul.chat
 			padding-left: 80px;
 			padding-right: @inter_column_padding;
 			
-			max-width: 40%;
+			.exact_width(20%);
 			
 			overflow: hidden;
 			text-overflow: ellipsis;
@@ -118,5 +111,24 @@ ul.chat
 				}
 			}
 		}
+	}
+}
+
+#chat_block
+{
+	[type=loading], [type=loading_more], [type=error], [type=loading_more_error]
+	{
+		text-align: center;
+		margin-bottom: 50px;
+	}
+	
+	[type=loading_more], [type=loading_more_error]
+	{
+		margin-top: 50px;
+	}
+	
+	[type=loading], [type=error]
+	{
+		margin-top: 150px;
 	}
 }

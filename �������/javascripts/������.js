@@ -140,15 +140,25 @@ function получить_настройку_запроса(name, url)
 */
 function неточное_время(время)
 {
+	var time
+	
+	if (typeof(время) === 'string')
+		time = Date.parse(время).getTime()
+	else if (typeof(время) === 'number')
+		time = время
+	else
+		throw 'Unsupported time: ' + время
+
 	var сейчас = new Date()
-	var разница = (сейчас.getTime() - Date.parse(время).getTime()) / 1000
+	var разница = (сейчас.getTime() - time) / 1000
 	
 	var окончание_единицы_измерения
 	
 	if (разница < 0)
 		return время
 	
-	var минуты = разница / 60
+	var точные_минуты = разница / 60
+	var минуты = Math.floor(точные_минуты)
 	if (минуты < 1)
 		return "только что"
 		
@@ -162,7 +172,8 @@ function неточное_время(время)
 		return минуты + '-' + number_ending(минуты, { вопрос: 'чем', род: 'женский' }) + ' минут' + окончание_единицы_измерения + ' ранее'
 	}
 	
-	var часы = минуты / 60
+	var точные_часы = точные_минуты / 60
+	var часы = Math.floor(точные_часы)
 	if (часы < 0.75)
 		return 'получасом ранее'
 		
@@ -186,7 +197,8 @@ function неточное_время(время)
 		количество_часов++
 	}
 	
-	var сутки = часы / 24
+	var точные_сутки = точные_часы / 24
+	var сутки = Math.floor(точные_сутки)
 	if (сутки < 1.5)
 		return 'вчера'
 		
@@ -202,7 +214,7 @@ function неточное_время(время)
 		количество_суток++
 	}
 	
-	var недели = сутки / 7
+	var недели = Math.floor(точные_сутки / 7)
 	if (недели < 1.5)
 		return 'на прошлой неделе'
 		
@@ -212,7 +224,7 @@ function неточное_время(время)
 	if (недели < 3.5)
 		return '3-мя неделями ранее'
 		
-	var месяцы = сутки / 30
+	var месяцы = Math.floor(точные_сутки / 30)
 	if (месяцы < 1.5)
 		return 'в прошлом месяце'
 
@@ -233,7 +245,7 @@ function неточное_время(время)
 		количество_месяцев++
 	}
 	
-	годы = сутки / 365.2425
+	годы = Math.floor(точные_сутки / 365.2425)
 	if (годы < 0.75)
 		return 'полугодом ранее'
 		
@@ -306,4 +318,19 @@ function get_hash()
 {
   var hash = decodeURIComponent(window.location.hash)
   return hash.substring(1)
+}
+
+function update_intelligent_dates()
+{
+	var now = new Date().getTime()
+	
+	$('.intelligent_date').each(function()
+	{
+		var element = $(this)
+		
+		var date = new Number(element.attr('date'))
+		var updated_at = new Number(element.attr('updated_at'))
+		element.text(неточное_время(date + (now - updated_at)))
+		element.attr('updated_at', now)
+	})
 }
