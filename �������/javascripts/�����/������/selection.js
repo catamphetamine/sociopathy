@@ -33,6 +33,7 @@ Editor.Selection = new Class
 	
 	cut: function()
 	{
+		this.editor.time_machine.snapshot()
 		return this.get().extractContents()
 	}
 })

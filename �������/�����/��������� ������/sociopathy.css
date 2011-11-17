@@ -155,9 +155,9 @@
 	{
 		li
 		{
-			&.code
+			&.code, &multiline_code
 			{
-				font-weight: bold;
+				/* font-weight: bold; */
 			}
 			
 			&.subscript sub

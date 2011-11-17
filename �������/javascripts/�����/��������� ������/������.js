@@ -108,6 +108,7 @@ Visual_editor.implement
 	
 	initialize_tools: function()
 	{
+		var visual_editor = this
 		var editor = this.editor
 	
 		var tools = $('.visual_editor_tools')
@@ -143,6 +144,8 @@ Visual_editor.implement
 				}
 				
 				var subheading = $('<h2/>')
+				visual_editor.hint(subheading, 'Введите текст')
+				
 				return editor.insert(subheading)
 			},
 			
@@ -166,7 +169,7 @@ Visual_editor.implement
 				
 				var element = $('<a/>')
 				element.attr('href', correct_uri(link))
-				element.text('one two three')
+				visual_editor.hint(element, 'Введите текст')
 				
 				return editor.insert(element)
 			},
@@ -191,13 +194,15 @@ Visual_editor.implement
 				
 				var text = $('<span/>')
 				text.addClass('text')
-				text.text('It is said that if you know your enemies and know yourself, you will not be imperiled in a hundred battles; if you do not know your enemies but do know yourself, you will win one and lose one; if you do not know your enemies nor yourself, you will be imperiled in every single battle.'.trim_trailing_comma())
+				visual_editor.hint(text, 'Введите текст выдержки')
+				//text.text('It is said that if you know your enemies and know yourself, you will not be imperiled in a hundred battles; if you do not know your enemies but do know yourself, you will win one and lose one; if you do not know your enemies nor yourself, you will be imperiled in every single battle.'.trim_trailing_comma())
 				
 				text.appendTo(citation)
 
 				var author = $('<div/>')
 				author.addClass('author')
-				author.text('Sun Tzu, The Art of War. Ch. 3, the last sentence.'.trim_trailing_comma())
+				visual_editor.hint(author, 'Укажите здесь источник')
+				//author.text('Sun Tzu, The Art of War. Ch. 3, the last sentence.'.trim_trailing_comma())
 				
 				author.appendTo(citation)
 				
@@ -206,7 +211,7 @@ Visual_editor.implement
 			
 			on_success: function(citation)
 			{
-				//editor.caret.move_to(citation)
+				editor.caret.move_to(citation)
 			}
 		}
 		
@@ -219,14 +224,22 @@ Visual_editor.implement
 				if (editor.selection.exists())
 					throw new Error('Не нужно ничего выделять')
 		
+				if (!editor.caret.container().is('p'))
+					throw new Error('Список можно поместить только внутри обычного текста')
+		
 				var list = $('<ul/>')
-				$('<li/>').text('123').appendTo(list)
-				return editor.insert(list)
+				var list_item = $('<li/>')
+				visual_editor.hint(list_item, 'Введите текст')
+				list_item.appendTo(list)
+				
+				editor.mark(list)
+				editor.insert_html('</p>' + list.outer_html() + '<p>')
+				return editor.unmark()
 			},
 			
 			on_success: function(list)
 			{
-				//editor.caret.move_to(list)
+				editor.caret.move_to(list)
 			}
 		}
 		
@@ -263,8 +276,8 @@ Visual_editor.implement
 			
 			apply: function()
 			{
-				if (editor.selection.exists())
-					throw new Error('Не нужно ничего выделять')
+				//if (editor.selection.exists())
+				//	throw new Error('Не нужно ничего выделять')
 				
 				if (!editor.time_machine.undo())
 					info('Это самая ранняя версия заметки')
@@ -277,8 +290,8 @@ Visual_editor.implement
 			
 			apply: function()
 			{
-				if (editor.selection.exists())
-					throw new Error('Не нужно ничего выделять')
+				//if (editor.selection.exists())
+				//	throw new Error('Не нужно ничего выделять')
 				
 				if (!editor.time_machine.redo())
 					info('Это самая поздняя версия заметки')
@@ -320,7 +333,7 @@ Visual_editor.implement
 					// на самом деле - брать выделенное и переводить его в регистр
 				
 				var subscript = $('<sub/>')
-				subscript.text('y')
+				visual_editor.hint(subscript, 'Введите текст')
 				
 				return editor.insert(subscript)
 			},
@@ -342,7 +355,7 @@ Visual_editor.implement
 					// на самом деле - брать выделенное и переводить его в регистр
 				
 				var superscript = $('<sup/>')
-				superscript.text('y')
+				visual_editor.hint(superscript, 'Введите текст')
 				
 				return editor.insert(superscript)
 			},
@@ -363,16 +376,30 @@ Visual_editor.implement
 					throw new Error('Не нужно ничего выделять')
 					// на самом деле - брать выделенное и переводить в код
 				
-				var code = 'var x = y(z)'
-				var tag
+				var element = $('<code/>')
+				visual_editor.hint(element, 'Введите код')
 				
-				if (code.is_multiline())
-					tag = 'pre'
-				else
-					tag = 'code'
+				return editor.insert(element)
+			},
+			
+			on_success: function(code)
+			{
+				editor.caret.move_to(code)
+			}
+		}
+		
+		Tools.Multiline_code =
+		{
+			selector: '.multiline_code',
+			
+			apply: function()
+			{
+				if (editor.selection.exists())
+					throw new Error('Не нужно ничего выделять')
+					// на самом деле - брать выделенное и переводить в код
 				
-				var element = $('<' + tag + '/>')
-				element.text(code)
+				var element = $('<pre/>')
+				visual_editor.hint(element, 'Введите код')
 				
 				return editor.insert(element)
 			},

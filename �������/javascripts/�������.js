@@ -5,19 +5,22 @@ var Клавиши =
     Enter: 13,
 	Pause: 19,
     Escape: 27,
-	Spacebar: 32,
+	Space: 32,
     
-	PAGE_UP: 33,
-    PAGE_DOWN: 34,
-    END: 35,
-    HOME: 36,
+	Page_up: 33,
+    Page_down: 34,
+    End: 35,
+    Home: 36,
     
 	Left: 37,
     Up: 38,
     Right: 39,
     Down: 40,
 	
-    HELP: 47,
+	Insert: 45,
+	Delete: 46,
+	
+    Help: 47,
 	
 	Digit_0: 48,
 	Digit_1: 49,
@@ -39,7 +42,7 @@ var Клавиши =
 	Y: 89,
 	Z: 90,
 	
-    NUMERIC_PLUS: 107,
+    Numeric_plus: 107,
 	
 	r: 114,
 	v: 118,
@@ -61,8 +64,8 @@ var Клавиши =
     F11: 122,
     F12: 123,
 	
-    PLUS: 187,
-    MINUS: 189,
+    Plus: 187,
+    Minus: 189,
 	
 	is: function()
 	{
@@ -72,24 +75,24 @@ var Клавиши =
 	
 		var args = Array.prototype.slice.call(arguments)
 		var event = args.pop()
-		var keys = args.map(function(key) { return key.toLowerCase() })
+		var keys = args.map(function(key) { return key })
 		
-		if (keys.contains('ctrl'))
+		if (keys.contains('Ctrl'))
 		{
 			ctrl = true
-			keys.erase('ctrl')
+			keys.erase('Ctrl')
 		}
 			
-		if (keys.contains('alt'))
+		if (keys.contains('Alt'))
 		{
 			alt = true
-			keys.erase('alt')
+			keys.erase('Alt')
 		}
 			
-		if (keys.contains('shift'))
+		if (keys.contains('Shift'))
 		{
 			shift = true
-			keys.erase('shift')
+			keys.erase('Shift')
 		}
 				
 		if (keys.length !== 1)
@@ -108,17 +111,26 @@ var Клавиши =
 		if (shift)
 			if (!event.shiftKey)
 				return false
-
-		if (shift)
-			key = key.toUpperCase()
+				
+		if (key.length === 1)				
+			if (shift)
+				key = key.toUpperCase()
 			
-		if (event.which === this[key])
+		var code
+		if (event.which)
+			code = event.which
+		else
+			code = event.keyCode
+		
+		if (code === this[key])
 			return true
 		else
 			return false
 	}
 }
 
+// testing:
+//
 //				if (Клавиши.is('Ctrl', 'Shift', 'z', event))
 //				if (Клавиши.is('Ctrl', 'Alt', 'Shift', 'z', event))
 //				if (Клавиши.is('Alt', 'Shift', 'z', event))

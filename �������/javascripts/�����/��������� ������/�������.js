@@ -22,6 +22,7 @@ Visual_editor.implement
 	{
 		var tags_with_prohibited_line_break = ['a', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']
 		
+		var visual_editor = this
 		var editor = this.editor
 		
 		editor.bind('keypress', function(event)
@@ -39,12 +40,22 @@ Visual_editor.implement
 			if (container.is('li'))
 			{
 				var list_item = $('<li/>')
-				list_item.text('123')
-				container.after(list_item)
-				editor.caret.move_to(list_item)
+				visual_editor.hint(list_item, 'Введите текст')
+				
+				editor.mark(list_item)
+				container.after(list_item)				
+				editor.caret.move_to(editor.unmark())
 				return
 			}
-				
+			
+			if (container.is('pre'))
+			{
+				editor.insert('\n')
+				return
+			}
+			
+			//
+			
 			if (editor.caret.is_in_the_beginning_of_container())
 			{
 				var containing_paragraph = container.search_upwards('p')
@@ -109,9 +120,6 @@ Visual_editor.implement
 		{
 			if (!Режим.правка())
 				return
-			
-			if (!event.charCode)
-				return
 				
 			if (Клавиши.is('Ctrl', 'z', event))
 			{
@@ -130,7 +138,7 @@ Visual_editor.implement
 				event.preventDefault()
 			}
 			
-			if (Клавиши.is('Ctrl', 'v', event))
+			if (Клавиши.is('Ctrl', 'v', event) || Клавиши.is('Shift', 'Insert', event))
 			{
 				event.preventDefault()
 			}
@@ -138,20 +146,68 @@ Visual_editor.implement
 		.bind(this))
 	},
 		
+	capture_breaking_space: function()
+	{
+		var editor = this.editor
+		
+		editor.bind('keypress', function(event)
+		{
+			if (!Режим.правка())
+				return
+				
+			if (Клавиши.is('Shift', 'Space', event))
+			{
+				event.preventDefault()
+			
+				var container = editor.caret.native_container()
+				var container_tag = container.parentNode
+				
+				if (container_tag.tagName.toLowerCase() === 'p')
+				{
+					editor.insert(' ')
+					return
+				}
+				
+				var text_node = Dom_tools.append_text_next_to(container_tag, ' ')
+				editor.caret.position(text_node, 1)
+				return
+			}
+		})
+	},
+	
 	capture_characters: function()
 	{
 		var editor = this.editor
 		
 		editor.bind('keypress', (function(event)
 		{
+			if (!Режим.правка())
+				return
+				
 			if (!event.charCode)
 				return
 				
 			if (event.altKey || event.ctrlKey)
 				return
+				
+			if (Клавиши.is('Shift', 'Space', event))
+				return
 		
 			event.preventDefault()
-			editor.insert(String.fromCharCode(event.charCode))
+			
+			if (editor.selection.exists())
+				editor.selection.cut()
+					
+			var options = {}
+			
+			var container = editor.caret.container()
+			if (container.hasClass('hint'))
+			{
+				container.removeClass('hint')
+				options.replace = true
+			}
+			
+			editor.insert(String.fromCharCode(event.charCode), options)
 		})
 		.bind(this))
 	}

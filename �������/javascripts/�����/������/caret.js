@@ -51,31 +51,19 @@ Editor.Caret = new Class
 	move_to: function(element)
 	{		
 		element = Dom_tools.normalize(element)
-			
+		
 		if (!Dom_tools.is_text_node(element))
-		{
-			var text_node = Dom_tools.down_to_text_node(element)
-			
-			if (text_node)
-			{
-				element = text_node
-			}
-			else
-			{
-				element = Dom_tools.find_next_text_node(element, this.editor.content)
-				
-				if (!element)
-					error('Text node not found')
-			}
-		}
+			element = Dom_tools.find_text_node(element, this.editor.content)
 		
 		var caret = this.get()
-		if (!caret)
-			caret = this.create()
-			
-		caret.setStart(element, 0)
-		this.editor.collapse(caret)
-		return caret
+		if (caret)
+		{
+			caret.setStart(element, 0)
+			this.editor.collapse(caret)
+			return caret
+		}
+		else
+			return this.create(element, 0)
 	},
 	
 	move_to_container_end: function(filter)
@@ -159,7 +147,9 @@ Editor.Caret = new Class
 	create: function(container, offset)
 	{
 		if (!container)
-			container = this.editor.content.get(0)
+			container = this.editor.content
+			
+		container = Dom_tools.normalize(container)
 			
 		if (!offset)
 			offset = 0
@@ -237,5 +227,10 @@ Editor.Caret = new Class
 		}
 		
 		return result
+	},
+	
+	move: function()
+	{
+		this.offset(this.offset() + 1)
 	}
 })

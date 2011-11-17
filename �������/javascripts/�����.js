@@ -461,12 +461,24 @@ $(function()
 
 String.prototype.count = function(what)
 {
-	var count = 0
-	var index = -1
-	while ((index = this.indexOf(what, index + 1)) >= 0)
-		count++
+	if (typeof(what) === 'string')
+	{
+		var count = 0
+		var index = -1
+		while ((index = this.indexOf(what, index + 1)) >= 0)
+			count++
+		
+		return count
+	}
 	
-	return count
+	if (what.constructor === RegExp)
+	{
+		var match = this.match(what)
+		if (!match)
+			return 0
+			
+		return this.match(what).length
+	}
 }
 
 function now()

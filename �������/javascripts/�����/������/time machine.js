@@ -80,6 +80,9 @@ Editor.Time_machine = new Class
 
 	snapshot: function()
 	{
+		if (this.get_most_recent_snapshot_time() >= this.editor.content_changed_on)
+			return
+		
 		this.snapshots.unshift(this.create_snapshot())
 	},
 
@@ -118,6 +121,9 @@ Editor.Time_machine = new Class
 	
 	can_snapshot_typing: function()
 	{
+		if (!this.editor.continuous_typing)
+			return true
+	
 		if (now().getTime() - this.editor.content_changed_on < this.typing_snapshot_delay)
 			return false
 			

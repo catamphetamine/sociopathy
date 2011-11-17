@@ -35,6 +35,11 @@
 		font-size: @textual_font_size;
 		line-height: @textual_line_height;
 
+		.hint
+		{
+			color: #7f7f7f !important;
+		}
+		
 		h1:focus, section:focus
 		{
 			outline: 0px solid transparent;
@@ -89,6 +94,11 @@
 			text-indent: @paragraph_indent;
 			/* text-align: justify; */
 		}
+		
+		ul li
+		{
+			text-indent: 10px;
+		}
 
 		a
 		{
@@ -125,7 +135,7 @@
 		{
 			font-family: @headings_font;
 		}
-			
+		
 		.references
 		{
 			list-style: none;

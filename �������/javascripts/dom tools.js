@@ -16,12 +16,30 @@ var Dom_tools =
 	
 	is_text_node: function(node)
 	{
+		node = this.normalize(node)
 		return node.nodeType == 3
 	},
 	
 	remove: function(node)
 	{
 		node.parentNode.removeChild(node)
+	},
+	
+	find_text_node: function(node, till)
+	{
+		node = this.normalize(node)
+		
+		var text_node = Dom_tools.down_to_text_node(node)
+			
+		if (text_node)
+			return text_node
+			
+		text_node = Dom_tools.find_next_text_node(node, till)
+			
+		if (text_node)
+			return text_node
+			
+		throw 'Text node not found'
 	},
 	
 	down_to_text_node: function(node)
@@ -56,7 +74,7 @@ var Dom_tools =
 		var next = this.next(node)
 		
 		if (!next)
-			return this.find_next_text_node(node.parentNode)
+			return this.find_next_text_node(node.parentNode, highest_parent)
 		
 		var child_text_node = this.down_to_text_node(next)
 		if (child_text_node)
@@ -65,6 +83,21 @@ var Dom_tools =
 		return this.find_next_text_node(next, highest_parent)
 	},
 	
+	append_text_next_to: function(node, text)
+	{
+		var text_node = document.createTextNode(text)
+		this.insert_x_after_y(text_node, node)
+		return text_node
+	},
+	
+	insert_x_after_y: function (x, y)
+	{
+		if (y.nextSibling)
+			y.parentNode.insertBefore(x, y.nextSibling)
+		else
+			y.parentNode.appendChild(x)
+	},
+
 	is_last_element: function(child, parent)
 	{
 		child = this.normalize(child)
@@ -266,5 +299,20 @@ var Dom_tools =
 			element = element[0]
 			
 		return element
+	},
+	
+	/**
+	* Getting the closest parent with the given tag name.
+	*/
+	find_parent_by_tag: function(child, tag)
+	{
+		var parent = child.parentNode
+		if (!parent)
+			return null
+			
+		if (parent.tagName.toLowerCase() === tag)
+			return parent
+
+		return find_parent_by_tag(parent, tag)
 	}
 }
