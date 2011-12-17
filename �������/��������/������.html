@@ -116,6 +116,8 @@
 
 		<script src="/javascripts/облик/form.js"></script> 
 
+		<script src="/javascripts/облик/batch loader.js"></script> 
+
 		<!-- slider -->
 		<script src="/javascripts/облик/slider/slider.js"></script> 
 		<script src="/javascripts/облик/slider/form_slider.js"></script> 
@@ -128,21 +130,12 @@
 		<script src="/javascripts/проверка обозревателя.js"></script> 
 
 		<script src="/javascripts/socket.io.js"></script>
-					
-		<script>
-			{{if пользователь}}
-				var пользователь =
-				{
-					id: '${пользователь.id}'
-				}
-			{{else}}
-				var пользователь = null
-			{{/if}}
-		
-			$(function()
-			{
-				loading_page()
 				
+		<script>
+			$(document).on('fully_loaded', function()
+			{
+				$(document).find('head').append('<script src="/javascripts/less-1.1.4.min.js"></s' + 'cript>')
+	
 				panel.initialize()
 				initialize_page()	
 				
@@ -164,10 +157,7 @@
 				go_to_anchor()
 			})
 		</script>
-		
-		<!-- стили этой страницы -->
-		<link rel="stylesheet/less" href="/облик/страницы/${название}.css"/>
-
+	
 		<script src="/javascripts/режимы.js"></script> 
 		 
 		 <!-- не убирается в файл, так как less обрабатывает стили при загрузке страницы, поэтому был бы виден мусор -->
@@ -190,6 +180,23 @@
 				text-align: center;
 			}
 			
+			#loading_screen[status=error]
+			{
+				cursor: default;
+			}
+			
+			.page_loading_error
+			{
+				text-align: center;
+				font-family: Georgia, Times New Roman, Minion Pro;
+				font-size: 30px;
+				/*color: #9c4646;*/
+				color: #3f3f3f;
+				position: relative;
+				top: 50%;
+				margin-top: -13px;
+			}
+			
 			/*
 			#loading_screen .text
 			{
@@ -205,7 +212,7 @@
 		<link rel="shortcut icon" href="/картинки/значок.png">
 	</head>
 
-	<body>
+	<body class="loading">
 		<div id="loading_screen">
 			<!--
 			<span class="text">Страница загружается</span>
@@ -223,6 +230,10 @@
 			*/
 		</script>
 		
+		<script>
+			var пользователь = null
+		</script>
+				
 		<aside>
 			<nav>
 				<!-- top menu panel -->
@@ -232,15 +243,6 @@
 						<li name="reading" link="/читальня">Читальня</li>
 						<li name="people" link="/люди">Люди</li>
 						<li name="help" link="/помощь">Помощь</li>
-						{{if пользователь}}
-							<li><span class="divider"></span></li>
-							<li name="болталка" link="/сеть/болталка">Болталка</li>
-							<li name="обсуждения" link="/сеть/обсуждения">Обсуждения</li>
-							<li name="беседы" link="/сеть/беседы">Беседы</li>
-							<li name="mail" link="/сеть/почта">Почта</li>
-							<li name="книги" link="/сеть/книги">Книги</li>
-							<li name="settings" link="/сеть/настройки">Настройки</li>
-						{{/if}}
 					</ul>
 		
 					<!-- logo -->
@@ -248,34 +250,11 @@
 				</div>
 			</nav>
 		</aside>
-	
-		<div class="centered_on_the_panel">
-			{{if пользователь}}
-				<div class="authenticated_user">
-					<div class="photo"></div>
-					<div class="info">
-						<a href="/люди/${пользователь['адресное имя']}" class="name">${пользователь.имя}</a>
-						<a href="#" class="logout">Выйти</a>
-					</div>
-				</div>
-			{{else}}
-				<div class="registration_hint non_selectable">
-					Если вы пропишетесь, вы сможете писать новые статьи и править текущие, <br/>
-					а также общаться и выражать своё мнение.
-					<div class="actions">
-						<a href="/прописка" class="register">Прописаться</a>
-						или
-						<a href="#войти" class="enter">Войти</a>
-					</div>
-				</div>
-			{{/if}}
-		</div>
-		
-		{{html содержимое}}
 
-		<!-- javascript'ы этой страницы -->
-		<script src="/javascripts/на страницах/${название}.js"></script> 
-		
+		<!-- Non-static content starts -->
+		<script src="/javascripts/non-static content.js"></script>
+		<!-- Non-static content ends -->
+				
 		<!-- AJAX loading window -->
 		<div id="loading_indicator" class="collapsed main_content non_selectable" title="Теперь ждите...">
 			<div style="text-align: center">
@@ -304,10 +283,9 @@
 				<a class='image' style="display: block; float: left; margin-right: 200px" href="http://www.google.com/chrome?hl=ru"><img src="/картинки/на страницах/welcome/chrome.png"/></a>
 				<a class='image' style=" float: left" href="http://www.mozilla-europe.org/ru/firefox/"><img src="/картинки/на страницах/welcome/firefox.png"/></a>
 			</div>
-			
 		</div>
 			
-		<!-- Вход -->
+		<!-- Окошко входа -->
 		<div id="enter_window" class="collapsed no_word_carrying" title="Вход">
 			<!-- пароль -->
 			<div class="main_content">
@@ -345,7 +323,4 @@
 		<!-- stretches the gradient background to the height of the entire page -->
 		<!--<div id="background_stretcher" class="non_selectable"></div>-->
 	</body>
-	
-	<!-- less (css preprocessor) -->
-	<script src="/javascripts/less-1.1.4.min.js"></script>
 </html>

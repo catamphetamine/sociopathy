@@ -11,10 +11,12 @@ function get_data(url)
 	
 var название = decodeURIComponent(request.get.path)
 
-var лекало_основы = get_data('http://127.0.0.1:8081/лекала/основа.html') //'<html><head><title>${название}</title></head><body>{{html содержимое}}</body></html>'
+var основа = get_data('http://127.0.0.1:8081/страницы/основа.html') //'<html><head><title>${название}</title></head><body>{{html содержимое}}</body></html>'
+var guest_content_template = get_data('http://127.0.0.1:8081/лекала/guest content.html') //'<html><head><title>${название}</title></head><body>{{html содержимое}}</body></html>'
 var лекало_страницы = get_data('http://127.0.0.1:8081/страницы/' + название + '.html') // get_data('http://localhost:8081/страницы/' + path + '.html')  //'<span>test: ${title}</span>'
 
-лекало_основы = лекало_основы.toString()
+основа = основа.toString()
+guest_content_template = guest_content_template.toString()
 лекало_страницы = лекало_страницы.toString()
 
 //system.stdout(123)
@@ -27,8 +29,15 @@ var данные = JSON.parse(request.get.data)
 данные.название = название
 данные.содержимое = лекала.tmpl(название, данные)
 			
-лекала.template('основа', лекало_основы)
-var data = лекала.tmpl('основа', данные)
+лекала.template('guest_content', guest_content_template)
+var guest_content = лекала.tmpl('guest_content', данные)
+
+var data = ''
+
+var replace_from = основа.indexOf('<!-- Non-static content starts -->')
+var replace_to = основа.indexOf('<!-- Non-static content ends -->')
+
+data = основа.substring(0, replace_from) + guest_content + основа.substring(replace_to)
 		
 delete лекала.template['основа']
 delete лекала.template[название]

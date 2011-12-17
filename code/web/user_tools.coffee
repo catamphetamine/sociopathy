@@ -1,35 +1,52 @@
-hash = require './whirlpool.hash'
-
 Цепочка = require './conveyor'
 цепь = (вывод) -> new Цепочка('web', вывод)
+
+снасти = require './tools'
 
 хранилище = global.db
 
 Cookie_expiration_date = new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 365 * 50)
 
-generate_remember_me = (пользователь) ->
-	hash(пользователь.имя + пользователь.пароль)
-
-exports.войти = (пользователь, ввод, вывод) ->
-	ввод.session.пользователь = пользователь
-	вывод.cookie 'user', пользователь._id, { expires: Cookie_expiration_date, httpOnly: true }
-	вывод.cookie 'remember me', generate_remember_me(пользователь), { expires: Cookie_expiration_date, httpOnly: true }
+exports.войти = (пользователь, ввод, вывод, возврат) ->
+	if ввод.session
+		if ввод.session.пользователь
+			if ввод.session.пользователь.id == пользователь.id
+				return
+		ввод.session.пользователь = пользователь
+	else
+		вывод.cookie 'user', пользователь._id, { expires: Cookie_expiration_date, httpOnly: true }
+		
+	возврат null, пользователь
 	
 exports.выйти = (ввод, вывод) ->
-	вывод.clearCookie 'connect.sid'
+	ввод.session.destroy()
 	вывод.clearCookie 'user'
-	вывод.clearCookie 'remember me'
-	
-	ввод.session.пользователь = null
 
+###
 exports.проверить = (номер_пользователя, remember_me, вывод, возврат) ->
+	цепь(вывод)
+		.сделать ->
+			хранилище.collection('people').findById номер_пользователя, @.в 'пользователь'
+			
+		.сделать (пользователь) ->
+			if not пользователь?
+				return возврат false
+			
+			generate_remember_me пользователь, @
+		
+		.сделать (generated_remember_me) ->
+			if generated_remember_me != remember_me
+				return возврат false
+				
+			возврат null, @.переменная 'пользователь'
+###
+
+exports.получить_пользователя = (номер_пользователя, вывод, возврат) ->
 	цепь(вывод)
 		.сделать ->
 			хранилище.collection('people').findById номер_пользователя, @
 			
 		.сделать (пользователь) ->
 			if not пользователь?
-				return возврат false
-			if generate_remember_me(пользователь) != remember_me
 				return возврат false
 			возврат null, пользователь

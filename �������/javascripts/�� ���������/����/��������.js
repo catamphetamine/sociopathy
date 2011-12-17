@@ -6,7 +6,8 @@ function initialize_page()
 		batch_size: 8,
 		list: function (data) { return уплотнить_сообщения(data.сообщения) },
 		template_url: '/лекала/сообщение в болталке.html',
-		item_container: $('.chat')
+		item_container: $('.chat'),
+		conditional: $('#chat_block[type=conditional]')
 	})
 	
 	connect_to_chat()

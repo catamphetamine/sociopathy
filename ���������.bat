@@ -1,4 +1,5 @@
 start "MongoDB" "run\mongodb.bat"
+start "Redis" "run\redis.bat"
 start "Node.js" "run\node.js.bat"
 call "run\apache.bat"
 rem start "Sass" "run\sass.bat"

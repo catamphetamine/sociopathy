@@ -173,7 +173,7 @@ function initialize_page()
 	
 	if (получить_настройку_запроса('приглашение'))
 	{
-		conditional = initialize_conditional($('[type=conditional]'))
+		conditional = initialize_conditional($('#join_button_block[type=conditional]'))
 		check_invite(conditional.callback)
 	}	
 }

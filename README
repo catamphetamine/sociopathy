@@ -14,6 +14,7 @@ Sociopathy
    MongoDB
    NginX
    Apache + v8cgi
+   Redis
 
 Статика отдаётся NginX'ом.
 Страницы шаблонизуются и отдаются Апачем (v8cgi + jQuery Templates).
@@ -26,6 +27,7 @@ Sociopathy
 Запуск:
 
 поставить mongodb
+поставить redis
 поставить node.js
 поставить nginx, и в nginx.conf в разделе "http" добавить "include c:\путь к папаке sociopathy\enginex.conf;"
 поставить apache (как службу; и сказать ему слушать 8082-ой порт), прикрутить к нему v8cgi, и в httpd.conf указать "DocumentRoot "c:/путь к папаке sociopathy/code/cgi""
@@ -51,3 +53,9 @@ LoadModule v8cgi_module c:\work\v8cgi\mod_v8cgi.dll
 "Заполнить хранилище"
 "Выдать приглашение" себе, и прописаться по нему (зайдя по адресу localhost:8081/?приглашение=проверка)
 Увидеть себя в конце страницы localhost:8081/люди
+
+=========================================================
+
+Connect: v 1.x
+там ещё в middleware/cookie.js нужно в set maxAge написать "new Date(Date.now().getTime() + ms)"
+иначе сессионности не будет

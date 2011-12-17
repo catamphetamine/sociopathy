@@ -1,5 +1,4 @@
-Цепочка = require './conveyor'
-цепь = (вывод) -> new Цепочка('web', вывод)
+цепь = require './../web_conveyor'
 цепь_websocket = (соединение) -> new Цепочка('websocket', соединение)
 
 sanitize = require('validator').sanitize
@@ -8,6 +7,13 @@ websocket = global.websocket
 хранилище = global.db
 приложение = global.application
 http = global.application_tools.http
+
+хранилище.bind 'chat',
+	выбрать: (настройки, возврат) ->
+		условия = настройки.условия || {}
+		дополнительно = { skip: настройки.с - 1, limit: настройки.сколько }
+		дополнительно.sort = настройки.sort
+		@find(условия, дополнительно).toArray возврат
 
 болталка = websocket
 	.of('/болталка')

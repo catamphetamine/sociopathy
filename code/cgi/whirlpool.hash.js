@@ -267,5 +267,5 @@
     return str;
   };
 
-	module.exports = WP
+	exports.hash = WP
 })();

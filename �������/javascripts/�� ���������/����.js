@@ -14,6 +14,7 @@ function initialize_page()
 		postprocess_item_element: function(element)
 		{
 			return $('<li/>').append(element)
-		}
+		},
+		conditional: $('#people_list_block[type=conditional]')
 	})
 }

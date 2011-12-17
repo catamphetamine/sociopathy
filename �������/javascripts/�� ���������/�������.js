@@ -15,7 +15,7 @@ function initialize_page()
 		return true
 	})
 
-	var conditional = initialize_conditional($('[type=conditional]'))
+	var conditional = initialize_conditional($('#id_card_block[type=conditional]'))
 	
 	$content = $('#content')
 	$id_card = $('#id_card')
@@ -34,8 +34,7 @@ function initialize_page()
 		{
 			$.template('личная карточка', template)
 			
-			var id_card = $.tmpl('личная карточка', пользователь_сети)
-			id_card.appendTo($id_card)
+			$.tmpl('личная карточка', пользователь_сети).appendTo($id_card)
 			
 			conditional.callback()
 		}

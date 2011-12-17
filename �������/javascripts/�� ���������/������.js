@@ -73,7 +73,7 @@ function activate_button(selector, options)
 	))
 }
         
-$(function()
+$(document).on('fully_loaded', function()
 {
     initialize_enter_window()
     initialize_enter_window_buttons()

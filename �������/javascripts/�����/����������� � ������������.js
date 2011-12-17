@@ -30,11 +30,11 @@ var loading_indicator = new (function()
 	var loading_indicators = []
 	
 	// rainy
-	loading_indicators.push({image: "rainy_by_hardware-requiem.gif", image_source: "http://hardware-requiem.deviantart.com/art/naruto-25542487"})
+	loading_indicators.push({image: "rainy_by_hardware-requiem.gif", image_source: "http://hardware-requiem.deviantart.com/art/naruto-25542487", width: 120, height: 120})
 	// fox
-	loading_indicators.push({image: "flipping_foxy_by_tanidareal-d32qs68.gif", image_source: "http://tanidareal.deviantart.com/art/Flipping-foxy-186007328"})
+	loading_indicators.push({image: "flipping_foxy_by_tanidareal-d32qs68.gif", image_source: "http://tanidareal.deviantart.com/art/Flipping-foxy-186007328", width: 100, height: 100})
 	// running wolf
-	loading_indicators.push({image: "Icon_moonrun_by_khaosdog.gif", image_source: "http://khaosdog.deviantart.com/art/Icon-moonrun-73322778"})
+	loading_indicators.push({image: "Icon_moonrun_by_khaosdog.gif", image_source: "http://khaosdog.deviantart.com/art/Icon-moonrun-73322778", width: 100, height: 100})
 	
 	this.initialize = function()
 	{
@@ -57,7 +57,15 @@ var loading_indicator = new (function()
 	{
 		var choise = this.choose_loading_indicator()
 		
-		$("img.loading_indicator_image", loading_indicator.$element).attr('src', images_path + "/" + choise.image)
+		var image = $("img.loading_indicator_image", loading_indicator.$element)
+		
+		image.css
+		({
+			width: choise.width + 'px',
+			height: choise.width + 'px'
+		})
+		
+		image.attr('src', images_path + "/" + choise.image)
 
 		$("a.loading_indicator_image_source", loading_indicator.$element).attr("href", choise.image_source)
 	}

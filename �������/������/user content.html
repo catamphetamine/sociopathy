@@ -1,0 +1,29 @@
+<ul id="extra_panel_menu" style="display: none">
+	<li><span class="divider"></span></li>
+	<li name="болталка" link="/сеть/болталка">Болталка</li>
+	<li name="обсуждения" link="/сеть/обсуждения">Обсуждения</li>
+	<li name="беседы" link="/сеть/беседы">Беседы</li>
+	<li name="mail" link="/сеть/почта">Почта</li>
+	<li name="книги" link="/сеть/книги">Книги</li>
+	<li name="settings" link="/сеть/настройки">Настройки</li>
+</ul>
+
+<script src="/javascripts/user content.js"></script>
+
+<div class="centered_on_the_panel">
+	<div class="authenticated_user">
+		<div class="photo"></div>
+		<div class="info">
+			<a href="/люди/${пользователь['адресное имя']}" class="name">${пользователь.имя}</a>
+			<a href="#" class="logout">Выйти</a>
+		</div>
+	</div>
+</div>
+
+{{html содержимое}}
+
+<!-- javascript'ы этой страницы -->
+<script src="/javascripts/на страницах/${название}.js"></script>
+
+<!-- стили этой страницы -->
+<link rel="stylesheet/less" href="/облик/страницы/${название}.css"/>
