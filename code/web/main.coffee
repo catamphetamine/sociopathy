@@ -1,5 +1,8 @@
 require 'coffee-script'
 
+memcache = require 'memcache'
+global.memcache = new memcache.Client 11211, 'localhost'
+
 mongo = require 'mongoskin'
 хранилище = mongo.db 'localhost:27017/sociopathy?auto_reconnect'
 global.db = хранилище
@@ -62,4 +65,15 @@ http.get '/общие_данные_для_страницы', (ввод, выво
 			.сделать ->
 				снасти.отдать_страницу страница, {}, ввод, вывод
 
-приложение.listen 8080, '0.0.0.0'
+global.memcache.on 'connect', () ->
+	приложение.listen 8080, '0.0.0.0'
+
+global.memcache.on 'timeout', () ->
+	# no arguments - socket timed out
+	console.error 'Memcache connection timeout'
+
+global.memcache.on 'error', (error) ->
+	# there was an error - exception is 1st argument
+	console.error error
+	
+global.memcache.connect()

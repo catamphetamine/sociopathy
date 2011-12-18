@@ -15,6 +15,7 @@ Sociopathy
    NginX
    Apache + v8cgi
    Redis
+   Memcache
 
 Статика отдаётся NginX'ом.
 Страницы шаблонизуются и отдаются Апачем (v8cgi + jQuery Templates).
@@ -27,6 +28,7 @@ Sociopathy
 Запуск:
 
 поставить mongodb
+поставить memcache
 поставить redis
 поставить node.js
 поставить nginx, и в nginx.conf в разделе "http" добавить "include c:\путь к папаке sociopathy\enginex.conf;"
@@ -44,6 +46,8 @@ LoadModule v8cgi_module c:\work\v8cgi\mod_v8cgi.dll
 
 настроить "run/mongodb.bat"
 настроить "run/node.js.bat"
+настроить "run/memcache.bat"
+настроить "run/redis.bat"
 настроить "run/nginx.bat"
 настроить "run/apache.bat"
 запустить "запустить.bat"
