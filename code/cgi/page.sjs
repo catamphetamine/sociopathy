@@ -35,7 +35,7 @@ var guest_content = лекала.tmpl('guest_content', данные)
 var data = ''
 
 var replace_from = основа.indexOf('<!-- Non-static content starts -->')
-var replace_to = основа.indexOf('<!-- Non-static content ends -->')
+var replace_to = основа.indexOf('<!-- Non-static content ends -->') + '<!-- Non-static content ends -->'.length
 
 data = основа.substring(0, replace_from) + guest_content + основа.substring(replace_to)
 		

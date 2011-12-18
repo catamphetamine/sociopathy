@@ -1,6 +1,12 @@
 var redis = require('redis')
+var снасти = require('./tools')
 
-var hour = 60 * 60
+var default_options =
+{
+	host: '127.0.0.1',
+	port: '6379',
+	time_to_live: 60 * 60 /* hour (in seconds) */
+}
 
 //var EventEmitter = require('events').EventEmitter
 
@@ -11,10 +17,8 @@ module.exports = function(connect)
 {
 	function RedisStore(options)
 	{
-		options = options || {}
-		
-		if (!options.time_to_live)
-			options.time_to_live = hour
+		this.options = снасти.merge(default_options, options)
+		options = this.options
 		
 		//Store.call(this, options)
 		
@@ -53,6 +57,7 @@ module.exports = function(connect)
 	{
 		callback = callback || Function.new
 	
+		var store = this
 		this.client.get(this.prefix + id, function(error, data)
 		{
 			try
@@ -68,13 +73,13 @@ module.exports = function(connect)
 		})
 	}
 	
-	RedisStore.prototype.set = function(id, session, callback)
+	RedisStore.prototype.set = function(id, session_data, callback)
 	{
 		callback = callback || Function.new
 		
 		try
 		{
-			this.client.setex(this.prefix + sid, options.time_to_live, JSON.stringify(session), function()
+			this.client.setex(this.prefix + id, this.options.time_to_live, JSON.stringify(session_data), function()
 			{
 				callback.apply(this, arguments)
 			})

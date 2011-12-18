@@ -2,23 +2,24 @@ var connect_utilities = require('connect').utils
 
 var Session = function(id, request, data)
 {
-	this._id = id
-	this._request = request
+	this.id = id
+	this.request = request
+	this.data = {}
 	
-	if ('object' == typeof data)
-		connect_utilities.merge(this, data)
+	if (typeof data === 'object')
+		connect_utilities.merge(this.data, data)
 }
 
 Session.prototype.save = function(callback)
 {
-	this._request.sessionStore.set(this._id, this, callback || function(){})
+	this.request.sessionStore.set(this.id, this.data, callback || function(){})
 	return this
 }
 
 Session.prototype.destroy = function(callback)
 {
-	delete this._request.session
-	this._request.sessionStore.destroy(this._id, callback)
+	delete this.request.session
+	this.request.sessionStore.destroy(this.id, callback)
 	return this
 }
 
@@ -67,13 +68,16 @@ module.exports = function(get_session_id, store)
 	
 		//
 		
-		store.get(id, function(error, session)
+		store.get(id, function(error, session_data)
 		{
 			if (error)
 				if (error.code !== 'ENOENT')
 					return next(error)
 
-			request.session = new Session(id, request, session)
+			//if (!session_data)
+			//	return next()
+				
+			request.session = new Session(id, request, session_data)
 			next()
 		})
 	}

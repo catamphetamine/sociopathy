@@ -30,7 +30,15 @@ remember_me = (ввод, вывод, следующий) ->
 	if not номер_пользователя?
 		return следующий()
 		
-	if ввод.session.пользователь?
+	###
+	console.log 'ввод.session.id'
+	console.log ввод.session.id
+	
+	console.log 'ввод.session.data.пользователь'
+	console.log ввод.session.data.пользователь
+	###
+	
+	if ввод.session.data.пользователь?
 		return следующий()
 		
 	следующий = общие_снасти.приостановить_ввод(ввод, следующий)

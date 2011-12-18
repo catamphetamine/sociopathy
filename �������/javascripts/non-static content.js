@@ -39,7 +39,7 @@
 	{
 		Ajax.get('/приложение/человек', { address_name: address_name },
 		{
-			error: function()
+			error: function(ошибка)
 			{
 				page_loading_error('Что-то сломалось')
 			},
@@ -56,13 +56,16 @@
 	{
 		Ajax.get('/приложение/общие_данные_для_страницы', 
 		{
-			error: function()
+			error: function(ошибка)
 			{
+				if (ошибка === 'Пользователь не найден')
+					return window.location.reload()
+				
 				page_loading_error('Что-то сломалось')
 			},
 			ok: function(данные) 
 			{
-				данные_для_страницы = Object.merge(данные_для_страницы, данные.данные)
+				данные_для_страницы = Object.merge(данные_для_страницы, данные)
 				данные_для_страницы.название = название_страницы
 
 				получить_шаблон_страницы()

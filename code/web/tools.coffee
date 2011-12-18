@@ -32,7 +32,6 @@ connect_utilities = require('connect').utils
 		port: 8082
 		path: '/page.sjs' + '?' + 'path=' + encodeURIComponent(название) + '&' + 'data=' + encodeURIComponent(JSON.stringify(данные_для_страницы))
 	
-	console.log options.path
 	снасти.получить_данные options, callback
 	
 снасти.hash = (что, чем, callback) ->
@@ -73,6 +72,14 @@ connect_utilities = require('connect').utils
 	return (ошибка) ->
 		следующий(ошибка)
 		pause.resume()
+		
+снасти.merge = (first, second) ->
+	result = {}
+	for own key, value of first
+		result[key] = value
+	for own key, value of second
+		result[key] = value
+	result
 	
 module.exports = снасти
 
