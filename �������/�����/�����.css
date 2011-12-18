@@ -303,6 +303,19 @@ label.error
 	opacity: 0;
 }
 
+.on_the_right_side_of_the_panel
+{
+	position: absolute;
+	top: 0;
+	right: 0;
+	
+	margin: 0;
+	margin-top: 4px;
+	margin-right: 14px;
+	
+	z-index: 10;
+}
+
 .centered_on_the_panel
 {
 	width: 100%;
@@ -374,6 +387,7 @@ label.error
 		text-align: right;
 		margin-top: 4px;
 		margin-left: 4px;
+		margin-right: 8px;
 
 		.name
 		{
