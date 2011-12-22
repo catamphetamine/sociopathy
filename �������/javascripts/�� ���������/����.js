@@ -4,7 +4,7 @@ function initialize_page()
 
 	$('#content').disableTextSelect()
 	
-	new Templated_batch_loader
+	new Data_templater
 	({
 		url: '/приложение/люди',
 		batch_size: 8,
@@ -15,6 +15,7 @@ function initialize_page()
 		{
 			return $('<li/>').append(element)
 		},
-		conditional: $('#people_list_block[type=conditional]')
+		conditional: $('#people_list_block[type=conditional]'),
+		loader: Batch_loader
 	})
 }

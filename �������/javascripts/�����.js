@@ -439,7 +439,7 @@ function add_anchor_to_url(anchor)
 		window.location = window.location + '#' + anchor
 }
 
-$(function()
+$(document).on('fully_loaded', function()
 {
 	var container = $('#content');
 	
@@ -450,6 +450,12 @@ $(function()
 			var element = $(this)
 			if (element.children().length > 0)
 				return
+				
+			element.css('display', 'inline')
+			
+			var dummy = $('<div></div>')
+			dummy.disableTextSelect()
+			element.after(dummy)
 				
 			element.click(function(event)
 			{

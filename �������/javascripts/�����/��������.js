@@ -137,6 +137,6 @@ var panel = new (function()
 		this.activate_buttons(images_path)
 		this.activate_tooltips()
 		
-		$('#panel_container').disableTextSelect()
+		$('#panel').children().disableTextSelect()
 	} 
 })()

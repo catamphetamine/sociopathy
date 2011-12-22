@@ -2,6 +2,8 @@
 http = global.application_tools.http
 цепь = require './../web_conveyor'
 
+снасти = require './../tools'
+
 http.get '/общие_данные_для_страницы', (ввод, вывод) ->
 	данные_для_страницы = {}
 	

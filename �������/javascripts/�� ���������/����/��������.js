@@ -1,13 +1,14 @@
 function initialize_page()
 {
-	new Templated_batch_loader
+	new Data_templater
 	({
 		url: '/приложение/болталка/сообщения',
 		batch_size: 8,
 		list: function (data) { return уплотнить_сообщения(data.сообщения) },
 		template_url: '/лекала/сообщение в болталке.html',
 		item_container: $('.chat'),
-		conditional: $('#chat_block[type=conditional]')
+		conditional: $('#chat_block[type=conditional]'),
+		loader: Batch_loader
 	})
 	
 	connect_to_chat()

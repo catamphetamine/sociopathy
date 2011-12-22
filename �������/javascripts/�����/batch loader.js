@@ -35,7 +35,7 @@ var Batch_loader = new Class
 			default:
 				throw 'next: invalid argument count'
 		}
-			
+
 		this.get(count, callback)
 	},
 	
@@ -109,13 +109,57 @@ var Batch_loader = new Class
 	}
 })
 
-var Templated_batch_loader = new Class
+var Data_loader = new Class
 ({
-	Extends: Batch_loader,
+	Implements: [Options],
 	
 	initialize: function(options)
 	{
-		this.conditional = initialize_conditional(options.conditional)
+		this.setOptions(options)
+	},
+
+	get: function(callback)
+	{
+		var loader = this
+		
+		Ajax.get(this.options.url,
+		{ 
+			ошибка: function(ошибка)
+			{
+				callback(ошибка)
+			},
+			ok: function(data)
+			{
+				callback(null, loader.options.list(data))
+			}
+		})
+	},
+	
+	load: function()
+	{
+		var loader = this
+		
+		this.get(function(ошибка, список)
+		{
+			if (ошибка)
+			{
+				loader.options.callback(ошибка)
+				return
+			}
+		
+			список.forEach(function(объект)
+			{
+				loader.options.show(объект)
+			})
+		})
+	}
+})
+
+var Data_templater = new Class
+({
+	initialize: function(options)
+	{
+		var conditional = initialize_conditional(options.conditional)
 
 		if (!options.postprocess_item_element)
 			options.postprocess_item_element  = function(element)
@@ -129,12 +173,11 @@ var Templated_batch_loader = new Class
 			options.postprocess_item_element(item_element).appendTo(options.item_container)
 		}
 		
-		options.loading_more = this.conditional.loading_more
-		options.callback = this.conditional.callback
+		options.loading_more = conditional.loading_more
+		options.callback = conditional.callback
 
-		this.parent(options)
-		
-		var loader = this
+		var loader = new options.loader(options)
+		//loader.conditional = conditional
 		
 		Ajax.get(options.template_url, 
 		{
@@ -142,7 +185,8 @@ var Templated_batch_loader = new Class
 			type: 'html',
 			error: function()
 			{
-				loader.conditional.callback('Не удалось загрузить страницу')
+				// loader.
+				conditional.callback('Не удалось загрузить страницу')
 			},
 			ok: function(template) 
 			{
