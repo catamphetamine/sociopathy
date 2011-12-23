@@ -15,28 +15,18 @@ function initialize_page()
 		return true
 	})
 
-	var conditional = initialize_conditional($('#id_card_block[type=conditional]'))
+	new Data_templater
+	({
+		template_url: '/лекала/личная карточка.html',
+		item_container: $('#id_card'),
+		conditional: $('#id_card_block[type=conditional]')
+	},
+	new  Data_loader
+	({
+		url: '/приложение/человек',
+		parameters: { адресное_имя: путь().match(/люди\/(.+)/)[1] },
+		get_data: function (data) { return data }
+	}))
 	
-	$content = $('#content')
-	$id_card = $('#id_card')
-	
-	$content.disableTextSelect()
-
-	Ajax.get('/лекала/личная карточка.html', 
-	{
-		//cache: false,
-		type: 'html',
-		error: function()
-		{
-			conditional.callback('Не удалось загрузить страницу')
-		},
-		ok: function(template) 
-		{
-			$.template('личная карточка', template)
-			
-			$.tmpl('личная карточка', пользователь_сети).appendTo($id_card)
-			
-			conditional.callback()
-		}
-	})
+	$('#content').disableTextSelect()
 }

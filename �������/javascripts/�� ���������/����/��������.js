@@ -2,14 +2,17 @@ function initialize_page()
 {
 	new Data_templater
 	({
-		url: '/приложение/болталка/сообщения',
-		batch_size: 8,
-		list: function (data) { return уплотнить_сообщения(data.сообщения) },
 		template_url: '/лекала/сообщение в болталке.html',
 		item_container: $('.chat'),
 		conditional: $('#chat_block[type=conditional]'),
 		loader: Batch_loader
-	})
+	},
+	new  Batch_loader
+	({
+		url: '/приложение/болталка/сообщения',
+		batch_size: 8,
+		get_data: function (data) { return уплотнить_сообщения(data.сообщения) }
+	}))
 	
 	connect_to_chat()
 }

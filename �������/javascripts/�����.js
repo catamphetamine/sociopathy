@@ -513,6 +513,11 @@ String.prototype.ends_with = function(substring)
 	return this.lastIndexOf(substring) === this.length - substring.length
 }
 
+String.prototype.chop_on_the_end = function(how_much) 
+{
+	return this.substring(0, this.length - how_much)
+}
+
 String.prototype.trim_trailing_comma = function()
 {
 	var text = this.trim()
@@ -559,3 +564,10 @@ $(function()
 		body.addClass('webkit')
 })
 
+function путь()
+{
+	var путь = parseUri(decodeURI(window.location)).path.substring(1)
+	if (путь.ends_with('/'))
+		путь = путь.chop_on_the_end(1)
+	return путь
+}

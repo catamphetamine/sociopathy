@@ -1,22 +1,12 @@
 <link rel="stylesheet/less" href="/облик/личная карточка.css"/>
 
-{{if ошибка}}
-	<section id="content">
-		<div class="error">${ошибка}</div>	
-	</section>
-{{else}}
-	<script>
-		var пользователь_сети = {{html данные_пользователя}}
-	</script>
-
-	<section id="content">
-		<div id="id_card_block" type="conditional">
-			<div type="ok">
-				<div id="id_card"></div>
-			</div>
-			
-			<div type="loading">Загружаем личную карточку</div>
-			<div type="error">Не удалось загрузить личную карточку</div>
-		</div>	
-	</section>
-{{/if}}
+<section id="content">
+	<div id="id_card_block" type="conditional">
+		<div type="ok">
+			<div id="id_card"></div>
+		</div>
+		
+		<div type="loading">Загружаем личную карточку</div>
+		<div type="error">Не удалось загрузить личную карточку</div>
+	</div>	
+</section>

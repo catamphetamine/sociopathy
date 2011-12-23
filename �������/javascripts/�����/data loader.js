@@ -2,6 +2,11 @@ var Batch_loader = new Class
 ({
 	Implements: [Options],
 	
+	options:
+	{
+		get_data: function(data) { return data }
+	},
+	
 	есть_ли_ещё: true,
 	index: 1,
 	
@@ -54,9 +59,9 @@ var Batch_loader = new Class
 				if (!data['есть ещё?'])
 					loader.есть_ли_ещё = false
 					
-				var list = loader.options.list(data)
-				loader.index += list.length
-				callback(null, list)
+				var data_list = loader.options.get_data(data)
+				loader.index += data_list.length
+				callback(null, data_list)
 			}
 		})
 	},
@@ -113,6 +118,12 @@ var Data_loader = new Class
 ({
 	Implements: [Options],
 	
+	options:
+	{
+		parameters: {},
+		get_data: function(data) { return data }
+	},
+	
 	initialize: function(options)
 	{
 		this.setOptions(options)
@@ -122,15 +133,15 @@ var Data_loader = new Class
 	{
 		var loader = this
 		
-		Ajax.get(this.options.url,
+		Ajax.get(this.options.url, this.options.parameters,
 		{ 
-			ошибка: function(ошибка)
+			error: function(ошибка)
 			{
 				callback(ошибка)
 			},
 			ok: function(data)
 			{
-				callback(null, loader.options.list(data))
+				callback(null, loader.options.get_data(data))
 			}
 		})
 	},
@@ -147,17 +158,22 @@ var Data_loader = new Class
 				return
 			}
 		
+			if (список.constructor !== Array)
+				список = [список]
+				
 			список.forEach(function(объект)
 			{
 				loader.options.show(объект)
 			})
+			
+			loader.options.callback()
 		})
 	}
 })
 
 var Data_templater = new Class
 ({
-	initialize: function(options)
+	initialize: function(options, loader)
 	{
 		var conditional = initialize_conditional(options.conditional)
 
@@ -166,33 +182,72 @@ var Data_templater = new Class
 			{
 				return element
 			}
-			
-		options.show = function(item)
+		
+		function show_item(item, options)
 		{
 			var item_element = $.tmpl(options.template_url, item)
 			options.postprocess_item_element(item_element).appendTo(options.item_container)
 		}
 		
-		options.loading_more = conditional.loading_more
-		options.callback = conditional.callback
-
-		var loader = new options.loader(options)
-		//loader.conditional = conditional
-		
-		Ajax.get(options.template_url, 
+		loader.options.show = function(item)
 		{
-			//cache: false,
-			type: 'html',
-			error: function()
+			if (options.data)
 			{
-				// loader.
-				conditional.callback('Не удалось загрузить страницу')
-			},
-			ok: function(template) 
-			{
-				$.template(options.template_url, template)
-				loader.load()
+				var items = item
+				for (var property in options.data)
+					if (options.data.hasOwnProperty(property))
+						if (items[property])
+						{
+							if (items[property].constructor === Array)
+								items[property].forEach(function(item)
+								{
+									show_item(item, options.data[property])
+								})
+							else
+								show_item(items[property], options.data[property])
+						}
 			}
-		})
+			else
+				show_item(item, options)
+		}
+		
+		loader.options.callback = conditional.callback
+		
+		if (options.data)
+		{
+			var latest_deferred
+			for (var property in options.data)
+				if (options.data.hasOwnProperty(property))
+				{
+					if (latest_deferred)
+						latest_deferred.then(function() { load_template(options.data[property].template_url) })
+					else
+						latest_deferred = load_template(options.data[property].template_url)
+				}
+			
+			latest_deferred.done(function() { loader.load() })
+		}
+		else
+			load_template(options.template_url).done(function() { loader.load() })
+			
+		function load_template(template_url)
+		{
+			var deferred = $.Deferred()
+			Ajax.get(template_url,
+			{
+				//cache: false,
+				type: 'html',
+				error: function()
+				{
+					conditional.callback('Не удалось загрузить страницу')
+				},
+				ok: function(template) 
+				{
+					$.template(template_url, template)
+					deferred.resolve()
+				}
+			})
+			return deferred
+		}
 	}
 })

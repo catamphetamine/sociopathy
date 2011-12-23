@@ -15,12 +15,18 @@
 <link rel="stylesheet/less" href="/облик/поле поиска.css"/>
 
 <section id="content" class="reading">
-
-	<ul id="categories">
-		<script>
-			var categories = [{id: 1, name: 'Физика', url_name: 'physics'}, {id: 2, name: 'Строительство', url_name: 'architecture'}, {id: 3, name: 'Механизация', url_name: 'machinery'}, {id: 4, name: 'Литература', url_name: 'literature'}, {id: 5, name: 'Политика', url_name: 'politics'}, {id: 6, name: 'Душеведение', url_name: 'psychology'}, {id: 7, name: 'Общество', url_name: 'society'}, {id: 8, name: 'История', url_name: 'history'}]
-		</script>
-	</ul>
+	<div id="category_list_block" type="conditional">
+		<div type="ok">	
+			<ul id="categories">
+			</ul>
+				
+			<ul id="articles">
+			</ul>
+		</div>
+		
+		<div type="loading">Загружаем список разделов и заметок</div>
+		<div type="error">Не удалось загрузить список разделов и заметок</div>
+	</div>
 	
 	<div class="clear">&nbsp;</div>
 </section>

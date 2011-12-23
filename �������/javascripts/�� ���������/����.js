@@ -6,16 +6,18 @@ function initialize_page()
 	
 	new Data_templater
 	({
-		url: '/приложение/люди',
-		batch_size: 8,
-		list: function (data) { return data.люди },
 		template_url: '/лекала/личная карточка.html',
 		item_container: $('#id_cards'),
 		postprocess_item_element: function(element)
 		{
 			return $('<li/>').append(element)
 		},
-		conditional: $('#people_list_block[type=conditional]'),
-		loader: Batch_loader
-	})
+		conditional: $('#people_list_block[type=conditional]')
+	},
+	new  Batch_loader
+	({
+		url: '/приложение/люди',
+		batch_size: 8,
+		get_data: function (data) { return data.люди }
+	}))
 }
