@@ -13,7 +13,7 @@ Sociopathy
    Javascript (jQuery, Mootools, Node.js, Express, WebSocket)
    MongoDB
    NginX
-   Apache + v8cgi
+   //Apache + v8cgi
    Redis
    Memcache
 
@@ -24,6 +24,10 @@ Sociopathy
 Доступна под GNU General Public License (см. "license.txt")
 
 =========================================================
+
+Примечания:
+
+Apache + v8cgi больше не используются. Можно их не ставить и не настраивать.
 
 Запуск:
 

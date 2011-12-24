@@ -14,7 +14,7 @@ exports.войти = (пользователь, ввод, вывод, возвр
 				return
 		ввод.session.data.пользователь = пользователь
 	else
-		вывод.cookie 'user', пользователь._id, { expires: Cookie_expiration_date, httpOnly: true }
+		вывод.cookie 'user', пользователь._id, { expires: Cookie_expiration_date, httpOnly: false }
 		
 	возврат null, пользователь
 	

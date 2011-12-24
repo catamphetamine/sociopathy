@@ -6,7 +6,7 @@ function initialize_page()
 	var main_header = $('article h1')
 	
 	var article_editor = new Visual_editor('#content > article section')
-		
+	
 	article_editor.initialize_tool_elements()
 	
 	initialize_editor()

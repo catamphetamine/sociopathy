@@ -26,7 +26,7 @@ var данные = JSON.parse(request.get.data)
 
 лекала.template(название, лекало_страницы)
 
-данные.название = название
+данные.название_страницы = название
 данные.содержимое = лекала.tmpl(название, данные)
 			
 лекала.template('guest_content', guest_content_template)

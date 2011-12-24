@@ -295,8 +295,25 @@ function initialize_conditional($this, options)
 			loading = loading_more
 		}
 		
-		if (message && typeof(message) === 'string')
-			error.text(message)
+		if (message)
+		{
+			if (message.уровень)
+			{
+				switch (message.уровень)
+				{
+					case 'ничего страшного':
+						error.html('<span class="nothing_serious">' + message.текст + '</span>')
+						break;
+				
+					default:
+						error.text(message.текст)
+				}
+			}
+			else
+			{
+				error.text(message)
+			}
+		}
 		else
 			error.text(error.attr('default_message'))
 		
@@ -450,13 +467,18 @@ $(document).on('fully_loaded', function()
 			var element = $(this)
 			if (element.children().length > 0)
 				return
-				
-			element.css('display', 'inline')
 			
-			var dummy = $('<div></div>')
-			dummy.disableTextSelect()
-			element.after(dummy)
+			/*	
+			if (element[0].tagName.toLowerCase() !== 'h2')
+			{
+				element.css('display', 'inline')
 				
+				var dummy = $('<div></div>')
+				dummy.disableTextSelect()
+				element.after(dummy)				
+			}
+			*/
+			
 			element.click(function(event)
 			{
 				event.preventDefault()
@@ -564,10 +586,43 @@ $(function()
 		body.addClass('webkit')
 })
 
-function путь()
+function путь_страницы()
 {
 	var путь = parseUri(decodeURI(window.location)).path.substring(1)
 	if (путь.ends_with('/'))
 		путь = путь.chop_on_the_end(1)
 	return путь
+}
+
+function path_breadcrumbs(path, delta)
+{
+	if (!delta)
+		delta = 0
+
+	var path_parts = path.split('/')
+	
+	var path_html = ''
+	
+	var i = 0
+	var how_much = path_parts.length + delta
+	while (i < how_much)
+	{
+		link_path = ''
+		
+		var j = 0
+		while (j <= i)
+		{
+			if (j > 0)
+				link_path += '/'
+			link_path += path_parts[j]
+			j++
+		}
+	
+		path_html += '<a href="/читальня/' + link_path + '">' + path_parts[i] + '</a>'
+		if (i < how_much - 1)
+			path_html += ' → '
+		i++
+	}
+	
+	return path_html
 }

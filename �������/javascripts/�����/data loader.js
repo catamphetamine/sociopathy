@@ -212,6 +212,7 @@ var Data_templater = new Class
 		}
 		
 		loader.options.callback = conditional.callback
+		loader.options.loading_more = conditional.loading_more
 		
 		if (options.data)
 		{

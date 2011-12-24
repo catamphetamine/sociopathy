@@ -24,7 +24,18 @@ memcache = global.memcache
 снасти.отдать_страницу = (название, данные_для_страницы, ввод, вывод, возврат) ->
 	new Цепочка()
 		.сделать ->
-			memcache.get название, @
+			if global.memcache_available
+				try
+					memcache.get название, @
+				catch error
+					@(error)
+			else
+				@()
+				
+		.ошибка (ошибка) ->
+			# если memcache не сумел взять данные - не страшно
+			console.error ошибка
+			return no
 			
 		.сделать (данные) ->
 			if not данные?
@@ -35,7 +46,18 @@ memcache = global.memcache
 			снасти.получить_страницу(название, данные_для_страницы, ввод, вывод, @.в 'данные')
 
 		.сделать (данные) ->
-			memcache.set название, данные, @, 60 * 60
+			if global.memcache_available
+				try
+					memcache.set название, данные, @, 60 * 60
+				catch error
+					@(error)
+			else
+				@()
+				
+		.ошибка (ошибка) ->
+			# если memcache не сумел положить данные - не страшно
+			console.error ошибка
+			return no
 			
 		.сделать (данные) ->
 			вывод.send @.переменная 'данные'

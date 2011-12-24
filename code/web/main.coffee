@@ -26,8 +26,9 @@ require './controller/people'
 require './controller/user'
 require './controller/general'
 
+#global.memcache_available = false
 global.memcache.on 'connect', () ->
-	приложение.listen 8080, '0.0.0.0'
+	global.memcache_available = true
 
 global.memcache.on 'timeout', () ->
 	# no arguments - socket timed out
@@ -35,6 +36,8 @@ global.memcache.on 'timeout', () ->
 
 global.memcache.on 'error', (error) ->
 	# there was an error - exception is 1st argument
+	console.error 'Memcache failed:'
 	console.error error
 	
+приложение.listen 8080, '0.0.0.0'
 global.memcache.connect()

@@ -24,7 +24,7 @@ function initialize_page()
 	new  Data_loader
 	({
 		url: '/приложение/человек',
-		parameters: { адресное_имя: путь().match(/люди\/(.+)/)[1] },
+		parameters: { адресное_имя: путь_страницы().match(/люди\/(.+)/)[1] },
 		get_data: function (data) { return data }
 	}))
 	

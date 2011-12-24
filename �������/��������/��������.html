@@ -16,7 +16,13 @@
 
 <section id="content" class="reading">
 	<div id="category_list_block" type="conditional">
-		<div type="ok">	
+		<div type="ok">
+			{{if путь}}
+				<div class="breadcrumbs">
+					{{html path_breadcrumbs(путь)}}
+				</div>
+			{{/if}}
+			
 			<ul id="categories">
 			</ul>
 				

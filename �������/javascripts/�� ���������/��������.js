@@ -8,7 +8,7 @@ function initialize_page()
 	$('#categories').disableTextSelect()
 
 	var путь_к_разделу
-	var match = путь().match(/читальня\/(.+)/)
+	var match = путь_страницы().match(/читальня\/(.+)/)
 	if (match)
 		путь_к_разделу = match[1]
 		
