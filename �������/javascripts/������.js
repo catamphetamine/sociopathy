@@ -38,8 +38,10 @@ var Ajax =
 			{
 				if (json.ошибка)
 				{
-					options.error(json.ошибка)
-					return
+					if (json.ошибка === true)
+						return options.error(options.ошибка)
+					else
+						return options.error(json.ошибка)
 				}
 
 				if ($.isFunction(options.ok))

@@ -7,6 +7,8 @@ mongo = require 'mongoskin'
 хранилище = mongo.db 'localhost:27017/sociopathy?auto_reconnect'
 global.db = хранилище
 
+global.mode = 'development'
+
 Цепочка = require './conveyor'
 цепь = (вывод) -> new Цепочка('web', вывод)
 

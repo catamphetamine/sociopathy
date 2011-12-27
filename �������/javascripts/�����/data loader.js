@@ -51,7 +51,7 @@ var Batch_loader = new Class
 		
 		Ajax.get(this.options.url, { с: this.index, сколько: count }, 
 		{ 
-			ошибка: function(ошибка)
+			error: function(ошибка)
 			{
 				callback(ошибка)
 			},

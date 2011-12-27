@@ -42,6 +42,46 @@ function адресное_имя()
 
 function id_card_loaded()
 {
+	show_minor_info()
+	initialize_editables()
+}
+
+function show_minor_info()
+{
+	дополнительные_данные =
+	[
+		'время рождения',
+		'характер',
+		'убеждения',
+		'семейное положение'
+	]
+	
+	var container = $('.minor_info')
+	var left = container.find('> .left')
+	var right = container.find('> .right')
+	
+	var odd = true
+	дополнительные_данные.forEach(function(поле)
+	{
+		var info = $('<div/>')
+		info.addClass('info')
+		
+		var title = $('<dt/>')
+		title.text(поле)
+		title.appendTo(info)
+		
+		var value = $('<dd/>')
+		value.text(пользователь_сети[поле])
+		value.appendTo(info)
+		
+		info.appendTo(odd ? left : right)
+		
+		odd = !odd
+	})
+}
+	
+function initialize_editables()
+{
 	if (!пользователь)
 		return
 		

@@ -157,6 +157,9 @@
 	
 	.info
 	{
+		position: absolute;
+		left: 180px;
+	
 		margin-top: 100px;
 		margin-left: 100px;
 
@@ -192,7 +195,8 @@
 
 	.miscellaneous
 	{
-		margin-left: 130px;
+		position: absolute;
+		left: 540px;
 		
 		.small_logo_placeholder
 		{

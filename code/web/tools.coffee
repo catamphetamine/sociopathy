@@ -229,6 +229,13 @@ memcache = global.memcache
 			переименовать()
 		)
 	)
+
+снасти.ошибка = (ошибка) ->
+	if typeof ошибка == 'string'
+		return ошибка
+	if ошибка.stack?
+		return ошибка.stack
+	return require('util').inspect(ошибка)
 	
 снасти.сейчас = (настройки) ->
 	if настройки.минуты?

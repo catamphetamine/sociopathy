@@ -151,7 +151,7 @@ $(function()
 				if (options.before)
 					options.before()
 				
-				$('body').append($.tmpl(url, данные))
+				$('footer').before($.tmpl(url, данные))
 				
 				возврат()
 			}

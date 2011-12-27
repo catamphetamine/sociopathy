@@ -62,6 +62,14 @@ function connect_to_chat(callback)
 	{
 		add_message(уплотнить_сообщения([ данные ]))
 	})
+	
+	болталка.on('ошибка', function(ошибка)
+	{
+		if (ошибка === true)
+			error('Ошибка связи с сервером')
+		else
+			error(ошибка)
+	})
 }
 
 function уплотнить_сообщения(сообщения)

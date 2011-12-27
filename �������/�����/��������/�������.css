@@ -27,3 +27,42 @@ body[mode="правка"] .real_picture
 {
 	cursor: pointer;
 }
+
+.minor_info
+{
+	width: 600px;
+	
+	display: block;
+	
+	margin-left: auto;
+	margin-right: auto;
+	
+	margin-top: 80px;
+	margin-bottom: 20px;
+	
+	.info
+	{
+		margin-bottom: 40px;
+
+		font-size: 26px;
+	
+		dt
+		{
+			display: block;
+			color: #7D7B7B;
+		}
+		
+		dd
+		{
+			display: block;
+			margin-left: 20px;
+		}
+	}
+	
+	.left, .right
+	{
+		width: 50%;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+}
