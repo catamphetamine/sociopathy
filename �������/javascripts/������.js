@@ -94,14 +94,17 @@ var Режим = (function()
 				if (this.tagName.toLowerCase() !== 'body')
 					$(this).show()
 			})
-			
+		
 		var описание_режима = найти_описание_режима(mode)
 		описание_режима.перейти(режим)
 		
 		$(document).trigger('режим.переход', [режим, mode])
 		$(document).trigger('режим.' + mode)
 	
+		$('*').unbind('.режим_' + режим)
+	
 		режим = mode
+		
 		$('body').attr('mode', описание_режима.название)
 	}
 	

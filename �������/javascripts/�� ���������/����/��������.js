@@ -1,11 +1,21 @@
 function initialize_page()
 {
+	Режим.подсказка('Здесь вы можете разговаривать с другими членами сети.')
+
+	var send_button = activate_button('.send_message .send')
+	.does(function()
+	{
+		var message = $('.send_message .message').val()
+		$('.send_message .message').val('')
+		болталка.emit('сообщение', message)
+	})
+		
 	new Data_templater
 	({
 		template_url: '/лекала/сообщение в болталке.html',
 		item_container: $('.chat'),
 		conditional: $('#chat_block[type=conditional]'),
-		loader: Batch_loader
+		done: chat_loaded
 	},
 	new  Batch_loader
 	({
@@ -13,15 +23,29 @@ function initialize_page()
 		batch_size: 8,
 		get_data: function (data) { return уплотнить_сообщения(data.сообщения) }
 	}))
-	
-	connect_to_chat()
+}
+
+function add_message(data)
+{
+	var content = $.tmpl('/лекала/сообщение в болталке.html', data)
+//	var item = $('<li/>')
+//	content.appendTo(item)
+	content.prependTo($('.chat'))
+}
+
+function chat_loaded()
+{  
+	connect_to_chat(function()
+	{
+		$('.send_message').show()
+	})
 }
 
 var болталка
 
-function connect_to_chat()
+function connect_to_chat(callback)
 {
-	болталка = io.connect('http://localhost:8080/болталка')
+	болталка = io.connect('http://localhost:8080/болталка', { transports: ['websocket'] })
 	
 	болталка.on('connect', function()
 	{
@@ -30,7 +54,13 @@ function connect_to_chat()
 	
 	болталка.on('готов', function()
 	{
+		callback()
 		// показать поле ввода и кнопку отправки
+	})
+	
+	болталка.on('сообщение', function(данные)
+	{
+		add_message(уплотнить_сообщения([ данные ]))
 	})
 }
 

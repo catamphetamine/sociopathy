@@ -311,3 +311,72 @@ cookie user ставится два раза или один? (firebug)
 // категория не может называться "[обложка]"
 
 // в супервайзоре: если сервер заваливается - слать email с куском лога
+
+
+
+
+
+в админке - сгенерить приглашение (whirlpool('sociopathy invite' + timestamp + random())
+убрать "заполнить базу"
+сделать "изменить базу"
+
+escape_single_quotes в картинках на личной карточке и прочих
+
+когда уезжает вверх more tools при переходе в обычный режим - не доезжает
+
+
+
+доделать чат
+
+
+socket.io -> Redis Store
+
+
+allowed extension - jpg
+проверять размер файла
+
+
+
+
+		.actions_container
+		{
+			position: absolute;
+			top: 110px;
+			left: -20px;
+			
+			display: none;
+			
+			.actions
+			{
+				.rounded_corners(4px);
+
+				opacity: 0.8;
+				
+				font-size: 20px;
+				
+				padding-top: 8px;
+				padding-bottom: 8px;
+
+				padding-left: 12px;
+				padding-right: 12px;
+				
+				background-color: black;
+				
+				white-space: nowrap;
+					
+				a
+				{
+					color: white;
+					border: 0;
+				}				
+			}
+		}
+
+		
+		
+				<div class="actions_container">
+					<div class="actions">
+						<a class="change_picture" href="#">Изменить картинку</a>
+					</div>
+				</div>
+				

@@ -19,6 +19,8 @@ http = global.application_tools.http
 
 require './date'
 
+require './upload_server'
+
 require './controller/administration'
 require './controller/chat'
 require './controller/library'
@@ -26,6 +28,8 @@ require './controller/people'
 require './controller/user'
 require './controller/general'
 
+#global.websocket = require('socket.io').listen 8084
+		
 #global.memcache_available = false
 global.memcache.on 'connect', () ->
 	global.memcache_available = true

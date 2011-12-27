@@ -1,3 +1,4 @@
+connect = require 'connect'
 express = require 'express'
 #session = express.cookieParser
 redis_store = new (require('./connect_redis_session_store')(express))()
@@ -7,21 +8,11 @@ session = require('./connect_session')(get_session_id, redis_store)
 		
 общие_снасти = require './tools'
 
-адрес = require 'url'
 io = require 'socket.io'
 пользовательское = require './user_tools'
 
 получатель_настроек = (ввод, вывод, следующий) ->
-	настройки = адрес.parse(ввод.url, true).query
-	
-	for ключ, значение of настройки
-		if (typeof значение is 'string')
-			if "#{parseInt(значение)}" == значение
-				настройки[ключ] = parseInt(значение)
-			else if "#{parseFloat(значение)}" == значение
-				настройки[ключ] = parseFloat(значение)
-
-	ввод.настройки = настройки
+	ввод.настройки = общие_снасти.настройки(ввод)
 	следующий()
 	
 remember_me = (ввод, вывод, следующий) ->
@@ -30,14 +21,6 @@ remember_me = (ввод, вывод, следующий) ->
 	if not номер_пользователя?
 		return следующий()
 		
-	###
-	console.log 'ввод.session.id'
-	console.log ввод.session.id
-	
-	console.log 'ввод.session.data.пользователь'
-	console.log ввод.session.data.пользователь
-	###
-	
 	if ввод.session.data.пользователь?
 		return следующий()
 		
@@ -75,7 +58,7 @@ module.exports = (приложение) ->
 			#приложение.use express.errorHandler()
 			
 		global.websocket = io.listen приложение
-	
+		
 	снасти = {}
 	
 	снасти.http = {}

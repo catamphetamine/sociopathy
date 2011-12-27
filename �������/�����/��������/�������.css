@@ -22,3 +22,8 @@
 		margin-top: 250px;
 	}
 }
+
+body[mode="правка"] .real_picture
+{
+	cursor: pointer;
+}

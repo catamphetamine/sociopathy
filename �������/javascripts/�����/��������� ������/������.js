@@ -34,6 +34,8 @@ Visual_editor.implement
 			this.set_proper_tools_state()
 		})
 		.bind(this))
+		
+		initialize_more_less_tools()
 	},
 
 	set_proper_tools_state: function()
@@ -515,7 +517,7 @@ $(function()
 })
 
 // more tools / less tools
-$(function()
+function initialize_more_less_tools()
 {
 	var tools = $('.visual_editor_tools')
 	var main_tools = tools.find('.main_tools')
@@ -551,4 +553,4 @@ $(function()
 			})
 		})
 	})
-})
+}

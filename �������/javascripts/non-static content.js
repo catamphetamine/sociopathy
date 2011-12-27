@@ -12,7 +12,7 @@ $(function()
 	{
 		название_страницы = 'человек'
 	}
-	
+				
 	if (название_страницы.starts_with('читальня/'))
 	{
 		var путь = название_страницы.substring('читальня/'.length)
@@ -88,6 +88,9 @@ $(function()
 			ok: function(данные) 
 			{
 				данные_для_страницы = Object.merge(данные_для_страницы, данные)
+				
+				пользователь = данные.пользователь
+				
 				возврат()
 			}
 		})
@@ -95,7 +98,26 @@ $(function()
 
 	function вставить_содержимое_страницы(возврат)
 	{
-		вставить_содержимое('/страницы/' + название_страницы + '.html', данные_для_страницы, возврат)
+		вставить_содержимое('/страницы/' + название_страницы + '.html', данные_для_страницы, возврат,
+		{
+			on_error: function()
+			{
+				название_страницы = 'страница не найдена'
+				вставить_содержимое_страницы(возврат,
+				{
+					before: вставить_стиль_и_javascript
+				})
+			},
+			before: вставить_стиль_и_javascript
+		})
+	}
+	
+	function вставить_стиль_и_javascript()
+	{
+		$.getScript('/javascripts/на страницах/' + название_страницы.escape_html() + '.js', function()
+		{
+			$('head').append('<link rel="stylesheet/less" href="/облик/страницы/' + название_страницы.escape_html() + '.css"/>')
+		})
 	}
 	
 	function вставить_пользовательское_содержимое(возврат)
@@ -108,19 +130,27 @@ $(function()
 		вставить_содержимое('/лекала/guest content.html', данные_для_страницы, возврат)
 	}
 	
-	function вставить_содержимое(url, данные, возврат)
+	function вставить_содержимое(url, данные, возврат, options)
 	{
+		options = options || {}
+		
 		Ajax.get(url, 
 		{
 			type: 'html',
 			error: function()
 			{
+				if (options.on_error)
+					return options.on_error()
+					
 				page_loading_error('Что-то сломалось')
 			},
 			ok: function(template) 
 			{
 				$.template(url, template)
-
+				
+				if (options.before)
+					options.before()
+				
 				$('body').append($.tmpl(url, данные))
 				
 				возврат()

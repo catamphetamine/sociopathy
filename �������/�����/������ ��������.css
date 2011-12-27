@@ -47,7 +47,7 @@
 
 	.personal_info
 	{
-		.picture
+		.default_picture
 		{
 			/*background-image: url('/картинки/avatar/male.png');*/
 			background-repeat: no-repeat;
@@ -59,6 +59,32 @@
 			margin-right: 50px;
 			
 			.beautiful_shadow(0px, 1px, 3px, 3px, 5px, 3px, 7px, 0.12);
+		}
+
+		.default_picture, .real_picture
+		{
+			background-repeat: no-repeat;
+			
+			width: 120px;
+			height: 120px;
+		}
+		
+		.default_picture
+		{
+			position: relative;
+			
+			background-image: url('/картинки/business card/картинка по умолчанию.jpg');
+			
+			margin-top: 30px;
+			margin-left: 15px;
+			
+			.beautiful_shadow(0px, 1px, 3px, 3px, 5px, 3px, 7px, 0.12);
+		}
+				
+		.upload_new_picture
+		{
+			position: absolute;
+			visibility: hidden;
 		}
 
 		.name

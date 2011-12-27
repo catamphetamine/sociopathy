@@ -12,6 +12,30 @@
 		margin-bottom: 50px;
 		margin-top: 250px;
 	}
+	
+	.send_message
+	{
+		text-align: center;
+		display: none;
+	
+		.send_message_inner
+		{
+			text-align: right;
+			display: inline-block;
+			
+			.message
+			{
+				width: 600px;
+				height: 100px;
+			}
+			
+			.send
+			{
+				margin-top: 10px;
+				display: inline-block;
+			}
+		}
+	}
 }
 
 ul.chat

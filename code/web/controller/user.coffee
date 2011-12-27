@@ -69,3 +69,17 @@ http.get '/пользовательские_данные_для_страницы
 			данные_для_страницы.ошибка = 'Пользователь не найден'
 		
 	вывод.send данные_для_страницы
+
+connect_utilities = require('connect').utils
+
+http_proxy = require 'http-proxy'
+
+http.post '/человек/сменить картинку', (ввод, вывод) ->
+	приостановленный_ввод = connect_utilities.pause(ввод)
+	return if пользовательское.требуется_вход(ввод, вывод)
+	proxy = new http_proxy.RoutingProxy()
+	proxy.proxyRequest(ввод, вывод,
+		host: 'localhost'
+		port: global.Upload_server_port
+	)
+	приостановленный_ввод.resume()

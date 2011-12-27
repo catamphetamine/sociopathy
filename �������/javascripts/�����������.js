@@ -80,13 +80,6 @@ String.prototype.ends_with = function(substring)
 	return (this.match(substring + "$") == substring)
 }
 
-// HTML escaping
-
-String.prototype.escape_html = function() 
-{
-	return this.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
-}
-
 // OOP
 
 function extend_static(Child, Parent) 

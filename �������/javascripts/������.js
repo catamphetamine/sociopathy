@@ -32,7 +32,7 @@ var Ajax =
 		({
 			url: url, 
 			type: method,
-			cache: false,
+			cache: true,
 			data: data, 
 			success: function(json, textStatus)
 			{

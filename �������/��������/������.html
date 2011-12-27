@@ -130,33 +130,30 @@
 		<!-- browser checker -->
 		<script src="/javascripts/проверка обозревателя.js"></script> 
 
-		<script src="/javascripts/socket.io.js"></script>
+		<script src="/javascripts/uploader.js"></script>
+		<script src="/javascripts/облик/всплывающее меню.js"></script>
+		
+		<script src="http://localhost:801/socket.io/socket.io.js"></script>
 				
 		<script>
 			$(document).on('fully_loaded', function()
 			{
-				$(document).find('head').append('<script src="/javascripts/less-1.1.4.min.js"></s' + 'cript>')
-	
-				panel.initialize()
-				initialize_page()	
+				$.getScript('/javascripts/less.js', function()
+				{
+					panel.initialize()
+					initialize_page()	
 				
-				//var delayed = function() 
-				//{
-					//center_horizontally()
-					//center_vertically()
 					page_loaded()
-				//}
-
-				//delayed.delay(1)
-				
-				check_browser_support()
-				
-				$('.non_selectable').disableTextSelect()
-				$('#page_header').disableTextSelect()
-				$('label').disableTextSelect()
-				$('.authenticated_user').disableTextSelect()
-				
-				go_to_anchor()
+					
+					check_browser_support()
+					
+					$('.non_selectable').disableTextSelect()
+					$('#page_header').disableTextSelect()
+					$('label').disableTextSelect()
+					$('.authenticated_user').disableTextSelect()
+					
+					go_to_anchor()
+				})
 			})
 		</script>
 	
@@ -234,6 +231,11 @@
 		
 		<script>
 			var пользователь = null
+			
+			var Options =
+			{
+				Upload_server_port: 8090
+			}
 		</script>
 				
 		<aside>

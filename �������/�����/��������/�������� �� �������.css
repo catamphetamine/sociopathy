@@ -1,0 +1,32 @@
+@import "/облик/вспомогательный.less";
+
+#content
+{
+	.message
+	{
+		margin-top: 160px;
+		margin-bottom: 140px;
+		
+		padding-left: 100px;
+		padding-right: 100px;
+		
+		font-family: @textual_font;
+		font-size: @textual_font_size;
+		line-height: @textual_line_height;
+
+		.main
+		{
+			line-height: 62px;
+		
+			text-align: center;
+			margin-bottom: 140px;
+			
+			.address
+			{
+				font-family: @discreet_font;
+				font-size: @textual_font_size;
+				color: #7f7f7f;
+			}
+		}
+	}
+}

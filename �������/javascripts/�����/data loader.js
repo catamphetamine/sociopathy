@@ -4,7 +4,8 @@ var Batch_loader = new Class
 	
 	options:
 	{
-		get_data: function(data) { return data }
+		get_data: function(data) { return data },
+		done: function() {}
 	},
 	
 	есть_ли_ещё: true,
@@ -70,6 +71,10 @@ var Batch_loader = new Class
 	{
 		var loader = this
 		
+		var first_load = true
+		if (loader.index > 1)
+			first_load = false
+			
 		this.batch(function(ошибка, список)
 		{
 			if (ошибка)
@@ -83,6 +88,9 @@ var Batch_loader = new Class
 				loader.options.show(объект)
 			})
 			
+			if (first_load)
+				loader.options.done()
+				
 			loader.options.callback(null, function()
 			{
 				if (loader.есть_ли_ещё)
@@ -167,6 +175,7 @@ var Data_loader = new Class
 			})
 			
 			loader.options.callback()
+			loader.options.done()
 		})
 	}
 })
@@ -199,12 +208,16 @@ var Data_templater = new Class
 						if (items[property])
 						{
 							if (items[property].constructor === Array)
+							{
 								items[property].forEach(function(item)
 								{
 									show_item(item, options.data[property])
 								})
+							}
 							else
+							{
 								show_item(items[property], options.data[property])
+							}
 						}
 			}
 			else
@@ -213,6 +226,7 @@ var Data_templater = new Class
 		
 		loader.options.callback = conditional.callback
 		loader.options.loading_more = conditional.loading_more
+		loader.options.done = options.done || function() {}
 		
 		if (options.data)
 		{
@@ -221,7 +235,7 @@ var Data_templater = new Class
 				if (options.data.hasOwnProperty(property))
 				{
 					if (latest_deferred)
-						latest_deferred.then(function() { load_template(options.data[property].template_url) })
+						latest_deferred = latest_deferred.pipe(function() { return load_template(options.data[property].template_url) })
 					else
 						latest_deferred = load_template(options.data[property].template_url)
 				}

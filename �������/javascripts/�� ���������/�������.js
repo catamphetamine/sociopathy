@@ -51,9 +51,9 @@ function initialize_page()
 		$('#edit_mode_actions').appendTo($('body')).move_out_downwards().disableTextSelect()
 		
 		cancel_button = activate_button('#edit_mode_actions .cancel', { 'prevent double submission': true })
-		.does(function() { info('cancel') })
+		.does(function() { info('to do: cancel') })
 	
 		done_button = activate_button('#edit_mode_actions .done', { 'prevent double submission': true })
-		.does(function() { info('save') })
+		.does(function() { info('to do: save') })
 	}
 }

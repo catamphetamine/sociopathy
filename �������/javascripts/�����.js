@@ -1,3 +1,5 @@
+$.ajaxSetup({ cache: true })
+
 // internationalization
 $.i18n.setLocale("ru")
 
@@ -625,4 +627,11 @@ function path_breadcrumbs(path, delta)
 	}
 	
 	return path_html
+}
+
+// HTML escaping
+
+String.prototype.escape_html = function() 
+{
+	return this.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
 }

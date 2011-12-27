@@ -53,6 +53,8 @@ var panel = new (function()
 	
 	var tooltip_show_bottom = 76
 	var tooltip_hide_bottom = 86
+	
+	var delta_y = tooltip_hide_bottom - tooltip_show_bottom
 
 	var icon_size = 60
 	
@@ -102,12 +104,21 @@ var panel = new (function()
 	
 	this.activate_tooltips = function()
 	{
+		var tooltips = []
+		
 		// for every tooltip
 		$('#' + menu_id + ' > li > a').each(function()
 		{
 			// get the tooltip and position it appropriately
 			var tooltip = $(this).next(tooltip_tag)
 			tooltip.disableTextSelect()
+			
+			tooltips.push(tooltip)
+			
+			if (tooltip.parent().attr('not_yet_implemented'))
+			{
+				$(this).click(function(event) { event.preventDefault(); info('Ещё не сделано'); })
+			}
 			
 			tooltip.css('left', ($(this).position().left + 10) + 'px')
 			tooltip.addClass('panel_menu_tooltip')
@@ -118,7 +129,21 @@ var panel = new (function()
 				// on mouse roll over - show
 				function() 
 				{
-					tooltip.stop(true, true).animate({opacity: "show", top: tooltip_show_bottom}, "slow")
+					var speed = 'slow'
+				
+					tooltips.each(function(a_tooltip)
+					{
+						if (a_tooltip !== tooltip && a_tooltip.css('display') !== 'none')
+						{
+							a_tooltip.stop(true, true).fadeOut(100)
+							speed = 300
+						}
+					})
+					
+					if (speed !== 'slow')
+						tooltip.css('top', tooltip_show_bottom)
+					
+					tooltip.stop(true, true).animate({opacity: 'show', top: tooltip_show_bottom}, speed)
 				},
 				// on mouse roll out - hide 
 				function()

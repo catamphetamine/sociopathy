@@ -2,6 +2,8 @@ http = require 'http'
 адрес = require 'url'
 connect_utilities = require('connect').utils
 
+file_system = require 'fs'
+
 Цепочка = require './conveyor'
 цепь = require './web_conveyor'
 
@@ -119,6 +121,119 @@ memcache = global.memcache
 	for own key, value of second
 		result[key] = value
 	result
+
+снасти.настройки = (ввод) ->
+	настройки = адрес.parse(ввод.url, true).query
+	
+	for ключ, значение of настройки
+		if (typeof значение is 'string')
+			if "#{parseInt(значение)}" == значение
+				настройки[ключ] = parseInt(значение)
+			else if "#{parseFloat(значение)}" == значение
+				настройки[ключ] = parseFloat(значение)
+	
+	return настройки
+	
+снасти.cookie = (имя, ввод) ->
+	if ввод.cookies?
+		return ввод.cookies[имя]
+		
+	cookie = ввод.headers.cookie || ввод.headers['x-cookie']
+	console.log cookie
+	if cookie?
+		try
+			ввод.cookies = connect_utilities.parseCookie(cookie)
+			return ввод.cookies[имя]
+		catch ошибка
+			console.error ошибка
+		
+снасти.создать_путь = (path, callback) ->
+	# default foder mode
+	mode = 0777
+	
+	# change windows slashes to unix
+	path =  path.replace(/\\/g, '/')
+	
+	# remove trailing slash
+	if path.substring(path.length - 1) == '/'
+		path = path.substring(0, path.length - 1)
+	
+	check_folder = (path, callback) ->
+		file_system.stat(path, (error, info) ->
+			if not error?
+				# folder exists, no need to check previous folders
+				if info.isDirectory()
+					return callback()
+				
+				# file exists at location, cannot make folder
+				#return callback(new Error('exists'))
+				
+			# if it is unkown error
+			if error.errno != 2 && error.errno != 32 && error.code != 'ENOENT'
+				console.error(require('util').inspect(error, true))
+				return callback(error)
+			
+			# the folder doesn't exist, try one stage earlier then create
+		
+			# if only slash remaining is initial slash, then there is no where to go back
+			if path.lastIndexOf('/') == path.indexOf('/')
+				# should only be triggered when path is '/' in Unix, or 'C:/' in Windows
+				# (which must exist)
+				return callback(new Error('Not found'))
+				
+			# try one stage earlier
+			check_folder(path.substring(0, path.lastIndexOf('/')), (error) ->
+				if error?
+					return callback(error)
+					
+				# make this directory
+				file_system.mkdir(path, mode, (error) ->
+					if error && error.errno != 17
+						error = "Failed to create folder #{path}"
+						console.error(error)
+						return callback(new Error(error))
+
+					callback()
+				)
+			)
+		)
+				
+	check_folder(path, callback)
+
+снасти.переименовать = (путь, имя, возврат) ->
+	# change windows slashes to unix
+	путь =  путь.replace(/\\/g, '/')
+	
+	место = путь.substring(0, путь.lastIndexOf('/'))
+	имя_файла = путь.substring(путь.lastIndexOf('/') + 1)
+	
+	разширение = ''
+	последняя_точка = имя_файла.lastIndexOf('.')
+	if последняя_точка >= 0
+		разширение = имя_файла.substring(последняя_точка + 1)
+	
+	переименовать = () ->
+		file_system.rename(путь, в_путь, возврат)
+		
+	в_путь = место + '/' + имя
+	file_system.stat(в_путь, (ошибка, сводка) ->
+		if ошибка?
+			return переименовать()
+			
+		if сводка.isDirectory()
+			return переименовать()
+			
+		file_system.unlink(в_путь, (ошибка) ->
+			if ошибка?
+				return возврат(ошибка)
+			переименовать()
+		)
+	)
+	
+снасти.сейчас = (настройки) ->
+	if настройки.минуты?
+		return new Date().toString('dd.MM.yyyy HH:mm')
+	new Date().toString('dd.MM.yyyy')
 	
 module.exports = снасти
 
@@ -132,8 +247,11 @@ Array.prototype.trim = () ->
 			array.push element
 	array
 	
-Object.prototype.where_am_i = () ->
+Array.prototype.where_am_i = () ->
 	try
 		this_variable_doesnt_exist['you are here'] += 0
 	catch error
 		console.log error.stack
+		
+String.prototype.escape_html = ->
+	@replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
