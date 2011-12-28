@@ -1,3 +1,5 @@
+Режим.можно_будет_править_после_загрузки()
+
 function initialize_page()
 {
 	Режим.подсказка('Здесь вы можете посмотреть данные об этом члене нашей сети. Если это ваша личная карточка, вы сможете изменить данные в ней, переключившись в режим правки.')
@@ -44,6 +46,33 @@ function id_card_loaded()
 {
 	show_minor_info()
 	initialize_editables()
+	initialize_edit_mode_effects()	
+
+	Режим.activate_actions(save_changes)
+	Режим.включить_возможность_правки()
+}
+
+function initialize_edit_mode_effects()
+{
+	var initial_background_color = $('body').css('background-color')
+	
+	var background_fade_time = 400
+	var highlight_color = '#44adcb'
+	
+	$(document).on('режим.правка', function()
+	{
+		$('body').stop(true, false).animate({ 'background-color': '#afafaf' }, background_fade_time)
+		$('.real_picture').animate({ 'boxShadow': '0 0 20px ' + highlight_color })
+	})
+
+	$(document).on('режим.переход', function(event, из, в)
+	{
+		if (из === 'правка')
+		{
+			$('body').stop(true, false).animate({ 'background-color': initial_background_color }, background_fade_time)
+			$('.real_picture').animate({ 'boxShadow': '0 0 0px' })
+		}
+	})
 }
 
 function show_minor_info()
@@ -79,7 +108,19 @@ function show_minor_info()
 		odd = !odd
 	})
 }
-	
+
+var image_file_name
+function save_changes()
+{
+	Ajax.post('/приложение/человек/сменить картинку', { имя: image_file_name },
+	{
+		ok: function()
+		{
+			Режим.изменения_сохранены()
+		}
+	})
+}
+
 function initialize_editables()
 {
 	if (!пользователь)
@@ -94,9 +135,15 @@ function initialize_editables()
 		//url: '/приложение/человек/сменить картинку',
 		url: 'http://localhost:' + Options.Upload_server_port + '/человек/сменить картинку',
 		parameter: { name: 'user', value: $.cookie('user') },
-		success: function()
+		success: function(data)
 		{
-			window.location.reload()
+			if (data.ошибка)
+				return error(data.ошибка)
+			
+			image_file_name = data.имя
+			$('.real_picture').css('background-image', "url('" + data.адрес + "')")
+			
+			//window.location.reload()
 		},
 		error: function(xhr)
 		{
@@ -106,7 +153,7 @@ function initialize_editables()
 
 	$(document).bind('режим.правка', function(event)
 	{
-		info('Вы можете сменить картинку (120 на 120), нажав на неё.')
+		//info('Вы можете сменить картинку (120 на 120), нажав на неё.')
 
 		var file_chooser = $('.upload_new_picture')
 		

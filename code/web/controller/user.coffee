@@ -2,6 +2,7 @@
 http = global.application_tools.http
 цепь = require './../web_conveyor'
 
+снасти = require './../tools'
 пользовательское = require './../user_tools'
 
 http.post '/вход', (ввод, вывод) ->
@@ -70,8 +71,26 @@ http.get '/пользовательские_данные_для_страницы
 		
 	вывод.send данные_для_страницы
 
-connect_utilities = require('connect').utils
+http.post '/человек/сменить картинку', (ввод, вывод) ->
+	return if пользовательское.требуется_вход(ввод, вывод)
 
+	имя = ввод.body.имя
+	if имя.to_unix_path().indexOf('/') >= 0
+		throw 'hack attempt: ' + имя
+	
+	путь = global.Upload_temporary_file_path + '/' + имя + '.jpg'
+	место = global.Upload_file_path + '/люди/' + ввод.session.data.пользователь['адресное имя'] + '/картинка'
+	
+	цепь(вывод)
+		.сделать ->
+			снасти.создать_путь(место, @)
+		.сделать ->
+			снасти.переместить_и_переименовать(путь, { место: место, имя: 'на личной карточке.jpg' }, @)
+		.сделать ->
+			вывод.send {}
+			
+###
+connect_utilities = require('connect').utils
 http_proxy = require 'http-proxy'
 
 http.post '/человек/сменить картинку', (ввод, вывод) ->
@@ -83,3 +102,4 @@ http.post '/человек/сменить картинку', (ввод, выво
 		port: global.Upload_server_port
 	)
 	приостановленный_ввод.resume()
+###

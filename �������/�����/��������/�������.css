@@ -176,7 +176,7 @@ body[mode="правка"] #content.article article a
 	.hyperlink();
 }
 
-#edit_mode_actions
+#article_edit_mode_actions
 {
 	display: none;
 
@@ -204,7 +204,7 @@ body[mode="правка"] #content.article article a
 	}
 }
 
-#edit_mode_actions, #edit_mode_actions_placeholder
+#article_edit_mode_actions, #article_edit_mode_actions_placeholder
 {
 	height: 66px;
 	overflow: hidden;

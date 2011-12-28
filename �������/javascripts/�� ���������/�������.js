@@ -1,3 +1,5 @@
+Режим.можно_будет_править_после_загрузки()
+
 function initialize_page()
 {
 	Режим.подсказка('Вы можете внести свои правки в эту заметку. Для этого потребуется перейти в <a href=\'/помощь/режимы\'>режим правки</a>.')
@@ -11,6 +13,8 @@ function initialize_page()
 	
 	initialize_editor()
 	initialize_actions()
+
+	Режим.включить_возможность_правки()
 		
 	function initialize_editor()
 	{
@@ -48,12 +52,12 @@ function initialize_page()
 	
 	function initialize_actions()
 	{
-		$('#edit_mode_actions').appendTo($('body')).move_out_downwards().disableTextSelect()
+		$('#article_edit_mode_actions').appendTo($('body')).move_out_downwards().disableTextSelect()
 		
-		cancel_button = activate_button('#edit_mode_actions .cancel', { 'prevent double submission': true })
+		cancel_button = activate_button('#article_edit_mode_actions .cancel', { 'prevent double submission': true })
 		.does(function() { info('to do: cancel') })
 	
-		done_button = activate_button('#edit_mode_actions .done', { 'prevent double submission': true })
+		done_button = activate_button('#article_edit_mode_actions .done', { 'prevent double submission': true })
 		.does(function() { info('to do: save') })
 	}
 }

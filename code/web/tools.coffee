@@ -168,10 +168,11 @@ memcache = global.memcache
 				# file exists at location, cannot make folder
 				#return callback(new Error('exists'))
 				
-			# if it is unkown error
-			if error.errno != 2 && error.errno != 32 && error.code != 'ENOENT'
-				console.error(require('util').inspect(error, true))
-				return callback(error)
+			if error?
+				# if it is unkown error
+				if error.errno != 2 && error.errno != 32 && error.code != 'ENOENT'
+					console.error(require('util').inspect(error, true))
+					return callback(error)
 			
 			# the folder doesn't exist, try one stage earlier then create
 		
@@ -201,8 +202,17 @@ memcache = global.memcache
 	check_folder(path, callback)
 
 снасти.переименовать = (путь, имя, возврат) ->
-	# change windows slashes to unix
-	путь =  путь.replace(/\\/g, '/')
+	снасти.переместить_и_переименовать(путь, { место: yes, имя: имя }, возврат)
+
+снасти.переместить = (путь, куда, возврат) ->
+	снасти.переместить_и_переименовать(путь, { место: куда, имя: yes }, возврат)
+
+снасти.имя_файла = (путь) ->
+	путь = путь.to_unix_path()
+	путь.substring(путь.lastIndexOf('/') + 1)
+	
+снасти.переместить_и_переименовать = (путь, куда, возврат) ->
+	путь = путь.to_unix_path()
 	
 	место = путь.substring(0, путь.lastIndexOf('/'))
 	имя_файла = путь.substring(путь.lastIndexOf('/') + 1)
@@ -212,10 +222,17 @@ memcache = global.memcache
 	if последняя_точка >= 0
 		разширение = имя_файла.substring(последняя_точка + 1)
 	
+	if куда.место == yes
+		куда.место = место
+		
+	if куда.имя == yes
+		куда.имя = имя_файла
+		
+	в_путь = куда.место + '/' + куда.имя
+
 	переименовать = () ->
 		file_system.rename(путь, в_путь, возврат)
-		
-	в_путь = место + '/' + имя
+	
 	file_system.stat(в_путь, (ошибка, сводка) ->
 		if ошибка?
 			return переименовать()
@@ -262,3 +279,6 @@ Array.prototype.where_am_i = () ->
 		
 String.prototype.escape_html = ->
 	@replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
+	
+String.prototype.to_unix_path = ->
+	@replace(/\\/g, '/')

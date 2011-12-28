@@ -46,6 +46,9 @@ var Режим = (function()
 	
 	var проверки_перехода = []
 	
+	var можно_править = false
+	var сообщение_о_выключенной_правке = 'Сейчас здесь нечего править'
+	
 	function возможен_ли_переход(из, в)
 	{
 		if (из === в)
@@ -54,6 +57,12 @@ var Режим = (function()
 		if (в === 'правка' && !пользователь)
 		{
 			info('Вы не можете сейчас ничего править, так как вы не вошли в нашу сеть. Если вы являетесь членом нашей сети, <a href=\'#войти\'  class=\'enter\'>войдите</a>. Если же вы не являетесь членом нашей сети, вы можете попробовать <a href=\'http://localhost:8081/прописка\'>прописаться</a>.')
+			return false
+		}
+
+		if (в === 'правка' && !можно_править)
+		{
+			info(сообщение_о_выключенной_правке)
 			return false
 		}
 		
@@ -245,6 +254,21 @@ var Режим = (function()
 		добавить_проверку_перехода: function(проверка)
 		{
 			проверки_перехода.push(проверка)
+		},
+		
+		включить_возможность_правки: function()
+		{
+			можно_править = true
+		},
+		
+		выключить_возможность_правки: function()
+		{
+			можно_править = false
+		},
+		
+		можно_будет_править_после_загрузки: function()
+		{
+			сообщение_о_выключенной_правке = 'Дождитесь загрузки страницы'
 		}
 	}
 	
@@ -255,6 +279,38 @@ var Режим = (function()
 			return result.текущий() === режим.название
 		}
 	})
+	
+	var actions
+	var save_changes_button
+	
+	result.изменения_сохранены = function()
+	{
+		перейти_в_режим('обычный')
+		actions.slide_out_downwards(300, function()
+		{
+			save_changes_button.unlock()
+		})
+	}
+	
+	result.activate_actions = function(on_save) //, on_cancel
+	{
+		actions = $('#edit_mode_actions')
+		actions.appendTo($('body')).move_out_downwards().disableTextSelect()
+
+		save_changes_button = activate_button(actions.find('.done'), { 'prevent double submission': true })
+		.does(on_save)
+		
+		$(document).on('режим.переход', function(event, из, в)
+		{
+			if (в === 'правка')	
+				actions.slide_in_from_bottom()
+			//else if (из === 'правка')
+			//	actions.slide_out_downwards()
+		})
+		
+		//cancel_button = activate_button(actions.find('.cancel'), { 'prevent double submission': true })
+		//.does(on_cancel)	
+	}
 	
 	return result
 })()

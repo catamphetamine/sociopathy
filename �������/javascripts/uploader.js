@@ -127,7 +127,7 @@ function Uploader(input, options)
 			if ($this.xhr.status == 200 || $this.xhr.status == 0)
 			{
 				if ($this.settings.success)
-					$this.settings.success($this.xhr.responseText, ev)
+					$this.settings.success(JSON.parse($this.xhr.responseText), ev)
 					
 				$this.input.value = ''
 			}

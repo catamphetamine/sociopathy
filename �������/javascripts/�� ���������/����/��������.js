@@ -65,7 +65,7 @@ function connect_to_chat(callback)
 	
 	болталка.on('ошибка', function(ошибка)
 	{
-		if (ошибка === true)
+		if (ошибка.ошибка === true)
 			error('Ошибка связи с сервером')
 		else
 			error(ошибка)

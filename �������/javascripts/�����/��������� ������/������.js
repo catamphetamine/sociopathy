@@ -75,7 +75,7 @@ Visual_editor.implement
 		else
 			tools.css({ top: 0 }).fade_in(0.3)
 			
-		$('#edit_mode_actions').slide_in_from_bottom()
+		$('#article_edit_mode_actions').slide_in_from_bottom()
 	},
 	
 	hide_tools: function()
@@ -87,7 +87,7 @@ Visual_editor.implement
 		else
 			tools.css({ top: 0 }).fade_out(0.3)
 			
-		$('#edit_mode_actions').slide_out_downwards()
+		$('#article_edit_mode_actions').slide_out_downwards()
 	},
 	
 	disable_tools: function()

@@ -102,8 +102,14 @@
 		return this.css({ bottom: -this.outerHeight(true) + 'px' })
 	}
 	
-	$.fn.slide_out_downwards = function(duration)
+	$.fn.slide_out_downwards = function(duration, callback)
 	{
+		if (typeof duration === 'function')
+		{
+			callback = duration
+			duration = null
+		}
+	
 		this.stop_animation()
 		return this.animate
 		(
@@ -111,7 +117,12 @@
 				bottom: -this.outerHeight(true) + 'px'
 			},
 			duration,
-			function() { this.hide() }
+			function()
+			{
+				this.hide()
+				if (callback)
+					callback()
+			}
 		)
 	}
 	
