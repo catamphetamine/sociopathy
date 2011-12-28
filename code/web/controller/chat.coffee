@@ -4,7 +4,15 @@
 
 снасти = require './../tools'
 
-sanitize = require('validator').sanitize
+#sanitize = require('validator').sanitize
+
+redis = require 'redis'
+
+# redis clients
+#store = redis.createClient()
+#publisher = redis.createClient()
+#subscriber = redis.createClient()
+online = redis.createClient()
 
 websocket = global.websocket
 хранилище = global.db
@@ -18,6 +26,8 @@ http = global.application_tools.http
 		дополнительно.sort = настройки.sort
 		@find(условия, дополнительно).toArray возврат
 
+#subscriber.subscribe("chat")
+		
 болталка = websocket
 	.of('/болталка')
 	.on 'connection', (соединение) ->
@@ -25,14 +35,38 @@ http = global.application_tools.http
 			цепь_websocket(соединение)
 				.сделать ->
 					id = хранилище.collection('people').id(id)
-					хранилище.collection('people').findOne({ '_id': id }, @)
+					хранилище.collection('people').findOne({ '_id': id }, @.в 'пользователь')
 					
 				.сделать (пользователь) ->
 					if not пользователь?
 						return @('Пользователь с номером ' + id + ' не найден')
 					соединение.set 'пользователь', пользователь, @
+
+				.сделать () ->
+					пользователь = @.переменная 'пользователь'
 					
-				.сделать ->
+					данные_пользователя =
+						имя: пользователь.имя
+						'адресное имя': пользователь['адресное имя']
+						
+					online.hset('online', id, JSON.stringify(данные_пользователя), @)
+				
+				.сделать () ->	
+					online.hgetall('online', @)
+					
+				.сделать (who_is_online) ->
+					пользователь = @.переменная 'пользователь'
+					
+					who_is_online_info = []
+					for id, json of who_is_online
+						if id + '' != пользователь._id + ''
+							who_is_online_info.push(JSON.parse(json))
+					соединение.emit 'online', who_is_online_info
+					
+					соединение.broadcast.emit 'user_online',
+						имя: пользователь.имя
+						'адресное имя': пользователь['адресное имя']
+					
 					соединение.emit 'готов'
 		
 		соединение.on 'сообщение', (сообщение) ->
@@ -57,10 +91,27 @@ http = global.application_tools.http
 						сообщение: сообщение
 						время: время
 					}
-						
+					
+					#publisher.publish("chat", "messages:" + id)
+					
 					соединение.emit('сообщение', данные_сообщения)
 					соединение.broadcast.emit('сообщение', данные_сообщения)
 	
+		соединение.on 'disconnect', () ->
+			пользователь = null
+			цепь(websocket)
+				.сделать ->
+					соединение.get 'пользователь', @
+					
+				.сделать (user) ->
+					пользователь = user
+					online.hdel('online', пользователь._id, @)
+					
+				.сделать () ->
+					соединение.broadcast.emit 'offline',
+						имя: пользователь.имя
+						'адресное имя': пользователь['адресное имя']
+		
 		###
 		соединение.emit('a message',
 		{

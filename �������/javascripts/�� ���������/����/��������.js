@@ -45,7 +45,7 @@ var болталка
 
 function connect_to_chat(callback)
 {
-	болталка = io.connect('http://localhost:8080/болталка', { transports: ['websocket'] })
+	болталка = io.connect('http://' + Options.Websocket_server + '/болталка', { transports: ['websocket'] })
 	
 	болталка.on('connect', function()
 	{
@@ -56,6 +56,24 @@ function connect_to_chat(callback)
 	{
 		callback()
 		// показать поле ввода и кнопку отправки
+	})
+	
+	болталка.on('online', function(data)
+	{
+		data.forEach(function(user)
+		{
+			info(user.имя + " в сети")
+		})
+	})
+	
+	болталка.on('user_online', function(user)
+	{
+		info(user.имя + " в сети")
+	})
+	
+	болталка.on('offline', function(user)
+	{
+		info(user.имя + " вышел")
 	})
 	
 	болталка.on('сообщение', function(данные)

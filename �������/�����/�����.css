@@ -395,7 +395,7 @@ label.error
 			
 			color: #5f5f5f;
 			
-			font-family: Verdana;
+			font-family: Verdana, Arial, Helvetica;
 			font-size: 16px;
 			
 			border: 0;
@@ -407,7 +407,7 @@ label.error
 
 			margin-top: 8px;
 			
-			font-family: Verdana;
+			font-family: Verdana, Arial, Helvetica;
 			font-size: 16px;
 			
 			color: #4a798f;

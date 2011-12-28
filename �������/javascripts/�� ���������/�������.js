@@ -165,6 +165,14 @@ function initialize_editables()
 		
 		file_chooser.on('change.режим_правка', function()
 		{
+			var file = file_chooser[0].files[0]
+			
+			if (file.size > 100000)
+				return warning('Слишком большой файл. Выберите картинку размером 120 на 120, и не более ста килобайтов.')
+
+			if (file.type !== "image/jpeg")
+				return warning('Можно загружать только картинки формата JPEG')
+							
 			uploader.send()
 			
 			/*

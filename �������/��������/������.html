@@ -234,9 +234,11 @@
 		<script>
 			var пользователь = null
 			
+			var host = parseUri().host
 			var Options =
 			{
-				Upload_server_port: 8090
+				Upload_server_port: 8090,
+				Websocket_server: host + ':8080'
 			}
 		</script>
 				
