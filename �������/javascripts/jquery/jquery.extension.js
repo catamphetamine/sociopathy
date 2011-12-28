@@ -308,3 +308,5 @@
 	
 	initialize_ajax_upload()
 })()
+
+jQuery.fn.exists = function() { return this.length > 0 }

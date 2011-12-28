@@ -2,7 +2,7 @@
 
 #chat_container
 {
-	margin-top: 100px;
+	margin-top: 50px;
 	margin-bottom: 100px;
 	
 	#loading
@@ -51,7 +51,7 @@ ul.chat
 		display: table-row;
 
 		@inter_column_padding: 25px;
-		@message_bottom_padding: 26px;
+		@message_bottom_padding: 4px;
 		
 		.author, .messages
 		{
@@ -86,7 +86,11 @@ ul.chat
 			.picture
 			{
 				display: inline-block;
-				margin-top: 10px;
+				
+				position: relative;
+				top: 12px;
+				
+				margin-left: 20px;
 		
 				background-image: url('/картинки/temporary/картинка с навершия.jpg');
 				background-repeat: no-repeat;
@@ -95,6 +99,14 @@ ul.chat
 		
 				width: 48px;
 				height: 48px;
+			}
+		}
+		
+		.author.online
+		{
+			.picture
+			{
+				.beautiful_shadow(0px, 0px, 2px, 4px, 8px,10px, 20px, 0.25, 8, 155, 0);
 			}
 		}
 		
@@ -154,5 +166,42 @@ ul.chat
 	[type=loading], [type=error]
 	{
 		margin-top: 150px;
+	}
+}
+
+.who_is_online li, .who_is_online li a
+{
+	width: 48px;
+	height: 48px;
+}
+			
+.who_is_online
+{
+	list-style: none;
+	text-indent: 0;
+	
+	margin-top: 0;
+	margin-bottom: 50px;
+	
+	margin-left: 50px;
+	margin-right: 50px;
+	
+	padding: 0;
+	
+	li
+	{
+		display: inline-block;
+		margin: 8px;
+			
+		background-image: url('/картинки/temporary/картинка с навершия.jpg');
+			
+		a
+		{
+			display: inline-block;
+			
+			border: 0;
+			
+			.beautiful_shadow(0px, 1px, 2px, 3px, 4px, 0px, 0px, 0.2);
+		}
 	}
 }

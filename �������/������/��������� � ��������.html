@@ -1,7 +1,9 @@
 <li>
-	<div class="author no_word_carrying">
-		<a href="/люди/${отправитель['адресное имя']}">${отправитель.имя}</a>
+	<div class="author no_word_carrying {{if is_current_user(отправитель['адресное имя'])}}online{{/if}}" author="${отправитель['адресное имя']}">
+		<a href="/люди/${отправитель['адресное имя']}" style="display: inline-block">${отправитель.имя}<div class="picture"></div></a>
+		<!--
 		<a href="/люди/${отправитель['адресное имя']}" style="display: inline-block"><div class="picture"></div></a>
+		-->
 	</div>
 	<div class="messages">
 		<ul>
