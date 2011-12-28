@@ -250,3 +250,15 @@ module.exports = () ->
 	.parEach (путь_к_файлу) ->
 		disk readFile путь_к_файлу, 'utf-8', this
 	###
+	
+	
+	
+	
+	
+	
+	
+	
+	
+Connect: v 1.x
+там ещё в middleware/cookie.js нужно в set maxAge написать "new Date(Date.now().getTime() + ms)"
+иначе сессионности не будет
