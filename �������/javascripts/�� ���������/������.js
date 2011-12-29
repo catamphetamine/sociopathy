@@ -9,7 +9,16 @@ function initialize_page()
 		var question = question_and_answer.find('.question')
 		var answer = question_and_answer.find('.answer')
 		
+		if (!answer.exists())
+			return
+			
+		var answer_container = $('<div/>')
+		answer_container.css('overflow', 'hidden')
+		answer_container.appendTo(question_and_answer)
+		answer.appendTo(answer_container)
+		
 		answer.move_out_upwards()
+		
 		question.disableTextSelect()
 		question.click(function()
 		{

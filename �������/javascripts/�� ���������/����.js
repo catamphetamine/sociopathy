@@ -8,9 +8,9 @@ function initialize_page()
 	({
 		template_url: '/лекала/личная карточка.html',
 		item_container: $('#id_cards'),
-		postprocess_item_element: function(element)
+		postprocess_item: function(item)
 		{
-			return $('<li/>').append(element)
+			return $('<li/>').append(item)
 		},
 		conditional: $('#people_list_block[type=conditional]')
 	},

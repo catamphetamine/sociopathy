@@ -34,32 +34,32 @@ var Ajax =
 			type: method,
 			cache: true,
 			data: data, 
-			success: function(json, textStatus)
-			{
-				if (json.ошибка)
-				{
-					if (json.ошибка === true)
-						return options.error(options.ошибка)
-					else
-						return options.error(json.ошибка)
-				}
-
-				if ($.isFunction(options.ok))
-					options.ok(json)
-				else if (typeof(options.ok) === 'string')
-					info(options.ok)
-				else
-					error('Неправильная настройка ok: ' + ok)
-			},
-			error: function(jqXHR, textStatus, errorThrown)
-			{
-				options.error(options.ошибка)
-			},
 			dataType: options.type,
 			
 			beforeSend: function() { disable_links() },
 			complete: function() { enable_links() },
 			timeout: 15000
+		})
+		.success(function(json, textStatus)
+		{
+			if (json.ошибка)
+			{
+				if (json.ошибка === true)
+					return options.error(options.ошибка)
+				else
+					return options.error(json.ошибка)
+			}
+
+			if ($.isFunction(options.ok))
+				options.ok(json)
+			else if (typeof(options.ok) === 'string')
+				info(options.ok)
+			else
+				error('Неправильная настройка ok: ' + ok)
+		})
+		.error(function(jqXHR, textStatus, errorThrown)
+		{
+			options.error(options.ошибка)
 		})
 	}
 }

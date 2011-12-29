@@ -52,12 +52,27 @@ function initialize_page()
 	
 	function initialize_actions()
 	{
-		$('#article_edit_mode_actions').appendTo($('body')).move_out_downwards().disableTextSelect()
+		var actions = $('#article_edit_mode_actions')
+		actions.appendTo($('body')).move_out_downwards().disableTextSelect()
 		
-		cancel_button = activate_button('#article_edit_mode_actions .cancel', { 'prevent double submission': true })
-		.does(function() { info('to do: cancel') })
+		cancel_button = activate_button(actions.find('.cancel'), { 'prevent double submission': true })
+		.does(function()
+		{
+			info('Здесь удалять черновик')
+			actions.slide_out_downwards()
+		})
 	
-		done_button = activate_button('#article_edit_mode_actions .done', { 'prevent double submission': true })
-		.does(function() { info('to do: save') })
+		done_button = activate_button(actions.find('.done'), { 'prevent double submission': true })
+		.does(function()
+		{
+			info('Здесь сохранять заметку')
+			actions.slide_out_downwards()
+		})
+		
+		$(document).on('режим.переход', function(event, из, в)
+		{
+			if (в === 'правка')	
+				actions.slide_in_from_bottom()
+		})
 	}
 }

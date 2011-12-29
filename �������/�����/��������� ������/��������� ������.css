@@ -68,8 +68,10 @@
 	
 	ul.additional_tools
 	{
-		position: absolute;
+		/*position: absolute;*/
+		position: relative;
 		top: -@visual_editor_tools_panel_height;
+		margin-bottom: -@visual_editor_tools_panel_height;
 		left: 0;
 	}
 	

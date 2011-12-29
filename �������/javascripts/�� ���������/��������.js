@@ -20,18 +20,18 @@ function initialize_page()
 			{
 				template_url: '/лекала/раздел читальни.html',
 				item_container: $('#categories'),
-				postprocess_item_element: function(element)
+				postprocess_item: function(item)
 				{
-					return $('<li/>').append(element)
+					return $('<li/>').append(item)
 				}
 			},
 			заметки:
 			{
 				template_url: '/лекала/заметка раздела читальни.html',
 				item_container: $('#articles'),
-				postprocess_item_element: function(element)
+				postprocess_item: function(item)
 				{
-					return $('<li/>').append(element)
+					return $('<li/>').append(item)
 				}
 			}
 		},

@@ -164,6 +164,17 @@
 			{
 				font-size: 16px;
 			}
+						
+			&.video > span
+			{
+				position: relative;
+				margin-top: -12px;
+				top: 11px;
+				
+				background-image: url('/картинки/на страницах/заметка/видео.png');
+				width: 40px;
+				height: 40px;
+			}
 		}
 	}
 	

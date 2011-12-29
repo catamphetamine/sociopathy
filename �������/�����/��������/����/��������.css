@@ -53,16 +53,22 @@ ul.chat
 		@inter_column_padding: 25px;
 		@message_bottom_padding: 4px;
 		
+		.messages
+		{
+			vertical-align: top;
+			padding-top: 15px;
+		}
+		
 		.author, .messages
 		{
 			display: table-cell;
-			padding-bottom: @message_bottom_padding;
 		}
 		
 		.author
 		{
 			padding-left: 80px;
 			padding-right: @inter_column_padding;
+			padding-bottom: @message_bottom_padding;
 			
 			.exact_width(20%);
 			
@@ -123,7 +129,6 @@ ul.chat
 				.text, .when
 				{
 					display: table-cell;
-					padding-bottom: @message_bottom_padding;
 				}
 				
 				.text
@@ -203,5 +208,28 @@ ul.chat
 			
 			.beautiful_shadow(0px, 1px, 2px, 3px, 4px, 0px, 0px, 0.2);
 		}
+	}
+}
+
+.message_list_container
+{
+	overflow: hidden;
+	
+	.border
+	{
+		position: relative;
+		z-index: 1;
+		
+		background-image: url('/картинки/на страницах/сеть/болталка/граница выезда новых сообщений.png');
+		background-color: transparent;
+		background-repeat: repeat-x;
+		
+		.exact_height(10px);
+	}
+		
+	.chat
+	{
+		position: relative;
+		z-index: 0;
 	}
 }

@@ -74,8 +74,6 @@ Visual_editor.implement
 		}
 		else
 			tools.css({ top: 0 }).fade_in(0.3)
-			
-		$('#article_edit_mode_actions').slide_in_from_bottom()
 	},
 	
 	hide_tools: function()
@@ -86,8 +84,6 @@ Visual_editor.implement
 			tools.opaque().slide_out_upwards()
 		else
 			tools.css({ top: 0 }).fade_out(0.3)
-			
-		$('#article_edit_mode_actions').slide_out_downwards()
 	},
 	
 	disable_tools: function()
@@ -410,6 +406,52 @@ Visual_editor.implement
 			on_success: function(code)
 			{
 				editor.caret.move_to(code)
+			}
+		}
+		
+		Tools.Video =
+		{
+			button: new image_button(tools.find('.video span')),
+			
+			apply: function()
+			{
+				return info('Ещё не сделано')
+				
+				if (editor.selection.exists())
+					throw new Error('Не нужно ничего выделять')
+					// на самом деле - брать выделенное и переводить в код
+				
+				encodeURI() // в окошке
+
+				return editor.insert($('<div/>'))
+			},
+			
+			on_success: function(element)
+			{
+				//editor.caret.move_to(element)
+			}
+		}
+		
+		Tools.Html =
+		{
+			selector: '.html',
+			
+			apply: function()
+			{
+				return info('Ещё не сделано')
+				
+				if (editor.selection.exists())
+					throw new Error('Не нужно ничего выделять')
+					// на самом деле - брать выделенное и переводить в код
+				
+				validate_html() // в окошке
+
+				return editor.insert($('<div/>'))
+			},
+			
+			on_success: function(element)
+			{
+				//editor.caret.move_to(element)
 			}
 		}
 		

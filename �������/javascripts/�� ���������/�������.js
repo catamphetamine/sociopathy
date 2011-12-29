@@ -92,6 +92,9 @@ function show_minor_info()
 	var odd = true
 	дополнительные_данные.forEach(function(поле)
 	{
+		if (typeof пользователь_сети[поле] === 'undefined')
+			return
+			
 		var info = $('<div/>')
 		info.addClass('info')
 		
@@ -112,6 +115,12 @@ function show_minor_info()
 var image_file_name
 function save_changes()
 {
+	if (!image_file_name)
+	{
+		warning('Вы ничего не меняли')
+		return this.allow_to_redo()
+	}
+	
 	Ajax.post('/приложение/человек/сменить картинку', { имя: image_file_name },
 	{
 		ok: function()

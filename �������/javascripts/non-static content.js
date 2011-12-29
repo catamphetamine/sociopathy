@@ -114,7 +114,7 @@ $(function()
 	
 	function вставить_стиль_и_javascript()
 	{
-		$.getScript('/javascripts/на страницах/' + название_страницы.escape_html() + '.js', function()
+		$.getScript('/javascripts/на страницах/' + название_страницы.escape_html() + '.js', function(data, status)
 		{
 			$('head').append('<link rel="stylesheet/less" href="/облик/страницы/' + название_страницы.escape_html() + '.css"/>')
 		})

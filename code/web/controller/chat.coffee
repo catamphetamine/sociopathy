@@ -3,6 +3,7 @@
 цепь_websocket = (соединение) -> new Цепочка('websocket', соединение)
 
 снасти = require './../tools'
+пользовательское = require './../user_tools'
 
 #sanitize = require('validator').sanitize
 
@@ -127,6 +128,7 @@ http = global.application_tools.http
 		###
 		
 http.get '/болталка/сообщения', (ввод, вывод) ->
+	return if пользовательское.требуется_вход(ввод, вывод)
 	цепь(вывод)
 		.сделать ->
 			хранилище.collection('chat').count @.в 'количество сообщений'

@@ -54,6 +54,7 @@
 		
 		border-color: #7f7f7f;
 		
+		background-color: #eef2f4;
 		.top_to_bottom_gradient(#eef2f4, #d6dde0);
 	}
 
@@ -66,6 +67,7 @@
 		
 		border-color: #400500;
 		
+		background-color: #a42e2e;
 		.top_to_bottom_gradient(#a42e2e, #742b2b);
 		
 		.close
@@ -83,6 +85,7 @@
 		
 		border-color: #918658;
 		
+		background-color: #f7dc72;
 		.top_to_bottom_gradient(#f7dc72, #d6b52f);
 	}
 }

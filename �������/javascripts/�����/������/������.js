@@ -292,15 +292,19 @@ var button = new Class
 				if (!error.is_form_validation)
 					throw error
 				
-				this.let_unlock({ force: true })
-				return
+				return this.allow_to_redo()
 			}
 		
 		// back reference
 		var self = this
 
 		// execute action after delay
-		setTimeout(function() { self.options.action(self) }, self.get_action_delay())
+		setTimeout(function() { self.options.action() }, self.get_action_delay())
+	},
+	
+	allow_to_redo: function()
+	{
+		this.let_unlock({ force: true })
 	},
 	
 	get_action_delay: function()
@@ -482,7 +486,7 @@ var button = new Class
 		if (arguments.length == 0)
 			return this.options.action
 			
-		this.options.action = fn
+		this.options.action = fn.bind(this)
 		
 		options = options || {}
 		this.options.delay = options.delay

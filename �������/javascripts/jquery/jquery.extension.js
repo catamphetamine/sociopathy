@@ -1,200 +1,6 @@
+// old ajax uploader
 (function()
 {
-	$.fn.slide_in_from_top = function(duration)
-	{
-		if (this.css('position') !== 'relative')
-		{
-			this.stop_animation()
-			this.show()
-			return this.animate({ top: 0 }, duration)
-		}
-	
-		this.stop_animation()
-	
-		if (this.parent().css('overflow') !== 'hidden')
-		{
-			var container = $('<div/>')
-			container.css({ overflow: 'hidden' })
-			this.wrap(container)
-		}
-		
-		var top = parseFloat(this.css('top'))
-		var margin_bottom = parseFloat(this.css('margin-bottom'))
-		var height = this.outerHeight(true) + top
-		
-		if (top === 0)
-		{
-			this.css({ top: -height + 'px' })
-			this.css({ 'margin-bottom': (margin_bottom - height) + 'px' })
-		}
-		
-		this.show()
-		
-		return this.animate
-		(
-			{
-				top: 0,
-				'margin-bottom': (margin_bottom - top) + 'px'
-			},
-			duration
-		)
-	}
-	
-	$.fn.move_out_upwards = function(duration)
-	{
-		if (this.css('position') !== 'relative')
-		{
-			var height = this.outerHeight(true)
-			return this.css({ top: -height + 'px' })
-		}
-		
-		var margin_bottom = parseFloat(this.css('margin-bottom'))
-		var height = this.outerHeight(true)
-		
-		return this.css
-		({
-			top: -height + 'px',
-			'margin-bottom': (margin_bottom - height) + 'px'
-		})
-	}
-	
-	$.fn.slide_out_upwards = function(duration)
-	{
-		if (this.css('position') !== 'relative')
-		{
-			this.stop_animation()
-			this.show()
-			return this.animate({ top: -this.outerHeight(true) + 'px' }, duration, (function() { this.hide() }).bind(this))
-		}
-	
-		this.stop_animation()
-		
-		if (this.parent().css('overflow') !== 'hidden')
-		{
-			var container = $('<div/>')
-			container.css({ overflow: 'hidden' })
-			this.wrap(container)
-		}
-		
-		var top = parseFloat(this.css('top')) // < 0
-		var margin_bottom = parseFloat(this.css('margin-bottom'))
-		var height = this.outerHeight(true) - top
-		
-		return this.animate
-		(
-			{
-				top: -height + 'px',
-				'margin-bottom': (margin_bottom - (height + top)) + 'px'
-			},
-			duration
-		)
-	}
-	
-	$.fn.slide_in_from_bottom = function(duration)
-	{
-		this.stop_animation()
-		this.show()
-		return this.animate({ bottom: 0 }, duration)
-	}
-	
-	$.fn.move_out_downwards = function(duration)
-	{
-		return this.css({ bottom: -this.outerHeight(true) + 'px' })
-	}
-	
-	$.fn.slide_out_downwards = function(duration, callback)
-	{
-		if (typeof duration === 'function')
-		{
-			callback = duration
-			duration = null
-		}
-	
-		this.stop_animation()
-		return this.animate
-		(
-			{
-				bottom: -this.outerHeight(true) + 'px'
-			},
-			duration,
-			function()
-			{
-				this.hide()
-				if (callback)
-					callback()
-			}
-		)
-	}
-	
-	$.fn.stop_animation = function()
-	{
-		if (this.is(":animated")) 
-			this.stop(true /* clear queue */, false /* don't jump to queue end */)
-		return this
-	}
-	
-	$.fn.fade_in = function(duration, options, callback)
-	{
-		if (!options)
-		{
-			options = {}
-		}
-		else if (typeof(options) === 'function')
-		{
-			callback = options
-			options = {}
-		}
-		
-		options.duration = duration
-		options.callback = callback
-	
-		animator.jquery.fade_in(this, options)
-		return this
-	}
-	
-	$.fn.fade_out = function(duration, options, callback)
-	{
-		if (!options)
-		{
-			options = {}
-		}
-		else if (typeof(options) === 'function')
-		{
-			callback = options
-			options = {}
-		}
-		
-		options.duration = duration
-		options.callback = callback
-		options.hide = true
-		
-		animator.jquery.fade_out(this, options)
-		return this
-	}
-	
-	$.fn.opaque = function()
-	{
-		return this.css({ opacity: 1 })
-	}
-	
-	$.fn.outer_html = function()
-	{
-		return $('<div/>').append(this.eq(0).clone()).html()
-	}
-	
-	$.fn.find_parent = function(filter)
-	{
-		return this.parents(filter).filter(':first')
-	}
-	
-	$.fn.search_upwards = function(filter)
-	{
-		if (this.is(filter))
-			return this
-		
-		return this.find_parent(filter)
-	}
-	
 	function initialize_ajax_upload()
 	{
 		function create_frame(options)
@@ -309,4 +115,222 @@
 	initialize_ajax_upload()
 })()
 
-jQuery.fn.exists = function() { return this.length > 0 }
+$.fn.slide_in_from_top = function(duration, easing, callback)
+{
+	if (typeof easing === 'function')
+		callback = easing
+
+	this.stop_animation()
+			
+	switch (this.css('position'))
+	{
+		case 'absolute':
+		case 'fixed':
+			this.show()
+			return this.animate({ top: 0 }, duration)
+
+		case 'relative':
+			if (this.parent().css('overflow') !== 'hidden')
+				throw 'Container\'s css overflow must be "hidden"'
+			
+			var top = parseFloat(this.css('top'))
+
+			if (top > 0)
+				throw 'top must be <= 0'
+				
+			if (top === 0)
+				this.move_out_upwards()
+
+			var margin_bottom = parseFloat(this.css('margin-bottom'))
+			var height = this.outerHeight(true) + top			
+			
+			this.show()
+			
+			return this.animate
+			({
+				top: 0,
+				'margin-bottom': (margin_bottom - top) + 'px'
+			},
+			duration,
+			easing,
+			callback)
+			
+		default:
+			throw 'Unsupported css position: ' + this.css('position')
+	}
+}
+
+$.fn.move_out_upwards = function(duration)
+{
+	switch (this.css('position'))
+	{
+		case 'absolute':
+		case 'fixed':
+			return this.css({ top: -this.outerHeight(true) + 'px' })
+
+		case 'relative':
+			var margin_bottom = parseFloat(this.css('margin-bottom'))
+			var height = this.outerHeight(true)
+			
+			return this.css
+			({
+				top: -height + 'px',
+				'margin-bottom': (margin_bottom - height) + 'px'
+			})
+	
+		default:
+			throw 'Unsupported css position: ' + this.css('position')
+	}
+}
+
+$.fn.slide_out_upwards = function(duration)
+{
+	this.stop_animation()
+	
+	switch (this.css('position'))
+	{
+		case 'absolute':
+		case 'fixed':
+			this.show()
+			return this.animate({ top: -this.outerHeight(true) + 'px' }, duration, (function() { this.hide() }).bind(this))
+
+		case 'relative':
+			if (this.parent().css('overflow') !== 'hidden')
+			{
+				var container = $('<div/>')
+				container.css({ overflow: 'hidden' })
+				this.wrap(container)
+			}
+			
+			var top = parseFloat(this.css('top'))
+			
+			//if (top < 0)
+			//	throw 'top must be >= 0'
+			
+			// top может быть < 0, если скольжение не дошло до конца и пошло обратно
+			
+			var margin_bottom = parseFloat(this.css('margin-bottom'))
+			// outer hieght includes bottom margin, which is = top
+			var height = this.outerHeight(true) - top
+			
+			return this.animate
+			({
+				top: -height + 'px',
+				'margin-bottom': (margin_bottom - (height + top)) + 'px'
+			},
+			duration)
+	
+		default:
+			throw 'Unsupported css position: ' + this.css('position')
+	}
+}
+
+$.fn.slide_in_from_bottom = function(duration)
+{
+	this.stop_animation()
+	this.show()
+	return this.animate({ bottom: 0 }, duration)
+}
+
+$.fn.move_out_downwards = function(duration)
+{
+	return this.css({ bottom: -this.outerHeight(true) + 'px' })
+}
+
+$.fn.slide_out_downwards = function(duration, callback)
+{
+	if (typeof duration === 'function')
+	{
+		callback = duration
+		duration = null
+	}
+
+	this.stop_animation()
+	return this.animate
+	({
+		bottom: -this.outerHeight(true) + 'px'
+	},
+	duration,
+	function()
+	{
+		this.hide()
+		if (callback)
+			callback()
+	})
+}
+
+$.fn.stop_animation = function()
+{
+	if (this.is(":animated")) 
+		this.stop(true /* clear queue */, false /* don't jump to queue end */)
+	return this
+}
+
+$.fn.fade_in = function(duration, options, callback)
+{
+	if (!options)
+	{
+		options = {}
+	}
+	else if (typeof(options) === 'function')
+	{
+		callback = options
+		options = {}
+	}
+	
+	options.duration = duration
+	options.callback = callback
+
+	animator.jquery.fade_in(this, options)
+	return this
+}
+
+$.fn.fade_out = function(duration, options, callback)
+{
+	if (!options)
+	{
+		options = {}
+	}
+	else if (typeof(options) === 'function')
+	{
+		callback = options
+		options = {}
+	}
+	
+	options.duration = duration
+	options.callback = callback
+	options.hide = true
+	
+	animator.jquery.fade_out(this, options)
+	return this
+}
+
+$.fn.opaque = function()
+{
+	return this.css({ opacity: 1 })
+}
+
+$.fn.outer_html = function()
+{
+	return $('<div/>').append(this.eq(0).clone()).html()
+}
+
+$.fn.find_parent = function(filter)
+{
+	return this.parents(filter).filter(':first')
+}
+
+$.fn.search_upwards = function(filter)
+{
+	if (this.is(filter))
+		return this
+	
+	return this.find_parent(filter)
+}
+
+$.fn.exists = function() { return this.length > 0 }
+
+$.style_class_property = function(style_class, property)
+{
+	return $('<div/>').addClass(style_class).css(property)
+}

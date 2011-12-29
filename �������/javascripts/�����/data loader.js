@@ -186,17 +186,21 @@ var Data_templater = new Class
 	{
 		var conditional = initialize_conditional(options.conditional)
 
-		if (!options.postprocess_item_element)
-			options.postprocess_item_element  = function(element)
+		if (!options.postprocess_item)
+			options.postprocess_item = function(element)
 			{
 				return element
 			}
 		
-		function show_item(item, options)
-		{
-			var item_element = $.tmpl(options.template_url, item)
-			options.postprocess_item_element(item_element).appendTo(options.item_container)
-		}
+		var show_item
+		if (options.show)
+			show_item = options.show
+		else
+			show_item = function(data, options)
+			{
+				var item = $.tmpl(options.template_url, data)
+				options.postprocess_item(item).appendTo(options.item_container)
+			}
 		
 		loader.options.show = function(item)
 		{
