@@ -1,9 +1,3 @@
-хранилище = global.db
-http = global.application_tools.http
-цепь = require './../web_conveyor'
-
-снасти = require './../tools'
-
 хранилище.bind 'people',
 	выбрать: (настройки, возврат) ->
 		условия = настройки.условия || {}

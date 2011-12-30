@@ -1,10 +1,3 @@
-хранилище = global.db
-http = global.application_tools.http
-Цепочка = require './../conveyor'
-цепь = require './../web_conveyor'
-
-снасти = require './../tools'
-
 http.get '/заметка', (ввод, вывод) ->
 	снасти.получить_данные_человека ввод.настройки.address_name, вывод, (данные) ->
 		вывод.send данные: данные

@@ -1,10 +1,3 @@
-цепь = require './../web_conveyor'
-Цепочка = require './../conveyor'
-цепь_websocket = (соединение) -> new Цепочка('websocket', соединение)
-
-снасти = require './../tools'
-пользовательское = require './../user_tools'
-
 #sanitize = require('validator').sanitize
 
 redis = require 'redis'
@@ -14,11 +7,6 @@ redis = require 'redis'
 #publisher = redis.createClient()
 #subscriber = redis.createClient()
 online = redis.createClient()
-
-websocket = global.websocket
-хранилище = global.db
-приложение = global.application
-http = global.application_tools.http
 
 хранилище.bind 'chat',
 	выбрать: (настройки, возврат) ->

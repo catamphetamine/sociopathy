@@ -1,10 +1,3 @@
-хранилище = global.db
-http = global.application_tools.http
-цепь = require './../web_conveyor'
-
-снасти = require './../tools'
-пользовательское = require './../user_tools'
-
 http.post '/вход', (ввод, вывод) ->
 	цепь(вывод)
 		.сделать ->

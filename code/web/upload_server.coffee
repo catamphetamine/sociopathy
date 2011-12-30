@@ -1,17 +1,7 @@
 http = require 'http'
-#адрес = require 'url'
 util = require 'util'
 formidable = require 'formidable'
 connect_utilities = require('connect').utils
-
-снасти = require './tools'
-пользовательское = require './user_tools'
-
-global.Upload_server_port = 8090
-
-global.Upload_file_path = 'c:/work/sociopathy/загруженное'
-global.Upload_file_url = '/загруженное'
-global.Upload_temporary_file_path = global.Upload_file_path + '/временное'
 
 server = http.createServer (ввод, вывод) ->
 	вывод.send = (что) ->
@@ -35,7 +25,7 @@ server = http.createServer (ввод, вывод) ->
 					console.error ошибка
 					return вывод.send(ошибка: ошибка)
 					
-				снасти.создать_путь(global.Upload_temporary_file_path, (ошибка) ->
+				снасти.создать_путь(Options.Upload_server.Temporary_file_path, (ошибка) ->
 					if ошибка?
 						console.error ошибка
 						return вывод.send(ошибка: ошибка)
@@ -48,7 +38,7 @@ server = http.createServer (ввод, вывод) ->
 								console.error ошибка
 								return вывод.send(ошибка: ошибка)
 								
-							адрес = file.path.to_unix_path().replace(global.Upload_file_path.to_unix_path(), global.Upload_file_url) + '.jpg'
+							адрес = file.path.to_unix_path().replace(Options.Upload_server.Upload_file_path, Options.Upload_server.File_url) + '.jpg'
 							вывод.send { имя: снасти.имя_файла(file.path), адрес: адрес }
 						)
 					)
@@ -65,7 +55,7 @@ upload = (ввод, возврат) ->
 	files = []
 	fields = []
 	
-	form.uploadDir = global.Upload_temporary_file_path
+	form.uploadDir = Options.Upload_server.Temporary_file_path
 	
 	form
 		.on 'field', (field, value) ->
@@ -82,4 +72,4 @@ upload = (ввод, возврат) ->
 
 	form.parse(ввод)
 	
-server.listen(global.Upload_server_port)
+server.listen(Options.Upload_server.Port)

@@ -1,5 +1,4 @@
 var redis = require('redis')
-var снасти = require('./tools')
 
 var default_options =
 {

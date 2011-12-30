@@ -1,18 +1,15 @@
 connect = require 'connect'
 express = require 'express'
-#session = express.cookieParser
+
+require('./connect_redis_session_store')
+		
 redis_store = new (require('./connect_redis_session_store')(express))()
 get_session_id = (ввод) ->
 	ввод.cookies.user
 session = require('./connect_session')(get_session_id, redis_store)
-		
-общие_снасти = require './tools'
-
-io = require 'socket.io'
-пользовательское = require './user_tools'
 
 получатель_настроек = (ввод, вывод, следующий) ->
-	ввод.настройки = общие_снасти.настройки(ввод)
+	ввод.настройки = снасти.настройки(ввод)
 	следующий()
 	
 remember_me = (ввод, вывод, следующий) ->
@@ -24,7 +21,7 @@ remember_me = (ввод, вывод, следующий) ->
 	if ввод.session.data.пользователь?
 		return следующий()
 		
-	следующий = общие_снасти.приостановить_ввод(ввод, следующий)
+	следующий = снасти.приостановить_ввод(ввод, следующий)
 	пользовательское.получить_пользователя номер_пользователя, вывод, (ошибка, пользователь) ->
 		if ошибка?
 			пользовательское.выйти ввод, вывод
@@ -40,7 +37,7 @@ remember_me = (ввод, вывод, следующий) ->
 module.exports = (приложение) ->
 	if not приложение?
 		приложение = express.createServer()
-		global.application = приложение
+		global.приложение = приложение
 
 		приложение.configure ->
 			приложение.use express.bodyParser()
@@ -56,8 +53,6 @@ module.exports = (приложение) ->
 	
 		приложение.configure 'production', ->
 			#приложение.use express.errorHandler()
-			
-		global.websocket = io.listen приложение
 		
 	снасти = {}
 	

@@ -1,13 +1,7 @@
 http = require 'http'
 адрес = require 'url'
 connect_utilities = require('connect').utils
-
 file_system = require 'fs'
-
-Цепочка = require './conveyor'
-цепь = require './web_conveyor'
-
-memcache = global.memcache
 
 снасти = {}
 

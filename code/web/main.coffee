@@ -1,25 +1,38 @@
 require 'coffee-script'
 
-memcache = require 'memcache'
-global.memcache = new memcache.Client 11211, 'localhost'
-
-mongo = require 'mongoskin'
-хранилище = mongo.db 'localhost:27017/sociopathy?auto_reconnect'
-global.db = хранилище
-
 global.mode = 'development'
 
-Цепочка = require './conveyor'
-цепь = (вывод) -> new Цепочка('web', вывод)
+Upload_server_file_path = 'c:/work/sociopathy/загруженное'
 
-global.application_tools = require('./express')()
-http = global.application_tools.http
+global.Options =
+	Web_server:
+		Port: 8080
+	Upload_server:
+		Port: 8090
+		File_path: Upload_server_file_path
+		File_url: '/загруженное'
+		Temporary_file_path: Upload_server_file_path + '/временное'
+	Memcache:
+		Port: 11211
+	MongoDB:
+		Port: 27017
+		Database: 'sociopathy'
+		
+memcache = require('memcache')
+global.memcache = new memcache.Client(global.Options.Memcache.Port, 'localhost')
+global.хранилище = require('mongoskin').db('localhost:' + global.Options.MongoDB.Port + '/' + global.Options.MongoDB.Database + '?auto_reconnect')
 
-приложение = global.application
+global.Цепочка = require './tools/conveyor'
+global.цепь = (вывод) -> new global.Цепочка('web', вывод)
+global.цепь_websocket = (соединение) -> new global.Цепочка('websocket', соединение)
 
-снасти = require './tools'
+global.снасти = require './tools/tools'
+global.пользовательское = require './tools/user_tools'
 
-require './date'
+global.application_tools = require('./connect/express')()
+global.http = global.application_tools.http
+
+global.websocket = require('socket.io').listen приложение
 
 require './upload_server'
 
@@ -30,8 +43,6 @@ require './controller/people'
 require './controller/user'
 require './controller/general'
 
-#global.websocket = require('socket.io').listen 8084
-		
 #global.memcache_available = false
 global.memcache.on 'connect', () ->
 	global.memcache_available = true
@@ -45,5 +56,5 @@ global.memcache.on 'error', (error) ->
 	console.error 'Memcache failed:'
 	console.error error
 	
-приложение.listen 8080, '0.0.0.0'
+global.приложение.listen global.Options.Web_server.Port, '0.0.0.0'
 global.memcache.connect()

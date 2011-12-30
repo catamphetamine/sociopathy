@@ -262,3 +262,38 @@ module.exports = () ->
 Connect: v 1.x
 там ещё в middleware/cookie.js нужно в set maxAge написать "new Date(Date.now().getTime() + ms)"
 иначе сессионности не будет
+
+
+
+
+
+
+
+
+
+
+
+
+		
+		/*
+		// box shadow plugin doesn't support multiple shadows
+		
+		var author = $(this)
+		if (author.attr('online') == true)
+			return
+			
+		var picture = author.find('.picture')
+			
+		var dummy = $('<div/>')
+		dummy.addClass('online')
+		dummy.addClass('author')
+		dummy.hide()
+		
+		var picture_dummy = $('<div/>')
+		picture_dummy.addClass('picture')
+		picture_dummy.appendTo(dummy)
+		
+		author.after(dummy)
+		
+		picture.animate({ 'boxShadow': picture_dummy.css('box-shadow') })
+		*/
