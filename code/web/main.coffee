@@ -34,6 +34,8 @@ global.http = global.application_tools.http
 
 global.websocket = require('socket.io').listen приложение
 
+require './tools/date'
+
 require './upload_server'
 
 require './controller/administration'

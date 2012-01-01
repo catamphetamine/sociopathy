@@ -1,3 +1,6 @@
+/*
+	Отсутствующие методы определяются, например, в файлах "клавиши.js" и "снасти.js"
+*/
 var Visual_editor = new Class
 ({
 	initialize: function(editor)

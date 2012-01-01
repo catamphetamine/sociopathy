@@ -8,13 +8,13 @@ function initialize_page()
 	({
 		template_url: '/лекала/личная карточка.html',
 		item_container: $('#id_cards'),
-		postprocess_item: function(item)
+		postprocess_element: function(item)
 		{
 			return $('<li/>').append(item)
 		},
 		conditional: $('#people_list_block[type=conditional]')
 	},
-	new  Batch_loader
+	new  Batch_loader_with_infinite_scroll
 	({
 		url: '/приложение/люди',
 		batch_size: 8,

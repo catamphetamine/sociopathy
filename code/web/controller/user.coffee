@@ -32,6 +32,8 @@ http.put '/прописать', (ввод, вывод) ->
 			хранилище.collection('invites').findAndModify настройки, [], {}, options, @
 			
 		.сделать ->
+			человек = ввод.body
+			человек['когда пришёл'] = new Date()
 			хранилище.collection('people').save ввод.body, @
 		
 		.сделать (пользователь) ->

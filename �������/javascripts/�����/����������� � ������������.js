@@ -80,3 +80,13 @@ $(function()
 {
 	loading_indicator.initialize()
 })
+
+/*
+$(document).on('fully_loaded', function()
+{
+	setTimeout(function()
+	{
+		loading_indicator.show()
+	}, 1000)
+})
+*/

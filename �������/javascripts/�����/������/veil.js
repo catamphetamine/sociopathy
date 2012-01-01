@@ -52,8 +52,8 @@ var veil = new Class
 	{
 		this.$element.css
 		({
-			width: get_page_width() + 'px',
-			height: get_page_height() + 'px'
+			width: $(document).width() + 'px',
+			height: $(document).height() + 'px'
 		})
 	},
 	

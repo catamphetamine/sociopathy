@@ -26,6 +26,8 @@
 	{
 		width: 790px;
 		height: 200px;
+		
+		/* .css_transition() */
 	}
 
 	input[type="text"]

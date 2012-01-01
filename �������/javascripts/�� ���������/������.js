@@ -140,7 +140,8 @@ function выйти()
 		ok: function(данные)
 		{ 
 			loading_indicator.hide()
-			window.location.reload()
+			//window.location.reload()
+			window.location = '/'
 		} 
 	})
 }

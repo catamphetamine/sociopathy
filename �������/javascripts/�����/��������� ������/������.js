@@ -6,27 +6,8 @@ Visual_editor.implement
 		tools.disableTextSelect()
 		
 		this.tools_element = tools
-	
-		var tools_container = tools.parent()
-	
-		//var tools_wrapper = $('<div/>')
-		//tools_wrapper.addClass('visual_editor_tools_wrapper')
-		//tools.wrapAll(tools_wrapper)
-	
-		tools_container.bind('disappearing_upwards.scroller', function(event, initialization)
-		{
-			tools.addClass('sticky')
-			event.stopPropagation()
-		})
-		
-		tools_container.bind('fully_appeared_on_top.scroller', function(event, initialization)
-		{
-			tools.css({ top: 0 }).removeClass('sticky')
-			event.stopPropagation()
-		})
-		
-		прокрутчик.watch(tools_container, 0)
-		
+		tools.floating_top_bar()
+			
 		// toolbar
 
 		this.editor.bind('content_changed.editor', (function(событие, options)
@@ -61,29 +42,12 @@ Visual_editor.implement
 	
 	show_tools: function()
 	{
-		var tools = this.tools_element
-		
-		if (tools.hasClass('sticky'))
-		{
-			tools.stop_animation()
-		
-			if (parseFloat(tools.css('top')) === 0)
-				tools.move_out_upwards()
-				
-			tools.opaque().slide_in_from_top()
-		}
-		else
-			tools.css({ top: 0 }).fade_in(0.3)
+		this.tools_element.floating_top_bar('show')
 	},
 	
 	hide_tools: function()
 	{
-		var tools = this.tools_element
-	
-		if (tools.hasClass('sticky'))
-			tools.opaque().slide_out_upwards()
-		else
-			tools.css({ top: 0 }).fade_out(0.3)
+		this.tools_element.floating_top_bar('hide')
 	},
 	
 	disable_tools: function()

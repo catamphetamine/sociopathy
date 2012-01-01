@@ -38,120 +38,229 @@
 	}
 }
 
-ul.chat
+.chat .author .away, .who_is_online li .away
 {
-	display: table;
+	font-size: 10px;
+	position: absolute;
+	bottom: 0;
+	color: white;
+	background-color: black;
+	opacity: 0;
 	width: 100%;
+	text-align: center;
+	padding-bottom: 2px;
+	font-family: Verdana;
+				
+	.css_transition_property(opacity);
+	.css_transition_duration(500ms);
+	.css_transition_easing(ease-in-out);
+}
+
+.chat .author.is_away .away, .who_is_online li.is_away .away
+{
+	opacity: 0.8;
+}
+
+.message_list_container
+{
+	overflow: hidden;
+	position: relative;
+
+	@inter_column_padding: 25px;
+	@author_column_padding: 30px;
+	@author_column_right_padding: 26px;
+	@author_column_width: 400px;
+	@message_bottom_padding: 0px;
+	@author_icon_margin_left: 20px;
+	@time_column_padding: 20px;
 	
-	margin: 0;
-	padding: 0;
-
-	li
+	ul.chat
 	{
-		display: table-row;
-
-		@inter_column_padding: 25px;
-		@message_bottom_padding: 4px;
+		position: relative;
+		z-index: 0;
 		
-		.messages
+		display: table;
+		width: 100%;
+		
+		top: 0;
+		
+		margin: 0;
+		padding: 0;
+	
+		li
 		{
-			vertical-align: top;
-			padding-top: 15px;
-		}
-		
-		.author, .messages
-		{
-			display: table-cell;
-		}
-		
-		.author
-		{
-			padding-left: 80px;
-			padding-right: @inter_column_padding;
-			padding-bottom: @message_bottom_padding;
+			display: table-row;
 			
-			.exact_width(20%);
-			
-			overflow: hidden;
-			text-overflow: ellipsis;
-			
-			text-align: right;
-			color: @blue_color;
-			
-			a
+			.messages
 			{
-				border: 0;
-			}
+				vertical-align: top;
+				padding-top: 12px;
 			
-			a:after
-			{
-				content: "\A";
-				white-space: pre;
-			}
-			
-			.picture
-			{
-				display: inline-block;
-				
-				position: relative;
-				top: 12px;
-				
-				margin-left: 20px;
-		
-				background-image: url('/картинки/temporary/картинка с навершия.jpg');
-				background-repeat: no-repeat;
-		
-				.beautiful_shadow(0px, 1px, 2px, 3px, 4px, 0px, 0px, 0.2);
-		
-				width: 48px;
-				height: 48px;
-			}
-		}
-		
-		.author.online
-		{
-			.picture
-			{
-				.beautiful_shadow(0px, 0px, 2px, 4px, 8px,10px, 20px, 0.25, 8, 155, 0);
-			}
-		}
-		
-		.messages
-		{
-			ul
-			{
-				display: table;
-				width: 100%;
-				
-				margin: 0;
-				padding: 0;
-				
-				.text, .when
-				{
-					display: table-cell;
+				ul li .text
+				{	
+					padding-bottom: 5px;
 				}
 				
 				.text
 				{
-					padding-left: @inter_column_padding;
-					padding-right: @inter_column_padding;
+					font-family: Minion Pro;
+			
+					font-size: 40px;
+					line-height: @textual_line_height;
+					
+					margin-bottom: 4px;
+				}
+			}
+			
+			.author, .messages
+			{
+				display: table-cell;
+			}
+			
+			.author
+			{
+				padding-left: @author_column_padding;
+				padding-right: @author_column_right_padding;
+				padding-bottom: @message_bottom_padding;
+				
+				max-width: @author_column_width;
+				overflow: hidden;
+				
+				/* text-overflow: ellipsis; */
+				
+				text-align: right;
+				color: @blue_color;
+				
+				.name
+				{
+					font-face: Tahoma, Arial, Helvetica;
+					font-size: 26px;
+					
+					display: inline-block;
+					margin-top: 21px;
+					vertical-align: top;
+					
+					max-width: @author_column_width - @user_icon_size - @author_icon_margin_left;
+					overflow: hidden;
+					text-overflow: ellipsis;
 				}
 				
-				.when
+				a
 				{
+					border: 0;
+				}
+				
+				a:after
+				{
+					content: "\A";
+					white-space: pre;
+				}
+				
+				@user_picture_left: 10px;
+				
+				.user_offline_picture_glow, .user_online_picture_glow, .picture
+				{
+					display: inline-block;
+					
 					position: relative;
+					top: 12px;
+					left: @user_picture_left;
+				
+					width: @user_icon_size;
+					height: @user_icon_size;
+				}
+				
+				.user_online_picture_glow, .user_offline_picture_glow
+				{
+					margin-right: -@user_icon_size;
+				
+					.css_transition_property(opacity);
+					.css_transition_duration(1000ms);
+					.css_transition_easing(ease-in-out);
+				}
+				
+				.user_online_picture_glow
+				{
+					opacity: 0;
+					.beautiful_shadow(0px, 0px, 2px, 4px, 8px,10px, 20px, 0.25, 8, 155, 0);
+				}
+				
+				.user_offline_picture_glow
+				{
+					.beautiful_shadow(0px, 1px, 2px, 3px, 4px, 0px, 0px, 0.2);
+				}
+				
+				.picture
+				{
+					background-image: url('/картинки/temporary/картинка с навершия.jpg');
+					background-repeat: no-repeat;
+				}
+			}
+			
+			.author.online
+			{
+				.user_offline_picture_glow
+				{
+					opacity: 0;
+				}
+				
+				.user_online_picture_glow
+				{
+					opacity: 1;
+				}
+			}
+			
+			.messages
+			{
+				width: 100%;
+			
+				ul
+				{
+					display: table;
+					width: 100%;
 					
-					padding-left: @inter_column_padding;
-					padding-right: 80px;
+					margin: 0;
+					padding: 0;
 					
-					text-align: right;
-					color: #afafaf;
+					.text, .when
+					{
+						display: table-cell;
+					}
 					
-					font-size: 20px;
-					top: -3px;
+					.text
+					{
+						padding-left: @inter_column_padding;
+						padding-right: @inter_column_padding;
+					}
+					
+					.when
+					{
+						position: relative;
+						
+						padding-left: @inter_column_padding;
+						padding-right: @time_column_padding;
+						
+						text-align: right;
+						color: #afafaf;
+						
+						font-size: 20px;
+						top: -3px;
+					}
 				}
 			}
 		}
+	}
+
+	.new_messages_smooth_border
+	{
+		position: absolute;
+		bottom: 0;
+	
+		background-image: url('/картинки/на страницах/сеть/болталка/граница выезда новых сообщений снизу.png');
+		background-color: transparent;
+		background-repeat: repeat-x;
+		
+		height: 16px;
 	}
 }
 
@@ -174,62 +283,114 @@ ul.chat
 	}
 }
 
-.who_is_online li, .who_is_online li a
-{
-	width: 48px;
-	height: 48px;
-}
+@user_icon_size: 48px;
+@top_padding: 5px;
+@bottom_padding: 5px;
+@user_icon_margin: 8px;
 			
-.who_is_online
-{
-	list-style: none;
-	text-indent: 0;
-	
-	margin-top: 0;
-	margin-bottom: 50px;
-	
-	margin-left: 50px;
-	margin-right: 50px;
-	
-	padding: 0;
-	
-	li
-	{
-		display: inline-block;
-		margin: 8px;
-			
-		background-image: url('/картинки/temporary/картинка с навершия.jpg');
-			
-		a
-		{
-			display: inline-block;
-			
-			border: 0;
-			
-			.beautiful_shadow(0px, 1px, 2px, 3px, 4px, 0px, 0px, 0.2);
-		}
-	}
-}
-
-.message_list_container
+.who_is_online_container
 {
 	overflow: hidden;
-	
-	.border
+	height: @top_padding + @user_icon_size + 2 * @user_icon_margin + @bottom_padding;
+
+	margin-bottom: 50px;
+			
+	.who_is_online_bar
 	{
 		position: relative;
 		z-index: 1;
+
+		&.sticky
+		{
+			width: 100%;
+			
+			.who_is_online
+			{
+				margin: 0;
+				
+				padding-left: @top_padding;
+				padding-right: @top_padding;
+				padding-top: @top_padding;
+				padding-bottom: @bottom_padding;
+				
+				li
+				{
+					border-width: 1px;
+					border-style: solid;
+					border-color: black;
+				}
+			}
+			
+			.background
+			{
+				background-color: #000000;
+				opacity: 0.8;
+			}
+		}
 		
-		background-image: url('/картинки/на страницах/сеть/болталка/граница выезда новых сообщений.png');
-		background-color: transparent;
-		background-repeat: repeat-x;
+		.who_is_online li, .who_is_online li a
+		{
+			width: @user_icon_size;
+			height: @user_icon_size;
+		}
+			
+		.background
+		{
+			position: absolute;
+			top: 0;
+			z-index: 0;
+			
+			width: 100%;
+			height: @user_icon_size + @top_padding + @bottom_padding + 2 * @user_icon_margin;
+			
+			background-color: #ffffff;
+			
+			.css_transition_property(background-color);
+			.css_transition_duration(400ms);
+			.css_transition_easing(ease-in-out);
+		}
 		
-		.exact_height(10px);
-	}
+		.who_is_online
+		{
+			position: relative;
+			z-index: 2;
+				
+			margin-top: @top_padding;
+			margin-bottom: @top_padding;
+			
+			padding: 0;
+			padding-left: 50px;
+			padding-right: 50px;
+			
+			overflow: hidden;
 		
-	.chat
-	{
-		position: relative;
-		z-index: 0;
+			list-style: none;
+			text-indent: 0;
+			
+			.css_transition_property(padding-left, padding-right);
+			.css_transition_duration(200ms);
+			.css_transition_easing(ease-in-out);
+			
+			li
+			{
+				display: inline-block;
+				margin: @user_icon_margin;
+					
+				background-image: url('/картинки/temporary/картинка с навершия.jpg');
+					
+				a
+				{
+					display: inline-block;
+					position: relative;
+					
+					width: @user_icon_size;
+					height: @user_icon_size;
+					
+					border: 0;
+					
+					.beautiful_shadow(0px, 1px, 2px, 3px, 4px, 0px, 0px, 0.2);
+				}
+			}
+		}
 	}
 }

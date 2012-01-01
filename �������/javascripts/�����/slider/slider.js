@@ -157,10 +157,7 @@ function slider(options)
 
 		// if no need to animate - just set the new scrolling property
 		if (this.no_animation)
-		{
-			this.$strip.css({ marginLeft: marginLeft })
-			return
-		}
+			return this.$strip.css({ marginLeft: marginLeft })
 
 		// else - animate
 		animator.roll_left(this.$strip, marginLeft, { callback: callback })

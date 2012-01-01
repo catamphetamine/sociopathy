@@ -5,7 +5,8 @@ var Batch_loader = new Class
 	options:
 	{
 		get_data: function(data) { return data },
-		done: function() {}
+		done: function() {},
+		before_done_output: function() {}
 	},
 	
 	есть_ли_ещё: true,
@@ -87,28 +88,43 @@ var Batch_loader = new Class
 			{
 				loader.options.show(объект)
 			})
-			
+				
 			if (first_load)
-				loader.options.done()
+				loader.options.before_done_output()
 				
 			loader.options.callback(null, function()
-			{
+			{			
+				if (first_load)
+					loader.options.done()
+				
 				if (loader.есть_ли_ещё)
 					loader.activate()
 			})
 		})
 	},
 	
+	activate: function() {},
+	deactivate: function() {},
+	
+	load_more: function()
+	{
+		this.deactivate()
+		this.options.loading_more()
+		this.load()
+	}
+})
+
+var Batch_loader_with_infinite_scroll = new Class
+({
+	Extends: Batch_loader,
+
 	activate: function()
 	{
 		var loader = this
 		
 		this.$scroll_detector.bind('appearing_on_bottom.scroller', function(event)
 		{
-			loader.deactivate()
-			loader.options.loading_more()
-			loader.load()
-				
+			loader.load_more()
 			event.stopPropagation()
 		})
 		
@@ -129,7 +145,9 @@ var Data_loader = new Class
 	options:
 	{
 		parameters: {},
-		get_data: function(data) { return data }
+		get_data: function(data) { return data },
+		done: function() {},
+		before_done_output: function() {}
 	},
 	
 	initialize: function(options)
@@ -174,8 +192,12 @@ var Data_loader = new Class
 				loader.options.show(объект)
 			})
 			
-			loader.options.callback()
-			loader.options.done()
+			loader.options.before_done_output()
+				
+			loader.options.callback(null, function()
+			{
+				loader.options.done()
+			})
 		})
 	}
 })
@@ -186,8 +208,8 @@ var Data_templater = new Class
 	{
 		var conditional = initialize_conditional(options.conditional)
 
-		if (!options.postprocess_item)
-			options.postprocess_item = function(element)
+		if (!options.postprocess_element)
+			options.postprocess_element = function(element)
 			{
 				return element
 			}
@@ -199,7 +221,7 @@ var Data_templater = new Class
 			show_item = function(data, options)
 			{
 				var item = $.tmpl(options.template_url, data)
-				options.postprocess_item(item).appendTo(options.item_container)
+				options.postprocess_element(item).appendTo(options.item_container)
 			}
 		
 		loader.options.show = function(item)

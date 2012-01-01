@@ -1,9 +1,20 @@
 <li>
 	<div class="author no_word_carrying {{if is_online(отправитель['адресное имя'])}}online{{/if}}" author="${отправитель['адресное имя']}">
-		<a href="/люди/${отправитель['адресное имя']}" style="display: inline-block">${отправитель.имя}<div class="picture"></div></a>
-		<!--
-		<a href="/люди/${отправитель['адресное имя']}" style="display: inline-block"><div class="picture"></div></a>
-		-->
+		<a href="/люди/${отправитель['адресное имя']}" style="display: inline-block">
+			<span class="name" title="${отправитель.имя}">
+				${отправитель.имя}
+			</span>
+			<!-- вставите пробел - будет зазор -->
+			<div class="user_offline_picture_glow"></div><div class="user_online_picture_glow"></div><div class="picture" title="${отправитель.имя}">
+				<div class="away">
+					{{if отправитель.пол === 'мужской'}}
+						отошёл
+					{{else}}
+						отошла
+					{{/if}}
+				</div>
+			</div>
+		</a>
 	</div>
 	
 	<div class="messages">

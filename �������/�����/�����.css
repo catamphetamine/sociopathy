@@ -1,12 +1,10 @@
 ﻿@import "/облик/вспомогательный.less";
 
-/*
 @font-face
 {
 	font-family: Minion Pro;
-	src: url('/начертания/minion pro.ttf');
+	src: url('/начертания/MinionPro-Regular.otf');
 }
-*/
    
 /* correct Html 5 element styling for old browsers 
 article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section 
@@ -30,6 +28,12 @@ html, body
 	padding: 0;
 	
 	height: 100%;
+}
+
+aside
+{
+	position: relative;
+	z-index: 1;
 }
 
 body.loading
@@ -313,7 +317,7 @@ label.error
 	margin-top: 4px;
 	margin-right: 14px;
 	
-	z-index: 10;
+	z-index: 1;
 }
 
 .centered_on_the_panel
@@ -337,7 +341,7 @@ label.error
 	display: inline-block;
 	
 	position: relative;
-	z-index: 10;	
+	z-index: 1;	
 }
 
 .registration_hint
@@ -456,9 +460,11 @@ h1, h2, h3, h4, h5, h6
 
 .sticky
 {
-	position: fixed;
+	position: fixed !important;
 	top: 0;
 	left: 0;
+	
+	/* .css_transition(200ms, top); */
 }
 
 .non_selectable

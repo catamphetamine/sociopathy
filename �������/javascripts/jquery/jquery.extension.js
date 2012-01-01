@@ -225,11 +225,49 @@ $.fn.slide_out_upwards = function(duration)
 	}
 }
 
-$.fn.slide_in_from_bottom = function(duration)
+$.fn.slide_in_from_bottom = function(duration, easing, callback)
 {
+	if (typeof easing === 'function')
+		callback = easing
+
 	this.stop_animation()
-	this.show()
-	return this.animate({ bottom: 0 }, duration)
+			
+	switch (this.css('position'))
+	{
+		case 'absolute':
+		case 'fixed':
+			this.show()
+			return this.animate({ bottom: 0 }, duration)
+	
+		case 'relative':
+			if (this.parent().css('overflow') !== 'hidden')
+				throw 'Container\'s css overflow must be "hidden"'
+			
+			var bottom = parseFloat(this.css('bottom'))
+
+			if (bottom > 0)
+				throw 'bottom must be <= 0'
+				
+			if (bottom === 0)
+				this.move_out_downwards()
+
+			var margin_top = parseFloat(this.css('margin-top'))
+			var height = this.outerHeight(true) + bottom
+			
+			this.show()
+			
+			return this.animate
+			({
+				bottom: 0,
+				'margin-top': (margin_top - bottom) + 'px'
+			},
+			duration,
+			easing,
+			callback)
+			
+		default:
+			throw 'Unsupported css position: ' + this.css('position')
+	}
 }
 
 $.fn.move_out_downwards = function(duration)

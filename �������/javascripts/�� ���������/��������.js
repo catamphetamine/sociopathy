@@ -20,7 +20,7 @@ function initialize_page()
 			{
 				template_url: '/лекала/раздел читальни.html',
 				item_container: $('#categories'),
-				postprocess_item: function(item)
+				postprocess_element: function(item)
 				{
 					return $('<li/>').append(item)
 				}
@@ -29,7 +29,7 @@ function initialize_page()
 			{
 				template_url: '/лекала/заметка раздела читальни.html',
 				item_container: $('#articles'),
-				postprocess_item: function(item)
+				postprocess_element: function(item)
 				{
 					return $('<li/>').append(item)
 				}

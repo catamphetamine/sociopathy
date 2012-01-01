@@ -72,8 +72,65 @@
 	height: @height;
 }
 
-.css_transition (@duration: 200ms)
+.css_transition (@duration: 200ms, @what: all)
 {
-	-webkit-transition: all @duration ease-in-out;
-	-moz-transition: all @duration ease-in-out;
+	-webkit-transition: @what @duration ease-in-out;
+	-moz-transition: @what @duration ease-in-out;
+	-o-transition: @what @duration ease-in-out;
+	-ms-transition: @what @duration ease-in-out;	
+	transition: @what @duration ease-in-out;
+}
+
+.css_transition_property(@property)
+{
+	-webkit-transition-property: @property;
+	-moz-transition-property: @property;
+	-o-transition-property: @property;
+	-ms-transition-property: @property;
+	transition-property: @property;
+}
+
+.css_transition_property(@property, @second_property)
+{
+	-webkit-transition-property: @property, @second_property;
+	-moz-transition-property: @property, @second_property;
+	-o-transition-property: @property, @second_property;
+	-ms-transition-property: @property, @second_property;
+	transition-property: @property, @second_property;
+}
+
+.css_transition_property(@property, @second_property, @third_property)
+{
+	-webkit-transition-property: @property, @second_property, @third_property;
+	-moz-transition-property: @property, @second_property, @third_property;
+	-o-transition-property: @property, @second_property, @third_property;
+	-ms-transition-property: @property, @second_property, @third_property;
+	transition-property: @property, @second_property, @third_property;
+}
+
+.css_transition_property(@property, @second_property, @third_property, @fourth_property)
+{
+	-webkit-transition-property: @property, @second_property, @third_property, @fourth_property;
+	-moz-transition-property: @property, @second_property, @third_property, @fourth_property;
+	-o-transition-property: @property, @second_property, @third_property, @fourth_property;
+	-ms-transition-property: @property, @second_property, @third_property, @fourth_property;
+	transition-property: @property, @second_property, @third_property, @fourth_property;
+}
+
+.css_transition_duration(@duration)
+{
+	-webkit-transition-duration: @duration;
+	-moz-transition-duration: @duration;
+	-o-transition-duration: @duration;
+	-ms-transition-duration: @duration;
+	transition-duration: @duration;
+}
+
+.css_transition_easing(@easing)
+{
+	-webkit-transition-easing: @easing;
+	-moz-transition-easing: @easing;
+	-o-transition-easing: @easing;
+	-ms-transition-easing: @easing;
+	transition-easing: @easing;
 }
