@@ -4,7 +4,7 @@ var default_options =
 {
 	host: '127.0.0.1',
 	port: '6379',
-	time_to_live: 60 * 60 /* hour (in seconds) */
+//	time_to_live: 60 * 60 /* an hour (in seconds) */
 }
 
 //var EventEmitter = require('events').EventEmitter
@@ -78,10 +78,16 @@ module.exports = function(connect)
 		
 		try
 		{
-			this.client.setex(this.prefix + id, this.options.time_to_live, JSON.stringify(session_data), function()
-			{
-				callback.apply(this, arguments)
-			})
+			if (this.options.time_to_live)
+				this.client.setex(this.prefix + id, this.options.time_to_live, JSON.stringify(session_data), function()
+				{
+					callback.apply(this, arguments)
+				})
+			else
+				this.client.set(this.prefix + id, JSON.stringify(session_data), function()
+				{
+					callback.apply(this, arguments)
+				})
 		}
 		catch (error)
 		{

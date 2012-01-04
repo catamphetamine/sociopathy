@@ -26,28 +26,38 @@ var veil = new Class
 			.hide()
 			.css
 			({
-				position: 'absolute',
+				position: 'fixed',
 				
 				left: 0,
 				top: 0,
+				
+				width: '100%',
+				height: '100%',
 
 				'z-index': z_indexer.acquire_top_z(),
+				
+				//cursor: 'not-allowed'
 			})
+			
+		if (options.style)
+			this.$element.css(options.style)
 		
+		/*
 		$(window).resize((function()
 		{
 			this.size()
 		})
 		.bind(this))
+		*/
 		
-		this.$element
-			.addClass('dialog_window_veil')
+		this.$element.addClass('dialog_window_veil')
 			
 		veiler.register(this.$element)
 		
 		this.show()
 	},
 	
+	/*
 	size: function()
 	{
 		this.$element.css
@@ -56,13 +66,14 @@ var veil = new Class
 			height: $(document).height() + 'px'
 		})
 	},
+	*/
 	
 	/**
 	 * shows the veil
 	 */
 	show: function()
 	{
-		this.size()
+		//this.size()
 		this.$element.fadeIn()
 	},
 	

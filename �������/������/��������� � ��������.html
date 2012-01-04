@@ -1,5 +1,5 @@
-<li>
-	<div class="author no_word_carrying {{if is_online(отправитель['адресное имя'])}}online{{/if}}" author="${отправитель['адресное имя']}">
+<li author="${отправитель._id}">
+	<div class="author no_word_carrying {{if is_online(отправитель._id)}}online{{/if}}">
 		<a href="/люди/${отправитель['адресное имя']}" style="display: inline-block">
 			<span class="name" title="${отправитель.имя}">
 				${отправитель.имя}
@@ -17,21 +17,10 @@
 		</a>
 	</div>
 	
-	<div class="messages">
-		<ul>
-			{{if сообщения}}
-			{{else}}
-				${сообщение_в_сообщения($data)}
-			{{/if}}
-			
-			{{each сообщения}}
-				<li>
-					<div class="text multiline_text">
-						${сообщение}
-					</div>
-					<div class="when no_word_carrying intelligent_date" date="${точное_время}" updated_at="${сейчас}">${время}</div>
-				</li>
-			{{/each}}
-		</ul>
+	<div class="message">
+		<div class="text multiline_text">
+			${сообщение}
+		</div>
+		<div class="when no_word_carrying intelligent_date" date="${точное_время}" updated_at="${сейчас}">${время}</div>
 	</div>
 </li>

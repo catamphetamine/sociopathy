@@ -1,5 +1,6 @@
 require 'coffee-script'
-
+global.redis = require 'redis'
+	
 global.mode = 'development'
 
 Upload_server_file_path = 'c:/work/sociopathy/загруженное'
@@ -57,6 +58,11 @@ global.memcache.on 'error', (error) ->
 	# there was an error - exception is 1st argument
 	console.error 'Memcache failed:'
 	console.error error
-	
-global.приложение.listen global.Options.Web_server.Port, '0.0.0.0'
+
 global.memcache.connect()
+	
+new Цепочка()	
+	.сделать ->
+		global.redis.createClient().del('chat:online', @)
+	.сделать ->					
+		global.приложение.listen global.Options.Web_server.Port, '0.0.0.0'

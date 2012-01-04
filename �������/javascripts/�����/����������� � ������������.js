@@ -39,7 +39,9 @@ var loading_indicator = new (function()
 	this.initialize = function()
 	{
 		// create the pop up window
-		loading_indicator = $("#loading_indicator").dialog_window()
+		loading_indicator = $("#loading_indicator").dialog_window({ veil_style: { cursor: 'wait' } })
+		loading_indicator.$element.find('*').css({ cursor: 'wait' })
+		//alert(loading_indicator.$element.outer_html())
 	}
 	
 	this.show = function()
@@ -67,7 +69,8 @@ var loading_indicator = new (function()
 		
 		image.attr('src', images_path + "/" + choise.image)
 
-		$("a.loading_indicator_image_source", loading_indicator.$element).attr("href", choise.image_source)
+		//$("a.loading_indicator_image_source", loading_indicator.$element)
+		//.attr("href", choise.image_source)
 	}
 	
 	this.choose_loading_indicator = function()

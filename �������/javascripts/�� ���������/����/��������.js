@@ -4,11 +4,12 @@ var who_is_online_bar_list
 var new_messages_smooth_border
 
 var Max_chat_messages = 100
+var Messages_batch_size = 32
 
 var away_users = {}
 
 var кто_в_болталке = {}
-кто_в_болталке[пользователь['адресное имя']] = true
+кто_в_болталке[пользователь._id] = true
 
 var chat_height
 var chat_top_offset
@@ -47,13 +48,16 @@ function initialize_page()
 		show: function(data, options)
 		{
 			var item = $.tmpl(options.template_url, data)
+			
+			/*	
 			var previous_item = chat.find('> li:last')
 			
 			if (!previous_item.exists())
 				return chat.append(item)
-				
+			
 			if (previous_item.find('> .author').attr('author') === data.отправитель['адресное имя'])
 				return previous_item.find('> .messages ul').append(item.find('> .messages li'))
+			*/
 
 			chat.append(item)
 		}
@@ -61,7 +65,7 @@ function initialize_page()
 	new  Batch_loader
 	({
 		url: '/приложение/болталка/сообщения',
-		batch_size: 12,
+		batch_size: Messages_batch_size,
 		get_data: function (data)
 		{
 			var сообщения = []
@@ -75,11 +79,13 @@ function initialize_page()
 	}))
 }
 
+/*
 function adjust_bottom_smooth_border(author)
 {
 	var border_margin_left = parseInt(author.css('padding-left')) + author.width() + parseInt(author.css('padding-right'))
 	new_messages_smooth_border.css({ marginLeft: border_margin_left + 'px' })
 }
+*/
 
 var messages_to_add = []
 function add_message(data)
@@ -99,27 +105,25 @@ function add_message(data)
 	}
 	
 	var previous = chat.find('> li:last')
-	var previoius_author = previous.find('> .author')
-	var previoius_messages = previous.find('> .messages > ul')
-	var same_author = previoius_author.attr('author') === data.отправитель['адресное имя']
+	var same_author = previous.attr('author') === data.отправитель._id
 		
 	var content = $.tmpl('/лекала/сообщение в болталке.html', data)
 	
 	var this_author = content.find('> .author')
-	var this_messages = content.find('> .messages')
+	var this_message = content.find('> .message')
 
-	if (away_users[data.отправитель['адресное имя']])
+	if (away_users[data.отправитель._id])
 		this_author.addClass('is_away')
 	
 	if (same_author)
 	{
 		this_author.children().remove()
-		this_messages.css('padding-top', 0)
+		this_message.css('padding-top', 0)
 	}
 		
 	content.appendTo(chat)
 
-	adjust_bottom_smooth_border(this_author)
+	//adjust_bottom_smooth_border(this_author)
 	
 	var next = function()
 	{
@@ -189,31 +193,21 @@ function add_message(data)
 	})
 }
 
-function is_current_user(адресное_имя)
-{
-	return пользователь['адресное имя'] === адресное_имя
-}
-
 function пользователь_в_сети(пользователь)
 {
-	кто_в_болталке[пользователь['адресное имя']] = true
+	кто_в_болталке[пользователь._id] = true
 	
-	chat.find('.author[author="' + пользователь['адресное имя'] + '"]').each(function()
+	chat.find('> li[author="' + пользователь._id + '"]').each(function()
 	{
-		$(this).addClass('online')
+		$(this).find('.author').addClass('online')
 	})
 	
 	внести_пользователя_в_список_вверху(пользователь)
 }
 
-function сообщение_в_сообщения(data)
+function is_online(id)
 {
-	data.сообщения = [data.сообщение]
-}
-
-function is_online(адресное_имя)
-{
-	if (кто_в_болталке[адресное_имя])
+	if (кто_в_болталке[id])
 		return true
 		
 	return false
@@ -221,7 +215,7 @@ function is_online(адресное_имя)
 
 function внести_пользователя_в_список_вверху(пользователь, options)
 {
-	var container = $('<li user="' + пользователь['адресное имя'] + '"></li>')
+	var container = $('<li user="' + пользователь._id + '"></li>')
 	
 	var link = $('<a/>')
 	link.attr('href', '/люди/' + пользователь['адресное имя'])
@@ -243,14 +237,14 @@ function внести_пользователя_в_список_вверху(по
 
 function пользователь_вышел_из_болталки(пользователь)
 {
-	delete кто_в_болталке[пользователь['адресное имя']]
+	delete кто_в_болталке[пользователь._id]
 
-	chat.find('.author[author="' + пользователь['адресное имя'] + '"]').each(function()
+	chat.find('> li[author="' + пользователь._id + '"]').each(function()
 	{
-		$(this).removeClass('online')
+		$(this).find('.author').removeClass('online')
 	})
 	
-	var icon = who_is_online_bar_list.find('[user="' + пользователь['адресное имя'] + '"]')
+	var icon = who_is_online_bar_list.find('[user="' + пользователь._id + '"]')
 	icon.fadeOut(500, function()
 	{
 		icon.remove()
@@ -269,7 +263,7 @@ function chat_loaded()
 		overflow: 'hidden'
 	})
 
-	adjust_bottom_smooth_border(chat.find('> li:last > .author'))
+	//adjust_bottom_smooth_border(chat.find('> li:last > .author'))
 	new_messages_smooth_border.css('width', '100%')
 	
 	//show_testing_messages()
@@ -301,7 +295,7 @@ function connect_to_chat(callback)
 	
 	болталка.on('connect', function()
 	{
-		болталка.emit('пользователь', пользователь.id)
+		болталка.emit('пользователь', $.cookie('user'))
 	})
 	
 	болталка.on('готов', function()
@@ -335,16 +329,16 @@ function connect_to_chat(callback)
 	
 	болталка.on('смотрит', function(пользователь)
 	{
-		delete away_users[пользователь['адресное имя']]
-		$('.who_is_online > li[user="' + пользователь['адресное имя'] + '"]').removeClass('is_away')
-		$('.chat > li > .author[author="' + пользователь['адресное имя'] + '"]').removeClass('is_away')
+		delete away_users[пользователь._id]
+		$('.who_is_online > li[user="' + пользователь._id + '"]').removeClass('is_away')
+		$('.chat > li[author="' + пользователь._id + '"] > .author').removeClass('is_away')
 	})
 	
 	болталка.on('не смотрит', function(пользователь)
 	{
-		away_users[пользователь['адресное имя']] = true
-		$('.who_is_online > li[user="' + пользователь['адресное имя'] + '"]').addClass('is_away')
-		$('.chat > li > .author[author="' + пользователь['адресное имя'] + '"]').addClass('is_away')
+		away_users[пользователь._id] = true
+		$('.who_is_online > li[user="' + пользователь._id + '"]').addClass('is_away')
+		$('.chat > li[author="' + пользователь._id + '"] > .author').addClass('is_away')
 	})
 	
 	болталка.on('ошибка', function(ошибка)
@@ -358,8 +352,8 @@ function connect_to_chat(callback)
 
 function преобразовать_время(сообщение)
 {
-	сообщение.точное_время = Date.parse(сообщение.время, 'dd.MM.yyyy HH:mm').getTime()
-	сообщение.время = неточное_время(сообщение.время)
+	сообщение.точное_время = new Date(сообщение.время).getTime() //Date.parse(сообщение.время, 'dd.MM.yyyy HH:mm').getTime()
+	сообщение.время = неточное_время(сообщение.точное_время)
 	сообщение.сейчас = new Date().getTime()
 	
 	return сообщение

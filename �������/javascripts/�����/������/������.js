@@ -87,7 +87,7 @@ var dialog_window = new Class
 				position: 'fixed',
 				
 				// setting overflow to hidden fixes the box-shadow scroll bar bug in Fire Fox
-				overflow: 'hidden'
+				//overflow: 'hidden'
 			})
 			.bind('keydown.' + this.namespace, function(event) 
 			{
@@ -99,6 +99,13 @@ var dialog_window = new Class
 					event.preventDefault()
 				}
 			})
+			
+		var firefox_box_shadow_scrollbar_hider = $('</div>')
+		firefox_box_shadow_scrollbar_hider.css
+		({
+			overflow: 'hidden'
+		})
+		this.$element.wrap(firefox_box_shadow_scrollbar_hider)
 			
 		// the wrapped dialog window (fixes the box-shadow scroll bar bug in Fire Fox)
 		var $dialog_window = $('<section/>')
@@ -188,7 +195,7 @@ var dialog_window = new Class
 			return
 			
 		if (this.options.modal)
-			this.veil = new veil({ smooth: this.smooth })
+			this.veil = new veil({ smooth: this.smooth, style: this.options.veil_style })
 			
 		this.size()
 		this.position()
