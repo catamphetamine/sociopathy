@@ -24,6 +24,9 @@
 		{
 			event.stopPropagation()
 			$this.addClass('sticky')
+			
+//			if ($this.css('position') !== 'fixed')
+//				alert('You should set "position: fixed" for the floating top bar (for ".your_bar.sticky" style class) in your Css')
 		})
 		
 		container.bind('fully_appeared_on_top.scroller', function(event, initialization)

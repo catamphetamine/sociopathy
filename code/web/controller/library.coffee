@@ -83,12 +83,6 @@ http.post "/получить_право_на_правку_заметки", (вв
 			if not заметка?
 				@.error "Заметка № #{_id} не найдена"
 			if заметка['кто правит']?
-			
-				console.log 123
-				console.log заметка['кто правит']
-				console.log ввод.session.пользователь._id
-				console.log 123
-				
 				if заметка['кто правит'].toString() == ввод.session.пользователь._id.toString()
 					return вывод.send {}
 				return new Цепочка(@)
@@ -100,10 +94,23 @@ http.post "/получить_право_на_правку_заметки", (вв
 		.сделать ->
 			хранилище.collection('library_articles').findOne({ _id: _id }, @)
 		.сделать (заметка) ->
-			console.log 123
-			console.log заметка['кто правит']
-			console.log ввод.session.пользователь._id
-			console.log 123
-			if заметка['кто правит'] != ввод.session.пользователь._id
+			if заметка['кто правит'].toString() != ввод.session.пользователь._id.toString()
 				return @.error("Не удалось занять право на правку заметки")
+			вывод.send {}
+			
+http.post '/заметка/сохранить', (ввод, вывод) ->
+	return if пользовательское.требуется_вход(ввод, вывод)
+	_id = хранилище.collection('library_articles').id(ввод.body._id)
+	цепь(вывод)
+		.сделать ->
+			хранилище.collection('library_articles').findOne({ _id: _id }, @)
+		.сделать (заметка) ->
+			if not заметка?
+				@.error "Заметка № #{_id} не найдена"
+			if not заметка['кто правит']?
+				@.error "Право на правку заметки № #{_id} не выдано"
+			if заметка['кто правит'].toString() != ввод.session.пользователь._id.toString()
+				@.error "Право на правку заметки № #{_id} принадлежит другому человеку"
+			хранилище.collection('library_articles').update({ _id: _id }, { $set: { содержимое: ввод.body.content }, $unset: { 'кто правит': 1 }}, @)
+		.сделать (заметка) ->
 			вывод.send {}

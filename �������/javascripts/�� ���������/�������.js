@@ -69,6 +69,7 @@ function initialize_page()
 		var actions = $('#article_edit_mode_actions')
 		actions.appendTo($('body')).move_out_downwards().disableTextSelect()
 		
+		/*
 		cancel_button = activate_button(actions.find('.cancel'), { 'prevent double submission': true })
 		.does(function()
 		{
@@ -80,19 +81,35 @@ function initialize_page()
 			save_button.unlock()
 			Режим.обычный()
 		})
+		*/
 	
 		save_button = activate_button(actions.find('.done'), { 'prevent double submission': true })
 		.does(function()
 		{
-			info('Здесь сохранять заметку')
-			// on success
-			право_на_правку_получено = false
-			actions.slide_out_downwards(300, function()
+			loading_indicator.show()
+			Ajax.post('/приложение/заметка/сохранить', { _id: заметка._id, content: article_editor.editor.content.html() },
 			{
-				save_button.unlock()
+				ошибка: function(ошибка)
+				{
+					loading_indicator.hide()
+					право_на_правку_получено = false
+					
+					error(ошибка)
+					save_button.unlock()
+				},
+				ok: function()
+				{
+					loading_indicator.hide()
+					право_на_правку_получено = false
+					
+					actions.slide_out_downwards(300, function()
+					{
+						save_button.unlock()
+					})
+					Режим.обычный()
+					info('Правки сохранены')
+				}
 			})
-			save_button.unlock()
-			Режим.обычный()
 		})
 		
 		$(document).on('режим.переход', function(event, из, в)
@@ -171,9 +188,8 @@ function acquire_edit_lock(режим)
 			
 			var кто_правит = data['кто правит']
 			if (кто_правит)
-			{
-				return warning('<a href=\'/люди/' + кто_правит['адресное имя'] + '\'>' + кто_правит.имя + '</a> уже правит эту заметку. Можете написать ' + (кто_правит.пол === 'мужской' ? 'ему' : 'ей') + ', чтобы ' + (кто_правит.пол === 'мужской' ? 'он сохранил' : 'она сохранила') + ' внесённые правки (либо ' + (кто_правит.пол === 'мужской' ? 'удалил' : 'удалила') + ' черновик), \n и тогда эта заметка снова станет доступной для правки.')
-			}
+				//return warning('<a href=\'/люди/' + кто_правит['адресное имя'] + '\'>' + кто_правит.имя + '</a> уже правит эту заметку. Можете написать ' + (кто_правит.пол === 'мужской' ? 'ему' : 'ей') + ', чтобы ' + (кто_правит.пол === 'мужской' ? 'он сохранил' : 'она сохранила') + ' внесённые правки (либо ' + (кто_правит.пол === 'мужской' ? 'удалил' : 'удалила') + ' черновик), \n и тогда эта заметка снова станет доступной для правки.')
+				return warning('<a href=\'/люди/' + кто_правит['адресное имя'] + '\'>' + кто_правит.имя + '</a> уже правит эту заметку. Можете написать ' + (кто_правит.пол === 'мужской' ? 'ему' : 'ей') + ', чтобы ' + (кто_правит.пол === 'мужской' ? 'он сохранил' : 'она сохранила') + ' внесённые правки, \n и тогда эта заметка снова станет доступной для правки.')
 			
 			право_на_правку_получено = true
 			Режим.разрешить_переходы()
