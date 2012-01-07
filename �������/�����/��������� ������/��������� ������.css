@@ -79,6 +79,8 @@
 	{
 		position: relative;
 		z-index: 0;
+		
+		overflow: hidden;
 	}
 		
 	ul.main_tools

@@ -29,9 +29,13 @@ class Цепь
 							[].where_am_i()
 							throw 'no web output'
 						@обработчик_ошибок_по_умолчанию = (ошибка) ->
-							ошибка = снасти.ошибка(ошибка)
-							console.error ошибка
-							вывод.send ошибка: yes
+							if ошибка.display_this_error?
+								console.error ошибка.error
+								вывод.send ошибка: ошибка.error
+							else
+								ошибка = снасти.ошибка(ошибка)
+								console.error ошибка
+								вывод.send ошибка: yes
 					when 'websocket'
 						соединение = arguments[1]
 						@обработчик_ошибок_по_умолчанию = (ошибка) ->
@@ -125,6 +129,11 @@ class Цепь
 			
 		функция_возврата.done = (result) =>
 			@callback(null, result)
+		
+		функция_возврата.error = (error) =>
+			if @callback?
+				return @callback(error)
+			функция_возврата({ error: error, display_this_error: true })
 		
 		функция_возврата
 		

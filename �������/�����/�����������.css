@@ -18,7 +18,7 @@
 	border-style: solid;
 	border-width: 2px;
 	
-	.beautiful_shadow(3px, 5px, 5px, 7px, 10px, 14px, 20px, 0.12);
+	.beautiful_shadow_5(3px, 5px, 5px, 7px, 10px, 14px, 20px, 0.12);
 	.rounded_corners(10px);
 	
 	cursor: default;

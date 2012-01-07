@@ -23,7 +23,7 @@ var Visual_editor = new Class
 		
 		if (!window.visual_editors)
 			window.visual_editors = []
-		window.visual_editors.push(this)
+		window.visual_editors.push(this)		
 	},
 	
 	hint: function(element, text)
@@ -31,3 +31,5 @@ var Visual_editor = new Class
 		element.text(text).addClass('hint')
 	}
 })
+
+Validation.наглядный_писарь = {}

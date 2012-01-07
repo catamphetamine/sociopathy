@@ -77,8 +77,8 @@
 		
 		.picture
 		{
-			/* .beautiful_shadow(0px, 4px, 20px, 8px, 12px, 8px, 0px, 0.1); */
-			/*.beautiful_shadow(0px, 0px, 4px, 4px, 4px, 4px, 0px, 1, 0, 120, 255); */
+			/* .beautiful_shadow_5(0px, 4px, 20px, 8px, 12px, 8px, 0px, 0.1); */
+			/*.beautiful_shadow_5(0px, 0px, 4px, 4px, 4px, 4px, 0px, 1, 0, 120, 255); */
 			
 				
 			&.cursor
@@ -208,4 +208,12 @@ body[mode="правка"] #content.article article a
 {
 	height: 66px;
 	overflow: hidden;
+}
+
+body[mode="правка"] .article [type="hyperlink"],
+body[mode="правка"] .article [type="picture"],
+body[mode="правка"] .article [type="formula"],
+body[mode="правка"] .article [type="video"]
+{
+	cursor: pointer;
 }

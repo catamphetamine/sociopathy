@@ -17,7 +17,7 @@
 	
 	min-width: 650px;
 	max-width: 650px;
-	overflow: hidden;
+	/* overflow: hidden; */
 	
 	margin-left: auto;
 	margin-right: auto;
@@ -37,7 +37,7 @@
 	background: -webkit-gradient(linear, center top, center bottom, from(#fcfcfc), to(#ededed));
 	background-image: -moz-linear-gradient(top, #fcfcfc, #ededed);
 	
-	.beautiful_shadow(0px, 4px, 20px, 8px, 12px, 8px, 0px, 0.1);
+	.beautiful_shadow_4(0px, 4px, 20px, 8px, 12px, 8px, 0.1);
 	
 	section
 	{
@@ -57,7 +57,7 @@
 			margin-top: 30px;
 			margin-right: 50px;
 			
-			.beautiful_shadow(0px, 1px, 3px, 3px, 5px, 3px, 7px, 0.12);
+			.beautiful_shadow_5(0px, 1px, 3px, 3px, 5px, 3px, 7px, 0.12);
 		}
 
 		.default_picture, .real_picture
@@ -77,7 +77,7 @@
 			margin-top: 30px;
 			margin-left: 15px;
 			
-			.beautiful_shadow(0px, 1px, 3px, 3px, 5px, 3px, 7px, 0.12);
+			.beautiful_shadow_5(0px, 1px, 3px, 3px, 5px, 3px, 7px, 0.12);
 		}
 				
 		.upload_new_picture
@@ -225,19 +225,71 @@
 			background-color: transparent;
 		}
 
-		.mood
+		.online_status
 		{
+			position: relative;
 			margin-top: 100px;
 		
 			margin-left: auto;
 			margin-right: auto;
-			
+		}
+		
+		.online_status, .online_status .online, .online_status .offline
+		{
 			width: 88px;
 			height: 88px;
+		}
+		
+		.online_status .online, .online_status .offline
+		{
+			position: absolute;
+			top: 0;
+			left: 0;
 			
-			background-image: url('/картинки/business card/mood.png');
 			background-repeat: no-repeat;
 			background-color: transparent;
+			
+			.css_transition_property(opacity);
+			.css_transition_duration(500ms);
+			.css_transition_easing(ease-in-out);
+		}
+		
+		.online_status
+		{
+			.online
+			{
+				background-image: url('/картинки/business card/online.png');
+			}
+		
+			.offline
+			{
+				background-image: url('/картинки/business card/offline.png');
+				
+				opacity: 0;
+			}
+			
+			.was_here
+			{
+				position: absolute;
+				top: 50px;
+				left: 40px;
+				
+				font-size: 20px;
+				white-space: nowrap;
+				
+				color: white;
+				background-color: black;
+				opacity: 0.8;
+				
+				display: none;
+				
+				padding-left: 10px;
+				padding-right: 10px;
+				padding-top: 6px;
+				padding-bottom: 6px;
+				
+				.rounded_corners(4px);
+			}
 		}
 	}
 }

@@ -18,9 +18,9 @@ function initialize_page()
 {
 	new_messages_smooth_border = $('.new_messages_smooth_border')
 
-	Режим.подсказка('Здесь вы можете разговаривать с другими членами сети.')
-	Режим.ещё_подсказка('Вверху вы видите список людей, у которых сейчас открыта болталка.')
-	Режим.ещё_подсказка('Также, в списке сообщений, пользователи, у которых сейчас открыта болталка, подсвечены зелёным.')
+	Подсказки.подсказка('Здесь вы можете разговаривать с другими членами сети.')
+	Подсказки.ещё_подсказка('Вверху вы видите список людей, у которых сейчас открыта болталка.')
+	Подсказки.ещё_подсказка('Также, в списке сообщений, пользователи, у которых сейчас открыта болталка, подсвечены зелёным.')
 
 	var send_button = activate_button('.send_message .send')
 	.does(function()
@@ -60,7 +60,8 @@ function initialize_page()
 			*/
 
 			chat.append(item)
-		}
+		},
+		order: 'обратный'
 	},
 	new  Batch_loader
 	({
@@ -215,6 +216,9 @@ function is_online(id)
 
 function внести_пользователя_в_список_вверху(пользователь, options)
 {
+	if (who_is_online_bar_list.find('> li[user="' + пользователь._id + '"]').exists())
+		return
+
 	var container = $('<li user="' + пользователь._id + '"></li>')
 	
 	var link = $('<a/>')
@@ -361,7 +365,7 @@ function преобразовать_время(сообщение)
 
 $(function()
 {	
-	update_intelligent_dates.periodical(60 * 1000)
+	update_intelligent_dates.ticking(60 * 1000)
 })
 
 function show_testing_messages()

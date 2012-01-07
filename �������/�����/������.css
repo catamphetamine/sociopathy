@@ -1,4 +1,4 @@
-﻿@import "/облик/вспомогательный.less";
+@import "/облик/вспомогательный.less";
 
 /**
  * Dialog Window script styling
@@ -29,7 +29,9 @@
 	border: 1px solid #a7a7a7;
 	border-top: 0;
 
-	.beautiful_shadow(0px, 16px, 100px, 80px, 60px, 40px, 30px, 0.2);
+	/*.beautiful_shadow_5(0px, 16px, 100px, 80px, 60px, 40px, 30px, 0.15); */
+	/* в хроме тормозит */
+	.shadow(0px, 16px, 40px, 0.20);
 	
 	.top_bar
 	{
@@ -101,4 +103,54 @@
 .dialog_window_veil
 {
 	background-color: rgba(0, 0, 0, 0.5)
+}
+
+/* прочее */
+
+.simple_value_dialog
+{
+	.main_content
+	{
+		padding-top: 40px;
+		padding-left: 56px;
+		padding-right: 56px;
+		padding-bottom: 54px;
+		
+		.icon
+		{
+			float: left;
+			
+			background-repeat: no-repeat;
+			
+			padding-right: 40px;
+			margin-top: 10px;
+		}
+		
+		form
+		{
+			display: inline-block;
+			vertical-align: top;
+		
+			padding-top: 5px;
+				
+			> label
+			{
+				display: block;
+				margin-top: 20px;
+			}
+			
+			input[type="text"]
+			{
+				width: 500px;
+				display: block;
+				margin-top: 10px;
+			}
+		}
+	}
+		
+	.buttons
+	{
+		padding-left: 28px;
+		padding-right: 50px;
+	}
 }

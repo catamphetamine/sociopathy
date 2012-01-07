@@ -179,12 +179,12 @@
 				.user_online_picture_glow
 				{
 					opacity: 0;
-					.beautiful_shadow(0px, 0px, 2px, 4px, 8px,10px, 20px, 0.25, 8, 155, 0);
+					.beautiful_shadow_5(0px, 0px, 2px, 4px, 8px,10px, 20px, 0.25, 8, 155, 0);
 				}
 				
 				.user_offline_picture_glow
 				{
-					.beautiful_shadow(0px, 1px, 2px, 3px, 4px, 0px, 0px, 0.2);
+					.beautiful_shadow_3(0px, 1px, 2px, 3px, 4px, 0.2);
 				}
 				
 				.picture
@@ -294,34 +294,6 @@
 		position: relative;
 		z-index: 1;
 
-		&.sticky
-		{
-			width: 100%;
-			
-			.who_is_online
-			{
-				margin: 0;
-				
-				padding-left: @top_padding;
-				padding-right: @top_padding;
-				padding-top: @top_padding;
-				padding-bottom: @bottom_padding;
-				
-				li
-				{
-					border-width: 1px;
-					border-style: solid;
-					border-color: black;
-				}
-			}
-			
-			.background
-			{
-				background-color: #000000;
-				opacity: 0.8;
-			}
-		}
-		
 		.who_is_online li, .who_is_online li a
 		{
 			width: @user_icon_size;
@@ -382,8 +354,36 @@
 					
 					border: 0;
 					
-					.beautiful_shadow(0px, 1px, 2px, 3px, 4px, 0px, 0px, 0.2);
+					.beautiful_shadow_3(0px, 1px, 2px, 3px, 4px, 0.2);
 				}
+			}
+		}
+		
+		&.sticky
+		{
+			width: 100%;
+			
+			.who_is_online
+			{
+				margin: 0;
+				
+				padding-left: @top_padding;
+				padding-right: @top_padding;
+				padding-top: @top_padding;
+				padding-bottom: @bottom_padding;
+				
+				li
+				{
+					border-width: 1px;
+					border-style: solid;
+					border-color: black;
+				}
+			}
+			
+			.background
+			{
+				background-color: #000000;
+				opacity: 0.8;
 			}
 		}
 	}

@@ -19,12 +19,23 @@ function initialize_search_bar()
 	var $clear_button = container.find('> span[type="button"]')
 	var input = container.find('> input[type="text"]')
 
-	input.bind('keyup', function()
+	input.on('keyup', function()
 	{
 		if ($(this).val().length > 0)
 			animator.fade_in($clear_button, { duration: 0.2 })
 		else
 			animator.fade_out($clear_button, { duration: 0.2, hide: true })
+	})
+	
+	input.on('keypress', function(event)
+	{
+		switch (event.which)
+		{
+			case Клавиши.Enter:
+				event.preventDefault()
+				info('Поиск ещё не сделан')
+				break
+		}
 	})
 		
 	// activate clear search text button

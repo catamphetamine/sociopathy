@@ -6,7 +6,8 @@ var Batch_loader = new Class
 	{
 		get_data: function(data) { return data },
 		done: function() {},
-		before_done_output: function() {}
+		before_done_output: function() {},
+		get_id: function(object) { return object._id }
 	},
 	
 	есть_ли_ещё: true,
@@ -50,9 +51,17 @@ var Batch_loader = new Class
 	{
 		var loader = this
 		
-		Ajax.get(this.options.url, { с: this.index, сколько: count }, 
+		var data = { сколько: count }
+		
+		if (this.latest)
+			data.после = this.latest
+			
+		if (this.options.order)
+			data.порядок = this.options.order
+		
+		Ajax.get(this.options.url, data, 
 		{ 
-			error: function(ошибка)
+			ошибка: function(ошибка)
 			{
 				callback(ошибка)
 			},
@@ -88,9 +97,17 @@ var Batch_loader = new Class
 			{
 				loader.options.show(объект)
 			})
-				
+			
 			if (first_load)
 				loader.options.before_done_output()
+			
+			if (!список.is_empty())
+			{
+				if (loader.options.order === 'обратный')
+					loader.latest = loader.options.get_id(список[0])
+				else
+					loader.latest = loader.options.get_id(список[список.length - 1])
+			}
 				
 			loader.options.callback(null, function()
 			{			
@@ -161,7 +178,7 @@ var Data_loader = new Class
 		
 		Ajax.get(this.options.url, this.options.parameters,
 		{ 
-			error: function(ошибка)
+			ошибка: function(ошибка)
 			{
 				callback(ошибка)
 			},
@@ -278,7 +295,7 @@ var Data_templater = new Class
 			{
 				//cache: false,
 				type: 'html',
-				error: function()
+				ошибка: function()
 				{
 					conditional.callback('Не удалось загрузить страницу')
 				},

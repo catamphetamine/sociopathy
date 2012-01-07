@@ -151,6 +151,9 @@ var Message =
 	
 	add_message: function(type, text, options)
 	{
+		if (!text)
+			text = ''
+	
 		options = options || {}
 	
 		var top = this.calculate_occupied_space()
@@ -173,7 +176,8 @@ var Message =
 			.split('\n ').join('<br/>')
 			.split('\n').join('<br/>')
 		
-		var message = $('<div class="' + type + ' non_selectable"/>').html(text)
+		// non_selectable
+		var message = $('<div class="' + type + '"/>').html(text)
 		var opacity = message.css('opacity')
 		message.css('opacity', 0)
 		

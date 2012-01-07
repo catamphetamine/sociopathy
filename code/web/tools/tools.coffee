@@ -69,11 +69,15 @@ file_system = require 'fs'
 	
 	снасти.получить_данные options, callback
 	
-снасти.hash = (что, чем, callback) ->
+снасти.hash = (что, настройки, callback) ->
+	чем = 'whirlpool'
 	options = 
 		host: 'localhost'
 		port: 8082
-		path: '/hash.sjs' + '?' + 'value=' + encodeURIComponent(что) + '&' + 'method=' + 'whirlpool'
+		path: '/hash.sjs' + '?' + 'value=' + encodeURIComponent(что) + '&' + 'method=' + чем
+		
+	if настройки.random?
+		options.path += '&' + 'random=' + настройки.random
 		
 	снасти.получить_данные options, callback
 	

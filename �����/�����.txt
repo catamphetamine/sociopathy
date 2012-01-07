@@ -297,3 +297,9 @@ Connect: v 1.x
 		
 		picture.animate({ 'boxShadow': picture_dummy.css('box-shadow') })
 		*/
+		
+		
+вставка формул TeX:
+http://texify.com/img/%5CLARGE%5C!tex
+http://chart.apis.google.com/chart?cht=tx&chl=\displaystyle\int_{-\infty}^{\infty}e^{-x^{2}}\;dx=\sqrt{\pi.gif
+

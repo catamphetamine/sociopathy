@@ -167,8 +167,11 @@
 				.html(hint_text);
 		};
 		
-		var animation_duration = self.options.animationTime * 1000;
-		var easing = self.options.animationEase;
+		var sliding_out_animation_duration = self.options.sliding_out.animationTime * 1000;
+		var sliding_out_animation_easing = self.options.sliding_out.animationEase;
+		
+		var sliding_in_animation_duration = self.options.sliding_in.animationTime * 1000;
+		var sliding_in_animation_easing = self.options.sliding_in.animationEase;
 		
 		var hidden
 	
@@ -210,7 +213,7 @@
 			
 			// Hide default text
 			self.title
-				.stop().animate(self.hidden_style, animation_duration, easing);
+				.stop().animate(self.hidden_style, sliding_out_animation_duration, sliding_out_animation_easing);
 
 			// on appear trigger
 			var on_appear = $.noop
@@ -220,18 +223,18 @@
 
 			// Show attribute text
 			self.hint
-				.stop().animate(self.visible_style, animation_duration, easing, function() { hidden = false; on_appear() })			
+				.stop().animate(self.visible_style, sliding_in_animation_duration, sliding_in_animation_easing, function() { hidden = false; on_appear() })			
 		}
 				
 		self.stop_effect = function()
 		{	
 			// Show default text
 			self.title
-				.stop().animate(self.visible_style, animation_duration, easing);
+				.stop().animate(self.visible_style, sliding_in_animation_easing, sliding_in_animation_easing);
 
 			// Hide attribute text
 			self.hint
-				.stop(true).animate(self.hidden_style, animation_duration, easing, function()
+				.stop(true).animate(self.hidden_style, sliding_out_animation_easing, sliding_out_animation_easing, function()
 				{	
 					hidden = true;
 				
@@ -256,8 +259,16 @@
 	$.label_slider.defaults = 
 	{
 		attribute: "href",
-		animationTime: 0.3,
-		animationEase: "swing", // "linear"
+		sliding_in:
+		{
+			animationTime: 0.4,
+			animationEase: "easeInCubic", // "linear"		
+		},
+		sliding_out:
+		{
+			animationTime: 0.4,
+			animationEase: "easeOutCubic", // "linear"		
+		},
 		hover: true,
 		tweenInFrom: "left", // "top", "right", "bottom"
 		parseAsURL: null,

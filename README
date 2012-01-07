@@ -16,6 +16,8 @@ Sociopathy
    //Apache + v8cgi
    Redis
    Memcache
+   ImageMagick
+   //Scala (Sbt, Scalatra)
 
 Статика отдаётся NginX'ом.
 Страницы шаблонизуются прямо в окне обозревателя.

@@ -32,6 +32,11 @@
 					color: @link_color;
 				}
 				
+				.question:after
+				{
+					content: '?'
+				}
+				
 				.answer
 				{
 					display: none;

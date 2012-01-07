@@ -25,8 +25,27 @@ var Ajax =
 	{
 		options.type = options.type || 'json'
 		
-		options.ошибка = options.ошибка || 'Ошибка связи с сервером'
-		options.error = options.error || function(message) { error(message) }
+		var ok = function(data)
+		{
+			if ($.isFunction(options.ok))
+				options.ok(data)
+			else if (typeof(options.ok) === 'string')
+				info(options.ok)
+			else
+				error('Неправильная настройка ok: ' + options.ok)
+		}
+		
+		var ошибка = function(сообщение)
+		{
+			if ($.isFunction(options.ошибка))
+				options.ошибка(сообщение)
+			else if (сообщение && typeof сообщение === 'string')
+				error(сообщение)
+			else if (typeof options.ошибка === 'string')
+				error(options.ошибка)
+			else
+				error('Ошибка связи с сервером')
+		}
 		
 		$.ajax
 		({
@@ -43,23 +62,13 @@ var Ajax =
 		.success(function(json, textStatus)
 		{
 			if (json.ошибка)
-			{
-				if (json.ошибка === true)
-					return options.error(options.ошибка)
-				else
-					return options.error(json.ошибка)
-			}
+				return ошибка(json.ошибка)
 
-			if ($.isFunction(options.ok))
-				options.ok(json)
-			else if (typeof(options.ok) === 'string')
-				info(options.ok)
-			else
-				error('Неправильная настройка ok: ' + ok)
+			ok(json)
 		})
 		.error(function(jqXHR, textStatus, errorThrown)
 		{
-			options.error(options.ошибка)
+			ошибка()
 		})
 	}
 }
@@ -144,15 +153,14 @@ function неточное_время(время)
 {
 	var time
 	
-	if (typeof(время) === 'string')
+	if (typeof время === 'string')
 		time = Date.parse(время).getTime()
-	else if (typeof(время) === 'number')
+	else if (typeof время === 'number')
 		time = время
 	else
 		throw 'Unsupported time: ' + время
 
-	var сейчас = new Date()
-	var разница = (сейчас.getTime() - time) / 1000
+	var разница = (new Date().getTime() - time) / 1000
 	
 	var окончание_единицы_измерения
 	
@@ -331,8 +339,29 @@ function update_intelligent_dates()
 		var element = $(this)
 		
 		var date = new Number(element.attr('date'))
-		var updated_at = new Number(element.attr('updated_at'))
+		
+		var updated_at_value = element.attr('updated_at')
+		if (!updated_at_value)
+			updated_at = now
+		else
+			updated_at = new Number(updated_at_value)
+	
 		element.text(неточное_время(date + (now - updated_at)))
 		element.attr('updated_at', now)
 	})
+}
+
+function get_youtube_video_id(url)
+{
+    return /https?:\/\/(?:[a-zA_Z]{2,3}.)?(?:youtube\.com\/watch\?)((?:[\w\d\-\_\=]+&amp;(?:amp;)?)*v(?:&lt;[A-Z]+&gt;)?=([0-9a-zA-Z\-\_]+))/i.exec(url)[2]
+}
+
+function get_embedded_youtube_video_id(url)
+{
+    return /http:\/\/www.youtube-nocookie.com\/embed\/([0-9a-zA-Z\-\_]+)?rel=0/i.exec(url)[0]
+}
+
+function get_youtube_video_url_from_id(id)
+{
+	return 'http://www.youtube.com/watch?v=' + id
 }

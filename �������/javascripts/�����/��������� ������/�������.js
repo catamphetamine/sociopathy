@@ -4,7 +4,7 @@ Visual_editor.implement
 	{
 		this.editor.bind('contextmenu', function(event)
 		{
-			if (Режим.правка())
+			if (Режим.правка_ли())
 				event.preventDefault()
 		})
 	},
@@ -27,7 +27,7 @@ Visual_editor.implement
 		
 		editor.bind('keypress', function(event)
 		{
-			if (!Режим.правка())
+			if (!Режим.правка_ли())
 				return
 				
 			if (event.which !== Клавиши.Enter)
@@ -118,7 +118,7 @@ Visual_editor.implement
 		
 		editor.bind('keypress', (function(event)
 		{
-			if (!Режим.правка())
+			if (!Режим.правка_ли())
 				return
 				
 			if (Клавиши.is('Ctrl', 'z', event))
@@ -152,7 +152,7 @@ Visual_editor.implement
 		
 		editor.bind('keypress', function(event)
 		{
-			if (!Режим.правка())
+			if (!Режим.правка_ли())
 				return
 				
 			if (Клавиши.is('Shift', 'Space', event))
@@ -181,7 +181,7 @@ Visual_editor.implement
 		
 		editor.bind('keypress', (function(event)
 		{
-			if (!Режим.правка())
+			if (!Режим.правка_ли())
 				return
 				
 			if (!event.charCode)

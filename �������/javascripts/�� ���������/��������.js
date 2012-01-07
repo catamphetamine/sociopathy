@@ -1,6 +1,6 @@
 function initialize_page()
 {
-	Режим.подсказка('В этом разделе вы можете читать и писать заметки на всевозможные темы.')
+	Подсказки.подсказка('В этом разделе вы можете читать и писать заметки на всевозможные темы.')
 
 	insert_search_bar_into($('#panel'))
 	$('.on_the_right_side_of_the_panel').css('right', $('#search').outerWidth(true) + parseInt($('#search').css('right')) + 'px')
@@ -35,7 +35,8 @@ function initialize_page()
 				}
 			}
 		},
-		conditional: $('#category_list_block[type=conditional]')
+		conditional: $('#category_list_block[type=conditional]'),
+		done: categories_loaded
 	},
 	new  Data_loader
 	({
@@ -45,6 +46,11 @@ function initialize_page()
 
 	$(window).resize(resize_categories_list)
 	resize_categories_list()
+}
+
+function categories_loaded()
+{
+	Режим.разрешить('правка')
 }
 
 function resize_categories_list()

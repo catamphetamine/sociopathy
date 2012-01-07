@@ -155,9 +155,13 @@
 	{
 		li
 		{
-			&.code, &multiline_code
+			&.code, &.multiline_code, &.html
 			{
-				/* font-weight: bold; */
+				> code
+				{
+					background: none;
+					border: 0;
+				}
 			}
 						
 			&.subscript sub, &.superscript sup
@@ -218,4 +222,64 @@
 {
 	position: relative;
 	top: -2px;
+}
+
+#visual_editor_hyperlink_window
+{
+	.icon
+	{
+		width: 128px;
+		height: 128px;
+
+		background-image: url('/картинки/писарь/снасти/ссылка.png');
+	}
+}
+
+#visual_editor_image_source_window
+{
+	.icon
+	{
+		width: 128px;
+		height: 128px;
+
+		background-image: url('/картинки/писарь/снасти/картинка.png');
+		
+		padding-right: 46px;
+	}
+}
+
+#visual_editor_formula_window
+{
+	.icon
+	{
+		width: 128px;
+		height: 128px;
+
+		background-image: url('/картинки/писарь/снасти/формула.png');
+	}
+}
+
+#visual_editor_video_window
+{
+	.icon
+	{
+		width: 128px;
+		height: 128px;
+
+		background-image: url('/картинки/писарь/снасти/видео.png');
+	}
+}
+
+#visual_editor_insert_html_window
+{
+	.icon
+	{
+		width: 128px;
+		height: 128px;
+
+		background-image: url('/картинки/писарь/снасти/html.png');
+		
+		padding-left: 10px;
+		padding-right: 0px;
+	}
 }

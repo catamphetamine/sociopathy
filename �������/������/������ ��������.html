@@ -41,8 +41,14 @@
 	</section>
 	
 	<section class="miscellaneous">
-		<!-- person's mood -->
-		<div class="mood"></div>	
+		<!-- person's online_status -->
+		<div class="online_status">
+			<div class="online"></div>
+			<div class="offline"></div>
+			<div class="was_here non_selectable">
+				{{if пол === 'мужской'}} Был {{else}} Была {{/if}} в сети <span class="last_action_time intelligent_date"></span>
+			</div>
+		</div>	
 	
 		<!-- Sobranie logo -->
 		<!-- <a href="#" class="small_logo"></a> -->

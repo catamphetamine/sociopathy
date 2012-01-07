@@ -12,6 +12,11 @@ session = require('./connect_session')(get_session_id, redis_store)
 	ввод.настройки = снасти.настройки(ввод)
 	следующий()
 	
+access_logger = (ввод, вывод, следующий) ->
+	следующий()
+	return if not ввод.session?
+	хранилище.collection('people').update({ _id: ввод.session.пользователь._id }, { $set: { 'когда был здесь': new Date() }})
+	
 remember_me = (ввод, вывод, следующий) ->
 	тайный_ключ = ввод.cookies.user
 
@@ -49,6 +54,7 @@ module.exports = (приложение) ->
 			приложение.use session
 			приложение.use получатель_настроек
 			приложение.use remember_me
+			приложение.use access_logger
 			приложение.use приложение.router
 	
 		приложение.configure 'development', ->

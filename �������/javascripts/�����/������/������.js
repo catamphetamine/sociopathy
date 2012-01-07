@@ -35,6 +35,8 @@ var dialog_window = new Class
 	control_locks: [],
 	
 	namespace: "window",
+	
+	state: {},
 
 	is_open: false,
 	
@@ -108,21 +110,25 @@ var dialog_window = new Class
 		this.$element.wrap(firefox_box_shadow_scrollbar_hider)
 			
 		// the wrapped dialog window (fixes the box-shadow scroll bar bug in Fire Fox)
+		/*
 		var $dialog_window = $('<section/>')
 			.addClass('dialog_window')
 			.appendTo(this.$element)
+		*/
+		
+		this.$element.addClass('dialog_window')
 
 		// set dialog content
 		$element
 			.removeClass('collapsed')
 			.addClass('content')
-			.appendTo($dialog_window)
+			.appendTo(this.$element)
 			.css({ width: 'auto' })
 
 		// set dialog title bar
 		$('<header/>')
 			.addClass("top_bar non_selectable")
-			.prependTo($dialog_window)	
+			.prependTo(this.$element)	
 			.text(title)
 			
 		$(window).resize((function()
@@ -131,6 +137,23 @@ var dialog_window = new Class
 				this.position()
 		})
 		.bind(this))
+		
+		this.$element.on('keydown', function(event) 
+		{
+			// if Enter key pressed
+			if (event.keyCode == Event.Keys.enter)
+			{
+				if (self.on_enter)
+				{
+					self.on_enter()
+					return false
+				}
+			}
+			
+			// if Tab key pressed
+			//if (event.keyCode == Event.Keys.tab) 
+			//	return false
+		})
 	},
 
 	set_dimensions: function($element)
@@ -189,8 +212,11 @@ var dialog_window = new Class
 	},
 	
 	// opens the dialog window
-	open: function() 
+	open: function(state) 
 	{
+		if (state)
+			this.state = state
+	
 		if (this.is_open)
 			return
 			
@@ -237,7 +263,7 @@ var dialog_window = new Class
 	// closes the dialog window
 	close: function(callback) 
 	{
-		this.veil.destroy()
+		this.veil.hide_and_destroy()
 		
 		this.$element.unbind('keypress.' + this.namespace)
 		
@@ -245,7 +271,9 @@ var dialog_window = new Class
 		{
 			if (callback)
 				callback()
-			
+		
+			this.state = {}
+	
 			z_indexer.unregister(this)
 
 			this.reset()
@@ -348,6 +376,13 @@ var dialog_window = new Class
 	 */
 	register_controls: function()
 	{
+		var dialog = this
+		Array.prototype.slice.call(arguments).flatten().forEach(function(control)
+		{
+			if (control.constructor === Form)
+				dialog.form = control
+		})
+	
 		this.controls.combine(Array.prototype.slice.call(arguments).flatten())
 	},
 	

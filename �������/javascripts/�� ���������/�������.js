@@ -1,29 +1,32 @@
-Режим.можно_будет_править_после_загрузки()
-
+var id_card
+var online_status
 function initialize_page()
 {
-	Режим.подсказка('Здесь вы можете посмотреть данные об этом члене нашей сети. Если это ваша личная карточка, вы сможете изменить данные в ней, переключившись в режим правки.')
+	id_card = $('#id_card')
+
+	Подсказки.подсказка('Здесь вы можете посмотреть данные об этом члене нашей сети. Если это ваша личная карточка, вы сможете изменить данные в ней, переключившись в режим правки.')
 	Режим.добавить_проверку_перехода(function(из, в)
 	{
-		if (!пользователь_сети)
-			return false
-			
 		if (в === 'правка')
 		{
+			if (!пользователь_сети)
+			{
+				info('Здесь нечего править')
+				return false
+			}
+			
 			if (пользователь._id !== пользователь_сети._id)
 			{
 				info('Это не ваши личные данные, и вы не можете их править.')
 				return false
 			}
 		}
-			
-		return true
 	})
 
 	new Data_templater
 	({
 		template_url: '/лекала/личная карточка.html',
-		item_container: $('#id_card'),
+		item_container: id_card,
 		conditional: $('#id_card_block[type=conditional]'),
 		done: id_card_loaded
 	},
@@ -42,14 +45,63 @@ function адресное_имя()
 	return путь_страницы().match(/люди\/(.+)/)[1]
 }
 
+var когда_был_здесь
+
 function id_card_loaded()
 {
+	online_status =
+	{
+		online: id_card.find('.online_status .online'),
+		offline: id_card.find('.online_status .offline') 
+	}
+	
+	show_online_status()
 	show_minor_info()
+	
 	initialize_editables()
 	initialize_edit_mode_effects()	
 
-	Режим.activate_actions(save_changes)
-	Режим.включить_возможность_правки()
+	Режим.activate_edit_actions({ on_save: save_changes })
+	Режим.разрешить('правка')
+}
+
+var online_status_updater
+function show_online_status()
+{
+	когда_был_здесь = пользователь_сети['когда был здесь']
+	if (!когда_был_здесь)
+		return
+	else
+		когда_был_здесь = new Date(когда_был_здесь)
+
+	id_card.find('.last_action_time').attr('date', когда_был_здесь.getTime())
+	update_intelligent_dates.ticking(60 * 1000)
+	
+	var online_status = id_card.find('.online_status')
+	online_status.on('mouseenter', function()
+	{
+		id_card.find('.was_here').fade_in(0.3, { maximum_opacity: 0.8, hide: true })
+	})
+	online_status.on('mouseleave', function()
+	{
+		id_card.find('.was_here').fade_out(0.3)
+	})
+
+	online_status_updater = update_online_status.ticking(2 * 1000)
+}
+
+function update_online_status()
+{
+	var остылость = (new Date().getTime() - когда_был_здесь.getTime()) / (Options.User_is_online_for * 1000)
+	if (остылость > 1)
+	{
+		online_status.online.hide()
+		online_status.offline.css({ opacity: 1 })
+		return online_status_updater.stop()
+	}
+	
+	online_status.online.css({ opacity: 1 - остылость })
+	online_status.offline.css({ opacity: остылость })
 }
 
 function initialize_edit_mode_effects()
@@ -183,24 +235,6 @@ function initialize_editables()
 				return warning('Можно загружать только картинки формата JPEG')
 							
 			uploader.send()
-			
-			/*
-			file_chooser.ajax_upload
-			({
-				//url: '/приложение/человек/сменить картинку',
-				url: 'http://localhost:' + Options.Upload_server_port + '/человек/сменить картинку',
-				data: { name: 'user', value: $.cookie('user') },
-				success: function(data)
-				{
-					if (data.ошибка)
-						return error(data.ошибка)
-				},
-				error: function()
-				{
-					error('Ошибка загрузки картинки')
-				}
-			})
-			*/
 		})
 	})
 }

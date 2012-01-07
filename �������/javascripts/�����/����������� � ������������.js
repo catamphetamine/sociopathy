@@ -59,7 +59,7 @@ var loading_indicator = new (function()
 	{
 		var choise = this.choose_loading_indicator()
 		
-		var image = $("img.loading_indicator_image", loading_indicator.$element)
+		var image = loading_indicator.$element.find("img.loading_indicator_image")
 		
 		image.css
 		({

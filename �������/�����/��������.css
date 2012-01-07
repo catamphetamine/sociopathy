@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Panel
  * 
  * This style sheet styles the panel. 
@@ -125,7 +125,7 @@ em.panel_menu_tooltip
 	-webkit-border-radius: 15px;
 	border-radius: 15px;
 	
-	.beautiful_shadow(2px, 5px, 5px, 7px, 10px, 14px, 20px, 0.05);
+	.beautiful_shadow_5(2px, 5px, 5px, 7px, 10px, 14px, 20px, 0.05);
 }
 
 #panel_logo

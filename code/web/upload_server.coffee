@@ -73,3 +73,29 @@ upload = (ввод, возврат) ->
 	form.parse(ввод)
 	
 server.listen(Options.Upload_server.Port)
+
+# convert -resize 120x120 -quality 85 input.jpg output.jpg
+# convert -resize 48x48 -quality 85 input.jpg output.jpg
+
+###
+image_magick = require 'imagemagick'
+image_magick.resize
+({
+	srcPath: ''
+	dstPath: ''
+	quality: 0.85
+	strip: false
+	width: 173
+	height: "173^"
+	filter: 'Lagrange'
+	customArgs:
+	[
+		"-gravity"
+		"center"
+		"-extent"
+		"173x173"
+	]
+}, function(error, output, errors_output)
+{
+})
+###

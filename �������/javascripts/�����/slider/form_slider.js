@@ -89,17 +89,15 @@ function form_slider(options)
 		$container.keydown(function(event) 
 		{
 			// if Enter key pressed
-			if (event.keyCode == Event.Keys.enter) 
+			if (event.keyCode == Event.Keys.enter)
 			{
 				options.buttons.next.push()
-				return
+				return false
 			}
 			
 			// if Tab key pressed
 			if (event.keyCode == Event.Keys.tab) 
-			{
 				return false
-			}
 		})
 	}
 	

@@ -33,14 +33,17 @@ function Form(element)
 		form.inputs.push(new (function(element, form)
 		{
 			this.element = element
+			this.name = this.element.attr('name')
 		
-			this.label = form.element.find('label[for=' + this.element.attr('name') + ']')
+			this.label = form.element.find('label[for=' + this.name + ']')
 			
 			this.reset = function()
 			{
 				// if there is any error message - hide it
 				if (this.error_label)
 					this.error_label.slide_out()
+					
+				this.element.val('')
 			}
 			
 			this.validate = function()
@@ -111,4 +114,16 @@ function Form(element)
 		})
 		(input, form))
 	})
+	
+	this.field = function(name)
+	{
+		var i = 0
+		while (i < this.inputs.length)
+		{
+			if (this.inputs[i].name === name)
+				return this.inputs[i].element
+				
+			i++
+		}
+	}
 }

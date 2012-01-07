@@ -93,10 +93,17 @@ var veil = new Class
 	 * destroys the veil
 	 */
 	destroy: function()
-	{			
-		veiler.unregister(this.$element)
+	{
+		var element = this.$element
+		veiler.unregister(element)
+		this.hide(function() { element.remove() })
+	},
 	
-		this.hide(this.$element.remove)
+	hide_and_destroy: function()
+	{
+		var veil = this
+		veil.$element.attr('destroying', true)
+		veil.hide(function() { veil.destroy() })
 	},
 	
 	/**

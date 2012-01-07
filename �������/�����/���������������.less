@@ -48,9 +48,49 @@
 	box-shadow: @value;
 }
 
-.beautiful_shadow (@left: 0px, @top: 0px, @first_radius, @second_radius, @third_radius, @fourth_radius, @fifth_radius, @opacity: 0.1, @red: 0, @green: 0, @blue: 0)
+.beautiful_shadow_5 (@left: 0px, @top: 0px, @first_radius, @second_radius, @third_radius, @fourth_radius, @fifth_radius, @opacity: 0.1, @red: 0, @green: 0, @blue: 0)
 {
 	@value: @left @top @first_radius rgba(@red, @green, @blue, @opacity), @left @top @second_radius rgba(@red, @green, @blue, @opacity), @left @top @third_radius rgba(@red, @green, @blue, @opacity), @left @top @fourth_radius rgba(@red, @green, @blue, @opacity), @left @top @fifth_radius rgba(@red, @green, @blue, @opacity);
+
+	-webkit-box-shadow: @value;
+	-moz-box-shadow: @value;
+	-o-box-shadow: @value;
+	box-shadow: @value;
+}
+
+.beautiful_shadow_4 (@left: 0px, @top: 0px, @first_radius, @second_radius, @third_radius, @fourth_radius, @opacity: 0.1, @red: 0, @green: 0, @blue: 0)
+{
+	@value: @left @top @first_radius rgba(@red, @green, @blue, @opacity), @left @top @second_radius rgba(@red, @green, @blue, @opacity), @left @top @third_radius rgba(@red, @green, @blue, @opacity), @left @top @fourth_radius rgba(@red, @green, @blue, @opacity);
+
+	-webkit-box-shadow: @value;
+	-moz-box-shadow: @value;
+	-o-box-shadow: @value;
+	box-shadow: @value;
+}
+
+.beautiful_shadow_3 (@left: 0px, @top: 0px, @first_radius, @second_radius, @third_radius, @opacity: 0.1, @red: 0, @green: 0, @blue: 0)
+{
+	@value: @left @top @first_radius rgba(@red, @green, @blue, @opacity), @left @top @second_radius rgba(@red, @green, @blue, @opacity), @left @top @third_radius rgba(@red, @green, @blue, @opacity);
+
+	-webkit-box-shadow: @value;
+	-moz-box-shadow: @value;
+	-o-box-shadow: @value;
+	box-shadow: @value;
+}
+
+.beautiful_shadow_2 (@left: 0px, @top: 0px, @first_radius, @second_radius, @opacity: 0.1, @red: 0, @green: 0, @blue: 0)
+{
+	@value: @left @top @first_radius rgba(@red, @green, @blue, @opacity), @left @top @second_radius rgba(@red, @green, @blue, @opacity);
+
+	-webkit-box-shadow: @value;
+	-moz-box-shadow: @value;
+	-o-box-shadow: @value;
+	box-shadow: @value;
+}
+
+.shadow (@left: 0px, @top: 0px, @radius, @opacity: 0.1, @red: 0, @green: 0, @blue: 0)
+{
+	@value: @left @top radius rgba(@red, @green, @blue, @opacity);
 
 	-webkit-box-shadow: @value;
 	-moz-box-shadow: @value;

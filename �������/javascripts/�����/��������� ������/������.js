@@ -89,7 +89,7 @@ Visual_editor.implement
 			apply: function()
 			{
 				if (editor.selection.exists())
-					throw new Error('Не нужно ничего выделять')
+					throw new Error('Выделение пока не поддерживается этим инструментом')
 				
 				if (!editor.caret.has_container('p'))
 					throw new Error('Подзаголовок можно помещать только в абзаце')
@@ -121,23 +121,63 @@ Visual_editor.implement
 		{
 			selector: '.link',
 			
+			initialize: function()
+			{
+				var tool = this
+				
+				Validation.наглядный_писарь.ссылка = function(value)
+				{
+					if (!value)
+						throw new custom_error('Введите адрес ссылки')
+				}
+				
+				this.dialog_window = simple_value_dialog_window
+				({
+					id: 'visual_editor_hyperlink_window',
+					title: 'Ссылка',
+					fields:
+					[{
+						id: 'url',
+						description: 'Укажите адрес ссылки',
+						validation: 'наглядный_писарь.ссылка'
+					}],
+					ok: function(url)
+					{
+						url = correct_uri(encodeURI(url))
+						
+						if (this.state.element)
+						{
+							this.state.element.attr('href', url)
+							return tool.restore_caret()
+						}
+						
+						var link = $('<a/>')
+						link.attr('href', url)
+						visual_editor.hint(link, 'Введите текст')
+						link.attr('type', 'hyperlink')
+						
+						tool.restore_caret()
+						tool.on_success(editor.insert(link))
+					},
+					cancel: function()
+					{
+						tool.restore_caret()
+					}
+				})
+			},
+			
 			apply: function()
 			{
 				if (editor.selection.exists())
-					throw new Error('Не нужно ничего выделять')
-					// на самом деле - брать выделенное и переводить в ссылку
+					throw new Error('Выделение пока не поддерживается этим инструментом')
 				
-				var link = 'http://google.ru'
-				
-				var element = $('<a/>')
-				element.attr('href', correct_uri(link))
-				visual_editor.hint(element, 'Введите текст')
-				
-				return editor.insert(element)
+				this.open_dialog_window()
+				return false
 			},
 			
 			on_success: function(link)
 			{
+				this.activate(link)
 				editor.caret.move_to(link)
 			}
 		}
@@ -149,7 +189,7 @@ Visual_editor.implement
 			apply: function()
 			{
 				if (editor.selection.exists())
-					throw new Error('Не нужно ничего выделять')
+					throw new Error('Выделение пока не поддерживается этим инструментом')
 		
 				var citation = $('<div/>')
 				citation.addClass('citation')
@@ -184,7 +224,7 @@ Visual_editor.implement
 			apply: function()
 			{
 				if (editor.selection.exists())
-					throw new Error('Не нужно ничего выделять')
+					throw new Error('Выделение пока не поддерживается этим инструментом')
 		
 				if (!editor.caret.container().is('p'))
 					throw new Error('Список можно поместить только внутри обычного текста')
@@ -209,25 +249,62 @@ Visual_editor.implement
 		{
 			button: new image_button(tools.find('.picture span')),
 			
+			initialize: function()
+			{
+				var tool = this
+				
+				Validation.наглядный_писарь.картинка = function(value)
+				{
+					if (!value)
+						throw new custom_error('Введите адрес картинки')
+				}
+				
+				this.dialog_window = simple_value_dialog_window
+				({
+					id: 'visual_editor_image_source_window',
+					title: 'Адрес картинки',
+					fields:
+					[{
+						id: 'url',
+						description: 'Укажите адрес картинки',
+						validation: 'наглядный_писарь.картинка'
+					}],
+					ok: function(url)
+					{
+						url = encodeURI(url)
+						
+						if (this.state.element)
+						{
+							this.state.element.attr('src', url)
+							return tool.restore_caret()
+						}
+					
+						var picture = $('<img/>')
+						picture.attr('src', url)
+						picture.attr('type', 'picture')
+						
+						tool.restore_caret()
+						tool.on_success(editor.insert(picture))
+					},
+					cancel: function()
+					{
+						tool.restore_caret()
+					}
+				})
+			},
+			
 			apply: function()
 			{
 				if (editor.selection.exists())
-					throw new Error('Не нужно ничего выделять')
+					throw new Error('Выделение пока не поддерживается этим инструментом')
 				
-				var picture = $('<img/>')
-				picture.addClass('picture')
-				picture.css
-				({
-					'background-image': "url('/картинки/temporary/картинка с личной карточки.jpg')",
-					width: '120px',
-					height: '120px'
-				})
-				
-				return editor.insert(picture)
+				this.open_dialog_window()
+				return false
 			},
 			
 			on_success: function(picture)
 			{
+				this.activate(picture)
 				editor.caret.move_to(picture)
 			}
 		}
@@ -239,7 +316,7 @@ Visual_editor.implement
 			apply: function()
 			{
 				//if (editor.selection.exists())
-				//	throw new Error('Не нужно ничего выделять')
+				//	throw new Error('Выделение пока не поддерживается этим инструментом')
 				
 				if (!editor.time_machine.undo())
 					info('Это самая ранняя версия заметки')
@@ -253,7 +330,7 @@ Visual_editor.implement
 			apply: function()
 			{
 				//if (editor.selection.exists())
-				//	throw new Error('Не нужно ничего выделять')
+				//	throw new Error('Выделение пока не поддерживается этим инструментом')
 				
 				if (!editor.time_machine.redo())
 					info('Это самая поздняя версия заметки')
@@ -266,21 +343,62 @@ Visual_editor.implement
 		{
 			selector: '.formula',
 			
+			initialize: function()
+			{
+				var tool = this
+				
+				Validation.наглядный_писарь.формула = function(value)
+				{
+					if (!value)
+						throw new custom_error('Введите код формулы в формате TeX')
+				}
+				
+				this.dialog_window = simple_value_dialog_window
+				({
+					id: 'visual_editor_formula_window',
+					title: 'Формула',
+					fields:
+					[{
+						id: 'formula',
+						description: 'Введите формулу (в формате TeX)',
+						validation: 'наглядный_писарь.формула'
+					}],
+					ok: function(formula)
+					{
+						if (this.state.element)
+						{
+							this.state.element.attr('src', 'http://chart.apis.google.com/chart?cht=tx&chs=28&chl=' + encodeURIComponent(formula))
+							return tool.restore_caret()
+						}
+						
+						var picture = $('<img/>')
+						picture.attr('src', 'http://chart.apis.google.com/chart?cht=tx&chs=28&chl=' + encodeURIComponent(formula))
+						picture.attr('type', 'formula')
+						
+						tool.restore_caret()
+						tool.on_success(editor.insert(picture))
+					},
+					cancel: function()
+					{
+						tool.restore_caret()
+					}
+				})
+			},
+	
 			apply: function()
 			{
 				if (editor.selection.exists())
-					throw new Error('Не нужно ничего выделять')
+					throw new Error('Выделение пока не поддерживается этим инструментом')
 				
 				//var formula = '\\[ f(x,y,z) = 3y^2 z \\left( 3 + \\frac{7x+5}{1 + y^2} \\right).\\]'
-				var formula = 'E = mc^2'
-				var picture = $('<img/>')
-				picture.attr('src', 'http://chart.apis.google.com/chart?cht=tx&chs=28&chl=' + encodeURIComponent(formula))
-				
-				return editor.insert(picture)
+
+				this.open_dialog_window()
+				return false
 			},
 			
 			on_success: function(picture)
 			{
+				this.activate(picture)
 				editor.caret.move_to(picture)
 			}
 		}
@@ -292,7 +410,7 @@ Visual_editor.implement
 			apply: function()
 			{
 				if (editor.selection.exists())
-					throw new Error('Не нужно ничего выделять')
+					throw new Error('Выделение пока не поддерживается этим инструментом')
 					// на самом деле - брать выделенное и переводить его в регистр
 				
 				var subscript = $('<sub/>')
@@ -314,7 +432,7 @@ Visual_editor.implement
 			apply: function()
 			{
 				if (editor.selection.exists())
-					throw new Error('Не нужно ничего выделять')
+					throw new Error('Выделение пока не поддерживается этим инструментом')
 					// на самом деле - брать выделенное и переводить его в регистр
 				
 				var superscript = $('<sup/>')
@@ -336,7 +454,7 @@ Visual_editor.implement
 			apply: function()
 			{
 				if (editor.selection.exists())
-					throw new Error('Не нужно ничего выделять')
+					throw new Error('Выделение пока не поддерживается этим инструментом')
 					// на самом деле - брать выделенное и переводить в код
 				
 				var element = $('<code/>')
@@ -358,7 +476,7 @@ Visual_editor.implement
 			apply: function()
 			{
 				if (editor.selection.exists())
-					throw new Error('Не нужно ничего выделять')
+					throw new Error('Выделение пока не поддерживается этим инструментом')
 					// на самом деле - брать выделенное и переводить в код
 				
 				var element = $('<pre/>')
@@ -377,22 +495,71 @@ Visual_editor.implement
 		{
 			button: new image_button(tools.find('.video span')),
 			
+			initialize: function()
+			{
+				var tool = this
+				
+				Validation.наглядный_писарь.видео = function(value)
+				{
+					if (!value)
+						throw new custom_error('Введите адрес видео на YouTube')
+						
+					if (!get_youtube_video_id(value))
+						throw new custom_error('Неправильный адрес видео на YouTube')
+				}
+				
+				this.dialog_window = simple_value_dialog_window
+				({
+					id: 'visual_editor_video_window',
+					title: 'Видео',
+					fields:
+					[{
+						id: 'url',
+						description: 'Введите адрес видео на YouTube',
+						validation: 'наглядный_писарь.видео'
+					}],
+					ok: function(url)
+					{
+						url = encodeURI(url)
+						
+						/*
+						if (this.state.element)
+						{
+							this.state.element.attr('src', 'http://www.youtube-nocookie.com/embed/' + get_youtube_video_id(url) + '?rel=0')
+							return tool.restore_caret()
+						}
+						*/
+					
+						var video = $('<iframe/>')
+						video.attr('src', 'http://www.youtube-nocookie.com/embed/' + get_youtube_video_id(url) + '?rel=0')
+						video.attr('width', 560)
+						video.attr('height', 315)
+						video.attr('frameborder', 0)
+						video.attr('allowfullscreen', 'true')
+						video.attr('type', 'video')
+					
+						tool.restore_caret()
+						tool.on_success(editor.insert(video))
+					},
+					cancel: function()
+					{
+						tool.restore_caret()
+					}
+				})
+			},
+			
 			apply: function()
 			{
-				return info('Ещё не сделано')
-				
 				if (editor.selection.exists())
-					throw new Error('Не нужно ничего выделять')
-					// на самом деле - брать выделенное и переводить в код
+					throw new Error('Выделение пока не поддерживается этим инструментом')
 				
-				encodeURI() // в окошке
-
-				return editor.insert($('<div/>'))
+				this.open_dialog_window()
+				return false
 			},
 			
 			on_success: function(element)
 			{
-				//editor.caret.move_to(element)
+				editor.caret.move_to(element)
 			}
 		}
 		
@@ -400,22 +567,68 @@ Visual_editor.implement
 		{
 			selector: '.html',
 			
+			initialize: function()
+			{
+				var tool = this
+				
+				Validation.наглядный_писарь.html = function(value)
+				{
+					if (!value)
+						throw new custom_error('Введите код Html')
+						
+					try
+					{
+						value = $(value).outer_html()
+						if (!value)
+							throw null
+					}
+					catch (error)
+					{
+						throw new custom_error('Неправильный формат кода Html')
+					}
+				
+					if (!value)
+						throw new custom_error('Введите код Html')
+						
+					tool.dialog_window.$element.find('input[name="html"]').val(value)
+				}
+				
+				this.dialog_window = simple_value_dialog_window
+				({
+					id: 'visual_editor_insert_html_window',
+					title: 'Вставка Html',
+					fields:
+					[{
+						id: 'html',
+						description: 'Введите код Html',
+						validation: 'наглядный_писарь.html'
+					}],
+					ok: function(html)
+					{
+						var element = $(html)
+						
+						tool.restore_caret()
+						tool.on_success(editor.insert(element))
+					},
+					cancel: function()
+					{
+						tool.restore_caret()
+					}
+				})
+			},
+			
 			apply: function()
 			{
-				return info('Ещё не сделано')
-				
 				if (editor.selection.exists())
-					throw new Error('Не нужно ничего выделять')
-					// на самом деле - брать выделенное и переводить в код
+					throw new Error('Выделение пока не поддерживается этим инструментом')
 				
-				validate_html() // в окошке
-
-				return editor.insert($('<div/>'))
+				this.open_dialog_window()
+				return false
 			},
 			
 			on_success: function(element)
 			{
-				//editor.caret.move_to(element)
+				editor.caret.move_to(element)
 			}
 		}
 		
@@ -435,7 +648,7 @@ Visual_editor.implement
 				if ($.browser.mozilla)
 					editor.content.focus()
 					
-				on_success(result)
+				on_success.bind(tool)(result)
 			}
 			
 			if (!tool.on_error)
@@ -453,7 +666,9 @@ Visual_editor.implement
 			{
 				try
 				{
-					tool.on_success(tool.apply())
+					var result = tool.apply()
+					if (result)
+						tool.on_success(result)
 				}
 				catch (error)
 				{
@@ -463,7 +678,35 @@ Visual_editor.implement
 						throw error
 				}
 			}
-					
+
+			if (tool.initialize)
+				tool.initialize()
+			
+			tool.open_dialog_window = function(values, state)
+			{
+				if (values)
+				{	
+					Object.each(values, function(value, name)
+					{
+						tool.dialog_window.form.field(name).val(value)
+					})
+				}
+				
+				this.backup_caret()
+				this.dialog_window.open(state)
+			}
+			
+			tool.backup_caret = function()
+			{
+				this.caret = editor.caret.get()			
+			}
+			
+			tool.restore_caret = function()
+			{
+				editor.content.focus()
+				editor.caret.set(this.caret)
+			}
+			
 			if (tool.selector)
 			{
 				element.bind('click', function(event)

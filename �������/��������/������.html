@@ -74,6 +74,9 @@
 		<script src="/javascripts/общее.js"></script>
 		<link rel="stylesheet/less" type="text/css" href="/облик/общее.css">
 		
+		<script src="/javascripts/облик/form.js"></script> 
+		<script src="/javascripts/облик/окошко/simple value dialog window.js"></script> 
+
 		<!-- писарь -->
 		<script src="/javascripts/облик/писарь/editor.js"></script>
 		<script src="/javascripts/облик/писарь/time machine.js"></script>
@@ -119,8 +122,6 @@
 		<script src="/javascripts/облик/навершие.js"></script> 
 		<link rel="stylesheet/less" href="/облик/навершие.css"/>
 
-		<script src="/javascripts/облик/form.js"></script> 
-
 		<script src="/javascripts/облик/data loader.js"></script> 
 
 		<!-- slider -->
@@ -162,6 +163,7 @@
 		</script>
 	
 		<script src="/javascripts/режимы.js"></script> 
+		<script src="/javascripts/облик/подсказки.js"></script> 
 		 
 		 <!-- не убирается в файл, так как less обрабатывает стили при загрузке страницы, поэтому был бы виден мусор -->
 		 <style>
@@ -240,7 +242,8 @@
 			var Options =
 			{
 				Upload_server_port: 8090,
-				Websocket_server: host + ':8080'
+				Websocket_server: host + ':8080',
+				User_is_online_for: 8 * 60
 			}
 		</script>
 				
@@ -331,15 +334,14 @@
 			</div>
 		</div>
 		
-		<div id="edit_mode_actions" class="non_selectable">
-			<!--
+		<!--
 			Применить внесённые правки или отменить их
 			-->
-			
+		<div id="edit_mode_actions" class="non_selectable">
 			<!-- done button -->
 			<div class="done" type="dark generic" styles="generic">
 				<span type="icon" icon="check" width="24" height="24" top_offset="8"></span>
-				<label>Применить внесённые правки</label>
+				<label>Сохранить правки</label>
 			</div>
 			
 			<!-- cancel button 
@@ -349,7 +351,34 @@
 			</div>
 			-->
 		</div>
-		
+
+		<!-- Окошко ввода значения -->
+		<div id="simple_value_dialog" class="simple_value_dialog collapsed no_word_carrying">
+			<div class="main_content">
+				<div class="icon"></div>
+				<form>
+				</form>
+			</div>
+			
+			<!-- начинаются кнопки -->
+			<div class="pre_buttons"></div>
+	
+			<!-- кнопки -->
+			<div class="no_word_carrying dialog_container buttons">
+				<!-- отмена -->
+				<span class="cancel left" type="minor" styles="generic, minor, caution">
+					<span type="icon" icon="cross" width="30" height="30" top_offset="5"></span>
+					<label>Отмена</label>
+				</span>
+	
+				<!-- применить -->			
+				<span class="ok right" type="dark generic" styles="generic">				
+					<span type="icon" icon="check" width="24" height="24" top_offset="8"></span>
+					<label>Применить</label>
+				</span>
+			</div>
+		</div>
+				
 		<footer></footer>
 
 		<!-- fix collapsed margin bug -->

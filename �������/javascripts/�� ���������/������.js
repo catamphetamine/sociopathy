@@ -9,6 +9,8 @@ var поле_пароля
 var кнопка_отмены
 var кнопка_входа
 
+var login_form
+
 // create dialog
 function initialize_enter_window()
 {
@@ -21,20 +23,16 @@ function initialize_enter_window()
 	поле_имени = enter_window.$element.find('input').eq(0)
 	поле_пароля = enter_window.$element.find('input').eq(1)
 	
-	enter_window.$element.keydown(function(event) 
+	enter_window.on_enter = function()
 	{
-		// if Enter key pressed
-		if (event.keyCode == Event.Keys.enter) 
-		{
-			кнопка_входа.push()
-			return false
-		}
-	})
+		кнопка_входа.push()
+	}
+	
+	login_form = new Form(enter_window.$element.find('form').eq(0))
 	
 	enter_window.register_controls
 	(
-		поле_имени,
-		поле_пароля,
+		login_form,
 		кнопка_отмены,
 		кнопка_входа
 	)
@@ -47,30 +45,7 @@ function initialize_enter_window_buttons()
 	.does(function() { enter_window.close() })
 	
 	кнопка_входа = activate_button('#enter_window .buttons .enter', { 'prevent double submission': true })
-	.does(function() { войти({ имя: поле_имени.val(), пароль: поле_пароля.val() }) }).submits(new Form(enter_window.$element.find('form').eq(0)))
-}
-
-function activate_button(selector, options)
-{
-	var element = $(selector)
-
-	options = options || {}
-	options.selector = selector
-
-	return button.physics.classic(new text_button
-	(
-		element,
-		Object.append
-		(
-			{
-				skin: 'sociopathy',
-				
-				// miscellaneous
-				'button type':  element.attr('type'), // || 'generic',
-			},
-			options
-		)
-	))
+	.does(function() { войти({ имя: поле_имени.val(), пароль: поле_пароля.val() }) }).submits(login_form)
 }
         
 $(document).on('fully_loaded', function()
@@ -109,7 +84,7 @@ function войти(data)
 	Ajax.post('/приложение/вход', data, 
 	{
 		ошибка: 'Не удалось войти',
-		error: function(ошибка)
+		ошибка: function(ошибка)
 		{
 			loading_indicator.hide()
 			error(ошибка)
@@ -132,7 +107,7 @@ function выйти()
 	Ajax.post('/приложение/выход', {}, 
 	{
 		ошибка: 'Не удалось выйти',
-		error: function(ошибка)
+		ошибка: function(ошибка)
 		{
 			loading_indicator.hide()
 			error(ошибка)

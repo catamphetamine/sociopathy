@@ -53,7 +53,7 @@ $(function()
 	{
 		Ajax.get('/приложение/раздел или заметка?', { путь: путь },
 		{
-			error: function(ошибка)
+			ошибка: function(ошибка)
 			{
 				page_loading_error('Что-то сломалось')
 			},
@@ -62,6 +62,7 @@ $(function()
 				if (данные.заметка)
 				{
 					название_страницы = 'заметка'
+					window.заметка = данные.заметка
 					данные_для_страницы = Object.merge(данные_для_страницы, данные)
 				}
 				else					
@@ -76,7 +77,7 @@ $(function()
 	{
 		Ajax.get('/приложение/пользовательские_данные_для_страницы', 
 		{
-			error: function(ошибка)
+			ошибка: function(ошибка)
 			{
 				// если кука user - кривая, то она уже сама удалилась на сервере,
 				// и просто перезагрузить страницу, чтобы войти в качестве гостя
@@ -98,24 +99,31 @@ $(function()
 
 	function вставить_содержимое_страницы(возврат)
 	{
-		вставить_содержимое('/страницы/' + название_страницы + '.html', данные_для_страницы, возврат,
+		вставить_содержимое('/страницы/' + название_страницы + '.html', данные_для_страницы, function() {},
 		{
 			on_error: function()
 			{
 				название_страницы = 'страница не найдена'
-				вставить_содержимое_страницы(возврат,
+				вставить_содержимое_страницы(function() {},
 				{
-					before: вставить_стиль_и_javascript
+					before: вставить_стиль_и_javascript(возврат)
 				})
 			},
-			before: вставить_стиль_и_javascript
+			before: вставить_стиль_и_javascript(возврат)
 		})
 	}
 	
-	function вставить_стиль_и_javascript()
+	function вставить_стиль_и_javascript(callback)
 	{
 		$('head').append('<link rel="stylesheet/less" href="/облик/страницы/' + название_страницы.escape_html() + '.css"/>')
-		$.getScript('/javascripts/на страницах/' + название_страницы.escape_html() + '.js', function(data, status) {})
+	
+		$.ajax
+		({
+			url: '/javascripts/на страницах/' + название_страницы.escape_html() + '.js',
+			dataType: "script",
+			success: function() { callback() },
+			error: function() { alert('Page script not loaded (possible syntax error): ' + '/javascripts/на страницах/' + название_страницы.escape_html() + '.js') }
+		})
 	}
 	
 	function вставить_пользовательское_содержимое(возврат)
@@ -135,7 +143,7 @@ $(function()
 		Ajax.get(url, 
 		{
 			type: 'html',
-			error: function()
+			ошибка: function()
 			{
 				if (options.on_error)
 					return options.on_error()
@@ -146,12 +154,16 @@ $(function()
 			{
 				$.template(url, template)
 				
+				var after = function()
+				{
+					$('footer').before($.tmpl(url, данные))
+					возврат()
+				}
+				
 				if (options.before)
-					options.before()
-				
-				$('footer').before($.tmpl(url, данные))
-				
-				возврат()
+					options.before(after)
+				else
+					after()
 			}
 		})
 	}

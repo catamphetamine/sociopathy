@@ -485,7 +485,7 @@ $(document).on('fully_loaded', function()
 			{
 				event.preventDefault()
 				
-				if (Режим.правка())
+				if (Режим.правка_ли())
 					return
 				
 				add_anchor_to_url(element.text())
@@ -634,4 +634,49 @@ function path_breadcrumbs(path, delta)
 String.prototype.escape_html = function() 
 {
 	return this.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
+}
+
+Function.prototype.ticking = function(period, bind, arguments)
+{
+	var running = true
+	var timeout_id
+	
+	var func = this
+	var periodical = function()
+	{
+		func()
+		if (running)
+			next()
+	}
+	
+	var next = function()
+	{
+		timeout_id = periodical.delay(period, bind, arguments)
+	}
+	
+	periodical()
+	return { stop: function() { clearTimeout(timeout_id); running = false } }
+}
+
+function activate_button(selector, options)
+{
+	var element = $(selector)
+
+	options = options || {}
+	options.selector = selector
+
+	return button.physics.classic(new text_button
+	(
+		element,
+		Object.append
+		(
+			{
+				skin: 'sociopathy',
+				
+				// miscellaneous
+				'button type':  element.attr('type'), // || 'generic',
+			},
+			options
+		)
+	))
 }
