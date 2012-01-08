@@ -99,7 +99,7 @@ var button = new Class
 					
 			this.locker.unlock()
 			this.locker = null
-			
+
 			// reset the flags
 			this.can_unlock = false
 			this.may_unlock = false			
@@ -115,10 +115,7 @@ var button = new Class
 			this.may_unlock = true
 	
 			if (!this.locker)
-			{
-				this.unlock()
-				return
-			}
+				return this.unlock()
 
 			// if the button can now be unlocked (has finished the push animation) - unlock it
 			if (this.can_unlock)
@@ -129,7 +126,7 @@ var button = new Class
 		{
 			// now the button can be unlocked (has finished the push animation), if the caller permits
 			this.can_unlock = true
-
+			
 			// if the caller permits - unlock
 			if (this.may_unlock)
 				this.unlock()
@@ -167,7 +164,7 @@ var button = new Class
 		
 		// stylize
 		
-		Object.each(this.frames, function($frame) { $frame.css(self.options.style) })
+		//Object.each(this.frames, function($frame) { $frame.css(self.options.style) })
 		
 		// bind events
 		
@@ -245,8 +242,6 @@ var button = new Class
 	
 		var lock = new (function()
 		{
-			//this.time = new Date().getTime()
-			
 			this.unlock = (function()
 			{
 				button.locks.erase(this)
@@ -406,7 +401,7 @@ var button = new Class
 			return
 			
 		var self = this
-			
+
 		var lock = this.lock()
 		this.fade_in('idle', function() 
 		{ 
@@ -502,16 +497,25 @@ var button = new Class
 	
 	disable: function(reason)
 	{
+		if (this.disabled_lock)
+			return
+	
 		this.$element.addClass('disabled')
-		this.lock()
+		this.disabled_lock = this.lock()
 		this.frames.idle.attr('title', reason)
 	},
 	
 	enable: function()
 	{
+		if (!this.disabled_lock)
+			return
+
 		this.$element.removeClass('disabled')
-		this.try_unlock()
+		//this.try_unlock()
+		this.disabled_lock.unlock()
 		this.frames.idle.removeAttr('title')
+		
+		this.disabled_lock = null
 	}
 })
 

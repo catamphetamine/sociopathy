@@ -48,13 +48,19 @@ Editor.Caret = new Class
 		return Dom_tools.down_to_text_node(this.native_container())
 	},
 	
-	move_to: function(element)
-	{		
+	move_to: function(element, offset)
+	{
+		if (!offset)
+			offset = 0
+	
 		element = Dom_tools.normalize(element)
 		
 		if (!Dom_tools.is_text_node(element))
 			element = Dom_tools.find_text_node(element, this.editor.content)
 		
+		if ($.browser.webkit)
+			return this.create(element, offset)
+
 		var caret = this.get()
 		if (caret)
 		{
@@ -163,19 +169,24 @@ Editor.Caret = new Class
 	
 	position: function(container, offset)
 	{
+		if ($.browser.webkit)
+			return this.create(container, offset)
+		
 		var caret = this.get()
 		
 		if (!caret)
-			caret = this.create(container, offset)
-
+			return this.create(container, offset)
+			
 		if (Dom_tools.is_text_node(container))
 		{
 			caret.setStart(container, offset)
-			this.editor.collapse(caret)
-			return
+			return this.editor.collapse(caret)
 		}
 		
-		throw 'Not a text node'
+		//throw 'Not a text node'
+		
+		caret.setStart(container, offset)
+		this.editor.collapse(caret)
 		
 		/*
 		if (container.childNodes.length === 0)

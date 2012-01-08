@@ -66,3 +66,23 @@ body[mode="правка"] .real_picture
 		text-overflow: ellipsis;
 	}
 }
+
+.business_card .uploading_picture
+{
+	display: none;
+
+	position: absolute;  
+	top: 0;
+	left: 0;
+
+	width: 120px;
+	height: 70px;
+	
+	background-color: #7f7f7f;
+	color: #ffffff;
+	
+	text-align: center;
+	padding-top: 50px;
+	
+	font-size: 18px;
+}

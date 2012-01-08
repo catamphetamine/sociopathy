@@ -134,13 +134,31 @@ Visual_editor.implement
 			}
 			
 			if (Клавиши.is('Ctrl', 'x', event))
-			{
-				event.preventDefault()
-			}
+				return event.preventDefault()
 			
 			if (Клавиши.is('Ctrl', 'v', event) || Клавиши.is('Shift', 'Insert', event))
+				return event.preventDefault()
+			
+			// русификация вышеперечисленных горячих клавиш для хрома
+			if ($.browser.webkit)
 			{
-				event.preventDefault()
+				if (Клавиши.is('Ctrl', 'Shift', 'я', event) || Клавиши.is('Ctrl', 'н', event))
+				{
+					this.Tools.Redo.apply()
+					event.preventDefault()
+				}
+				
+				if (Клавиши.is('Ctrl', 'я', event))
+				{
+					this.Tools.Undo.apply()
+					event.preventDefault()
+				}
+				
+				if (Клавиши.is('Ctrl', 'ч', event))
+					return event.preventDefault()
+				
+				if (Клавиши.is('Ctrl', 'м', event))
+					return event.preventDefault()
 			}
 		})
 		.bind(this))
@@ -184,6 +202,12 @@ Visual_editor.implement
 			if (!Режим.правка_ли())
 				return
 				
+			if (Клавиши.is('Delete', event) || Клавиши.is('Backspace', event))
+			{
+				editor.time_machine.snapshot()
+				return editor.checkpoint()
+			}
+			
 			if (!event.charCode)
 				return
 				

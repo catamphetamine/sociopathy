@@ -75,12 +75,14 @@ http.post '/человек/сменить картинку', (ввод, выво
 	if имя.to_unix_path().indexOf('/') >= 0
 		throw 'hack attempt: ' + имя
 	
-	путь = global.Upload_temporary_file_path + '/' + имя + '.jpg'
-	место = global.Upload_file_path + '/люди/' + ввод.session.пользователь['адресное имя'] + '/картинка'
+	путь = Options.Upload_server.Temporary_file_path + '/' + имя + '.jpg'
+	место = Options.Upload_server.File_path + '/люди/' + ввод.session.пользователь['адресное имя'] + '/картинка'
 	
 	цепь(вывод)
 		.сделать ->
 			снасти.создать_путь(место, @)
+		.сделать ->			
+			square_resize(путь, место + '/в болталке.jpg', Options.User.Picture.Chat.Size, @)
 		.сделать ->
 			снасти.переместить_и_переименовать(путь, { место: место, имя: 'на личной карточке.jpg' }, @)
 		.сделать ->

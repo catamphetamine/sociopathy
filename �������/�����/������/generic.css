@@ -9,7 +9,7 @@
  * @github kuchumovn
  */
 
-.generic_button label
+.generic_button *
 {
 	cursor: pointer;
 	margin-top: 1px;

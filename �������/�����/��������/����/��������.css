@@ -36,6 +36,11 @@
 			}
 		}
 	}
+	
+	> .older
+	{
+		text-align: center;
+	}
 }
 
 .chat .author .away, .who_is_online li .away
@@ -151,6 +156,16 @@
 				{
 					content: "\A";
 					white-space: pre;
+				}
+				
+				.real_picture
+				{
+					position: absolute;
+					top: 0;
+					left: 0;
+					
+					width: @user_icon_size;
+					height: @user_icon_size;
 				}
 				
 				@user_picture_left: 10px;

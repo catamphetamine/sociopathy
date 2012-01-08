@@ -111,6 +111,6 @@ http.post '/заметка/сохранить', (ввод, вывод) ->
 				@.error "Право на правку заметки № #{_id} не выдано"
 			if заметка['кто правит'].toString() != ввод.session.пользователь._id.toString()
 				@.error "Право на правку заметки № #{_id} принадлежит другому человеку"
-			хранилище.collection('library_articles').update({ _id: _id }, { $set: { содержимое: ввод.body.content }, $unset: { 'кто правит': 1 }}, @)
+			хранилище.collection('library_articles').update({ _id: _id }, { $set: { название: ввод.body.title, содержимое: ввод.body.content }, $unset: { 'кто правит': 1 }}, @)
 		.сделать (заметка) ->
 			вывод.send {}

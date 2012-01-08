@@ -53,7 +53,7 @@
 			
 			&.disabled
 			{
-				cursor: default;
+				cursor: default !important;
 				opacity: 0.5;
 			}
 		}

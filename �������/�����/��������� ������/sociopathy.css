@@ -6,7 +6,7 @@
 	{
 		li
 		{
-			.css_transition(200ms);				
+			.css_transition(200ms);
 			
 			@hover_glow_color: #8d0031;
 			@hover_text_color: #fff2f7;
@@ -19,6 +19,11 @@
 				color: @hover_text_color !important;
 				border-color: @hover_text_color !important;
 				text-shadow: 0px 0px 20px @hover_glow_color;
+			}
+			
+			&.disabled:hover
+			{
+				text-shadow: none;
 			}
 			
 			&:active
@@ -192,6 +197,8 @@
 		
 		width: 30px;
 		height: 30px;
+		
+		cursor: pointer;
 	}
 	
 	.more

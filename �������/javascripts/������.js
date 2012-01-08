@@ -358,7 +358,7 @@ function get_youtube_video_id(url)
 
 function get_embedded_youtube_video_id(url)
 {
-    return /http:\/\/www.youtube-nocookie.com\/embed\/([0-9a-zA-Z\-\_]+)?rel=0/i.exec(url)[0]
+    return /http:\/\/www.youtube-nocookie.com\/embed\/([0-9a-zA-Z\-\_]+)?rel=0&wmode=transparent/i.exec(url)[0]
 }
 
 function get_youtube_video_url_from_id(id)

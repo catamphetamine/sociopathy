@@ -369,8 +369,11 @@ label.error
 {
 	margin-top: 2px;
 
-	.photo
+	@picture_size: 48px;
+	
+	.picture
 	{
+		position: relative;
 		display: inline-block;
 		
 		background-image: url('/картинки/temporary/картинка с навершия.jpg');
@@ -378,8 +381,18 @@ label.error
 
 		.beautiful_shadow_3(0px, 1px, 2px, 3px, 4px, 0.2);
 
-		width: 48px;
-		height: 48px;
+		width: @picture_size;
+		height: @picture_size;
+		
+		.real_picture
+		{
+			position: absolute;
+			top: 0;
+			left: 0;
+			
+			width: @picture_size;
+			height: @picture_size;
+		}
 	}
 
 	.info

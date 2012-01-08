@@ -28,15 +28,22 @@ function simple_value_dialog_window(options)
 	var dialog_window = element.dialog_window
 	({
 		'close on escape': true,
-		'on open': function() { dialog_window.$element.find('input:first').focus() }
+		'on open': function()
+		{
+			if (options.on_open)
+				options.on_open.bind(dialog_window)()
+		},
+		'on close': function()
+		{
+			if (options.on_close)
+				options.on_close.bind(dialog_window)()
+		}
 	})
 		
 	var cancel = activate_button(dialog_window.$element.find('.buttons .cancel'), { 'prevent double submission': true })
 	.does(function()
 	{
 		dialog_window.close()
-		if (options.cancel)
-			options.cancel.bind(this)()
 	}
 	.bind(dialog_window))
 	

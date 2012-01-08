@@ -97,8 +97,10 @@ var dialog_window = new Class
 				if (self.options['close on escape'] && event.keyCode &&
 					event.keyCode === Event.Keys.esc) 
 				{	
-					self.close()
 					event.preventDefault()
+					if (self.options.on_close)
+						self.options.on_close()
+					self.close()
 				}
 			})
 			
@@ -172,11 +174,10 @@ var dialog_window = new Class
 	 */
 	show: function()
 	{
-		this.$element.focus()
-		
-		if (this.options['on open'])
-			this.options['on open'].bind(this.$element)()
+		//this.$element.focus()
 	
+		this.$element.find('input:first').focus()
+		
 		if (this.smooth)
 		{
 			this.$element.hide()
@@ -214,6 +215,9 @@ var dialog_window = new Class
 	// opens the dialog window
 	open: function(state) 
 	{
+		if (this.options['on open'])
+			this.options['on open'].bind(this.$element)()
+			
 		if (state)
 			this.state = state
 	
@@ -263,6 +267,9 @@ var dialog_window = new Class
 	// closes the dialog window
 	close: function(callback) 
 	{
+		if (this.options['on close'])
+			this.options['on close'].bind(this.$element)()
+			
 		this.veil.hide_and_destroy()
 		
 		this.$element.unbind('keypress.' + this.namespace)

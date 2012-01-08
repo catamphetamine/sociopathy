@@ -122,6 +122,12 @@ var Клавиши =
 		else
 			code = event.keyCode
 		
+		/*
+		if (!event.charCode)
+			if (this[key] && this[key.toUpperCase()])
+				key = key.toUpperCase()
+		*/
+				
 		if (code === this[key])
 			return true
 		else

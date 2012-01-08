@@ -159,7 +159,11 @@ Visual_editor.implement
 						tool.restore_caret()
 						tool.on_success(editor.insert(link))
 					},
-					cancel: function()
+					on_open: function()
+					{	
+						tool.backup_caret()
+					},
+					on_close: function()
 					{
 						tool.restore_caret()
 					}
@@ -177,7 +181,10 @@ Visual_editor.implement
 			
 			on_success: function(link)
 			{
-				this.activate(link)
+				this.activate_edit_mode_onclick(link)
+				
+				if ($.browser.webkit)
+					return editor.caret.move_to(link, 1)
 				editor.caret.move_to(link)
 			}
 		}
@@ -286,7 +293,11 @@ Visual_editor.implement
 						tool.restore_caret()
 						tool.on_success(editor.insert(picture))
 					},
-					cancel: function()
+					on_open: function()
+					{	
+						tool.backup_caret()
+					},
+					on_close: function()
 					{
 						tool.restore_caret()
 					}
@@ -304,7 +315,7 @@ Visual_editor.implement
 			
 			on_success: function(picture)
 			{
-				this.activate(picture)
+				this.activate_edit_mode_onclick(picture)
 				editor.caret.move_to(picture)
 			}
 		}
@@ -378,7 +389,11 @@ Visual_editor.implement
 						tool.restore_caret()
 						tool.on_success(editor.insert(picture))
 					},
-					cancel: function()
+					on_open: function()
+					{	
+						tool.backup_caret()
+					},
+					on_close: function()
 					{
 						tool.restore_caret()
 					}
@@ -398,7 +413,7 @@ Visual_editor.implement
 			
 			on_success: function(picture)
 			{
-				this.activate(picture)
+				this.activate_edit_mode_onclick(picture)
 				editor.caret.move_to(picture)
 			}
 		}
@@ -531,17 +546,20 @@ Visual_editor.implement
 						*/
 					
 						var video = $('<iframe/>')
-						video.attr('src', 'http://www.youtube-nocookie.com/embed/' + get_youtube_video_id(url) + '?rel=0')
+						video.attr('src', 'http://www.youtube-nocookie.com/embed/' + get_youtube_video_id(url) + '?rel=0&wmode=transparent')
 						video.attr('width', 560)
 						video.attr('height', 315)
 						video.attr('frameborder', 0)
 						video.attr('allowfullscreen', 'true')
 						video.attr('type', 'video')
 					
-						tool.restore_caret()
 						tool.on_success(editor.insert(video))
 					},
-					cancel: function()
+					on_open: function()
+					{	
+						tool.backup_caret()
+					},
+					on_close: function()
 					{
 						tool.restore_caret()
 					}
@@ -607,10 +625,13 @@ Visual_editor.implement
 					{
 						var element = $(html)
 						
-						tool.restore_caret()
 						tool.on_success(editor.insert(element))
 					},
-					cancel: function()
+					on_open: function()
+					{	
+						tool.backup_caret()
+					},
+					on_close: function()
 					{
 						tool.restore_caret()
 					}
@@ -692,7 +713,6 @@ Visual_editor.implement
 					})
 				}
 				
-				this.backup_caret()
 				this.dialog_window.open(state)
 			}
 			
@@ -703,7 +723,9 @@ Visual_editor.implement
 			
 			tool.restore_caret = function()
 			{
-				editor.content.focus()
+				if ($.browser.mozilla)
+					editor.content.focus()
+				
 				editor.caret.set(this.caret)
 			}
 			
@@ -746,8 +768,12 @@ Visual_editor.implement
 // disable on blur / enable on focus
 $(function()
 {
+	var previously_focused
 	$(document).bind('focusin', function(event)
 	{
+		if (event.target === previously_focused)
+			return
+			
 		if (!window.visual_editors)
 			return
 			

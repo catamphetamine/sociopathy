@@ -87,7 +87,12 @@ function initialize_page()
 		.does(function()
 		{
 			loading_indicator.show()
-			Ajax.post('/приложение/заметка/сохранить', { _id: заметка._id, content: article_editor.editor.content.html() },
+			Ajax.post('/приложение/заметка/сохранить',
+			{
+				_id: заметка._id,
+				title: article_editor.editor.content.parent().find('> h1').text(),
+				content: article_editor.editor.content.html()
+			},
 			{
 				ошибка: function(ошибка)
 				{
@@ -149,9 +154,9 @@ function initialize_page()
 		})
 	}
 	
-	article_editor.Tools.Link.activate = activate_hyperlinks
-	article_editor.Tools.Picture.activate = activate_pictures
-	article_editor.Tools.Formula.activate = activate_formulas
+	article_editor.Tools.Link.activate_edit_mode_onclick = activate_hyperlinks
+	article_editor.Tools.Picture.activate_edit_mode_onclick = activate_pictures
+	article_editor.Tools.Formula.activate_edit_mode_onclick = activate_formulas
 	
 	$(document).bind('режим.правка', function(event)
 	{
@@ -188,8 +193,11 @@ function acquire_edit_lock(режим)
 			
 			var кто_правит = data['кто правит']
 			if (кто_правит)
+			{
+				Режим.разрешить_переходы()
 				//return warning('<a href=\'/люди/' + кто_правит['адресное имя'] + '\'>' + кто_правит.имя + '</a> уже правит эту заметку. Можете написать ' + (кто_правит.пол === 'мужской' ? 'ему' : 'ей') + ', чтобы ' + (кто_правит.пол === 'мужской' ? 'он сохранил' : 'она сохранила') + ' внесённые правки (либо ' + (кто_правит.пол === 'мужской' ? 'удалил' : 'удалила') + ' черновик), \n и тогда эта заметка снова станет доступной для правки.')
 				return warning('<a href=\'/люди/' + кто_правит['адресное имя'] + '\'>' + кто_правит.имя + '</a> уже правит эту заметку. Можете написать ' + (кто_правит.пол === 'мужской' ? 'ему' : 'ей') + ', чтобы ' + (кто_правит.пол === 'мужской' ? 'он сохранил' : 'она сохранила') + ' внесённые правки, \n и тогда эта заметка снова станет доступной для правки.')
+			}
 			
 			право_на_правку_получено = true
 			Режим.разрешить_переходы()

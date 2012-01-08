@@ -18,6 +18,15 @@ global.Options =
 	MongoDB:
 		Port: 27017
 		Database: 'sociopathy'
+	User:
+		Picture:
+			Generic:
+				Size: 120
+			Chat:
+				Size: 48
+	ImageMagick:
+		Convert:
+			Path: 'C:/Program Files (x86)/ImageMagick-6.7.4-Q16/convert'
 		
 memcache = require('memcache')
 global.memcache = new memcache.Client(global.Options.Memcache.Port, 'localhost')
@@ -34,6 +43,9 @@ global.application_tools = require('./connect/express')()
 global.http = global.application_tools.http
 
 global.websocket = require('socket.io').listen приложение
+
+global.image_magick = require 'imagemagick'
+global.image_magick.convert.path = Options.ImageMagick.Convert.Path
 
 require './tools/date'
 

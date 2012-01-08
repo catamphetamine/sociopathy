@@ -173,10 +173,23 @@ function save_changes()
 		return this.allow_to_redo()
 	}
 	
+	Режим.заморозить_переходы()
+	loading_indicator.show()
+
 	Ajax.post('/приложение/человек/сменить картинку', { имя: image_file_name },
 	{
+		ошибка: function(ошибка)
+		{
+			loading_indicator.hide()
+			Режим.разрешить_переходы()
+			
+			error(ошибка)
+		},
 		ok: function()
 		{
+			loading_indicator.hide()
+			Режим.разрешить_переходы()
+			
 			Режим.изменения_сохранены()
 		}
 	})
@@ -204,11 +217,14 @@ function initialize_editables()
 			image_file_name = data.имя
 			$('.real_picture').css('background-image', "url('" + data.адрес + "')")
 			
+			id_card.find('.uploading_picture').hide()
+			
 			//window.location.reload()
 		},
 		error: function(xhr)
 		{
-			//error(ошибка)
+			error("Не удалось загрузить картинку")
+			id_card.find('.uploading_picture').hide()
 		}
 	})
 
@@ -233,7 +249,8 @@ function initialize_editables()
 
 			if (file.type !== "image/jpeg")
 				return warning('Можно загружать только картинки формата JPEG')
-							
+			
+			id_card.find('.uploading_picture').show()
 			uploader.send()
 		})
 	})

@@ -14,6 +14,11 @@ var кто_в_болталке = {}
 var chat_height
 var chat_top_offset
 
+var is_away = false
+
+var new_message_sound = new Audio("/звуки/new message.ogg")
+var alarm_sound = new Audio("/звуки/alarm.ogg")
+	
 function initialize_page()
 {
 	new_messages_smooth_border = $('.new_messages_smooth_border')
@@ -31,6 +36,22 @@ function initialize_page()
 	})
 	
 	chat = $('.chat')
+		
+	var loader = new Batch_loader
+	({
+		url: '/приложение/болталка/сообщения',
+		batch_size: Messages_batch_size,
+		get_data: function (data)
+		{
+			var сообщения = []
+			data.сообщения.forEach(function(сообщение)
+			{
+				сообщения.push(преобразовать_время(сообщение))
+			})
+		
+			return сообщения.reverse()
+		}
+	})
 		
 	new Data_templater
 	({
@@ -63,21 +84,13 @@ function initialize_page()
 		},
 		order: 'обратный'
 	},
-	new  Batch_loader
-	({
-		url: '/приложение/болталка/сообщения',
-		batch_size: Messages_batch_size,
-		get_data: function (data)
-		{
-			var сообщения = []
-			data.сообщения.forEach(function(сообщение)
-			{
-				сообщения.push(преобразовать_время(сообщение))
-			})
-		
-			return сообщения.reverse()
-		}
-	}))
+	loader)
+	
+	$('#chat_container').find('.older > a').click(function(event)
+	{
+		event.preventDefault()
+		loader.load_more()
+	})
 }
 
 /*
@@ -281,11 +294,14 @@ function chat_loaded()
 		
 		$(window).focus(function()
 		{
+			is_away = false
+			dismiss_new_messages_notifications()
 			болталка.emit('смотрит')
 		})
 		
 		$(window).blur(function()
 		{
+			is_away = true
 			болталка.emit('не смотрит')
 		})
 	})
@@ -328,6 +344,9 @@ function connect_to_chat(callback)
 	
 	болталка.on('сообщение', function(данные)
 	{
+		if (is_away)
+			new_messages_notification()
+	
 		add_message(преобразовать_время(данные))
 	})
 	
@@ -343,6 +362,11 @@ function connect_to_chat(callback)
 		away_users[пользователь._id] = true
 		$('.who_is_online > li[user="' + пользователь._id + '"]').addClass('is_away')
 		$('.chat > li[author="' + пользователь._id + '"] > .author').addClass('is_away')
+	})
+	
+	болталка.on('вызов', function(пользователь)
+	{
+		alarm_sound.play()
 	})
 	
 	болталка.on('ошибка', function(ошибка)
@@ -399,4 +423,18 @@ function show_testing_messages()
 		$('.background').addClass('test')
 	},
 	3000)
+}
+
+function new_messages_notification()
+{
+	if (document.title.indexOf('* ') !== 0)
+		document.title = '* ' + document.title
+		
+	new_message_sound.play()
+}
+
+function dismiss_new_messages_notifications()
+{
+	if (document.title.indexOf('* ') === 0)
+		document.title = document.title.substring(2)
 }
