@@ -12,7 +12,7 @@ function get_data(url)
 var название = decodeURIComponent(request.get.path)
 
 var основа = get_data('http://127.0.0.1:8081/страницы/основа.html') //'<html><head><title>${название}</title></head><body>{{html содержимое}}</body></html>'
-var guest_content_template = get_data('http://127.0.0.1:8081/лекала/guest content.html') //'<html><head><title>${название}</title></head><body>{{html содержимое}}</body></html>'
+var guest_content_template = get_data('http://127.0.0.1:8081/страницы/кусочки/guest content.html') //'<html><head><title>${название}</title></head><body>{{html содержимое}}</body></html>'
 var лекало_страницы = get_data('http://127.0.0.1:8081/страницы/' + название + '.html') // get_data('http://localhost:8081/страницы/' + path + '.html')  //'<span>test: ${title}</span>'
 
 основа = основа.toString()

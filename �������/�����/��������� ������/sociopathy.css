@@ -71,6 +71,16 @@
 				font-family: @textual_font;
 			}
 			
+			&.bold
+			{
+				font-weight: bold;
+			}
+			
+			&.italic
+			{
+				font-style: italic;
+			}
+			
 			&.link
 			{
 				font-family: @headings_font;

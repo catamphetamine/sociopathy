@@ -18,7 +18,7 @@ function initialize_page()
 		{
 			подразделы:
 			{
-				template_url: '/лекала/раздел читальни.html',
+				template_url: '/страницы/кусочки/раздел читальни.html',
 				item_container: $('#categories'),
 				postprocess_element: function(item)
 				{
@@ -27,7 +27,7 @@ function initialize_page()
 			},
 			заметки:
 			{
-				template_url: '/лекала/заметка раздела читальни.html',
+				template_url: '/страницы/кусочки/заметка раздела читальни.html',
 				item_container: $('#articles'),
 				postprocess_element: function(item)
 				{

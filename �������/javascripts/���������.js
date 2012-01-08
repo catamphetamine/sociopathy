@@ -76,7 +76,15 @@ var Scroller = new Class
 		if (top + window_height > document_height)
 			top = document_height - window_height
 		
-		$('html').animate({ scrollTop: top + 'px' }, 1000, 'easeInOutCubic')
+		var scroller
+		if ($.browser.webkit)
+			scroller = $('body')
+		else if ($.browser.mozilla)
+			scroller = $('html')
+		else
+			throw 'Unsupported browser'
+			
+		scroller.animate({ scrollTop: top + 'px' }, 1000, 'easeInOutCubic')
 	}
 })
 

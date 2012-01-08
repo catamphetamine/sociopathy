@@ -13,12 +13,35 @@ var Ajax =
 	
 	post: function(url, data, options)
 	{
+		if (!options)
+		{
+			options = data
+			data = undefined
+		}
+		
 		this.request('POST', url, data, options);
 	},
 	
 	put: function(url, data, options)
 	{
+		if (!options)
+		{
+			options = data
+			data = undefined
+		}
+		
 		this.request('POST', url, Object.merge(data, { _method: 'put' }), options);
+	},
+	
+	'delete': function(url, data, options)
+	{
+		if (!options)
+		{
+			options = data
+			data = undefined
+		}
+		
+		this.request('POST', url, Object.merge(data, { _method: 'delete' }), options);
 	},
 	
 	request: function(method, url, data, options)

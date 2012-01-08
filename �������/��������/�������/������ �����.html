@@ -1,0 +1,32 @@
+<!-- Окошко входа -->
+<div id="enter_window" class="collapsed no_word_carrying" title="Вход">
+	<!-- пароль -->
+	<div class="main_content">
+		<div class="icon"></div>
+		<form>
+			<label for="имя">Введите своё имя</label>
+			<input name="имя" class="field" type="text" validation="вход.имя"/>
+			
+			<label for="пароль">Введите свой пароль</label>
+			<input name="пароль" class="field" type="text" validation="вход.пароль"/>
+		</form>
+	</div>
+	
+	<!-- начинаются кнопки -->
+	<div class="pre_buttons"></div>
+
+	<!-- кнопки -->
+	<div class="no_word_carrying dialog_container buttons">
+		<!-- отмена -->
+		<span class="cancel left" type="minor" styles="generic, minor, caution">
+			<span type="icon" icon="cross" width="30" height="30" top_offset="5"></span>
+			<label>Отмена</label>
+		</span>
+
+		<!-- войти -->			
+		<span class="enter right" type="dark generic" styles="generic">
+			<label>Войти</label>
+			<span type="icon" icon="right arrows" width="40" height="30" top_offset="7"></span>
+		</span>
+	</div>
+</div>

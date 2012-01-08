@@ -114,3 +114,22 @@ http.post '/заметка/сохранить', (ввод, вывод) ->
 			хранилище.collection('library_articles').update({ _id: _id }, { $set: { название: ввод.body.title, содержимое: ввод.body.content }, $unset: { 'кто правит': 1 }}, @)
 		.сделать (заметка) ->
 			вывод.send {}
+			
+http['delete'] '/заметка/черновик/удалить', (ввод, вывод) ->
+	return if пользовательское.требуется_вход(ввод, вывод)
+	_id = хранилище.collection('library_articles').id(ввод.body._id)
+	цепь(вывод)
+		.сделать ->
+			хранилище.collection('library_articles').findOne({ _id: _id }, @.в 'заметка')
+		.сделать (заметка) ->
+			if not заметка?
+				@.error "Заметка № #{_id} не найдена"
+			if not заметка['кто правит']?
+				@.error "Право на правку заметки № #{_id} не выдано"
+			if заметка['кто правит'].toString() != ввод.session.пользователь._id.toString()
+				@.error "Право на правку заметки № #{_id} принадлежит другому человеку"
+			хранилище.collection('library_articles').update({ _id: _id }, { $unset: { 'кто правит': 1 }}, @)
+		.сделать (заметка) ->
+			хранилище.collection('library_article_drafts').remove({ '_id заметки': _id, '_id человека': ввод.session.пользователь._id }, @)
+		.сделать ->
+			вывод.send @.переменная 'заметка'

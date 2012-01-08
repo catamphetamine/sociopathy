@@ -36,7 +36,8 @@ function initialize_page()
 	})
 	
 	chat = $('.chat')
-		
+	var more_link = $('#chat_container').find('.older > a')
+	
 	var loader = new Batch_loader
 	({
 		url: '/приложение/болталка/сообщения',
@@ -49,13 +50,27 @@ function initialize_page()
 				сообщения.push(преобразовать_время(сообщение))
 			})
 		
-			return сообщения.reverse()
+//			return сообщения.reverse()
+			return сообщения
+		},
+		before_done_more_output: function()
+		{
+			chat.parent().height(chat_height)
+		},
+		done_more: function()
+		{
+			if (this.есть_ли_ещё)
+				more_link.fadeIn(300)
+		},
+		finished: function()
+		{
+			more_link.hide()
 		}
 	})
 		
 	new Data_templater
 	({
-		template_url: '/лекала/сообщение в болталке.html',
+		template_url: '/страницы/кусочки/сообщение в болталке.html',
 		item_container: chat,
 		conditional: $('#chat_block[type=conditional]'),
 		done: chat_loaded,
@@ -80,16 +95,21 @@ function initialize_page()
 				return previous_item.find('> .messages ul').append(item.find('> .messages li'))
 			*/
 
-			chat.append(item)
+			chat.prepend(item)
+			
+			chat_height += item.height()
 		},
 		order: 'обратный'
 	},
 	loader)
 	
-	$('#chat_container').find('.older > a').click(function(event)
+	more_link.click(function(event)
 	{
 		event.preventDefault()
-		loader.load_more()
+		more_link.fadeOut(300, function()
+		{
+			loader.load_more()
+		})
 	})
 }
 
@@ -121,7 +141,7 @@ function add_message(data)
 	var previous = chat.find('> li:last')
 	var same_author = previous.attr('author') === data.отправитель._id
 		
-	var content = $.tmpl('/лекала/сообщение в болталке.html', data)
+	var content = $.tmpl('/страницы/кусочки/сообщение в болталке.html', data)
 	
 	var this_author = content.find('> .author')
 	var this_message = content.find('> .message')

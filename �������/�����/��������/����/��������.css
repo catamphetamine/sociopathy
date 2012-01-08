@@ -40,6 +40,20 @@
 	> .older
 	{
 		text-align: center;
+		height: 120px;
+		
+		.more_container
+		{
+			position: absolute;
+			width: 100%;
+			text-align: center;
+		}
+		
+		> a
+		{
+			position: relative;
+			top: 50px;
+		}
 	}
 }
 
@@ -302,7 +316,7 @@
 	overflow: hidden;
 	height: @top_padding + @user_icon_size + 2 * @user_icon_margin + @bottom_padding;
 
-	margin-bottom: 50px;
+	margin-bottom: 0px;
 			
 	.who_is_online_bar
 	{

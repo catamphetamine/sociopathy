@@ -29,6 +29,7 @@ Editor.Selection = new Class
 			element = element[0]
 			
 		this.get().surroundContents(element)
+		return element
 	},
 	
 	cut: function()

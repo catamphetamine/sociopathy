@@ -47,7 +47,7 @@ Editor.Caret = new Class
 	{
 		return Dom_tools.down_to_text_node(this.native_container())
 	},
-	
+
 	move_to: function(element, offset)
 	{
 		if (!offset)
@@ -243,5 +243,10 @@ Editor.Caret = new Class
 	move: function()
 	{
 		this.offset(this.offset() + 1)
+	},
+	
+	move_to_the_next_element: function(relative_element)
+	{
+		return this.move_to(Dom_tools.down_to_text_node(Dom_tools.next(relative_element)))
 	}
 })

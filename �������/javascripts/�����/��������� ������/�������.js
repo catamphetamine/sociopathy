@@ -20,7 +20,8 @@ Visual_editor.implement
 	
 	insert_line_break_on_enter: function()
 	{
-		var tags_with_prohibited_line_break = ['a', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']
+		var tags_with_prohibited_line_break = ['a']
+		// , 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'
 		
 		var visual_editor = this
 		var editor = this.editor
@@ -36,6 +37,7 @@ Visual_editor.implement
 			event.preventDefault()
 			
 			var container = editor.caret.container()
+			var container_tag = container[0].tagName.toLowerCase()
 			
 			if (container.is('li'))
 			{
@@ -54,46 +56,90 @@ Visual_editor.implement
 				return
 			}
 			
-			//
-			
-			if (editor.caret.is_in_the_beginning_of_container())
+			var i = 0
+			while (i < tags_with_prohibited_line_break.length)
 			{
-				var containing_paragraph = container.search_upwards('p')
-				
-				if (Dom_tools.is_first_element(container, containing_paragraph))
+				if (tags_with_prohibited_line_break[i] === container_tag)
+					return
+				i++
+			}
+			
+			/*
+			if (!container.is('p'))
+				return
+			*/
+			
+			if (container.is('h2') || container.is('h3') || container.is('h4') || container.is('h5') || container.is('h6'))
+			{
+				if (editor.caret.is_in_the_beginning_of_container())
 				{
+					/*
+					var containing_paragraph = container.search_upwards('p')
+					
+					if (Dom_tools.is_first_element(container, containing_paragraph))
+					{
+						var new_paragraph = $('<p/>')
+						container.before(new_paragraph)
+						new_paragraph.text(1)
+						editor.caret.move_to(new_paragraph)
+					}
+					*/
+					
 					var new_paragraph = $('<p/>')
 					container.before(new_paragraph)
-					new_paragraph.text(1)
+					new_paragraph.addClass('hint')
+					new_paragraph.text('Введите текст абзаца')
 					editor.caret.move_to(new_paragraph)
+					
+					return
+				}
+				
+				if (editor.caret.is_in_the_end_of_container())
+				{
+					/*
+					var containing_paragraph = container.search_upwards('p')
+					if (Dom_tools.is_last_element(container, containing_paragraph))
+					{
+						var new_paragraph = $('<p/>')
+						container.after(new_paragraph)
+						new_paragraph.text(1)
+						editor.caret.move_to(new_paragraph)
+					}
+					*/
+					
+					var new_paragraph = $('<p/>')
+					container.after(new_paragraph)
+					new_paragraph.addClass('hint')
+					new_paragraph.text('Введите текст абзаца')
+					editor.caret.move_to(new_paragraph)
+					
+					return
 				}
 				
 				return
 			}
 			
-			if (editor.caret.is_in_the_end_of_container())
+			if (container.is('p'))
 			{
-				var containing_paragraph = container.search_upwards('p')
-				if (Dom_tools.is_last_element(container, containing_paragraph))
+				if (editor.caret.is_in_the_end_of_container())
 				{
 					var new_paragraph = $('<p/>')
 					container.after(new_paragraph)
-					new_paragraph.text(1)
+					new_paragraph.addClass('hint')
+					new_paragraph.text('Введите текст абзаца')
 					editor.caret.move_to(new_paragraph)
+					
+					return
 				}
+				
+				editor.insert_html('</p><p ' + editor.get_marker_html() + '>')
+				var next_paragraph = editor.unmark()
+				editor.caret.move_to(next_paragraph)
 				
 				return
 			}
-			
-			tags_with_prohibited_line_break.forEach(function(tag)
-			{
-				if (container.is(tag))
-					return
-			})
-			
-			if (!container.is('p'))
-				return
 				
+			/*
 			editor.insert_html('</p><p ' + editor.get_marker_html() + '>')
 
 			var next_paragraph = editor.unmark()
@@ -109,6 +155,7 @@ Visual_editor.implement
 				if (html.length > trimmed_html.length)
 					paragraph.html(trimmed_html)
 			})
+			*/
 		})
 	},
 		
@@ -120,46 +167,28 @@ Visual_editor.implement
 		{
 			if (!Режим.правка_ли())
 				return
-				
+			
+			// в Хроме не ловится
 			if (Клавиши.is('Ctrl', 'z', event))
 			{
 				this.Tools.Undo.apply()
-				event.preventDefault()
+				return false
 			}
 			
+			// в Хроме не ловится
 			if (Клавиши.is('Ctrl', 'Shift', 'z', event) || Клавиши.is('Ctrl', 'y', event))
 			{
 				this.Tools.Redo.apply()
-				event.preventDefault()
+				return false
 			}
 			
+			/*
 			if (Клавиши.is('Ctrl', 'x', event))
 				return event.preventDefault()
 			
 			if (Клавиши.is('Ctrl', 'v', event) || Клавиши.is('Shift', 'Insert', event))
 				return event.preventDefault()
-			
-			// русификация вышеперечисленных горячих клавиш для хрома
-			if ($.browser.webkit)
-			{
-				if (Клавиши.is('Ctrl', 'Shift', 'я', event) || Клавиши.is('Ctrl', 'н', event))
-				{
-					this.Tools.Redo.apply()
-					event.preventDefault()
-				}
-				
-				if (Клавиши.is('Ctrl', 'я', event))
-				{
-					this.Tools.Undo.apply()
-					event.preventDefault()
-				}
-				
-				if (Клавиши.is('Ctrl', 'ч', event))
-					return event.preventDefault()
-				
-				if (Клавиши.is('Ctrl', 'м', event))
-					return event.preventDefault()
-			}
+			*/
 		})
 		.bind(this))
 	},

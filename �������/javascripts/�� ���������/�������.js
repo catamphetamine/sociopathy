@@ -39,7 +39,7 @@ function initialize_page()
 			if ($.browser.mozilla)
 				article_editor.editor.content.focus()
 			
-			article_editor.editor.caret.move_to(article_editor.editor.content.find('p:first').get(0).firstChild)
+			article_editor.editor.caret.move_to(article_editor.editor.content.find('> *:first'))
 		})
 		
 		$(document).bind('режим.переход', function(event, из, в)
@@ -64,24 +64,20 @@ function initialize_page()
 		})
 	}
 	
+	function get_title()
+	{
+		return article_editor.editor.content.parent().find('> h1').text()
+	}
+	
+	function set_title(title)
+	{
+		return article_editor.editor.content.parent().find('> h1').text(title)
+	}
+	
 	function initialize_actions()
 	{
 		var actions = $('#article_edit_mode_actions')
 		actions.appendTo($('body')).move_out_downwards().disableTextSelect()
-		
-		/*
-		cancel_button = activate_button(actions.find('.cancel'), { 'prevent double submission': true })
-		.does(function()
-		{
-			info('Здесь удалять черновик')
-			actions.slide_out_downwards(300, function()
-			{
-				cancel_button.unlock()
-			})
-			save_button.unlock()
-			Режим.обычный()
-		})
-		*/
 	
 		save_button = activate_button(actions.find('.done'), { 'prevent double submission': true })
 		.does(function()
@@ -90,7 +86,7 @@ function initialize_page()
 			Ajax.post('/приложение/заметка/сохранить',
 			{
 				_id: заметка._id,
-				title: article_editor.editor.content.parent().find('> h1').text(),
+				title: get_title(),
 				content: article_editor.editor.content.html()
 			},
 			{
@@ -113,6 +109,42 @@ function initialize_page()
 					})
 					Режим.обычный()
 					info('Правки сохранены')
+				}
+			})
+		})
+		
+		cancel_button = activate_button(actions.find('.cancel'), { 'prevent double submission': true })
+		.does(function()
+		{
+			loading_indicator.show()
+			Ajax.delete('/приложение/заметка/черновик/удалить',
+			{
+				_id: заметка._id,
+				title: article_editor.editor.content.parent().find('> h1').text(),
+				content: article_editor.editor.content.html()
+			},
+			{
+				ошибка: function(ошибка)
+				{
+					loading_indicator.hide()
+					право_на_правку_получено = false
+					
+					error(ошибка)
+					save_button.unlock()
+				},
+				ok: function(data)
+				{
+					loading_indicator.hide()
+					право_на_правку_получено = false
+					
+					actions.slide_out_downwards(300, function()
+					{
+						save_button.unlock()
+					})
+					Режим.обычный()
+					
+					article_editor.editor.load_content(заметка.содержимое)
+					set_title(заметка.название)
 				}
 			})
 		})

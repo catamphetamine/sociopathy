@@ -128,7 +128,9 @@ class Цепь
 			@именованные_переменные[имя]
 			
 		функция_возврата.done = (result) =>
-			@callback(null, result)
+			if @callback?
+				return @callback(null, result)
+			функция_возврата(null, result)
 		
 		функция_возврата.error = (error) =>
 			if @callback?

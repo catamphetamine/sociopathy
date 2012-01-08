@@ -160,8 +160,18 @@ var Editor = new Class
 		{
 			this.time_machine.snapshot()
 			
+			var container = this.caret.container()
+			var container_tag = container[0].tagName.toLowerCase()
+			
 			this.mark(what)
-			this.insert_html(what.outer_html())
+			
+			var html
+			if (container.attr('contenteditable') == true)
+				html = what.outer_html()
+			else
+				html = '</' + container_tag + '>' + what.outer_html() + '<' + container_tag + '>'
+			
+ 			this.insert_html(html)
 			this.checkpoint()
 			return this.unmark()
 		}

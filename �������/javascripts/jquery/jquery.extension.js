@@ -353,6 +353,17 @@ $.fn.outer_html = function()
 	return $('<div/>').append(this.eq(0).clone()).html()
 }
 
+$.fn.boundary_html = function()
+{
+	var outer_html = this.outer_html()
+	var inner_html = this.html()
+	
+	var opening_boundary_stop = outer_html.indexOf(inner_html)
+	var closing_boundary_start = opening_boundary_stop + inner_html.length
+	
+	return { opening: outer_html.substring(0, opening_boundary_stop), closing: outer_html.substring(closing_boundary_start) }
+}
+
 $.fn.find_parent = function(filter)
 {
 	return this.parents(filter).filter(':first')

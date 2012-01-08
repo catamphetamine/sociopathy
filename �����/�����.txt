@@ -222,7 +222,7 @@ module.exports = () ->
 	# в будущем ответ этот - класть в memcache, и брать оттуда nginx'ом минуя node.js
 	.seq ->
 		this null, [ 
-			пути.join(process.cwd(), "ресурсы/лекала/основа.html"), 
+			пути.join(process.cwd(), "ресурсы/страницы/основа.html"), 
 			пути.join(process.cwd(), "ресурсы/страницы/#{название}.html") 
 		]
 		

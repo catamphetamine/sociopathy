@@ -4,6 +4,7 @@ Visual_editor.implement
 	{
 		var tools = $('.visual_editor_tools')
 		tools.disableTextSelect()
+		tools.parent().show()
 		
 		this.tools_element = tools
 		tools.floating_top_bar()
@@ -88,12 +89,22 @@ Visual_editor.implement
 			
 			apply: function()
 			{
+				this.backup_caret()
+				
 				if (editor.selection.exists())
+				{
+					this.restore_caret()
 					throw new Error('Выделение пока не поддерживается этим инструментом')
+				}
 				
-				if (!editor.caret.has_container('p'))
-					throw new Error('Подзаголовок можно помещать только в абзаце')
+//				if (!editor.caret.has_container('p'))
+				if (!editor.caret.container().is('p'))
+				{
+					this.restore_caret()
+					throw new Error('Подзаголовок можно помещать только непосредственно в абзаце')
+				}
 				
+				/*
 				var caret
 				if (editor.caret.is_in_the_beginning_of_container('p'))
 					caret = editor.caret.move_to_container_start('p')
@@ -104,9 +115,10 @@ Visual_editor.implement
 					throw new Error('Подзаголовок можно поместить только в начале или в конце абзаца')
 					return
 				}
+				*/
 				
 				var subheading = $('<h2/>')
-				visual_editor.hint(subheading, 'Введите текст')
+				visual_editor.hint(subheading, 'Введите текст подзаголовка')
 				
 				return editor.insert(subheading)
 			},
@@ -114,6 +126,52 @@ Visual_editor.implement
 			on_success: function(subheading)
 			{
 				editor.caret.move_to(subheading)
+			}
+		}
+
+		Tools.Bold =
+		{
+			selector: '.bold',
+			
+			apply: function()
+			{
+				this.backup_caret()
+				
+				if (!editor.selection.exists())
+				{
+					this.restore_caret()
+					throw new Error('Выделите текст')
+				}
+								
+				return editor.selection.wrap($('<b/>'))
+			},
+			
+			on_success: function(element)
+			{
+				editor.caret.move_to_the_next_element(element)
+			}
+		}
+
+		Tools.Italic =
+		{
+			selector: '.italic',
+			
+			apply: function()
+			{
+				this.backup_caret()
+				
+				if (!editor.selection.exists())
+				{
+					this.restore_caret()
+					throw new Error('Выделите текст')
+				}
+								
+				return editor.selection.wrap($('<i/>'))
+			},
+			
+			on_success: function(element)
+			{
+				editor.caret.move_to_the_next_element(element)
 			}
 		}
 

@@ -6,7 +6,7 @@ function initialize_page()
 	
 	new Data_templater
 	({
-		template_url: '/лекала/личная карточка.html',
+		template_url: '/страницы/кусочки/личная карточка.html',
 		item_container: $('#id_cards'),
 		postprocess_element: function(item)
 		{

@@ -79,7 +79,7 @@ var loading_indicator = new (function()
 	}
 })()
 
-$(function()
+$(document).on('fully_loaded', function()
 {
 	loading_indicator.initialize()
 })

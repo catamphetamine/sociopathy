@@ -1,13 +1,24 @@
 ﻿function initialize_page()
 {
-	$('#initialize').click(function(event)
+	$('#reset_database').click(function(event)
 	{
 		event.preventDefault()
 		
-		Ajax.get('/приложение/хранилище/заполнить', 
+		Ajax.post('/приложение/хранилище/заполнить', 
 		{
 			ошибка: 'Не удалось заполнить хранилище',
 			ok: 'Хранилище заполнено'
+		})
+	})
+	
+	$('#update_database').click(function(event)
+	{
+		event.preventDefault()
+		
+		Ajax.post('/приложение/хранилище/изменить', 
+		{
+			ошибка: 'Не удалось изменить хранилище',
+			ok: 'Хранилище изменено'
 		})
 	})
 	
@@ -15,7 +26,7 @@
 	{
 		event.preventDefault()
 		
-		Ajax.get('/приложение/приглашение/выдать', 
+		Ajax.post('/приложение/приглашение/выдать', 
 		{
 			ошибка: 'Не удалось выдать приглашение',
 			ok: function(data)

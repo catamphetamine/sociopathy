@@ -5,8 +5,11 @@ var Batch_loader = new Class
 	options:
 	{
 		get_data: function(data) { return data },
+		finished: function() {},
 		done: function() {},
+		done_more: function() {},
 		before_done_output: function() {},
+		before_done_more_output: function() {},
 		get_id: function(object) { return object._id }
 	},
 	
@@ -100,6 +103,8 @@ var Batch_loader = new Class
 			
 			if (first_load)
 				loader.options.before_done_output()
+			else
+				loader.options.before_done_more_output()
 			
 			if (!список.is_empty())
 			{
@@ -108,11 +113,16 @@ var Batch_loader = new Class
 				else
 					loader.latest = loader.options.get_id(список[список.length - 1])
 			}
+			
+			if (!loader.есть_ли_ещё)
+				loader.options.finished()
 				
 			loader.options.callback(null, function()
 			{			
 				if (first_load)
 					loader.options.done()
+				else
+					loader.options.done_more.bind(loader)()
 				
 				if (loader.есть_ли_ещё)
 					loader.activate()
