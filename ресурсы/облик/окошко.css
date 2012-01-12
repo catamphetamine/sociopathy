@@ -1,0 +1,156 @@
+@import "/облик/вспомогательный.less";
+
+/**
+ * Dialog Window script styling
+ * 
+ * Copyright (c) 2010 Nikolay Kuchumov
+ * Licensed under MIT (http://en.wikipedia.org/wiki/MIT_License)
+ * 
+ * @author Kuchumov Nikolay
+ * @email kuchumovn@gmail.com
+ * @github kuchumovn
+ */
+ 
+.dialog_window
+{
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;				
+	border-radius: 10px;				
+
+	border-bottom-left-radius: 0;
+	-moz-border-radius-bottomleft: 0;
+
+	border-bottom-right-radius: 0;
+	-moz-border-radius-bottomright: 0;
+	
+	background-image: url('/картинки/window/top bar.png');
+	background-repeat: repeat-x;
+
+	border: 1px solid #a7a7a7;
+	border-top: 0;
+
+	/*.beautiful_shadow_5(0px, 16px, 100px, 80px, 60px, 40px, 30px, 0.15); */
+	/* в хроме тормозит */
+	/* можно заменить border-image'ем */
+	.shadow(0px, 16px, 40px, 0.20);
+	
+	.top_bar
+	{
+		height: 46px;
+		
+		padding-top: 5px;
+
+		padding-left: 30px;
+		padding-right: 30px;
+		
+		font-size: 32px;
+		line-height: normal;
+		
+		color: #2f2f2f;
+		text-shadow: 0px 1px 0px #dfdfdf;
+		
+		text-align: center;
+		white-space: nowrap;
+		
+		cursor: default;
+	}
+
+	div.pre_buttons
+	{
+		height: 2px;
+
+		background-image: url('/картинки/window/pre buttons.png'); 
+		background-repeat: repeat-x;  
+	}
+
+	.content
+	{
+		margin: 0;
+		padding: 0;
+	}
+
+	.main_content
+	{
+		background-color: #ededed;
+		.top_to_bottom_gradient(#efefef, #ededed);
+
+		border: 0;
+		
+		padding: 40px;	
+		
+		cursor: default;
+	}
+
+	.buttons
+	{
+		background-color: #e5e5e5;
+		
+		background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#E5E5E5), color-stop(36%,#D8D8D8), color-stop(58%,#CCCCCC), color-stop(100%,#A8A8A8));
+		background: -moz-linear-gradient(top, #E5E5E5 0%, #D8D8D8 36%, #CCCCCC 58%, #A8A8A8 100%);
+
+		padding: 20px;	
+	}
+
+	.buttons:after
+	{
+		content: ""; 
+		display: block; 
+		height: 0; 
+		clear: both;
+	}
+}
+
+.dialog_window_veil
+{
+	background-color: rgba(0, 0, 0, 0.5)
+}
+
+/* прочее */
+
+.simple_value_dialog
+{
+	.main_content
+	{
+		padding-top: 40px;
+		padding-left: 56px;
+		padding-right: 56px;
+		padding-bottom: 54px;
+		
+		.icon
+		{
+			float: left;
+			
+			background-repeat: no-repeat;
+			
+			padding-right: 40px;
+			margin-top: 10px;
+		}
+		
+		form
+		{
+			display: inline-block;
+			vertical-align: top;
+		
+			padding-top: 5px;
+				
+			> label
+			{
+				display: block;
+				margin-top: 20px;
+			}
+			
+			input[type="text"]
+			{
+				width: 500px;
+				display: block;
+				margin-top: 10px;
+			}
+		}
+	}
+		
+	.buttons
+	{
+		padding-left: 28px;
+		padding-right: 50px;
+	}
+}

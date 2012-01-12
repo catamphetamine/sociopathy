@@ -1,0 +1,106 @@
+<section id="content">
+	<!-- picture -->
+	<div class="fix_margin_bug">
+		<div id="concept"></div>
+	</div>
+
+	<br/>
+	
+	<div style="text-align: center">
+		<div style="color: #3f3f3f; display: inline-block; text-align: left; line-height: 44px;">
+			<br/>
+			Поцаны,<br/>
+			Войти в сеть можно под именем любого из существующих пользователей.<br/>
+			Пароль: 123.<br/>
+			<br/>
+		</div>
+	</div>
+
+	<!-- Registration button -->
+	<div class="join_button_block non_selectable" type="conditional">
+		<div type="ok">
+			<span id="join_button" class="centered"></span>
+		</div>
+		<div type="loading">Ищем вас в списке приглашённых</div>
+		<div type="error">Не удалось поискать вас в списке приглашённых</div>
+	</div>
+
+	<!-- Registration window -->
+	<div id="join_dialog" set_width="true" class="collapsed" title="Присоединиться">
+
+		<div class="no_word_carrying main_content">
+
+			<!-- register form slider -->
+			<div class="slider">
+
+				<!-- 1st slide: имя -->
+				<div class="slide name">
+					<div class="icon"></div>
+					<form>
+						<label for="имя">Назовитесь</label>
+						<input name="имя" class="field" type="text" validation="прописка.имя"/>
+					</form>
+				</div>
+
+				<!-- 2nd slide: пол -->
+				<div class="slide gender">
+					<form>
+						<label for="пол">Если хотите, можете указать свой пол</label>
+
+						<div class="chooser non_selectable center">
+							<div style="padding-top: 40px"></div>
+
+							<div class="clear"></div>
+							<span name="male" value="мужской"></span>
+							<span name="female" value="женский"></span>
+						</div>
+
+						<input name="пол" type="hidden" validation="прописка.пол"/>
+					</form>
+				</div>
+
+				<!-- 3rd slide: откуда (country, city, etc) -->
+				<div class="slide origin">
+					<div class="icon"></div>
+					<form>
+						<label for="откуда">В какой местности вы проживаете?</label>
+						<input name="откуда" class="field" type="text"/>
+					</form>
+				</div>
+				
+				<!-- пароль -->
+				<div class="slide password">
+					<div class="icon"></div>
+					<form>
+						<label for="пароль">Придумайте себе пароль</label>
+						<input name="пароль" class="field" type="text" validation="прописка.пароль"/>
+					</form>
+				</div>
+			</div>
+		</div>
+
+		<!-- dialog window buttons block starts -->
+		<div class="pre_buttons"></div>
+
+		<!-- dialog window buttons -->
+		<div class="no_word_carrying non_selectable buttons">
+			<!-- cancel button -->
+			<div class="cancel left" type="minor" styles="generic, minor, caution">
+				<span type="icon" icon="cross" width="30" height="30" top_offset="5"></span>
+				<label>Отмена</label>
+			</div>
+
+			<!-- next button -->			
+			<div class="next right" type="dark generic" styles="generic">
+				<label>Дальше</label>
+				<span type="icon" icon="right arrows" width="35" height="30" top_offset="7"></span>
+			</div>
+
+			<!-- done button -->
+			<div class="done right" type="dark generic" styles="generic">
+				<span type="icon" icon="check" width="24" height="24" top_offset="8"></span>
+				<label>Готово</label>
+			</div>
+		</div>
+	</div>
+</section>

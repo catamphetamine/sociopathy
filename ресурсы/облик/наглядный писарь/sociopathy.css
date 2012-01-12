@@ -1,0 +1,302 @@
+@import "/облик/вспомогательный.less";
+
+.visual_editor_tools
+{
+	ul
+	{
+		li
+		{
+			.css_transition(200ms);
+			
+			@hover_glow_color: #8d0031;
+			@hover_text_color: #fff2f7;
+			
+			@active_glow_color: #cb0026;
+			@active_text_color: #ffe3e8;
+			
+			&:hover
+			{
+				color: @hover_text_color !important;
+				border-color: @hover_text_color !important;
+				text-shadow: 0px 0px 20px @hover_glow_color;
+			}
+			
+			&.disabled:hover
+			{
+				text-shadow: none;
+			}
+			
+			&:active
+			{
+				color: @active_text_color !important;
+				border-color: @active_text_color !important;
+				text-shadow: 0px 0px 20px @active_glow_color;
+			}
+		}
+	}
+}
+
+.visual_editor_tools
+{
+	ul
+	{
+		li
+		{
+			font-size: 26px;
+		}
+	}
+}
+
+.visual_editor_tools
+{
+	ul.main_tools
+	{
+		li
+		{
+			&.heading
+			{
+				font-family: @headings_font;
+			}
+			
+			&.subheading
+			{
+				font-family: @headings_font;
+				border-bottom-style: solid;
+				border-bottom-width: 1px;
+				border-bottom-color: white;
+			}
+			
+			&.paragraph
+			{
+				font-family: @textual_font;
+			}
+			
+			&.bold
+			{
+				font-weight: bold;
+			}
+			
+			&.italic
+			{
+				font-style: italic;
+			}
+			
+			&.link
+			{
+				font-family: @labels_font;
+				.hyperlink();
+				color: white;
+				border-color: white;
+			}
+			
+			&.citation
+			{
+				font-style: italic;
+			}
+			
+			&.citation:before
+			{
+				content: '«';
+			}
+			
+			&.citation:after
+			{
+				content: '»';
+			}
+			
+			&.list > span
+			{
+				position: relative;
+				margin-top: -12px;
+				top: 11px;
+				
+				background-image: url('/картинки/на страницах/заметка/список.png');
+				width: 40px;
+				height: 40px;
+			}
+			
+			&.picture > span
+			{
+				position: relative;
+				margin-top: -12px;
+				top: 11px;
+				
+				background-image: url('/картинки/на страницах/заметка/картинка.png');
+				width: 40px;
+				height: 40px;
+			}
+			
+			&.undo > span, &.redo > span
+			{
+				position: relative;
+				margin-top: -10px;
+				top: 9px;
+			
+				width: 36px;
+				height: 36px;
+				
+				-webkit-transition: all 200ms ease-in-out;
+				-moz-transition: all 200ms ease-in-out;
+			}
+	
+			&.undo > span
+			{
+				background-image: url('/картинки/на страницах/заметка/undo.png');
+			}
+			
+			&.undo > span.disabled, &.redo > span.disabled
+			{
+				cursor: default !important;
+			}
+	
+			&.redo > span
+			{
+				background-image: url('/картинки/на страницах/заметка/redo.png');
+			}
+			
+			&.undo
+			{
+				margin-right: 0;
+			}
+			
+			&.redo
+			{
+				margin-left: 0;
+			}
+		}
+	}
+	
+	ul.additional_tools
+	{
+		li
+		{
+			&.code, &.multiline_code, &.html
+			{
+				> code
+				{
+					background: none;
+					border: 0;
+				}
+			}
+						
+			&.subscript sub, &.superscript sup
+			{
+				font-size: 16px;
+			}
+						
+			&.video > span
+			{
+				position: relative;
+				margin-top: -12px;
+				top: 11px;
+				
+				background-image: url('/картинки/на страницах/заметка/видео.png');
+				width: 40px;
+				height: 40px;
+			}
+		}
+	}
+	
+	.more, .less
+	{
+		position: absolute;
+		right: 12px;
+		top: 10px;
+		
+		z-index: 1;
+		
+		width: 30px;
+		height: 30px;
+		
+		cursor: pointer;
+	}
+	
+	.more
+	{
+		background-image: url('/картинки/на страницах/заметка/показать всё.png');
+	}
+
+	.less
+	{
+		display: none;
+		background-image: url('/картинки/на страницах/заметка/скрыть разширенное.png');
+	}
+}
+
+.firefox .visual_editor_tools .subscript sub
+{
+	position: relative;
+	top: -8px;
+}
+
+.webkit .visual_editor_tools .subscript sub
+{
+	position: relative;
+	top: -2px;
+}
+
+.webkit .visual_editor_tools .superscript sup
+{
+	position: relative;
+	top: -2px;
+}
+
+#visual_editor_hyperlink_window
+{
+	.icon
+	{
+		width: 128px;
+		height: 128px;
+
+		background-image: url('/картинки/писарь/снасти/ссылка.png');
+	}
+}
+
+#visual_editor_image_source_window
+{
+	.icon
+	{
+		width: 128px;
+		height: 128px;
+
+		background-image: url('/картинки/писарь/снасти/картинка.png');
+		
+		padding-right: 46px;
+	}
+}
+
+#visual_editor_formula_window
+{
+	.icon
+	{
+		width: 128px;
+		height: 128px;
+
+		background-image: url('/картинки/писарь/снасти/формула.png');
+	}
+}
+
+#visual_editor_video_window
+{
+	.icon
+	{
+		width: 128px;
+		height: 128px;
+
+		background-image: url('/картинки/писарь/снасти/видео.png');
+	}
+}
+
+#visual_editor_insert_html_window
+{
+	.icon
+	{
+		width: 128px;
+		height: 128px;
+
+		background-image: url('/картинки/писарь/снасти/html.png');
+		
+		padding-left: 10px;
+		padding-right: 0px;
+	}
+}

@@ -1,0 +1,51 @@
+@import "/облик/вспомогательный.less";
+
+#content
+{
+	p
+	{
+		text-indent: @paragraph_indent;
+	}
+	
+	.help_section
+	{
+		@indent: 40px;
+		
+		margin-bottom: 100px;
+		padding-left: @indent;
+		
+		h2
+		{
+			/* margin-left: -@indent; */
+		}
+		
+		ul
+		{
+			list-style: none;
+			padding: 0;
+			
+			li
+			{
+				.question
+				{
+					cursor: pointer;
+					color: @link_color;
+				}
+				
+				.question:after
+				{
+					content: '?'
+				}
+				
+				.answer
+				{
+					display: none;
+					position: relative;
+					margin-left: 40px;
+					margin-bottom: 40px;
+					margin-top: 10px;
+				}
+			}
+		}
+	}
+}

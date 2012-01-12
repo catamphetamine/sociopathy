@@ -1,0 +1,35 @@
+<style>
+	#logo
+	{
+		display: none;
+	}
+</style>
+
+<ul id="extra_panel_menu" style="display: none">
+	<li><span class="divider"></span></li>
+	<li name="болталка" link="/сеть/болталка">Болталка</li>
+	<li not_yet_implemented="true" name="обсуждения" link="/сеть/обсуждения">Обсуждения</li>
+	<li not_yet_implemented="true" name="беседы" link="/сеть/беседы">Беседы</li>
+	<li not_yet_implemented="true" name="дела" link="/сеть/дела">Дела</li>
+	<li not_yet_implemented="true" name="mail" link="/сеть/почта">Почта</li>
+	<li not_yet_implemented="true" name="книги" link="/сеть/книги">Книги</li>
+	<li not_yet_implemented="true" name="settings" link="/сеть/настройки">Настройки</li>
+</ul>
+
+<script src="/javascripts/user content.js"></script>
+
+<div class="on_the_right_side_of_the_panel">
+	<div class="authenticated_user">
+		<div class="info">
+			<a href="/люди/${пользователь['адресное имя']}" class="name">${пользователь.имя}</a>
+			<a href="#" class="logout">Выйти</a>
+		</div>
+		<a href="/люди/${пользователь['адресное имя']}" class="name" style="display: inline-block; border: 0">
+			<div class="picture">
+				<div class="real_picture" style="background-image: url('/загруженное/люди/${пользователь['адресное имя']}/картинка/в болталке.jpg')"></div>
+			</div>
+		</a>
+	</div>
+</div>
+
+{{html содержимое}}
