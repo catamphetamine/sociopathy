@@ -1,28 +1,16 @@
 <li author="${отправитель._id}">
+	<div class="text_wrapper">
+		<div class="text multiline_text">{{html сообщение}}</div>
+	</div>
+
 	<div class="author no_word_carrying {{if is_online(отправитель._id)}}online{{/if}}">
-		<a href="/люди/${отправитель['адресное имя']}" style="display: inline-block">
+		<a href="/люди/${отправитель['адресное имя']}">
 			<span class="name" title="${отправитель.имя}">
 				${отправитель.имя}
 			</span>
-			<!-- вставите пробел - будет зазор -->
-			<div class="user_offline_picture_glow"></div><div class="user_online_picture_glow"></div><div class="picture" title="${отправитель.имя}">
-				<div class="real_picture" style="background-image: url('/загруженное/люди/${отправитель['адресное имя']}/картинка/в болталке.jpg')"></div>
-				
-				<div class="away">
-					{{if отправитель.пол === 'мужской'}}
-						отошёл
-					{{else}}
-						отошла
-					{{/if}}
-				</div>
-			</div>
+			{{tmpl "chat user icon"}}
 		</a>
 	</div>
 	
-	<div class="message">
-		<div class="text multiline_text">
-			${сообщение}
-		</div>
-		<div class="when no_word_carrying intelligent_date" date="${точное_время}" updated_at="${сейчас}">${время}</div>
-	</div>
+	<div class="when no_word_carrying intelligent_date" date="${точное_время}" updated_at="${сейчас}">${время}</div>
 </li>

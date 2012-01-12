@@ -66,6 +66,7 @@ var Клавиши =
 	
     Plus: 187,
     Minus: 189,
+    Dot: 190,
 	
 	is: function()
 	{
@@ -126,6 +127,12 @@ var Клавиши =
 		if (!event.charCode)
 			if (this[key] && this[key.toUpperCase()])
 				key = key.toUpperCase()
+		*/
+		
+		/*
+		console.log('code: ' + code)
+		console.log('key: ' + key)
+		console.log('this[key]: ' + this[key])
 		*/
 				
 		if (code === this[key])

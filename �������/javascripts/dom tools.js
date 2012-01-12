@@ -39,7 +39,7 @@ var Dom_tools =
 		if (text_node)
 			return text_node
 			
-		throw 'Text node not found'
+		//throw 'Text node not found'
 	},
 	
 	down_to_text_node: function(node)
@@ -70,7 +70,7 @@ var Dom_tools =
 		
 		if (node === highest_parent)
 			return null
-			
+		
 		var next = this.next(node)
 		
 		if (!next)
@@ -257,6 +257,9 @@ var Dom_tools =
 		node = this.normalize(node)
 		till = this.normalize(till)
 	
+		if (node === till)
+			return []
+	
 		if (node.parentNode === till)
 			return [this.get_child_index(node)]
 	
@@ -309,10 +312,38 @@ var Dom_tools =
 		var parent = child.parentNode
 		if (!parent)
 			return null
-			
-		if (parent.tagName.toLowerCase() === tag)
-			return parent
+		
+		if (parent.tagName)
+			if (parent.tagName.toLowerCase() === tag)
+				return parent
 
-		return find_parent_by_tag(parent, tag)
+		return this.find_parent_by_tag(parent, tag)
+	},
+	
+	replace: function(what, with_what)
+	{
+		if (typeof with_what === 'string')
+			with_what = document.createTextNode(with_what)
+		var where = what.parentNode
+		return where.replaceChild(with_what, what)
+	},
+	
+	text: function(element, text)
+	{
+		text = document.createTextNode(text	)
+		element.appendChild(text)
+		return text
+	},
+	
+	uppest_before: function(node, ceiling)
+	{
+		if (node === ceiling)
+			throw 'The node is ceiling'
+	
+		while (node.parentNode !== ceiling)
+		{
+			node = node.parentNode
+		}
+		return node
 	}
 }

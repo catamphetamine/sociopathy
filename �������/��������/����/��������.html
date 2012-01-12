@@ -29,7 +29,10 @@
 		<div type="error">Не удалось загрузить сообщения</div>
 	</div>
 	
-	<div id="scroll_detector"></div>
-	
-	<p style="visibility: hidden">strange hack for Chrome</p>
+	<div id="compose_message" style="display: none">
+		<div class="visual_editor_tools_container"></div>
+		
+		<!-- лишних пробелов в article не ставить -->
+		<article contenteditable="true"><p></p></article>
+	</div>
 </section>

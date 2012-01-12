@@ -76,8 +76,8 @@ function slider(options)
 		
 		// get dimensions
 		
-		this.options.width = this.$element.width()
-		this.options.height = this.$element.height()
+		this.options.width = this.$element.parent().width()
+		this.options.height = this.$element.parent().height()
 
 		// create the strip
 		
@@ -105,9 +105,9 @@ function slider(options)
 //			this.options.buttons.previous.does(this.next(), '1x')
 	}
 	
-	this.bind = function(event, handler)
+	this.on = function(event, handler)
 	{
-		this.$element.bind(event, handler)
+		this.$element.on(event, handler)
 	}
 	
 	// go to slide

@@ -168,7 +168,7 @@ var button = new Class
 		
 		// bind events
 		
-		this.$element.bind('mouseenter.' + this.namespace, function() 
+		this.$element.on('mouseenter.' + this.namespace, function() 
 		{
 			this.is_rolled_over = true
 			
@@ -180,7 +180,7 @@ var button = new Class
 		}.
 		bind(this))
 		
-		this.$element.bind('mouseleave.' + this.namespace, function() 
+		this.$element.on('mouseleave.' + this.namespace, function() 
 		{
 			this.is_rolled_over = false
 			
@@ -192,7 +192,7 @@ var button = new Class
 		}.
 		bind(this))
 
-		this.$element.bind('click.' + this.namespace, function() 
+		this.$element.on('click.' + this.namespace, function() 
 		{
 			// if is locked - exit
 			if (this.is_locked())

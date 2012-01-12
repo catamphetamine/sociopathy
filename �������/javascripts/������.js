@@ -194,7 +194,7 @@ var Режим = (function()
 			из_какого = null
 		}
 		
-		$(document).bind('режим.переход', function(event, из, в)
+		$(document).on('режим.переход', function(event, из, в)
 		{
 			if (в_какой)
 				if (в_какой !== в)

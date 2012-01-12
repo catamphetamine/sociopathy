@@ -2,20 +2,76 @@ Visual_editor.implement
 ({
 	disable_context_menu: function()
 	{
-		this.editor.bind('contextmenu', function(event)
+		var visual_editor = this
+		this.editor.on('contextmenu', function(event)
 		{
-			if (Режим.правка_ли())
+			if (visual_editor.can_edit())
 				event.preventDefault()
 		})
 	},
 	
 	disable_tab: function()
 	{
-		this.editor.bind('keypress', function(event)
+		this.editor.on('keypress', function(event)
 		{
 			if (event.which === Клавиши.Tab)
 				event.preventDefault()
 		})
+	},
+	
+	initialize_line_break_handlers: function()
+	{
+		var visual_editor = this
+		
+		this.line_break_handlers =
+		{
+			'li': function(container)
+			{
+				var list_item = $('<li/>')
+				this.hint(list_item, 'Введите текст')
+				
+				this.editor.mark(list_item)
+				container.after(list_item)				
+				this.editor.caret.move_to(this.editor.unmark())
+			},
+			'pre': function()
+			{
+				this.editor.insert('\n')
+			},
+			'h1, h2, h3, h4, h5, h6': function(container)
+			{
+				if (this.editor.caret.is_in_the_beginning_of_container())
+				{
+					var new_paragraph = $('<p/>')
+					container.before(new_paragraph)
+					new_paragraph.addClass('hint')
+					new_paragraph.text('Введите текст абзаца')
+					this.editor.caret.move_to(new_paragraph)
+					return
+				}
+				
+				if (this.editor.caret.is_in_the_end_of_container())
+				{
+					var new_paragraph = $('<p/>')
+					container.after(new_paragraph)
+					new_paragraph.addClass('hint')
+					new_paragraph.text('Введите текст абзаца')
+					this.editor.caret.move_to(new_paragraph)
+					return
+				}
+			},
+			'p': function(container)
+			{
+				if (this.editor.caret.is_in_the_end_of_container())
+				{
+					return visual_editor.new_paragraph()
+				}
+				
+				this.editor.insert_html('</p><p ' + this.editor.get_marker_html() + '>')
+				var next_paragraph = this.editor.unmark()
+				this.editor.caret.move_to(next_paragraph)
+			}
+		}
 	},
 	
 	insert_line_break_on_enter: function()
@@ -26,9 +82,9 @@ Visual_editor.implement
 		var visual_editor = this
 		var editor = this.editor
 		
-		editor.bind('keypress', function(event)
+		editor.on('keypress', function(event)
 		{
-			if (!Режим.правка_ли())
+			if (!visual_editor.can_edit())
 				return
 				
 			if (event.which !== Клавиши.Enter)
@@ -36,25 +92,14 @@ Visual_editor.implement
 		
 			event.preventDefault()
 			
+			if (Клавиши.is('Shift', 'Enter', event))
+				return visual_editor.on_break()
+			
 			var container = editor.caret.container()
 			var container_tag = container[0].tagName.toLowerCase()
 			
-			if (container.is('li'))
-			{
-				var list_item = $('<li/>')
-				visual_editor.hint(list_item, 'Введите текст')
-				
-				editor.mark(list_item)
-				container.after(list_item)				
-				editor.caret.move_to(editor.unmark())
-				return
-			}
-			
-			if (container.is('pre'))
-			{
-				editor.insert('\n')
-				return
-			}
+			if (container[0] === editor.content[0])
+				return visual_editor.enter_pressed_in_container()
 			
 			var i = 0
 			while (i < tags_with_prohibited_line_break.length)
@@ -64,108 +109,29 @@ Visual_editor.implement
 				i++
 			}
 			
-			/*
-			if (!container.is('p'))
-				return
-			*/
-			
-			if (container.is('h2') || container.is('h3') || container.is('h4') || container.is('h5') || container.is('h6'))
+			var finished = false
+			Object.each(visual_editor.line_break_handlers, function(action, selector)
 			{
-				if (editor.caret.is_in_the_beginning_of_container())
-				{
-					/*
-					var containing_paragraph = container.search_upwards('p')
-					
-					if (Dom_tools.is_first_element(container, containing_paragraph))
-					{
-						var new_paragraph = $('<p/>')
-						container.before(new_paragraph)
-						new_paragraph.text(1)
-						editor.caret.move_to(new_paragraph)
-					}
-					*/
-					
-					var new_paragraph = $('<p/>')
-					container.before(new_paragraph)
-					new_paragraph.addClass('hint')
-					new_paragraph.text('Введите текст абзаца')
-					editor.caret.move_to(new_paragraph)
-					
+				if (finished)
 					return
-				}
-				
-				if (editor.caret.is_in_the_end_of_container())
+					
+				if (container.is(selector))
 				{
-					/*
-					var containing_paragraph = container.search_upwards('p')
-					if (Dom_tools.is_last_element(container, containing_paragraph))
-					{
-						var new_paragraph = $('<p/>')
-						container.after(new_paragraph)
-						new_paragraph.text(1)
-						editor.caret.move_to(new_paragraph)
-					}
-					*/
-					
-					var new_paragraph = $('<p/>')
-					container.after(new_paragraph)
-					new_paragraph.addClass('hint')
-					new_paragraph.text('Введите текст абзаца')
-					editor.caret.move_to(new_paragraph)
-					
-					return
+					action.bind(visual_editor)(container)
+					finished = true
 				}
-				
-				return
-			}
-			
-			if (container.is('p'))
-			{
-				if (editor.caret.is_in_the_end_of_container())
-				{
-					var new_paragraph = $('<p/>')
-					container.after(new_paragraph)
-					new_paragraph.addClass('hint')
-					new_paragraph.text('Введите текст абзаца')
-					editor.caret.move_to(new_paragraph)
-					
-					return
-				}
-				
-				editor.insert_html('</p><p ' + editor.get_marker_html() + '>')
-				var next_paragraph = editor.unmark()
-				editor.caret.move_to(next_paragraph)
-				
-				return
-			}
-				
-			/*
-			editor.insert_html('</p><p ' + editor.get_marker_html() + '>')
-
-			var next_paragraph = editor.unmark()
-			editor.caret.move_to(next_paragraph)
-				
-			editor.content.find('p').each(function()
-			{
-				paragraph = $(this)
-				
-				var html = paragraph.html()
-				var trimmed_html = cut_off_whitespaces(html)
-				
-				if (html.length > trimmed_html.length)
-					paragraph.html(trimmed_html)
 			})
-			*/
 		})
 	},
 		
 	remap_editing_hotkeys: function()
 	{
+		var visual_editor = this
 		var editor = this.editor
 		
-		editor.bind('keypress', (function(event)
+		editor.on('keypress', (function(event)
 		{
-			if (!Режим.правка_ли())
+			if (!visual_editor.can_edit())
 				return
 			
 			// в Хроме не ловится
@@ -193,13 +159,14 @@ Visual_editor.implement
 		.bind(this))
 	},
 		
-	capture_breaking_space: function()
+	capture_special_hotkeys: function()
 	{
+		var visual_editor = this
 		var editor = this.editor
 		
-		editor.bind('keypress', function(event)
+		editor.on('keypress', function(event)
 		{
-			if (!Режим.правка_ли())
+			if (!visual_editor.can_edit())
 				return
 				
 			if (Клавиши.is('Shift', 'Space', event))
@@ -210,10 +177,7 @@ Visual_editor.implement
 				var container_tag = container.parentNode
 				
 				if (container_tag.tagName.toLowerCase() === 'p')
-				{
-					editor.insert(' ')
-					return
-				}
+					return editor.insert(' ')
 				
 				var text_node = Dom_tools.append_text_next_to(container_tag, ' ')
 				editor.caret.position(text_node, 1)
@@ -224,11 +188,31 @@ Visual_editor.implement
 	
 	capture_characters: function()
 	{
+		var visual_editor = this
 		var editor = this.editor
 		
-		editor.bind('keypress', (function(event)
+		editor.on('keydown', function(event)
 		{
-			if (!Режим.правка_ли())
+			var keyCode = event.which
+			
+			/*
+			if (keyCode === Клавиши.Dot)
+			{
+				if (editor.caret.text().ends_with('..'))
+				{
+					editor.caret.collapse_recent_characters(2, '…')
+					return false
+				}
+				
+				editor.insert('.')
+				return false
+			}
+			*/
+		})
+		
+		editor.on('keypress', (function(event)
+		{
+			if (!visual_editor.can_edit())
 				return
 				
 			if (Клавиши.is('Delete', event) || Клавиши.is('Backspace', event))
@@ -253,14 +237,36 @@ Visual_editor.implement
 					
 			var options = {}
 			
-			var container = editor.caret.container()
-			if (container.hasClass('hint'))
+			if (editor.content[0].firstChild)
+				if (editor.content[0].firstChild.tagName)
+					if (editor.content[0].firstChild.tagName.toLowerCase() === 'br')
+						editor.content[0].removeChild(editor.content[0].firstChild)
+			
+			var character = String.fromCharCode(event.charCode)
+
+			if (character === ' ')
 			{
-				container.removeClass('hint')
-				options.replace = true
+				var text = editor.caret.text()
+				if (text)
+					if (text.ends_with(' -'))
+						return editor.caret.collapse_recent_characters(2, ' — ')
+			}
+			else if (character === '"')
+			{
+				var left_quotes = editor.content.html().count('«')
+				var right_quotes = editor.content.html().count('»')
+				if (left_quotes === 0)
+					character = '«'
+				else if (left_quotes === right_quotes)
+					character = '«'
+				else if (left_quotes === right_quotes + 1)
+					character = '»'
+				else alert('Quote parser error')
+				
+				return editor.insert(character, options)
 			}
 			
-			editor.insert(String.fromCharCode(event.charCode), options)
+			editor.insert(character, options)
 		})
 		.bind(this))
 	}

@@ -21,16 +21,19 @@ var Editor = new Class
 		return this.container.find(this.content_selector)
 	},
 
-	bind: function(event, handler)
+	on: function(event, handler)
 	{
 		this.container.on(event, this.content_selector, handler)
 	},
 	*/
 	
+	event_handlers: [],
+	
 	initialize: function(content_selector)
 	{
 		this.content_selector = content_selector
 		this.content = this.get_content()
+		this.apply_content_style()
 		
 		this.caret = new Editor.Caret(this)
 		this.selection = new Editor.Selection(this)
@@ -42,9 +45,25 @@ var Editor = new Class
 		return $(this.content_selector)
 	},
 
-	bind: function(event, handler)
+	on: function(event, handler)
 	{
+		this.event_handlers.push({ event: event, handler: handler })
 		this.content.on(event, handler)
+	},
+	
+	on_event: function(selector, event, handler)
+	{
+		this.event_handlers.push({ selector: selector, event: event, handler: handler })
+		this.content.find(selector).on(event, handler)
+	},
+	
+	apply_content_style: function()
+	{
+		this.content.css
+		({
+			outline: '0px solid transparent', // remove border in FireFox
+			'white-space': 'pre-wrap'
+		})
 	},
 
 	/*	
@@ -71,15 +90,31 @@ var Editor = new Class
 	
 	load_content: function(html)
 	{
-		//alert(html)
 		this.content.html(html)
-		//alert(this.content.html())
+		this.apply_content_style()
 	},
 	
 	refresh_content: function()
 	{
 		this.content = this.get_content()
+		this.rebind()
 	},
+	
+	rebind: function()
+	{
+		var editor = this
+		this.event_handlers.forEach(function(rebound)
+		{
+			if (!rebound.selector)
+				editor.content.on(rebound.event, rebound.handler)
+			else
+				editor.content.find(rebound.selector).on(rebound.event, rebound.handler)
+		})
+		
+		//this.rebind_events()
+	},
+	
+	//rebind_events: function() {},
 	
 	marker_attribute: 'mark',
 	marker_attribute_value: 'temporary',
@@ -95,13 +130,22 @@ var Editor = new Class
 		return element
 	},
 	
-	unmark: function()
+	unmark: function(options)
 	{
-		this.reload_content()
+		options = options || {}
+	
 		var element = this.content.find(this.get_marker_selector())
 		
-		if (element.length == 0)
+		if (!element.exists())
+		{
+			if (!options.cant_retry)
+			{
+				this.refresh_content()
+				return this.unmark({ cant_retry: true })
+			}
+			
 			throw 'No marked element found'
+		}
 			
 		if (element.length > 1)
 			throw 'More than one element was marked'
@@ -139,14 +183,26 @@ var Editor = new Class
 	{
 		options = options || {}
 		
+		var container = this.caret.container()
+		if (container.hasClass('hint'))
+		{
+			container.removeClass('hint')
+			options.replace = true
+		}
+		else if (container.hasClass('tagged_hint'))
+		{
+			container.removeClass('tagged_hint')
+			options.replace_tag = true
+		}
+		
 		if (typeof(what) === 'string')
 		{
-			if (what.contains('<'))
-				throw 'Insert html with .insert_html() function'
+			//if (what.contains('<'))
+			//	throw 'Insert html with .insert_html() function'
 			
 			if (this.time_machine.can_snapshot_typing())
 				this.time_machine.snapshot()
-				
+			
 			this.insert_text(what, options)
 			this.content_changed()
 			
@@ -165,12 +221,26 @@ var Editor = new Class
 			
 			this.mark(what)
 			
-			var html
-			if (container.attr('contenteditable') == true)
-				html = what.outer_html()
-			else
-				html = '</' + container_tag + '>' + what.outer_html() + '<' + container_tag + '>'
+			if (options.replace_tag)
+			{
+				var native_container = this.caret.native_container()
+				var parent_container = native_container.parentNode
+				Dom_tools.replace(parent_container, what[0])
+				return this.unmark()
+			}
+			else if (options.replace)
+			{
+				var native_container = this.caret.native_container()
+				Dom_tools.replace(native_container, what[0])
+				return this.unmark()
+			}
 			
+			var html
+			if (options.break_container && container[0] !== this.content[0])
+				html = '</' + container_tag + '>' + what.outer_html() + '<' + container_tag + '>'
+			else
+				html = what.outer_html()
+				
  			this.insert_html(html)
 			this.checkpoint()
 			return this.unmark()
@@ -181,6 +251,15 @@ var Editor = new Class
 	
 	insert_text: function(inserted_text, options)
 	{
+		if (options.replace_tag)
+		{
+			var container = this.caret.native_container()
+			var parent_container = container.parentNode
+			var super_parent_container = parent_container.parentNode
+			Dom_tools.replace(parent_container, inserted_text)
+			return this.caret.move_to(super_parent_container, inserted_text.length)
+		}
+			
 		var caret = this.caret.get()
 		var caret_offset = this.caret.offset(caret)
 		if (options.replace)
@@ -194,15 +273,27 @@ var Editor = new Class
 			
 			if ($.browser.webkit)
 				offset--
+				
+			if (container.childNodes.length === 0 || offset < 0)
+			{
+				text_container = Dom_tools.text(container, inserted_text)
+				return this.caret.create(text_container, inserted_text.length)
+			}
 			
-			container = Dom_tools.find_text_node(container.childNodes[offset], this.content)
-			
+			var text_container = Dom_tools.find_text_node(container.childNodes[offset], this.content)
+		
+			if (!text_container)
+			{
+				text_container = Dom_tools.text(container, inserted_text)
+				return this.caret.create(text_container, inserted_text.length)
+			}
+		
 			if (!options.replace)
-				container.nodeValue = inserted_text + container.nodeValue
+				text_container.nodeValue = inserted_text + text_container.nodeValue
 			else
-				container.nodeValue = inserted_text
+				text_container.nodeValue = inserted_text
 			
-			this.caret.create(container, inserted_text.length)
+			this.caret.create(text_container, inserted_text.length)
 		}
 		else
 		{
@@ -225,10 +316,24 @@ var Editor = new Class
 	insert_html: function(html)
 	{
 		var container = this.caret.native_textual_container()
-		var text = this.caret.text_before_and_after()
-		var parent = container.parentNode
+		var text
+		
+		if (container)
+			text = this.caret.text_before_and_after()
+		else
+		{
+			container = this.caret.native_container()
+			text = { before: '', after: '' }
+		}
 			
-		var node_chain = [parent]
+		var parent
+		if (container !== this.content[0])
+			parent = container.parentNode
+		
+		var node_chain = []
+		if (parent)
+			node_chain.push(parent)
+		
 		var how_much_parent_tags_to_close = html.count('</') - html.count(/<[^\/]+/g)
 		
 		while (how_much_parent_tags_to_close > 0)
@@ -240,7 +345,11 @@ var Editor = new Class
 		
 		node_chain.reverse()
 		
-		var before_and_after = Dom_tools.html_before_and_after(container)
+		var before_and_after;
+		if (parent)
+			before_and_after = Dom_tools.html_before_and_after(container)
+		else
+			before_and_after = { before: '', after: '' }
 		
 		html = before_and_after.before +
 			text.before +
@@ -248,10 +357,19 @@ var Editor = new Class
 			text.after + 
 			before_and_after.after
 		
-		Dom_tools.inject_html(html, node_chain)
-		
+		if (!node_chain.is_empty())
+			Dom_tools.inject_html(html, node_chain)
+		else
+			container.innerHTML = html
+	
 		if (how_much_parent_tags_to_close > 0)
 			this.refresh_content()
+	},
+	
+	is_empty: function()
+	{
+		console.log('1' + this.content.text().trim() + '2')
+		return this.content.text().trim().length === 0
 	},
 	
 	range: function()

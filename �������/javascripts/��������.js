@@ -34,8 +34,8 @@ var jquery_animator = new Class
 		var maximum_opacity = 1
 		if (options.maximum_opacity)
 			maximum_opacity = options.maximum_opacity
-		
-		if ($element.css('opacity') >= maximum_opacity)
+			
+		if ($element.css('opacity') > maximum_opacity)
 			$element.css('opacity', 0)
 			
 		$element.show()

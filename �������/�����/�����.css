@@ -1,11 +1,6 @@
 ﻿@import "/облик/вспомогательный.less";
+@import "/облик/начертания.less";
 
-@font-face
-{
-	font-family: Minion Pro;
-	src: url('/начертания/MinionPro-Regular.otf');
-}
-   
 /* correct Html 5 element styling for old browsers 
 article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section 
 {
@@ -112,8 +107,9 @@ html *::selection, html *::-moz-selection, html *::-webkit-selection
 
 html, input
 {
-	font-family: Helvetica, Arial, sans-serif;
-	font-size: 30px;
+	font-family: Whitney;
+	font-size: 32px;
+	font-weight: normal;
 }
 
 .multiline_text
@@ -402,18 +398,18 @@ label.error
 		line-height: 16px;
 		
 		text-align: right;
-		margin-top: 4px;
+		margin-top: 5px;
 		margin-left: 4px;
 		margin-right: 8px;
 
+		font-family: "DIN Round";
+		font-size: 20px;
+		
 		.name
 		{
 			display: block;
 			
 			color: #5f5f5f;
-			
-			font-family: Verdana, Arial, Helvetica;
-			font-size: 16px;
 			
 			border: 0;
 		}
@@ -422,14 +418,12 @@ label.error
 		{
 			display: inline-block;
 
-			margin-top: 8px;
-			
-			font-family: Verdana, Arial, Helvetica;
-			font-size: 16px;
+			margin-top: 7px;
 			
 			color: #4a798f;
 			border-color: #4a798f;
 			line-height: 21px;
+			border: 0;
 		}
 	}
 }
@@ -448,6 +442,16 @@ label.error
 	padding-right: 40px;
 }
 
+h1
+{
+	font-size: 58px;
+}
+
+h2
+{
+	font-size: 50px;
+}
+
 h1, h2, h3, h4, h5, h6
 {
 	cursor: pointer;
@@ -464,6 +468,7 @@ h1, h2, h3, h4, h5, h6
 h1, h2, h3, h4, h5, h6
 {
 	font-family: @headings_font;
+	font-weight: normal;
 }
 
 .collapsed
@@ -574,4 +579,44 @@ pre, code
 	border-image: initial;
 	
 	font-family: 'Bitstream Vera Sans Mono', 'Courier', monospace;
+}
+
+.button
+{
+	cursor: pointer;
+}
+
+.popup_menu_container
+{
+	position: absolute;
+	z-index: 1;
+	
+	display: none;
+	opacity: 0;
+	
+	.popup_menu
+	{
+		.rounded_corners(4px);
+
+		opacity: 0.8;
+		
+		font-size: 20px;
+		
+		padding-top: 8px;
+		padding-bottom: 8px;
+
+		padding-left: 12px;
+		padding-right: 12px;
+		
+		background-color: black;
+		
+		white-space: nowrap;
+			
+		a, span
+		{
+			color: white;
+			border: 0;
+			cursor: pointer;
+		}				
+	}
 }

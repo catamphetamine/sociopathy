@@ -16,7 +16,7 @@
 		
 		h2
 		{
-			margin-left: -@indent;
+			/* margin-left: -@indent; */
 		}
 		
 		ul

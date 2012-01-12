@@ -39,6 +39,7 @@
 		background-image: url('/картинки/уведомления/закрыть.png');	
 	}	
 }
+
 .message_container
 {
 	position: fixed;

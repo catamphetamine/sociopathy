@@ -22,10 +22,14 @@
 
 #join_dialog
 {
-	.slider
+	.main_content
 	{
 		width: 790px;
 		height: 200px;
+	}
+	
+	.slider
+	{
 		
 		/* .css_transition() */
 	}

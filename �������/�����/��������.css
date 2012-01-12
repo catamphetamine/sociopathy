@@ -100,7 +100,7 @@
 em.panel_menu_tooltip
 {
 	padding-top: 10px;
-	padding-bottom: 10px;
+	padding-bottom: 7px;
 	padding-left: 15px;
 	padding-right: 15px;
 
@@ -113,9 +113,10 @@ em.panel_menu_tooltip
 
 	display: none;
 
-	font-family: Tahoma, Arial, Helvetica;
+	font-family: Whitney;
 	font-size: 18pt;
 	font-style: normal;
+	font-weight: normal;
 	
 	background-color: #dfdfdf;
 	

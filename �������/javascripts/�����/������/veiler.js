@@ -57,7 +57,7 @@ var veiler = new (function()
 	this.start_underneath_event_muting = function() 
 	{
 		if (has_veils())
-			$(document).bind
+			$(document).on
 			(
 				events,
 				this.mute_if_belongs_underneath
@@ -124,7 +124,7 @@ var veiler = new (function()
 			this.allow_closing_on_escape()
 
 			// handle window resize
-			$(window).bind('resize.' + namespace, this.resize.bind(this))
+			$(window).on('resize.' + namespace, this.resize.bind(this))
 		}
 		
 		// add the veil to the list
@@ -136,7 +136,7 @@ var veiler = new (function()
 	 */
 	this.allow_closing_on_escape = function()
 	{
-		$(document).bind
+		$(document).on
 		(
 			'keydown.' +namespace, 
 			function(event)

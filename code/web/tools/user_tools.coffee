@@ -68,3 +68,20 @@ exports.тайный_ключ = (id, возврат) ->
 			#if тайный_ключ?
 			#	тайный_ключ = тайный_ключ['тайный ключ']
 			@.done(тайный_ключ[0]['тайный ключ'])
+
+exports.get_session_data = (тайный_ключ, возврат) ->
+	new Цепочка(возврат)
+		.сделать ->
+			redis_session_store.get(тайный_ключ, @)
+		.сделать (session_data) ->
+			возврат(null, session_data)
+
+exports.set_session_data = (тайный_ключ, ключ, значение, возврат) ->
+	new Цепочка(возврат)
+		.сделать ->
+			redis_session_store.get(тайный_ключ, @)
+		.сделать (session_data) ->
+			if not session_data?
+				session_data = {}
+			session_data[ключ] = значение
+			redis_session_store.set(тайный_ключ, session_data, возврат)

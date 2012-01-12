@@ -48,15 +48,22 @@ Editor.Caret = new Class
 		return Dom_tools.down_to_text_node(this.native_container())
 	},
 
-	move_to: function(element, offset)
+	move_to: function(the_element, offset)
 	{
+		the_element = Dom_tools.normalize(the_element)
+		var element = the_element
+	
 		if (!offset)
 			offset = 0
-	
-		element = Dom_tools.normalize(element)
 		
 		if (!Dom_tools.is_text_node(element))
 			element = Dom_tools.find_text_node(element, this.editor.content)
+		
+		if (!element)
+		{
+			element = document.createTextNode(' ')
+			the_element.parentNode.appendChild(element)
+		}
 		
 		if ($.browser.webkit)
 			return this.create(element, offset)
@@ -64,12 +71,12 @@ Editor.Caret = new Class
 		var caret = this.get()
 		if (caret)
 		{
-			caret.setStart(element, 0)
+			caret.setStart(element, offset)
 			this.editor.collapse(caret)
 			return caret
 		}
 		else
-			return this.create(element, 0)
+			return this.create(element, offset)
 	},
 	
 	move_to_container_end: function(filter)
@@ -248,5 +255,36 @@ Editor.Caret = new Class
 	move_to_the_next_element: function(relative_element)
 	{
 		return this.move_to(Dom_tools.down_to_text_node(Dom_tools.next(relative_element)))
+	},
+	
+	move_to_the_end: function(element)
+	{
+		element = Dom_tools.normalize(element)
+		
+		if (Dom_tools.is_text_node(element))
+			return this.position(element, element.nodeValue.length)
+			
+		this.position(element, element.childNodes.length)
+	},
+	
+	text: function()
+	{
+		return this.native_container().nodeValue
+	},
+	
+	collapse_recent_characters: function(how_much, into)
+	{
+		var container = this.native_container()
+		container.nodeValue = container.nodeValue.substring(0, container.nodeValue.length - how_much) + into
+		this.move_to_the_end(container)
+	},
+	
+	inside: function(selector)
+	{
+		var container = this.container()
+		if (container.is(this.editor.content_selector + ' ' + selector))
+			return true
+
+		return container.parents(this.editor.content_selector + ' ' + selector).exists()
 	}
 })

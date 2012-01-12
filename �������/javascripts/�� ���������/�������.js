@@ -228,7 +228,7 @@ function initialize_editables()
 		}
 	})
 
-	$(document).bind('режим.правка', function(event)
+	$(document).on('режим.правка', function(event)
 	{
 		//info('Вы можете сменить картинку (120 на 120), нажав на неё.')
 

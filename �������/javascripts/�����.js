@@ -86,7 +86,7 @@ var namespace = 'main'
 
 function disable_scroll()
 {
-	$(window).bind('scroll.' + namespace, {scroll_position: get_scroll_position()}, function(event) 
+	$(window).on('scroll.' + namespace, {scroll_position: get_scroll_position()}, function(event) 
 	{
 		window.scrollTo(event.data.scroll_position.x, event.data.scroll_position.y)
     	return false
@@ -221,10 +221,11 @@ function initialize_conditional($this, options)
 	
 	var error = $this.find('[type=error]').eq(0)
 	error.attr('default_message', error.text())
+	error.hide()
 
 	var loading = $this.find('[type=loading]').eq(0)
 	var loading_more = $this.find('[type=loading_more]').eq(0)
-
+	
 	var loading_more_error = $this.find('[type=loading_more_error]').eq(0)
 
 	if (loading_more_error.length === 0)
@@ -537,7 +538,8 @@ String.prototype.starts_with = function(substring)
 
 String.prototype.ends_with = function(substring) 
 {
-	return this.lastIndexOf(substring) === this.length - substring.length
+	var index = this.lastIndexOf(substring)
+	return index >= 0 && index === this.length - substring.length
 }
 
 String.prototype.chop_on_the_end = function(how_much) 
@@ -563,6 +565,11 @@ String.prototype.is_multiline = function()
 String.prototype.contains = function(what)
 {
 	return this.indexOf(what) >= 0
+}
+
+String.prototype.collapse_lines = function()
+{
+	return this.replace(/\n/g, '')
 }
 
 /*

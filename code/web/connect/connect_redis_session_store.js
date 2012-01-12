@@ -21,7 +21,7 @@ module.exports = function(connect)
 		
 		//Store.call(this, options)
 		
-		this.prefix = options.prefix || 'website_session:'
+		this.prefix = options.prefix || 'connect_session:'
 		
 		this.client = options.client || new redis.createClient(options.port || options.socket, options.host, options)
 		
@@ -78,16 +78,23 @@ module.exports = function(connect)
 		
 		try
 		{
+			var multi = this.client.multi()
+		
+			multi.get(this.prefix + id, function(data)
+			{
+				if (data)
+					session_data = Object.merge_recursive(session_data, JSON.parse(data.toString()))
+			})
+				
 			if (this.options.time_to_live)
-				this.client.setex(this.prefix + id, this.options.time_to_live, JSON.stringify(session_data), function()
-				{
-					callback.apply(this, arguments)
-				})
+				multi.setex(this.prefix + id, this.options.time_to_live, JSON.stringify(session_data))
 			else
-				this.client.set(this.prefix + id, JSON.stringify(session_data), function()
-				{
-					callback.apply(this, arguments)
-				})
+				multi.set(this.prefix + id, JSON.stringify(session_data))
+				
+			multi.exec(function()
+			{
+				callback.apply(this, arguments)
+			})
 		}
 		catch (error)
 		{

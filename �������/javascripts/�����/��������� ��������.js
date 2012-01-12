@@ -20,7 +20,7 @@
 		var $this = this
 		var container = this.parent()
 	
-		container.bind('disappearing_upwards.scroller', function(event, initialization)
+		container.on('disappearing_upwards.scroller', function(event, initialization)
 		{
 			event.stopPropagation()
 			$this.addClass('sticky')
@@ -29,7 +29,7 @@
 //				alert('You should set "position: fixed" for the floating top bar (for ".your_bar.sticky" style class) in your Css')
 		})
 		
-		container.bind('fully_appeared_on_top.scroller', function(event, initialization)
+		container.on('fully_appeared_on_top.scroller', function(event, initialization)
 		{
 			event.stopPropagation()
 			$this.css({ top: 0 }).removeClass('sticky')

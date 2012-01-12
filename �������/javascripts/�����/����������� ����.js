@@ -1,10 +1,10 @@
 /*
-var actions = $('.actions_container')
+var actions = $('.popup_menu_container')
 
-actions.find('.change_picture').click(function(event)
+actions.find('.call').click(function(event)
 {
 	event.preventDefault()
-	$('.upload_new_picture').click()
+	alert(1)
 })
 
 activate_popup_menu
@@ -20,49 +20,16 @@ function activate_popup_menu(options)
 	var left_actions_timer
 		
 	var delay = 200
-	var ready = true
-	var acting = false
-		
-	options.activator.on('mouseenter', function()
-	{
-		if (!ready)
-			return
-			
-		if (left_photo_timer)
-		{
-			clearTimeout(left_photo_timer)
-			left_photo_timer = null
-		}
-		else if (left_actions_timer)
-		{
-			clearTimeout(left_actions_timer)
-			left_actions_timer = null
-		}
-		else
-		{
-			inside()
-		}
-	})
 	
-	options.activator.on('mouseleave', function()
-	{
-		if (!acting)
-			return
-			
-		left_photo_timer = function()
-		{
-			clearTimeout(left_photo_timer)
-			left_photo_timer = null
-			
-			outside()
-		}
-		.delay(delay)
-	})
+	var activator = options.activator
+	var actions = options.actions
+	var actions_container = options.actions.parent()
 	
-	options.actions.on('mouseenter', function()
+	activator.on('mouseenter', function()
 	{
-		if (!ready)
-			return
+		if (options.condition)
+			if (!options.condition())
+				return
 			
 		if (left_photo_timer)
 		{
@@ -75,33 +42,76 @@ function activate_popup_menu(options)
 			clearTimeout(left_actions_timer)
 			left_actions_timer = null
 		}
+		
+		show()
 	})
 	
-	options.actions.on('mouseleave', function()
+	activator.on('mouseleave', function()
 	{
-		if (!acting)
-			return
-			
-		left_actions_timer = function()
+		left_photo_timer = function()
 		{
-			clearTimeout(left_actions_timer)
-			left_actions_timer = null
-			
-			outside()
+			hide()
 		}
 		.delay(delay)
 	})
 	
-	function inside()
+	actions.on('mouseenter', function()
 	{
-		acting = true
-		options.actions.fade_in(0.3, { easing: 'easeInQuad' })
+		if (left_photo_timer)
+		{
+			clearTimeout(left_photo_timer)
+			left_photo_timer = null
+		}
+		
+		if (left_actions_timer)
+		{
+			clearTimeout(left_actions_timer)
+			left_actions_timer = null
+		}
+		
+		show()
+	})
+	
+	actions.on('mouseleave', function()
+	{
+		left_actions_timer = function()
+		{
+			hide()
+		}
+		.delay(delay)
+	})
+	
+	function show()
+	{
+		actions.appendTo('body')
+		
+		var offset = actions_container.offset()
+		actions.css
+		({
+			left: offset.left + 'px',
+			top: offset.top + 'px'
+		})
+		
+		if (options.style_class)
+			actions.addClass(options.style_class)
+			
+		actions.fade_in(0.3, { easing: 'easeInQuad' })
 	}
 	
-	function outside()
+	function hide()
 	{
-		acting = false
-		ready = false
-		options.actions.fade_out(0.3, function() { ready = true })
+		actions.fade_out(0.3, function()
+		{
+			actions.css
+			({
+				left: 0,
+				top: 0
+			})
+		
+			if (options.style_class)
+				actions.removeClass(options.style_class)
+			
+			actions.appendTo(actions_container)
+		})
 	}
 }

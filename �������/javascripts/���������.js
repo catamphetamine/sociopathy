@@ -6,8 +6,8 @@ var Scroller = new Class
 
 	initialize: function()
 	{
-		$(window).bind('scroll', this.process_scroll)
-		//$(window).bind('resize', this.reset)
+		$(window).on('scroll', this.process_scroll)
+		//$(window).on('resize', this.reset)
 	},
 	
 	watching: function(element)

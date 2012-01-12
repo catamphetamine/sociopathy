@@ -42,29 +42,29 @@ function initialize_join_dialog()
 		join_form_slider
 	)
 	
-	join_dialog.bind('open', function()
+	join_dialog.on('open', function()
 	{
-		Режим.запомнить_подсказки('вне_окошка')
+		Подсказки.запомнить('вне_окошка')
 		Подсказки.подсказка('Выберите себе имя в нашей сети. Например, "Иван Петрович Сидоров".')
 	})
 	
-	join_dialog.bind('close', function()
+	join_dialog.on('close', function()
 	{
 		if (!прописан)
 			Подсказки.подсказка(Подсказки.возстановить('вне_окошка'))
 	})
 	
-	join_form_slider.bind('slide_No_2', function()
+	join_form_slider.on('slide_No_2', function()
 	{
 		Подсказки.подсказка('Нажмите на картинку, соответствующую вашему полу.')
 	})
 	
-	join_form_slider.bind('slide_No_3', function()
+	join_form_slider.on('slide_No_3', function()
 	{
 		Подсказки.подсказка('Разскажите нам, откуда вы. Например: "Москва", "Где-то на границе с Монголией", "Кольский полуостров".')
 	})
 	
-	join_form_slider.bind('slide_No_4', function()
+	join_form_slider.on('slide_No_4', function()
 	{
 		Подсказки.подсказка('По этому паролю вы будете входить в нашу сеть. Например: "белый слон жуёт морковь", "кто не спрятался - я не виноват", "у меня везде один пароль".')
 	})

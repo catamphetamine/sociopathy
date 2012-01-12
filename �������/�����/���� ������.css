@@ -35,7 +35,8 @@
 	input[type="text"]
 	{
 		display: inline-block;
-		margin-top: 4px;
+		margin-top: 2px;
+		width: 340px;
 		
 		-webkit-rtl-ordering: logical;
 		-webkit-user-select: text;

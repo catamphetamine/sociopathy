@@ -11,11 +11,13 @@
 		<div class="default_picture">
 			<div>
 				<div class="real_picture" style="background-image: url('/загруженное/люди/${$data['адресное имя']}/картинка/на личной карточке.jpg')"></div>
-				<div class="uploading_picture">Загружается</div>
-				
-				<form>
-					<input type="file" class="upload_new_picture"/>
-				</form>
+				{{if window.название_страницы === 'человек' }}
+					<div class="uploading_picture">Загружается</div>
+					
+					<form>
+						<input type="file" class="upload_new_picture"/>
+					</form>
+				{{/if}}
 			</div>
 		</div>
 		

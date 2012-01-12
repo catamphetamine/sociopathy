@@ -7,7 +7,9 @@
 online = redis.createClient()
 
 #subscriber.subscribe("chat")
-		
+
+соединения_пользователей = {}
+
 болталка = websocket
 	.of('/болталка')
 	.on 'connection', (соединение) ->
@@ -21,6 +23,7 @@ online = redis.createClient()
 					if not user?
 						return send ошибка: 'пользователь не найден: ' + тайный_ключ
 					пользователь = user
+					соединения_пользователей[пользователь._id.toString()] = соединение
 					@()
 					
 				.сделать () ->
@@ -39,32 +42,45 @@ online = redis.createClient()
 					соединение.broadcast.emit('user_online', пользовательское.выбрать_поля(['адресное имя', 'имя', '_id', 'пол'], пользователь))
 					соединение.emit 'готов'
 			
-			соединение.on 'смотрит', (сообщение) ->
+			соединение.on 'смотрит', () ->
 				соединение.broadcast.emit('смотрит', пользовательское.выбрать_поля(['_id'], пользователь))
 					
-			соединение.on 'не смотрит', (сообщение) ->
+			соединение.on 'не смотрит', () ->
 				соединение.broadcast.emit('не смотрит', пользовательское.выбрать_поля(['_id'], пользователь))
 			
+			соединение.on 'вызов', (_id) ->
+				вызываемый = соединения_пользователей[_id]
+				if not вызываемый
+					return соединение.emit('ошибка', 'Вызываемый пользователь недоступен')
+				вызываемый.emit('вызов', пользователь)
+			
+			соединение.on 'пишет', ->
+				соединение.broadcast.emit('пишет', пользователь)
+			
 			соединение.on 'сообщение', (сообщение) ->
-				сообщение = сообщение.escape_html()
+				#сообщение = сообщение.escape_html()
 				#сообщение = sanitize(сообщение).xss()
 				#время = снасти.сейчас({ минуты: yes })
 				
 				цепь_websocket(соединение)
-					.сделать () ->
-						хранилище.collection('chat').save { 'отправитель': пользователь._id, 'сообщение': сообщение, 'время': new Date() }, @
+					.сделать ->
+						sanitize(сообщение, @)
 						
 					.сделать (сообщение) ->
-						ввод.session.data['последнее сообщение в болталке'] = сообщение._id
+						хранилище.collection('chat').save { 'отправитель': пользователь._id, 'сообщение': сообщение, 'время': new Date() }, @.в 'сообщение'
+						
+					.сделать (сообщение) ->
+						пользовательское.set_session_data(тайный_ключ, 'последнее сообщение в болталке', сообщение._id, @)
+						
+					.сделать ->
+						сообщение = @.переменная 'сообщение'
 						данные_сообщения =
-						{
 							отправитель: пользовательское.выбрать_поля(['адресное имя', 'имя', '_id'], пользователь)
 							сообщение: сообщение.сообщение
 							время: сообщение.время
-						}
 						
-						console.log 'данные_сообщения:'
-						console.log данные_сообщения
+						#console.log 'данные_сообщения:'
+						#console.log данные_сообщения
 						
 						#publisher.publish("chat", "messages:" + id)
 						
@@ -73,6 +89,7 @@ online = redis.createClient()
 						болталка.emit('сообщение', данные_сообщения)
 		
 			соединение.on 'disconnect', () ->
+				delete соединения_пользователей[пользователь._id.toString()]
 				цепь(websocket)
 					.сделать ->
 						online.hdel('chat:online', пользователь._id, @)
@@ -119,7 +136,7 @@ http.get '/болталка/сообщения', (ввод, вывод) ->
 		return возврат.done({ с: хранилище.collection('chat').id(ввод.настройки.после), прихватить_границу: no, откуда: 'раньше' })
 
 	с_какого_выбрать = ввод.session.data['последнее сообщение в болталке']
-	return возврат.done({ с: с_какого_выбрать, ограничение: Max_batch_size, откуда: 'позже' }) if с_какого_выбрать?
+	return возврат.done({ с: хранилище.collection('chat').id(с_какого_выбрать), ограничение: Max_batch_size, откуда: 'позже' }) if с_какого_выбрать?
 	
 	new Цепочка(возврат)
 		.сделать ->
@@ -152,12 +169,57 @@ http.get '/болталка/сообщения', (ввод, вывод) ->
 			сравнение_id = '$lt'
 		else if сравнение_id = '$gte'
 			сравнение_id = '$gt'
+	
+	id_criteria = {}
+	id_criteria[сравнение_id] = с
+	хранилище.collection('chat').find({ _id: id_criteria }, { limit: ограничение, sort: [['$natural', -1]] }).toArray возврат
+
+# это временно
+	
+jsdom  = require 'jsdom'
+jQuery = require('fs').readFileSync(process.cwd() + '/code/web/tools/jquery.js').toString()
+
+sanitize = (html, возврат) ->
+	
+	for_jsdom =
+		html: '<pre>' + html + '</pre>',
+		src: [jQuery],
+		done: (errors, window) ->
+			if (errors)
+				return возврат(errors)
+				
+			$ = window.$
+					
+			$('script').remove()
 		
-	new Цепочка(возврат)
-		.сделать ->
-			id_criteria = {}
-			id_criteria[сравнение_id] = с
-			хранилище.collection('chat').find({ _id: id_criteria }, { limit: ограничение, sort: [['$natural', -1]] }).toArray @.в 'сообщения'
+			remove_attributes = [
+				'onblur'
+				'onchange'
+				'onclick'
+				'ondblclick'
+				'onfocus'
+				'onfocusin'
+				'onfocusout'
+				'onmouseover'
+				'onmousemove'
+				'onmousedown'
+				'onmouseup'
+				'onkeydown'
+				'onkeyup'
+				'onkeypress'
+				'onresize'
+				'onscroll'
+				'onselect'
+				'onsubmit'
+				'onreset'
+				'onload'
+				'onunload'
+			]
+		
+			for attribute in remove_attributes
+				$('*').removeAttr(attribute)
+				
+			console.log($('pre:first').html())
+			возврат(null, $('pre:first').html())
 			
-		.сделать ->
-			@.done(@.переменная('сообщения'))
+	jsdom.env(for_jsdom)

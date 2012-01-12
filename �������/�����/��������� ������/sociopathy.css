@@ -83,7 +83,7 @@
 			
 			&.link
 			{
-				font-family: @headings_font;
+				font-family: @labels_font;
 				.hyperlink();
 				color: white;
 				border-color: white;

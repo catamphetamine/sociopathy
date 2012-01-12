@@ -17,7 +17,7 @@ Editor.Time_machine = new Class
 		
 		//this.snapshot()
 		
-		this.editor.content.bind('content_changed.editor', (function(event, options)
+		this.editor.content.on('content_changed.editor', (function(event, options)
 		{
 			if (options.undo || options.redo)
 				return

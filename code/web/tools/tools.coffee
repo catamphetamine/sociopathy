@@ -284,3 +284,13 @@ String.prototype.escape_html = ->
 	
 String.prototype.to_unix_path = ->
 	@replace(/\\/g, '/')
+	
+Object.merge_recursive = (obj1, obj2) ->
+	for ключ, значение of obj2
+		#if obj2.hasOwnProperty(ключ)
+		if typeof obj2[ключ] == 'object'
+			obj1[ключ] = Object.merge_recursive(obj1[ключ], obj2[ключ])
+		else
+			obj1[ключ] = obj2[ключ]
+
+	return obj1

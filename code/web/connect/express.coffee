@@ -1,9 +1,10 @@
 connect = require 'connect'
 express = require 'express'
 
-require('./connect_redis_session_store')
+redis_session_store_constructor = require('./connect_redis_session_store')(express)
 		
-redis_store = new (require('./connect_redis_session_store')(express))()
+redis_store = new redis_session_store_constructor({ prefix: Options.User.Session.Redis.Prefix })
+global.redis_session_store = redis_store
 get_session_id = (ввод) ->
 	ввод.cookies.user
 session = require('./connect_session')(get_session_id, redis_store)

@@ -91,7 +91,7 @@ var dialog_window = new Class
 				// setting overflow to hidden fixes the box-shadow scroll bar bug in Fire Fox
 				//overflow: 'hidden'
 			})
-			.bind('keydown.' + this.namespace, function(event) 
+			.on('keydown.' + this.namespace, function(event) 
 			{
 				// close on escape key
 				if (self.options['close on escape'] && event.keyCode &&
@@ -161,12 +161,12 @@ var dialog_window = new Class
 	set_dimensions: function($element)
 	{
 		// if dialog window width is set manually
-		if ($element.attr('set_width'))
-			this.options.width = $element.width()
+		//if ($element.attr('set_width'))
+		//	this.options.width = $element.outerWidth()
 			
 		// if dialog window height is set manually
-		if ($element.attr('set_height'))
-			this.options.height = $element.height()
+		//if ($element.attr('set_height'))
+		//	this.options.height = $element.height()
 	},
 	
 	/**
@@ -207,9 +207,9 @@ var dialog_window = new Class
 		}
 	},
 	
-	bind: function(event, handler)
+	on: function(event, handler)
 	{
-		this.$element.bind(event, handler)
+		this.$element.on(event, handler)
 	},
 	
 	// opens the dialog window
@@ -234,7 +234,7 @@ var dialog_window = new Class
 
 		// prevent tabbing out of modal dialog windows
 		if (this.options.modal)
-			this.$element.bind('keypress.' + this.namespace, this.swallow_outer_tabulation)
+			this.$element.on('keypress.' + this.namespace, this.swallow_outer_tabulation)
 					
 		z_indexer.register(this)
 

@@ -1,17 +1,18 @@
 Visual_editor.implement
 ({
-	initialize_tool_elements: function()
+	initialize_tools_container: function()
 	{
 		var tools = $('.visual_editor_tools')
+		var сontainer = $('.visual_editor_tools_container')
 		tools.disableTextSelect()
+		tools.appendTo(сontainer)
 		tools.parent().show()
 		
 		this.tools_element = tools
-		tools.floating_top_bar()
 			
 		// toolbar
 
-		this.editor.bind('content_changed.editor', (function(событие, options)
+		this.editor.on('content_changed.editor', (function(событие, options)
 		{
 			this.set_proper_tools_state()
 		})
@@ -104,23 +105,10 @@ Visual_editor.implement
 					throw new Error('Подзаголовок можно помещать только непосредственно в абзаце')
 				}
 				
-				/*
-				var caret
-				if (editor.caret.is_in_the_beginning_of_container('p'))
-					caret = editor.caret.move_to_container_start('p')
-				else if (editor.caret.is_in_the_end_of_container('p'))
-					caret = editor.caret.move_to_container_end('p')
-				else
-				{
-					throw new Error('Подзаголовок можно поместить только в начале или в конце абзаца')
-					return
-				}
-				*/
-				
 				var subheading = $('<h2/>')
 				visual_editor.hint(subheading, 'Введите текст подзаголовка')
 				
-				return editor.insert(subheading)
+				return editor.insert(subheading, { break_container: true })
 			},
 			
 			on_success: function(subheading)
@@ -179,6 +167,8 @@ Visual_editor.implement
 		{
 			selector: '.link',
 			
+			type_attribute: 'hyperlink',
+			
 			initialize: function()
 			{
 				var tool = this
@@ -212,7 +202,7 @@ Visual_editor.implement
 						var link = $('<a/>')
 						link.attr('href', url)
 						visual_editor.hint(link, 'Введите текст')
-						link.attr('type', 'hyperlink')
+						tool.mark_type(link)
 						
 						tool.restore_caret()
 						tool.on_success(editor.insert(link))
@@ -239,11 +229,19 @@ Visual_editor.implement
 			
 			on_success: function(link)
 			{
-				this.activate_edit_mode_onclick(link)
+				this.activate(link)
 				
+				// иначе в хроме будет курсор в начале, но как бы перед самой ссылкой
 				if ($.browser.webkit)
 					return editor.caret.move_to(link, 1)
 				editor.caret.move_to(link)
+			},
+			
+			on_element_click: function()
+			{
+				var url = decodeURIComponent($(this).attr('href'))
+				visual_editor.Tools.Link.open_dialog_window({ url: url }, { element: $(this) })
+				return false
 			}
 		}
 						
@@ -291,7 +289,10 @@ Visual_editor.implement
 				if (editor.selection.exists())
 					throw new Error('Выделение пока не поддерживается этим инструментом')
 		
-				if (!editor.caret.container().is('p'))
+				//console.log(editor.caret.container()[0])
+				//console.log( editor.content[0])
+		
+				if (!editor.caret.container().is('p') && editor.caret.container()[0] !== editor.content[0])
 					throw new Error('Список можно поместить только внутри обычного текста')
 		
 				var list = $('<ul/>')
@@ -299,20 +300,20 @@ Visual_editor.implement
 				visual_editor.hint(list_item, 'Введите текст')
 				list_item.appendTo(list)
 				
-				editor.mark(list)
-				editor.insert_html('</p>' + list.outer_html() + '<p>')
-				return editor.unmark()
+				return editor.insert(list, { break_container: true })
 			},
 			
 			on_success: function(list)
 			{
-				editor.caret.move_to(list)
+				//editor.caret.move_to(list)
 			}
 		}
 		
 		Tools.Picture =
 		{
 			button: new image_button(tools.find('.picture span')),
+			
+			type_attribute: 'picture',
 			
 			initialize: function()
 			{
@@ -336,7 +337,7 @@ Visual_editor.implement
 					}],
 					ok: function(url)
 					{
-						url = encodeURI(url)
+						url = encodeURI(url.collapse_lines())
 						
 						if (this.state.element)
 						{
@@ -346,7 +347,7 @@ Visual_editor.implement
 					
 						var picture = $('<img/>')
 						picture.attr('src', url)
-						picture.attr('type', 'picture')
+						tool.mark_type(picture)
 						
 						tool.restore_caret()
 						tool.on_success(editor.insert(picture))
@@ -373,8 +374,15 @@ Visual_editor.implement
 			
 			on_success: function(picture)
 			{
-				this.activate_edit_mode_onclick(picture)
+				this.activate(picture)
 				editor.caret.move_to(picture)
+			},
+			
+			on_element_click: function()
+			{
+				var url = decodeURIComponent($(this).attr('src'))
+				tool.open_dialog_window({ url: url }, { element: $(this) })
+				return false
 			}
 		}
 		
@@ -412,6 +420,8 @@ Visual_editor.implement
 		{
 			selector: '.formula',
 			
+			type_attribute: 'formula',
+			
 			initialize: function()
 			{
 				var tool = this
@@ -434,15 +444,17 @@ Visual_editor.implement
 					}],
 					ok: function(formula)
 					{
+						formula = encodeURIComponent(formula.collapse_lines())
+					
 						if (this.state.element)
 						{
-							this.state.element.attr('src', 'http://chart.apis.google.com/chart?cht=tx&chs=28&chl=' + encodeURIComponent(formula))
+							this.state.element.attr('src', 'http://chart.apis.google.com/chart?cht=tx&chs=28&chl=' + formula)
 							return tool.restore_caret()
 						}
 						
 						var picture = $('<img/>')
-						picture.attr('src', 'http://chart.apis.google.com/chart?cht=tx&chs=28&chl=' + encodeURIComponent(formula))
-						picture.attr('type', 'formula')
+						picture.attr('src', 'http://chart.apis.google.com/chart?cht=tx&chs=28&chl=' + formula)
+						tool.mark_type(picture)
 						
 						tool.restore_caret()
 						tool.on_success(editor.insert(picture))
@@ -471,8 +483,15 @@ Visual_editor.implement
 			
 			on_success: function(picture)
 			{
-				this.activate_edit_mode_onclick(picture)
+				this.activate(picture)
 				editor.caret.move_to(picture)
+			},
+			
+			on_element_click: function()
+			{
+				var formula = decodeURIComponent(parseUri($(this).attr('src')).queryKey.chl)
+				visual_editor.Tools.Formula.open_dialog_window({ formula: formula }, { element: $(this) })
+				return false
 			}
 		}
 		
@@ -568,6 +587,8 @@ Visual_editor.implement
 		{
 			button: new image_button(tools.find('.video span')),
 			
+			type_attribute: 'video',
+			
 			initialize: function()
 			{
 				var tool = this
@@ -593,7 +614,7 @@ Visual_editor.implement
 					}],
 					ok: function(url)
 					{
-						url = encodeURI(url)
+						url = encodeURI(url.collapse_lines())
 						
 						/*
 						if (this.state.element)
@@ -609,7 +630,7 @@ Visual_editor.implement
 						video.attr('height', 315)
 						video.attr('frameborder', 0)
 						video.attr('allowfullscreen', 'true')
-						video.attr('type', 'video')
+						tool.mark_type(video)
 					
 						tool.on_success(editor.insert(video))
 					},
@@ -650,7 +671,7 @@ Visual_editor.implement
 				Validation.наглядный_писарь.html = function(value)
 				{
 					if (!value)
-						throw new custom_error('Введите код Html')
+						throw new custom_error('Введите код Html (но потом всё обрежется)')
 						
 					try
 					{
@@ -761,6 +782,38 @@ Visual_editor.implement
 			if (tool.initialize)
 				tool.initialize()
 			
+			tool.activate_all = function()
+			{
+				if (this.type_attribute)
+					this.activate('[type="' + this.type_attribute + '"]')
+			}
+			
+			tool.activate = function(selector)
+			{
+				if (typeof(selector) !== 'string')
+					return this.activate_element(selector)
+		
+				var tool = this
+				editor.on_event(selector, 'click.visual_editor', function(event)
+				{
+					return tool.on_element_click.bind(this)()
+				})
+			}
+			
+			tool.activate_element = function(element)
+			{
+				var tool = this
+				element.on('click.visual_editor', function(event)
+				{
+					return tool.on_element_click.bind(this)()
+				})
+			}
+			
+			tool.mark_type = function(element)
+			{
+				element.attr('type', this.type_attribute)
+			}
+			
 			tool.open_dialog_window = function(values, state)
 			{
 				if (values)
@@ -789,7 +842,7 @@ Visual_editor.implement
 			
 			if (tool.selector)
 			{
-				element.bind('click', function(event)
+				element.on('click', function(event)
 				{
 					event.preventDefault()
 					action()
@@ -826,21 +879,34 @@ Visual_editor.implement
 // disable on blur / enable on focus
 $(function()
 {
-	var previously_focused
-	$(document).bind('focusin', function(event)
+	/*
+	// с этим кодом, если фокус уходит на visual_editor_tools, то они перестают работать
+	$(document).on('focusout', function(event)
 	{
-		if (event.target === previously_focused)
-			return
-			
 		if (!window.visual_editors)
 			return
 			
+		window.visual_editors.forEach(function(visual_editor)
+		{
+			if (event.target === visual_editor.editor.content.get(0))
+				visual_editor.disable_tools()
+		})
+	})
+	*/
+	
+	$(document).on('focusin', function(event)
+	{
+		if (!window.visual_editors)
+			return
+			
+		// disable all the other editors
 		window.visual_editors.forEach(function(visual_editor)
 		{
 			if (event.target !== visual_editor.editor.content.get(0))
 				visual_editor.disable_tools()
 		})
 		
+		// enable this editor
 		window.visual_editors.forEach(function(visual_editor)
 		{
 			if (event.target === visual_editor.editor.content.get(0))

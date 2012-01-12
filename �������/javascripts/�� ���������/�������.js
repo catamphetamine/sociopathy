@@ -7,9 +7,36 @@ function initialize_page()
 
 	var main_header = $('article h1')
 	
-	var article_editor = new Visual_editor('#content > article section')
+	var visual_editor = new Visual_editor('#content > article section')
 	
-	article_editor.initialize_tool_elements()
+	// изначально в режиме просмотра - отключить снасти
+	visual_editor.unbind()
+	
+	/*
+	visual_editor.editor.rebind_events = function()
+	{
+		if (Режим.правка_ли())
+			visual_editor.activate_tools_inside_content()
+	}
+	*/
+	
+	visual_editor.initialize_tools_container()
+	visual_editor.tools_element.floating_top_bar()
+	visual_editor.can_edit = function() { return Режим.правка_ли() }
+	
+	visual_editor.on_break = function()
+	{
+		visual_editor.new_paragraph()
+	}
+	
+	visual_editor.enter_pressed_in_container = function()
+	{
+		var new_paragraph = $('<p/>')
+		new_paragraph.addClass('hint')
+		new_paragraph.text('Введите текст абзаца')
+		visual_editor.editor.insert(new_paragraph)
+		visual_editor.editor.caret.move_to(new_paragraph)
+	}
 	
 	initialize_editor()
 	initialize_actions()
@@ -32,24 +59,24 @@ function initialize_page()
 		
 	function initialize_editor()
 	{
-		$(document).bind('режим.правка', function(event)
+		$(document).on('режим.правка', function(event)
 		{
-			article_editor.show_tools()
+			visual_editor.show_tools()
 			
 			if ($.browser.mozilla)
-				article_editor.editor.content.focus()
+				visual_editor.editor.content.focus()
 			
-			article_editor.editor.caret.move_to(article_editor.editor.content.find('> *:first'))
+			visual_editor.editor.caret.move_to(visual_editor.editor.content.find('> *:first'))
 		})
 		
-		$(document).bind('режим.переход', function(event, из, в)
+		$(document).on('режим.переход', function(event, из, в)
 		{
 			if (из === 'правка')
-				article_editor.hide_tools()
+				visual_editor.hide_tools()
 		})
 		
 		// при нажатии Ввода на основном заголовке - перейти к первому абзацу
-		main_header.bind('keypress', function(event)
+		main_header.on('keypress', function(event)
 		{
 			if (!Режим.правка_ли())
 				return
@@ -58,7 +85,7 @@ function initialize_page()
 			{
 				case Клавиши.Enter:
 					event.preventDefault()
-					article_editor.editor.move_caret_to(article_editor.editor.content.find('p:first'))
+					visual_editor.editor.move_caret_to(visual_editor.editor.content.find('p:first'))
 					break
 			}
 		})
@@ -66,20 +93,21 @@ function initialize_page()
 	
 	function get_title()
 	{
-		return article_editor.editor.content.parent().find('> h1').text()
+		return visual_editor.editor.content.parent().find('> h1').text()
 	}
 	
 	function set_title(title)
 	{
-		return article_editor.editor.content.parent().find('> h1').text(title)
+		return visual_editor.editor.content.parent().find('> h1').text(title)
 	}
 	
+	var edit_mode_actions
 	function initialize_actions()
 	{
-		var actions = $('#article_edit_mode_actions')
-		actions.appendTo($('body')).move_out_downwards().disableTextSelect()
+		edit_mode_actions = $('#article_edit_mode_actions')
+		edit_mode_actions.appendTo($('body')).move_out_downwards().disableTextSelect()
 	
-		save_button = activate_button(actions.find('.done'), { 'prevent double submission': true })
+		save_button = activate_button(edit_mode_actions.find('.done'), { 'prevent double submission': true })
 		.does(function()
 		{
 			loading_indicator.show()
@@ -87,7 +115,7 @@ function initialize_page()
 			{
 				_id: заметка._id,
 				title: get_title(),
-				content: article_editor.editor.content.html()
+				content: visual_editor.editor.content.html()
 			},
 			{
 				ошибка: function(ошибка)
@@ -103,7 +131,7 @@ function initialize_page()
 					loading_indicator.hide()
 					право_на_правку_получено = false
 					
-					actions.slide_out_downwards(300, function()
+					edit_mode_actions.slide_out_downwards(300, function()
 					{
 						save_button.unlock()
 					})
@@ -113,15 +141,13 @@ function initialize_page()
 			})
 		})
 		
-		cancel_button = activate_button(actions.find('.cancel'), { 'prevent double submission': true })
+		cancel_button = activate_button(edit_mode_actions.find('.cancel'), { 'prevent double submission': true })
 		.does(function()
 		{
 			loading_indicator.show()
 			Ajax.delete('/приложение/заметка/черновик/удалить',
 			{
-				_id: заметка._id,
-				title: article_editor.editor.content.parent().find('> h1').text(),
-				content: article_editor.editor.content.html()
+				_id: заметка._id
 			},
 			{
 				ошибка: function(ошибка)
@@ -137,13 +163,13 @@ function initialize_page()
 					loading_indicator.hide()
 					право_на_правку_получено = false
 					
-					actions.slide_out_downwards(300, function()
+					edit_mode_actions.slide_out_downwards(300, function()
 					{
-						save_button.unlock()
+						cancel_button.unlock()
 					})
 					Режим.обычный()
 					
-					article_editor.editor.load_content(заметка.содержимое)
+					visual_editor.editor.load_content(заметка.содержимое)
 					set_title(заметка.название)
 				}
 			})
@@ -151,59 +177,25 @@ function initialize_page()
 		
 		$(document).on('режим.переход', function(event, из, в)
 		{
-			if (в === 'правка')	
-				actions.slide_in_from_bottom()
+			if (из === 'правка')
+				visual_editor.unbind()
 		})
 	}
 	
-	function activate_hyperlinks($elements)
+	$(document).on('режим.правка', function(event)
 	{
-		$elements.on('click.режим_правка', function(event)
-		{
-			event.preventDefault()
-			var url = decodeURIComponent($(this).attr('href'))
-			article_editor.Tools.Link.open_dialog_window({ url: url }, { element: $(this) })
-		})
-	}
-	
-	function activate_pictures($elements)
-	{
-		$elements.on('click.режим_правка', function(event)
-		{
-			event.preventDefault()
-			var url = decodeURIComponent($(this).attr('src'))
-			article_editor.Tools.Picture.open_dialog_window({ url: url }, { element: $(this) })
-		})
-	}
-	
-	function activate_formulas($elements)
-	{
-		$elements.on('click.режим_правка', function(event)
-		{
-			event.preventDefault()
-			var formula = decodeURIComponent(parseUri($(this).attr('src')).queryKey.chl)
-			article_editor.Tools.Formula.open_dialog_window({ formula: formula }, { element: $(this) })
-		})
-	}
-	
-	article_editor.Tools.Link.activate_edit_mode_onclick = activate_hyperlinks
-	article_editor.Tools.Picture.activate_edit_mode_onclick = activate_pictures
-	article_editor.Tools.Formula.activate_edit_mode_onclick = activate_formulas
-	
-	$(document).bind('режим.правка', function(event)
-	{
-		activate_hyperlinks(article_editor.editor.content.find('[type="hyperlink"]'))
-		activate_pictures(article_editor.editor.content.find('[type="picture"]'))
-		activate_formulas(article_editor.editor.content.find('[type="formula"]'))
+		edit_mode_actions.slide_in_from_bottom()
+		
+		visual_editor.activate_tools_inside_content()
 		
 		/*
-		article_editor.editor.content.find('[type="video"]').on('mouseover.режим_правка', function(event)
+		visual_editor.editor.content.find('[type="video"]').on('mouseover.режим_правка', function(event)
 		{
 			event.preventDefault()
 			var url = $(this).attr('src')
 			url = get_youtube_video_url_from_id(get_embedded_youtube_video_id(url))
 			alert(url)
-			article_editor.Tools.Video.open_dialog_window({ url: url }, { element: $(this) })
+			visual_editor.Tools.Video.open_dialog_window({ url: url }, { element: $(this) })
 		})
 		*/
 	})

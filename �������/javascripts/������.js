@@ -197,7 +197,7 @@ function неточное_время(время)
 		
 	if (минуты <= 25)
 	{
-		if (last_digit(минуты) == 1)
+		if (last_digit(минуты) == 1 && минуты !== 11)
 			окончание_единицы_измерения = 'ой'
 		else
 			окончание_единицы_измерения = 'ами'
@@ -219,7 +219,7 @@ function неточное_время(время)
 	var количество_часов = 2
 	while (количество_часов <= 23)
 	{
-		if (last_digit(количество_часов) == 1)
+		if (last_digit(количество_часов) == 1 && количество_часов !== 11)
 			окончание_единицы_измерения = 'ом'
 		else
 			окончание_единицы_измерения = 'ами'
@@ -267,7 +267,7 @@ function неточное_время(время)
 	var количество_месяцев = 3
 	while (количество_месяцев <= 5)
 	{
-		if (last_digit(количество_месяцев) == 1)
+		if (last_digit(количество_месяцев) == 1 && количество_месяцев !== 11)
 			окончание_единицы_измерения = 'ем'
 		else
 			окончание_единицы_измерения = 'ами'
@@ -291,7 +291,7 @@ function неточное_время(время)
 	var количество_лет = 2
 	while (количество_лет < 1000000)
 	{
-		if (last_digit(количество_лет) == 1)
+		if (last_digit(количество_лет) == 1 && количество_лет !== 11)
 			окончание_единицы_измерения = 'ом'
 		else
 			окончание_единицы_измерения = 'ами'
@@ -336,6 +336,7 @@ function number_ending(число, настройки)
 				case 5:
 				case 6:
 				case 7:
+				case 8:
 				case 9:
 					return 'ю'
 			}
@@ -387,4 +388,25 @@ function get_embedded_youtube_video_id(url)
 function get_youtube_video_url_from_id(id)
 {
 	return 'http://www.youtube.com/watch?v=' + id
+}
+
+function получить_шаблон(options, callback)
+{
+	Ajax.get(options.url, 
+	{
+		type: 'html',
+		ошибка: function()
+		{
+			if (options.error)
+				return options.error('Не удалось загрузить страницу')
+				
+			error('Не удалось загрузить страницу')
+		},
+		ok: function(template) 
+		{
+			$.template(options.id, template)
+			
+			callback()
+		}
+	})
 }
