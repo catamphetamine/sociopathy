@@ -1,7 +1,0 @@
-start "MongoDB" "run\mongodb.bat"
-start "Redis" "run\redis.bat"
-start "Node.js" "run\node.js.bat"
-start "Memcache" "run\memcache.bat"
-call "run\apache.bat"
-rem start "Sass" "run\sass.bat"
-call "run\nginx.bat"
