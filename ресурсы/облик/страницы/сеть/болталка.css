@@ -184,7 +184,7 @@
 @time_column_padding: 20px;
 @time_column_width: 200px;
 
-.chat > li .message > .text, #compose_message > article
+.chat > li .text, #compose_message > article
 {
 	font-family: @textual_font;
 	font-size: 34px;
@@ -200,9 +200,6 @@
 	{
 		position: relative;
 		z-index: 0;
-		
-		display: table;
-		width: 100%;
 		
 		top: 0;
 		
@@ -282,6 +279,7 @@
 				margin-right: @inter_column_padding + @time_column_width + @time_column_padding;
 				
 				white-space: pre-wrap;
+				word-wrap: break-word;
 			}
 			
 			.when

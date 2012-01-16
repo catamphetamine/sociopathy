@@ -1,7 +1,9 @@
 var право_на_правку_получено = false
 
+Режим.пообещать('правка')
+
 function initialize_page()
-{
+{	
 	Подсказки.подсказка('Вы можете внести свои правки в эту заметку. Для этого потребуется перейти в <a href=\'/помощь/режимы\'>режим правки</a>.')
 	Подсказки.ещё_подсказка('Во время правки, для того, чтобы вернуться в режим набора обычного текста, нажмите Shift + Пробел.')
 
@@ -12,14 +14,6 @@ function initialize_page()
 	// изначально в режиме просмотра - отключить снасти
 	visual_editor.unbind()
 	
-	/*
-	visual_editor.editor.rebind_events = function()
-	{
-		if (Режим.правка_ли())
-			visual_editor.activate_tools_inside_content()
-	}
-	*/
-	
 	visual_editor.initialize_tools_container()
 	visual_editor.tools_element.floating_top_bar()
 	visual_editor.can_edit = function() { return Режим.правка_ли() }
@@ -27,6 +21,15 @@ function initialize_page()
 	visual_editor.on_break = function()
 	{
 		visual_editor.new_paragraph()
+	}
+	
+	var default_on_breaking_space = visual_editor.on_breaking_space
+	visual_editor.on_breaking_space = function(container_tag)
+	{
+		if (container_tag.tagName.toLowerCase() === 'p')
+			return visual_editor.editor.insert(' ')
+		
+		default_on_breaking_space()
 	}
 	
 	visual_editor.enter_pressed_in_container = function()
@@ -178,15 +181,18 @@ function initialize_page()
 		$(document).on('режим.переход', function(event, из, в)
 		{
 			if (из === 'правка')
+			{
 				visual_editor.unbind()
+				visual_editor.editor.content.removeAttr('contenteditable')
+			}
 		})
 	}
 	
 	$(document).on('режим.правка', function(event)
 	{
 		edit_mode_actions.slide_in_from_bottom()
-		
 		visual_editor.activate_tools_inside_content()
+		visual_editor.editor.content.attr('contenteditable', true)
 		
 		/*
 		visual_editor.editor.content.find('[type="video"]').on('mouseover.режим_правка', function(event)
@@ -220,7 +226,7 @@ function acquire_edit_lock(режим)
 			{
 				Режим.разрешить_переходы()
 				//return warning('<a href=\'/люди/' + кто_правит['адресное имя'] + '\'>' + кто_правит.имя + '</a> уже правит эту заметку. Можете написать ' + (кто_правит.пол === 'мужской' ? 'ему' : 'ей') + ', чтобы ' + (кто_правит.пол === 'мужской' ? 'он сохранил' : 'она сохранила') + ' внесённые правки (либо ' + (кто_правит.пол === 'мужской' ? 'удалил' : 'удалила') + ' черновик), \n и тогда эта заметка снова станет доступной для правки.')
-				return warning('<a href=\'/люди/' + кто_правит['адресное имя'] + '\'>' + кто_правит.имя + '</a> уже правит эту заметку. Можете написать ' + (кто_правит.пол === 'мужской' ? 'ему' : 'ей') + ', чтобы ' + (кто_правит.пол === 'мужской' ? 'он сохранил' : 'она сохранила') + ' внесённые правки, \n и тогда эта заметка снова станет доступной для правки.')
+				return warning('<a href=\'/люди/' + кто_правит['адресное имя'] + '\'>' + кто_правит.имя + '</a> уже правит эту заметку. Можете написать ' + (кто_правит.пол === 'мужской' ? 'ему' : 'ей') + ', чтобы ' + (кто_правит.пол === 'мужской' ? 'он сохранил (или отменил)' : 'она сохранила (или отменила)') + ' внесённые правки, \n и тогда эта заметка снова станет доступной для правки.')
 			}
 			
 			право_на_правку_получено = true

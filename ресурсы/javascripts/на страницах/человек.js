@@ -1,10 +1,14 @@
 var id_card
 var online_status
+var the_picture
+
+Режим.пообещать('правка')
+Подсказки.подсказка('Здесь вы можете посмотреть данные об этом члене нашей сети. Если это ваша личная карточка, вы сможете изменить данные в ней, переключившись в режим правки.')
+
 function initialize_page()
 {
 	id_card = $('#id_card')
 
-	Подсказки.подсказка('Здесь вы можете посмотреть данные об этом члене нашей сети. Если это ваша личная карточка, вы сможете изменить данные в ней, переключившись в режим правки.')
 	Режим.добавить_проверку_перехода(function(из, в)
 	{
 		if (в === 'правка')
@@ -49,6 +53,8 @@ var когда_был_здесь
 
 function id_card_loaded()
 {
+	the_picture = id_card.find('.real_picture')
+
 	online_status =
 	{
 		online: id_card.find('.online_status .online'),
@@ -114,7 +120,7 @@ function initialize_edit_mode_effects()
 	$(document).on('режим.правка', function()
 	{
 		$('body').stop(true, false).animate({ 'background-color': '#afafaf' }, background_fade_time)
-		$('.real_picture').animate({ 'boxShadow': '0 0 20px ' + highlight_color })
+		the_picture.animate({ 'boxShadow': '0 0 20px ' + highlight_color })
 	})
 
 	$(document).on('режим.переход', function(event, из, в)
@@ -122,7 +128,7 @@ function initialize_edit_mode_effects()
 		if (из === 'правка')
 		{
 			$('body').stop(true, false).animate({ 'background-color': initial_background_color }, background_fade_time)
-			$('.real_picture').animate({ 'boxShadow': '0 0 0px' })
+			the_picture.animate({ 'boxShadow': '0 0 0px' })
 		}
 	})
 }
@@ -207,7 +213,7 @@ function initialize_editables()
 	{
 		//url: '/загрузка/человек/сменить картинку',
 		//url: '/приложение/человек/сменить картинку',
-		url: 'http://localhost:' + Options.Upload_server_port + '/человек/сменить картинку',
+		url: 'http://' + host + ':' + Options.Upload_server_port + '/человек/сменить картинку',
 		parameter: { name: 'user', value: $.cookie('user') },
 		success: function(data)
 		{
@@ -215,7 +221,7 @@ function initialize_editables()
 				return error(data.ошибка)
 			
 			image_file_name = data.имя
-			$('.real_picture').css('background-image', "url('" + data.адрес + "')")
+			the_picture.css('background-image', "url('" + data.адрес + "')")
 			
 			id_card.find('.uploading_picture').hide()
 			
@@ -234,7 +240,7 @@ function initialize_editables()
 
 		var file_chooser = $('.upload_new_picture')
 		
-		$('.real_picture').on('click.режим_правка', function(event)
+		the_picture.on('click.режим_правка', function(event)
 		{
 			event.preventDefault()
 			file_chooser.click()
@@ -244,8 +250,8 @@ function initialize_editables()
 		{
 			var file = file_chooser[0].files[0]
 			
-			if (file.size > 100000)
-				return warning('Слишком большой файл. Выберите картинку размером 120 на 120, и не более ста килобайтов.')
+			if (file.size > 512000)
+				return warning('Слишком большой файл. Выберите картинку размером 120 на 120, и не более пятисот килобайтов.')
 
 			if (file.type !== "image/jpeg")
 				return warning('Можно загружать только картинки формата JPEG')

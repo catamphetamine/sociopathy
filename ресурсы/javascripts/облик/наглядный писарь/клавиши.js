@@ -164,24 +164,19 @@ Visual_editor.implement
 		var visual_editor = this
 		var editor = this.editor
 		
-		editor.on('keypress', function(event)
+		editor.on('keydown', function(event)
 		{
 			if (!visual_editor.can_edit())
 				return
 				
-			if (Клавиши.is('Shift', 'Space', event))
+			if (Клавиши.is('Alt', 'Shift', 'Minus', event))
 			{
 				event.preventDefault()
 			
 				var container = editor.caret.native_container()
 				var container_tag = container.parentNode
 				
-				if (container_tag.tagName.toLowerCase() === 'p')
-					return editor.insert(' ')
-				
-				var text_node = Dom_tools.append_text_next_to(container_tag, ' ')
-				editor.caret.position(text_node, 1)
-				return
+				visual_editor.on_breaking_space(container_tag)
 			}
 		})
 	},

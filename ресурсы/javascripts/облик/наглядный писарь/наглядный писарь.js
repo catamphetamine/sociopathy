@@ -71,6 +71,15 @@ var Visual_editor = new Class
 	{
 	},
 	
+	on_breaking_space: function(container_tag)
+	{
+		if (container_tag === this.editor.content[0])
+			return this.editor.insert(' ')
+		
+		var text_node = Dom_tools.append_text_next_to(container_tag, ' ')
+		this.editor.caret.position(text_node, 1)
+	},
+	
 	new_paragraph: function()
 	{
 		var container = this.editor.caret.native_container()

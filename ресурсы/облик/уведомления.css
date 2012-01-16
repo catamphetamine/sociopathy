@@ -17,10 +17,14 @@
 	
 	border-style: solid;
 	border-width: 2px;
-	
-	.beautiful_shadow_5(3px, 5px, 5px, 7px, 10px, 14px, 20px, 0.12);
+
 	.rounded_corners(10px);
 	
+	/* .beautiful_shadow_5(3px, 5px, 5px, 7px, 10px, 14px, 20px, 0.12); */
+	/* в хроме тормозит */
+	/* можно заменить border-image'ем */
+	.shadow(3px, 5px, 15px, 0.25);
+
 	cursor: default;
 
 	.close
