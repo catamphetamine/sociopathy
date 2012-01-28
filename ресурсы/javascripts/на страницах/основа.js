@@ -20,15 +20,15 @@ function initialize_enter_window()
 		'on open': function() { $('#enter_window input:first').focus() }
 	})
 	
-	поле_имени = enter_window.$element.find('input').eq(0)
-	поле_пароля = enter_window.$element.find('input').eq(1)
+	поле_имени = enter_window.content.find('input').eq(0)
+	поле_пароля = enter_window.content.find('input').eq(1)
 	
 	enter_window.on_enter = function()
 	{
 		кнопка_входа.push()
 	}
 	
-	login_form = new Form(enter_window.$element.find('form').eq(0))
+	login_form = new Form(enter_window.content.find('form').eq(0))
 	
 	enter_window.register_controls
 	(

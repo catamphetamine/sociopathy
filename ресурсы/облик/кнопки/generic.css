@@ -9,6 +9,11 @@
  * @github kuchumovn
  */
 
+body.osx .generic_button label
+{
+	padding-top: 6px;
+}
+
 .generic_button *
 {
 	cursor: pointer;

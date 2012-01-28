@@ -690,3 +690,15 @@ function activate_button(selector, options)
 		)
 	))
 }
+
+$(function()
+{
+	if (navigator.userAgent.indexOf("Mac"))
+	{
+		$('body').addClass('osx')
+	}
+	else if (navigator.userAgent.indexOf("Mac"))
+	{
+		$('body').addClass('windows')
+	}
+})

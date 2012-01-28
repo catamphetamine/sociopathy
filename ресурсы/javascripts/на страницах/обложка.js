@@ -69,7 +69,7 @@ function initialize_join_dialog()
 		Подсказки.подсказка('По этому паролю вы будете входить в нашу сеть. Например: "белый слон жуёт морковь", "кто не спрятался - я не виноват", "у меня везде один пароль".')
 	})
 	
-	join_form_slider.set_container(join_dialog.$element)
+	join_form_slider.set_container(join_dialog.content)
 	join_form_slider.when_done(function() { join_submission(join_form_slider.data()) })
 }
 

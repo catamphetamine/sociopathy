@@ -10,36 +10,177 @@
  * @email kuchumovn@gmail.com
  * @github kuchumovn
  */
- 
-.dialog_window
+
+body.osx .popup .top_bar
 {
-	-moz-border-radius: 10px;
-	-webkit-border-radius: 10px;				
-	border-radius: 10px;				
+	height: 37px;
+	padding-top: 12px;
+}
 
-	border-bottom-left-radius: 0;
-	-moz-border-radius-bottomleft: 0;
+.popup .top_bar
+{
+	height: 39px;
+	padding-top: 10px;
+}
+ 
+.popup_veil
+{
+	position: fixed;
+	left: 0;
+	top: 0;
 
-	border-bottom-right-radius: 0;
-	-moz-border-radius-bottomright: 0;
+	display: block;
+
+	width: 100%;
+	height: 100%;
+
+	z-index: -1;	
 	
-	background-image: url('/картинки/window/top bar.png');
-	background-repeat: repeat-x;
-
-	border: 1px solid #a7a7a7;
-	border-top: 0;
-
-	/*.beautiful_shadow_5(0px, 16px, 100px, 80px, 60px, 40px, 30px, 0.15); */
-	/* в хроме тормозит */
-	/* можно заменить border-image'ем */
-	.shadow(0px, 16px, 40px, 0.20);
+	text-align: center;
 	
+	/* background-color: rgba(0, 0, 0, 0.5); */
+	
+	background: -webkit-radial-gradient(rgba(127, 127, 127, 0.5), rgba(127, 127, 127, 0.5) 35%, rgba(0, 0, 0, 0.7));
+	background: -moz-radial-gradient(rgba(127, 127, 127, 0.5), rgba(127, 127, 127, 0.5) 35%, rgba(0, 0, 0, 0.7));
+}
+
+.popup_veil.shown
+{
+}
+
+.popup_veil:after
+{
+	display: inline-block;
+	width: 0;
+	height: 100%;
+	vertical-align: middle;
+	content: ''
+}
+
+.popup
+{
+	position: relative;	
+	
+	display: inline-block;
+	vertical-align: middle;
+	
+	text-align: left;
+	
+	> .shadow
+	{
+		position: absolute;
+		z-index: -1;
+		
+		width: 100%;
+		height: 100%;
+		
+		left: 0px;
+		top: 0px;
+		
+		/*		
+		margin-left: -48px;
+		margin-top: -27px;
+		
+		table
+		{
+			width: 100%;
+			height: 100%;
+		
+			.corner
+			{
+				width: 100px;
+				height: 100px;
+				
+				background-image: url('/картинки/окошко/тень/вся.png');
+				background-repeat: no-repeat;
+			}
+			
+			.left_top.corner
+			{
+				background-position: left top;
+			}
+			
+			.right_top.corner
+			{
+				background-position: right top;
+			}
+			
+			.left_bottom.corner
+			{
+				background-position: left bottom;
+			}
+			
+			.right_bottom.corner
+			{
+				background-position: right bottom;
+			}
+			
+			.left
+			{
+				width: 48px;
+				background-image: url('/картинки/окошко/тень/левая.png');
+				height: 100%;
+				background-repeat: repeat-y;
+			}
+			
+			.top
+			{
+				height: 26px;
+				background-image: url('/картинки/окошко/тень/верхняя.png');
+				background-repeat: repeat-x;
+			}
+			
+			.right
+			{
+				width: 48px;
+				background-image: url('/картинки/окошко/тень/правая.png');
+				height: 100%;
+				background-repeat: repeat-y;
+			}
+			
+			.bottom
+			{
+				height: 70px;
+				background-image: url('/картинки/окошко/тень/нижняя.png');
+				background-repeat: repeat-x;
+				background-position: left bottom;
+			}
+		}
+		*/
+			
+		left: -120px;
+		top: -120px;
+		
+		box-sizing: border-box;
+		padding: 54px;
+		
+		.shrunk_shadow
+		{
+			width: 100%;
+			height: 100%;
+		
+			border-image: url('/картинки/окошко/тень/вся тень.png') 120 120 120 120 repeat;
+			border-width: 120px;
+			
+			opacity: 1;
+		}
+	}
+		
 	.top_bar
 	{
-		height: 46px;
+		display: block;
 		
-		padding-top: 5px;
-
+		border: 1px solid #6b6b6b;
+		border-bottom-color: #6b6b6b;
+			
+		border-top-left-radius: 10px;
+		border-top-right-radius: 10px;
+	
+		background-image: url('/картинки/window/top bar.png'); 
+		background-repeat: repeat-x;  
+		
+		margin: 0;	
+	
 		padding-left: 30px;
 		padding-right: 30px;
 		
@@ -54,43 +195,65 @@
 		
 		cursor: default;
 	}
-
+		
 	div.pre_buttons
 	{
 		height: 2px;
-
+		
 		background-image: url('/картинки/window/pre buttons.png'); 
-		background-repeat: repeat-x;  
+		background-repeat: repeat-x;
+		
+		margin-left: 1px;
+		margin-right: 1px;
 	}
-
+	
+	div.pre_buttons:before
+	{
+		content: '';
+		height: 2px;
+		width: 100%;
+		position: absolute;
+		z-index: -1;
+		left: 0px;
+		
+		background-color: #7B7B7B;
+	}
+	
 	.content
 	{
 		margin: 0;
 		padding: 0;
 	}
-
+	
 	.main_content
 	{
 		background-color: #ededed;
 		.top_to_bottom_gradient(#efefef, #ededed);
-
-		border: 0;
+	
+		border-left-width: 1px;
+		border-right-width: 1px;
+		
+		border-left-style: solid;
+		border-right-style: solid;
+		
+		border-left-color: #7b7b7b;
+		border-right-color: #7b7b7b;
 		
 		padding: 40px;	
 		
 		cursor: default;
 	}
-
+	
 	.buttons
 	{
 		background-color: #e5e5e5;
 		
 		background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#E5E5E5), color-stop(36%,#D8D8D8), color-stop(58%,#CCCCCC), color-stop(100%,#A8A8A8));
 		background: -moz-linear-gradient(top, #E5E5E5 0%, #D8D8D8 36%, #CCCCCC 58%, #A8A8A8 100%);
-
+	
 		padding: 20px;	
 	}
-
+	
 	.buttons:after
 	{
 		content: ""; 
@@ -98,11 +261,24 @@
 		height: 0; 
 		clear: both;
 	}
-}
-
-.dialog_window_veil
-{
-	background-color: rgba(0, 0, 0, 0.5)
+	
+	.content > :last-child
+	{
+		border-bottom-left-radius: 10px;
+		border-bottom-right-radius: 10px;
+		
+		border-left-width: 1px;
+		border-right-width: 1px;
+		border-bottom-width: 1px;
+		
+		border-left-style: solid;
+		border-right-style: solid;
+		border-bottom-style: solid;
+		
+		border-left-color: #7b7b7b;
+		border-right-color: #7b7b7b;
+		border-bottom-color: #525252;
+	}
 }
 
 /* прочее */
@@ -153,4 +329,63 @@
 		padding-left: 28px;
 		padding-right: 50px;
 	}
+}
+
+/* Themes */
+
+.popup_veil.slide_from_top
+{
+	.popup
+	{
+		position: relative;
+	}
+}
+
+.popup_veil.slide_from_top,
+.popup_veil.slide_from_top .popup
+{
+	.css_transition(300ms);
+	.css_transition_easing(ease-in-out);
+}
+
+.popup_veil.fade.collapsed
+{
+	opacity: 0;
+}
+
+.popup_veil.fade.shown
+{
+	opacity: 1;
+}
+
+.popup_veil.fade,
+.popup_veil.fade .popup
+{
+	.css_transition(100ms);
+	.css_transition_easing(ease-in-out);
+}
+
+.popup_veil.bubble.collapsed
+{
+	.popup
+	{
+		-webkit-transform: scale(0);
+		-moz-transform: scale(0);
+	}
+}
+
+.popup_veil.bubble.shown
+{
+	.popup
+	{
+		-webkit-transform: scale(1);
+		-moz-transform: scale(1);
+	}
+}
+
+.popup_veil.bubble,
+.popup_veil.bubble .popup
+{
+	.css_transition(300ms);
+	.css_transition_easing(cubic-bezier(0.325, 0.855, 0.185, 0.990));
 }

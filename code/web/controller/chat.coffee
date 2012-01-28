@@ -174,52 +174,5 @@ http.get '/болталка/сообщения', (ввод, вывод) ->
 	id_criteria[сравнение_id] = с
 	хранилище.collection('chat').find({ _id: id_criteria }, { limit: ограничение, sort: [['$natural', -1]] }).toArray возврат
 
-# это временно
-	
-jsdom  = require 'jsdom'
-jQuery = require('fs').readFileSync(process.cwd() + '/code/web/tools/jquery.js').toString()
-
 sanitize = (html, возврат) ->
-	
-	for_jsdom =
-		html: '<pre>' + html + '</pre>',
-		src: [jQuery],
-		done: (errors, window) ->
-			if (errors)
-				return возврат(errors)
-				
-			$ = window.$
-					
-			$('script').remove()
-		
-			remove_attributes = [
-				'onblur'
-				'onchange'
-				'onclick'
-				'ondblclick'
-				'onfocus'
-				'onfocusin'
-				'onfocusout'
-				'onmouseover'
-				'onmousemove'
-				'onmousedown'
-				'onmouseup'
-				'onkeydown'
-				'onkeyup'
-				'onkeypress'
-				'onresize'
-				'onscroll'
-				'onselect'
-				'onsubmit'
-				'onreset'
-				'onload'
-				'onunload'
-			]
-		
-			for attribute in remove_attributes
-				$('*').removeAttr(attribute)
-				
-			console.log($('pre:first').html())
-			возврат(null, $('pre:first').html())
-			
-	jsdom.env(for_jsdom)
+	возврат(html)

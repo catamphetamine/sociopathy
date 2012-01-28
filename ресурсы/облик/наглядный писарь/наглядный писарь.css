@@ -1,0 +1,89 @@
+@visual_editor_tools_panel_height: 51px;
+
+.visual_editor_tools_container
+{
+	position: relative;
+
+	min-height: 2 * @visual_editor_tools_panel_height;
+	max-height: 2 * @visual_editor_tools_panel_height;
+	
+	overflow: hidden;
+}
+
+.visual_editor_tools
+{
+	width: 100%;
+		
+	display: none;
+
+	position: absolute;
+	top: 0;
+	left: 0;
+	
+	ul
+	{
+		width: 100%;
+	
+		background-color: #3f3f3f;
+		color: #efefef;
+	
+		padding-left: 10px;
+		padding-right: 10px;
+		
+		margin: 0;
+		
+		text-align: center;
+		
+		min-height: @visual_editor_tools_panel_height;
+		max-height: @visual_editor_tools_panel_height;
+
+		overflow: hidden;
+		
+		li
+		{
+			display: inline-block;
+			padding-top: 5px;
+			
+			margin-left: 15px;
+			margin-right: 15px;
+			
+			cursor: pointer;
+			
+			&.disabled
+			{
+				cursor: default !important;
+				opacity: 0.5;
+			}
+		}
+	}
+
+	&.sticky
+	{
+		position: fixed;
+		width: 100%;
+		margin: 0;
+	}
+	
+	ul.additional_tools
+	{
+		/*position: absolute;*/
+		position: relative;
+		top: -@visual_editor_tools_panel_height;
+		margin-bottom: -@visual_editor_tools_panel_height;
+		left: 0;
+	}
+	
+	.additional_tools_container
+	{
+		position: relative;
+		z-index: 0;
+		
+		overflow: hidden;
+	}
+		
+	ul.main_tools
+	{
+		position: relative;
+		z-index: 1;
+	}
+}

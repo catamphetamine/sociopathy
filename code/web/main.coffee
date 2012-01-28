@@ -10,66 +10,11 @@ get_launch_options = ->
 
 launch_options = get_launch_options()
 
-if launch_options.server == 'home'
-	Upload_server_file_path = 'c:/work/sociopathy/загруженное'
-	
-	global.Options =
-		Web_server:
-			Port: 8080
-		Upload_server:
-			Port: 8090
-			File_path: Upload_server_file_path
-			File_url: '/загруженное'
-			Temporary_file_path: Upload_server_file_path + '/временное'
-		Memcache:
-			Port: 11211
-		MongoDB:
-			Port: 27017
-			Database: 'sociopathy'
-		User:
-			Session:
-				Redis:
-					Prefix: 'website_session:'
-			Picture:
-				Generic:
-					Size: 120
-				Chat:
-					Size: 48
-		ImageMagick:
-			Convert:
-				Path: 'C:/Program Files (x86)/ImageMagick-6.7.4-Q16/convert'
-else if launch_options.server == 'grimbit'
-	Upload_server_file_path = 'c:/work/sociopathy/загруженное'
-	
-	global.Options =
-		Web_server:
-			Port: 8080
-		Upload_server:
-			Port: 8090
-			File_path: Upload_server_file_path
-			File_url: '/загруженное'
-			Temporary_file_path: Upload_server_file_path + '/временное'
-		Memcache:
-			Port: 11211
-		MongoDB:
-			Port: 27017
-			Database: 'sociopathy'
-		User:
-			Session:
-				Redis:
-					Prefix: 'website_session:'
-			Picture:
-				Generic:
-					Size: 120
-				Chat:
-					Size: 48
-		ImageMagick:
-			Convert:
-				Path: 'C:/Program Files (x86)/ImageMagick-6.7.4-Q16/convert'
-				
+require "./../../configuration/#{launch_options.server}/configuration.coffee"
+
 memcache = require('memcache')
-global.memcache = new memcache.Client(global.Options.Memcache.Port, 'localhost')
-global.хранилище = require('mongoskin').db('localhost:' + global.Options.MongoDB.Port + '/' + global.Options.MongoDB.Database + '?auto_reconnect')
+global.memcache = new memcache.Client(Options.Memcache.Port, 'localhost')
+global.хранилище = require('mongoskin').db('localhost:' + Options.MongoDB.Port + '/' + Options.MongoDB.Database + '?auto_reconnect')
 
 global.Цепочка = require './tools/conveyor'
 global.цепь = (вывод) -> new global.Цепочка('web', вывод)
@@ -116,4 +61,4 @@ new Цепочка()
 	.сделать ->
 		global.redis.createClient().del('chat:online', @)
 	.сделать ->					
-		global.приложение.listen global.Options.Web_server.Port, '0.0.0.0'
+		global.приложение.listen Options.Web_server.Port, '0.0.0.0'

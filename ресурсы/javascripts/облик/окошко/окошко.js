@@ -1,22 +1,6 @@
 /**
  * Dialog Window class
  * 
- * Usage:
- * 
- * In Html:
- * 
- * <div id="the_dialog_window" title="Hello">Greetings</div>
- * 
- * In javascript:
- * 
- * $("#the_dialog_window").dialog_window
- * ({
- * 		'close on escape': true
- * })
- * .open()
- * 
- * The stylesheet ("окошко.css") is included.
- * 
  * Requires jQuery and MooTools.
  * 
  * Copyright (c) 2010 Nikolay Kuchumov
@@ -48,7 +32,13 @@ var dialog_window = new Class
 		'close on escape': false,
 		
 		width: 'auto',
-		height: 'auto'
+		height: 'auto',
+		
+		collapse_duration: 300,
+		
+		theme: 'fade'
+		//theme: 'slide_from_top'
+		//theme: 'bubble'
 	},
 	
 	// dialog window padding inside the viewport
@@ -65,32 +55,13 @@ var dialog_window = new Class
 		
 		// back reference
 		var self = this
-		
-		// set width and height
-		this.set_dimensions($element)
 
 		// get the title
 		var title = $element.attr('title')
 		$element.removeAttr('title')
-
-		// create the dialog element
-		this.$element = $('<article/>')
 		
-		// set up the dialog element
-		this.$element.hide()
+		this.container = $('<div class="popup_veil collapsed"></div>')
 			.appendTo(document.body)
-			// setting tabIndex makes the div focusable
-			.attr('tabIndex', -1)
-			.css
-			({
-				// setting outline to 0 prevents a border on focus in Mozilla
-				outline: 0,
-				
-				position: 'fixed',
-				
-				// setting overflow to hidden fixes the box-shadow scroll bar bug in Fire Fox
-				//overflow: 'hidden'
-			})
 			.on('keydown.' + this.namespace, function(event) 
 			{
 				// close on escape key
@@ -103,44 +74,33 @@ var dialog_window = new Class
 					self.close()
 				}
 			})
-			
-		var firefox_box_shadow_scrollbar_hider = $('</div>')
-		firefox_box_shadow_scrollbar_hider.css
-		({
-			overflow: 'hidden'
-		})
-		this.$element.wrap(firefox_box_shadow_scrollbar_hider)
-			
-		// the wrapped dialog window (fixes the box-shadow scroll bar bug in Fire Fox)
-		/*
-		var $dialog_window = $('<section/>')
-			.addClass('dialog_window')
-			.appendTo(this.$element)
-		*/
+			.addClass(this.options.theme)
 		
-		this.$element.addClass('dialog_window')
+		var dialog_window = $('<article/>')
+			// setting tabIndex makes the div focusable
+			.addClass('popup')
+			.appendTo(this.container)
+		
+		
+		// set dialog title bar
+		$('<h1/>')
+			.addClass("top_bar non_selectable")
+			.appendTo(dialog_window)	
+			.text(title)
 
-		// set dialog content
-		$element
+		this.content = $element
 			.removeClass('collapsed')
 			.addClass('content')
-			.appendTo(this.$element)
-			.css({ width: 'auto' })
-
-		// set dialog title bar
-		$('<header/>')
-			.addClass("top_bar non_selectable")
-			.prependTo(this.$element)	
-			.text(title)
+			.attr('tabIndex', -1)
+			.appendTo(dialog_window)
 			
-		$(window).resize((function()
-		{
-			if (this.is_open)
-				this.position()
-		})
-		.bind(this))
+		var shadow = $('<div class="shadow"><div class="shrunk_shadow"></div></div>')
+		//var shadow = $('<div class="shadow"><table><tr><td class="left_top corner"></td><td class="top"></td><td class="right_top corner"></td></tr><tr><td class="left"></td><td class="void"></td><td class="right"></td></tr><tr><td class="left_bottom corner"></td><td class="bottom"></td><td class="right_bottom corner"></td></tr></table></div>')
+		dialog_window.append(shadow)
 		
-		this.$element.on('keydown', function(event) 
+		this.reset()
+		
+		this.content.on('keydown', function(event) 
 		{
 			// if Enter key pressed
 			if (event.keyCode == Event.Keys.enter)
@@ -157,89 +117,44 @@ var dialog_window = new Class
 			//	return false
 		})
 	},
-
-	set_dimensions: function($element)
-	{
-		// if dialog window width is set manually
-		//if ($element.attr('set_width'))
-		//	this.options.width = $element.outerWidth()
-			
-		// if dialog window height is set manually
-		//if ($element.attr('set_height'))
-		//	this.options.height = $element.height()
-	},
-	
-	/**
-	 * shows the dialog window
-	 */
-	show: function()
-	{
-		//this.$element.focus()
-	
-		this.$element.find('input:first').focus()
-		
-		if (this.smooth)
-		{
-			this.$element.hide()
-			this.$element.fadeIn(500)
-		}
-		else
-		{
-			this.$element.show()
-		}
-	},
-	
-	/**
-	 * hides the dialog window
-	 */
-	hide: function(callback)
-	{
-		if (this.smooth)
-		{
-			this.$element.fadeOut(500, callback)
-		}
-		else
-		{
-			this.$element.hide()
-			
-			if (callback)
-				callback()
-		}
-	},
 	
 	on: function(event, handler)
 	{
-		this.$element.on(event, handler)
+		this.content.on(event, handler)
 	},
 	
 	// opens the dialog window
 	open: function(state) 
 	{
 		if (this.options['on open'])
-			this.options['on open'].bind(this.$element)()
+			this.options['on open'].bind(this.content)()
 			
 		if (state)
 			this.state = state
 	
 		if (this.is_open)
 			return
-			
-		if (this.options.modal)
-			this.veil = new veil({ smooth: this.smooth, style: this.options.veil_style })
-			
-		this.size()
-		this.position()
-		this.show()
+		
+		this.container.removeClass('collapsed').addClass('shown')
+		
+		if (this.options.theme === 'slide_from_top')
+			this.container.children().eq(0).css('top', 0)
+		
+		this.content.find('input:first').focus()
+		
+		if (this.content.css('display') !== 'inline-block')
+			this.content.css('display', 'inline-block')
+		
 		this.rise()
 
 		// prevent tabbing out of modal dialog windows
-		if (this.options.modal)
-			this.$element.on('keypress.' + this.namespace, this.swallow_outer_tabulation)
+//		if (this.options.modal)
+		this.container.on('keypress.' + this.namespace, this.swallow_outer_tabulation)
 					
-		z_indexer.register(this)
+//		z_indexer.register(this)
 
 		this.is_open = true
-		this.$element.trigger('open')
+		this.content.trigger('open')
 	},
 	
 	// prevent tabbing out of modal dialog windows
@@ -267,28 +182,31 @@ var dialog_window = new Class
 	// closes the dialog window
 	close: function(callback) 
 	{
-		if (this.options['on close'])
-			this.options['on close'].bind(this.$element)()
-			
-		this.veil.hide_and_destroy()
+		this.container.removeClass('shown').addClass('collapsed')
 		
-		this.$element.unbind('keypress.' + this.namespace)
-		
-		this.hide((function()
+		var closed = function()
 		{
+			if (this.options['on close'])
+				this.options['on close'].bind(this.content)()
+			
+			this.container.unbind('keypress.' + this.namespace)
+			this.content.unbind('keypress.' + this.namespace)
+			
 			if (callback)
 				callback()
 		
 			this.state = {}
 	
-			z_indexer.unregister(this)
-
+			this.unrise()
+	
 			this.reset()
-
+	
 			this.is_open = false
-			this.$element.trigger('close')
-		})
-		.bind(this))
+			this.container.css('z-index', -1)
+			this.content.trigger('close')
+		}
+		
+		closed.bind(this).delay(this.options.collapse_duration)
 	},
 
 	/**
@@ -298,66 +216,12 @@ var dialog_window = new Class
 	// to their correct position on open
 	rise: function()
 	{
-		this.veil.set_z_index(z_indexer.acquire_top_z())
-		this.$element.css('z-index', z_indexer.acquire_top_z())
-	},
-			
-	/**
-	 * sizes the dialog window
-	 */
-	size: function() 
-	{
-		// reset content sizing
-		this.$element.show().css
-		({
-			width: 'auto',
-			height: 0
-		})
-
-		// reset wrapper sizing
-		// determine the height of all the non-content elements
-		var non_content_elements_height = this.$element.css
-		({
-			height: 'auto',
-			width: this.options.width
-		})
-		.height()
-		
-		if (this.options.height === "auto") 
-			this.$element.css({ height: "auto" })
-		else
-			this.$element.height(Math.max(this.options.height - non_content_elements_height, 0))
+		this.container.css('z-index', z_indexer.acquire_top_z())
 	},
 	
-	/**
-	 * positions the dialog window at the center of the screen
-	 */
-	position: function()
+	unrise: function()
 	{
-		this.padding.left = parseInt((get_viewport_width() - this.$element.outerWidth()) / 2)
-		//this.padding.right = get_viewport_width() - this.$element.width() - this.padding.left
-		
-		this.padding.top = parseInt((get_viewport_height() - this.$element.outerHeight()) / 2)
-		//this.padding.bottom = get_viewport_height() - this.$element.height() - this.padding.top
-		
-		/*
-		this.$element.css
-		({
-			left: 0,
-			top: 0,
-			
-			'padding-left': this.padding.left,
-			'padding-right': this.padding.right,
-			'padding-top': this.padding.top,
-			'padding-bottom': this.padding.bottom
-		})
-		*/
-		
-		this.$element.css
-		({
-			left: this.padding.left + 'px',
-			top: this.padding.top + 'px',
-		})
+		//z_indexer.unregister(this)
 	},
 	
 	/**
@@ -365,6 +229,9 @@ var dialog_window = new Class
 	 */
 	reset: function()
 	{
+		if (this.options.theme === 'slide_from_top')
+			this.container.children().eq(0).css('top', -(this.container.outerHeight(true) + this.container.offset().top) + 'px')
+
 		// reset controls
 		this.controls.each(function(control)
 		{
