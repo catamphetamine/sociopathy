@@ -3,9 +3,9 @@ var Клавиши =
     Backspace: 8,
     Tab: 9,
     Enter: 13,
-	Pause: 19,
+    Pause: 19,
     Escape: 27,
-	Space: 32,
+    Space: 32,
     
 	Page_up: 33,
     Page_down: 34,
@@ -33,11 +33,19 @@ var Клавиши =
 	Digit_8: 56,
 	Digit_9: 57,
 	
+    D: 68,
+    E: 69,
+    F: 70,
+    G: 71,
     H: 72,
     K: 75,
     N: 78,
+    O: 79,
+    P: 80,
+    Q: 81,
     R: 82,
     V: 86,
+    W: 87,
 	X: 88,
 	Y: 89,
 	Z: 90,
@@ -130,8 +138,19 @@ var Клавиши =
 		*/
 		
 		/*
-		console.log('code: ' + code)
-		console.log('key: ' + key)
+		if (ctrl)
+			console.log('ctrl')
+		
+		if (alt)
+			console.log('alt')
+				
+		if (shift)	
+			console.log('shift')
+		*/
+		
+		/*
+		console.log('pushed: ' + code)
+		console.log('expected key: ' + key)
 		console.log('this[key]: ' + this[key])
 		*/
 				

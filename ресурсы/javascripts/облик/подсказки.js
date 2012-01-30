@@ -6,17 +6,12 @@ var Подсказки = (function()
 	{
 		$(document).keydown(function(event) 
 		{
-			if (event.altKey && !event.ctrlKey && event.shiftKey)
+			if (Клавиши.is('Alt', 'Shift', 'Digit_0', event))
 			{
-				switch(event.keyCode)
-				{ 
-					case Клавиши.Digit_0: 
-						включены = !включены
-						if (включены)				
-							if (подсказка)
-								info(подсказка)
-						break
-				}
+				включены = !включены
+				if (включены)				
+					if (подсказка)
+						info(подсказка)
 			}
 		})
 	})				

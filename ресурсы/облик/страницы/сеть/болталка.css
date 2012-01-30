@@ -51,23 +51,26 @@
 		}
 	}
 }
-
+	
 .chat_user_icon
 {
 	display: inline-block;
 	position: relative;
 	
-	width: @user_icon_size;
-	height: @user_icon_size;
-	
+	.picture, .real_picture,
+	.user_offline_picture_glow, .user_online_picture_glow
+	{
+		width: @user_icon_size;
+		height: @user_icon_size;
+		
+		border-radius: 4px;
+	}
+		
 	.real_picture
 	{
 		position: absolute;
 		top: 0;
 		left: 0;
-		
-		width: @user_icon_size;
-		height: @user_icon_size;
 		
 		.actions
 		{
@@ -96,9 +99,6 @@
 		display: inline-block;
 		
 		position: relative;
-	
-		width: @user_icon_size;
-		height: @user_icon_size;
 	}
 	
 	.user_online_picture_glow, .user_offline_picture_glow
@@ -356,6 +356,8 @@
 		.who_is_online li
 		{
 			position: relative;
+			
+			border-radius: 4px;
 		}
 		
 		.who_is_online li, .who_is_online li a
@@ -412,9 +414,6 @@
 				{
 					display: inline-block;
 					position: relative;
-					
-					width: @user_icon_size;
-					height: @user_icon_size;
 					
 					border: 0;
 					

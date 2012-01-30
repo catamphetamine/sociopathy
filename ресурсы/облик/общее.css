@@ -223,8 +223,6 @@ div.clear
 #unsupported_browser_warning
 {
 	text-align: center;
-	padding-top: 30px;
-	padding-bottom: 30px;
 }
 
 /* input field */
@@ -367,6 +365,14 @@ label.error
 
 	@picture_size: 48px;
 	
+	.picture, .real_picture
+	{
+		width: @picture_size;
+		height: @picture_size;
+		
+		border-radius: 4px;
+	}
+			
 	.picture
 	{
 		position: relative;
@@ -376,18 +382,12 @@ label.error
 		background-repeat: no-repeat;
 
 		.beautiful_shadow_3(0px, 1px, 2px, 3px, 4px, 0.2);
-
-		width: @picture_size;
-		height: @picture_size;
 		
 		.real_picture
 		{
 			position: absolute;
 			top: 0;
 			left: 0;
-			
-			width: @picture_size;
-			height: @picture_size;
 		}
 	}
 
@@ -619,4 +619,9 @@ pre, code
 			cursor: pointer;
 		}				
 	}
+}
+
+#loading_indicator
+{
+	display: block !important;
 }

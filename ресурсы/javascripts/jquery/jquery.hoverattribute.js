@@ -45,6 +45,8 @@
 		self.$element = $(element)
 		self.element = element
 		
+		self.$element.css('display', 'block')
+		
 		// Store initial variables in the jQuery object.
 		self.$element.$parent = self.$element.parent() // Not in use a.t.m.
 		self.$element.initWidth = self.$element.width()

@@ -535,5 +535,21 @@ button.physics =
 		})
 		
 		return the_button
+	},
+	
+	'quick pushing': function(the_button)
+	{
+		the_button.setOptions
+		({
+			'ready frame fade in duration': 0.5,
+			'ready frame fade out duration': 0.5,
+			'pushed frame fade in duration': 0.1,
+			'pushed frame fade out duration': 0.4,
+		
+			'pushed frame fade in easing': 'easeInOutCubic',
+			'pushed frame fade out easing': 'swing'
+		})
+		
+		return the_button
 	}
 }

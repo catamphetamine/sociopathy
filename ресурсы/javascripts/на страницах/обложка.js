@@ -149,29 +149,6 @@ function initialize_gender_chooser()
 	)
 }
 
-function activate_button(selector, options)
-{
-	var element = $(selector)
-
-	options = options || {}
-	options.selector = selector
-
-	return button.physics.classic(new text_button
-	(
-		element,
-		Object.append
-		(
-			{
-				skin: 'sociopathy',
-				
-				// miscellaneous
-				'button type':  element.attr('type'), // || 'generic',
-			},
-			options
-		)
-	))	
-}
-
 var conditional
 function initialize_page()
 {

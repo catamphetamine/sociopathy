@@ -1,69 +1,161 @@
-// browser checker
-
-// the popup
-var unsupported_browser_warning
-
-// construct the popup window
-$(function() 
+/*
+ * http://www.quirksmode.org/js/detect.html
+ */
+var BrowserDetect =
 {
-	unsupported_browser_warning = $("#unsupported_browser_warning").dialog_window
-	({
-		width: 1400,
-		'close on escape': true
-	})
-})
-
-// detects current web browser
-var browser_engine_detector = new (function()
-{
-	// Web Kit detector (Chromium, Chrome, Safari)
-	this.is_web_kit = function()
+	init: function ()
 	{
-		if (!navigator)
-			return false
-			
-		return RegExp(" AppleWebKit/").test(navigator.userAgent)
-	}
-
-	// Gecko detector (Fire Fox)
-	this.is_gecko = function()
-	{
-		if (!navigator)
-			return false
-			
-		return navigator.product == 'Gecko'
-	}
-
-	// Presto detector (Opera)
-	this.is_presto = function()
-	{
-		if (!navigator)
-			return false
-			
-		return (/Opera[\/\s](\d+\.\d+)/.test(navigator.userAgent))
-	}
-})()
-
-// if this browser is not supported - set the flag on
-function is_browser_supported()
-{
-	var is_supported = true
-		&& !Browser.ie
-		&& !Browser.opera
-		&& 
-		(
-			(Browser.firefox && !Browser.firefox2)
-			|| browser_engine_detector.is_web_kit()
-		)
+		this.browser = this.searchString(this.dataBrowser) || "An unknown browser";
+		this.version = this.searchVersion(navigator.userAgent)
+			|| this.searchVersion(navigator.appVersion)
+			|| "an unknown version";
+		this.OS = this.searchString(this.dataOS) || "an unknown OS";
+	},
 	
-	return is_supported
+	searchString: function (data)
+	{
+		for (var i=0;i<data.length;i++)
+		{
+			var dataString = data[i].string;
+			var dataProp = data[i].prop;
+			this.versionSearchString = data[i].versionSearch || data[i].identity;
+			if (dataString)
+			{
+				if (dataString.indexOf(data[i].subString) != -1)
+					return data[i].identity;
+			}
+			else if (dataProp)
+				return data[i].identity;
+		}
+	},
 	
-//	return browser_engine_detector.is_web_kit() || browser_engine_detector.is_gecko()
+	searchVersion: function (dataString)
+	{
+		var index = dataString.indexOf(this.versionSearchString);
+		if (index == -1) return;
+		return parseFloat(dataString.substring(index+this.versionSearchString.length+1));
+	},
+	
+	dataBrowser:
+	[
+		{
+			string: navigator.userAgent,
+			subString: "Chrome",
+			identity: "Chrome"
+		},
+		{ 	string: navigator.userAgent,
+			subString: "OmniWeb",
+			versionSearch: "OmniWeb/",
+			identity: "OmniWeb"
+		},
+		{
+			string: navigator.vendor,
+			subString: "Apple",
+			identity: "Safari",
+			versionSearch: "Version"
+		},
+		{
+			prop: window.opera,
+			identity: "Opera",
+			versionSearch: "Version"
+		},
+		{
+			string: navigator.vendor,
+			subString: "iCab",
+			identity: "iCab"
+		},
+		{
+			string: navigator.vendor,
+			subString: "KDE",
+			identity: "Konqueror"
+		},
+		{
+			string: navigator.userAgent,
+			subString: "Firefox",
+			identity: "Firefox"
+		},
+		{
+			string: navigator.vendor,
+			subString: "Camino",
+			identity: "Camino"
+		},
+		{		// for newer Netscapes (6+)
+			string: navigator.userAgent,
+			subString: "Netscape",
+			identity: "Netscape"
+		},
+		{
+			string: navigator.userAgent,
+			subString: "MSIE",
+			identity: "Explorer",
+			versionSearch: "MSIE"
+		},
+		{
+			string: navigator.userAgent,
+			subString: "Gecko",
+			identity: "Mozilla",
+			versionSearch: "rv"
+		},
+		{ 		// for older Netscapes (4-)
+			string: navigator.userAgent,
+			subString: "Mozilla",
+			identity: "Netscape",
+			versionSearch: "Mozilla"
+		}
+	],
+	
+	dataOS :
+	[
+		{
+			string: navigator.platform,
+			subString: "Win",
+			identity: "Windows"
+		},
+		{
+			string: navigator.platform,
+			subString: "Mac",
+			identity: "Mac"
+		},
+		{
+			   string: navigator.userAgent,
+			   subString: "iPhone",
+			   identity: "iPhone/iPod"
+	    },
+		{
+			string: navigator.platform,
+			subString: "Linux",
+			identity: "Linux"
+		}
+	]
+
 }
 
-// check for proper web browser
+BrowserDetect.init()
+
+/*
+alert(BrowserDetect.browser)
+alert(BrowserDetect.version)
+alert(BrowserDetect.OS)
+*/
+
+function is_browser_supported()
+{
+	var is_supported = 
+		(BrowserDetect.browser === 'Firefox' && parseFloat(BrowserDetect.version) >= 9)
+		||
+		(BrowserDetect.browser === 'Chrome' && parseFloat(BrowserDetect.version) >= 16)
+		
+	return is_supported
+}
+
 function check_browser_support()
 {
-	if (!is_browser_supported())
-		unsupported_browser_warning.open()
+	if (is_browser_supported())
+		return
+		
+	unsupported_browser_warning = $("#unsupported_browser_warning").dialog_window
+	({
+		'close on escape': true
+	})
+	.open()
 }

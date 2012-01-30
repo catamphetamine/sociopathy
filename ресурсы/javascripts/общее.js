@@ -675,7 +675,10 @@ function activate_button(selector, options)
 	options = options || {}
 	options.selector = selector
 
-	return button.physics.classic(new text_button
+	if (!options.physics)
+		options.physics = 'classic'
+		
+	return button.physics[options.physics](new text_button
 	(
 		element,
 		Object.append

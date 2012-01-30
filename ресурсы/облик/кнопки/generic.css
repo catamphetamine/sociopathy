@@ -34,14 +34,14 @@ body.osx .generic_button label
 
 .generic_button .button_contents
 {
+	font-size: 28px;
+	font-family: "Messe Univers";
+	line-height: normal;
+	
+	color: #4f4f4f;
+	
 	label
 	{
 		padding-top: 1px;
-		
-		font-size: 28px;
-		font-family: "Messe Univers";
-		line-height: normal;
-		
-		color: #4f4f4f;
 	}
 }

@@ -158,23 +158,14 @@ var Режим = (function()
 	{
 		$(document).keydown(function(event) 
 		{
-			// alert(String.fromCharCode(event.which))
-			
-			if (event.altKey && !event.ctrlKey && event.shiftKey)
-			{
-				switch(event.keyCode)
-				{ 
-					case Клавиши.Digit_1:
-						перейти_в_режим('обычный')
-						break
-					case Клавиши.Digit_2: 
-						перейти_в_режим('правка')
-						break
-					case Клавиши.Digit_3: 
-						перейти_в_режим('глубокая_правка')
-						break
-				}
-			}
+			if (Клавиши.is('Alt', 'Shift', 'Q', event))
+				return перейти_в_режим('обычный')
+				
+			if (Клавиши.is('Alt', 'Shift', 'W', event))
+				return перейти_в_режим('правка')
+				
+			if (Клавиши.is('Alt', 'Shift', 'E', event))
+				return перейти_в_режим('глубокая_правка')
 		})
 	})
 	

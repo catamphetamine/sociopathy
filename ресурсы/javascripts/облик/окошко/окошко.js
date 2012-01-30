@@ -76,6 +76,9 @@ var dialog_window = new Class
 			})
 			.addClass(this.options.theme)
 		
+		if (options.veil_style)
+			this.container.css(options.veil_style)
+		
 		var dialog_window = $('<article/>')
 			// setting tabIndex makes the div focusable
 			.addClass('popup')
@@ -236,10 +239,7 @@ var dialog_window = new Class
 		this.controls.each(function(control)
 		{
 			if (control instanceof jQuery)
-			{
-				control.val('')
-				return
-			}
+				return control.val('')
 
 			control.reset()
 		})			

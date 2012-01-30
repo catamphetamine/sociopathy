@@ -75,7 +75,7 @@ function Form(element)
 			this.valid = function()
 			{
 				if (this.error_label)
-					this.error_label.slide_out(1000)
+					this.error_label.slide_out()
 			}
 			
 			// if this field has an error
@@ -94,7 +94,7 @@ function Form(element)
 					   wrapLength: "auto",
 					   styles: ['error'],
 					   hover: false,
-					   'on appear': this.label.glow,
+					   //'on appear': this.label.glow,
 					   "indention style name": "glowable"
 					})
 					
