@@ -66,7 +66,7 @@ var Message =
 		messages: [],
 		
 		schedule: function($element)
-		{
+		{			
 			this.messages.push($element)
 			this.check()
 		},
@@ -96,11 +96,13 @@ var Message =
 				this.remove($element)
 				return
 			}
+			
+			var disappearance_duration = $element.data('dissapearance_duration') || Message.disappearance_duration
 				
 			var self = this
 			animator.fade_out($element, 
 			{
-				duration: Message.disappearance_duration, 
+				duration: disappearance_duration, 
 				callback: function() 
 				{
 					$element.hide()
@@ -188,7 +190,11 @@ var Message =
 		message_container.append(message).appendTo('body')
 		message_container.css('top', top)
 
-		new image_button(close_button).does(function() { Message.vanisher.schedule(message_container) })
+		new image_button(close_button).does(function()
+		{
+			message_container.data('dissapearance_duration', 0.25)
+			Message.vanisher.schedule(message_container)
+		})
 	
 		animator.fade_in(message, 
 		{ 

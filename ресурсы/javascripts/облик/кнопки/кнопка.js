@@ -525,7 +525,7 @@ button.physics =
 	{
 		the_button.setOptions
 		({
-			'ready frame fade in duration': 0.5,
+			'ready frame fade in duration': 0.3,
 			'ready frame fade out duration': 0.5,
 			'pushed frame fade in duration': 0.37,
 			'pushed frame fade out duration': 0.4,

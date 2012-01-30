@@ -190,7 +190,9 @@ Visual_editor.implement
 		{
 			var keyCode = event.which
 			
-			/*
+			if (event.ctrlKey || event.shiftKey || event.altKey || event.metaKey)
+				return
+			
 			if (keyCode === Клавиши.Dot)
 			{
 				if (editor.caret.text().ends_with('..'))
@@ -202,7 +204,6 @@ Visual_editor.implement
 				editor.insert('.')
 				return false
 			}
-			*/
 		})
 		
 		editor.on('keypress', (function(event)

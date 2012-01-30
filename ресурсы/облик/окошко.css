@@ -190,7 +190,7 @@ body.osx .popup .top_bar
 		font-size: 32px;
 		line-height: normal;
 		
-		color: #2f2f2f;
+		color: #3f3f3f;
 		text-shadow: 0px 1px 0px #dfdfdf;
 		
 		text-align: center;
@@ -226,6 +226,8 @@ body.osx .popup .top_bar
 	{
 		margin: 0;
 		padding: 0;
+		
+		outline: none;
 	}
 	
 	.main_content
