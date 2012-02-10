@@ -49,7 +49,7 @@ function initialize_page()
 		if (в === 'правка' || в === 'глубокая_правка')
 		{
 			if (право_на_правку_получено)
-				return
+				return		
 				
 			Режим.заморозить_переходы()
 			loading_indicator.show()

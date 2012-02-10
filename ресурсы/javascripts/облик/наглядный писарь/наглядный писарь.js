@@ -25,7 +25,7 @@ var Visual_editor = new Class
 		
 		this.capture_characters()
 		this.capture_special_hotkeys()
-		this.remap_editing_hotkeys()
+		//this.remap_editing_hotkeys()
 		this.insert_line_break_on_enter()
 		//this.disable_context_menu()
 		this.disable_tab()

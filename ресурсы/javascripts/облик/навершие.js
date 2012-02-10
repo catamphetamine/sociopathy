@@ -90,7 +90,7 @@ var panel = new (function()
 			$("em", $menu_item).append(text_node)
 			
 			// activate panel menu item fading
-			new image_button
+			var button = new image_button
 			(
 				$("> a", $menu_item), 
 				{
@@ -99,6 +99,18 @@ var panel = new (function()
 					height: icon_size
 				}
 			)
+			
+			button.setOptions
+			({
+				'ready frame fade in duration': 0.3,
+				'ready frame fade out duration': 0.3,
+				
+				'pushed frame fade in duration': 0.3,
+				'pushed frame fade out duration': 0.3,
+	
+				'pushed frame fade in easing': 'swing',
+				'pushed frame fade out easing': 'swing'
+			})
 		})
 	}
 	

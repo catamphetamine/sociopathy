@@ -6,7 +6,7 @@ var Подсказки = (function()
 	{
 		$(document).keydown(function(event) 
 		{
-			if (Клавиши.is('Alt', 'Shift', 'Digit_0', event))
+			if (Клавиши.is('Ctrl', 'Shift', 'Digit_0', event))
 			{
 				включены = !включены
 				if (включены)				

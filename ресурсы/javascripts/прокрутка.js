@@ -84,7 +84,18 @@ var Scroller = new Class
 		else
 			throw 'Unsupported browser'
 			
-		scroller.animate({ scrollTop: top + 'px' }, 1000, 'easeInOutCubic')
+		var namespace = '.scroller_' + new Date().getTime()
+		
+		scroller.animate({ scrollTop: top + 'px' }, 1000, 'easeInOutCubic', function()
+		{
+			$(document).unbind(namespace)
+		})
+		
+		$(document).on('wheel' + namespace, function(event)
+		{
+			// clear queue, dont jump to end
+			scroller.stop(true, false)
+		})
 	}
 })
 

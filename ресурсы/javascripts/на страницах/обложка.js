@@ -144,7 +144,11 @@ function initialize_gender_chooser()
 	(
 		"#join_dialog .gender .chooser",
 		{
-			target: "#join_dialog .gender input[type=hidden]"
+			target: "#join_dialog .gender input[type=hidden]",
+			on_choise: function()
+			{
+				join_form_slider.next()
+			}
 		}
 	)
 }

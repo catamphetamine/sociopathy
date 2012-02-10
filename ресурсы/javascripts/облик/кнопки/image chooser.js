@@ -3,56 +3,6 @@
  * 
  * This script creates eye-candy image chooser with smooth animated hover and click effects.
  * 
- * Usage:
- * 
- * In html:
- * 
- * <div id="chooser" class="centered">
- *		<span name="apples" value="russian apples"></span>
- *		<span name="bananas" value="african bananas"></span>
- * 		
- * 		<hr class="centered" />
- * 	</div>
- * 
- * <input type="hidden" id="chosen_fruit" value="['russian apples' or 'african bananas' will be placed here]"/>
- * 
- * In javascript:
- * 
- *	$(function()
- *	{
- *		new image_chooser
- *		(
- *			"chooser", 
- *			{
- *				target: "chosen_fruit"
- *			}
- *		)
- *	});
- *
- * In stylesheet:
- * 
- *	div.centered
- *	{
- *		margin-left: auto;
- *		margin-right: auto;
- *
- *		display: table;
- *	}
- *
- *	hr.centered
- *	{
- *		clear: left; 
- *		visibility: hidden;
- *	}
- *
- * In filesystem:
- * 
- * create image sprites (100 pixels by 300 pixels, in this example):
- * (frames (top to bottom): idle, ready, pushed)
- * 
- * 		/картинки/fruits/apples.png
- * 		/картинки/fruits/bananas.png
- * 
  * Requires: jQuery, MooTools, Image Button. 
  * 
  * Copyright (c) 2010 Nikolay Kuchumov
@@ -77,6 +27,8 @@ var image_chooser = function(selector_or_element, options)
 	// back reference
 	var self = this
 	
+	this.choise_options = []
+	
 	// initialize each choosable image
 	choises.each(function(index) 
 	{
@@ -88,18 +40,13 @@ var image_chooser = function(selector_or_element, options)
 			// choise
 			$this,
 			// options
-			$.extend
-			(
-				{
-					'button name': $this.attr("name"),
-					action: self.choose
-				},
-				options
-			)
+			options
 		)
 		
 		// set back reference
 		choise_option.chooser = self
+		
+		self.choise_options.push(choise_option)
 	})
 	
 	this.choose = function(choise)
@@ -109,6 +56,9 @@ var image_chooser = function(selector_or_element, options)
 		
 		// set the target value
 		this.target.val(this.choise.$element.attr("value"))
+		
+		if (options.on_choise)
+			options.on_choise()
 	}
 
 	this.reset = function()
@@ -116,6 +66,11 @@ var image_chooser = function(selector_or_element, options)
 		// if anything is selected - unselect it
 		if (this.choise)
 			this.choise = null
+			
+		this.choise_options.forEach(function(choise)
+		{
+			choise.reset()
+		})
 
 		// reset the target value			
 		this.target.val('')
@@ -128,18 +83,47 @@ var choosable_image = new Class
 	
 	initialize: function(id_or_element, options)
 	{
-		this.parent(id_or_element, Object.merge(options, { 'auto unlock': false }))
+		options.action = function()
+		{
+			// if some option is currently chosen
+			if (this.chooser.choise)
+			{
+				// if this option is currently chosen - exit
+				if (this.chooser.choise === this)
+					return
+				// else - reset the previously selected option
+				else
+				{
+					//this.chooser.choise.let_unlock()
+					//this.chooser.choise.fade_out('pushed')
+					//this.fade_in('pushed')
+				}
+			}
+			
+			this.chooser.choose(this)
+		}
+		.bind(this)
+		
+		options['pushed frame fade in duration'] = 0.3
+		options['pushed frame fade out duration'] = 0.3
+
+		this.parent(id_or_element, options)
+		//this.parent(id_or_element, Object.merge(options, { 'auto unlock': false }))
+	},
+	
+	on_push: function()
+	{
+		if (this.chooser.choise)
+			if (this.chooser.choise !== this)
+				this.chooser.choise.fade_out('pushed')
+				
+		this.parent()
 	},
 	
 	on_roll_over: function()
 	{
-	/*
-		// if some option is currently chosen
-		if (this.chooser.choise != null)
-			// if this option is currently chosen - exit
-			if (this.chooser.choise === this)
-				return
-	*/
+		if (this.chooser.choise === this)
+			return
 
 		this.parent()
 	},
@@ -157,26 +141,14 @@ var choosable_image = new Class
 		this.parent()
 	},
 	
+	/*
 	on_push: function()
 	{
-		// if some option is currently chosen
-		if (this.chooser.choise)
-			// if this option is currently chosen - exit
-			if (this.chooser.choise === this)
-				return
-			// else - reset the previously selected option
-			else
-			{
-				this.chooser.choise.let_unlock()
-				this.chooser.choise.unpush()
-			}
-				
-		this.select()
-		this.parent()
 	},
+	*/
 	
-	select: function()
+	unpush: function()
 	{
-		this.chooser.choose(this)
-	},
+		this.can_unlock_the_pushing_lock()
+	}
  })

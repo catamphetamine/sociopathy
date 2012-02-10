@@ -1,16 +1,11 @@
 var Режим = (function()
 {
-	var режим
+	var режим = 'обычный'
 
 	var режимы = []
 	var обещания = {}
 	
 	var разрешённые_режимы = { обычный: true }
-
-	$(function()
-	{
-		перейти_в_режим('обычный')
-	})
 	
 	режимы.push
 	({
@@ -154,17 +149,17 @@ var Режим = (function()
 		})
 	})
 	
-	$(document).ready(function() 
+	$(function() 
 	{
 		$(document).keydown(function(event) 
 		{
-			if (Клавиши.is('Alt', 'Shift', 'Q', event))
+			if (Клавиши.is('Ctrl', 'Shift', 'Digit_1', event))
 				return перейти_в_режим('обычный')
 				
-			if (Клавиши.is('Alt', 'Shift', 'W', event))
+			if (Клавиши.is('Ctrl', 'Shift', 'Digit_2', event))
 				return перейти_в_режим('правка')
 				
-			if (Клавиши.is('Alt', 'Shift', 'E', event))
+			if (Клавиши.is('Ctrl', 'Shift', 'Digit_3', event))
 				return перейти_в_режим('глубокая_правка')
 		})
 	})

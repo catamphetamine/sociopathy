@@ -271,7 +271,7 @@ Visual_editor.implement
 				
 				author.appendTo(citation)
 				
-				return editor.insert(citation)
+				return editor.insert(citation, { break_container: true })
 			},
 			
 			on_success: function(citation)
@@ -660,6 +660,7 @@ Visual_editor.implement
 			}
 		}
 		
+		/*
 		Tools.Html =
 		{
 			selector: '.html',
@@ -731,6 +732,7 @@ Visual_editor.implement
 				editor.caret.move_to(element)
 			}
 		}
+		*/
 		
 		// helpers
 		

@@ -174,6 +174,11 @@ Editor.Caret = new Class
 		return range
 	},
 	
+	position_at: function(offset)
+	{
+		this.position(this.native_container(), offset)
+	},
+	
 	position: function(container, offset)
 	{
 		if ($.browser.webkit)
@@ -269,14 +274,19 @@ Editor.Caret = new Class
 	
 	text: function()
 	{
-		return this.native_container().nodeValue
+		return this.native_container().nodeValue.substring(0, this.offset())
 	},
 	
 	collapse_recent_characters: function(how_much, into)
 	{
 		var container = this.native_container()
-		container.nodeValue = container.nodeValue.substring(0, container.nodeValue.length - how_much) + into
-		this.move_to_the_end(container)
+		var offset = this.offset()
+		
+		container.nodeValue =
+			container.nodeValue.substring(0, offset - how_much) + into +
+			container.nodeValue.substring(offset, container.nodeValue.length)
+			
+		this.position(container, offset - how_much + into.length)
 	},
 	
 	inside: function(selector)

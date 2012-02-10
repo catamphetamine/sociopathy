@@ -134,6 +134,8 @@ Visual_editor.implement
 			if (!visual_editor.can_edit())
 				return
 			
+			// можно добавить command z, command c, command v, command x			
+			
 			// в Хроме не ловится
 			if (Клавиши.is('Ctrl', 'z', event))
 			{
@@ -197,7 +199,8 @@ Visual_editor.implement
 			{
 				if (editor.caret.text().ends_with('..'))
 				{
-					editor.caret.collapse_recent_characters(2, '…')
+					editor.caret.collapse_recent_characters(3, '…')
+					editor.caret.move()
 					return false
 				}
 				

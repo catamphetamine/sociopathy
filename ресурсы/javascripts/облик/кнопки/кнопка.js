@@ -472,8 +472,10 @@ var button = new Class
 	
 	reset: function()
 	{
-		this.on_roll_out(),
+		this.on_roll_out()
 		this.unlock()
+		
+		this.frames.pushed.hide()
 	},
 	
 	does: function(fn, options)
@@ -527,6 +529,7 @@ button.physics =
 		({
 			'ready frame fade in duration': 0.3,
 			'ready frame fade out duration': 0.5,
+			
 			'pushed frame fade in duration': 0.37,
 			'pushed frame fade out duration': 0.4,
 		
@@ -543,10 +546,11 @@ button.physics =
 		({
 			'ready frame fade in duration': 0.5,
 			'ready frame fade out duration': 0.5,
+			
 			'pushed frame fade in duration': 0.1,
-			'pushed frame fade out duration': 0.4,
-		
-			'pushed frame fade in easing': 'easeInOutCubic',
+			'pushed frame fade out duration': 0.5,
+
+			'pushed frame fade in easing': 'swing',
 			'pushed frame fade out easing': 'swing'
 		})
 		

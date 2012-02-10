@@ -3,33 +3,6 @@
  * 
  * This script creates eye-candy buttons with smooth animated hover and click effects.
  * 
- * Usage:
- * 
- * In html:
- * 
- * <span id="fancy_button" class="centered"></span>
- * 
- * In javascript:
- * 
- *	$(function()
- *	{
- *		new image_button
- *		(
- *			"fancy_button", 
- *			{
- *				"button name": "fancy button",
- *				action: function() { alert('action') },
- *				delay: "1x"
- *			}
- *		)
- *	});
- *
- * In filesystem:
- * 
- * create sprite image (100 pixels by 300 pixels, in this example):
- * 		/images/fancy button.png
- * (frames (top to bottom): idle, ready, pushed)
- * 
  * Requires: jQuery, MooTools, Button. 
  * 
  * Copyright (c) 2010 Nikolay Kuchumov
@@ -125,7 +98,6 @@ var image_button = new Class
 	get_image_path: function()
 	{
 		return this.options.skin
-		//return "url('" + this.options.skin + "." + this.options['image format'] + "')"
-		//return "url('" + this.options.path + "/" + this.options["button name"] + "." + this.options['image format'] + "')"
-	}.protect()
+	}
+	.protect()
 })

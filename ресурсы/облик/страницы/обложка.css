@@ -25,7 +25,7 @@
 	.main_content
 	{
 		width: 790px;
-		height: 200px;
+		height: 160px;
 	}
 	
 	.slider
@@ -92,6 +92,11 @@
 	
 	.gender
 	{
+		label
+		{
+			margin-left: 15px;
+		}
+
 		.chooser 
 		{
 			text-align: center;
@@ -144,6 +149,11 @@
 			
 			padding-top: 5px;
 		}
+	}
+		
+	.buttons
+	{
+		padding-right: 30px;
 	}
 }
 

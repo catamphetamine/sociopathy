@@ -278,7 +278,15 @@ Array.prototype.where_am_i = () ->
 		this_variable_doesnt_exist['you are here'] += 0
 	catch error
 		console.log error.stack
-		
+
+RegExp.escape = (string) ->
+	specials = new RegExp("[.*+?|()\\[\\]{}\\\\]", "g")
+	return string.replace(specials, "\\$&")
+
+String.prototype.replace_all = (what, with_what) ->
+	regexp = new RegExp(RegExp.escape(what), "g")
+	return @replace(regexp, with_what)
+	
 String.prototype.escape_html = ->
 	@replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
 	
