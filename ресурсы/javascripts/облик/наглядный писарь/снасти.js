@@ -282,7 +282,7 @@ Visual_editor.implement
 		
 		Tools.List =
 		{
-			button: new image_button(tools.find('.list span')),
+			button: new image_button(tools.find('.list > *')),
 			
 			apply: function()
 			{
@@ -311,7 +311,7 @@ Visual_editor.implement
 		
 		Tools.Picture =
 		{
-			button: new image_button(tools.find('.picture span')),
+			button: new image_button(tools.find('.picture > *')),
 			
 			type_attribute: 'picture',
 			
@@ -388,7 +388,7 @@ Visual_editor.implement
 		
 		Tools.Undo =
 		{
-			button: new image_button(tools.find('.undo span')),
+			button: new image_button(tools.find('.undo > *')),
 			
 			apply: function()
 			{
@@ -402,7 +402,7 @@ Visual_editor.implement
 		
 		Tools.Redo =
 		{
-			button: new image_button(tools.find('.redo span')),
+			button: new image_button(tools.find('.redo > *')),
 			
 			apply: function()
 			{
@@ -585,7 +585,7 @@ Visual_editor.implement
 		
 		Tools.Video =
 		{
-			button: new image_button(tools.find('.video span')),
+			button: new image_button(tools.find('.video > *')),
 			
 			type_attribute: 'video',
 			

@@ -30,7 +30,7 @@
 		<div class="clear"></div>
 		
 		<!-- origin -->
-		<div {{if откуда}}{{else}}style="visibility: hidden"{{/if}}>
+		<div {{if откуда}}{{else}}style="visibility: hidden"{{/if}} class="origin">
 			<div class="type">откуда</div>
 			<div class="value">{{if откуда}}${откуда}{{else}}&nbsp;{{/if}}</div>
 		</div>
@@ -48,7 +48,8 @@
 			<div class="online"></div>
 			<div class="offline"></div>
 			<div class="was_here non_selectable">
-				{{if пол === 'мужской'}} Был {{else}} Была {{/if}} в сети <span class="last_action_time intelligent_date"></span>
+				<span class="line">{{if пол === 'мужской'}} Был {{else}} Была {{/if}} в сети <span class="last_action_time intelligent_date"></span>.</span>
+				<a href="${window.location}">Перепроверить</a>
 			</div>
 		</div>	
 	

@@ -78,8 +78,8 @@ var Ajax =
 			data: data, 
 			dataType: options.type,
 			
-			beforeSend: function() { disable_links() },
-			complete: function() { enable_links() },
+			//beforeSend: function() { disable_links() },
+			//complete: function() { enable_links() },
 			timeout: 15000
 		})
 		.success(function(json, textStatus)
@@ -100,8 +100,16 @@ function disable_links()
 {
 	$('a').each(function()
 	{
-		if ($(this).attr('href'))
-			$(this).data('href', $(this).attr('href')).removeAttr('href');
+		var link = $(this)
+		/*
+		if (link.attr('href'))
+			link.data('href', link.attr('href')).removeAttr('href')
+		*/
+		
+		link.on('click.disable_links_while_ajaxing', function(event)
+		{
+			event.preventDefault()
+		})
 	})
 }
 
@@ -109,7 +117,9 @@ function enable_links()
 {
 	$('a').each(function()
 	{
-		$(this).attr('href', $(this).data('href'));
+		var link = $(this)
+		if (link.data('href'))
+			link.attr('href', link.data('href'))
 	})
 }
 

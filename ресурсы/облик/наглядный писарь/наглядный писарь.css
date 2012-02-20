@@ -1,13 +1,15 @@
-@visual_editor_tools_panel_height: 51px;
+@import "/облик/вспомогательный.less";
 
 .visual_editor_tools_container
 {
 	position: relative;
 
+	/*
 	min-height: 2 * @visual_editor_tools_panel_height;
 	max-height: 2 * @visual_editor_tools_panel_height;
 	
 	overflow: hidden;
+	*/
 }
 
 .visual_editor_tools
@@ -16,9 +18,11 @@
 		
 	display: none;
 
+	/*
 	position: absolute;
 	top: 0;
 	left: 0;
+	*/
 	
 	ul
 	{

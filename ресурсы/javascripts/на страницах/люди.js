@@ -18,6 +18,6 @@ function initialize_page()
 	({
 		url: '/приложение/люди',
 		batch_size: 8,
-		get_data: function (data) { return data.люди }
+		get_data: function(data) { return data.люди }
 	}))
 }

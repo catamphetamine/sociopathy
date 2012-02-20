@@ -104,7 +104,7 @@
 				content: '»';
 			}
 			
-			&.list > span
+			&.list > *
 			{
 				position: relative;
 				margin-top: -12px;
@@ -115,7 +115,7 @@
 				height: 40px;
 			}
 			
-			&.picture > span
+			&.picture > *
 			{
 				position: relative;
 				margin-top: -12px;
@@ -126,7 +126,7 @@
 				height: 40px;
 			}
 			
-			&.undo > span, &.redo > span
+			&.undo > *, &.redo > *
 			{
 				position: relative;
 				margin-top: -10px;
@@ -139,17 +139,17 @@
 				-moz-transition: all 200ms ease-in-out;
 			}
 	
-			&.undo > span
+			&.undo > *
 			{
 				background-image: url('/картинки/на страницах/заметка/undo.png');
 			}
 			
-			&.undo > span.disabled, &.redo > span.disabled
+			&.undo > *.disabled, &.redo > *.disabled
 			{
 				cursor: default !important;
 			}
 	
-			&.redo > span
+			&.redo > *
 			{
 				background-image: url('/картинки/на страницах/заметка/redo.png');
 			}
@@ -184,7 +184,7 @@
 				font-size: 16px;
 			}
 						
-			&.video > span
+			&.video > *
 			{
 				position: relative;
 				margin-top: -12px;

@@ -92,7 +92,7 @@ var Режим = (function()
 	{
 		if (!возможен_ли_переход(режим, mode))
 			return
-								
+							
 		if (режим === 'правка')
 		{
 			if ($.browser.mozilla)
@@ -124,6 +124,20 @@ var Режим = (function()
 	
 		режим = mode
 		
+		if (режим === 'правка')
+		{
+			$('[editable=true]').each(function()
+			{
+				$(this)
+					.attr('contenteditable', true)
+					.on('keypress.режим_правка', function(event)
+					{
+						if (Клавиши.is('Enter', event))
+							return false
+					})
+			})
+		}
+		
 		$('body').attr('mode', описание_режима.название)
 	}
 	
@@ -153,6 +167,9 @@ var Режим = (function()
 	{
 		$(document).keydown(function(event) 
 		{
+			//if (Клавиши.is('Ctrl', 'Shift', 'Digit_2', event))
+			//	console.log('правка')
+		
 			if (Клавиши.is('Ctrl', 'Shift', 'Digit_1', event))
 				return перейти_в_режим('обычный')
 				

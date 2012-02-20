@@ -37,6 +37,19 @@ exports.требуется_вход = (ввод, вывод) ->
 		вывод.send ошибка: ошибка
 		return yes
 	return no
+			
+exports.не_он = (_id, ввод, вывод) ->
+	return if пользовательское.требуется_вход(ввод, вывод)
+	
+	if ввод.session.пользователь._id != _id
+		console.log 'Hack attempt: ' + decodeURI(ввод.url)
+		console.log 'Hacker: ' + ввод.session.пользователь._id
+		
+		ошибка = 'Сделать это может только сам пользователь'
+		console.error ошибка
+		вывод.send ошибка: ошибка
+		return yes
+	return no
 	
 exports.выбрать_поля = (поля, пользователь) ->
 	данные = {}

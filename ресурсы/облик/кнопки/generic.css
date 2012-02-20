@@ -9,6 +9,11 @@
  * @github kuchumovn
  */
 
+.generic_button label
+{
+	display: inline-block;
+}
+ 
 body.osx .generic_button label
 {
 	padding-top: 5px;

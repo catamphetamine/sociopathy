@@ -35,12 +35,17 @@ var image_button = new Class
 	{
 		var position = this.$element.css('position')
 		
-		if (position !== 'absolute')
-			position = 'relative'
+		//if (position !== 'absolute')
+		//	position = 'relative'
+		
+		if (this.$element.css('position') !== 'absolute')
+			this.$element.css('position', 'relative')
 		
 		var display = this.$element.css('display')
 		if (display !== 'block' && display !== 'inline-block' && display !== 'none')
 			display = 'block';
+		
+		return this.build_frame({ skin_top_offset: 0 })
 		
 		this.$element.css
 		({
@@ -62,15 +67,23 @@ var image_button = new Class
 	
 	build_ready_frame: function()
 	{
-		return this.build_hidden_frame({ height: this.options.height })
+		return this.build_frame({ skin_top_offset: this.options.height }).css
+		({
+			display: 'none',
+			opacity: 0
+		})
 	},
 	
 	build_pushed_frame: function()
 	{
-		return this.build_hidden_frame({ height: this.options.height * 2 })
+		return this.build_frame({ skin_top_offset: this.options.height * 2 }).css
+		({
+			display: 'none',
+			opacity: 0
+		})
 	},
 	
-	build_hidden_frame: function(options)
+	build_frame: function(options)
 	{
 		var $frame = $('<span></span>')
 		this.$element.append($frame)
@@ -83,12 +96,10 @@ var image_button = new Class
 			position: "absolute",
 			top: 0,
 			left: 0,
-			display: "none",
-			opacity: 0,
 	
 			"background-repeat": "no-repeat",
 			"background-color": "transparent",
-			"background_position_y": "-" + options.height + "px",
+			"background_position_y": "-" + options.skin_top_offset + "px",
 			"background-image": this.get_image_path()
 		})
 

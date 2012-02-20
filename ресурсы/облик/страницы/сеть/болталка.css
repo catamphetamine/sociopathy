@@ -216,15 +216,13 @@
 			
 			.author
 			{
-				float: left;
-			
 				padding-left: @author_column_padding;
 				padding-right: @author_column_right_padding;
 				padding-bottom: @message_bottom_padding;
 				
-				margin-left: -100%;
-				
 				.exact_width(@author_column_width);
+				.three_column_layout_left(@author_column_width);
+				
 				overflow: hidden;
 				
 				/* text-overflow: ellipsis; */
@@ -275,8 +273,7 @@
 				padding-left: @inter_column_padding;
 				padding-right: @inter_column_padding;
 				
-				margin-left: @author_column_padding + @author_column_width + @author_column_right_padding;
-				margin-right: @inter_column_padding + @time_column_width + @time_column_padding;
+				.three_column_layout_center(@author_column_padding + @author_column_width + @author_column_right_padding, @inter_column_padding + @time_column_width + @time_column_padding);
 				
 				white-space: pre-wrap;
 				word-wrap: break-word;
@@ -284,8 +281,6 @@
 			
 			.when
 			{
-				float: left;
-				
 				padding-left: @inter_column_padding;
 				padding-right: @time_column_padding;
 				
@@ -295,7 +290,7 @@
 				font-size: 20px;
 				top: -3px;
 				
-				margin-left: -(@inter_column_padding + @time_column_padding + @time_column_width);
+				.three_column_layout_right(@inter_column_padding + @time_column_width + @time_column_padding);
 				
 				.exact_width(@time_column_width);
 			}
@@ -490,9 +485,28 @@ body
 	margin-left: 4 * @user_icon_size / 7;
 }
 
-/*
-.three_column_layout_wrapper{float:left;width:100%}
-.three_column_layout_content{margin: 0 25%}
-.three_column_layout_left{float:left;width:25%;margin-left:-100%}
-.three_column_layout_right{float:left;width:25%;margin-left:-25%}
-*/
+#compose_message
+{
+	position: fixed;
+	bottom: 0;
+	
+	width: 100%;
+	
+	background-color: white;
+	
+	article
+	{
+		margin-top: 15px;
+		margin-bottom: 5px;
+	}
+	
+	.visual_editor_tools .more
+	{
+		background-image: url('/картинки/на страницах/заметка/скрыть разширенное.png');
+	}
+	
+	.visual_editor_tools .less
+	{
+		background-image: url('/картинки/на страницах/заметка/показать всё.png');
+	}
+}

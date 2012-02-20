@@ -3,88 +3,6 @@
  * 
  * This script creates eye-candy buttons with smooth animated hover and click effects.
  * 
- * Usage:
- * 
- * In html:
- * 
- * // align buttons to the center
- * <div class="centered">
- * 		<!-- cancel button -->
- *		<span id="join_dialog_cancel_button" class="left" type="minor" styles="generic, minor, caution">
- *			<span type="icon" icon="cross" width="30" height="30" top_offset="5"></span>
- *			<span class="translated" label="button 'cancel'"></span>
- *		</span>
- *		
- *		<!-- next button -->			
- *		<span id="join_dialog_next_button" class="right" type="dark generic" styles="generic">
- *			<span class="translated" label="button 'next'"></span>
- *			<span type="icon" icon="right arrows" width="40" height="30" top_offset="7"></span>
- *		</span>
- *
- *		<!-- done button -->
- *		<span id="join_dialog_done_button" class="right" type="dark generic" styles="generic">
- *			<span type="icon" icon="check" width="24" height="24" top_offset="8"></span>
- *			<span class="translated" label="button 'done'"></span>
- *		</span>
- * 		
- * 		<hr class="centered" />
- * 	</div>
- * 
- * <span id="back" ... style="float: left">Back</span> // align button to the left
- * <span id="next" ... style="float: right">Next</span> // align button to the right
- *
- * In javascript:
- * 
- *	$(function()
- *	{
- *		new text_button
- *		(
- *			"yes",
- *			{
- *				skin: 'aqua',
- *				action: function() { alert('yes') }
- *			}
- *		)
- *
- *		new text_button
- *		(
- *			"no",
- *			{
- *				skin: 'aqua',
- *				action: function() { alert('no') }
- *			}
- *		)
- *	})
- *
- * In stylesheet:
- * 
- *	div.centered
- *	{
- *		margin-left: auto;
- *		margin-right: auto;
- *	
- *		display: table;
- *	}
- *
- *	hr.centered
- *	{
- *		clear: left; 
- *		visibility: hidden;
- *	}
- * 
- * In filesystem:
- * 
- * create sprite image for the left part of the button (100 pixels high and, for example, 500 pixels wide):
- * 		/картинки/button/generic/left.png
- * (frames (top to bottom): idle, ready, pushed)
- * 
- * create sprite image for the right part of the button (100 pixels high and 10 pixels wide, in this example):
- * 		/картинки/button/generic/right.png
- * (frames (top to bottom): idle, ready, pushed)
- * 
- * create style sheets for 'generic', 'minor' and 'caution' buttons (see the default examples), and include them in your html page
- * (the order of css file inclusion matters, because the latest css file will overwrite styling of the previous css file)
- * 
  * Requires jQuery, MooTools, Button. 
  * 
  * Copyright (c) 2010 Nikolay Kuchumov
@@ -255,9 +173,14 @@ var text_button = new Class
 
 			'background_position_x': 'left',
 			'background_position_y': 'top',
-			'background-image': this.get_image_path('right'),
+			'background-image': this.get_image_path('left'),
 			'background-color': 'transparent',
 			'background-repeat': 'no-repeat',
+			
+			'-moz-transform': 'scaleX(-1)',
+			'-o-transform': 'scaleX(-1)',
+			'-webkit-transform': 'scaleX(-1)',
+			'transform': 'scaleX(-1)'
 		})
 
 		idle_frame.prepend(left_part).append(right_part)
@@ -343,34 +266,17 @@ var text_button = new Class
 		return $frame
 	},
 
-	get_right_part_style: function()
-	{
-		var style = 
-		{
-			'background-image': this.get_image_path('right'),
-			'background-color': 'transparent',
-			'background-repeat': 'no-repeat',
-				
-			'height': this.skin.height + 'px',
-			'margin': 0,
-			'padding-right': this.skin['side bar size'] + 'px',
-	
-			'-webkit-user-select': 'none',
-			'-moz-user-select': 'none'
-		}
-		
-		return style
-	},
-	
 	get_image_path: function(image_name)
 	{
 		return "url('" + this.skin.path + "/" + this.options["button type"] + "/" + image_name + "." + this.skin['image format'] + "')"
-	}.protect(),
+	}
+	.protect(),
 	
 	get_icon_path: function(icon_name)
 	{
 		return "url('" + this.skin.path + "/icon/" + icon_name + "." + this.skin['image format'] + "')"
-	}.protect(),
+	}
+	.protect(),
 	
 	add_icon: function($element)
 	{

@@ -251,6 +251,9 @@ var Data_templater = new Class
 				options.postprocess_element(item).appendTo(options.item_container)
 			}
 		
+		if (!options.process_data)
+			options.process_data = function(data) { return data }
+		
 		loader.options.show = function(item)
 		{
 			if (options.data)
@@ -264,12 +267,12 @@ var Data_templater = new Class
 							{
 								items[property].forEach(function(item)
 								{
-									show_item(item, options.data[property])
+									show_item(item, options.process_data(options.data[property]))
 								})
 							}
 							else
 							{
-								show_item(items[property], options.data[property])
+								show_item(items[property], options.process_data(options.data[property]))
 							}
 						}
 			}

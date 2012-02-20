@@ -1,15 +1,86 @@
+@import "/облик/вспомогательный.less";
+
 #id_card_block
 {
-	#id_card
-	{
-		margin-top: 150px;
-	}
-	
 	[type=loading], [type=error]
 	{
 		text-align: center;
 		margin-bottom: 50px;
 		margin-top: 250px;
+	}
+	
+	.main_info_centerer
+	{
+		text-align: center;
+	}
+	
+	.main_info
+	{
+		margin-top: 150px;
+		display: inline-block;
+		
+		text-align: left;
+		
+		@left_column: 300px;
+		@right_column: 300px;
+		
+		@side_columns_padding: 40px;
+		
+		#id_card
+		{
+			.three_column_layout_center(@left_column, @right_column);
+		}	
+		
+		#links, #actions
+		{
+			display: none;
+			margin-top: 40px;
+		}
+		
+		#links
+		{
+			.three_column_layout_left(@left_column);
+			
+			text-align: right;
+			
+			.include_padding_in_width();
+			padding-right: @side_columns_padding;
+			
+			.common_friends
+			{
+				display: none;
+			}
+		}
+		
+		#actions
+		{
+			.three_column_layout_right(@right_column);
+			
+			.include_padding_in_width();
+			padding-left: @side_columns_padding;
+		}
+		
+		.links
+		{
+			list-style-type: none;
+			padding: 0;
+			
+			line-height: 1.8em;
+			font-size: 32px;
+			
+			a
+			{
+				white-space: nowrap;
+			
+				.css_transition();
+				color: #7f7f7f;
+				
+				&:hover
+				{
+					color: @link_color;
+				}
+			}
+		}
 	}
 }
 
@@ -37,14 +108,24 @@ body[mode="правка"] .real_picture
 	margin-left: auto;
 	margin-right: auto;
 	
-	margin-top: 80px;
-	margin-bottom: 20px;
+	margin-top: 40px;
+	margin-bottom: 50px;
+	
+	background-color: #ffffff;
+	
+	padding: 40px;
+	.rounded_corners(10px);
 	
 	.info
 	{
 		margin-bottom: 40px;
 
 		font-size: 26px;
+		
+		&:last-child
+		{
+			margin-bottom: 0;
+		}
 	
 		dt
 		{

@@ -104,6 +104,8 @@
 			{
 				border: 0;
 				color: inherit;
+				
+				white-space: nowrap;
 			}
 		}
 
@@ -113,9 +115,12 @@
 			margin-left: 12px;
 			
 			font-size: 24px;
-			color: #989898;
+			color: #7f7f7f;
 	
 			cursor: default;
+			outline: none;
+				
+			white-space: nowrap;
 		}
 
 		/*
@@ -178,6 +183,15 @@
 			color: #e81f95;
 	
 			cursor: default;
+			outline: none;
+		}
+	}
+	
+	.origin
+	{
+		.value
+		{
+			white-space: nowrap;
 		}
 	}
 
@@ -284,7 +298,6 @@
 				left: 40px;
 				
 				font-size: 20px;
-				white-space: nowrap;
 				
 				color: white;
 				background-color: black;
@@ -292,12 +305,25 @@
 				
 				display: none;
 				
-				padding-left: 10px;
-				padding-right: 10px;
-				padding-top: 6px;
-				padding-bottom: 6px;
+				padding-left: 12px;
+				padding-right: 12px;
+				padding-top: 8px;
+				padding-bottom: 8px;
 				
 				.rounded_corners(4px);
+				
+				.line
+				{
+					white-space: nowrap;
+				}
+				
+				a
+				{
+					color: white;
+					border-bottom: 1px;
+					border-bottom-style: dashed;
+					border-bottom-color: white;
+				}
 			}
 		}
 	}

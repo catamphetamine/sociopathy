@@ -146,6 +146,7 @@ function center_horizontally()
 
 $(window).resize(center_horizontally)
 
+/*
 function center_vertically()
 {
 	$(".middle").each(function()
@@ -172,8 +173,9 @@ function center_vertically()
 		})
 	})
 }
+*/
 
-$(window).resize(center_vertically)
+//$(window).resize(center_vertically)
 
 /**
  * show loading screen

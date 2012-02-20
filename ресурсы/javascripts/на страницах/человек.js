@@ -31,25 +31,44 @@ function initialize_page()
 	({
 		template_url: '/страницы/кусочки/личная карточка.html',
 		item_container: id_card,
-		conditional: $('#id_card_block[type=conditional]'),
-		done: id_card_loaded
+		conditional: $('#id_card_block[type=conditional]')
 	},
 	new  Data_loader
 	({
 		url: '/приложение/человек',
-		parameters: { адресное_имя: адресное_имя() },
-		get_data: function (data) { пользователь_сети = data; return data }
+		parameters: { адресное_имя: window.адресное_имя },
+		get_data: function (data) { пользователь_сети = data; return data },
+		before_done_output: before_id_card_shown,
+		done: id_card_loaded
 	}))
-	
-	$('#content').disableTextSelect()
-}
-
-function адресное_имя()
-{
-	return путь_страницы().match(/люди\/(.+)/)[1]
 }
 
 var когда_был_здесь
+	
+var editable_info =
+[
+	'.personal_info .name a',
+	'.personal_info .description',
+	'.info .origin .value'
+]
+
+function before_id_card_shown()
+{
+	$('#links').find('a').each(function()
+	{
+		var link = $(this)
+		if (link.attr('href').starts_with('/люди//'))
+			link.attr('href', link.attr('href').replace('//', '/' + пользователь_сети['адресное имя'] + '/'))
+	})
+	
+	$('#links').show()
+	
+	if (пользователь && пользователь._id !== пользователь_сети._id)
+	{
+		$('#links .common_friends').show()
+		$('#actions').show()
+	}
+}
 
 function id_card_loaded()
 {
@@ -65,8 +84,10 @@ function id_card_loaded()
 	show_minor_info()
 	
 	initialize_editables()
-	initialize_edit_mode_effects()	
-
+	initialize_edit_mode_effects()		
+	
+	id_card.find(editable_info.join(', ')).attr('editable', true)
+	
 	Режим.activate_edit_actions({ on_save: save_changes })
 	Режим.разрешить('правка')
 }
@@ -114,13 +135,13 @@ function initialize_edit_mode_effects()
 {
 	var initial_background_color = $('body').css('background-color')
 	
-	var background_fade_time = 400
-	var highlight_color = '#44adcb'
+	var background_fade_time = 300
+	//var highlight_color = '#44adcb'
 	
 	$(document).on('режим.правка', function()
 	{
 		$('body').stop(true, false).animate({ 'background-color': '#afafaf' }, background_fade_time)
-		the_picture.animate({ 'boxShadow': '0 0 20px ' + highlight_color })
+		//the_picture.animate({ 'boxShadow': '0 0 20px ' + highlight_color })
 	})
 
 	$(document).on('режим.переход', function(event, из, в)
@@ -128,7 +149,7 @@ function initialize_edit_mode_effects()
 		if (из === 'правка')
 		{
 			$('body').stop(true, false).animate({ 'background-color': initial_background_color }, background_fade_time)
-			the_picture.animate({ 'boxShadow': '0 0 0px' })
+			//the_picture.animate({ 'boxShadow': '0 0 0px' })
 		}
 	})
 }
@@ -173,16 +194,24 @@ function show_minor_info()
 var image_file_name
 function save_changes()
 {
+	/*
 	if (!image_file_name)
 	{
 		warning('Вы ничего не меняли')
 		return this.allow_to_redo()
 	}
+	*/
 	
 	Режим.заморозить_переходы()
 	loading_indicator.show()
 
-	Ajax.post('/приложение/человек/сменить картинку', { имя: image_file_name },
+	Ajax.post('/приложение/человек/сменить данные',
+	{
+		_id: пользователь._id,
+		имя: id_card.find(editable_info[0]).text(),
+		описание: id_card.find(editable_info[1]).text(),
+		откуда: id_card.find(editable_info[2]).text()
+	},
 	{
 		ошибка: function(ошибка)
 		{
@@ -193,10 +222,31 @@ function save_changes()
 		},
 		ok: function()
 		{
-			loading_indicator.hide()
-			Режим.разрешить_переходы()
+			if (!image_file_name)
+			{
+				loading_indicator.hide()
+				Режим.разрешить_переходы()
+				return Режим.изменения_сохранены()
+			}
 			
-			Режим.изменения_сохранены()
+			Ajax.post('/приложение/человек/сменить картинку', { имя: image_file_name },
+			{
+				ошибка: function(ошибка)
+				{
+					loading_indicator.hide()
+					Режим.разрешить_переходы()
+					
+					error(ошибка)
+				},
+				ok: function()
+				{
+					loading_indicator.hide()
+					Режим.разрешить_переходы()
+					
+					Режим.изменения_сохранены()
+					image_file_name = null
+				}
+			})
 		}
 	})
 }

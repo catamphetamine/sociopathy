@@ -12,6 +12,8 @@
 	
 @paragraph_indent: 1.35em;
 
+@visual_editor_tools_panel_height: 51px;
+
 .top_to_bottom_gradient(@from_color, @to_color)
 {
 		background: -webkit-gradient(linear, left top, left bottom, from(@from_color), to(@to_color));
@@ -122,7 +124,7 @@
 	transition: @what @duration ease-in-out;
 }
 
-.css_transition_property(@property)
+.css_transition_property (@property)
 {
 	-webkit-transition-property: @property;
 	-moz-transition-property: @property;
@@ -174,4 +176,36 @@
 	-o-transition-easing: @easing;
 	-ms-transition-easing: @easing;
 	transition-easing: @easing;
+}
+
+.three_column_layout_center_wrapper
+{
+	float: left;
+	width: 100%;
+}
+
+.three_column_layout_center(@left_width, @right_width)
+{
+	margin-left: @left_width;
+	margin-right: @right_width;
+}
+
+.three_column_layout_left(@width)
+{
+	float: left;
+	width: @width;
+	margin-left: -100%;
+}
+
+.three_column_layout_right(@width)
+{
+	float: left;
+	width: @width;
+	margin-left: -@width;
+}
+
+.include_padding_in_width()
+{
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
 }

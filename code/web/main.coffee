@@ -41,6 +41,9 @@ require './controller/library'
 require './controller/people'
 require './controller/user'
 require './controller/general'
+require './controller/blog'
+require './controller/books'
+require './controller/friends'
 
 #global.memcache_available = false
 global.memcache.on 'connect', () ->

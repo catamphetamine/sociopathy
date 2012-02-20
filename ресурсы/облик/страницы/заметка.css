@@ -6,6 +6,11 @@
 {
 	margin-left: -@article_side_padding;
 	margin-right: -@article_side_padding;
+
+	min-height: 2 * @visual_editor_tools_panel_height;
+	max-height: 2 * @visual_editor_tools_panel_height;
+	
+	overflow: hidden;
 }
 
 #content.article

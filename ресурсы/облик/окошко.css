@@ -151,8 +151,7 @@ body.osx .popup .top_bar
 		left: -120px;
 		top: -120px;
 		
-		box-sizing: border-box;
-		-moz-box-sizing: border-box;
+		.include_padding_in_width();
 		
 		padding: 54px;
 		

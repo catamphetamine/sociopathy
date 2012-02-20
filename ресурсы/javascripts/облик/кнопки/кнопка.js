@@ -18,6 +18,14 @@
  * @github kuchumovn
  */
 
+/*
+	options.css3 пока не работает, так как сложно будет управлять
+	временем анимации каждого состояния кнопки,
+	которое может меняться в зависимости от состояния
+	
+	options.display_single_frame - не очень красиво выглядит
+	почему-то несинхронно скрывается и показывается
+*/
 var button = new Class
 ({
 	Implements: [Options, Events],
@@ -334,18 +342,26 @@ var button = new Class
 	on_roll_over: function() 
 	{
 //		animator.stop(this.frames.ready)
-		this.fade_in('ready') 
+
+		if (this.options.css3)
+			this.$element.addClass('ready')
+		else
+			this.fade_in('ready') 
 	},
 	
 	on_roll_out: function() 
 	{
 //		animator.stop(this.frames.ready)
-		this.fade_out('ready')
+
+		if (this.options.css3)
+			this.$element.removeClass('ready')
+		else
+			this.fade_out('ready') 
 	},
 	
 	on_push: function()
 	{
-		this.fade_in('pushed', function() 
+		var on_action = function() 
 		{
 			this.on_roll_out()
 			
@@ -355,12 +371,28 @@ var button = new Class
 			if (this.is_auto_unlock())
 				this.let_unlock()
 		}.
-		bind(this))
+		bind(this)
+		
+		if (this.options.css3)
+		{
+			var delay = this.$element.css('transition-duration')
+			this.$element.addClass('pushed')
+			on_action.delay(delay)
+		}
+		else
+			this.fade_in('pushed', on_action)
 	},
 	
 	unpush: function()
 	{
-		this.fade_out('pushed', this.can_unlock_the_pushing_lock)
+		if (this.options.css3)
+		{
+			var delay = this.$element.css('transition-duration')
+			this.$element.removeClass('pushed')
+			this.can_unlock_the_pushing_lock.delay(delay)
+		}
+		else
+			this.fade_out('pushed', this.can_unlock_the_pushing_lock)
 	},
 	
 	get_maximum_opacity: function(frame)
@@ -428,19 +460,22 @@ var button = new Class
 		{
 			if (self.pushing.is_locked())
 			{
-				setTimeout(fade_out_after_pushed, 10)
+				setTimeout(fade_out_after_pushed, 30)
 				return
 			}
-				
-			self.fade_out('idle', function() 
-			{ 
+			
+			var action = function() 
+			{
+				self.frames.idle.hide()
 				self.is_shown = false
 			
 				if (callback) 
 					callback()
 	
 				lock.unlock()				
-			})
+			}
+				
+			self.fade_out('idle', action)
 		}
 		
 		fade_out_after_pushed()
@@ -457,10 +492,28 @@ var button = new Class
 			callback: callback,
 			maximum_opacity: this.get_maximum_opacity(this.frames[frame_name])
 		})
+		
+		// пока не используется
+		if (this.options.display_single_frame)
+			if (frame_name !== 'idle')
+				animator.fade_out(this.frames.idle,
+				{
+					duration: this.options[frame_name + ' frame fade in duration'],
+					easing: this.options[frame_name + ' frame fade in easing']
+				})
 	},
 	
 	fade_out: function(frame_name, callback)
 	{
+		// пока не используется
+		if (this.options.display_single_frame)
+			if (frame_name !== 'idle')
+				animator.fade_in(this.frames.idle,
+				{
+					duration: this.options[frame_name + ' frame fade in duration'],
+					easing: this.options[frame_name + ' frame fade in easing']
+				})
+		
 		animator.fade_out(this.frames[frame_name], 
 		{
 			duration: this.options[frame_name + ' frame fade out duration'],

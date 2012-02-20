@@ -80,10 +80,12 @@ html *::selection, html *::-moz-selection, html *::-webkit-selection
 	overflow: hidden;
 }
 
+/*
 .middle
 {
 	position: relative;
 }
+*/
 
 .table
 {
@@ -100,10 +102,12 @@ html *::selection, html *::-moz-selection, html *::-webkit-selection
 	}
 }
 
+/*
 .middle
 {
 	vertical-align: middle;
 }
+*/
 
 html, input
 {
@@ -203,21 +207,6 @@ div.clear
 {
 	clear: both;
 	font-size: 0;
-}
-
-.left
-{
-	float: left;
-}
-
-.right
-{
-	float: right;
-}
-
-.field_watermark
-{
-	color: #7f7f7f;
 }
 
 #unsupported_browser_warning
@@ -525,13 +514,21 @@ h1, h2, h3, h4, h5, h6
 	width: 100%;
 	
 	background-color: #d2d2d2;
+	background: -webkit-gradient(linear, center top, center bottom, from(#eaeaea), to(#cfcfcf));
+	background-image: -moz-linear-gradient(top, #eaeaea, #cfcfcf);
+	
+	border-top-width: 1px;
+	border-top-style: solid;
+	border-top-color: #cfcfcf;
+
+	.shadow(0px, 0px, 4px, 0.20);
 	
 	position: fixed;
 	bottom: 0;
 	left: 0;
 	
 	overflow: hidden;
-	padding-top: 8px;
+	padding-top: 6px;
 	
 	text-align: center;
 	
@@ -548,7 +545,7 @@ h1, h2, h3, h4, h5, h6
 
 #edit_mode_actions, #edit_mode_actions_placeholder
 {
-	height: 66px;
+	height: 65px;
 	overflow: hidden;
 }
 
@@ -624,4 +621,9 @@ pre, code
 #loading_indicator
 {
 	display: block !important;
+}
+
+[contenteditable=true]
+{
+	cursor: auto !important;
 }

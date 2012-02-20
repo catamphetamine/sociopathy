@@ -18,6 +18,8 @@
 	height: 59px;
 	
 	background-image: url('/картинки/на страницах/welcome/join button.png');
+	
+	cursor: pointer;
 }
 
 #join_dialog

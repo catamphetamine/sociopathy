@@ -1,0 +1,18 @@
+@import "/облик/вспомогательный.less";
+
+#blog_block
+{
+	[type=loading], [type=error]
+	{
+		text-align: center;
+		margin-bottom: 50px;
+		margin-top: 250px;
+	}
+	
+	[type=ok]
+	{
+		text-align: center;
+		margin-bottom: 50px;
+		margin-top: 250px;
+	}
+}
