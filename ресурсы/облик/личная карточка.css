@@ -273,7 +273,7 @@
 			background-color: transparent;
 			
 			.css_transition_property(opacity);
-			.css_transition_duration(500ms);
+			.css_transition_duration(1s);
 			.css_transition_easing(ease-in-out);
 		}
 		
@@ -300,8 +300,8 @@
 				font-size: 20px;
 				
 				color: white;
-				background-color: black;
-				opacity: 0.8;
+				background-color: #2f2f2f;
+				opacity: 0.91;
 				
 				display: none;
 				
@@ -309,6 +309,8 @@
 				padding-right: 12px;
 				padding-top: 8px;
 				padding-bottom: 8px;
+				
+				text-shadow: black 1px 1px 2px;
 				
 				.rounded_corners(4px);
 				

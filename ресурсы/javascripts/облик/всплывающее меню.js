@@ -16,15 +16,27 @@ activate_popup_menu
 
 function activate_popup_menu(options)
 {
+	options.popup = options.actions
+	activate_popup(options)
+}
+
+function activate_popup(options)
+{
 	var left_photo_timer
-	var left_actions_timer
+	var left_popup_timer
 		
 	var delay = 200
 	
 	var activator = options.activator
-	var actions = options.actions
-	var actions_container = options.actions.parent()
+	var popup = options.popup
+	var popup_container = options.popup.parent()
 	
+	if (typeof options.fade_in_duration === 'undefined')
+		options.fade_in_duration = 0.3
+	
+	if (typeof options.fade_out_duration === 'undefined')
+		options.fade_out_duration = 0.3
+		
 	activator.on('mouseenter', function()
 	{
 		if (options.condition)
@@ -37,10 +49,10 @@ function activate_popup_menu(options)
 			left_photo_timer = null
 		}
 		
-		if (left_actions_timer)
+		if (left_popup_timer)
 		{
-			clearTimeout(left_actions_timer)
-			left_actions_timer = null
+			clearTimeout(left_popup_timer)
+			left_popup_timer = null
 		}
 		
 		show()
@@ -55,7 +67,7 @@ function activate_popup_menu(options)
 		.delay(delay)
 	})
 	
-	actions.on('mouseenter', function()
+	popup.on('mouseenter', function()
 	{
 		if (left_photo_timer)
 		{
@@ -63,55 +75,67 @@ function activate_popup_menu(options)
 			left_photo_timer = null
 		}
 		
-		if (left_actions_timer)
+		if (left_popup_timer)
 		{
-			clearTimeout(left_actions_timer)
-			left_actions_timer = null
+			clearTimeout(left_popup_timer)
+			left_popup_timer = null
 		}
 		
 		show()
 	})
 	
-	actions.on('mouseleave', function()
+	popup.on('mouseleave', function()
 	{
-		left_actions_timer = function()
+		left_popup_timer = function()
 		{
 			hide()
 		}
 		.delay(delay)
 	})
 	
+	var popup_offset =
+	{
+		left: parseInt(popup.css('left')),
+		top: parseInt(popup.css('top'))
+	}
+	
+	if (popup.css('left') !== popup_offset.left + 'px')
+		return alert('Invalid popup left css value. Use pixels')
+		
+	if (popup.css('top') !== popup_offset.top + 'px')
+		return alert('Invalid popup top css value. Use pixels')
+		
 	function show()
 	{
-		actions.appendTo('body')
+		popup.appendTo('body')
+		var offset = popup_container.offset()
 		
-		var offset = actions_container.offset()
-		actions.css
+		popup.css
 		({
-			left: offset.left + 'px',
-			top: offset.top + 'px'
+			left: offset.left + popup_offset.left + 'px',
+			top: offset.top + popup_offset.top +'px'
 		})
 		
 		if (options.style_class)
-			actions.addClass(options.style_class)
+			popup.addClass(options.style_class)
 			
-		actions.fade_in(0.3, { easing: 'easeInQuad' })
+		popup.fade_in(options.fade_in_duration, { easing: 'easeInQuad' })
 	}
 	
 	function hide()
 	{
-		actions.fade_out(0.3, function()
+		popup.fade_out(options.fade_out_duration, function()
 		{
-			actions.css
+			popup.css
 			({
 				left: 0,
 				top: 0
 			})
 		
 			if (options.style_class)
-				actions.removeClass(options.style_class)
+				popup.removeClass(options.style_class)
 			
-			actions.appendTo(actions_container)
+			popup.appendTo(popup_container)
 		})
 	}
 }

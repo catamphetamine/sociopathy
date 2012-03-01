@@ -47,5 +47,15 @@
 	.buttons
 	{
 		padding-right: 30px;
+		
+		.cancel
+		{
+			float: left;
+		}
+		
+		.enter
+		{
+			float: right;
+		}
 	}
 }

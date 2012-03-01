@@ -58,12 +58,12 @@ function resize_categories_list()
 	function calculate_categories_width(count)
 	{
 		var Category_width = 250
-		var Category_side_spacing = 15
+		var Category_side_spacing = 40
 	
 		return count * (Category_width + (Category_side_spacing * 2))
 	}
 	
-	var available_width = parseInt($(window).width())
+	var available_width = parseInt($('#content').width())
 	
 	var count = 0
 	var width = 0

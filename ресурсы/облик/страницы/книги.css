@@ -25,12 +25,90 @@
 	margin-top: 100px;
 }
 
+.book_info_container
+{
+	position: absolute;
+	z-index: 2;
+	
+	top: 90%;
+}
+
+.book_info
+{
+	position: relative;
+	
+	padding: 2px;
+	background-color: #cfcfcf;
+	
+	border-width: 1px;
+	border-style: solid;
+	border-color: #6f6f6f;
+
+	.shadow(0, 0, 8px, 0.5);
+	
+	opacity: 0.91;			
+	border-radius: 8px;
+	
+	.info
+	{
+		line-height: 43px;
+		font-size: 30px;
+		
+		color: white;
+		background-color: #2F2F2F;
+		
+		text-shadow: black 1px 1px 4px;
+		
+		border-radius: 6px;
+		
+		padding-left: 14px;
+		padding-right: 14px;
+		padding-top: 9px;
+		padding-bottom: 9px;
+		
+		border-width: 1px;
+		border-style: solid;
+		border-color: #1f1f1f;
+		
+		box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.7);
+		text-align: center;
+		
+		.author, .title
+		{
+			&::selection
+			{
+				color: black;
+				background-color: white;
+				text-shadow: white 1px 1px 4px;
+			}		
+		}
+		
+		.author
+		{
+			display: block;
+		}
+		
+		.title
+		{
+			&:before
+			{
+				content: '«';
+			}
+			
+			&:after
+			{
+				content: '»';
+			}
+		}
+	}
+}
+
 .bookshelf
 {
 	display: inline-block;
 	font-size: 0;
 	
-	.shadow(0px, 10px, 42px, 0.5);
+	.beautiful_shadow_4(0px, 10px, 5px, 14px, 26px, 42px, 0.20);
 	
 	.middle
 	{
@@ -74,7 +152,7 @@
 		
 		.left, .center, .right
 		{
-			height: 161px;
+			height: 180px;
 			display: inline-block;
 		}
 		
@@ -98,51 +176,110 @@
 		.books
 		{
 			position: absolute;
-			bottom: 5px;
+			bottom: 6px;
 			
 			padding-left: 20px;
 			padding-right: 20px;
 			
 			white-space: nowrap;
+			box-sizing: border-box;
 			
-			.book
+			width: 100%;
+			text-align: center;	
+			
+			.book_place
 			{
 				display: inline-block;
 				position: relative;
-								
-				height: 140px;
-				width: 88px;
-					
-				.icon
-				{
-					height: 140px;
-					width: 88px;
-					
-					position: absolute;
-					z-index: 1;
 				
-					background-image: url('/загруженное/книги/обложки/фритьоф капра «скрытые связи»1.jpg');
-					.shadow(0px, 0px, 14px, 1.0);
-				}
+				width: 152px;
+				text-align: center;
 			
-				margin-left: 25px;
-				margin-right: 25px;
-				
-				.bottom_shadow
+				.book
 				{
-					background-image: url('/картинки/книжный шкаф/тень от книги на подставке.png');
-					height: 10px;
-
-					width: 110%;
-					left: -5%;
+					display: inline-block;
+					position: relative;
+									
+					width: 88px;
+					height: 140px;
+						
+					.icon
+					{
+						width: 100%;
+						height: 100%;
+						
+						position: absolute;
+						z-index: 1;
+						bottom: 0;
 					
-					background-size: 100% 10px;
+						background-image: url('/загруженное/книги/обложки/фритьоф капра «скрытые связи».jpg');
+						.shadow(0px, 0px, 14px, 1.0);
+					}
 					
-					opacity: 0.5;
+					.author, .title
+					{
+						position: absolute;
+						z-index: 2;
+						
+						text-align: center;
+						
+						overflow: hidden;
+					}
 					
-					position: absolute;
-					bottom: -4px;
-					z-index: 0;
+					.author
+					{
+						width: 70px;
+						height: 16px;
+						
+						bottom: 22px;
+						left: 18px;
+						
+						font-family: DINPro;
+					}
+					
+					.title
+					{
+						width: 63px;
+						height: 42px;
+						
+						top: 34px;
+						left: 22px;
+						
+						font-family: Times New Roman;
+						
+						> *
+						{
+							white-space: normal;
+						}
+					}
+					
+					&.no_icon
+					{
+						width: 100px;
+						height: 150px;
+						
+						.icon
+						{
+							background-image: url('/картинки/книжный шкаф/книга без обложки.png');
+						}
+					}
+					
+					.bottom_shadow
+					{
+						background-image: url('/картинки/книжный шкаф/тень от книги на подставке.png');
+						height: 10px;
+	
+						width: 110%;
+						left: -5%;
+						
+						background-size: 100% 10px;
+						
+						opacity: 0.5;
+						
+						position: absolute;
+						bottom: -4px;
+						z-index: 0;
+					}
 				}
 			}
 		}

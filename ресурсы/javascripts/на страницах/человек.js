@@ -98,16 +98,18 @@ function show_online_status()
 	когда_был_здесь = пользователь_сети['когда был здесь']
 	if (!когда_был_здесь)
 		return
-	else
-		когда_был_здесь = new Date(когда_был_здесь)
+	
+	когда_был_здесь = new Date(когда_был_здесь)
 
 	id_card.find('.last_action_time').attr('date', когда_был_здесь.getTime())
 	update_intelligent_dates.ticking(60 * 1000)
 	
+	var maximum_opacity = id_card.find('.was_here').css('opacity')
+	
 	var online_status = id_card.find('.online_status')
 	online_status.on('mouseenter', function()
 	{
-		id_card.find('.was_here').fade_in(0.3, { maximum_opacity: 0.8, hide: true })
+		id_card.find('.was_here').fade_in(0.3, { maximum_opacity: maximum_opacity, hide: true })
 	})
 	online_status.on('mouseleave', function()
 	{
@@ -122,7 +124,7 @@ function update_online_status()
 	var остылость = (new Date().getTime() - когда_был_здесь.getTime()) / (Options.User_is_online_for * 1000)
 	if (остылость > 1)
 	{
-		online_status.online.hide()
+		online_status.online.css({ opacity: 0 })
 		online_status.offline.css({ opacity: 1 })
 		return online_status_updater.stop()
 	}

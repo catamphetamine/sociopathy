@@ -24,6 +24,7 @@
 		<script src="/javascripts/jquery/jquery.color.js"></script>
 		<script src="/javascripts/jquery/jquery.animate-shadow.js"></script>
 		<script src="/javascripts/jquery/jquery.tools.js"></script>
+		<script src="/javascripts/jquery/jquery-full-house.js"></script>
 		
 		<!-- MooTools -->
 		<script src="/javascripts/mootools/core-1.3.js"></script>
@@ -153,7 +154,7 @@
 					
 					$('.non_selectable').disableTextSelect()
 					$('#page_header').disableTextSelect()
-					$('label').disableTextSelect()
+					//$('label').disableTextSelect()
 					$('.authenticated_user').disableTextSelect()
 					
 					go_to_anchor()
@@ -242,7 +243,9 @@
 			{
 				Upload_server_port: 8090,
 				Websocket_server: host + ':8080',
-				User_is_online_for: 8 * 60
+				User_is_online_for: 8 * 60,
+				Book_shelf_size: 6,
+				Minimum_book_shelves: 3
 			}
 		</script>
 				

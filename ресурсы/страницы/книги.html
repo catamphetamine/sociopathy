@@ -1,14 +1,46 @@
 <section id="content">
-	<div class="bookshelf">
+	<div class="bookshelf non_selectable">
 		<div class="top_border"></div>
 		<div class="middle">
-			<div class="left_border"></div><div class="inner">
-				<div class="shelf"><div class="left"></div><div class="center"></div><div class="right"></div><div class="books"><div class="book"><div class="icon"></div><div class="bottom_shadow"></div></div><div class="book"><div class="icon"></div><div class="bottom_shadow"></div></div></div></div>
-				<div class="shelf_divider"><div class="left"></div><div class="center"></div><div class="right"></div></div>
-				<div class="shelf"><div class="left"></div><div class="center"></div><div class="right"></div></div>
-				<div class="shelf_divider"><div class="left"></div><div class="center"></div><div class="right"></div></div>
-				<div class="shelf"><div class="left"></div><div class="center"></div><div class="right"></div></div>
-			</div><div class="right_border"></div>
+			<div class="left_border"></div>
+			<div class="inner">
+				{{each shelves}}
+					<div class="shelf">
+						<div class="left"></div>
+						<div class="center"></div>
+						<div class="right"></div>
+						<div class="books">
+							{{each books}}
+								<div class="book_place">
+									{{if title}}
+										<div class="book_info_container">
+											<div class="book_info">
+												<div class="info">
+													<span class="author">${author}</span>
+													<span class="title">${title}</span>
+												</div>
+											</div>
+										</div>
+										
+										<div class="book {{if icon}}{{else}}no_icon{{/if}} non_selectable">
+											{{if icon}}{{else}}<div class="author">${author}</div><div class="title">${title}</div>{{/if}}<div class="icon" {{if icon}}style="background-image: url('/загруженное/книги/обложки/${icon}.jpg')"{{/if}}></div><div class="bottom_shadow"></div>
+										</div>
+									{{/if}}
+								</div>
+							{{/each}}
+						</div>
+					</div>
+					
+					{{if $index + 1 < $data.shelves.length}}
+						<div class="shelf_divider">
+							<div class="left"></div>
+							<div class="center"></div>
+							<div class="right"></div>
+						</div>
+					{{/if}}
+				{{/each}}
+			</div>
+			<div class="right_border"></div>
 		</div>
 		<div class="bottom_border"></div>
 	</div>
