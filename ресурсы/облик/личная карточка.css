@@ -282,13 +282,13 @@
 			.online
 			{
 				background-image: url('/картинки/business card/online.png');
+				
+				opacity: 0;
 			}
 		
 			.offline
 			{
 				background-image: url('/картинки/business card/offline.png');
-				
-				opacity: 0;
 			}
 			
 			.was_here

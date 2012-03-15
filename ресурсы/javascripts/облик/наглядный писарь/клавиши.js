@@ -98,29 +98,45 @@ Visual_editor.implement
 			var container = editor.caret.container()
 			var container_tag = container[0].tagName.toLowerCase()
 			
-			if (container[0] === editor.content[0])
-				return visual_editor.enter_pressed_in_container()
-			
-			var i = 0
-			while (i < tags_with_prohibited_line_break.length)
+			var process_enter_key = function()
 			{
-				if (tags_with_prohibited_line_break[i] === container_tag)
-					return
-				i++
+				var error
+				
+				var i = 0
+				while (i < tags_with_prohibited_line_break.length)
+				{
+					if (tags_with_prohibited_line_break[i] === container_tag)
+					{
+						if (container_tag === 'a')
+							error = 'Нельзя вставлять разрывы строк в ссылках'
+						return { prohibited: error }
+					}
+					i++
+				}
+				
+				var captured = false
+				Object.each(visual_editor.line_break_handlers, function(action, selector)
+				{
+					if (captured)
+						return
+						
+					if (container.is(selector))
+					{
+						action.bind(visual_editor)(container)
+						captured = true
+					}
+				})
+				
+				return { captured: captured }
 			}
 			
-			var finished = false
-			Object.each(visual_editor.line_break_handlers, function(action, selector)
-			{
-				if (finished)
-					return
-					
-				if (container.is(selector))
-				{
-					action.bind(visual_editor)(container)
-					finished = true
-				}
-			})
+			if (container[0] === editor.content[0])
+				return visual_editor.enter_pressed_in_container()
+				
+			var result = process_enter_key()
+			
+			if (!result.captured)
+				visual_editor.enter_pressed(result)
 		})
 	},
 		
@@ -170,8 +186,9 @@ Visual_editor.implement
 		{
 			if (!visual_editor.can_edit())
 				return
-				
-			if (Клавиши.is('Alt', 'Shift', 'Minus', event))
+			
+			/*	
+			if (Клавиши.is('Ctrl', 'Shift', 'Minus', event))
 			{
 				event.preventDefault()
 			
@@ -180,6 +197,7 @@ Visual_editor.implement
 				
 				visual_editor.on_breaking_space(container_tag)
 			}
+			*/
 		})
 	},
 	
@@ -226,8 +244,8 @@ Visual_editor.implement
 			if (event.altKey || event.ctrlKey)
 				return
 				
-			if (Клавиши.is('Shift', 'Space', event))
-				return
+			//if (Клавиши.is('Shift', 'Space', event))
+			//	return
 		
 			event.preventDefault()
 			
@@ -247,8 +265,12 @@ Visual_editor.implement
 			{
 				var text = editor.caret.text()
 				if (text)
+				{
 					if (text.ends_with(' -'))
 						return editor.caret.collapse_recent_characters(2, ' — ')
+					else if (text.ends_with(' '))
+						return visual_editor.on_breaking_space(editor.caret.native_container().parentNode)
+				}
 			}
 			else if (character === '"')
 			{

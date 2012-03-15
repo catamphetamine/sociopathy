@@ -69,8 +69,6 @@ var dialog_window = new Class
 					event.keyCode === Event.Keys.esc) 
 				{	
 					event.preventDefault()
-					if (self.options.on_close)
-						self.options.on_close()
 					self.close()
 				}
 			})
@@ -180,6 +178,18 @@ var dialog_window = new Class
 			last.focus(1)
 			return false
 		}
+	},
+	
+	cancel: function(callback)
+	{
+		this.close(function()
+		{
+			if (this.options['on cancel'])
+				this.options['on cancel'].bind(this.content)()
+				
+			if (callback)
+				callback()
+		})
 	},
 	
 	// closes the dialog window

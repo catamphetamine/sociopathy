@@ -1,3 +1,5 @@
+title('Болталка')
+
 var chat
 var who_is_online_bar_list
 
@@ -19,6 +21,12 @@ var new_message_sound = new Audio("/звуки/new message.ogg")
 var alarm_sound = new Audio("/звуки/alarm.ogg")
 
 var compose_message
+//var chat_lifter
+
+var scroll_down_to_new_messages
+var scroll_down_to_new_messages_opacity
+
+var new_messages = []
 	
 function initialize_page()
 {
@@ -31,6 +39,9 @@ function initialize_page()
 	chat = $('.chat')
 	var more_link = $('#chat_container').find('.older > a')
 	compose_message = $('#compose_message')
+	
+	scroll_down_to_new_messages = $('.scroll_down_to_new_messages')
+	scroll_down_to_new_messages_opacity = scroll_down_to_new_messages.css('opacity') || 1
 	
 	var loader = new Batch_loader
 	({
@@ -46,6 +57,7 @@ function initialize_page()
 		
 			return сообщения
 		},
+		done: chat_loaded,
 		done_more: function()
 		{
 			if (this.есть_ли_ещё)
@@ -85,7 +97,6 @@ function initialize_page()
 			template_url: '/страницы/кусочки/сообщение в болталке.html',
 			item_container: chat,
 			conditional: conditional,
-			done: chat_loaded,
 			postprocess_element: function(item)
 			{
 				var author = item.find('.author')
@@ -114,21 +125,61 @@ function initialize_page()
 					next_in_time.find('.message').css('padding-top', 0)
 				}
 				
+				chat.prepend(item)
+
+				// после preprend, т.к. стили				
 				if (data.отправитель._id !== пользователь._id)
 					initialize_call_action(item, item.attr('author'), 'of_message_author', function() { return item.find('.author').hasClass('online') })
-							
-				chat.prepend(item)
 			},
 			order: 'обратный'
 		},
 		loader)
 	})
+	
+	function iterate(array, condition, action)
+	{
+		var count = array.length
+		
+		var i = 0
+		while (i < count)
+		{
+			if (condition(array[i]))
+			{
+				action(array.splice(i, 1)[0])
+				count--
+			}
+			else
+				i++
+		}
+	}
+	
+	$(window).on('scroll', function()
+	{
+		check_if_there_are_still_unread_messages()
+	})
+	
+	// таким образом мы исправим случай, когда поле ввода было большим при скролле,
+	// но потом уменьшилось при удалении всего, и табличка о новых сообщениях осталась висеть
+	check_if_there_are_still_unread_messages.ticking(1000)
+	
+	function check_if_there_are_still_unread_messages()
+	{
+		iterate(new_messages, function(message)
+		{
+			return message.is_visible_on_screen({ fully: true })
+		},
+		function()
+		{
+			if (new_messages.is_empty())
+				indicate_no_new_messages()
+		})
+	}
 }
 
 function initialize_call_action(user_icon, user_id, style_class, condition)
 {
 	var actions = user_icon.find('.popup_menu_container')
-
+	
 	actions.find('.call').click(function(event)
 	{
 		event.preventDefault()
@@ -140,7 +191,9 @@ function initialize_call_action(user_icon, user_id, style_class, condition)
 		activator: user_icon.find('.picture'),
 		actions: actions,
 		condition: condition,
-		style_class: style_class
+		style_class: style_class,
+		fade_in_duration: 0.1,
+		fade_out_duration: 0.1
 	})
 }
 
@@ -179,57 +232,26 @@ function add_message(data)
 		this_message.css('padding-top', 0)
 	}
 
+	// вывести снизу следующее новое сообщение
 	var next = function()
 	{
 		messages_to_add.shift()
 		add_message()
+		remove_old_messages()
 	}
 	
-	if (data.отправитель._id !== пользователь._id)
-		initialize_call_action(content, content.attr('author'), 'of_message_author', function() { return this_author.hasClass('online') })
-	
-	var сообщений_не_видно = false //$(window).scrollTop() + $(window).height() < chat_top_offset
-	var видно_верхнюю_границу_сообщений = $(window).scrollTop() < chat_top_offset
-	var не_видно_нижнюю_границу_сообщений = $(window).scrollTop() + $(window).height() < chat_top_offset + chat.height() //_height
-	if (сообщений_не_видно || видно_верхнюю_границу_сообщений || не_видно_нижнюю_границу_сообщений)
+	// убрать сверху лишние сообщения
+	var remove_old_messages = function()
 	{
-		content.appendTo(chat)
-		return next()
-	}
-	
-	fix_chat_container_height()
-	
-	content.appendTo(chat)
-	
-	var delta_height = content.outerHeight(true)
-	
-	var marginBottom = parseInt(chat.css('marginBottom'))
-
-	var compose_message_window_offset = compose_message.offset().top - $(window).scrollTop()
-	
-	chat.animate
-	({
-		top: -delta_height + 'px',
-		marginBottom: -delta_height + 'px'
-	},
-	700,
-	'easeInOutQuad',
-	function()
-	{	
-		// показать то верхнее сообщение, которое уехало
-		
-		chat.css({ top: 0, 'margin-bottom': 0 })
-	
-		// убрать сверху лишние сообщения
-		
 		var chat_messages = chat.find('> li')
+		var delta_height = 0
 		
 		var delta_messages = chat_messages.length - Max_chat_messages
 		var i = 0
 		while (delta_messages > 0)
 		{
 			var message = chat_messages.eq(i)
-			var delta_height = message.height()
+			delta_height += message.height()
 
 			message.remove()
 			
@@ -237,13 +259,55 @@ function add_message(data)
 			i++
 		}
 		
-		automatic_chat_container_height()
+		return delta_height		
+	}
+	
+	var is_another_users_message = data.отправитель._id !== пользователь._id
+	
+	var append = function()
+	{
+		content.appendTo(chat)
 		
-		$(window).scrollTop(compose_message.offset().top - compose_message_window_offset)
+		// после append'а, т.к. стили
+		if (is_another_users_message)
+			initialize_call_action(content, content.attr('author'), 'of_message_author', function() { return this_author.hasClass('online') })
+	}
+	
+	if (!should_roll())
+	{
+		append()
 		
-		// вывести снизу следующее новое сообщение
+		// прокрутить на величину убранных сообщений
+		$(window).scrollTop($(window).scrollTop() - remove_old_messages())
+		
+		if (is_another_users_message)
+			notify_new_message_recieved(content)
+		
+		return next()
+	}
+	
+	append()
+	прокрутчик.scroll_to(chat, { top_offset: chat_top_offset, bottom: true, duration: 700 }, function()
+	{
+		remove_old_messages()
 		next()
 	})
+}
+
+function indicate_new_messages()
+{
+	scroll_down_to_new_messages.fade_in(0.3, { maximum_opacity: scroll_down_to_new_messages_opacity })
+}
+
+function indicate_no_new_messages()
+{
+	scroll_down_to_new_messages.fade_out(0.3)
+}
+
+function notify_new_message_recieved(message)
+{
+	new_messages.push(message)
+	indicate_new_messages()
 }
 
 function пользователь_в_сети(пользователь)
@@ -276,15 +340,17 @@ function внести_пользователя_в_список_вверху(user
 	
 	$.tmpl('chat user icon', { отправитель: user }).appendTo(container)
 	
-	if (user._id !== пользователь._id)
-		initialize_call_action(container, user._id, 'of_online_user')
-	
 	if (options)
 		if (options.куда === 'в начало')
 			return container.prependTo(who_is_online_bar_list)
 	
 	container.css('opacity', '0')
 	container.appendTo(who_is_online_bar_list)
+	
+	// после append'а, т.к. стили
+	if (user._id !== пользователь._id)
+		initialize_call_action(container, user._id, 'of_online_user')
+		
 	animator.fade_in(container, { duration: 1 }) // in seconds
 }
 
@@ -304,30 +370,10 @@ function пользователь_вышел_из_болталки(пользо�
 	})
 }
 
-function fix_chat_container_height()
-{
-	chat.parent().css
-	({
-		height: chat.height() + 'px',
-		overflow: 'hidden'
-	})
-}
-
-function automatic_chat_container_height()
-{
-	chat.parent().css
-	({
-		height: 'auto',
-		overflow: 'visible'
-	})
-}
-
 function chat_loaded()
 {
-	//chat_height = chat.height()
 	chat_top_offset = chat.offset().top
 
-	//adjust_bottom_smooth_border(chat.find('> li:last > .author'))
 	new_messages_smooth_border.css('width', '100%')
 	
 	//show_testing_messages()
@@ -389,16 +435,14 @@ function chat_loaded()
 			visual_editor.editor.caret.move_to_the_end(container)
 			*/
 		}
+
+		//if (visual_editor.editor.caret.inside('li'))
+		//	return
 		
-		visual_editor.enter_pressed_in_container = function()
+		function send_message()
 		{
-			if (visual_editor.editor.caret.inside('li'))
-				return
-		
-			//alert(visual_editor.editor.content.html())
-		
-			var message = visual_editor.editor.content.html()
-			if (!message.trim())
+			var message = visual_editor.editor.content.html().trim()
+			if (!message)
 				return
 				
 			visual_editor.editor.content.html(editor_initial_html)
@@ -407,19 +451,60 @@ function chat_loaded()
 			болталка.emit('сообщение', message)
 		}
 		
-		visual_editor.tagged_hint(visual_editor.editor.content.find('> p'), 'Вводите сообщение здесь')
+		visual_editor.enter_pressed_in_container = function()
+		{
+			send_message()
+			check_if_there_are_still_unread_messages()
+		}
+		
+		visual_editor.enter_pressed = function(result)
+		{
+			send_message()
+			check_if_there_are_still_unread_messages()
+		}
+		
+		var hint = $('<p/>').appendTo(visual_editor.editor.content)
+		visual_editor.tagged_hint(hint, 'Вводите сообщение здесь')
+		
 		var editor_initial_html = visual_editor.editor.content.html()
 		
+		visual_editor.Tools.Subheading.turn_off()
 		visual_editor.initialize_tools_container()
+		
+		visual_editor.tools_element.on('more.visual_editor_tools', adjust_chat_listing_margin)
+		visual_editor.tools_element.on('less.visual_editor_tools', adjust_chat_listing_margin)
 		
 		visual_editor.show_tools()
 		
 		if ($.browser.mozilla)
 			visual_editor.editor.content.focus()
 		
-		$('#compose_message').fadeIn()
+		adjust_chat_listing_margin()
+		
+		compose_message.fadeIn()
+		
 		visual_editor.editor.caret.move_to(visual_editor.editor.content.find('> *:first'))
 	})
+}
+
+function should_roll()
+{
+	// если список сообщений кончается ниже верхней границы области ввода сообщения - не прокручивать
+	if (chat_top_offset + chat.outerHeight() > $(window).scrollTop() + $(window).height() - compose_message.height())
+		return false
+		
+	return true
+}
+
+function lift_chat_by(how_much)
+{
+	//chat_lifter.height(how_much)
+	chat.css('margin-bottom', how_much + 'px')
+}
+
+function adjust_chat_listing_margin()
+{
+	lift_chat_by(compose_message.height())
 }
 
 var status_classes =
@@ -611,8 +696,8 @@ function show_testing_messages()
 
 function new_messages_notification()
 {
-	if (document.title.indexOf('* ') !== 0)
-		document.title = '* ' + document.title
+	if (title().indexOf('* ') !== 0)
+		title('* ' + title())
 		
 	new_message_sound.play()
 }

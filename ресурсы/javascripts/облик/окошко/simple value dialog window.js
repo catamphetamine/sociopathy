@@ -33,17 +33,17 @@ function simple_value_dialog_window(options)
 			if (options.on_open)
 				options.on_open.bind(dialog_window)()
 		},
-		'on close': function()
+		'on cancel': function()
 		{
-			if (options.on_close)
-				options.on_close.bind(dialog_window)()
+			if (options.on_cancel)
+				options.on_cancel.bind(dialog_window)()
 		}
 	})
 		
 	var cancel = activate_button(dialog_window.content.find('.buttons .cancel'), { 'prevent double submission': true })
 	.does(function()
 	{
-		dialog_window.close()
+		dialog_window.cancel()
 	}
 	.bind(dialog_window))
 	

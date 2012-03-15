@@ -7,6 +7,7 @@
 	-->
 	
 	<div class="visual_editor_tools_container">
+		<div class="info_banner"></div>
 	</div>
 	
 	<div id="article_edit_mode_actions" class="non_selectable">
@@ -30,7 +31,7 @@
 	<article>
 		<h1 editable="true">${заметка.название}</h1>
 		
-		<section editable="true">{{html заметка.содержимое}}</section>
+		<section class="rich_formatting" editable="true">{{html заметка.содержимое}}</section>
 	</article>
 	
 	<div class="clear">&nbsp;</div>

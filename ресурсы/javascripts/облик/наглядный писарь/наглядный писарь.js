@@ -63,6 +63,12 @@ var Visual_editor = new Class
 		return true
 	},
 	
+	enter_pressed: function(result)
+	{
+		if (result.prohibited)
+			info(result.prohibited)
+	},
+	
 	enter_pressed_in_container: function()
 	{
 	},

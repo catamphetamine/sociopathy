@@ -383,3 +383,56 @@ $.style_class_property = function(style_class, property)
 {
 	return $('<div/>').addClass(style_class).css(property)
 }
+
+$.fn.child_or_self = function(element)
+{
+	if (this[0] === element)
+		return true
+	
+	var children = this.children()
+		
+	var i = 0
+	while (i < children.length)
+	{
+		if ($(children[i]).child_or_self(element))
+			return true
+		i++
+	}
+	
+	/*
+	if ($(possible_child).parents().index(this) >= 0)
+		return true
+	*/
+	
+	return false
+}
+
+$.fn.is_visible_on_screen = function(options)
+{
+	options = options || {}
+
+	var offset = this.offset()
+	var height = this.outerHeight()
+	var scroll_top = $(window).scrollTop()
+	
+	if (offset.top + height < $(window).scrollTop())
+		return false
+
+	if (offset.top + (options.fully ? height : 0) > scroll_top + $(window).height())
+		return false
+	
+	var element = document.elementFromPoint(offset.left, offset.top - scroll_top)
+	if (!element || !this.child_or_self(element))
+		return false
+		
+	if (options.fully)
+	{
+		element = document.elementFromPoint(offset.left, offset.top - scroll_top + height - 1)
+		if (!element || !this.child_or_self(element))
+			return false
+	}
+	
+	// mb check that element.style.visibility !== 'hidden' && element.style.display !== 'none'
+	
+	return true
+}

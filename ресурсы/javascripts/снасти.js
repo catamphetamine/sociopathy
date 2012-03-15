@@ -420,3 +420,22 @@ function получить_шаблон(options, callback)
 		}
 	})
 }
+
+function get_image_size(url, callback)
+{
+	var image = new Image()
+	
+	image.onload = function()
+	{
+		callback({ width: this.width, height: this.height })
+	}
+	
+	image.onerror = function()
+	{
+		callback({ width: 0, height: 0 })
+	}
+	
+	image.src = url
+}
+
+//get_image_size('http://www.google.com/images/errors/logo_sm.gif, function(size) { alert(size.width + ' x ' + size.height) })

@@ -449,7 +449,7 @@ function go_to_anchor()
 	})
 	
 	if (header)
-		прокрутчик.scroll_to(header)
+		прокрутчик.scroll_to(header, { make_room_for_text_readability : true })
 }
 
 function add_anchor_to_url(anchor)
@@ -495,7 +495,7 @@ $(document).on('fully_loaded', function()
 					return
 				
 				add_anchor_to_url(element.text())
-				прокрутчик.scroll_to(element)
+				прокрутчик.scroll_to(element, { make_room_for_text_readability : true })
 			})
 		})
 	})
@@ -608,39 +608,6 @@ function путь_страницы()
 	return путь
 }
 
-function path_breadcrumbs(path, delta)
-{
-	if (!delta)
-		delta = 0
-
-	var path_parts = path.split('/')
-	
-	var path_html = ''
-	
-	var i = 0
-	var how_much = path_parts.length + delta
-	while (i < how_much)
-	{
-		link_path = ''
-		
-		var j = 0
-		while (j <= i)
-		{
-			if (j > 0)
-				link_path += '/'
-			link_path += path_parts[j]
-			j++
-		}
-	
-		path_html += '<a href="/читальня/' + link_path + '">' + path_parts[i] + '</a>'
-		if (i < how_much - 1)
-			path_html += ' → '
-		i++
-	}
-	
-	return path_html
-}
-
 // HTML escaping
 
 String.prototype.escape_html = function() 
@@ -707,3 +674,11 @@ $(function()
 		$('body').addClass('windows')
 	}
 })
+
+function title(text)
+{
+	if (!text)
+		return document.title
+		
+	document.title = text
+}

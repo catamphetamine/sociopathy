@@ -3,30 +3,6 @@
  */
 var Editor = new Class
 ({
-	/*
-	initialize: function(container, content_selector)
-	{
-		this.container = container
-		this.content_selector = content_selector
-		
-		this.content = this.get_content()
-		
-		this.caret = new Editor.Caret(this)
-		this.selection = new Editor.Selection(this)
-		this.time_machine = new Editor.Time_machine(this)
-	},
-	
-	get_content: function()
-	{
-		return this.container.find(this.content_selector)
-	},
-
-	on: function(event, handler)
-	{
-		this.container.on(event, this.content_selector, handler)
-	},
-	*/
-	
 	event_handlers: [],
 	
 	initialize: function(content_selector)
@@ -38,6 +14,25 @@ var Editor = new Class
 		this.caret = new Editor.Caret(this)
 		this.selection = new Editor.Selection(this)
 		this.time_machine = new Editor.Time_machine(this)
+		
+		this.on('paste', (function()
+		{
+			var container = this.caret.container()
+			if (container.hasClass('hint'))
+			{
+				container.removeClass('hint')
+				container.text('')
+				this.caret.move_to(container)
+			}
+			else if (container.hasClass('tagged_hint'))
+			{
+				container.removeClass('tagged_hint')
+				var parent = container.parent()
+				this.caret.move_to(parent)
+				container.remove()
+			}
+		})
+		.bind(this))
 	},
 	
 	get_content: function()
@@ -316,15 +311,12 @@ var Editor = new Class
 	insert_html: function(html)
 	{
 		var container = this.caret.native_textual_container()
-		var text
+		var text = { before: '', after: '' }
 		
 		if (container)
 			text = this.caret.text_before_and_after()
 		else
-		{
 			container = this.caret.native_container()
-			text = { before: '', after: '' }
-		}
 			
 		var parent
 		if (container !== this.content[0])
@@ -334,7 +326,26 @@ var Editor = new Class
 		if (parent)
 			node_chain.push(parent)
 		
-		var how_much_parent_tags_to_close = html.count('</') - html.count(/<[^\/]+/g)
+		function how_much_tags_to_close(html)
+		{
+			//return html.count('</') - html.count(/<[^\/]+/g)
+		
+			var opening_tags = 0
+			var closing_tags = 0
+			
+			var left = html.substring(html.indexOf('<'))
+			if (html.starts_with('</'))
+			{
+				if (opening_tags > 0)
+					opening_tags--
+				else
+					closing_tags++
+			}
+			
+			return closing_tags
+		}
+		
+		var how_much_parent_tags_to_close = how_much_tags_to_close(html)
 		
 		while (how_much_parent_tags_to_close > 0)
 		{
@@ -345,7 +356,7 @@ var Editor = new Class
 		
 		node_chain.reverse()
 		
-		var before_and_after;
+		var before_and_after
 		if (parent)
 			before_and_after = Dom_tools.html_before_and_after(container)
 		else
@@ -356,7 +367,7 @@ var Editor = new Class
 			html +
 			text.after + 
 			before_and_after.after
-		
+			
 		if (!node_chain.is_empty())
 			Dom_tools.inject_html(html, node_chain)
 		else

@@ -8,9 +8,14 @@
 	margin-right: -@article_side_padding;
 
 	min-height: 2 * @visual_editor_tools_panel_height;
-	max-height: 2 * @visual_editor_tools_panel_height;
+	/* max-height: 2 * @visual_editor_tools_panel_height; */
 	
 	overflow: hidden;
+	
+	.visual_editor_tools
+	{
+		position: absolute;
+	}
 }
 
 #content.article
@@ -20,177 +25,14 @@
 	
 	padding-top: 40px;
 	padding-bottom: 40px;
-
-	> .edit
-	{
-		float: right;
-		margin-top: 105px;
-		padding-left: 40px;
-		
-		background-image: url('/картинки/на страницах/читальня/править.png');
-		background-position: left top;
-		background-repeat: no-repeat;
-		background-color: transparent;
-	}
 	
 	article
 	{
 		font-family: @textual_font;
-
+	
 		font-size: @textual_font_size;
 		line-height: @textual_line_height;
-
-		.hint
-		{
-			color: #7f7f7f !important;
-		}
-		
-		h1:focus
-		{
-			outline: 0px solid transparent;
-		}
-		
-		.citation
-		{
-			padding-left: 100px;
-			
-			padding-top: 49px;
-			padding-bottom: 58px;
-		
-			.text:before
-			{
-				content: '«';
-			}
-			
-			.text:after
-			{
-				content: '»';
-			}
-			
-			.text
-			{
-				font-face: Bliss Pro;
-			}
-			
-			.author
-			{
-				margin-left: 100px;
-				text-align: right;
-				white-space: nowrap;
-				text-overflow: ellipsis;
-				
-				/* font-family: @headings_font; */
-				font-size: 27px;
-				line-height: 40px;
-			}
-		}
-		
-		.picture
-		{
-			/* .beautiful_shadow_5(0px, 4px, 20px, 8px, 12px, 8px, 0px, 0.1); */
-			/*.beautiful_shadow_5(0px, 0px, 4px, 4px, 4px, 4px, 0px, 1, 0, 120, 255); */
-			
-				
-			&.cursor
-			{
-				border-width: 4px;
-				border-color: #0078ff;
-				border-style: solid;
-			}
-		}
-		
-		p
-		{
-			text-indent: @paragraph_indent;
-			/* text-align: justify; */
-		}
-		
-		ul li
-		{
-			text-indent: 10px;
-		}
-
-		a
-		{
-			/*
-			color: inherit;
-			border-bottom-width: 0;
-			*/
-		}
-
-		a:hover
-		{
-			.hyperlink();
-			
-			/*
-			-webkit-transition: color .25s linear;
-			-moz-transition: color .25s linear;
-			transition: color .25s linear;
-			*/
-		}
-
-		h1
-		{
-			font-size: 50px;
-		}
-
-		h2
-		{
-			font-size: 40px;
-
-			border-bottom-width: 1px;
-			border-bottom-color: black;
-			border-bottom-style: solid;
-			
-			margin-top: 100px;
-		}
-		
-		h1, h2, h3, h4, h5, h6
-		{
-			/* font-family: @headings_font; */
-		}
-		
-		a.reference
-		{
-			font-family: @labels_font;
-		}
-		
-		.references
-		{
-			list-style: none;
-			padding: 0;
-			
-			li
-			{
-				margin-bottom: 20px;
-				
-				a
-				{
-					.hyperlink;
-					
-					display: inline-block;
-				}
-			}
-		}
-		
-		h1[contenteditable="true"]
-		{
-			cursor: text;
-		}
-			
-		section[contenteditable="true"]
-		{
-			h2
-			{
-				cursor: text;
-			}
-		}
 	}
-}
-
-body[mode="правка"] #content.article article a
-{
-	.hyperlink();
 }
 
 #article_edit_mode_actions
@@ -225,14 +67,6 @@ body[mode="правка"] #content.article article a
 {
 	height: 66px;
 	overflow: hidden;
-}
-
-body[mode="правка"] .article [type="hyperlink"],
-body[mode="правка"] .article [type="picture"],
-body[mode="правка"] .article [type="formula"],
-body[mode="правка"] .article [type="video"]
-{
-	cursor: pointer;
 }
 
 .visual_editor_tools_container

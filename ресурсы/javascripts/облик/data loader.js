@@ -155,7 +155,7 @@ var Batch_loader_with_infinite_scroll = new Class
 			event.stopPropagation()
 		})
 		
-		прокрутчик.watch(this.$scroll_detector, $(window).height() + 1)
+		прокрутчик.watch(this.$scroll_detector)
 	},
 	
 	deactivate: function()

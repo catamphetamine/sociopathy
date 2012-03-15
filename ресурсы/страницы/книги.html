@@ -10,20 +10,18 @@
 						<div class="center"></div>
 						<div class="right"></div>
 						<div class="books">
-							{{each books}}
+							{{each(index, book) books}}
 								<div class="book_place">
-									{{if title}}
-										<div class="book_info_container">
-											<div class="book_info">
-												<div class="info">
-													<span class="author">${author}</span>
-													<span class="title">${title}</span>
-												</div>
+									{{if book.title}}
+										<div class="book_info popup_panel_container">
+											<div class="info popup_panel">
+												<span class="author">${book.author}</span>
+												<span class="title">${book.title}</span>
 											</div>
 										</div>
 										
 										<div class="book {{if icon}}{{else}}no_icon{{/if}} non_selectable">
-											{{if icon}}{{else}}<div class="author">${author}</div><div class="title">${title}</div>{{/if}}<div class="icon" {{if icon}}style="background-image: url('/загруженное/книги/обложки/${icon}.jpg')"{{/if}}></div><div class="bottom_shadow"></div>
+											{{if book.icon}}{{else}}<div class="author">${book.author}</div><div class="title">${book.title}</div>{{/if}}<div class="icon" {{if book.icon}}style="background-image: url('/загруженное/книги/обложки/${book.icon}.jpg')"{{/if}}></div><div class="bottom_shadow"></div>
 										</div>
 									{{/if}}
 								</div>

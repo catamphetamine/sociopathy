@@ -6,7 +6,7 @@ var the_picture
 Подсказки.подсказка('Здесь вы можете посмотреть данные об этом члене нашей сети. Если это ваша личная карточка, вы сможете изменить данные в ней, переключившись в режим правки.')
 
 function initialize_page()
-{
+{	
 	id_card = $('#id_card')
 
 	Режим.добавить_проверку_перехода(function(из, в)
@@ -54,6 +54,8 @@ var editable_info =
 
 function before_id_card_shown()
 {
+	title(пользователь_сети.имя)
+	
 	$('#links').find('a').each(function()
 	{
 		var link = $(this)

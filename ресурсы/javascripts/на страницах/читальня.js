@@ -1,5 +1,10 @@
 function initialize_page()
 {
+	if (window.раздел)
+		title(раздел.название)
+	else
+		title('Читальня')
+
 	Подсказки.подсказка('В этом разделе вы можете читать и писать заметки на всевозможные темы.')
 
 	insert_search_bar_into($('#panel'))
@@ -80,4 +85,45 @@ function resize_categories_list()
 	}
 	
 	$('#categories').width(suitable_width).css('left', (available_width - suitable_width) / 2 + 'px')
+}
+
+function path_breadcrumbs(path, delta)
+{
+	if (!delta)
+		delta = 0
+
+	var path_parts = path.split('/')
+	
+	var path_html = ''
+	
+	var i = 0
+	var how_much = path_parts.length + delta
+	while (i < how_much)
+	{
+		link_path = ''
+		
+		var j = 0
+		while (j <= i)
+		{
+			if (j > 0)
+				link_path += '/'
+			link_path += path_parts[j]
+			j++
+		}
+	
+		if (i < how_much - 1)
+			path_html += '<a href="/читальня/' + link_path + '">'
+		
+		path_html += path_parts[i]
+			
+		if (i < how_much - 1)
+		{
+			path_html += '</a>'
+			path_html += ' → '
+		}
+			
+		i++
+	}
+	
+	return path_html
 }

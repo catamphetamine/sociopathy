@@ -201,7 +201,7 @@ Visual_editor.implement
 						
 						var link = $('<a/>')
 						link.attr('href', url)
-						visual_editor.hint(link, 'Введите текст')
+						visual_editor.hint(link, 'Введите текст ссылки')
 						tool.mark_type(link)
 						
 						tool.restore_caret()
@@ -211,7 +211,7 @@ Visual_editor.implement
 					{	
 						tool.backup_caret()
 					},
-					on_close: function()
+					on_cancel: function()
 					{
 						tool.restore_caret()
 					}
@@ -345,18 +345,27 @@ Visual_editor.implement
 							return tool.restore_caret()
 						}
 					
-						var picture = $('<img/>')
-						picture.attr('src', url)
-						tool.mark_type(picture)
-						
-						tool.restore_caret()
-						tool.on_success(editor.insert(picture))
+						loading_indicator.show()
+						get_image_size(url, function(size)
+						{
+							loading_indicator.hide()
+							
+							var picture = $('<img/>')
+							picture.attr('src', url)
+							picture.attr('width', size.width)
+							picture.attr('height', size.height)
+							
+							tool.mark_type(picture)
+							
+							tool.restore_caret()
+							tool.on_success(editor.insert(picture))
+						})
 					},
 					on_open: function()
 					{	
 						tool.backup_caret()
 					},
-					on_close: function()
+					on_cancel: function()
 					{
 						tool.restore_caret()
 					}
@@ -381,7 +390,7 @@ Visual_editor.implement
 			on_element_click: function()
 			{
 				var url = decodeURIComponent($(this).attr('src'))
-				tool.open_dialog_window({ url: url }, { element: $(this) })
+				this.open_dialog_window({ url: url }, { element: $(this) })
 				return false
 			}
 		}
@@ -463,7 +472,7 @@ Visual_editor.implement
 					{	
 						tool.backup_caret()
 					},
-					on_close: function()
+					on_cancel: function()
 					{
 						tool.restore_caret()
 					}
@@ -638,7 +647,7 @@ Visual_editor.implement
 					{	
 						tool.backup_caret()
 					},
-					on_close: function()
+					on_cancel: function()
 					{
 						tool.restore_caret()
 					}
@@ -711,7 +720,7 @@ Visual_editor.implement
 					{	
 						tool.backup_caret()
 					},
-					on_close: function()
+					on_cancel: function()
 					{
 						tool.restore_caret()
 					}
@@ -743,6 +752,11 @@ Visual_editor.implement
 				element = tools.find(tool.selector)
 			else if (tool.button)
 				element = tool.button.$element.parent()
+			
+			tool.turn_off = function()
+			{
+				element.remove()
+			}
 			
 			var on_success = tool.on_success || $.noop
 			tool.on_success = function(result)
@@ -936,6 +950,7 @@ function initialize_more_less_tools()
 			hide_additional_tools.element.fadeIn(function()
 			{
 				hide_additional_tools.unlock()
+				tools.trigger('more.visual_editor_tools')
 			})
 		})
 	})
@@ -951,6 +966,7 @@ function initialize_more_less_tools()
 			show_all_tools.element.fadeIn(function()
 			{
 				show_all_tools.unlock()
+				tools.trigger('less.visual_editor_tools')
 			})
 		})
 	})

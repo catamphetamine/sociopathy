@@ -1,3 +1,5 @@
+title('Помощь')
+
 function initialize_page()
 {
 	$('.faq ul li').each(function()

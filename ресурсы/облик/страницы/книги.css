@@ -25,52 +25,16 @@
 	margin-top: 100px;
 }
 
-.book_info_container
+.book_info
 {
 	position: absolute;
 	z-index: 2;
-	
-	top: 90%;
-}
-
-.book_info
-{
-	position: relative;
-	
-	padding: 2px;
-	background-color: #cfcfcf;
-	
-	border-width: 1px;
-	border-style: solid;
-	border-color: #6f6f6f;
-
-	.shadow(0, 0, 8px, 0.5);
-	
-	opacity: 0.91;			
-	border-radius: 8px;
-	
+		
 	.info
 	{
 		line-height: 43px;
 		font-size: 30px;
 		
-		color: white;
-		background-color: #2F2F2F;
-		
-		text-shadow: black 1px 1px 4px;
-		
-		border-radius: 6px;
-		
-		padding-left: 14px;
-		padding-right: 14px;
-		padding-top: 9px;
-		padding-bottom: 9px;
-		
-		border-width: 1px;
-		border-style: solid;
-		border-color: #1f1f1f;
-		
-		box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.7);
 		text-align: center;
 		
 		.author, .title

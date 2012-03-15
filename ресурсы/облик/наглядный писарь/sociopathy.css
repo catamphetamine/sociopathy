@@ -300,3 +300,18 @@
 		padding-right: 0px;
 	}
 }
+
+[contenteditable=true] a[type=hyperlink]
+{
+	cursor: pointer;
+}
+
+
+
+body[mode="правка"] .article [type="hyperlink"],
+body[mode="правка"] .article [type="picture"],
+body[mode="правка"] .article [type="formula"],
+body[mode="правка"] .article [type="video"]
+{
+	cursor: pointer;
+}

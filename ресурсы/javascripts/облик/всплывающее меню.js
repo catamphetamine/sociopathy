@@ -95,16 +95,36 @@ function activate_popup(options)
 	
 	var popup_offset =
 	{
-		left: parseInt(popup.css('left')),
-		top: parseInt(popup.css('top'))
+		left: 0,
+		top: 0
 	}
 	
-	if (popup.css('left') !== popup_offset.left + 'px')
-		return alert('Invalid popup left css value. Use pixels')
+	var left = popup.css('left')
+	var top = popup.css('top')
+	
+	if (left && top && left !== 'auto' && top !== 'auto')
+	{	
+		popup_offset =
+		{
+			left: parseInt(left),
+			top: parseInt(top)
+		}
 		
-	if (popup.css('top') !== popup_offset.top + 'px')
-		return alert('Invalid popup top css value. Use pixels')
-		
+		if (left !== popup_offset.left + 'px')
+			return alert('Invalid popup left css value: ' + left + '. Use pixels')
+			
+		if (top !== popup_offset.top + 'px')
+			return alert('Invalid popup top css value: ' + top + '. Use pixels')
+	}
+	
+	var opacity = 1
+	var css_opacity = popup.css('opacity')
+	if (css_opacity)
+	{
+		opacity = css_opacity
+		popup.css('opacity', 0)
+	}
+			
 	function show()
 	{
 		popup.appendTo('body')
@@ -113,13 +133,13 @@ function activate_popup(options)
 		popup.css
 		({
 			left: offset.left + popup_offset.left + 'px',
-			top: offset.top + popup_offset.top +'px'
+			top: offset.top + popup_offset.top + 'px'
 		})
 		
 		if (options.style_class)
 			popup.addClass(options.style_class)
 			
-		popup.fade_in(options.fade_in_duration, { easing: 'easeInQuad' })
+		popup.fade_in(options.fade_in_duration, { maximum_opacity: opacity, easing: 'easeInQuad' })
 	}
 	
 	function hide()

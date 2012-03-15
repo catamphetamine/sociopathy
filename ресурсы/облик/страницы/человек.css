@@ -146,6 +146,16 @@ body[mode="правка"] .real_picture
 		overflow: hidden;
 		text-overflow: ellipsis;
 	}
+	
+	.left
+	{
+		float: left;
+	}
+	
+	.right
+	{
+		float: right;
+	}
 }
 
 .business_card .uploading_picture
