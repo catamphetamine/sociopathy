@@ -108,10 +108,12 @@ Editor.Time_machine = new Class
 		var caret = editor.caret.get()
 		if (caret)
 		{
+			var caret_position = editor.caret.caret_position()
+			
 			snapshot.caret =
 			{
-				offset: editor.caret.offset(),
-				node_backtrack: Dom_tools.get_node_backtrack(editor.caret.native_container(), editor.content[0]),
+				offset: caret_position.offset,
+				node_backtrack: Dom_tools.get_node_backtrack(caret_position.node, editor.content[0]),
 				get_container: function() { return Dom_tools.get_node_by_backtrack(this.node_backtrack.clone(), editor.content[0]) }
 			}
 		}

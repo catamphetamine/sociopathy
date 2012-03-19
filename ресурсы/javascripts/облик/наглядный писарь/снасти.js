@@ -98,7 +98,6 @@ Visual_editor.implement
 					throw new Error('Выделение пока не поддерживается этим инструментом')
 				}
 				
-//				if (!editor.caret.has_container('p'))
 				if (!editor.caret.container().is('p'))
 				{
 					this.restore_caret()
@@ -173,10 +172,12 @@ Visual_editor.implement
 			{
 				var tool = this
 				
-				Validation.наглядный_писарь.ссылка = function(value)
+				Validation.наглядный_писарь.ссылка = function(value, callback)
 				{
 					if (!value)
-						throw new custom_error('Введите адрес ссылки')
+						return callback({ error: 'Введите адрес ссылки' })
+						
+					callback()
 				}
 				
 				this.dialog_window = simple_value_dialog_window
@@ -289,9 +290,6 @@ Visual_editor.implement
 				if (editor.selection.exists())
 					throw new Error('Выделение пока не поддерживается этим инструментом')
 		
-				//console.log(editor.caret.container()[0])
-				//console.log( editor.content[0])
-		
 				if (!editor.caret.container().is('p') && editor.caret.container()[0] !== editor.content[0])
 					throw new Error('Список можно поместить только внутри обычного текста')
 		
@@ -305,7 +303,7 @@ Visual_editor.implement
 			
 			on_success: function(list)
 			{
-				//editor.caret.move_to(list)
+				editor.caret.move_to(list)
 			}
 		}
 		
@@ -319,10 +317,18 @@ Visual_editor.implement
 			{
 				var tool = this
 				
-				Validation.наглядный_писарь.картинка = function(value)
+				Validation.наглядный_писарь.картинка = function(url, callback)
 				{
-					if (!value)
-						throw new custom_error('Введите адрес картинки')
+					if (!url)
+						return callback({ error: 'Введите адрес картинки' })
+						
+					image_exists(url, function(result)
+					{
+						if (result.error)
+							return callback({ error: 'Картинка не найдена' })
+						
+						callback()
+					})
 				}
 				
 				this.dialog_window = simple_value_dialog_window
@@ -345,10 +351,16 @@ Visual_editor.implement
 							return tool.restore_caret()
 						}
 					
-						loading_indicator.show()
+						var loading = loading_indicator.show()
 						get_image_size(url, function(size)
 						{
-							loading_indicator.hide()
+							loading.hide()
+							
+							if (size.error)
+							{
+								error('Не удалось загрузить картинку. Можете попробовать ещё раз.')
+								return tool.restore_caret()
+							}
 							
 							var picture = $('<img/>')
 							picture.attr('src', url)
@@ -435,10 +447,12 @@ Visual_editor.implement
 			{
 				var tool = this
 				
-				Validation.наглядный_писарь.формула = function(value)
+				Validation.наглядный_писарь.формула = function(value, callback)
 				{
 					if (!value)
-						throw new custom_error('Введите код формулы в формате TeX')
+						return callback({ error: 'Введите код формулы в формате TeX' })
+						
+					callback()
 				}
 				
 				this.dialog_window = simple_value_dialog_window
@@ -454,19 +468,51 @@ Visual_editor.implement
 					ok: function(formula)
 					{
 						formula = encodeURIComponent(formula.collapse_lines())
+						var url = 'http://chart.apis.google.com/chart?cht=tx&chs=28&chl=' + formula
 					
-						if (this.state.element)
+						var loading = loading_indicator.show()
+						
+						var picture = this.state.element
+						if (picture)
 						{
-							this.state.element.attr('src', 'http://chart.apis.google.com/chart?cht=tx&chs=28&chl=' + formula)
-							return tool.restore_caret()
+							return get_image_size(url, function(size)
+							{
+								loading.hide()
+								
+								if (size.error)
+								{
+									error('Не удалось загрузить картинку. Можете попробовать ещё раз.')
+									return tool.restore_caret()
+								}
+							
+								picture.attr('src', url)
+								picture.attr('width', size.width)
+								picture.attr('height', size.height)
+							
+								tool.restore_caret()
+							})
 						}
 						
-						var picture = $('<img/>')
-						picture.attr('src', 'http://chart.apis.google.com/chart?cht=tx&chs=28&chl=' + formula)
-						tool.mark_type(picture)
-						
-						tool.restore_caret()
-						tool.on_success(editor.insert(picture))
+						get_image_size(url, function(size)
+						{
+							loading.hide()
+							
+							if (size.error)
+							{
+								error('Не удалось загрузить картинку. Можете попробовать ещё раз.')
+								return tool.restore_caret()
+							}
+							
+							var picture = $('<img/>')
+							picture.attr('src', url)
+							picture.attr('width', size.width)
+							picture.attr('height', size.height)
+							
+							tool.mark_type(picture)
+							
+							tool.restore_caret()
+							tool.on_success(editor.insert(picture))
+						})
 					},
 					on_open: function()
 					{	
@@ -522,6 +568,10 @@ Visual_editor.implement
 			
 			on_success: function(subscript)
 			{
+				// иначе в хроме будет курсор в начале, но как бы перед самой ссылкой
+				if ($.browser.webkit)
+					return editor.caret.move_to(subscript, 1)
+				
 				editor.caret.move_to(subscript)
 			}
 		}
@@ -544,6 +594,10 @@ Visual_editor.implement
 			
 			on_success: function(superscript)
 			{
+				// иначе в хроме будет курсор в начале, но как бы перед самой ссылкой
+				if ($.browser.webkit)
+					return editor.caret.move_to(superscript, 1)
+				
 				editor.caret.move_to(superscript)
 			}
 		}
@@ -602,13 +656,15 @@ Visual_editor.implement
 			{
 				var tool = this
 				
-				Validation.наглядный_писарь.видео = function(value)
+				Validation.наглядный_писарь.видео = function(value, callback)
 				{
 					if (!value)
-						throw new custom_error('Введите адрес видео на YouTube')
+						return callback({ error: 'Введите адрес видео на YouTube' })
 						
 					if (!get_youtube_video_id(value))
-						throw new custom_error('Неправильный адрес видео на YouTube')
+						return callback({ error: 'Неправильный адрес видео на YouTube' })
+						
+					callback()
 				}
 				
 				this.dialog_window = simple_value_dialog_window
@@ -678,10 +734,10 @@ Visual_editor.implement
 			{
 				var tool = this
 				
-				Validation.наглядный_писарь.html = function(value)
+				Validation.наглядный_писарь.html = function(value, callback)
 				{
 					if (!value)
-						throw new custom_error('Введите код Html (но потом всё обрежется)')
+						return callback({ error: Введите код Html (но потом всё обрежется)' })
 						
 					try
 					{
@@ -904,10 +960,13 @@ $(function()
 			
 		window.visual_editors.forEach(function(visual_editor)
 		{
+			// если бы можно было знать, куда приземляется фокус, то можно было бы поставить условие
 			if (event.target === visual_editor.editor.content.get(0))
 				visual_editor.disable_tools()
 		})
 	})
+	
+	// если поместить только tools и content в один контейнер, то тогда можно было бы на нём делать focusout
 	*/
 	
 	$(document).on('focusin', function(event)

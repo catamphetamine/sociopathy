@@ -23,7 +23,6 @@
 	padding-left: @article_side_padding;
 	padding-right: @article_side_padding;
 	
-	padding-top: 40px;
 	padding-bottom: 40px;
 	
 	article
@@ -32,6 +31,11 @@
 	
 		font-size: @textual_font_size;
 		line-height: @textual_line_height;
+		
+		h1
+		{
+			margin-top: 30px;
+		}
 	}
 }
 
@@ -71,5 +75,5 @@
 
 .visual_editor_tools_container
 {
-	margin-top: 30px;
+	/* margin-top: 30px; */
 }

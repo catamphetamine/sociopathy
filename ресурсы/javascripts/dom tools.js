@@ -49,11 +49,17 @@ var Dom_tools =
 		if (this.is_text_node(node))
 			return node
 		
-		if (!node.firstChild)
-			return null
-			//throw 'No text node found'
-			
-		return this.down_to_text_node(node.firstChild)
+		var i = 0
+		while (i < node.childNodes.length)
+		{
+			var text_node = this.down_to_text_node(node.childNodes[i])
+			if (text_node)
+				return text_node
+			i++
+		}
+		
+		return null
+		//throw 'No text node found'
 	},
 	
 	/**
@@ -330,7 +336,7 @@ var Dom_tools =
 	
 	text: function(element, text)
 	{
-		text = document.createTextNode(text	)
+		text = document.createTextNode(text)
 		element.appendChild(text)
 		return text
 	},

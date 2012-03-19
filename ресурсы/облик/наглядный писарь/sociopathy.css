@@ -285,6 +285,11 @@
 
 		background-image: url('/картинки/писарь/снасти/видео.png');
 	}
+	
+	.main_content form input[type="text"]
+	{
+		width: 550px;
+	}
 }
 
 #visual_editor_insert_html_window

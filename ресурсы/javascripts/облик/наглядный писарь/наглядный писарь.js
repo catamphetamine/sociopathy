@@ -82,13 +82,16 @@ var Visual_editor = new Class
 		if (container_tag === this.editor.content[0])
 			return this.editor.insert(' ')
 		
+		if (container_tag.tagName.toLowerCase() === 'li')
+			return this.on_breaking_space(container_tag.parentNode)
+			
 		var text_node = Dom_tools.append_text_next_to(container_tag, ' ')
 		this.editor.caret.position(text_node, 1)
 	},
 	
 	new_paragraph: function()
 	{
-		var container = this.editor.caret.native_container()
+		var container = this.editor.caret.node()
 
 		var new_paragraph = $('<p/>')
 		new_paragraph.addClass('hint')

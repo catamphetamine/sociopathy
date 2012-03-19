@@ -136,23 +136,6 @@ function initialize_page()
 		loader)
 	})
 	
-	function iterate(array, condition, action)
-	{
-		var count = array.length
-		
-		var i = 0
-		while (i < count)
-		{
-			if (condition(array[i]))
-			{
-				action(array.splice(i, 1)[0])
-				count--
-			}
-			else
-				i++
-		}
-	}
-	
 	$(window).on('scroll', function()
 	{
 		check_if_there_are_still_unread_messages()
@@ -161,19 +144,19 @@ function initialize_page()
 	// таким образом мы исправим случай, когда поле ввода было большим при скролле,
 	// но потом уменьшилось при удалении всего, и табличка о новых сообщениях осталась висеть
 	check_if_there_are_still_unread_messages.ticking(1000)
-	
-	function check_if_there_are_still_unread_messages()
+}
+
+function check_if_there_are_still_unread_messages()
+{
+	iterate(new_messages, function(message)
 	{
-		iterate(new_messages, function(message)
-		{
-			return message.is_visible_on_screen({ fully: true })
-		},
-		function()
-		{
-			if (new_messages.is_empty())
-				indicate_no_new_messages()
-		})
-	}
+		return message.is_visible_on_screen({ fully: true })
+	},
+	function()
+	{
+		if (new_messages.is_empty())
+			indicate_no_new_messages()
+	})
 }
 
 function initialize_call_action(user_icon, user_id, style_class, condition)
@@ -425,20 +408,8 @@ function chat_loaded()
 			var node = document.createTextNode(' ')
 			visual_editor.editor.content[0].appendChild(node)
 			visual_editor.editor.caret.move_to(node)
-			
-			/*
-			var container = visual_editor.editor.caret.native_container()
-			if (container === visual_editor.editor.content[0])
-				return
-				
-			container = Dom_tools.uppest_before(container, visual_editor.editor.content[0])
-			visual_editor.editor.caret.move_to_the_end(container)
-			*/
 		}
 
-		//if (visual_editor.editor.caret.inside('li'))
-		//	return
-		
 		function send_message()
 		{
 			var message = visual_editor.editor.content.html().trim()
@@ -479,7 +450,8 @@ function chat_loaded()
 		if ($.browser.mozilla)
 			visual_editor.editor.content.focus()
 		
-		adjust_chat_listing_margin()
+		//adjust_chat_listing_margin()
+		adjust_chat_listing_margin.ticking(1000)
 		
 		compose_message.fadeIn()
 		
@@ -490,15 +462,22 @@ function chat_loaded()
 function should_roll()
 {
 	// если список сообщений кончается ниже верхней границы области ввода сообщения - не прокручивать
-	if (chat_top_offset + chat.outerHeight() > $(window).scrollTop() + $(window).height() - compose_message.height())
-		return false
+	// поправка на пиксель для firefox
+	var amendment = 0
+	if ($.browser.mozilla)
+		amendment = 1
 		
+	if (chat_top_offset + chat.outerHeight() - amendment > $(window).scrollTop() + $(window).height() - compose_message.height())
+		return false
+	
 	return true
 }
 
 function lift_chat_by(how_much)
 {
-	//chat_lifter.height(how_much)
+	if (chat.css('margin-bottom') === how_much + 'px')
+		return
+		
 	chat.css('margin-bottom', how_much + 'px')
 }
 

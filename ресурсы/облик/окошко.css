@@ -365,7 +365,7 @@ body.osx .popup .top_bar
 .popup_veil.fade,
 .popup_veil.fade .popup
 {
-	.css_transition(100ms);
+	.css_transition(200ms);
 	.css_transition_easing(ease-in-out);
 }
 

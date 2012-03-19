@@ -186,18 +186,6 @@ Visual_editor.implement
 		{
 			if (!visual_editor.can_edit())
 				return
-			
-			/*	
-			if (Клавиши.is('Ctrl', 'Shift', 'Minus', event))
-			{
-				event.preventDefault()
-			
-				var container = editor.caret.native_container()
-				var container_tag = container.parentNode
-				
-				visual_editor.on_breaking_space(container_tag)
-			}
-			*/
 		})
 	},
 	
@@ -269,7 +257,7 @@ Visual_editor.implement
 					if (text.ends_with(' -'))
 						return editor.caret.collapse_recent_characters(2, ' — ')
 					else if (text.ends_with(' '))
-						return visual_editor.on_breaking_space(editor.caret.native_container().parentNode)
+						return visual_editor.on_breaking_space(editor.caret.node().parentNode)
 				}
 			}
 			else if (character === '"')

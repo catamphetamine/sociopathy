@@ -34,18 +34,91 @@ Editor.Caret = new Class
 	
 	container: function(filter)
 	{
-		var container = this.native_container()
+		var container = this.node()
 		return $(container).find_parent(filter)
 	},
 	
-	native_container: function()
+	node: function()
 	{
 		return this.get().commonAncestorContainer
 	},
 	
-	native_textual_container: function()
+	really_textual_container: function()
 	{
-		return Dom_tools.down_to_text_node(this.native_container())
+		return Dom_tools.down_to_text_node(this.node())
+	},
+	
+	caret_position: function()
+	{
+		var offset = this.offset()
+		var node = this.node()
+		var container
+		
+		var caret = this
+		var editor = this.editor
+		
+		var defaults = function()
+		{
+			offset = 0
+			node = Dom_tools.down_to_text_node(editor.content)
+			
+			if (node)
+			{
+				caret.move_to(node)
+				
+				var result =
+				{
+					container: $(node.parentNode),
+					node: node,
+					offset: 0,
+					textual: true
+				}
+				
+				return result
+			}
+			
+			node = editor.content[0]
+			offset = node.childNodes.length
+			
+			caret.move_to(node, offset)
+				
+			var result =
+			{
+				container: $(node),
+				node: node,
+				offset: offset,
+				textual: false
+			}
+			
+			return result
+		}
+		
+		if (node)
+		{
+			if (Dom_tools.is_text_node(node))
+				container = $(node.parentNode)
+			else
+				container = $(node)
+			
+			if (!container.belongs_to(editor.content))
+			{
+				return defaults()
+			}
+		}
+		else
+		{
+			return defaults()
+		}
+		
+		var result =
+		{
+			container: container,
+			node: node,
+			offset: offset,
+			textual: Dom_tools.is_text_node(node)
+		}
+		
+		return result
 	},
 
 	move_to: function(the_element, offset)
@@ -176,7 +249,7 @@ Editor.Caret = new Class
 	
 	position_at: function(offset)
 	{
-		this.position(this.native_container(), offset)
+		this.position(this.node(), offset)
 	},
 	
 	position: function(container, offset)
@@ -232,8 +305,10 @@ Editor.Caret = new Class
 	
 	text_before_and_after: function()
 	{
-		var container = this.native_textual_container()
-		var offset = this.offset()
+		var caret_position = this.caret_position()
+		
+		var container = caret_position.node
+		var offset = caret_position.offset
 		
 		if (!Dom_tools.is_text_node(container))
 			throw 'Unpredicted scenario in function insert_html'
@@ -274,12 +349,12 @@ Editor.Caret = new Class
 	
 	text: function()
 	{
-		return this.native_container().nodeValue.substring(0, this.offset())
+		return this.node().nodeValue.substring(0, this.offset())
 	},
 	
 	collapse_recent_characters: function(how_much, into)
 	{
-		var container = this.native_container()
+		var container = this.node()
 		var offset = this.offset()
 		
 		container.nodeValue =

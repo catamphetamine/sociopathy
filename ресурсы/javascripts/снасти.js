@@ -387,7 +387,14 @@ function update_intelligent_dates()
 
 function get_youtube_video_id(url)
 {
-    return /https?:\/\/(?:[a-zA_Z]{2,3}.)?(?:youtube\.com\/watch\?)((?:[\w\d\-\_\=]+&amp;(?:amp;)?)*v(?:&lt;[A-Z]+&gt;)?=([0-9a-zA-Z\-\_]+))/i.exec(url)[2]
+	try
+	{
+		return /https?:\/\/(?:[a-zA_Z]{2,3}.)?(?:youtube\.com\/watch\?)((?:[\w\d\-\_\=]+&amp;(?:amp;)?)*v(?:&lt;[A-Z]+&gt;)?=([0-9a-zA-Z\-\_]+))/i.exec(url)[2]
+	}
+	catch (error)
+	{
+		return null
+	}
 }
 
 function get_embedded_youtube_video_id(url)
@@ -425,17 +432,59 @@ function get_image_size(url, callback)
 {
 	var image = new Image()
 	
+	//var loading = loading_indicator.show()
+	
 	image.onload = function()
 	{
+		//loading.hide()
 		callback({ width: this.width, height: this.height })
 	}
 	
 	image.onerror = function()
 	{
-		callback({ width: 0, height: 0 })
+		//loading.hide()
+		callback({ width: 0, height: 0, error: true })
+	}
+	
+	image.src = url
+}
+
+function image_exists(url, callback)
+{
+	var image = new Image()
+	
+	//var loading = loading_indicator.show()
+	
+	image.onload = function()
+	{
+		//loading.hide()
+		callback({ ok: true })
+	}
+	
+	image.onerror = function()
+	{
+		//loading.hide()
+		callback({ error: true })
 	}
 	
 	image.src = url
 }
 
 //get_image_size('http://www.google.com/images/errors/logo_sm.gif, function(size) { alert(size.width + ' x ' + size.height) })
+
+function iterate(array, condition, action)
+{
+	var count = array.length
+	
+	var i = 0
+	while (i < count)
+	{
+		if (condition(array[i]))
+		{
+			action(array.splice(i, 1)[0])
+			count--
+		}
+		else
+			i++
+	}
+}

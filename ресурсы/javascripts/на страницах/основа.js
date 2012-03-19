@@ -75,20 +75,20 @@ $(document).on('fully_loaded', function()
 
 function войти(data)
 {
-	loading_indicator.show()
+	var loading = loading_indicator.show()
 	Ajax.post('/приложение/вход', data, 
 	{
 		ошибка: 'Не удалось войти',
 		ошибка: function(ошибка)
 		{
-			loading_indicator.hide()
+			loading.hide()
 			error(ошибка)
 			поле_пароля.focus()
 			кнопка_входа.unlock({ force: true })
 		},
 		ok: function(данные)
 		{ 
-			loading_indicator.hide()
+			loading.hide()
 			enter_window.close()
 			
 			window.location.reload()
@@ -98,18 +98,18 @@ function войти(data)
 
 function выйти()
 {
-	loading_indicator.show()
+	var loading = loading_indicator.show()
 	Ajax.post('/приложение/выход', {}, 
 	{
 		ошибка: 'Не удалось выйти',
 		ошибка: function(ошибка)
 		{
-			loading_indicator.hide()
+			loading.hide()
 			error(ошибка)
 		},
 		ok: function(данные)
 		{ 
-			loading_indicator.hide()
+			loading.hide()
 			//window.location.reload()
 			window.location = '/'
 		} 
@@ -118,15 +118,19 @@ function выйти()
 
 Validation.вход =
 {
-	имя: function(имя)
+	имя: function(имя, callback)
 	{
 		if (имя.length == 0)
-			throw new custom_error('Введите ваше имя')
+			return callback({ error: 'Введите ваше имя' })
+			
+		callback()
 	},
 	
-	пароль: function(пароль)
+	пароль: function(пароль, callback)
 	{
 		if (пароль.length == 0)
-			throw new custom_error('Введите ваш пароль')
+			return callback({ error: 'Введите ваш пароль' })
+			
+		callback()
 	}
 }

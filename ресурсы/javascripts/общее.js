@@ -1,5 +1,3 @@
-$.ajaxSetup({ cache: true })
-
 // internationalization
 $.i18n.setLocale("ru")
 

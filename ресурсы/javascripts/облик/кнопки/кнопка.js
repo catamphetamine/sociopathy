@@ -30,7 +30,7 @@ var button = new Class
 ({
 	Implements: [Options, Events],
 	
-	Binds: ['can_unlock_the_pushing_lock'],
+	Binds: ['can_unlock_the_pushing_lock', 'get_action_delay'],
 	
 	namespace: "button",
 	
@@ -284,25 +284,26 @@ var button = new Class
 		// if no action - exit
 		if (!this.options.action)
 			return
-			
-		if (this.form)
-			try
-			{
-				this.form.validate()
-			}
-			catch (error)
-			{
-				if (!error.is_form_validation)
-					throw error
-				
-				return this.allow_to_redo()
-			}
 		
 		// back reference
-		var self = this
-
-		// execute action after delay
-		setTimeout(function() { self.options.action() }, self.get_action_delay())
+		var button = this
+		
+		var delay = button.get_action_delay()
+		var ok = function()
+		{
+			// execute action after delay
+			(function() { button.options.action() }).delay(delay)
+		}
+		
+		if (this.form)
+		{
+			this.form.validate(ok, function()
+			{	
+				button.allow_to_redo()
+			})
+		}
+		else
+			ok()
 	},
 	
 	allow_to_redo: function()
@@ -316,7 +317,7 @@ var button = new Class
 	
 		// if no delay - exit
 		if (!delay)
-			return
+			return 0
 		
 		// if delay is in units (1 unit = 1 button push/unpush duration)
 		if (delay.ends_with("x"))

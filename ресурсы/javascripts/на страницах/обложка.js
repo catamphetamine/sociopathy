@@ -118,22 +118,28 @@ function initialize_join_form_slider()
 
 Validation.прописка =
 {
-	имя: function(имя)
+	имя: function(имя, callback)
 	{
 		if (!имя)
-			throw new custom_error('Вам нужно представиться')
+			return callback({ error: 'Вам нужно представиться' })
+			
+		callback()
 	},
 	
-	пол: function(пол)
+	пол: function(пол, callback)
 	{
 		if (!пол)
-			throw new custom_error('Вам нужно указать свой пол')
+			return callback({ error: 'Вам нужно указать свой пол' })
+			
+		callback()
 	},
 	
-	пароль: function(пароль)
+	пароль: function(пароль, callback)
 	{
 		if (!пароль)
-			throw new custom_error('Пароль будет нужен для входа')
+			return callback({ error: 'Пароль будет нужен для входа' })
+			
+		callback()
 	}
 }
 
@@ -205,7 +211,7 @@ function join_submission(data)
 {
 	data.приглашение = получить_настройку_запроса('приглашение')
 
-	loading_indicator.show()
+	var loading = loading_indicator.show()
 	Ajax.put('/приложение/прописать', data, 
 	{ 
 		ошибка: function()
@@ -218,7 +224,7 @@ function join_submission(data)
 			прописан = true
 			Подсказки.подсказка('Сейчас страница будет перезагружена.')
 
-			loading_indicator.hide()
+			loading.hide()
 			join_dialog.close()
 		} 
 	})

@@ -178,7 +178,9 @@ var Editor = new Class
 	{
 		options = options || {}
 		
-		var container = this.caret.container()
+		var caret_position = this.caret.caret_position()
+		var container = caret_position.container
+		
 		if (container.hasClass('hint'))
 		{
 			container.removeClass('hint')
@@ -211,22 +213,22 @@ var Editor = new Class
 		{
 			this.time_machine.snapshot()
 			
-			var container = this.caret.container()
+			var container = caret_position.container
 			var container_tag = container[0].tagName.toLowerCase()
 			
 			this.mark(what)
 			
 			if (options.replace_tag)
 			{
-				var native_container = this.caret.native_container()
-				var parent_container = native_container.parentNode
+				var node = caret_position.node
+				var parent_container = node.parentNode
 				Dom_tools.replace(parent_container, what[0])
 				return this.unmark()
 			}
 			else if (options.replace)
 			{
-				var native_container = this.caret.native_container()
-				Dom_tools.replace(native_container, what[0])
+				var node = caret_position.node
+				Dom_tools.replace(node, what[0])
 				return this.unmark()
 			}
 			
@@ -248,23 +250,23 @@ var Editor = new Class
 	{
 		if (options.replace_tag)
 		{
-			var container = this.caret.native_container()
+			var container = this.caret.node()
 			var parent_container = container.parentNode
 			var super_parent_container = parent_container.parentNode
 			Dom_tools.replace(parent_container, inserted_text)
 			return this.caret.move_to(super_parent_container, inserted_text.length)
 		}
 			
-		var caret = this.caret.get()
-		var caret_offset = this.caret.offset(caret)
+		var caret_position = this.caret.caret_position()
+		var caret_offset = caret_position.offset
 		if (options.replace)
 			caret_offset = 0
 		
-		var container = this.caret.native_container()
+		var container = caret_position.node
 		
 		if (!Dom_tools.is_text_node(container))
 		{
-			var offset = this.caret.offset()
+			var offset = caret_offset
 			
 			if ($.browser.webkit)
 				offset--
@@ -310,14 +312,29 @@ var Editor = new Class
 	
 	insert_html: function(html)
 	{
-		var container = this.caret.native_textual_container()
-		var text = { before: '', after: '' }
+		var caret_position = this.caret.caret_position()
+		var container = caret_position.node
 		
-		if (container)
-			text = this.caret.text_before_and_after()
+		var inner_html = { before: '', after: '' }
+		
+		if (caret_position.textual)
+			inner_html = this.caret.text_before_and_after()
 		else
-			container = this.caret.native_container()
+		{
+			var i = 0
+			while (i < caret_position.offset)
+			{
+				inner_html.before += Dom_tools.outer_html(container.childNodes[i])
+				i++
+			}
 			
+			while (i < container.childNodes.length)
+			{
+				inner_html.after += Dom_tools.outer_html(container.childNodes[i])
+				i++
+			}
+		}
+		
 		var parent
 		if (container !== this.content[0])
 			parent = container.parentNode
@@ -356,17 +373,15 @@ var Editor = new Class
 		
 		node_chain.reverse()
 		
-		var before_and_after
+		var outer_html = { before: '', after: '' }
 		if (parent)
-			before_and_after = Dom_tools.html_before_and_after(container)
-		else
-			before_and_after = { before: '', after: '' }
+			outer_html = Dom_tools.html_before_and_after(container)
 		
-		html = before_and_after.before +
-			text.before +
+		html = outer_html.before +
+			inner_html.before +
 			html +
-			text.after + 
-			before_and_after.after
+			inner_html.after + 
+			outer_html.after
 			
 		if (!node_chain.is_empty())
 			Dom_tools.inject_html(html, node_chain)
@@ -379,7 +394,6 @@ var Editor = new Class
 	
 	is_empty: function()
 	{
-		console.log('1' + this.content.text().trim() + '2')
 		return this.content.text().trim().length === 0
 	},
 	

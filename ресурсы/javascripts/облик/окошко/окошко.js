@@ -69,7 +69,7 @@ var dialog_window = new Class
 					event.keyCode === Event.Keys.esc) 
 				{	
 					event.preventDefault()
-					self.close()
+					self.cancel()
 				}
 			})
 			.addClass(this.options.theme)
@@ -182,10 +182,12 @@ var dialog_window = new Class
 	
 	cancel: function(callback)
 	{
+		var dialog_window = this
+		
 		this.close(function()
 		{
-			if (this.options['on cancel'])
-				this.options['on cancel'].bind(this.content)()
+			if (dialog_window.options['on cancel'])
+				dialog_window.options['on cancel'].bind(dialog_window.content)()
 				
 			if (callback)
 				callback()

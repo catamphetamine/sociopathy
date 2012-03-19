@@ -217,7 +217,7 @@ ul.chat
 	
 	font-size: 0;
 
-	li
+	> li
 	{
 		position: relative;
 		display: inline-block;
@@ -342,7 +342,12 @@ ul.chat
 	.who_is_online_bar
 	{
 		position: relative;
-		z-index: 1;
+		z-index: 0;
+		
+		&.sticky
+		{
+			z-index: 1;
+		}
 
 		.who_is_online li
 		{
@@ -397,6 +402,8 @@ ul.chat
 			.picture
 			{
 				border: 0;
+					
+				background-image: url('/картинки/temporary/картинка с навершия.jpg');
 			}
 			
 			/* compensate border absense */
@@ -410,8 +417,6 @@ ul.chat
 			{
 				display: inline-block;
 				margin: @user_icon_margin;
-					
-				background-image: url('/картинки/temporary/картинка с навершия.jpg');
 					
 				a
 				{
@@ -438,7 +443,7 @@ ul.chat
 				padding-top: @top_padding;
 				padding-bottom: @bottom_padding;
 				
-				li
+				li .picture
 				{
 					border-width: 1px;
 					border-style: solid;

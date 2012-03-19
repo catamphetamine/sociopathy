@@ -5,12 +5,27 @@ function Form(element)
 	this.element = element
 	this.inputs = []
 	
-	this.validate = function()
+	this.validate = function(ok, error, index)
 	{
-		this.inputs.forEach(function(input)
+		var i = 0
+		if (index)
+			i = index
+			
+		var this_function = this.validate.bind(this)
+			
+		if (i < this.inputs.length)
 		{
-			input.validate()
-		})
+			this.inputs[i].validate(function()
+			{
+				this_function(ok, error, i + 1)
+			},
+			function(error_thrown)
+			{
+				error(error_thrown)
+			})
+		}
+		else
+			ok()
 	}
 	
 	this.reset = function()
@@ -46,29 +61,26 @@ function Form(element)
 				this.element.val('')
 			}
 			
-			this.validate = function()
+			var form = this
+			
+			this.validate = function(ok_callback, error_callback)
 			{
-				try
+				eval('var validation = Validation.' + this.element.attr('validation'))
+				validation(this.element.val(), function(result)
 				{
-					eval('var validation = Validation.' + this.element.attr('validation'))
-					validation(this.element.val())
-					// mark field as valid
-					this.valid()
-				}
-				// if there were any errors
-				catch (error)
-				{
-					// if that's not our custom error - throw it further
-					if (!(error instanceof custom_error))
-						throw error
-		
-					// if that's our custom error - focus on the field and display the error message
-					this.element.focus()
-					this.error(error)
+					if (result && result.error)
+					{
+						form.element.focus()
+						form.error(result.error)
+						
+						error.is_form_validation = true
+						return error_callback(result.error)
+					}
 					
-					error.is_form_validation = true
-					throw error
-				}
+					// mark field as valid
+					form.valid()
+					ok_callback()
+				})
 			}
 			
 			// mark the field as valid
@@ -82,7 +94,7 @@ function Form(element)
 			this.error = function(error)
 			{
 				// prepare the error label
-				this.label.attr("error", new String(error.message).escape_html())
+				this.label.attr("error", new String(error).escape_html())
 	
 				// if the error label hasn't been created - create it
 				if (!this.error_label)

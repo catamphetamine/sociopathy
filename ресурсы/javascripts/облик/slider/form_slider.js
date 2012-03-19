@@ -155,41 +155,39 @@ function form_slider(options)
 	}
 	
 	// go to the next slide
-	this.next = function(callback)
+	this.next = function(ok, error)
 	{
 		// get the field for this slide
 		// (currently there can be only one field per slide)
 		var field = this.get_current_field()
 
-		try
+		// if there is any validation - validate this field value
+		if (field)
 		{
-			// if there is any validation - validate this field value
-			if (field)
-				if (field.form)
-					field.form.validate()
-			
-			// go to the next slide
-			this.slider.next(callback) 
-			return true
-		}
-		catch (error)
-		{
-			if (!error.is_form_validation)
-				throw error
-				
-			return false
+			if (field.form)
+				field.form.validate(function()
+				{
+					// go to the next slide
+					this.slider.next(ok)
+					return true
+				},
+				error)
+			else
+				ok()
 		}
 	}
 	
 	this.done = function()
 	{
-		if (!this.next())
+		var self = this
+		this.next(function()
+		{
+			self.final_actions()
+		},
+		function()
 		{
 			options.buttons.done.unlock()
-			return
-		}
-		
-		return this.final_actions()
+		})
 	}
 	
 	this.when_done = function(actions)

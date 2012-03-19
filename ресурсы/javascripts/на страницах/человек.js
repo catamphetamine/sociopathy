@@ -207,7 +207,7 @@ function save_changes()
 	*/
 	
 	Режим.заморозить_переходы()
-	loading_indicator.show()
+	var loading = loading_indicator.show()
 
 	Ajax.post('/приложение/человек/сменить данные',
 	{
@@ -219,7 +219,7 @@ function save_changes()
 	{
 		ошибка: function(ошибка)
 		{
-			loading_indicator.hide()
+			loading.hide()
 			Режим.разрешить_переходы()
 			
 			error(ошибка)
@@ -228,7 +228,7 @@ function save_changes()
 		{
 			if (!image_file_name)
 			{
-				loading_indicator.hide()
+				loading.hide()
 				Режим.разрешить_переходы()
 				return Режим.изменения_сохранены()
 			}
@@ -237,14 +237,14 @@ function save_changes()
 			{
 				ошибка: function(ошибка)
 				{
-					loading_indicator.hide()
+					loading.hide()
 					Режим.разрешить_переходы()
 					
 					error(ошибка)
 				},
 				ok: function()
 				{
-					loading_indicator.hide()
+					loading.hide()
 					Режим.разрешить_переходы()
 					
 					Режим.изменения_сохранены()

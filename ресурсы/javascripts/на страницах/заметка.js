@@ -2,6 +2,8 @@ var право_на_правку_получено = false
 
 Режим.пообещать('правка')
 
+var acquiring_edit_lock
+
 function initialize_page()
 {
 	title(заметка.название)
@@ -55,7 +57,7 @@ function initialize_page()
 				return		
 				
 			Режим.заморозить_переходы()
-			loading_indicator.show()
+			acquiring_edit_lock = loading_indicator.show()
 			acquire_edit_lock(в)
 			return false
 		}
@@ -116,7 +118,7 @@ function initialize_page()
 		save_button = activate_button(edit_mode_actions.find('.done'), { 'prevent double submission': true })
 		.does(function()
 		{
-			loading_indicator.show()
+			var loading = loading_indicator.show()
 			Ajax.post('/приложение/заметка/сохранить',
 			{
 				_id: заметка._id,
@@ -126,7 +128,7 @@ function initialize_page()
 			{
 				ошибка: function(ошибка)
 				{
-					loading_indicator.hide()
+					loading.hide()
 					право_на_правку_получено = false
 					
 					error(ошибка)
@@ -134,7 +136,7 @@ function initialize_page()
 				},
 				ok: function()
 				{
-					loading_indicator.hide()
+					loading.hide()
 					право_на_правку_получено = false
 					
 					edit_mode_actions.slide_out_downwards(300, function()
@@ -150,7 +152,7 @@ function initialize_page()
 		cancel_button = activate_button(edit_mode_actions.find('.cancel'), { 'prevent double submission': true })
 		.does(function()
 		{
-			loading_indicator.show()
+			var loading = loading_indicator.show()
 			Ajax.delete('/приложение/заметка/черновик/удалить',
 			{
 				_id: заметка._id
@@ -158,7 +160,7 @@ function initialize_page()
 			{
 				ошибка: function(ошибка)
 				{
-					loading_indicator.hide()
+					loading.hide()
 					право_на_правку_получено = false
 					
 					error(ошибка)
@@ -166,7 +168,7 @@ function initialize_page()
 				},
 				ok: function(data)
 				{
-					loading_indicator.hide()
+					loading.hide()
 					право_на_правку_получено = false
 					
 					edit_mode_actions.slide_out_downwards(300, function()
@@ -216,13 +218,13 @@ function acquire_edit_lock(режим)
 	{
 		ошибка: function(ошибка)
 		{
-			loading_indicator.hide()
+			acquiring_edit_lock.hide()
 			Режим.разрешить_переходы()
 			error(ошибка)
 		},
 		ok: function(data)
 		{
-			loading_indicator.hide()
+			acquiring_edit_lock.hide()
 			
 			var кто_правит = data['кто правит']
 			if (кто_правит)

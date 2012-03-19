@@ -372,6 +372,10 @@ label.error
 		background-image: url('/картинки/temporary/картинка с навершия.jpg');
 		background-repeat: no-repeat;
 
+		border-style: solid;
+		border-color: #7f7f7f;
+		border-width: 1px;
+		
 		.beautiful_shadow_3(0px, 1px, 2px, 3px, 4px, 0.2);
 		
 		.real_picture
@@ -620,10 +624,12 @@ pre, code
 	}
 }
 
+/*
 #loading_indicator
 {
 	display: block !important;
 }
+*/
 
 [contenteditable=true]
 {
@@ -751,6 +757,7 @@ body[mode="правка"] .rich_formatting a
 	ul li
 	{
 		text-indent: 10px;
+		list-style-type: disc;
 	}
 
 	a
@@ -826,6 +833,206 @@ body[mode="правка"] .rich_formatting a
 		h2
 		{
 			cursor: text;
+		}
+	}
+}
+
+.blurred
+{
+	*, #compose_message > article .hint, #compose_message > article .tagged_hint
+	{
+		.css_transition_duration(1000ms);
+		.css_transition_property(color, text-shadow);
+		color: transparent !important;
+		text-shadow: 0 0 5px rgba(0, 0, 0, 0.5) !important;
+	}
+	
+	.visual_editor_tools_container
+	{
+		box-shadow: 0 0 14px black;
+		opacity: 0.4;
+		
+		li
+		{
+			&, sub, sup, code, pre
+			{
+				color: rgba(255, 255, 255, 0.2) !important;
+				text-shadow: 0 0 5px rgba(255, 255, 255, 1.0) !important;
+			}
+			
+			&.list, &.picture, &.undo, &.redo, &.video
+			{
+				opacity: 0.5
+			}
+		}
+		
+		.more, .less
+		{
+			opacity: 0.5;
+		}
+	}
+	
+	.on_the_right_side_of_the_panel .picture, .chat_user_icon .picture
+	{
+		opacity: 0.4;
+		
+		& *
+		{
+			color: rgba(255, 255, 255, 1) !important;
+		}
+	}
+	
+	#panel
+	{
+		box-shadow: 0 0 14px rgba(0, 0, 0, 0.7);
+		
+		#panel_menu
+		{
+			opacity: 0.5
+		}
+	}
+}
+
+#loading_indicator
+{
+	position: fixed;
+	left: 0;
+	top: 0;
+
+	display: none;
+	opacity: 0;
+
+	width: 100%;
+	height: 100%;
+	
+	text-align: center;
+	
+	/*
+	background-color: rgba(0, 0, 0, 0.7);
+	*/
+	
+	/*
+	background: -webkit-radial-gradient(rgba(64, 64, 64, 0.5), rgba(64, 64, 64, 0.5) 35%, rgba(0, 0, 0, 1));
+	background: -moz-radial-gradient(rgba(64, 64, 64, 0.5), rgba(64, 64, 64, 0.5) 35%, rgba(0, 0, 0, 1));
+	*/
+
+	&:after
+	{
+		display: inline-block;
+		width: 0;
+		height: 100%;
+		vertical-align: middle;
+		content: ''
+	}
+
+	.background
+	{
+		position: absolute;
+		left: 0;
+		top: 0;
+		
+		z-index: -1;
+		
+		width: 100%;
+		height: 100%;
+		
+		.top, .bottom
+		{
+			width: 100%;
+			height: 100%;
+			
+			opacity: 0.75;
+		}
+		
+		.top
+		{
+			position: relative;
+			
+			left: 0;
+			top: -50%;
+		
+			margin-top: 73px;	
+		
+			width: 100%;
+			height: 100%;
+			
+			background-image: linear-gradient(bottom, rgb(0, 0, 0) 0%, rgba(0, 0, 0, 0.88) 2%);
+			background-image: -moz-linear-gradient(bottom, rgb(0, 0, 0) 0%, rgba(0, 0, 0, 0.88) 2%);
+			
+			background-image: -webkit-linear-gradient(bottom, rgb(0, 0, 0) 0%, rgba(0, 0, 0, 0.88) 2%);
+		}
+		
+		.bottom
+		{
+			position: relative;
+			
+			left: 0;
+			top: -50%;
+			
+			background-color: rgb(0, 0, 0);
+		}
+	}
+	
+	.content
+	{
+		position: relative;	
+		
+		display: inline-block;
+		vertical-align: middle;
+			
+		height: 180px;
+		width: 260px;
+			
+		> div
+		{
+			display: inline-block;
+		
+			opacity: 0;
+			
+			width: 100%;
+			height: 100%;
+				
+			.wait
+			{
+				position: relative;
+				left: -8px;
+				top: -4px;
+				
+				color: #AFAFAF !important;
+				text-shadow: 0 0 0px #000 !important;
+				
+				.ellipsis
+				{
+					min-width: 25px;
+					color: inherit !important;
+					text-shadow: inherit !important;
+					display: inline-block;
+					text-align: left;
+				}
+			}
+			
+			.frames
+			{
+				position: relative;
+				
+				width: 100%;
+				height: 100%;
+	
+				.frame
+				{
+					visibility: hidden;
+				
+					display: inline-block;
+					position: absolute;
+					
+					left: 0;
+				
+					width: 100%;
+					height: 100%;
+					
+					background-color: transparent;
+				}
+			}
 		}
 	}
 }

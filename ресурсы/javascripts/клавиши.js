@@ -75,6 +75,16 @@ var Клавиши =
     Plus: 187,
     Minus: 189,
     Dot: 190,
+
+	disable: function()
+	{
+		this.disabled = true
+	},
+	
+	enable: function()
+	{
+		this.disabled = false
+	},
 	
 	is: function()
 	{
@@ -160,6 +170,12 @@ var Клавиши =
 			return false
 	}
 }
+
+$(document).on('keypress', function(event)
+{
+	if (Клавиши.disabled)
+		event.preventDefault()
+})
 
 // testing:
 //
