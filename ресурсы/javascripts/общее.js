@@ -680,3 +680,5 @@ function title(text)
 		
 	document.title = text
 }
+
+function document_fully_loaded() {}

@@ -51,7 +51,7 @@ var jquery_animator = new Class
 		// if delay animation
 		if (options.delay)
 			$element.delay(options.delay * 1000)
-
+			
 		this.stop($element)
 		$element.fadeTo(options.duration * 1000, 0, options.easing, this.get_callback($element, options))
 	},

@@ -411,7 +411,8 @@ var button = new Class
 		if (this.is_shown)
 			return
 			
-		this.frames.idle.show()
+		this.$element.show()
+//		this.frames.idle.show()
 		this.frames.idle.css({ opacity: this.get_maximum_opacity(this.frames.idle), visibility: 'visible' })
 		this.is_shown = true
 	},
@@ -423,7 +424,8 @@ var button = new Class
 		if (!this.is_shown)
 			return
 		
-		this.frames.idle.hide()
+		//this.frames.idle.hide()
+		this.$element.hide()
 		this.is_shown = false
 	},
 	

@@ -319,7 +319,8 @@ $.fn.fade_in = function(duration, options, callback)
 	options.duration = duration
 	options.callback = callback
 	
-	animator.jquery.fade_in(this, options)
+	//animator.jquery
+	animator.fade_in(this, options)
 	return this
 }
 
@@ -339,7 +340,8 @@ $.fn.fade_out = function(duration, options, callback)
 	options.callback = callback
 	options.hide = true
 	
-	animator.jquery.fade_out(this, options)
+	//animator.jquery
+	animator.fade_out(this, options)
 	return this
 }
 

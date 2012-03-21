@@ -178,17 +178,24 @@ var Message =
 			.split('\n ').join('<br/>')
 			.split('\n').join('<br/>')
 		
-		// non_selectable
-		var message = $('<div class="' + type + '"/>').html(text)
-		var opacity = message.css('opacity')
-		message.css('opacity', 0)
+		var message_itself = $('<div class="popup_panel"/>').html(text)
+		
+		var message = $('<div class="popup_panel_container"/>')
+		message.addClass('popup_message')
+		message.addClass(type)
+		message.append(message_itself)
+
+		//var message = $('<div class="' + type + '"/>').html(text)
 		
 		var close_button = $('<span></span>')
 		close_button.addClass('close')
-		close_button.prependTo(message)
+		close_button.prependTo(message_itself)
 		
 		message_container.append(message).appendTo('body')
 		message_container.css('top', top)
+
+		var opacity = message.css('opacity')
+		message.css('opacity', 0)
 
 		new image_button(close_button).does(function()
 		{
@@ -234,17 +241,21 @@ function info(text) { Message.info(text) }
 function warning(text) { Message.warning(text) }
 function error(text) { Message.error(text) }
 
-/*
 // testing
-$(function()
+/*
+$(document).on('fully_loaded', function()
 {
-	Message.info('долгое уведомление', { время: 3 })
-	Message.info('уведомление')
-	Message.info('ещё уведомление')
-
-	setTimeout(function() { Message.error('ошибка') }, 2000)
-	setTimeout(function() { Message.warning('предупреждение') }, 4000)
-
-	setTimeout(function() { Message.warning('не добавится во время анимации') }, 7000)
+	setTimeout(function()
+	{
+		Message.info('долгое уведомление', { время: 300 })
+		Message.info('уведомление')
+		Message.info('ещё уведомление')
+	
+		setTimeout(function() { Message.error('ошибка') }, 2000)
+		setTimeout(function() { Message.warning('предупреждение') }, 4000)
+	
+		setTimeout(function() { Message.warning('не добавится во время анимации') }, 7000)
+	},
+	1000)
 })
 */

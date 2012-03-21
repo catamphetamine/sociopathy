@@ -1,29 +1,33 @@
 @import "/облик/вспомогательный.less";
 
-.message()
+.popup_message
 {
 	display: inline-block;
 			
 	margin-top: 20px;
 	margin-right: 20px;
 	
-	padding-top: 15px;
-	padding-bottom: 15px;
+	border-width: 0;
+	padding: 0;
 	
-	padding-left: 30px;
-	padding-right: 30px;
+	.popup_panel
+	{
+		border-width: 0;
+	}
 	
-	opacity: 0.85;
+	/* opacity: 0.85; */
 	
+	/*
 	border-style: solid;
 	border-width: 2px;
 
 	.rounded_corners(10px);
+	*/
 	
 	/* .beautiful_shadow_5(3px, 5px, 5px, 7px, 10px, 14px, 20px, 0.12); */
 	/* в хроме тормозит */
 	/* можно заменить border-image'ем */
-	.shadow(3px, 5px, 15px, 0.25);
+	/* .shadow(3px, 5px, 15px, 0.25); */
 
 	cursor: default;
 
@@ -40,7 +44,9 @@
 		width: 30px;
 		height: 30px;
 		
-		background-image: url('/картинки/уведомления/закрыть.png');	
+		background-image: url('/картинки/уведомления/закрыть.png');
+		
+		cursor: pointer;
 	}	
 }
 
@@ -52,45 +58,56 @@
 
 	.info
 	{
-		.message();
-		
-		color: #303030;
-		text-shadow: 1px 1px 0px #ffffff;
-		
-		border-color: #7f7f7f;
-		
-		background-color: #eef2f4;
-		.top_to_bottom_gradient(#eef2f4, #d6dde0);
+		> div
+		{
+			/* .message(); */
+			
+			color: #303030;
+			text-shadow: 1px 1px 0px #ffffff;
+			
+			border-color: #7f7f7f;
+			
+			background-color: #eef2f4;
+			.top_to_bottom_gradient(#eef2f4, #d6dde0);
+		}
 	}
 
 	.error
 	{
-		.message();
-		
-		color: #faefef;
-		text-shadow: 1px 1px 0px #000000;
-		
-		border-color: #400500;
-		
-		background-color: #a42e2e;
-		.top_to_bottom_gradient(#a42e2e, #742b2b);
-		
-		.close
+		padding: 2px;
+		border-width: 1px;
+			
+		> div
 		{
-			background-image: url('/картинки/уведомления/закрыть ошибку.png');	
+			color: #faefef;
+			text-shadow: 1px 1px 0px #000000;
+			
+			border-width: 1px;
+			border-color: #400500;
+			
+			background-color: #a42e2e;
+			.top_to_bottom_gradient(#a42e2e, #742b2b);
+			
+			.close
+			{
+				background-image: url('/картинки/уведомления/закрыть ошибку.png');	
+			}
 		}
 	}
 
 	.warning
 	{
-		.message();
-		
-		color: #281b00;
-		text-shadow: 1px 1px 0px #f3e69f;
-		
-		border-color: #918658;
-		
-		background-color: #f7dc72;
-		.top_to_bottom_gradient(#f7dc72, #d6b52f);
+		> div
+		{
+			/* .message(); */
+			
+			color: #281b00;
+			text-shadow: 1px 1px 0px #f3e69f;
+			
+			border-color: #918658;
+			
+			background-color: #f7dc72;
+			.top_to_bottom_gradient(#f7dc72, #d6b52f);
+		}
 	}
 }

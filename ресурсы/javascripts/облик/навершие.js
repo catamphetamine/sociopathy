@@ -56,7 +56,9 @@ var panel = new (function()
 	
 	var delta_y = tooltip_hide_bottom - tooltip_show_bottom
 
-	var icon_size = 60
+	this.icon_size = 60
+	
+	this.buttons = {}
 	
 	this.activate_buttons = function(images_path)
 	{
@@ -66,8 +68,8 @@ var panel = new (function()
 			var $menu_item = $(this)
 			
 			// initialize variables
-			var title = $menu_item.attr("name");
-			var link = $menu_item.attr("link");
+			var title = $menu_item.attr("name")
+			var link = $menu_item.attr("link")
 
 			if (!title)
 				return
@@ -92,11 +94,11 @@ var panel = new (function()
 			// activate panel menu item fading
 			var button = new image_button
 			(
-				$("> a", $menu_item), 
+				$hyperlink, 
 				{
 					skin: 'url(\'' + images_path + '/' + title + '.png' + '\')',
-					width: icon_size,
-					height: icon_size
+					width: panel.icon_size,
+					height: panel.icon_size
 				}
 			)
 			
@@ -111,6 +113,11 @@ var panel = new (function()
 				'pushed frame fade in easing': 'swing',
 				'pushed frame fade out easing': 'swing'
 			})
+			
+			panel.buttons[title] = button
+			
+			if ($menu_item.attr('hidden'))
+				$menu_item.hide()
 		})
 	}
 	
@@ -121,6 +128,8 @@ var panel = new (function()
 		// for every tooltip
 		$('#' + menu_id + ' > li > a').each(function()
 		{
+			var menu_item = $(this)
+			
 			// get the tooltip and position it appropriately
 			var tooltip = $(this).next(tooltip_tag)
 			tooltip.disableTextSelect()
@@ -129,12 +138,21 @@ var panel = new (function()
 			
 			if (tooltip.parent().attr('not_yet_implemented'))
 			{
-				$(this).click(function(event) { event.preventDefault(); info('Ещё не сделано'); })
+				menu_item.click(function(event) { event.preventDefault(); info('Ещё не сделано'); })
 			}
 			
-			tooltip.css('left', ($(this).position().left + 10) + 'px')
 			tooltip.addClass('panel_menu_tooltip')
 			$(document).find('body').append(tooltip)
+			
+			tooltip.data('menu item', menu_item)
+			panel.buttons[menu_item.parent().attr('name')].tooltip = tooltip
+			
+			tooltip.update_position = function()
+			{
+				this.css('left', (tooltip.data('menu item').offset().left + 10) + 'px')
+			}
+			
+			tooltip.update_position()
 			
 			$(this).hover
 			(

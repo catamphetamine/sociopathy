@@ -143,6 +143,8 @@
 		<script>
 			$(document).on('fully_loaded', function()
 			{
+				document_fully_loaded()
+				
 				$.getScript('/javascripts/less.js', function()
 				{
 					panel.initialize()
@@ -259,6 +261,13 @@
 						<li name="люди" link="/люди">Люди</li>
 						<li name="помощь" link="/помощь">Помощь</li>
 					</ul>
+					
+					<!-- убираем пробелы между элементами -->
+					<script>
+						var menu = $('#panel_menu')
+						var menu_items = menu.children()
+						menu.empty().append(menu_items)
+					</script>
 		
 					<!-- logo -->
 					<a id="logo" href="/"><img id="panel_logo" src="/картинки/навершие/logo.png"/></a>

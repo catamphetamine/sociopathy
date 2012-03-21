@@ -53,10 +53,7 @@
 {
 	list-style: none;
 	text-indent: 0;
-}
-
-#panel_menu
-{
+	
 	position: absolute;
 	left: 15px;
 	right: 0;
@@ -67,25 +64,27 @@
 
 	li
 	{
+		position: relative;
+	
 		margin: 0;
 		padding: 0;
 
-		display: inline;
+		display: inline-block;
+		
+		width: 60px;
+		height: 60px;
+			
+		margin-left: 2px;
+		margin-right: 2px;
 
 		a, .divider
 		{
 			display: block;
 			float: left;
-			
-			margin-left: 2px;
-			margin-right: 2px;
 		}
 		
 		a
 		{
-			width: 60px;
-			height: 60px;
-			
 			border: 0;
 			
 			cursor: pointer;
