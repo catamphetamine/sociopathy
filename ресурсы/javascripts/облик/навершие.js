@@ -3,39 +3,6 @@
  * 
  * This script creates top panel bar with clickable menu items having tooltips.
  * 
- * Usage:
- * 
- * in html:
- * 
- * 	<div id="panel">
- *		<ul id="panel_menu">
- *			<li name="home" link="/">
- *				go to Home page
- *			</li>
- *			<li name="contacts" link="/contacts/">
- *				view Contact information
- *			</li>
- *		</ul>
- *	</div>
- *
- * in javascript:
- * 
- * $(function()
- *	{
- *		panel.activate_buttons("/картинки/навершие/menu")
- *		panel.activate_tooltips()
- * })
- * 
- * In filesystem:
- * 
- * create image sprites (60 pixels by 180 pixels in this example):
- * (frames (top to bottom): idle, ready, pushed)
- * 
- * 		/картинки/навершие/menu/home.png
- * 		/картинки/навершие/menu/contacts.png
- * 
- * Requires jQuery and Button Fader. 
- * 
  * Copyright (c) 2010 Nikolay Kuchumov
  * Licensed under MIT (http://en.wikipedia.org/wiki/MIT_License)
  * 
@@ -44,26 +11,28 @@
  * @github kuchumovn
  */
 
-var panel = new (function()
-{
-	var menu_id = "panel_menu"
-	var tooltip_tag = "em"
-
-	var images_path = "/картинки/навершие/menu"
+var Panel = new Class
+({
+	icon_size: 60,
 	
-	var tooltip_show_bottom = 76
-	var tooltip_hide_bottom = 86
+	buttons: {},
 	
-	var delta_y = tooltip_hide_bottom - tooltip_show_bottom
-
-	this.icon_size = 60
-	
-	this.buttons = {}
-	
-	this.activate_buttons = function(images_path)
+	options:
 	{
+		menu_id: "panel_menu",
+
+		images_path: "/картинки/навершие/menu",
+	
+		tooltip_show_bottom: 76,
+		tooltip_hide_bottom: 86
+	},
+	
+	activate_buttons: function(images_path)
+	{
+		var panel = this
+	
 		// for every panel menu item
-		$("#" + menu_id + " > li").each(function()
+		$("#" + this.options.menu_id + " > li").each(function()
 		{
 			var $menu_item = $(this)
 			
@@ -119,19 +88,20 @@ var panel = new (function()
 			if ($menu_item.attr('hidden'))
 				$menu_item.hide()
 		})
-	}
+	},
 	
-	this.activate_tooltips = function()
+	activate_tooltips: function()
 	{
+		var panel = this
 		var tooltips = []
 		
 		// for every tooltip
-		$('#' + menu_id + ' > li > a').each(function()
+		$('#' + this.options.menu_id + ' > li > a').each(function()
 		{
 			var menu_item = $(this)
 			
 			// get the tooltip and position it appropriately
-			var tooltip = $(this).next(tooltip_tag)
+			var tooltip = $(this).next('em')
 			tooltip.disableTextSelect()
 			
 			tooltips.push(tooltip)
@@ -171,25 +141,156 @@ var panel = new (function()
 					})
 					
 					if (speed !== 'slow')
-						tooltip.css('top', tooltip_show_bottom)
+						tooltip.css('top', panel.options.tooltip_show_bottom)
 					
-					tooltip.stop(true, true).animate({opacity: 'show', top: tooltip_show_bottom}, speed)
+					tooltip.stop(true, true).animate({opacity: 'show', top: panel.options.tooltip_show_bottom}, speed)
 				},
 				// on mouse roll out - hide 
 				function()
 				{
-					tooltip.animate({opacity: "hide", top: tooltip_hide_bottom}, "fast")
+					tooltip.animate({opacity: "hide", top: panel.options.tooltip_hide_bottom}, "fast")
 				}
 			)
 		})
-	}
+	},
 	
 	// initialize panel
-	this.initialize = function()
-	{			
-		this.activate_buttons(images_path)
+	initialize: function()
+	{
+		this.activate_buttons(this.options.images_path)
 		this.activate_tooltips()
+	
+		this.initialize_new_messages_indication()
+		this.initialize_news_feed_indication()
+		this.initialize_new_discussions_indication()
+
+		//this.new_news.bind(this).delay(1000)
 		
 		$('#panel').children().disableTextSelect()
-	} 
-})()
+	},
+
+	toggle_buttons: function(options)
+	{
+		var idle_button = this.buttons[options.idle.button.title].element
+		var active_button = this.buttons[options.active.button.title].element
+		
+		active_button.css
+		({
+			position: 'absolute',
+			'z-index': -1,
+			opacity: 0
+		})
+		
+		idle_button.parent().append(active_button)
+		
+		this.buttons[options.active.button.title].tooltip.update_position()
+		
+		this[options.activation_name] = function(these_options)
+		{
+			options = Object.merge(options, these_options)
+			
+			active_button.css('z-index', 0)
+			
+			if (options.immediate)
+			{
+				idle_button.hide()
+				active_button.show().css('opacity', 1)
+			}
+			else
+			{
+				active_button.fade_in(options.active.fade_in_duration)
+				idle_button.fade_out(options.idle.fade_out_duration)
+			}
+		}
+		
+		this[options.deactivation_name] = function(these_options)
+		{
+			options = Object.merge(options, these_options)
+		
+			active_button.css('z-index', -1)
+			
+			if (options.immediate)
+			{
+				active_button.hide()
+				idle_button.show().css('opacity', 1)
+			}
+			else
+			{
+				idle_button.fade_in(options.idle.fade_in_duration)
+				active_button.fade_out(options.active.fade_out_duration)
+			}
+		}
+	},
+	
+	initialize_news_feed_indication: function(options)
+	{
+		options = options || {}
+		
+		this.toggle_buttons
+		({
+			idle:
+			{
+				button: { title: 'новости' },
+				fade_in_duration: 0.5,
+				fade_out_duration: 3
+			},
+			active:
+			{
+				button: { title: 'новости (непрочитанные)' },
+				fade_in_duration: 2,
+				fade_out_duration: 1
+			},
+			activation_name: 'new_news',
+			deactivation_name: 'no_more_new_news',
+			immediate: options.immediate
+		})
+	},
+	
+	initialize_new_messages_indication: function(options)
+	{
+		options = options || {}
+	
+		this.toggle_buttons
+		({
+			idle:
+			{
+				button: { title: 'беседы' },
+				fade_in_duration: 0.5,
+				fade_out_duration: 1
+			},
+			active:
+			{
+				button: { title: 'беседы (непрочитанные)' },
+				fade_in_duration: 1,
+				fade_out_duration: 1
+			},
+			activation_name: 'new_messages',
+			deactivation_name: 'no_more_new_messages',
+			immediate: options.immediate
+		})
+	},
+	
+	initialize_new_discussions_indication: function(options)
+	{
+		options = options || {}
+	
+		this.toggle_buttons
+		({
+			idle:
+			{
+				button: { title: 'обсуждения' },
+				fade_in_duration: 0.5,
+				fade_out_duration: 1.5
+			},
+			active:
+			{
+				button: { title: 'обсуждения (непрочитанные)' },
+				fade_in_duration: 1,
+				fade_out_duration: 1
+			},
+			activation_name: 'new_discussions',
+			deactivation_name: 'no_more_new_discussions',
+			immediate: options.immediate
+		})
+	}
+})

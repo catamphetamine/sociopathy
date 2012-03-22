@@ -211,7 +211,6 @@ function save_changes()
 
 	Ajax.post('/приложение/человек/сменить данные',
 	{
-		_id: пользователь._id,
 		имя: id_card.find(editable_info[0]).text(),
 		описание: id_card.find(editable_info[1]).text(),
 		откуда: id_card.find(editable_info[2]).text()

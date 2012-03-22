@@ -141,13 +141,18 @@
 		<script src="/javascripts/socket.io.js"></script>
 				
 		<script>
+			var panel
+			
 			$(document).on('fully_loaded', function()
 			{
 				document_fully_loaded()
 				
 				$.getScript('/javascripts/less.js', function()
 				{
-					panel.initialize()
+					panel = new Panel()
+					
+					$(document).trigger('styles_loaded')
+					
 					initialize_page()	
 				
 					page_loaded()

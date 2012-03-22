@@ -673,16 +673,20 @@ function show_testing_messages()
 	3000)
 }
 
+//var attention_symbol = '•'
+var attention_symbol = '⁕'
+
 function new_messages_notification()
 {
-	if (title().indexOf('* ') !== 0)
-		title('* ' + title())
+	// 
+	if (title().indexOf(attention_symbol) !== 0)
+		title(attention_symbol + title())
 		
 	new_message_sound.play()
 }
 
 function dismiss_new_messages_notifications()
 {
-	if (document.title.indexOf('* ') === 0)
-		document.title = document.title.substring(2)
+	if (document.title.indexOf(attention_symbol) === 0)
+		document.title = document.title.substring(1)
 }

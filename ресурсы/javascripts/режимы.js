@@ -175,6 +175,9 @@ var Режим = (function()
 				
 			if (Клавиши.is('Ctrl', 'Shift', 'Digit_3', event))
 				return перейти_в_режим('действия')
+				
+			if (Клавиши.is('Ctrl', 'Shift', 'Digit_4', event))
+				alert('it works')
 		})
 	})
 	
