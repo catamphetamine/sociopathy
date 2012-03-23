@@ -34,7 +34,7 @@
 		#links, #actions
 		{
 			display: none;
-			margin-top: 40px;
+			margin-top: 20px;
 		}
 		
 		#links
@@ -92,70 +92,121 @@
 		margin-bottom: 50px;
 		margin-top: 250px;
 	}
+	
+	#id_card_block > div
+	{
+		text-align: center;
+		
+		> .photo
+		{
+			img
+			{
+				margin-top: 80px;
+			
+				border-width: 1px;
+				border-style: solid;
+				border-color: #afafaf;
+				
+				.rounded_corners(10px);
+				
+				.beautiful_shadow_3(0, 0, 4px, 6px, 10px, 0.1);
+			}
+		}
+		
+		> .miscellaneous
+		{
+			text-align: left;
+			white-space: nowrap;
+			
+			background-color: #ffffff;
+			
+			padding: 40px;
+			
+			margin-top: 40px;
+			margin-bottom: 50px;
+			
+			margin-left: auto;
+			margin-right: auto;
+			display: inline-block;
+			
+			.rounded_corners(10px);
+			
+			.minor_info
+			{
+				width: 600px;
+				
+				display: inline-block;
+				vertical-align: top;
+				
+				margin: 0;
+				
+				.info
+				{
+					margin-bottom: 40px;
+			
+					font-size: 26px;
+					
+					&:last-child
+					{
+						margin-bottom: 0;
+					}
+				
+					dt
+					{
+						display: block;
+						color: #7D7B7B;
+					}
+					
+					dd
+					{
+						display: block;
+						margin-left: 20px;
+					}
+				}
+				
+				.left, .right
+				{
+					width: 50%;
+					overflow: hidden;
+					text-overflow: ellipsis;
+				}
+				
+				.left
+				{
+					float: left;
+				}
+				
+				.right
+				{
+					float: right;
+				}
+			}
+		
+			.links
+			{
+				display: inline-block;
+				vertical-align: top;
+				
+				margin-left: 60px;
+				
+				color: #7D7B7B;
+				font-size: 26px;
+				
+				ul
+				{
+					margin-top: 0;
+					padding-left: 20px;
+	
+					list-style-type: none;
+				}
+			}
+		}
+	}
 }
 
 body[mode="правка"] .real_picture
 {
 	cursor: pointer;
-}
-
-.minor_info
-{
-	width: 600px;
-	
-	display: block;
-	
-	margin-left: auto;
-	margin-right: auto;
-	
-	margin-top: 40px;
-	margin-bottom: 50px;
-	
-	background-color: #ffffff;
-	
-	padding: 40px;
-	.rounded_corners(10px);
-	
-	.info
-	{
-		margin-bottom: 40px;
-
-		font-size: 26px;
-		
-		&:last-child
-		{
-			margin-bottom: 0;
-		}
-	
-		dt
-		{
-			display: block;
-			color: #7D7B7B;
-		}
-		
-		dd
-		{
-			display: block;
-			margin-left: 20px;
-		}
-	}
-	
-	.left, .right
-	{
-		width: 50%;
-		overflow: hidden;
-		text-overflow: ellipsis;
-	}
-	
-	.left
-	{
-		float: left;
-	}
-	
-	.right
-	{
-		float: right;
-	}
 }
 
 .business_card .uploading_picture

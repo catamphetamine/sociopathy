@@ -221,6 +221,7 @@ http.post '/хранилище/заполнить', (ввод, вывод) ->
 				характер: 'флегматичный'
 				убеждения: 'социализм'
 				'семейное положение': 'холост'
+				ссылки: [ 'http://vkontakte.ru/kuchumovn', 'http://youtube.com/user/kuchumovn' ]
 				
 			хранилище.collection('people').save человек, @
 			

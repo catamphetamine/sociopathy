@@ -1,6 +1,7 @@
 var id_card
 var online_status
 var the_picture
+var content
 
 Режим.пообещать('правка')
 Подсказки.подсказка('Здесь вы можете посмотреть данные об этом члене нашей сети. Если это ваша личная карточка, вы сможете изменить данные в ней, переключившись в режим правки.')
@@ -8,7 +9,8 @@ var the_picture
 function initialize_page()
 {	
 	id_card = $('#id_card')
-
+	content = $('#id_card_block [type="ok"]')
+	
 	Режим.добавить_проверку_перехода(function(из, в)
 	{
 		if (в === 'правка')
@@ -70,10 +72,7 @@ function before_id_card_shown()
 		$('#links .common_friends').show()
 		$('#actions').show()
 	}
-}
 
-function id_card_loaded()
-{
 	the_picture = id_card.find('.real_picture')
 
 	online_status =
@@ -82,8 +81,10 @@ function id_card_loaded()
 		offline: id_card.find('.online_status .offline') 
 	}
 	
+	show_photo()
 	show_online_status()
 	show_minor_info()
+	show_links()
 	
 	initialize_editables()
 	initialize_edit_mode_effects()		
@@ -94,9 +95,32 @@ function id_card_loaded()
 	Режим.разрешить('правка')
 }
 
+function id_card_loaded()
+{
+}
+
+function show_photo()
+{
+	if (!пользователь_сети.фотография)
+		return
+
+	var image = $('<img/>')
+	image.attr('src', '/загруженное/люди/' + пользователь_сети.имя + '/фотография.jpg')
+
+	content.find('> .photo').append(image)
+}
+
 var online_status_updater
 function show_online_status()
 {
+	// если сам зашёл на свою страницу
+	if (пользователь._id === пользователь_сети._id)
+	{
+		$('.online_status .offline').css({ opacity: 0 })
+		$('.online_status .online').css({ opacity: 1 })
+		return
+	}
+	
 	когда_был_здесь = пользователь_сети['когда был здесь']
 	if (!когда_был_здесь)
 		return
@@ -156,6 +180,38 @@ function initialize_edit_mode_effects()
 			//the_picture.animate({ 'boxShadow': '0 0 0px' })
 		}
 	})
+}
+
+function show_links()
+{
+	var links_block = content.find('.miscellaneous .links')
+	
+	if (!пользователь_сети.ссылки || пользователь_сети.ссылки.is_empty())
+		return links_block.hide()
+		
+	var list = links_block.find('ul')
+	
+	пользователь_сети.ссылки.forEach(function(link)
+	{
+		list.append($('<li/>').append($('<a/>').attr('href', link).text(human_readable_url(link))))
+	})
+}
+
+function human_readable_url(url)
+{
+	var host = parseUri(url).host
+	
+	switch (host)
+	{
+		case 'vkontakte.ru':
+		case 'vk.com':
+			return 'ВКонтакте'
+			
+		case 'youtube.com':
+			return 'YouTube'
+			
+		return host
+	}
 }
 
 function show_minor_info()
