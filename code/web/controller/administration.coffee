@@ -289,9 +289,59 @@ http.post '/хранилище/заполнить', (ввод, вывод) ->
 				
 		.сделать ->
 			хранилище.createCollection 'books', @
+
+		# заполнить книги пользователей
+		
+		.сделать ->
+			хранилище.collection('peoples_books').drop @
+		
+		.ошибка (ошибка) ->
+			if ошибка.message == 'ns not found'
+				return no
+			console.error ошибка
+			вывод.send ошибка: ошибка
+				
+		.сделать ->
+			хранилище.createCollection 'peoples_books', @
 			
 		.сделать ->
-			хранилище.collection('books').ensureIndex 'пользователь', yes, @
+			хранилище.collection('peoples_books').ensureIndex('пользователь', yes, @)
+
+		# заполнить картинки
+		
+		.сделать ->
+			хранилище.collection('pictures').drop @
+		
+		.ошибка (ошибка) ->
+			if ошибка.message == 'ns not found'
+				return no
+			console.error ошибка
+			вывод.send ошибка: ошибка
+				
+		.сделать ->
+			хранилище.createCollection 'pictures', @
+			
+		.сделать ->
+			хранилище.collection('pictures').ensureIndex([[ 'пользователь', 1 ], [ 'id', 1 ] ], yes, @)
+
+		# { пользователь: { "$oid" : "4f26b53cf05b347c03000001"}, альбомы: [{ название: 'реклама', описание: 'Разного рода интересная западная реклама' }] }
+		
+		# заполнить видео
+		
+		.сделать ->
+			хранилище.collection('videos').drop @
+		
+		.ошибка (ошибка) ->
+			if ошибка.message == 'ns not found'
+				return no
+			console.error ошибка
+			вывод.send ошибка: ошибка
+				
+		.сделать ->
+			хранилище.createCollection 'videos', @
+			
+		.сделать ->
+			хранилище.collection('videos').ensureIndex([[ 'пользователь', 1 ], [ 'id', 1 ] ], yes, @)
 
 		# заполнить дневники
 			

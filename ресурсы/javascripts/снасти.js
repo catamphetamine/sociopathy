@@ -488,3 +488,88 @@ function iterate(array, condition, action)
 			i++
 	}
 }
+
+function match_url(url, start, patterns)
+{
+	if (url === '')
+		return
+
+	if (typeof start !== 'string')
+	{
+		patterns = start
+		start = ''
+	}
+
+	if (start === '/')
+		start = ''
+	else if (!url.starts_with(start))
+		return
+		
+	url = url.substring(start.length)
+	
+	var matched = false
+	Object.each(patterns, function(action, key)
+	{
+		if (matched)
+			return
+			
+		if (key === '*')
+		{
+			var slash = url.indexOf('/')
+			var rest
+			
+			if (slash < 0)
+			{
+				slash = url.length
+				rest = ''
+			}
+			else
+			{
+				rest = url.substring(slash + 1)
+			}
+			
+			matched = true
+			return action(url.substring(0, slash), rest)
+		}
+		
+		if (url.starts_with(key))
+		{
+			return action(url.substring(key.length + 1))
+		}
+	})
+}
+
+function center_list(list, options)
+{
+	if (list.css('position') !== 'relative')
+		return alert('list position must be relative')
+		
+	function calculate_width(count)
+	{
+		return count * (options.item_width + (options.item_margin * 2))
+	}
+	
+	var available_width = parseInt(options.space.width())
+	
+	var count = 0
+	var width = 0
+	var suitable_width = width
+	while (true)
+	{
+		count++
+		width = calculate_width(count)
+		
+		if (width <= available_width)
+			suitable_width = width
+		else
+			break
+	}
+	
+	list.width(suitable_width)
+	var delta = (available_width - suitable_width) / 2
+	list.css
+	({
+		left: delta + 'px',
+		'margin-right': -delta + 'px'
+	})
+}

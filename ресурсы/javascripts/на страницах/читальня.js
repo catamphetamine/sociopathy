@@ -1,3 +1,5 @@
+Режим.пообещать('правка')
+	
 function initialize_page()
 {
 	if (window.раздел)
@@ -40,17 +42,17 @@ function initialize_page()
 				}
 			}
 		},
-		conditional: $('#category_list_block[type=conditional]'),
-		done: categories_loaded
+		conditional: $('#category_list_block[type=conditional]')
 	},
 	new  Data_loader
 	({
 		url: '/приложение/раздел читальни',
-		parameters: { путь: путь_к_разделу }
+		parameters: { путь: путь_к_разделу },
+		before_done_output: categories_loaded
 	}))
 
-	$(window).resize(resize_categories_list)
-	resize_categories_list()
+	$(window).resize(center_categories_list)
+	center_categories_list()
 }
 
 function categories_loaded()
@@ -58,33 +60,9 @@ function categories_loaded()
 	Режим.разрешить('правка')
 }
 
-function resize_categories_list()
+function center_categories_list()
 {
-	function calculate_categories_width(count)
-	{
-		var Category_width = 250
-		var Category_side_spacing = 40
-	
-		return count * (Category_width + (Category_side_spacing * 2))
-	}
-	
-	var available_width = parseInt($('#content').width())
-	
-	var count = 0
-	var width = 0
-	var suitable_width = width
-	while (true)
-	{
-		count++
-		width = calculate_categories_width(count)
-		
-		if (width <= available_width)
-			suitable_width = width
-		else
-			break
-	}
-	
-	$('#categories').width(suitable_width).css('left', (available_width - suitable_width) / 2 + 'px')
+	center_list($('#categories'), { space: $('#content'), item_width: 250, item_margin: 40 })
 }
 
 function path_breadcrumbs(path, delta)

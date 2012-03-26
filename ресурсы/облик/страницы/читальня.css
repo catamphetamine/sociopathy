@@ -30,20 +30,11 @@
 
 			display: inline-block;
 			
-			min-width: 250px;
-			max-width: 250px;
-			min-height: 250px;
-			max-height: 250px;
+			width: 250px;
+			height: 250px;
 			
 			/* = Category_side_spacing */
 			margin: 40px;
-			
-			/*
-			margin-top: 15px;
-			margin-bottom: 15px;
-			margin-left: 15px;
-			margin-right: 15px;
-			*/
 			
 			background-color: #efefef;
 			
@@ -63,7 +54,6 @@
 			
 			a
 			{
-				.rounded_corners(10px);
 				overflow: hidden;
 				
 				text-align: center;
@@ -74,11 +64,8 @@
 				background-position: center top;
 				background-repeat: no-repeat;
 				
-				min-width: 250px;
-				max-width: 250px;
-				
-				min-height: 250px;
-				max-height: 250px;
+				width: 250px;
+				height: 250px;
 				
 				vertical-align: bottom;
 				border-bottom: none;

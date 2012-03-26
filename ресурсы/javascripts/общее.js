@@ -621,7 +621,8 @@ Function.prototype.ticking = function(period, bind, arguments)
 	var func = this
 	var periodical = function()
 	{
-		func()
+		if (func() === false)
+			return
 		if (running)
 			next()
 	}

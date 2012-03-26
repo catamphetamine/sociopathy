@@ -10,53 +10,79 @@ $(function()
 		
 	var данные_для_страницы = window.данные_для_страницы
 	
-	if (название_страницы.starts_with('люди/')
-		&& название_страницы.length > 'люди/'.length)
+	var breaks_from_normal_workflow = false
+	
+	match_url(путь_страницы(),
 	{
-		var путь = название_страницы.substring('люди/'.length)
-		window.адресное_имя = путь.match(/([^\/]+)/)[1]
-		название_страницы = 'человек'
-			
-		if (!путь.contains('/'))
+		'люди': function(rest)
 		{
-			название_страницы = 'человек'
-		}
-		else
-		{
-			путь = путь.substring((window.адресное_имя + '/').length)
-			if (!путь.contains('/'))
+			match_url(rest,
 			{
-				switch (путь)
+				'*': function(value, rest)
 				{
-					case 'дневник':
-						название_страницы = 'дневник'
-						break
-						
-					case 'книги':
-						название_страницы = 'книги'
-						break
-						
-					case 'общие друзья':
-						название_страницы = 'общие друзья'
-						break
-						
-					default:
-						название_страницы = 'человек'
-				}	
-			}
-			else
+					window.адресное_имя = value
+					название_страницы = 'человек/человек'
+					
+					match_url(rest,
+					{
+						'дневник': function(rest)
+						{
+							название_страницы = 'человек/дневник'
+						},
+						'книги': function()
+						{
+							название_страницы = 'человек/книги'
+						},
+						'картинки': function(rest)
+						{
+							название_страницы = 'человек/картинки'
+							
+							match_url(rest,
+							{
+								'*': function(value, rest)
+								{
+									название_страницы = 'человек/альбом с картинками'
+									window.альбом = value
+								}
+							})
+						},
+						'видео': function(rest)
+						{
+							название_страницы = 'человек/видео'
+							
+							match_url(rest,
+							{
+								'*': function(value, rest)
+								{
+									название_страницы = 'человек/альбом с видео'
+									window.альбом = value
+								}
+							})
+						},
+						'общие друзья': function()
+						{
+							название_страницы = 'общие друзья'
+						}
+					})
+				}
+			})
+		},
+		'читальня': function(rest)
+		{
+			match_url(rest,
 			{
-			}
+				'*': function()
+				{
+					var путь = название_страницы.substring('читальня/'.length)
+					данные_для_страницы.путь = путь
+					раздел_или_заметка(путь, proceed)
+					breaks_from_normal_workflow = true
+				}
+			})
 		}
-	}
-			
-	if (название_страницы.starts_with('читальня/'))
-	{
-		var путь = название_страницы.substring('читальня/'.length)
-		данные_для_страницы.путь = путь
-		раздел_или_заметка(путь, proceed)
-	}
-	else
+	})
+	
+	if (!breaks_from_normal_workflow)
 		proceed()
 
 	function proceed()

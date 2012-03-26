@@ -110,7 +110,6 @@ function show_photo()
 	content.find('> .photo').append(image)
 }
 
-var online_status_updater
 function show_online_status()
 {
 	// если сам зашёл на свою страницу
@@ -142,7 +141,7 @@ function show_online_status()
 		id_card.find('.was_here').fade_out(0.3)
 	})
 
-	online_status_updater = update_online_status.ticking(2 * 1000)
+	update_online_status.ticking(2 * 1000)
 }
 
 function update_online_status()
@@ -152,7 +151,7 @@ function update_online_status()
 	{
 		online_status.online.css({ opacity: 0 })
 		online_status.offline.css({ opacity: 1 })
-		return online_status_updater.stop()
+		return false
 	}
 	
 	online_status.online.css({ opacity: 1 - остылость })
