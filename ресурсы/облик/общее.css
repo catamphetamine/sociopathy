@@ -907,6 +907,8 @@ body[mode="правка"] .rich_formatting a
 	
 	text-align: center;
 	
+	cursor: progress;
+	
 	/*
 	background-color: rgba(0, 0, 0, 0.7);
 	*/
@@ -1040,4 +1042,29 @@ body[mode="правка"] .rich_formatting a
 *
 {
 	outline: none;
+}
+
+.main_conditional
+{
+	[type=loading], [type=loading_more], [type=error], [type=loading_more_error]
+	{
+		text-align: center;
+		margin-bottom: 50px;
+	}
+	
+	[type=loading_more], [type=loading_more_error]
+	{
+		margin-top: 50px;
+	}
+	
+	[type=loading], [type=error]
+	{
+		margin-top: 150px;
+	}
+}
+
+.breadcrumbs_container
+{
+	margin-left: 80px;
+	margin-right: 80px;
 }

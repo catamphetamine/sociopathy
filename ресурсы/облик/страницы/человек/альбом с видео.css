@@ -1,0 +1,36 @@
+@import "/облик/вспомогательный.less";
+
+#content
+{
+	padding-left: 40px;
+	padding-right: 40px;
+	
+	margin-top: 50px;
+	
+	#videos
+	{
+		list-style-type: none;
+		padding: 0;
+		
+		position: relative;
+	
+		> li
+		{
+			display: inline-block;
+			margin: 40px;
+			
+			> .video
+			{
+				display: inline-block;
+				
+				background-color: black;
+				color: white;
+				text-align: center;
+				
+				height: 400px;
+				
+				.beautiful_shadow_5(0px, 3px, 20px, 12px, 2px, 8px, 4px, 0.2);
+			}
+		}
+	}
+}

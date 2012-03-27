@@ -1,0 +1,37 @@
+@import "/облик/вспомогательный.less";
+
+#content
+{
+	padding-left: 40px;
+	padding-right: 40px;
+	
+	margin-top: 50px;
+	
+	#pictures
+	{
+		list-style-type: none;
+		padding: 0;
+		
+		position: relative;
+	
+		> li
+		{
+			display: inline-block;
+			margin: 40px;
+			
+			> .icon
+			{
+				display: inline-block;
+				cursor: -webkit-zoom-in;
+				cursor: -moz-zoom-in;
+			
+				width: 400px;
+				height: 267px;
+				
+				.rounded_corners(8px);
+				
+				.beautiful_shadow_5(0px, 3px, 20px, 12px, 2px, 8px, 4px, 0.2);
+			}
+		}
+	}
+}

@@ -127,25 +127,6 @@
 	}
 }
 
-#category_list_block
-{
-	[type=loading], [type=loading_more], [type=error], [type=loading_more_error]
-	{
-		text-align: center;
-		margin-bottom: 50px;
-	}
-	
-	[type=loading_more], [type=loading_more_error]
-	{
-		margin-top: 50px;
-	}
-	
-	[type=loading], [type=error]
-	{
-		margin-top: 150px;
-	}
-}
-
 .breadcrumbs
 {
 	margin-left: 80px;

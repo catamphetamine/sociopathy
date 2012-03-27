@@ -34,7 +34,7 @@
 			&, > .cover
 			{
 				width: 400px;
-				height: 400px;
+				height: 267px;
 			}
 			
 			/* fix rounded corners bug in web kit */
@@ -57,37 +57,18 @@
 				
 				width: 100%;
 				
-				font-size: 36px;
+				font-size: 32px;
 				color: white;
 				background-color: black;
 				opacity: 0.85;
 				
-				padding-left: 18px;
-				padding-right: 18px;
-				padding-top: 10px;
-				padding-bottom: 8px;
+				padding-left: 14px;
+				padding-right: 14px;
+				padding-top: 6px;
+				padding-bottom: 6px;
 				
 				box-sizing: border-box;
 			}
 		}
-	}
-}
-
-#albums_block
-{
-	[type=loading], [type=loading_more], [type=error], [type=loading_more_error]
-	{
-		text-align: center;
-		margin-bottom: 50px;
-	}
-	
-	[type=loading_more], [type=loading_more_error]
-	{
-		margin-top: 50px;
-	}
-	
-	[type=loading], [type=error]
-	{
-		margin-top: 150px;
 	}
 }

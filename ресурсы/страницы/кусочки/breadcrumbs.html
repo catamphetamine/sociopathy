@@ -1,0 +1,8 @@
+<div class="breadcrumbs">
+	{{each(index, path_part) path}}
+		<a href="${path_part.link}">${path_part.title}</a>
+		{{if index < path.length - 1}}
+			 → 
+		{{/if}}
+	{{/each}}
+</div>

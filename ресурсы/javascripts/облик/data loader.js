@@ -233,7 +233,9 @@ var Data_templater = new Class
 ({
 	initialize: function(options, loader)
 	{
-		var conditional = initialize_conditional(options.conditional)
+		var conditional = options.conditional
+		if (conditional.constructor === jQuery)
+			conditional = initialize_conditional(options.conditional)
 
 		if (!options.postprocess_element)
 			options.postprocess_element = function(element)

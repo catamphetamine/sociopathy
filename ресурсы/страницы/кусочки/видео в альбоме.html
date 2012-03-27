@@ -1,0 +1,11 @@
+<div class="video">
+	{{if источник == 'vimeo.com' }}
+		<iframe src="http://player.vimeo.com/video/${внешний_id}" width="${Options.Video.Size.Width}" height="${Options.Video.Size.Height}" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+	{{else}}
+		{{if источник == 'youtube.com' }}
+			<iframe width="${Options.Video.Size.Width}" height="${Options.Video.Size.Height}" src="http://www.youtube.com/embed/${внешний_id}" frameborder="0" allowfullscreen></iframe>
+		{{else}}
+			Неизвестный источник видео
+		{{/if}}
+	{{/if}}
+</div>

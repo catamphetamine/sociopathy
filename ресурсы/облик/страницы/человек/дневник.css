@@ -1,6 +1,6 @@
 @import "/облик/вспомогательный.less";
 
-#blog_block
+.main_conditional
 {
 	[type=loading], [type=error]
 	{

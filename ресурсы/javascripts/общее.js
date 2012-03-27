@@ -683,3 +683,24 @@ function title(text)
 }
 
 function document_fully_loaded() {}
+
+function breadcrumbs(path, on_ok, on_error)
+{
+	var template_url = '/страницы/кусочки/breadcrumbs.html'
+
+	Ajax.get(template_url,
+	{
+		//cache: false,
+		type: 'html',
+		ошибка: function()
+		{
+			on_error()
+		},
+		ok: function(template) 
+		{
+			$.template(template_url, template)
+			$('.breadcrumbs_container').append($.tmpl(template_url, { path: path }))
+			on_ok()
+		}
+	})
+}

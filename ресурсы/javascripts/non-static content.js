@@ -140,7 +140,7 @@ $(function()
 		{
 			ошибка: function(ошибка)
 			{
-				page_loading_error('Что-то сломалось')
+				page_loading_error('Возможно что-то сломалось')
 			},
 			ok: function(данные) 
 			{
@@ -172,7 +172,7 @@ $(function()
 				if (ошибка === 'Пользователь не найден')
 					return window.location.reload()
 				
-				page_loading_error('Что-то сломалось')
+				page_loading_error('Возможно что-то сломалось')
 			},
 			ok: function(данные) 
 			{
@@ -236,7 +236,7 @@ $(function()
 				if (options.on_error)
 					return options.on_error()
 					
-				page_loading_error('Что-то сломалось')
+				page_loading_error('Возможно что-то сломалось')
 			},
 			ok: function(template) 
 			{

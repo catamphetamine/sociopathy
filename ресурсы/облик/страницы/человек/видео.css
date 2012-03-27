@@ -33,7 +33,7 @@
 			
 			&, > .cover
 			{
-				width: 400px;
+				width: 706px;
 				height: 400px;
 			}
 			
@@ -70,24 +70,5 @@
 				box-sizing: border-box;
 			}
 		}
-	}
-}
-
-#albums_block
-{
-	[type=loading], [type=loading_more], [type=error], [type=loading_more_error]
-	{
-		text-align: center;
-		margin-bottom: 50px;
-	}
-	
-	[type=loading_more], [type=loading_more_error]
-	{
-		margin-top: 50px;
-	}
-	
-	[type=loading], [type=error]
-	{
-		margin-top: 150px;
 	}
 }

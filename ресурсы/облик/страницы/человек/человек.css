@@ -1,6 +1,6 @@
 @import "/облик/вспомогательный.less";
 
-#id_card_block
+.main_conditional
 {
 	[type=loading], [type=error]
 	{
@@ -34,7 +34,7 @@
 		#links, #actions
 		{
 			display: none;
-			margin-top: 20px;
+			margin-top: 0px;
 		}
 		
 		#links
