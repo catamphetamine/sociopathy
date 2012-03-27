@@ -160,9 +160,14 @@ var Panel = new Class
 		this.activate_buttons(this.options.images_path)
 		this.activate_tooltips()
 	
-		this.initialize_new_messages_indication()
-		this.initialize_news_feed_indication()
-		this.initialize_new_discussions_indication()
+		console.log(пользователь)
+	
+		if (пользователь)
+		{
+			this.initialize_new_messages_indication()
+			this.initialize_news_feed_indication()
+			this.initialize_new_discussions_indication()
+		}
 
 		//this.new_news.bind(this).delay(1000)
 		
