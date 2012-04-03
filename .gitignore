@@ -3,3 +3,4 @@ db/*.sqlite3
 log/*.log
 загруженное/временное/*
 временное/*
+/configuration/home_osx/configuration.private.coffee

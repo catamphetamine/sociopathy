@@ -2,75 +2,31 @@ var Ajax =
 {
 	get: function(url, data, options)
 	{
-		if (!options)
-		{
-			options = data
-			data = undefined
-		}
-		
-		this.request('GET', url, data, options);
+		return this.request('GET', url, data, options);
 	},
 	
 	post: function(url, data, options)
 	{
-		if (!options)
-		{
-			options = data
-			data = undefined
-		}
-		
-		this.request('POST', url, data, options);
+		return this.request('POST', url, data, options);
 	},
 	
 	put: function(url, data, options)
 	{
-		if (!options)
-		{
-			options = data
-			data = undefined
-		}
-		
-		this.request('POST', url, Object.merge(data, { _method: 'put' }), options);
+		return this.request('POST', url, Object.merge(data, { _method: 'put' }), options);
 	},
 	
 	'delete': function(url, data, options)
 	{
-		if (!options)
-		{
-			options = data
-			data = undefined
-		}
-		
-		this.request('POST', url, Object.merge(data, { _method: 'delete' }), options);
+		return this.request('POST', url, Object.merge(data, { _method: 'delete' }), options);
 	},
 	
 	request: function(method, url, data, options)
 	{
+		options = options || {}
+		
 		options.type = options.type || 'json'
 		
-		var ok = function(data)
-		{
-			if ($.isFunction(options.ok))
-				options.ok(data)
-			else if (typeof(options.ok) === 'string')
-				info(options.ok)
-			else
-				error('Неправильная настройка ok: ' + options.ok)
-		}
-		
-		var ошибка = function(сообщение)
-		{
-			if ($.isFunction(options.ошибка))
-				options.ошибка(сообщение)
-			else if (сообщение && typeof сообщение === 'string')
-				error(сообщение)
-			else if (typeof options.ошибка === 'string')
-				error(options.ошибка)
-			else
-				error('Ошибка связи с сервером')
-		}
-		
-		$.ajax
+		var ajax = $.ajax
 		({
 			url: url, 
 			type: method,
@@ -82,17 +38,62 @@ var Ajax =
 			//complete: function() { enable_links() },
 			timeout: 15000
 		})
-		.success(function(json, textStatus)
+		
+		var default_on_error = function(сообщение)
 		{
-			if (json.ошибка)
-				return ошибка(json.ошибка)
-
-			ok(json)
-		})
-		.error(function(jqXHR, textStatus, errorThrown)
+			error('Ошибка связи с сервером')
+		}
+		
+		var on_error = default_on_error
+		
+		var result =
 		{
-			ошибка()
-		})
+			ok: function(ok)
+			{
+				var on_ok = function(data)
+				{
+					if ($.isFunction(ok))
+						ok(data)
+					else if (typeof(ok) === 'string')
+						info(ok)
+					else
+						error('Неправильная настройка ok: ' + ok)
+				}
+				
+				ajax.success(function(data, textStatus)
+				{
+					if (data.ошибка)
+						return on_error(data.ошибка)
+		
+					on_ok(data)
+				})
+				
+				return result
+			},
+			ошибка: function(ошибка)
+			{
+				on_error = function(сообщение)
+				{
+					if ($.isFunction(ошибка))
+						ошибка(сообщение)
+					else if (сообщение && typeof сообщение === 'string')
+						error(сообщение)
+					else if (typeof ошибка === 'string')
+						error(ошибка)
+					else
+						default_on_error()
+				}
+				
+				ajax.error(function(jqXHR, textStatus, errorThrown)
+				{
+					on_error()
+				})
+				
+				return result
+			}
+		}
+		
+		return result
 	}
 }
 
@@ -409,22 +410,19 @@ function get_youtube_video_url_from_id(id)
 
 function получить_шаблон(options, callback)
 {
-	Ajax.get(options.url, 
+	Ajax.get(options.url, {}, { type: 'html' })
+	.ошибка(function()
 	{
-		type: 'html',
-		ошибка: function()
-		{
-			if (options.error)
-				return options.error('Не удалось загрузить страницу')
-				
-			error('Не удалось загрузить страницу')
-		},
-		ok: function(template) 
-		{
-			$.template(options.id, template)
+		if (options.error)
+			return options.error('Не удалось загрузить страницу')
 			
-			callback()
-		}
+		error('Не удалось загрузить страницу')
+	})
+	.ok(function(template) 
+	{
+		$.template(options.id, template)
+		
+		callback()
 	})
 }
 

@@ -24,9 +24,12 @@
 	<li not_yet_implemented="true" name="почта" link="/сеть/почта">Почта</li>
 	-->
 	<li name="книги" link="/люди/${пользователь['адресное имя']}/книги">Книги</li>
+	<!--
 	<li name="друзья" link="/сеть/друзья">Друзья</li>
+	-->
+	<li name="круги" link="/сеть/круги">Круги</li>
 	<li name="настройки" link="/сеть/настройки">Настройки</li>
-	<li name="мусорка" link="/сеть/мусорка">Мусорка</li>
+	<li name="мусорка" link="/сеть/мусорка" hidden="true">Мусорка</li>
 </ul>
 
 <script src="/javascripts/user content.js"></script>
@@ -37,11 +40,8 @@
 			<a href="/люди/${пользователь['адресное имя']}" class="name">${пользователь.имя}</a>
 			<a href="#" class="logout">Выйти</a>
 		</div>
-		<a href="/люди/${пользователь['адресное имя']}" class="name" style="display: inline-block; border: 0">
-			<div class="picture">
-				<div class="real_picture" style="background-image: url('/загруженное/люди/${пользователь['адресное имя']}/картинка/в болталке.jpg')"></div>
-			</div>
-		</a>
+		
+		{{tmpl(пользователь) 'маленький аватар'}}
 	</div>
 </div>
 

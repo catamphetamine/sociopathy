@@ -185,11 +185,24 @@ var Message =
 		message.addClass(type)
 		message.append(message_itself)
 
+		var closing = false
+		message.on('contextmenu', function(event)
+		{
+			event.preventDefault()
+			
+			if (closing)
+				return
+			closing = true
+			
+			message_container.data('dissapearance_duration', 0.25)
+			Message.vanisher.schedule(message_container)
+		})
+		
 		//var message = $('<div class="' + type + '"/>').html(text)
 		
-		var close_button = $('<span></span>')
-		close_button.addClass('close')
-		close_button.prependTo(message_itself)
+		//var close_button = $('<span></span>')
+		//close_button.addClass('close')
+		//close_button.prependTo(message_itself)
 		
 		message_container.append(message).appendTo('body')
 		message_container.css('top', top)
@@ -197,12 +210,14 @@ var Message =
 		var opacity = message.css('opacity')
 		message.css('opacity', 0)
 
+		/*
 		new image_button(close_button).does(function()
 		{
 			message_container.data('dissapearance_duration', 0.25)
 			Message.vanisher.schedule(message_container)
 		})
-	
+		*/
+		
 		animator.fade_in(message, 
 		{ 
 			duration: this.appearance_duration, 

@@ -212,7 +212,7 @@ function initialize_conditional($this, options)
 {
 	var conditional
 
-	var fade_in_duration = 500
+	var fade_in_duration = 200
 	var fade_out_duration = 200
 	
 	var every = $this.children()
@@ -688,19 +688,19 @@ function breadcrumbs(path, on_ok, on_error)
 {
 	var template_url = '/страницы/кусочки/breadcrumbs.html'
 
-	Ajax.get(template_url,
+	Ajax.get(template_url, {}, { type: 'html' })
+	.ошибка(function()
 	{
-		//cache: false,
-		type: 'html',
-		ошибка: function()
-		{
-			on_error()
-		},
-		ok: function(template) 
-		{
-			$.template(template_url, template)
-			$('.breadcrumbs_container').append($.tmpl(template_url, { path: path }))
-			on_ok()
-		}
+		on_error()
+	})
+	.ok(function(template) 
+	{
+		$.template(template_url, template)
+		$('.breadcrumbs_container').append($.tmpl(template_url, { path: path }))
+		on_ok()
 	})
 }
+
+// чтобы не было ошибок по консоли в обозревателе
+if (!console)
+	console = { log: function() {} }

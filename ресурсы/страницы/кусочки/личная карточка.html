@@ -10,17 +10,18 @@
 		<!-- avatar -->
 		<div class="picture">
 			<div>
-				<div class="real_picture" style="background-image: url('/загруженное/люди/${$data['адресное имя']}/картинка/на личной карточке.jpg')"></div>
-				{{if window.название_страницы === 'человек' }}
+				<img {{if !$data['загружен ли аватар?'] }} style="display: none" {{/if}} class="real_picture" {{if $data['загружен ли аватар?'] }} src="/загруженное/люди/${$data['адресное имя']}/картинка/большая.jpg" {{/if}}/>
+				{{if window.название_страницы === 'человек/человек' }}
 					<div class="uploading_picture">Загружается</div>
-					
-					<form>
-						<input type="file" class="upload_new_picture"/>
-					</form>
 				{{/if}}
 			</div>
 		</div>
 		
+		{{if window.название_страницы === 'человек/человек' }}
+			<form>
+				<input type="file" class="upload_new_picture"/>
+			</form>
+		{{/if}}		
 	</section>
 	
 	<section class="info">					

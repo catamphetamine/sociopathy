@@ -170,14 +170,22 @@ var Режим = (function()
 			if (Клавиши.is('Ctrl', 'Shift', 'Digit_1', event))
 				return перейти_в_режим('обычный')
 				
-			if (Клавиши.is('Ctrl', 'Shift', 'Digit_2', event))
+			if (Клавиши.is('Ctrl', 'Shift', 'Digit_3', event))
 				return перейти_в_режим('правка')
 				
-			if (Клавиши.is('Ctrl', 'Shift', 'Digit_3', event))
+			if (Клавиши.is('Ctrl', 'Shift', 'Digit_5', event))
 				return перейти_в_режим('действия')
 				
+			/*
 			if (Клавиши.is('Ctrl', 'Shift', 'Digit_4', event))
-				alert('it works')
+				return alert('test')
+				
+			if (Клавиши.is('Ctrl', 'Shift', 'Digit_5', event))
+				return alert('test')
+				
+			if (Клавиши.is('Ctrl', 'Shift', 'Digit_6', event))
+				return alert('test')
+			*/
 		})
 	})
 	

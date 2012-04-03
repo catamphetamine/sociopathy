@@ -76,43 +76,37 @@ $(document).on('fully_loaded', function()
 function войти(data)
 {
 	var loading = loading_indicator.show()
-	Ajax.post('/приложение/вход', data, 
+	Ajax.post('/приложение/вход', data)
+	.ошибка(function(ошибка)
 	{
-		ошибка: 'Не удалось войти',
-		ошибка: function(ошибка)
-		{
-			loading.hide()
-			error(ошибка)
-			поле_пароля.focus()
-			кнопка_входа.unlock({ force: true })
-		},
-		ok: function(данные)
-		{ 
-			loading.hide()
-			enter_window.close()
-			
-			window.location.reload()
-		} 
+		loading.hide()
+		error(ошибка)
+		поле_пароля.focus()
+		кнопка_входа.unlock({ force: true })
+	})
+	.ok(function(данные)
+	{ 
+		loading.hide()
+		enter_window.close()
+		
+		window.location.reload()
 	})
 }
 
 function выйти()
 {
 	var loading = loading_indicator.show()
-	Ajax.post('/приложение/выход', {}, 
+	Ajax.post('/приложение/выход')
+	.ошибка(function(ошибка)
 	{
-		ошибка: 'Не удалось выйти',
-		ошибка: function(ошибка)
-		{
-			loading.hide()
-			error(ошибка)
-		},
-		ok: function(данные)
-		{ 
-			loading.hide()
-			//window.location.reload()
-			window.location = '/'
-		} 
+		loading.hide()
+		error(ошибка)
+	})
+	.ok(function(данные)
+	{ 
+		loading.hide()
+		//window.location.reload()
+		window.location = '/'
 	})
 }
 

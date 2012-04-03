@@ -290,6 +290,23 @@ http.post '/хранилище/заполнить', (ввод, вывод) ->
 		.сделать ->
 			хранилище.createCollection 'books', @
 
+		# заполнить круги пользователей
+		
+		.сделать ->
+			хранилище.collection('circles').drop @
+		
+		.ошибка (ошибка) ->
+			if ошибка.message == 'ns not found'
+				return no
+			console.error ошибка
+			вывод.send ошибка: ошибка
+				
+		.сделать ->
+			хранилище.createCollection 'circles', @
+			
+		.сделать ->
+			хранилище.collection('circles').ensureIndex('пользователь', yes, @)
+
 		# заполнить книги пользователей
 		
 		.сделать ->

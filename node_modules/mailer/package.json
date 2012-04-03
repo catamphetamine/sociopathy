@@ -1,0 +1,21 @@
+{
+  "name": "mailer",
+  "description": "send emails from node.js to a smtp server, simple as cake",
+  "version": "0.6.7",
+  "author": "Marak Squires",
+  "contributors" : [
+    "Elijah Insua <tmpvar@gmail.com> (http://tmvpar.com/)",
+    "Fedor Indutny <fedor.indutny@gmail.com> (http://indutny.com/)",
+    "Bradley Meck <bradley.meck@gmail.com> (http://bradleymeck.com)"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/Marak/node_mailer.git"
+  },
+  "dependencies": {
+    "nodemailer": "0.1.20",
+    "colors": ">= 0.3.0"
+  },
+  "engine": [ "node >=0.3.0" ],
+  "main": "lib/node_mailer"
+}

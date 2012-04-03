@@ -56,7 +56,7 @@ file_system = require 'fs'
 			return no
 			
 		.сделать (данные) ->
-			вывод.send @.переменная 'данные'
+			вывод.send @.$.данные
 			
 		.ошибка (ошибка) ->
 			возврат ошибка
@@ -278,6 +278,9 @@ Array.prototype.where_am_i = () ->
 		this_variable_doesnt_exist['you are here'] += 0
 	catch error
 		console.log error.stack
+	
+Array.prototype.has = (element) ->
+	@indexOf(element) >= 0
 
 RegExp.escape = (string) ->
 	specials = new RegExp("[.*+?|()\\[\\]{}\\\\]", "g")
@@ -302,3 +305,16 @@ Object.merge_recursive = (obj1, obj2) ->
 			obj1[ключ] = obj2[ключ]
 
 	return obj1
+
+Object.выбрать = (названия, object) ->
+	поля = {}
+	for название in названия
+		поля[название] = object[название]
+	поля
+	
+Object.keys = (object) ->
+	keys = []
+	for key, value of object
+		if object.hasOwnProperty(key)
+			keys.push(key)
+	keys

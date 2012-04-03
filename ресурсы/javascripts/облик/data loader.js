@@ -62,21 +62,19 @@ var Batch_loader = new Class
 		if (this.options.order)
 			data.порядок = this.options.order
 		
-		Ajax.get(this.options.url, data, 
-		{ 
-			ошибка: function(ошибка)
-			{
-				callback(ошибка)
-			},
-			ok: function(data)
-			{
-				if (!data['есть ещё?'])
-					loader.есть_ли_ещё = false
-					
-				var data_list = loader.options.get_data(data)
-				loader.index += data_list.length
-				callback(null, data_list)
-			}
+		Ajax.get(this.options.url, data)
+		.ошибка(function(ошибка)
+		{
+			callback(ошибка)
+		})
+		.ok(function(data)
+		{
+			if (!data['есть ещё?'])
+				loader.есть_ли_ещё = false
+				
+			var data_list = loader.options.get_data(data)
+			loader.index += data_list.length
+			callback(null, data_list)
 		})
 	},
 	
@@ -186,16 +184,14 @@ var Data_loader = new Class
 	{
 		var loader = this
 		
-		Ajax.get(this.options.url, this.options.parameters,
-		{ 
-			ошибка: function(ошибка)
-			{
-				callback(ошибка)
-			},
-			ok: function(data)
-			{
-				callback(null, loader.options.get_data(data))
-			}
+		Ajax.get(this.options.url, this.options.parameters)
+		.ошибка(function(ошибка)
+		{
+			callback(ошибка)
+		})
+		.ok(function(data)
+		{
+			callback(null, loader.options.get_data(data))
 		})
 	},
 	
@@ -305,20 +301,17 @@ var Data_templater = new Class
 		function load_template(template_url)
 		{
 			var deferred = $.Deferred()
-			Ajax.get(template_url,
+			Ajax.get(template_url, {}, { type: 'html' })
+			.ошибка(function()
 			{
-				//cache: false,
-				type: 'html',
-				ошибка: function()
-				{
-					conditional.callback('Не удалось загрузить страницу')
-				},
-				ok: function(template) 
-				{
-					$.template(template_url, template)
-					deferred.resolve()
-				}
+				conditional.callback('Не удалось загрузить страницу')
 			})
+			.ok(function(template) 
+			{
+				$.template(template_url, template)
+				deferred.resolve()
+			})
+			
 			return deferred
 		}
 	}

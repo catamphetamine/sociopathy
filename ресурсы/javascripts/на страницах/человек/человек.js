@@ -1,6 +1,7 @@
 var id_card
 var online_status
 var the_picture
+var avatar
 var content
 
 Режим.пообещать('правка')
@@ -58,22 +59,31 @@ function before_id_card_shown()
 {
 	title(пользователь_сети.имя)
 	
-	$('#links').find('a').each(function()
+	var links = $('#links')
+	var actions = $('#actions')
+	
+	links.find('a').each(function()
 	{
 		var link = $(this)
 		if (link.attr('href').starts_with('/люди//'))
 			link.attr('href', link.attr('href').replace('//', '/' + пользователь_сети['адресное имя'] + '/'))
 	})
 	
-	$('#links').show()
+	links.show()
 	
 	if (пользователь && пользователь._id !== пользователь_сети._id)
 	{
-		$('#links .common_friends').show()
-		$('#actions').show()
+		//links.find('.common_friends').show()
+		actions.show()
+		
+		if (пользователь_сети.в_круге)
+			actions.find('.remove_from_circles').show()
+		else
+			actions.find('.add_to_circles').show()
 	}
 
-	the_picture = id_card.find('.real_picture')
+	avatar = id_card.find('.picture')
+	the_picture = avatar.find('.real_picture')
 
 	online_status =
 	{
@@ -93,6 +103,40 @@ function before_id_card_shown()
 	
 	Режим.activate_edit_actions({ on_save: save_changes })
 	Режим.разрешить('правка')
+	
+	actions.find('.start_conversation').click(function(event)
+	{
+		event.preventDefault()
+	})
+	
+	actions.find('.call').click(function(event)
+	{
+		event.preventDefault()
+	})
+	
+	actions.find('.add_to_circles').click(function(event)
+	{
+		event.preventDefault()
+		
+		Ajax.put('/приложение/пользователь/круги/состав', { кого: пользователь_сети._id })
+		.ok(function()
+		{
+			actions.find('.add_to_circles').hide()
+			actions.find('.remove_from_circles').show()
+		})
+	})
+	
+	actions.find('.remove_from_circles').click(function(event)
+	{
+		event.preventDefault()
+		
+		Ajax['delete']('/приложение/пользователь/круги/состав', { кого: пользователь_сети._id })
+		.ok(function()
+		{
+			actions.find('.remove_from_circles').hide()
+			actions.find('.add_to_circles').show()
+		})
+	})
 }
 
 function id_card_loaded()
@@ -269,43 +313,39 @@ function save_changes()
 		имя: id_card.find(editable_info[0]).text(),
 		описание: id_card.find(editable_info[1]).text(),
 		откуда: id_card.find(editable_info[2]).text()
-	},
+	})
+	.ошибка(function(ошибка)
 	{
-		ошибка: function(ошибка)
+		loading.hide()
+		Режим.разрешить_переходы()
+		
+		error(ошибка)
+	})
+	.ok(function()
+	{
+		if (!image_file_name)
+		{
+			loading.hide()
+			Режим.разрешить_переходы()
+			return Режим.изменения_сохранены()
+		}
+		
+		Ajax.post('/приложение/человек/сменить картинку', { имя: image_file_name })
+		.ошибка(function(ошибка)
 		{
 			loading.hide()
 			Режим.разрешить_переходы()
 			
 			error(ошибка)
-		},
-		ok: function()
+		})
+		.ok(function()
 		{
-			if (!image_file_name)
-			{
-				loading.hide()
-				Режим.разрешить_переходы()
-				return Режим.изменения_сохранены()
-			}
+			loading.hide()
+			Режим.разрешить_переходы()
 			
-			Ajax.post('/приложение/человек/сменить картинку', { имя: image_file_name },
-			{
-				ошибка: function(ошибка)
-				{
-					loading.hide()
-					Режим.разрешить_переходы()
-					
-					error(ошибка)
-				},
-				ok: function()
-				{
-					loading.hide()
-					Режим.разрешить_переходы()
-					
-					Режим.изменения_сохранены()
-					image_file_name = null
-				}
-			})
-		}
+			Режим.изменения_сохранены()
+			image_file_name = null
+		})
 	})
 }
 
@@ -329,7 +369,7 @@ function initialize_editables()
 				return error(data.ошибка)
 			
 			image_file_name = data.имя
-			the_picture.css('background-image', "url('" + data.адрес + "')")
+			the_picture.attr('src', data.адрес).show()
 			
 			id_card.find('.uploading_picture').hide()
 			
@@ -348,7 +388,7 @@ function initialize_editables()
 
 		var file_chooser = $('.upload_new_picture')
 		
-		the_picture.on('click.режим_правка', function(event)
+		avatar.on('click.режим_правка', function(event)
 		{
 			event.preventDefault()
 			file_chooser.click()

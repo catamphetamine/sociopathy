@@ -9,8 +9,8 @@ function initialize_page()
 	email = $('#content').find('.email')
 	No_email_text = email.text()
 
-	var conditional = $('#main_block[type=conditional]')
-
+	var conditional = initialize_conditional($('.main_conditional[type=conditional]'))
+	
 	new Data_loader
 	({
 		url: '/приложение/пользователь/настройки',
@@ -35,7 +35,7 @@ function подготовить_режим_правки()
 {
 	$(document).on('режим.правка', function(event)
 	{
-		// на будущее
+		window.старая_почта = get_email()
 	})
 }
 
@@ -52,23 +52,25 @@ function save_changes()
 	Режим.заморозить_переходы()
 	var загрузка = loading_indicator.show()
 
+	var почта = get_email()
+		
 	Ajax.post('/приложение/пользователь/настройки',
 	{
-		почта: get_email()
-	},
+		почта: почта
+	})
+	.ошибка(function(ошибка)
 	{
-		ошибка: function(ошибка)
-		{
-			загрузка.hide()
-			Режим.разрешить_переходы()
-			
-			error(ошибка)
-		},
-		ok: function()
-		{
-			загрузка.hide()
-			Режим.разрешить_переходы()
-			Режим.изменения_сохранены()
-		}
+		загрузка.hide()
+		Режим.разрешить_переходы()
+		
+		error(ошибка)
+	})
+	.ok(function()
+	{
+		if (почта && почта !== window.старая_почта)
+			info('На ваш новый почтовый ящик отправлено письмо')
+		загрузка.hide()
+		Режим.разрешить_переходы()
+		Режим.изменения_сохранены()
 	})
 }

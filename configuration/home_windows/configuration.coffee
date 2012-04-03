@@ -25,3 +25,8 @@ global.Options =
         ImageMagick:
                 Convert:
                         Path: 'C:/Program Files (x86)/ImageMagick-6.7.4-Q16/convert'
+		Mail:
+				Smtp:
+						Username: 'sobranie.net@gmail.com'
+						Host: 'smtp.gmail.com'
+						Port: 587 #465

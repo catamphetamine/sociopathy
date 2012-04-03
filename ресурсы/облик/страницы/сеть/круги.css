@@ -1,0 +1,45 @@
+#content
+{
+	margin-top: 80px;
+	margin-bottom: 100px;
+	
+	p.description
+	{
+		color: #7f7f7f;
+		
+		margin-left: 120px;
+		margin-right: 120px;	
+	}
+}
+
+#circles
+{
+	margin-top: 50px;
+	margin-left: 50px;
+	
+	list-style-type: none;
+	
+	> li
+	{
+		display: inline-block;
+		
+		ul.members
+		{
+			list-style-type: none;
+			
+			> li
+			{
+				display: block;
+				
+				margin-bottom: 8px;
+				
+				> .name
+				{
+					position: relative;
+					top: -13px;
+					margin-left: 8px;
+				}
+			}
+		}
+	}
+}

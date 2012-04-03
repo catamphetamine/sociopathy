@@ -19,6 +19,11 @@ exports.войти = (пользователь, ввод, вывод, возвр
 exports.выйти = (ввод, вывод) ->
 	ввод.session.destroy()
 	вывод.clearCookie 'user'
+	
+exports.пользователь = (ввод, возврат) ->
+	if not ввод.session.пользователь
+		throw "You haven't logged in yet to call user_tools.user(request)"	
+	хранилище.collection('people').findOne({ _id: ввод.session.пользователь._id }, возврат)
 
 exports.получить_пользователя = (номер_пользователя, возврат) ->
 	new Цепочка(возврат)

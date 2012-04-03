@@ -11,6 +11,7 @@ get_launch_options = ->
 launch_options = get_launch_options()
 
 require "./../../configuration/#{launch_options.server}/configuration.coffee"
+require "./../../configuration/#{launch_options.server}/configuration.private.coffee"
 
 memcache = require('memcache')
 global.memcache = new memcache.Client(Options.Memcache.Port, 'localhost')
@@ -30,6 +31,10 @@ global.websocket = require('socket.io').listen приложение
 
 global.image_magick = require 'imagemagick'
 global.image_magick.convert.path = Options.ImageMagick.Convert.Path
+
+global.почта = require './tools/email'
+
+#global.почта.письмо(кому: 'Николай Кучумов <kuchumovn@gmail.com>', тема: 'Test', сообщение: 'Проверка {{связи}}', данные: { связи: 'связи' })
 
 require './tools/date'
 

@@ -160,8 +160,6 @@ var Panel = new Class
 		this.activate_buttons(this.options.images_path)
 		this.activate_tooltips()
 	
-		console.log(пользователь)
-	
 		if (пользователь)
 		{
 			this.initialize_new_messages_indication()

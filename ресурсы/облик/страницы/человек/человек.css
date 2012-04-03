@@ -58,6 +58,11 @@
 			
 			.include_padding_in_width();
 			padding-left: @side_columns_padding;
+			
+			.add_to_circles, .remove_from_circles
+			{
+				display: none;
+			}
 		}
 		
 		.links
@@ -204,9 +209,20 @@
 	}
 }
 
-body[mode="правка"] .real_picture
+body[mode="правка"]
 {
-	cursor: pointer;
+	#content
+	{
+		.business_card .picture
+		{
+			cursor: pointer;
+		}
+		
+		.photo img
+		{
+			cursor: pointer;
+		}
+	}
 }
 
 .business_card .uploading_picture
