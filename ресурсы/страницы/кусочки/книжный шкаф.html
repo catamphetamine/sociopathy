@@ -18,10 +18,32 @@
 											<span class="title">${book.название}</span>
 										</div>
 									</div>
+																	
+									<div class="book {{if book.обложка}} {{else}}no_icon{{/if}} non_selectable">
+										{{if book.файл}}
+											<a href="/загруженное/книги/${book.id}/${book.файл}">
+										{{else}}
+											{{if book.ссылка}}
+												<a href="${book.ссылка}">
+											{{/if}}
+										{{/if}}
 									
-									<div class="book {{if book.id}} {{else}}no_icon{{/if}} non_selectable">
-										{{if book.id}} {{else}}<div class="author">${book.сочинитель}</div><div class="title">${book.название}</div>{{/if}}
-										<div class="icon" {{if book.id}}style="background-image: url('/загруженное/книги/${book.id}/обложка.jpg')"{{/if}}></div><div class="bottom_shadow"></div>
+										{{if book.обложка}}
+											<img class="icon" src="/загруженное/книги/${book.id}/${book.обложка}"/>
+										{{else}}
+											<div class="author">${book.сочинитель}</div><div class="title">${book.название}</div>
+											<div class="icon"></div>
+										{{/if}}
+
+										<div class="bottom_shadow"></div>
+										
+										{{if book.файл}}
+											</a>
+										{{else}}
+											{{if book.ссылка}}
+												</a>
+											{{/if}}
+										{{/if}}
 									</div>
 								{{/if}}
 							</div>

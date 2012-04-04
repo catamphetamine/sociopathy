@@ -42,7 +42,7 @@ function initialize_page()
 				shelves.push({ books: books.splice(0, Options.Book_shelf_size) })
 			}
 			
-			shelves.push(books)
+			shelves.push({ books: books })
 			
 			return { shelves: shelves }
 		}
@@ -84,7 +84,7 @@ function books_shown()
 	})
 	
 	$('.bookshelf_container .book_place').animate({ opacity: 1 }, 500)
-	
+		
 	Режим.разрешить('правка')
 	Режим.разрешить('действия')
 }
