@@ -1,45 +1,10 @@
 <section id="content">
-	<div class="bookshelf non_selectable">
-		<div class="top_border"></div>
-		<div class="middle">
-			<div class="left_border"></div>
-			<div class="inner">
-				{{each shelves}}
-					<div class="shelf">
-						<div class="left"></div>
-						<div class="center"></div>
-						<div class="right"></div>
-						<div class="books">
-							{{each(index, book) books}}
-								<div class="book_place">
-									{{if book.title}}
-										<div class="book_info popup_panel_container">
-											<div class="info popup_panel">
-												<span class="author">${book.author}</span>
-												<span class="title">${book.title}</span>
-											</div>
-										</div>
-										
-										<div class="book {{if icon}}{{else}}no_icon{{/if}} non_selectable">
-											{{if book.icon}}{{else}}<div class="author">${book.author}</div><div class="title">${book.title}</div>{{/if}}<div class="icon" {{if book.icon}}style="background-image: url('/загруженное/книги/обложки/${book.icon}.jpg')"{{/if}}></div><div class="bottom_shadow"></div>
-										</div>
-									{{/if}}
-								</div>
-							{{/each}}
-						</div>
-					</div>
-					
-					{{if $index + 1 < $data.shelves.length}}
-						<div class="shelf_divider">
-							<div class="left"></div>
-							<div class="center"></div>
-							<div class="right"></div>
-						</div>
-					{{/if}}
-				{{/each}}
-			</div>
-			<div class="right_border"></div>
+	<div class="main_conditional" type="conditional">
+		<div type="ok">
+			<div class="bookshelf_container"></div>
 		</div>
-		<div class="bottom_border"></div>
+		
+		<div type="loading">Загружаем список книг</div>
+		<div type="error">Не удалось загрузить список книг</div>
 	</div>
 </section>

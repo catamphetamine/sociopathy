@@ -1,6 +1,60 @@
 title('Книги. ' + адресное_имя)
 
+Режим.пообещать('правка')
+Режим.пообещать('действия')
+
 function initialize_page()
+{
+	var conditional = initialize_conditional($('.main_conditional[type=conditional]'))
+	
+	new Data_templater
+	({
+		template_url: '/страницы/кусочки/книжный шкаф.html',
+		item_container: $('.bookshelf_container'),
+		/*
+		postprocess_element: function(item)
+		{
+			return $('<li/>').append(item)
+		},
+		*/
+		conditional: conditional
+	},
+	new  Data_loader
+	({
+		url: '/приложение/человек/книги',
+		parameters: { 'адресное имя': window.адресное_имя },
+		before_done_output: books_loaded,
+		done: books_shown,
+		get_data: function(data)
+		{
+			var books = data.книги
+			
+			while (books.length % Options.Book_shelf_size > 0
+					|| books.length < Options.Book_shelf_size * Options.Minimum_book_shelves)
+			{
+				books.push({})
+			}
+			
+			var shelves = []
+			
+			while (books.length > Options.Book_shelf_size)
+			{
+				shelves.push({ books: books.splice(0, Options.Book_shelf_size) })
+			}
+			
+			shelves.push(books)
+			
+			return { shelves: shelves }
+		}
+	}))
+}
+
+function books_loaded()
+{
+	$('.bookshelf_container .book_place').css('opacity', 0)
+}
+
+function books_shown()
 {
 	$('.book.no_icon .author').fill_with_text()
 	$('.book.no_icon .title').fill_with_text({ 'center vertically': true })
@@ -28,61 +82,9 @@ function initialize_page()
 			fade_out_duration: 0.1
 		})
 	})
+	
+	$('.bookshelf_container .book_place').animate({ opacity: 1 }, 500)
+	
+	Режим.разрешить('правка')
+	Режим.разрешить('действия')
 }
-
-var books = 
-[
-	{
-		author: 'Фритьоф Капра',
-		title: 'Скрытые связи'
-	},
-	{
-		author: 'Фритьоф Капра',
-		title: 'Скрытые связи',
-		icon: 'фритьоф капра «скрытые связи»'
-	},
-	{
-		author: 'Фритьоф Капра',
-		title: 'Скрытые связи'
-	},
-	{
-		author: 'Фритьоф Капра',
-		title: 'Скрытые связи',
-		icon: 'фритьоф капра «скрытые связи»'
-	},
-	{
-		author: 'Фритьоф Капра',
-		title: 'Скрытые связи'
-	},
-	{
-		author: 'Фритьоф Капра',
-		title: 'Скрытые связи',
-		icon: 'фритьоф капра «скрытые связи»'
-	},
-	{
-		author: 'Фритьоф Капра',
-		title: 'Скрытые связи'
-	},
-	{
-		author: 'Фритьоф Капра',
-		title: 'Скрытые связи',
-		icon: 'фритьоф капра «скрытые связи»'
-	}
-]
-
-while (books.length % Options.Book_shelf_size > 0
-		|| books.length < Options.Book_shelf_size * Options.Minimum_book_shelves)
-{
-	books.push({})
-}
-
-var shelves = []
-
-while (books.length > Options.Book_shelf_size)
-{
-	shelves.push({ books: books.splice(0, Options.Book_shelf_size) })
-}
-
-shelves.push(books)
-
-window.данные_для_страницы.shelves = shelves

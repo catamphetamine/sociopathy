@@ -1,7 +1,7 @@
 title('Круги')
 
-Режим.пообещать('правка')
-Режим.пообещать('действия')
+//Режим.пообещать('правка')
+//Режим.пообещать('действия')
 
 function initialize_page()
 {
@@ -33,20 +33,10 @@ function initialize_page()
 			return круги
 		}
 	}))
-
-	//$(window).resize(center_albums_list)
-	//center_albums_list()
 }
-
-/*
-function center_albums_list()
-{
-	center_list($('#albums'), { space: $('#content'), item_width: 400, item_margin: 60 })
-}
-*/
 
 function circles_loaded()
 {
-	Режим.разрешить('правка')
-	Режим.разрешить('действия')
+//	Режим.разрешить('правка')
+//	Режим.разрешить('действия')
 }

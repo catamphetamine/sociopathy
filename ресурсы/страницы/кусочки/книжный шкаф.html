@@ -1,0 +1,44 @@
+<div class="bookshelf non_selectable">
+	<div class="top_border"></div>
+	<div class="middle">
+		<div class="left_border"></div>
+		<div class="inner">
+			{{each shelves}}
+				<div class="shelf">
+					<div class="left"></div>
+					<div class="center"></div>
+					<div class="right"></div>
+					<div class="books">
+						{{each(index, book) books}}
+							<div class="book_place">
+								{{if book.название}}
+									<div class="book_info popup_panel_container">
+										<div class="info popup_panel">
+											<span class="author">${book.сочинитель}</span>
+											<span class="title">${book.название}</span>
+										</div>
+									</div>
+									
+									<div class="book {{if book.id}} {{else}}no_icon{{/if}} non_selectable">
+										{{if book.id}} {{else}}<div class="author">${book.сочинитель}</div><div class="title">${book.название}</div>{{/if}}
+										<div class="icon" {{if book.id}}style="background-image: url('/загруженное/книги/${book.id}/обложка.jpg')"{{/if}}></div><div class="bottom_shadow"></div>
+									</div>
+								{{/if}}
+							</div>
+						{{/each}}
+					</div>
+				</div>
+				
+				{{if $index + 1 < $data.shelves.length}}
+					<div class="shelf_divider">
+						<div class="left"></div>
+						<div class="center"></div>
+						<div class="right"></div>
+					</div>
+				{{/if}}
+			{{/each}}
+		</div>
+		<div class="right_border"></div>
+	</div>
+	<div class="bottom_border"></div>
+</div>
