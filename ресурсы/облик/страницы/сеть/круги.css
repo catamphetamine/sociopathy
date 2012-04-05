@@ -1,7 +1,7 @@
 #content
 {
 	margin-top: 80px;
-	margin-bottom: 100px;
+	padding-bottom: 50px;
 	
 	p.description
 	{
@@ -38,6 +38,11 @@
 					position: relative;
 					top: -13px;
 					margin-left: 8px;
+				}
+				
+				&.empty
+				{
+					color: #7f7f7f;
 				}
 			}
 		}

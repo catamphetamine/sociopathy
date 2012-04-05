@@ -1,10 +1,14 @@
 <h2>${название}</h2>
 
 <ul class="members">
-	{{each(index, член) члены}}
-		<li class="member">
-			{{tmpl(член) 'маленький аватар'}}
-			<a href="/люди/${член['адресное имя']}" class="name">${член.имя}</a>
-		</li>
-	{{/each}}
+	{{if члены.length == 0}}
+		<li class="empty">Пуст</li>
+	{{else}}
+		{{each(index, член) члены}}
+			<li class="member">
+				{{tmpl(член) 'маленький аватар'}}
+				<a href="/люди/${член['адресное имя']}" class="name">${член.имя}</a>
+			</li>
+		{{/each}}
+	{{/if}}
 </ul>
