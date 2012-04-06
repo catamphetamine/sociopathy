@@ -48,6 +48,79 @@ function center_pictures_list()
 
 function pictures_loaded()
 {
+	var picture = $('.show_picture')
+	var namespace = '.show_picture'
+	
+	content.find('.icon').click(function(event)
+	{
+		event.preventDefault()
+		
+		var container = picture.find('.container').empty()
+		
+		var url = $(this).attr('picture')
+		get_image(url, function(result)
+		{
+			if (result.error)
+				return
+		
+			var image = $(result.image)
+			container.append(image)
+			
+			var factor = 1
+			
+			var max_width = 1900
+			var max_height = 1000
+			
+			function propose_factor(new_factor)
+			{
+				if (new_factor < factor)
+					factor = new_factor
+			}
+			
+			if (result.image.width > max_width)
+				propose_factor(max_width / result.image.width)
+			
+			if (result.image.height > max_height)
+				propose_factor(max_height / result.image.height)
+			
+			image.width(parseInt(result.image.width * factor))
+			image.height(parseInt(result.image.height * factor))
+		})
+		
+		show_picture()
+	})
+	
+	function hide_picture()
+	{
+		$(document).unbind(namespace)
+		picture.unbind(namespace)
+		picture.fade_out(0)
+	}
+	
+	function show_picture()
+	{
+		picture.fade_in(0, function() { picture.focus() })
+	
+		$(document).on('keydown' + namespace, function(event) 
+		{
+			if (Клавиши.is('Escape', event))
+				hide_picture()
+		})
+		
+		picture.on('click' + namespace, function(event) 
+		{
+			hide_picture()
+		})
+	}
+	
+	/*
+	picture.find('.close').click(function(event)
+	{
+		event.preventDefault()
+		hide_video()
+	})
+	*/
+
 	Режим.разрешить('правка')
 	Режим.разрешить('действия')
 }

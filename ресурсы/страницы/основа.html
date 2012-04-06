@@ -65,7 +65,10 @@
 		<!-- jQuery watermark input -->
 		<!--<script src="/javascripts/jquery/jquery.watermarkinput.js"></script>-->
 
- 		<script src="/javascripts/uri.js"></script> 
+ 		<script src="/javascripts/uri.js"></script>
+		
+ 		<script src="/javascripts/youtube.js"></script> 
+ 		<script src="/javascripts/vimeo.js"></script> 
 
 		<!-- generic -->
 		<script src="/javascripts/dom tools.js"></script> 
@@ -141,9 +144,11 @@
 				
 		<script>
 			var panel
+			var content
 			
 			$(document).on('fully_loaded', function()
 			{
+				content = $('#content')
 				document_fully_loaded()
 				
 				$.getScript('/javascripts/less.js', function()

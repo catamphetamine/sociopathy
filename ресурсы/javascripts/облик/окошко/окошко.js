@@ -60,7 +60,10 @@ var dialog_window = new Class
 		var title = $element.attr('title')
 		$element.removeAttr('title')
 		
-		this.container = $('<div class="popup_veil collapsed"></div>')
+		this.container = $('<div/>')
+			.addClass("veil")
+			.addClass("popup_veil")
+			.addClass("collapsed")
 			.appendTo(document.body)
 			.on('keydown.' + this.namespace, function(event) 
 			{
@@ -79,6 +82,7 @@ var dialog_window = new Class
 		
 		var dialog_window = $('<article/>')
 			// setting tabIndex makes the div focusable
+			.addClass('centered')
 			.addClass('popup')
 			.appendTo(this.container)
 		

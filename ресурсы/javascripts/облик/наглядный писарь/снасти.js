@@ -661,7 +661,7 @@ Visual_editor.implement
 					if (!value)
 						return callback({ error: 'Введите адрес видео на YouTube' })
 						
-					if (!get_youtube_video_id(value))
+					if (!Youtube.Video.id(value))
 						return callback({ error: 'Неправильный адрес видео на YouTube' })
 						
 					callback()
@@ -684,13 +684,13 @@ Visual_editor.implement
 						/*
 						if (this.state.element)
 						{
-							this.state.element.attr('src', 'http://www.youtube-nocookie.com/embed/' + get_youtube_video_id(url) + '?rel=0')
+							this.state.element.attr('src', 'http://www.youtube-nocookie.com/embed/' + Youtube.Video.id(url) + '?rel=0')
 							return tool.restore_caret()
 						}
 						*/
 					
 						var video = $('<iframe/>')
-						video.attr('src', 'http://www.youtube-nocookie.com/embed/' + get_youtube_video_id(url) + '?rel=0&wmode=transparent')
+						video.attr('src', 'http://www.youtube-nocookie.com/embed/' + Youtube.Video.id(url) + '?rel=0&wmode=transparent')
 						video.attr('width', 560)
 						video.attr('height', 315)
 						video.attr('frameborder', 0)

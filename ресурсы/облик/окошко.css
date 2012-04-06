@@ -25,18 +25,9 @@ body.osx .popup .top_bar
  
 .popup_veil
 {
-	position: fixed;
-	left: 0;
-	top: 0;
-
 	display: block;
 
-	width: 100%;
-	height: 100%;
-
-	z-index: -1;	
-	
-	text-align: center;
+	z-index: -1;
 	
 	/* background-color: rgba(0, 0, 0, 0.5); */
 	
@@ -48,24 +39,8 @@ body.osx .popup .top_bar
 {
 }
 
-.popup_veil:after
-{
-	display: inline-block;
-	width: 0;
-	height: 100%;
-	vertical-align: middle;
-	content: ''
-}
-
 .popup
 {
-	position: relative;	
-	
-	display: inline-block;
-	vertical-align: middle;
-	
-	text-align: left;
-	
 	> .shadow
 	{
 		position: absolute;

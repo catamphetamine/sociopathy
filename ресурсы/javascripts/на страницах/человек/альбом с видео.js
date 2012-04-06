@@ -48,6 +48,60 @@ function center_videos_list()
 
 function videos_loaded()
 {
+	Vimeo.load_pictures()
+	Youtube.load_pictures()
+	
+	var video = $('.show_video')
+	var namespace = '.show_video'
+	
+	$('a.video').click(function(event)
+	{
+		event.preventDefault()
+		
+		var image = $(this).find('img')
+		var code = ''
+		
+		if (image.attr('vimeo_video_id'))
+			code = Vimeo.Video.embed_code(image.attr('vimeo_video_id'))
+		else if (image.attr('youtube_video_id'))
+			code = Youtube.Video.embed_code(image.attr('youtube_video_id'))
+		
+		video.find('.container').empty().append($(code))
+		
+		show_video()
+	})
+	
+	function hide_video()
+	{
+		$(document).unbind(namespace)
+		video.unbind(namespace)
+		video.fade_out(0.2)
+	}
+	
+	function show_video()
+	{
+		video.fade_in(0.2, function() { video.focus() })
+	
+		$(document).on('keydown' + namespace, function(event) 
+		{
+			if (Клавиши.is('Escape', event))
+				hide_video()
+		})
+		
+		video.on('click' + namespace, function(event) 
+		{
+			hide_video()
+		})
+	}
+	
+	/*
+	video.find('.close').click(function(event)
+	{
+		event.preventDefault()
+		hide_video()
+	})
+	*/
+
 	Режим.разрешить('правка')
 	Режим.разрешить('действия')
 }

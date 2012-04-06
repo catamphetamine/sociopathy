@@ -22,6 +22,7 @@
 			> .icon
 			{
 				display: inline-block;
+				
 				cursor: -webkit-zoom-in;
 				cursor: -moz-zoom-in;
 			
@@ -32,6 +33,17 @@
 				
 				.beautiful_shadow_5(0px, 3px, 20px, 12px, 2px, 8px, 4px, 0.2);
 			}
+		}
+	}
+	
+	.show_picture
+	{
+		background-color: rgba(0, 0, 0, 0.85);
+		
+		.container
+		{
+			background-color: rgb(0, 0, 0);
+			.beautiful_shadow_5(0px, 3px, 20px, 12px, 2px, 8px, 4px, 0.2);
 		}
 	}
 }

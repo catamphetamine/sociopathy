@@ -198,9 +198,14 @@ function initialize_page()
 		/*
 		visual_editor.editor.content.find('[type="video"]').on('mouseover.режим_правка', function(event)
 		{
+			function get_embedded_youtube_video_id(url)
+			{
+				return /http:\/\/www.youtube-nocookie.com\/embed\/([0-9a-zA-Z\-\_]+)?rel=0&wmode=transparent/i.exec(url)[0]
+			}
+
 			event.preventDefault()
 			var url = $(this).attr('src')
-			url = get_youtube_video_url_from_id(get_embedded_youtube_video_id(url))
+			url = Youtube.Video.url(get_embedded_youtube_video_id(url))
 			alert(url)
 			visual_editor.Tools.Video.open_dialog_window({ url: url }, { element: $(this) })
 		})

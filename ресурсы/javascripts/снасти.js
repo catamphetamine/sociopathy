@@ -386,28 +386,6 @@ function update_intelligent_dates()
 	})
 }
 
-function get_youtube_video_id(url)
-{
-	try
-	{
-		return /https?:\/\/(?:[a-zA_Z]{2,3}.)?(?:youtube\.com\/watch\?)((?:[\w\d\-\_\=]+&amp;(?:amp;)?)*v(?:&lt;[A-Z]+&gt;)?=([0-9a-zA-Z\-\_]+))/i.exec(url)[2]
-	}
-	catch (error)
-	{
-		return null
-	}
-}
-
-function get_embedded_youtube_video_id(url)
-{
-    return /http:\/\/www.youtube-nocookie.com\/embed\/([0-9a-zA-Z\-\_]+)?rel=0&wmode=transparent/i.exec(url)[0]
-}
-
-function get_youtube_video_url_from_id(id)
-{
-	return 'http://www.youtube.com/watch?v=' + id
-}
-
 function получить_шаблон(options, callback)
 {
 	Ajax.get(options.url, {}, { type: 'html' })
@@ -426,46 +404,43 @@ function получить_шаблон(options, callback)
 	})
 }
 
-function get_image_size(url, callback)
+function get_image(url, callback)
 {
 	var image = new Image()
 	
-	//var loading = loading_indicator.show()
-	
 	image.onload = function()
 	{
-		//loading.hide()
-		callback({ width: this.width, height: this.height })
+		callback({ image: this })
 	}
 	
 	image.onerror = function()
 	{
-		//loading.hide()
-		callback({ width: 0, height: 0, error: true })
+		callback({ error: true })
 	}
 	
 	image.src = url
 }
 
+function get_image_size(url, callback)
+{
+	get_image(url, function(result)
+	{
+		if (result.error)
+			return callback({ error: true, width: 0, height: 0 })
+			
+		callback({ width: result.image.width, height: result.image.height })
+	})
+}
+
 function image_exists(url, callback)
 {
-	var image = new Image()
-	
-	//var loading = loading_indicator.show()
-	
-	image.onload = function()
+	get_image(url, function(result)
 	{
-		//loading.hide()
+		if (result.error)
+			return callback({ error: true })
+			
 		callback({ ok: true })
-	}
-	
-	image.onerror = function()
-	{
-		//loading.hide()
-		callback({ error: true })
-	}
-	
-	image.src = url
+	})
 }
 
 //get_image_size('http://www.google.com/images/errors/logo_sm.gif, function(size) { alert(size.width + ' x ' + size.height) })

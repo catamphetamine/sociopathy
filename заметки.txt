@@ -591,6 +591,26 @@ id картинки или видео не может быть "обложка"
 описать клик правой кнопкой в помощи
 
 
+
+conveyor: error: yes - remove
+
+имя пользователя не содержит слешей, или содержит, но их кодировать
+				
+				
+
+remove the white flashing background when embedded videos are loaded on a Black background
+
+
+
+
+max height = 360
+max width = 640
+
+http://vimeo.com/api/v2/video/6271487.xml
+
+
+
+
 внести книги и фотки, и видео - в базу
 
 к фоткам и видео - каменты
