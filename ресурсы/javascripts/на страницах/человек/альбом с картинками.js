@@ -68,8 +68,8 @@ function pictures_loaded()
 			
 			var factor = 1
 			
-			var max_width = 1900
-			var max_height = 1000
+			var max_width = content.width()
+			var max_height = $(window).height()
 			
 			function propose_factor(new_factor)
 			{
@@ -77,14 +77,20 @@ function pictures_loaded()
 					factor = new_factor
 			}
 			
+			var width = result.image.width
+			var height = result.image.height
+			
 			if (result.image.width > max_width)
-				propose_factor(max_width / result.image.width)
+				propose_factor(max_width / width)
 			
 			if (result.image.height > max_height)
-				propose_factor(max_height / result.image.height)
+				propose_factor(max_height / height)
 			
-			image.width(parseInt(result.image.width * factor))
-			image.height(parseInt(result.image.height * factor))
+			width = parseInt(width * factor)
+			height = parseInt(height * factor)
+			
+			image.width(width)
+			image.height(height)
 		})
 		
 		show_picture()
@@ -94,12 +100,12 @@ function pictures_loaded()
 	{
 		$(document).unbind(namespace)
 		picture.unbind(namespace)
-		picture.fade_out(0)
+		picture.fade_out(0.0)
 	}
 	
 	function show_picture()
 	{
-		picture.fade_in(0, function() { picture.focus() })
+		picture.fade_in(0.0, function() { picture.focus() })
 	
 		$(document).on('keydown' + namespace, function(event) 
 		{

@@ -63,7 +63,12 @@ var Ajax =
 				ajax.success(function(data, textStatus)
 				{
 					if (data.ошибка)
-						return on_error(data.ошибка)
+					{
+						var message = data.ошибка
+						if (message == true)
+							message = 'Произошла ошибка на сервере'
+						return on_error(message)
+					}
 		
 					on_ok(data)
 				})

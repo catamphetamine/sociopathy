@@ -75,12 +75,12 @@ function videos_loaded()
 	{
 		$(document).unbind(namespace)
 		video.unbind(namespace)
-		video.fade_out(0.2)
+		video.fade_out(0.0)
 	}
 	
 	function show_video()
 	{
-		video.fade_in(0.2, function() { video.focus() })
+		video.fade_in(0.3, function() { video.focus() })
 	
 		$(document).on('keydown' + namespace, function(event) 
 		{
