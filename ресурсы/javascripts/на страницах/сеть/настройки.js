@@ -1,3 +1,5 @@
+title('Настройки')
+
 Режим.пообещать('правка')
 Подсказки.подсказка('Здесь вы можете посмотреть и изменить свои настройки. Пока это только личный почтовый ящик.')
 	
@@ -37,6 +39,13 @@ function подготовить_режим_правки()
 	{
 		window.старая_почта = get_email()
 	})
+
+	initialize_edit_mode_effects()	
+}
+
+function initialize_edit_mode_effects()
+{
+	initialize_body_edit_mode_effects()
 }
 
 function get_email()

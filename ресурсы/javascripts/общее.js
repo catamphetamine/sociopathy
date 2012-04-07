@@ -704,3 +704,27 @@ function breadcrumbs(path, on_ok, on_error)
 // чтобы не было ошибок по консоли в обозревателе
 if (!console)
 	console = { log: function() {} }
+
+// body background css transitions didn't work
+function initialize_body_edit_mode_effects()
+{
+	var initial_background_color = $('body').css('background-color')
+	
+	var dummy_div = $('<div/>').hide().appendTo('body').addClass('body_edit_mode')
+	
+	var background_fade_time = dummy_div.transition_duration() * 1000
+	var edit_mode_background_color = dummy_div.css('background-color')
+	
+	$(document).on('режим.правка', function()
+	{
+		$('body').stop(true, false).animate({ 'background-color': edit_mode_background_color }, background_fade_time)
+	})
+
+	$(document).on('режим.переход', function(event, из, в)
+	{
+		if (из === 'правка')
+		{
+			$('body').stop(true, false).animate({ 'background-color': initial_background_color }, background_fade_time)
+		}
+	})
+}

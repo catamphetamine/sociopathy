@@ -53,7 +53,7 @@ function pictures_loaded()
 	
 	var container = picture.find('.container')
 	
-	picture.find('.previous').on('click', function(event) 
+	function previous_picture()
 	{
 		var previous_picture_icon = current_picture_icon.parent().prev().children().eq(0)
 		if (!previous_picture_icon.exists())
@@ -61,6 +61,11 @@ function pictures_loaded()
 		
 		container.empty()
 		show_picture_file(previous_picture_icon)
+	}
+	
+	picture.find('.previous').on('click', function(event) 
+	{
+		previous_picture()
 	})
 	
 	function next_picture()
@@ -124,8 +129,6 @@ function pictures_loaded()
 			image.width(width)
 			image.height(height)
 		})
-		
-		show_picture()
 	}
 	
 	content.find('.icon').click(function(event)
@@ -135,6 +138,7 @@ function pictures_loaded()
 		container.empty()
 		
 		show_picture_file($(this))
+		show_picture()
 	})
 	
 	function hide_picture()
@@ -151,10 +155,16 @@ function pictures_loaded()
 		$(document).on('keydown' + namespace, function(event) 
 		{
 			if (Клавиши.is('Escape', event))
-				hide_picture()
+				return hide_picture()
+		
+			if (Клавиши.is('Left', event))
+				return previous_picture()
+				
+			if (Клавиши.is('Right', event))
+				return next_picture()
 		})
 		
-		picture.find('.close').on('click' + namespace, function(event) 
+		picture.find('.close').disableTextSelect().on('click' + namespace, function(event) 
 		{
 			hide_picture()
 		})

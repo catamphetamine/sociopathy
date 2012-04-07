@@ -56,7 +56,7 @@ function videos_loaded()
 	
 	var container = video.find('.container')
 	
-	video.find('.previous').on('click', function(event) 
+	function previous_video()
 	{
 		var previous_video_icon = current_video_icon.parent().prev().children().eq(0)
 		if (!previous_video_icon.exists())
@@ -64,9 +64,14 @@ function videos_loaded()
 		
 		container.empty()
 		show_video_file(previous_video_icon)
+	}
+
+	video.find('.previous').on('click', function(event) 
+	{
+		previous_video()
 	})
 	
-	video.find('.next').on('click', function(event) 
+	function next_video()
 	{
 		var next_video_icon = current_video_icon.parent().next().children().eq(0)
 		if (!next_video_icon.exists())
@@ -74,31 +79,35 @@ function videos_loaded()
 		
 		container.empty()
 		show_video_file(next_video_icon)
+	}
+	
+	video.find('.next').on('click', function(event) 
+	{
+		next_video()
 	})
 	
 	var current_video_icon
 	
-	function show_video_file(image)
+	function show_video_file(image, options)
 	{
 		current_video_icon = image
 		
 		var code = ''
 		
 		if (image.attr('vimeo_video_id'))
-			code = Vimeo.Video.embed_code(image.attr('vimeo_video_id'))
+			code = Vimeo.Video.embed_code(image.attr('vimeo_video_id'), options)
 		else if (image.attr('youtube_video_id'))
-			code = Youtube.Video.embed_code(image.attr('youtube_video_id'))
+			code = Youtube.Video.embed_code(image.attr('youtube_video_id'), options)
 		
 		container.empty().append($(code))
-		
-		show_video()
 	}
 	
 	content.find('.video').click(function(event)
 	{
 		event.preventDefault()
 		
-		show_video_file($(this))
+		show_video_file($(this), { play: true })
+		show_video()
 	})
 	
 	function hide_video()
@@ -115,10 +124,16 @@ function videos_loaded()
 		$(document).on('keydown' + namespace, function(event) 
 		{
 			if (Клавиши.is('Escape', event))
-				hide_video()
+				return hide_video()
+		
+			if (Клавиши.is('Left', event))
+				return previous_video()
+				
+			if (Клавиши.is('Right', event))
+				return next_video()
 		})
 		
-		video.find('.close').on('click' + namespace, function(event) 
+		video.find('.close').disableTextSelect().on('click' + namespace, function(event) 
 		{
 			hide_video()
 		})

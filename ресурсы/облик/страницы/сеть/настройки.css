@@ -1,10 +1,12 @@
+@import "/облик/вспомогательный.less";
+
 #content
 {
 	margin-top: 50px;
 	margin-bottom: 50px;
 	
-	margin-left: 60px;
-	margin-right: 60px;
+	margin-left: 80px;
+	margin-right: 80px;
 }
 
 .email_icon
@@ -20,4 +22,49 @@
 	height: 20px;
 	
 	background-image: url('/картинки/на страницах/сеть/настройки/почта.png');
+}
+
+.email_block
+{
+	display: inline-block;
+	
+	.rounded_corners(10px);
+	padding: 5px;
+	
+	padding-left: 16px;
+	padding-right: 12px;
+	
+	margin-top: 30px;
+	
+	background-color: white;
+}
+
+.mode_shortcuts
+{
+	margin-top: 80px;
+	
+	.rounded_corners(10px);
+	padding: 5px;
+
+	padding-left: 16px;
+	padding-right: 12px;
+	
+	> ul
+	{
+		list-style-type: none;
+		
+		> li
+		{
+			> label
+			{
+				display: inline-block;
+				width: 240px;
+			}
+			
+			> span
+			{
+				
+			}
+		}
+	}
 }

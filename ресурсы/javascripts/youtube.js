@@ -29,15 +29,24 @@ var Youtube =
 			return 'http://www.youtube.com/watch?v=' + id
 		},
 		
-		embed_code: function(id, width, height)
+		embed_code: function(id, options)
 		{
+			options = options || {}
+			
+			var width = options.width
+			var height = options.height
+			
 			if (!width)
 				width = Options.Video.Size.Width
 		
 			if (!height)
 				height = Options.Video.Size.Height
+			
+			var source = 'http://www.youtube.com/embed/' + id
+			//if (options.play)
+			//	source += 'autoplay=true' + '&'
 		
-			return '<iframe width="' + width + '" height="' + height + '" src="http://www.youtube.com/embed/' + id + '" frameborder="0" allowfullscreen></iframe>'
+			return '<iframe width="' + width + '" height="' + height + '" src="' + source + '" frameborder="0" allowfullscreen></iframe>'
 		}
 	}
 }

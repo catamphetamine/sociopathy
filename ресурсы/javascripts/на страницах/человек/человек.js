@@ -204,14 +204,12 @@ function update_online_status()
 
 function initialize_edit_mode_effects()
 {
-	var initial_background_color = $('body').css('background-color')
-	
-	var background_fade_time = 300
+	initialize_body_edit_mode_effects()
+
 	//var highlight_color = '#44adcb'
 	
 	$(document).on('режим.правка', function()
 	{
-		$('body').stop(true, false).animate({ 'background-color': '#afafaf' }, background_fade_time)
 		//the_picture.animate({ 'boxShadow': '0 0 20px ' + highlight_color })
 	})
 
@@ -219,7 +217,6 @@ function initialize_edit_mode_effects()
 	{
 		if (из === 'правка')
 		{
-			$('body').stop(true, false).animate({ 'background-color': initial_background_color }, background_fade_time)
 			//the_picture.animate({ 'boxShadow': '0 0 0px' })
 		}
 	})

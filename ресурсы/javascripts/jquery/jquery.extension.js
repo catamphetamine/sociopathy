@@ -481,6 +481,21 @@ $.fn.exists = function()
 	return this.length > 0
 }
 
+$.fn.transition_duration = function()
+{
+	var value = this.css('transition-duration') || this.css('-webkit-transition-duration') || this.css('-moz-transition-duration')
+	if (!value)
+		return
+		
+	if (value.ends_with('ms'))
+		return parseFloat(value) / 1000
+		
+	if (value.ends_with('s'))
+		return parseFloat(value)
+	
+	return
+}
+
 // get current time
 /*
 var $time = Date.now || function() 

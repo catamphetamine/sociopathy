@@ -44,15 +44,24 @@ var Vimeo =
 			return 'https://vimeo.com/' + id
 		},
 		
-		embed_code: function(id, width, height)
+		embed_code: function(id, options)
 		{
+			options = options || {}
+			
+			var width = options.width
+			var height = options.height
+			
 			if (!width)
 				width = Options.Video.Size.Width
 		
 			if (!height)
 				height = Options.Video.Size.Height
+			
+			var source = 'http://player.vimeo.com/video/' + id + '?'
+			if (options.play)
+				source += 'autoplay=true' + '&'
 		
-			return '<iframe src="http://player.vimeo.com/video/' + id + '" width="' + width + '" height="' + height + '" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>'
+			return '<iframe src="' + source + '" width="' + width + '" height="' + height + '" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>'
 		}
 	}
 }

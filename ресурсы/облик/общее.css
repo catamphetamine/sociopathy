@@ -276,12 +276,6 @@ label.error
 	text-shadow: rgba(255, 0, 0, 0.1) 0 0 20px;
 }
 
-.non_selectable
-{
-	-webkit-user-select: none;
-	-moz-user-select: none;	
-}
-
 .hidden_button_frame
 {
 	display: block;
@@ -1108,4 +1102,20 @@ body[mode="правка"] .rich_formatting a
 		
 		text-align: left;
 	}
+}
+
+.non_selectable
+{
+    -moz-user-select: none;        /* Mozilla Firefox */
+    -khtml-user-select: none;    /* Konqueror, Safary, Chrome. ��������� �� ��������� � ������� ? */
+    -webkit-user-select: none;    /* Safary, Chrome */
+    user-select: none;            /* CSS3 -- �� ������� */
+}
+
+.non_selectable::selection { color: inherit }
+
+.body_edit_mode
+{
+	background-color: #afafaf;
+	.css_transition_duration(300ms);
 }

@@ -225,6 +225,12 @@ body[mode="правка"]
 	}
 }
 
+.body_edit_mode
+{
+	background-color: #afafaf;
+	.css_transition_duration(300ms);
+}
+
 .business_card .uploading_picture
 {
 	display: none;
