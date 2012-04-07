@@ -51,13 +51,40 @@ function pictures_loaded()
 	var picture = $('.show_picture')
 	var namespace = '.show_picture'
 	
-	content.find('.icon').click(function(event)
+	var container = picture.find('.container')
+	
+	picture.find('.previous').on('click', function(event) 
 	{
-		event.preventDefault()
+		var previous_picture_icon = current_picture_icon.parent().prev().children().eq(0)
+		if (!previous_picture_icon.exists())
+			return hide_picture()
 		
-		var container = picture.find('.container').empty()
+		container.empty()
+		show_picture_file(previous_picture_icon)
+	})
+	
+	function next_picture()
+	{
+		var next_picture_icon = current_picture_icon.parent().next().children().eq(0)
+		if (!next_picture_icon.exists())
+			return hide_picture()
 		
-		var url = $(this).attr('picture')
+		container.empty()
+		show_picture_file(next_picture_icon)
+	}
+	
+	picture.find('.next').on('click', function(event) 
+	{
+		next_picture()
+	})
+	
+	var current_picture_icon
+	
+	function show_picture_file(icon)
+	{
+		current_picture_icon = icon
+	
+		var url = icon.attr('picture')
 		get_image(url, function(result)
 		{
 			if (result.error)
@@ -65,6 +92,11 @@ function pictures_loaded()
 		
 			var image = $(result.image)
 			container.append(image)
+			
+			image.on('click', function(event) 
+			{
+				next_picture()
+			})
 			
 			var factor = 1
 			
@@ -94,6 +126,15 @@ function pictures_loaded()
 		})
 		
 		show_picture()
+	}
+	
+	content.find('.icon').click(function(event)
+	{
+		event.preventDefault()
+		
+		container.empty()
+		
+		show_picture_file($(this))
 	})
 	
 	function hide_picture()
@@ -113,7 +154,7 @@ function pictures_loaded()
 				hide_picture()
 		})
 		
-		picture.on('click' + namespace, function(event) 
+		picture.find('.close').on('click' + namespace, function(event) 
 		{
 			hide_picture()
 		})

@@ -54,11 +54,34 @@ function videos_loaded()
 	var video = $('.show_video')
 	var namespace = '.show_video'
 	
-	$('a.video').click(function(event)
+	var container = video.find('.container')
+	
+	video.find('.previous').on('click', function(event) 
 	{
-		event.preventDefault()
+		var previous_video_icon = current_video_icon.parent().prev().children().eq(0)
+		if (!previous_video_icon.exists())
+			return hide_video()
 		
-		var image = $(this).find('img')
+		container.empty()
+		show_video_file(previous_video_icon)
+	})
+	
+	video.find('.next').on('click', function(event) 
+	{
+		var next_video_icon = current_video_icon.parent().next().children().eq(0)
+		if (!next_video_icon.exists())
+			return hide_video()
+		
+		container.empty()
+		show_video_file(next_video_icon)
+	})
+	
+	var current_video_icon
+	
+	function show_video_file(image)
+	{
+		current_video_icon = image
+		
 		var code = ''
 		
 		if (image.attr('vimeo_video_id'))
@@ -66,9 +89,16 @@ function videos_loaded()
 		else if (image.attr('youtube_video_id'))
 			code = Youtube.Video.embed_code(image.attr('youtube_video_id'))
 		
-		video.find('.container').empty().append($(code))
+		container.empty().append($(code))
 		
 		show_video()
+	}
+	
+	content.find('.video').click(function(event)
+	{
+		event.preventDefault()
+		
+		show_video_file($(this))
 	})
 	
 	function hide_video()
@@ -88,7 +118,7 @@ function videos_loaded()
 				hide_video()
 		})
 		
-		video.on('click' + namespace, function(event) 
+		video.find('.close').on('click' + namespace, function(event) 
 		{
 			hide_video()
 		})

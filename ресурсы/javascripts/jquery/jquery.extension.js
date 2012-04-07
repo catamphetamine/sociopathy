@@ -476,6 +476,11 @@ $.fn.belongs_to = function(parent)
 	return (parent.find(this).length > 0)
 }
 
+$.fn.exists = function()
+{
+	return this.length > 0
+}
+
 // get current time
 /*
 var $time = Date.now || function() 

@@ -1,11 +1,11 @@
-<a href="#" class="video">
-	{{if источник == 'vimeo.com' }}
-		<img class="vimeo_video_picture" vimeo_video_id="${внешний_id}"/>
+{{if источник == 'vimeo.com' }}
+	<img class="vimeo_video_picture video" vimeo_video_id="${внешний_id}"/>
+{{else}}
+	{{if источник == 'youtube.com' }}
+		<img class="youtube_video_picture video" youtube_video_id="${внешний_id}"/>
 	{{else}}
-		{{if источник == 'youtube.com' }}
-			<img class="youtube_video_picture" youtube_video_id="${внешний_id}"/>
-		{{else}}
+		<div class="video">
 			Неизвестный источник видео
-		{{/if}}
+		</div>
 	{{/if}}
-</a>
+{{/if}}
