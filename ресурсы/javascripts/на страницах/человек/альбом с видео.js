@@ -105,14 +105,11 @@ function videos_loaded()
 		}
 	}
 	
-	var progress_bar = $('.progress_bar .bar')
-	var progress = progress_bar.find('.progress')
-	
-	var one_video_progress = progress_bar.width() / all_icons.length
+	var progress = $('.progress_bar .bar .progress')
 	
 	function update_progress()
 	{
-		progress.width(parseInt(get_video_number() * one_video_progress))
+		progress.width(parseInt(get_video_number() * ($(window).width() / all_icons.length)))
 	}
 	
 	function show_video_file(image, options)

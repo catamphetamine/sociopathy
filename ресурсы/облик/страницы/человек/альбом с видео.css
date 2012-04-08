@@ -60,6 +60,8 @@
 			margin: 10px;
 			margin-top: 40px;
 			
+			font-size: 0;
+			
 			background-color: rgb(0, 0, 0);
 			.beautiful_shadow_5(0px, 3px, 20px, 12px, 2px, 8px, 4px, 0.2);
 		}
@@ -105,7 +107,7 @@
 .progress_bar
 {
 	position: absolute;
-	top: 24px;
+	bottom: 0px;
 	
 	width: 100%;
 	text-align: center;
@@ -114,14 +116,11 @@
 	
 	.bar
 	{
-		display: inline-block;
-	
-		width: 200px;
 		background-color: #2f2f2f;
 	
 		&, .progress
 		{
-			height: 1px;
+			height: 4px;
 		}
 		
 		.progress
