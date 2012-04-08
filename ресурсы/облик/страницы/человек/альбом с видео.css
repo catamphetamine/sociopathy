@@ -57,6 +57,9 @@
 		
 		.container
 		{
+			margin: 10px;
+			margin-top: 40px;
+			
 			background-color: rgb(0, 0, 0);
 			.beautiful_shadow_5(0px, 3px, 20px, 12px, 2px, 8px, 4px, 0.2);
 		}

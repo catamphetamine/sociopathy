@@ -113,11 +113,6 @@ var Клавиши =
 			shift = true
 			keys.erase('Shift')
 		}
-				
-		if (keys.length !== 1)
-			throw 'Too much character keys. Only one allowed.'
-			
-		var key = keys[0]
 
 		if (ctrl)
 			if (!event.ctrlKey)
@@ -130,7 +125,18 @@ var Клавиши =
 		if (shift)
 			if (!event.shiftKey)
 				return false
-				
+		
+		if (keys.length === 0)
+		{
+			//alert(event.keyCode)
+			return true
+		}
+			
+		if (keys.length !== 1)
+			throw 'Too much character keys. Only one allowed.'
+			
+		var key = keys[0]
+		
 		if (key.length === 1)				
 			if (shift)
 				key = key.toUpperCase()

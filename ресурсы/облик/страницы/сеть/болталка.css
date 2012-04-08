@@ -162,6 +162,7 @@
 {
 	.exact_height(@user_picture_top + @user_icon_size + 10px);
 }
+
 .chat .author .chat_user_icon
 {
 	top: @user_picture_top;
@@ -194,7 +195,7 @@
 @message_bottom_padding: 0px;
 @author_icon_margin_left: 20px;
 @time_column_padding: 20px;
-@time_column_width: 200px;
+@time_column_width: 220px;
 
 .chat > li .text, #compose_message > article
 {
@@ -217,6 +218,11 @@ ul.chat
 	
 	font-size: 0;
 
+	> li.new_author:nth-child(odd)
+	{
+		background-color: #f6f6f6;
+	}
+	
 	> li
 	{
 		position: relative;

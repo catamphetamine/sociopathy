@@ -123,8 +123,10 @@ function initialize_page()
 				{
 					next_in_time.find('.author').children().remove()
 					next_in_time.find('.message').css('padding-top', 0)
+					next_in_time.removeClass('new_author')
 				}
 				
+				item.addClass('new_author')
 				chat.prepend(item)
 
 				// после preprend, т.к. стили				
@@ -246,6 +248,9 @@ function add_message(data)
 	}
 	
 	var is_another_users_message = data.отправитель._id !== пользователь._id
+	
+	if (is_another_users_message)
+		content.addClass('new_author')
 	
 	var append = function()
 	{

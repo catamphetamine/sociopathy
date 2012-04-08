@@ -50,12 +50,12 @@ var Vimeo =
 			
 			var width = options.width
 			var height = options.height
-			
+
 			if (!width)
-				width = Options.Video.Size.Width
+				width = 500
 		
 			if (!height)
-				height = Options.Video.Size.Height
+				height = 281
 			
 			var source = 'http://player.vimeo.com/video/' + id + '?'
 			if (options.play)

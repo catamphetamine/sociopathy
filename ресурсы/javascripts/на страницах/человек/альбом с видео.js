@@ -43,7 +43,7 @@ function initialize_page()
 
 function center_videos_list()
 {
-	center_list($('#videos'), { space: $('#content'), item_width: Options.Video.Size.Width, item_margin: 40 })
+	center_list($('#videos'), { space: content, item_width: Options.Video.Icon.Size.Width + 2 /* border */, item_margin: 40 })
 }
 
 function videos_loaded()
@@ -87,10 +87,27 @@ function videos_loaded()
 	})
 	
 	var current_video_icon
+		
+	var delta_height = parseInt(container.css('margin-top')) + parseInt(container.css('margin-bottom'))
+	var delta_width = parseInt(container.css('margin-left')) + parseInt(container.css('margin-right'))
 	
 	function show_video_file(image, options)
 	{
+		options = options || {}
+	
 		current_video_icon = image
+	
+		var size = inscribe
+		({
+			width: Options.Video.Size.Width,
+			height: Options.Video.Size.Height,
+			max_width: $(window).width() - delta_width,
+			max_height: $(window).height() - delta_height,
+			//expand: true // тормозит, т.к. кадры увеличиваются на лету
+		})
+		
+		options.width = size.width
+		options.height = size.height
 		
 		var code = ''
 		
@@ -115,6 +132,7 @@ function videos_loaded()
 		$(document).unbind(namespace)
 		video.unbind(namespace)
 		video.fade_out(0.0)
+		container.empty()
 	}
 	
 	function show_video()

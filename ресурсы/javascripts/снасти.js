@@ -551,3 +551,57 @@ function center_list(list, options)
 		'margin-right': -delta + 'px'
 	})
 }
+
+function click_link(link)
+{
+    var cancelled = false;
+
+    if (document.createEvent) {
+        var event = document.createEvent("MouseEvents");
+        event.initMouseEvent("click", true, true, window,
+            0, 0, 0, 0, 0,
+            false, false, false, false,
+            0, null);
+        cancelled = !link.dispatchEvent(event);
+    }
+    else if (link.fireEvent) {
+        cancelled = !link.fireEvent("onclick");
+    }
+
+    if (!cancelled) {
+        window.location = link.href;
+    }
+}
+
+function new_tab(url)
+{
+	return window.open(url,'_blank','menubar=yes,toolbar=yes,location=yes,directories=yes,fullscreen=no,titlebar=yes,hotkeys=yes,status=yes,scrollbars=yes,resizable=yes')
+}
+
+function inscribe(options)
+{
+	var factor = 1
+	
+	function propose_factor(new_factor)
+	{
+		if (new_factor < factor)
+			factor = new_factor
+	}
+	
+	propose_factor(options.max_width / options.width)
+	propose_factor(options.max_height / options.height)
+	
+	if (factor === 1 && options.expand)
+	{
+		factor = options.max_width / options.width
+		propose_factor(options.max_height / options.height)
+	}
+	
+	var result =
+	{
+		width: parseInt(options.width * factor),
+		height: parseInt(options.height * factor)
+	}
+	
+	return result
+}

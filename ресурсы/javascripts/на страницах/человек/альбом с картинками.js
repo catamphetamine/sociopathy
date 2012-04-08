@@ -85,6 +85,9 @@ function pictures_loaded()
 	
 	var current_picture_icon
 	
+	var delta_height = parseInt(container.css('margin-top')) + parseInt(container.css('margin-bottom'))
+	var delta_width = parseInt(container.css('margin-left')) + parseInt(container.css('margin-right'))
+	
 	function show_picture_file(icon)
 	{
 		current_picture_icon = icon
@@ -98,36 +101,32 @@ function pictures_loaded()
 			var image = $(result.image)
 			container.append(image)
 			
+			var initial_width = result.image.width
+			var initial_height = result.image.height
+			
+			var link = $('<a/>').attr('target', '_blank').attr('href', 'http://google.ru').appendTo('body')
 			image.on('click', function(event) 
 			{
+				if (Клавиши.is('Shift', event))
+				{
+					event.preventDefault()
+					return new_tab(image.attr('src'))
+				}
+				
+				event.preventDefault()
 				next_picture()
 			})
 			
-			var factor = 1
+			var size = inscribe
+			({
+				width: result.image.width,
+				height: result.image.height,
+				max_width: $(window).width() - delta_width,
+				max_height: $(window).height() - delta_height
+			})
 			
-			var max_width = content.width()
-			var max_height = $(window).height()
-			
-			function propose_factor(new_factor)
-			{
-				if (new_factor < factor)
-					factor = new_factor
-			}
-			
-			var width = result.image.width
-			var height = result.image.height
-			
-			if (result.image.width > max_width)
-				propose_factor(max_width / width)
-			
-			if (result.image.height > max_height)
-				propose_factor(max_height / height)
-			
-			width = parseInt(width * factor)
-			height = parseInt(height * factor)
-			
-			image.width(width)
-			image.height(height)
+			image.width(size.width)
+			image.height(size.height)
 		})
 	}
 	
@@ -162,6 +161,20 @@ function pictures_loaded()
 				
 			if (Клавиши.is('Right', event))
 				return next_picture()
+				
+			if (Клавиши.is('Shift', event))
+			{
+				container.css('cursor', '-webkit-zoom-in')
+				container.css('cursor', '-moz-zoom-in')
+				return
+			}
+		})
+		
+		$(document).on('keyup' + namespace, function(event) 
+		{
+			//if (Клавиши.is('Shift', event))
+			
+			container.css('cursor', 'default')
 		})
 		
 		picture.find('.close').disableTextSelect().on('click' + namespace, function(event) 

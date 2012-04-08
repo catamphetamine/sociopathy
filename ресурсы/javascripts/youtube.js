@@ -35,16 +35,19 @@ var Youtube =
 			
 			var width = options.width
 			var height = options.height
-			
+
 			if (!width)
-				width = Options.Video.Size.Width
+				width = 560
 		
 			if (!height)
-				height = Options.Video.Size.Height
+				height = 315
 			
-			var source = 'http://www.youtube.com/embed/' + id
-			//if (options.play)
-			//	source += 'autoplay=true' + '&'
+			var source = 'http://www.youtube.com/embed/' + id + '?'
+			
+			if (options.play)
+				source += 'autoplay=1' + '&'
+				
+			source += 'rel=0' + '&'
 		
 			return '<iframe width="' + width + '" height="' + height + '" src="' + source + '" frameborder="0" allowfullscreen></iframe>'
 		}
