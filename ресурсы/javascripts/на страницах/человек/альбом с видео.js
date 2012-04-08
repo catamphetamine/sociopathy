@@ -91,6 +91,30 @@ function videos_loaded()
 	var delta_height = parseInt(container.css('margin-top')) + parseInt(container.css('margin-bottom'))
 	var delta_width = parseInt(container.css('margin-left')) + parseInt(container.css('margin-right'))
 	
+	var all_icons = $('#videos').find('li > img')
+	
+	function get_video_number()
+	{
+		var i = 0
+		while (i < all_icons.length)
+		{
+			if (all_icons[i] === current_video_icon[0])
+				return i + 1
+				
+			i++
+		}
+	}
+	
+	var progress_bar = $('.progress_bar .bar')
+	var progress = progress_bar.find('.progress')
+	
+	var one_video_progress = progress_bar.width() / all_icons.length
+	
+	function update_progress()
+	{
+		progress.width(parseInt(get_video_number() * one_video_progress))
+	}
+	
 	function show_video_file(image, options)
 	{
 		options = options || {}
@@ -117,6 +141,8 @@ function videos_loaded()
 			code = Youtube.Video.embed_code(image.attr('youtube_video_id'), options)
 		
 		container.empty().append($(code))
+		
+		update_progress()
 	}
 	
 	content.find('.video').click(function(event)

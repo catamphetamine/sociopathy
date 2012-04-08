@@ -88,6 +88,30 @@ function pictures_loaded()
 	var delta_height = parseInt(container.css('margin-top')) + parseInt(container.css('margin-bottom'))
 	var delta_width = parseInt(container.css('margin-left')) + parseInt(container.css('margin-right'))
 	
+	var all_icons = $('#pictures').find('li > div')
+	
+	function get_picture_number()
+	{
+		var i = 0
+		while (i < all_icons.length)
+		{
+			if (all_icons[i] === current_picture_icon[0])
+				return i + 1
+				
+			i++
+		}
+	}
+	
+	var progress_bar = $('.progress_bar .bar')
+	var progress = progress_bar.find('.progress')
+	
+	var one_picture_progress = progress_bar.width() / all_icons.length
+	
+	function update_progress()
+	{
+		progress.width(parseInt(get_picture_number() * one_picture_progress))
+	}
+	
 	function show_picture_file(icon)
 	{
 		current_picture_icon = icon
@@ -127,6 +151,8 @@ function pictures_loaded()
 			
 			image.width(size.width)
 			image.height(size.height)
+			
+			update_progress()
 		})
 	}
 	
