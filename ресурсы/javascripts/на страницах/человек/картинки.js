@@ -27,7 +27,7 @@ function initialize_page()
 		new  Data_loader
 		({
 			url: '/приложение/человек/картинки/альбомы',
-			parameters: { адресное_имя: window.адресное_имя },
+			parameters: { 'адресное имя': адресное_имя },
 			before_done_output: albums_loaded,
 			get_data: function(data) { return data.альбомы }
 		}))

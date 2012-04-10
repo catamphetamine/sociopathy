@@ -21,8 +21,10 @@ exports.выйти = (ввод, вывод) ->
 	вывод.clearCookie 'user'
 	
 exports.пользователь = (ввод, возврат) ->
-	if not ввод.session.пользователь
-		throw "You haven't logged in yet to call user_tools.user(request)"	
+	if not ввод.session?
+		return возврат()
+	if not ввод.session.пользователь?
+		return возврат()
 	хранилище.collection('people').findOne({ _id: ввод.session.пользователь._id }, возврат)
 
 exports.получить_пользователя = (номер_пользователя, возврат) ->

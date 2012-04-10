@@ -157,11 +157,14 @@ function show_photo()
 function show_online_status()
 {
 	// если сам зашёл на свою страницу
-	if (пользователь._id === пользователь_сети._id)
+	if (пользователь)
 	{
-		$('.online_status .offline').css({ opacity: 0 })
-		$('.online_status .online').css({ opacity: 1 })
-		return
+		if (пользователь._id === пользователь_сети._id)
+		{
+			$('.online_status .offline').css({ opacity: 0 })
+			$('.online_status .online').css({ opacity: 1 })
+			return
+		}
 	}
 	
 	когда_был_здесь = пользователь_сети['когда был здесь']

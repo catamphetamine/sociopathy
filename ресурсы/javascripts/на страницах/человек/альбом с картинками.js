@@ -28,9 +28,9 @@ function initialize_page()
 		new  Data_loader
 		({
 			url: '/приложение/человек/картинки/альбом',
-			parameters: { адресное_имя: window.адресное_имя, альбом: window.альбом },
+			parameters: { 'адресное имя': window.адресное_имя, альбом: window.альбом },
 			before_done_output: pictures_loaded,
-			get_data: function(data) { return data.картинки }
+			get_data: function(data) { return data.альбом.картинки }
 		}))
 	
 		$(window).resize(center_pictures_list)

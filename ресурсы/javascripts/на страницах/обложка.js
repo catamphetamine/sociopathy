@@ -164,8 +164,11 @@ function initialize_page()
 {
 	Подсказки.подсказка('Это заглавная страница нашей сети. Воспользуйтесь меню слева сверху для перехода в какой-либо раздел сети.')
 	
-	panel.buttons.мусорка.element.parent().show()
-	panel.buttons.мусорка.tooltip.update_position()
+	if (panel.buttons.мусорка)
+	{
+		panel.buttons.мусорка.element.parent().show()
+		panel.buttons.мусорка.tooltip.update_position()
+	}
 	
 	if (получить_настройку_запроса('приглашение'))
 	{
