@@ -11,13 +11,13 @@
 		<div class="picture">
 			<div>
 				<img {{if !$data['загружен ли аватар?'] }} style="display: none" {{/if}} class="real_picture" {{if $data['загружен ли аватар?'] }} src="/загруженное/люди/${$data['адресное имя']}/картинка/большая.jpg" {{/if}}/>
-				{{if window.название_страницы === 'человек/человек' }}
+				{{if Страница.эта() === 'человек/человек' }}
 					<div class="uploading_picture">Загружается</div>
 				{{/if}}
 			</div>
 		</div>
 		
-		{{if window.название_страницы === 'человек/человек' }}
+		{{if Страница.эта() === 'человек/человек' }}
 			<form>
 				<input type="file" class="upload_new_picture"/>
 			</form>

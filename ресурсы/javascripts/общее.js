@@ -521,6 +521,19 @@ String.prototype.count = function(what)
 	}
 }
 
+String.prototype.matches = function(pattern)
+{
+	var expression = pattern
+	if (expression.constructor !== 'RegExp')
+		expression = new RegExp(pattern, 'g')
+	
+	var match = this.match(expression)
+	if (!match)
+		return false
+		
+	return true //this.match(what).length
+}
+
 function now()
 {
 	return new Date()

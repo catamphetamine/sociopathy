@@ -171,57 +171,104 @@ var Panel = new Class
 		
 		$('#panel').children().disableTextSelect()
 	},
+	
+	page_initialized: function()
+	{
+		
+		var panel = this
+		function check_for_current_page(options)
+		{
+			if (options.page)
+				if (!Страница.is(options.page))
+					return
+			
+			if (options.page_pattern)
+				if (!Страница.matches(options.page_pattern))
+					return
+					
+			panel.toggle_buttons
+			({
+				hide: { button: { title: options.button } },
+				show: { button: { title: options.button + ' (выбрано)' } }
+			})
+		}
+		
+		check_for_current_page({ page: 'читальня', button: 'читальня' })
+		check_for_current_page({ page: 'люди', button: 'люди' })
+		check_for_current_page({ page: 'человек/человек', button: 'люди' })
+		check_for_current_page({ page_pattern: 'помощь(/.*)?', button: 'помощь' })
+		check_for_current_page({ page: 'сеть/новости', button: 'новости' })
+		check_for_current_page({ page: 'сеть/болталка', button: 'болталка' })
+		check_for_current_page({ page: 'сеть/обсуждения', button: 'обсуждения' })
+		check_for_current_page({ page: 'сеть/беседы', button: 'беседы' })
+		check_for_current_page({ page: 'человек/дневник', button: 'дневник' })
+		check_for_current_page({ page: 'человек/книги', button: 'книги' })
+		check_for_current_page({ page: 'сеть/круги', button: 'круги' })
+		check_for_current_page({ page: 'сеть/настройки', button: 'настройки' })
+		check_for_current_page({ page: 'сеть/мусорка', button: 'мусорка' })
+	},
 
 	toggle_buttons: function(options)
 	{
-		var idle_button = this.buttons[options.idle.button.title].element
-		var active_button = this.buttons[options.active.button.title].element
+		var hide_button = this.buttons[options.hide.button.title].element
+		var show_button = this.buttons[options.show.button.title].element
 		
-		active_button.css
+		show_button.css
 		({
 			position: 'absolute',
 			'z-index': -1,
 			opacity: 0
 		})
 		
-		idle_button.parent().append(active_button)
+		hide_button.parent().append(show_button)
 		
-		this.buttons[options.active.button.title].tooltip.update_position()
+		this.buttons[options.show.button.title].tooltip.update_position()
 		
-		this[options.activation_name] = function(these_options)
+		var activate = function(these_options)
 		{
 			options = Object.merge(options, these_options)
 			
-			active_button.css('z-index', 0)
+			show_button.css('z-index', 0)
 			
 			if (options.immediate)
 			{
-				idle_button.hide()
-				active_button.show().css('opacity', 1)
+				hide_button.hide()
+				show_button.show().css('opacity', 1)
 			}
 			else
 			{
-				active_button.fade_in(options.active.fade_in_duration)
-				idle_button.fade_out(options.idle.fade_out_duration)
+				show_button.fade_in(options.show.fade_in_duration)
+				hide_button.fade_out(options.hide.fade_out_duration)
 			}
 		}
 		
-		this[options.deactivation_name] = function(these_options)
+		var deactivate = function(these_options)
 		{
 			options = Object.merge(options, these_options)
 		
-			active_button.css('z-index', -1)
+			show_button.css('z-index', -1)
 			
 			if (options.immediate)
 			{
-				active_button.hide()
-				idle_button.show().css('opacity', 1)
+				show_button.hide()
+				hide_button.show().css('opacity', 1)
 			}
 			else
 			{
-				idle_button.fade_in(options.idle.fade_in_duration)
-				active_button.fade_out(options.active.fade_out_duration)
+				hide_button.fade_in(options.hide.fade_in_duration)
+				show_button.fade_out(options.show.fade_out_duration)
 			}
+		}
+		
+		if (options.activation_name)
+		{
+			this[options.activation_name] = activate
+			this[options.deactivation_name] = deactivate
+		}
+		else
+		{
+			options.immediate = true
+			activate()
 		}
 	},
 	
@@ -231,13 +278,13 @@ var Panel = new Class
 		
 		this.toggle_buttons
 		({
-			idle:
+			hide:
 			{
 				button: { title: 'новости' },
 				fade_in_duration: 0.5,
 				fade_out_duration: 3
 			},
-			active:
+			show:
 			{
 				button: { title: 'новости (непрочитанные)' },
 				fade_in_duration: 2,
@@ -255,13 +302,13 @@ var Panel = new Class
 	
 		this.toggle_buttons
 		({
-			idle:
+			hide:
 			{
 				button: { title: 'беседы' },
 				fade_in_duration: 0.5,
 				fade_out_duration: 1
 			},
-			active:
+			show:
 			{
 				button: { title: 'беседы (непрочитанные)' },
 				fade_in_duration: 1,
@@ -279,13 +326,13 @@ var Panel = new Class
 	
 		this.toggle_buttons
 		({
-			idle:
+			hide:
 			{
 				button: { title: 'обсуждения' },
 				fade_in_duration: 0.5,
 				fade_out_duration: 1.5
 			},
-			active:
+			show:
 			{
 				button: { title: 'обсуждения (непрочитанные)' },
 				fade_in_duration: 1,

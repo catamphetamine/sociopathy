@@ -1,4 +1,4 @@
-title('Дневник. ' + адресное_имя)
+title('Дневник. ' + window.адресное_имя)
 
 var blog
 
@@ -12,7 +12,7 @@ function initialize_page()
 	({
 		template_url: '/страницы/кусочки/записи дневника.html',
 		item_container: blog,
-		conditional: $('#blog_block[type=conditional]'),
+		conditional: $('.main_conditional[type=conditional]'),
 		done: blog_loaded
 	},
 	new  Data_loader
