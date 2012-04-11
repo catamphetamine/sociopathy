@@ -30,7 +30,15 @@ function initialize_page()
 			url: '/приложение/человек/картинки/альбом',
 			parameters: { 'адресное имя': window.адресное_имя, альбом: window.альбом },
 			before_done_output: pictures_loaded,
-			get_data: function(data) { return data.альбом.картинки }
+			get_data: function(data)
+			{
+				if (data.альбом.описание)
+				{
+					$('#pictures').before($('<p/>').addClass('description').text(data.альбом.описание))
+				}
+				
+				return data.альбом.картинки
+			}
 		}))
 	
 		$(window).resize(center_pictures_list)
@@ -59,7 +67,6 @@ function pictures_loaded()
 		if (!previous_picture_icon.exists())
 			return hide_picture()
 		
-		container.empty()
 		show_picture_file(previous_picture_icon)
 	}
 	
@@ -74,7 +81,6 @@ function pictures_loaded()
 		if (!next_picture_icon.exists())
 			return hide_picture()
 		
-		container.empty()
 		show_picture_file(next_picture_icon)
 	}
 	
@@ -113,6 +119,17 @@ function pictures_loaded()
 	{
 		current_picture_icon = icon
 	
+		container.empty()
+		
+		var description_height = 0
+		if (icon.next().is('p'))
+		{
+			description = $('<p/>').addClass('picture_description').text(icon.next().text())
+			description.appendTo(content)
+			description_height = description.outerHeight(true)
+			description.appendTo(container)
+		}
+			
 		var url = icon.attr('picture')
 		get_image(url, function(result)
 		{
@@ -120,8 +137,8 @@ function pictures_loaded()
 				return
 		
 			var image = $(result.image)
-			container.append(image)
-			
+			container.prepend(image)
+
 			var initial_width = result.image.width
 			var initial_height = result.image.height
 			
@@ -143,7 +160,7 @@ function pictures_loaded()
 				width: result.image.width,
 				height: result.image.height,
 				max_width: $(window).width() - delta_width,
-				max_height: $(window).height() - delta_height
+				max_height: $(window).height() - delta_height - description_height
 			})
 			
 			image.width(size.width)

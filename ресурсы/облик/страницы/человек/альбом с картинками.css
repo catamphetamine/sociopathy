@@ -6,87 +6,104 @@
 	padding-right: 40px;
 	
 	margin-top: 50px;
-	
-	#pictures
+
+	.picture_description
 	{
-		list-style-type: none;
-		padding: 0;
-		
-		position: relative;
-	
-		> li
-		{
-			display: inline-block;
-			margin: 40px;
-			
-			> .icon
-			{
-				display: inline-block;
-				
-				cursor: -webkit-zoom-in;
-				cursor: -moz-zoom-in;
-			
-				width: 400px;
-				height: 267px;
-				
-				.rounded_corners(8px);
-				
-				.beautiful_shadow_5(0px, 3px, 20px, 12px, 2px, 8px, 4px, 0.2);
-			}
-		}
+		color: white;
+		font-size: 20px;
 	}
 	
-	.show_picture
+	.main_content
 	{
-		background-color: rgba(0, 0, 0, 0.89);
-		
-		.container
+		> .description
 		{
-			margin: 10px;
-			margin-top: 40px;
-			
-			font-size: 0;
-			
-			background-color: rgb(0, 0, 0);
-			.beautiful_shadow_5(0px, 3px, 20px, 12px, 2px, 8px, 4px, 0.2);
-			
-			cursor: default;
+			margin-left: 80px;
+			text-indent: 0;
+			margin-top: 70px;
+			margin-bottom: 50px;
 		}
 		
-		.close
+		#pictures
 		{
-			position: absolute;
-			top: 15px;
-			right: 20px;
+			list-style-type: none;
+			padding: 0;
 			
-			font-size: 14px;
-			font-family: Helvetica;
-			color: #afafaf;
-			cursor: pointer;
+			position: relative;
+		
+			> li
+			{
+				display: inline-block;
+				margin: 40px;
+				
+				> .icon
+				{
+					display: inline-block;
+					
+					cursor: -webkit-zoom-in;
+					cursor: -moz-zoom-in;
+				
+					width: 400px;
+					height: 267px;
+					
+					.rounded_corners(8px);
+					
+					.beautiful_shadow_5(0px, 3px, 20px, 12px, 2px, 8px, 4px, 0.2);
+				}
+			}
 		}
 		
-		.previous
+		.show_picture
 		{
-			position: absolute;
-			left: 0;
-			top: 0;
+			background-color: rgba(0, 0, 0, 0.89);
 			
-			width: 50%;
-			height: 100%;
+			.container
+			{
+				margin: 10px;
+				margin-top: 40px;
+				
+				font-size: 0;
+				
+				background-color: rgb(0, 0, 0);
+				.beautiful_shadow_5(0px, 3px, 20px, 12px, 2px, 8px, 4px, 0.2);
+				
+				cursor: default;
+			}
 			
-			cursor: w-resize;
-		}
-		
-		.next
-		{
-			position: absolute;
-			right: 0;
-			top: 0;
+			.close
+			{
+				position: absolute;
+				top: 15px;
+				right: 20px;
+				
+				font-size: 14px;
+				font-family: Helvetica;
+				color: #afafaf;
+				cursor: pointer;
+			}
 			
-			width: 50%;
-			height: 100%;
+			.previous
+			{
+				position: absolute;
+				left: 0;
+				top: 0;
+				
+				width: 50%;
+				height: 100%;
+				
+				cursor: w-resize;
+			}
 			
-			cursor: e-resize;
+			.next
+			{
+				position: absolute;
+				right: 0;
+				top: 0;
+				
+				width: 50%;
+				height: 100%;
+				
+				cursor: e-resize;
+			}
 		}
 	}
 }

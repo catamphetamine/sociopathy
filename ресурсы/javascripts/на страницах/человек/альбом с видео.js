@@ -30,7 +30,15 @@ function initialize_page()
 			url: '/приложение/человек/видео/альбом',
 			parameters: { 'адресное имя': window.адресное_имя, альбом: window.альбом },
 			before_done_output: videos_loaded,
-			get_data: function(data) { return data.альбом.видео }
+			get_data: function(data)
+			{
+				if (data.альбом.описание)
+				{
+					$('#videos').before($('<p/>').addClass('description').text(data.альбом.описание))
+				}
+				
+				return data.альбом.видео
+			}
 		}))
 	
 		$(window).resize(center_videos_list)
@@ -118,12 +126,23 @@ function videos_loaded()
 	
 		current_video_icon = image
 	
+		container.empty()
+	
+		var description_height = 0
+		if (image.next().is('p'))
+		{
+			description = $('<p/>').addClass('video_description').text(image.next().text())
+			description.appendTo(content)
+			description_height = description.outerHeight(true)
+			description.appendTo(container)
+		}
+	
 		var size = inscribe
 		({
 			width: Options.Video.Size.Width,
 			height: Options.Video.Size.Height,
 			max_width: $(window).width() - delta_width,
-			max_height: $(window).height() - delta_height,
+			max_height: $(window).height() - delta_height - description_height,
 			//expand: true // тормозит, т.к. кадры увеличиваются на лету
 		})
 		
@@ -137,7 +156,7 @@ function videos_loaded()
 		else if (image.attr('youtube_video_id'))
 			code = Youtube.Video.embed_code(image.attr('youtube_video_id'), options)
 		
-		container.empty().append($(code))
+		container.prepend($(code))
 		
 		update_progress()
 	}

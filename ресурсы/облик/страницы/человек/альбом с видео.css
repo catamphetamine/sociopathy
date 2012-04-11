@@ -7,99 +7,116 @@
 	
 	margin-top: 50px;
 	
-	#videos
+	.video_description
 	{
-		list-style-type: none;
-		padding: 0;
-		
-		position: relative;
+		color: white;
+		font-size: 20px;
+	}
 	
-		> li
+	.main_content
+	{
+		> .description
 		{
-			display: inline-block;
-			margin: 40px;
+			margin-left: 80px;
+			text-indent: 0;
+			margin-top: 70px;
+			margin-bottom: 50px;
+		}
+	
+		#videos
+		{
+			list-style-type: none;
+			padding: 0;
 			
-			> .video
+			position: relative;
+		
+			> li
 			{
 				display: inline-block;
+				margin: 40px;
 				
-				background-color: black;
-				color: white;
-				text-align: center;
-				
-				width: 640px;
-				height: 360px;
-				
-				overflow: hidden;
-				
-				.beautiful_shadow_5(0px, 3px, 20px, 12px, 2px, 8px, 4px, 0.2);
-				.rounded_corners(10px);
-				
-				border-style: solid;
-				border-color: #7f7f7f;
-				border-width: 1px;
-				
-				cursor: -webkit-zoom-in;
-				cursor: -moz-zoom-in;
-				
-				.vimeo_video_picture
+				> .video
 				{
-					opacity: 0;
-					.css_transition(all, 300ms);
+					display: inline-block;
+					
+					background-color: black;
+					color: white;
+					text-align: center;
+					
+					width: 640px;
+					height: 360px;
+					
+					overflow: hidden;
+					
+					.beautiful_shadow_5(0px, 3px, 20px, 12px, 2px, 8px, 4px, 0.2);
+					.rounded_corners(10px);
+					
+					border-style: solid;
+					border-color: #7f7f7f;
+					border-width: 1px;
+					
+					cursor: -webkit-zoom-in;
+					cursor: -moz-zoom-in;
+					
+					.vimeo_video_picture
+					{
+						opacity: 0;
+						.css_transition(all, 300ms);
+					}
 				}
 			}
 		}
-	}
-	
-	.show_video
-	{
-		background-color: rgba(0, 0, 0, 0.89);
 		
-		.container
+		.show_video
 		{
-			margin: 10px;
-			margin-top: 40px;
+			background-color: rgba(0, 0, 0, 0.89);
 			
-			font-size: 0;
+			.container
+			{
+				margin: 10px;
+				margin-top: 40px;
+				
+				font-size: 0;
+				
+				background-color: rgb(0, 0, 0);
+				.beautiful_shadow_5(0px, 3px, 20px, 12px, 2px, 8px, 4px, 0.2);
+			}
 			
-			background-color: rgb(0, 0, 0);
-			.beautiful_shadow_5(0px, 3px, 20px, 12px, 2px, 8px, 4px, 0.2);
-		}
-		
-		.close
-		{
-			position: absolute;
-			top: 15px;
-			right: 20px;
+			.close
+			{
+				position: absolute;
+				top: 15px;
+				right: 20px;
+				
+				font-size: 14px;
+				font-family: Helvetica;
+				color: #afafaf;
+				cursor: pointer;
+			}
 			
-			font-size: 14px;
-			font-family: Helvetica;
-			color: #afafaf;
-			cursor: pointer;
-		}
-		
-		.previous
-		{
-			position: absolute;
-			left: 0;
-			top: 0;
+			.previous
+			{
+				position: absolute;
+				left: 0;
+				top: 0;
+				
+				width: 50%;
+				height: 100%;
+				
+				cursor: w-resize;
+			}
 			
-			width: 50%;
-			height: 100%;
-			
-			cursor: w-resize;
-		}
-		
-		.next
-		{
-			position: absolute;
-			right: 0;
-			top: 0;
-			
-			width: 50%;
-			height: 100%;
-			
-			cursor: e-resize;
+			.next
+			{
+				position: absolute;
+				right: 0;
+				top: 0;
+				
+				width: 50%;
+				height: 100%;
+				
+				cursor: e-resize;
+			}
 		}
 	}
 }
