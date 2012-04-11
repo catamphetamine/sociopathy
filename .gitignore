@@ -4,3 +4,4 @@ log/*.log
 загруженное/временное/*
 временное/*
 /configuration/home_osx/configuration.private.coffee
+code/scala/classes/*

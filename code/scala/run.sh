@@ -1,0 +1,1 @@
+scala -classpath "libraries/jersey-core-1.12.jar:libraries/grizzly-framework-2.1.9.jar:libraries/jersey-bundle-1.12.jar:libraries/asm-3.1.jar:libraries/grizzly-http-server-2.1.9.jar:libraries/grizzly-comet-webserver-1.9.45.jar:classes" -Dport=8090 Main
