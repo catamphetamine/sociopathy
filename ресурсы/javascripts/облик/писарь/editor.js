@@ -399,10 +399,10 @@ var Editor = new Class
 	
 	range: function()
 	{
-		if (window.getSelection().rangeCount === 0)
+		if (this.selection().rangeCount === 0)
 			return
 			
-		return window.getSelection().getRangeAt(0)
+		return this.selection().getRangeAt(0)
 	},
 	
 	create_range: function()
@@ -415,9 +415,14 @@ var Editor = new Class
 		range.collapse(true)
 	},
 	
+	selection: function()
+	{
+		return window.getSelection()
+	},
+	
 	apply_range: function(range)
 	{
-		var selection = window.getSelection()
+		var selection = this.selection()
 		selection.removeAllRanges()
 		selection.addRange(range)
 	},

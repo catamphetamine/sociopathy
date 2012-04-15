@@ -2,7 +2,7 @@
 	
 function initialize_page()
 {
-	if (window.раздел)
+	if (page_data.раздел)
 		title(раздел.название)
 	else
 		title('Читальня')

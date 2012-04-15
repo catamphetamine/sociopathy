@@ -316,6 +316,14 @@ $.fn.fade_in = function(duration, options, callback)
 		options = {}
 	}
 	
+	if (this.length < 1)
+	{
+		if (callback)
+			return callback()
+		else
+			return
+	}
+
 	options.duration = duration
 	options.callback = callback
 	
@@ -336,6 +344,14 @@ $.fn.fade_out = function(duration, options, callback)
 		options = {}
 	}
 	
+	if (this.length < 1)
+	{
+		if (callback)
+			return callback()
+		else
+			return
+	}
+
 	options.duration = duration
 	options.callback = callback
 	options.hide = true

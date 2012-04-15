@@ -556,4 +556,17 @@ public class Whirlpool {
         //makeNESSIETestVectors();
         makeISOTestVectors();
     }
+	
+	public static String hash(Object value)
+	{
+		Whirlpool whirlpool = new Whirlpool();
+		
+        byte[] digest = new byte[Whirlpool.DIGESTBYTES];
+		
+        whirlpool.NESSIEinit();
+        whirlpool.NESSIEadd(value.toString());
+        whirlpool.NESSIEfinalize(digest);
+		
+		return Whirlpool.display(digest);
+	}
 }

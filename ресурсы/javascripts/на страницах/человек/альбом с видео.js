@@ -1,4 +1,4 @@
-title(window.альбом + '. ' + 'Видео. ' + адресное_имя)
+title(page_data.альбом + '. ' + 'Видео. ' + page_data.адресное_имя)
 
 Режим.пообещать('правка')
 Режим.пообещать('действия')
@@ -28,7 +28,7 @@ function initialize_page()
 		new  Data_loader
 		({
 			url: '/приложение/человек/видео/альбом',
-			parameters: { 'адресное имя': window.адресное_имя, альбом: window.альбом },
+			parameters: { 'адресное имя': page_data.адресное_имя, альбом: page_data.альбом },
 			before_done_output: videos_loaded,
 			get_data: function(data)
 			{
@@ -196,6 +196,18 @@ function videos_loaded()
 		video.find('.close').disableTextSelect().on('click' + namespace, function(event) 
 		{
 			hide_video()
+		})
+		
+		video.find('.previous').on('contextmenu' + namespace, function(event) 
+		{
+			event.preventDefault()
+			video.find('.close').click()
+		})
+		
+		video.find('.next').on('contextmenu' + namespace, function(event) 
+		{
+			event.preventDefault()
+			video.find('.close').click()
 		})
 	}
 	

@@ -11,11 +11,11 @@ import java.lang.Integer
 
 object Main
 {
-    def getPort (defaultPort : Integer) : Integer =
+    def port (default_port : Integer) : Integer =
 	{
-        val port : String = System.getProperty("port")
+        val port = System.getProperty("port")
         if (port == null)
-			return defaultPort
+			return default_port
 			
 		try
 		{
@@ -23,41 +23,42 @@ object Main
 		}
 		catch
 		{
-			case error : NumberFormatException => {}
+			case ошибка : NumberFormatException => {}
 		}
         
-		return defaultPort
+		default_port
     }
     
-    def getBaseURI () : URI =
+    def адрес () : URI =
 	{
-        return UriBuilder.fromUri("http://localhost/").port(getPort(9998)).build()
+        UriBuilder.fromUri("http://localhost/").port(port(8080)).build()
     }
 
-    val BASE_URI : URI = getBaseURI()
+    val Адрес = адрес()
 
 	@throws (classOf[IOException])
-    def startServer () : com.sun.grizzly.http.SelectorThread =
+    def запустить () : com.sun.grizzly.http.SelectorThread =
 	{
-        val initParams = new HashMap[String, String]()
+        val настройки = new HashMap[String, String]()
 
-        initParams.put("com.sun.jersey.config.property.packages", "resources")
+        настройки.put("com.sun.jersey.config.property.packages", "resources")
 
         System.out.println("Starting grizzly...")
-        return GrizzlyWebContainerFactory.create(BASE_URI, initParams)
+		
+        GrizzlyWebContainerFactory.create(Адрес, настройки)
     }
     
 	@throws (classOf[IOException])
-    def main (args : Array[String]) =
+    def main (настройки : Array[String]) =
 	{
-        val httpServer = startServer()
-		httpServer.run()//listen()
+        val server = запустить()
+		server.run()//listen()
 		
         System.out.println(String.format("Jersey app started with WADL available at "
                 + "%sapplication.wadl\nTry out %shelloworld\nHit enter to stop it...",
-                BASE_URI, BASE_URI))
+                Адрес, Адрес))
 		
         System.in.read()
-        httpServer.stopEndpoint()
+        server.stopEndpoint()
     }    
 }

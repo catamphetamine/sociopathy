@@ -1,4 +1,4 @@
-title(window.альбом + '. ' + 'Картинки. ' + адресное_имя)
+title(page_data.альбом + '. ' + 'Картинки. ' + page_data.адресное_имя)
 
 Режим.пообещать('правка')
 Режим.пообещать('действия')
@@ -28,7 +28,7 @@ function initialize_page()
 		new  Data_loader
 		({
 			url: '/приложение/человек/картинки/альбом',
-			parameters: { 'адресное имя': window.адресное_имя, альбом: window.альбом },
+			parameters: { 'адресное имя': page_data.адресное_имя, альбом: page_data.альбом },
 			before_done_output: pictures_loaded,
 			get_data: function(data)
 			{
@@ -220,6 +220,18 @@ function pictures_loaded()
 		picture.find('.close').disableTextSelect().on('click' + namespace, function(event) 
 		{
 			hide_picture()
+		})
+		
+		picture.find('.previous').on('contextmenu' + namespace, function(event) 
+		{
+			event.preventDefault()
+			picture.find('.close').click()
+		})
+		
+		picture.find('.next').on('contextmenu' + namespace, function(event) 
+		{
+			event.preventDefault()
+			picture.find('.close').click()
 		})
 	}
 	

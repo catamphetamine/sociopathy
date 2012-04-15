@@ -70,14 +70,19 @@ file_system = require 'fs'
 	снасти.получить_данные options, callback
 	
 снасти.hash = (что, настройки, callback) ->
+	if typeof настройки == 'function'
+		callback = настройки
+		настройки = {}
+
 	чем = 'whirlpool'
+	
 	options = 
 		host: 'localhost'
-		port: 8082
-		path: '/hash.sjs' + '?' + 'value=' + encodeURIComponent(что) + '&' + 'method=' + чем
+		port: 8090
+		path: '/hash/whirlpool/' + encodeURIComponent(что)
 		
-	if настройки.random?
-		options.path += '&' + 'random=' + настройки.random
+#	if настройки.random?
+#		options.path += '&' + 'random=' + настройки.random
 		
 	снасти.получить_данные options, callback
 	
@@ -261,6 +266,10 @@ file_system = require 'fs'
 		return new Date().toString('dd.MM.yyyy HH:mm')
 	new Date().toString('dd.MM.yyyy')
 	
+снасти.сделать_id = (id) ->
+	id = id.to_unix_file_name()
+	id
+	
 module.exports = снасти
 
 Array.prototype.is_empty = () ->
@@ -295,6 +304,14 @@ String.prototype.escape_html = ->
 	
 String.prototype.to_unix_path = ->
 	@replace(/\\/g, '/')
+	
+String.prototype.to_unix_file_name = ->
+	if @ == '.' || @ == '..'
+		throw 'Invalid Unix file name: ' + @
+	@replace(/\//g, encodeURIComponent('/'))
+	#.replace(/\|/g, encodeURIComponent('|')).replace(/;/g, encodeURIComponent(';'))
+	
+console.log("afsd/lfaksjdf.|flasdj;afds".to_unix_file_name())
 	
 Object.merge_recursive = (obj1, obj2) ->
 	for ключ, значение of obj2

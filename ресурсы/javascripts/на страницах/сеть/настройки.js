@@ -37,7 +37,7 @@ function подготовить_режим_правки()
 {
 	$(document).on('режим.правка', function(event)
 	{
-		window.старая_почта = get_email()
+		page_data.старая_почта = get_email()
 	})
 
 	initialize_edit_mode_effects()	
@@ -76,7 +76,7 @@ function save_changes()
 	})
 	.ok(function()
 	{
-		if (почта && почта !== window.старая_почта)
+		if (почта && почта !== page_data.старая_почта)
 			info('На ваш новый почтовый ящик отправлено письмо')
 		загрузка.hide()
 		Режим.разрешить_переходы()

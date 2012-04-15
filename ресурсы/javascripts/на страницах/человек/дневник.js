@@ -1,4 +1,4 @@
-title('Дневник. ' + window.адресное_имя)
+title('Дневник. ' + page_data.адресное_имя)
 
 var blog
 
@@ -18,7 +18,7 @@ function initialize_page()
 	new  Data_loader
 	({
 		url: '/приложение/дневник',
-		parameters: { адресное_имя: window.адресное_имя },
+		parameters: { адресное_имя: page_data.адресное_имя },
 		get_data: function (data) { дневник = data; return data }
 	}))
 }

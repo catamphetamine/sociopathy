@@ -22,7 +22,7 @@ function initialize_page()
 	new  Data_loader
 	({
 		url: '/приложение/человек/книги',
-		parameters: { 'адресное имя': window.адресное_имя },
+		parameters: { 'адресное имя': адресное_имя },
 		before_done_output: books_loaded,
 		done: books_shown,
 		get_data: function(data)

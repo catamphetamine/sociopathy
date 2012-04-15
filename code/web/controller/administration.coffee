@@ -14,8 +14,7 @@ http.post '/приглашение/выдать', (ввод, вывод) ->
 		.сделать ->
 			проверить_управляющего(ввод, @)
 		.сделать ->
-			#снасти.hash(new Date().getTime(), { random: true }, @)
-			@(null, new Date().getTime().toString() + Math.random())
+			@.done(пользовательское.приглашение())
 		.сделать (ключ) ->
 			хранилище.collection('invites').save { ключ: ключ }, @
 		.сделать (приглашение) ->
@@ -227,8 +226,8 @@ http.post '/хранилище/заполнить', (ввод, вывод) ->
 			console.error ошибка
 			вывод.send ошибка: ошибка
 
-		.сделать ->
-			хранилище.collection('people').ensureIndex 'почта', true, @
+#		.сделать ->
+#			хранилище.collection('people').ensureIndex 'почта', true, @
 
 		.сделать ->
 			хранилище.collection('people').ensureIndex 'имя', true, @

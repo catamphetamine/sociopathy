@@ -4,15 +4,64 @@
 		@find(условия, { skip: настройки.с - 1, limit: настройки.сколько }).toArray возврат
 
 http.get '/люди', (ввод, вывод) ->
+
+	настройки =  {}
+
+	if ввод.настройки.раньше == 'true'
+		настройки.направление = 'назад'
+		настройки.прихватить_границу = no
+	else
+		настройки.направление = 'вперёд'
+		настройки.прихватить_границу = no
+		
 	цепь(вывод)
 		.сделать ->
-			if ввод.настройки.после?
-				return хранилище.collection('people').find({ _id: { $lt: хранилище.collection('people').id(ввод.настройки.после) } }, { limit: ввод.настройки.сколько, sort: [['$natural', -1]] }).toArray(@.в 'люди')
-			хранилище.collection('people').find({}, { limit: ввод.настройки.сколько, sort: [['$natural', -1]] }).toArray(@.в 'люди')
+			if not ввод.настройки.с?
+				skip = ввод.настройки.пропустить || 0
+				return хранилище.collection('people').find({}, { limit: ввод.настройки.сколько, sort: [['$natural', -1]], skip: skip }).toArray(@.в 'люди')
+				
+			сравнение_id = {}
+			
+			if настройки.направление == 'вперёд'
+				сравнение_id = '$lte'
+			else if настройки.направление == 'назад'
+				сравнение_id = '$gte'
+		
+			if настройки.прихватить_границу == no
+				if сравнение_id == '$lte'
+					сравнение_id = '$lt'
+				else if сравнение_id == '$gte'
+					сравнение_id = '$gt'
+					
+			id_criteria = {}
+			id_criteria[сравнение_id] = хранилище.collection('people').id(ввод.настройки.с)
+				
+			sort = null
+			
+			if настройки.направление == 'вперёд'
+				sort = -1
+			else if настройки.направление == 'назад'
+				sort = 1
+				
+			хранилище.collection('people').find({ _id: id_criteria }, { limit: ввод.настройки.сколько, sort: [['$natural', sort]] }).toArray(@.в 'люди')
 
 		.сделать (люди) ->
 			return @() if люди.length == 0
-			хранилище.collection('people').find({ _id: { $lt: люди[люди.length - 1]._id } }, { limit: 1, sort: [['$natural', -1]] }).toArray @
+			
+			more_id_criteria  = {}
+			sort = null
+			
+			if настройки.направление == 'назад'
+				more_id_criteria = { $gt: люди[люди.length - 1]._id }
+				sort = -1
+			else if настройки.направление == 'вперёд'
+				more_id_criteria = { $lt: люди[люди.length - 1]._id }
+				sort = 1
+				
+			console.log(люди)
+			console.log(more_id_criteria)
+				
+			хранилище.collection('people').find({ _id: more_id_criteria }, { limit: 1, sort: [['$natural', sort]] }).toArray @
 		
 		.сделать (ещё_люди) ->
 			есть_ли_ещё = no

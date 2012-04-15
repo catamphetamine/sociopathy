@@ -17,7 +17,7 @@ Sociopathy
    Redis
    Memcache
    ImageMagick
-   //Scala (Sbt, Scalatra)
+   Scala (Jersey, Grizzly, Ant)
 
 Статика отдаётся NginX'ом.
 Страницы шаблонизуются прямо в окне обозревателя.

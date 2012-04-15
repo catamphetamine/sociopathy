@@ -1,5 +1,8 @@
 var название_страницы = путь_страницы()
-window.данные_для_страницы = {}
+
+page_data = {}
+
+page_data.данные_для_страницы = {}
 
 $(function()
 {
@@ -9,7 +12,7 @@ $(function()
 	if (!название_страницы)
 		название_страницы = 'обложка'
 		
-	var данные_для_страницы = window.данные_для_страницы
+	var данные_для_страницы = page_data.данные_для_страницы
 	
 	var breaks_from_normal_workflow = false
 	
@@ -21,7 +24,15 @@ $(function()
 			{
 				'*': function(value, rest)
 				{
-					window.адресное_имя = value
+					var int_value = parseInt(value)
+					if (int_value == value && int_value > 0)
+					{
+						page_data.номер_страницы = int_value
+						название_страницы = 'люди'
+						return
+					}
+					
+					page_data.адресное_имя = value
 					название_страницы = 'человек/человек'
 					
 					match_url(rest,
@@ -43,7 +54,7 @@ $(function()
 								'*': function(value, rest)
 								{
 									название_страницы = 'человек/альбом с картинками'
-									window.альбом = value
+									page_data.альбом = value
 								}
 							})
 						},
@@ -56,7 +67,7 @@ $(function()
 								'*': function(value, rest)
 								{
 									название_страницы = 'человек/альбом с видео'
-									window.альбом = value
+									page_data.альбом = value
 								}
 							})
 						},
@@ -177,13 +188,13 @@ $(function()
 			if (данные.заметка)
 			{
 				название_страницы = 'заметка'
-				window.заметка = данные.заметка
+				page_data.заметка = данные.заметка
 				данные_для_страницы = Object.merge(данные_для_страницы, данные)
 			}
 			else
 			{
 				название_страницы = 'читальня'
-				window.раздел = данные.раздел
+				page_data.раздел = данные.раздел
 			}
 
 			возврат()

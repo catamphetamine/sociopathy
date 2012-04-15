@@ -25,6 +25,8 @@ var Ajax =
 		options = options || {}
 		
 		options.type = options.type || 'json'
+	
+		Default_ajax_error_message = 'Произошла ошибка на сервере'
 		
 		var ajax = $.ajax
 		({
@@ -66,10 +68,10 @@ var Ajax =
 					{
 						var message = data.ошибка
 						if (message == true)
-							message = 'Произошла ошибка на сервере'
+							message = Default_ajax_error_message
 						return on_error(message)
 					}
-		
+					
 					on_ok(data)
 				})
 				
@@ -79,6 +81,9 @@ var Ajax =
 			{
 				on_error = function(сообщение)
 				{
+					if (сообщение === 'Internal Server Error')
+						сообщение = Default_ajax_error_message
+					
 					if ($.isFunction(ошибка))
 						ошибка(сообщение)
 					else if (сообщение && typeof сообщение === 'string')
@@ -91,7 +96,7 @@ var Ajax =
 				
 				ajax.error(function(jqXHR, textStatus, errorThrown)
 				{
-					on_error()
+					on_error(errorThrown)
 				})
 				
 				return result

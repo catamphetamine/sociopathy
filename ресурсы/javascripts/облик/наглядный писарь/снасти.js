@@ -955,10 +955,10 @@ $(function()
 	// с этим кодом, если фокус уходит на visual_editor_tools, то они перестают работать
 	$(document).on('focusout', function(event)
 	{
-		if (!window.visual_editors)
+		if (!page_data.visual_editors)
 			return
 			
-		window.visual_editors.forEach(function(visual_editor)
+		page_data.visual_editors.forEach(function(visual_editor)
 		{
 			// если бы можно было знать, куда приземляется фокус, то можно было бы поставить условие
 			if (event.target === visual_editor.editor.content.get(0))
@@ -971,18 +971,18 @@ $(function()
 	
 	$(document).on('focusin', function(event)
 	{
-		if (!window.visual_editors)
+		if (!page_data.visual_editors)
 			return
 			
 		// disable all the other editors
-		window.visual_editors.forEach(function(visual_editor)
+		page_data.visual_editors.forEach(function(visual_editor)
 		{
 			if (event.target !== visual_editor.editor.content.get(0))
 				visual_editor.disable_tools()
 		})
 		
 		// enable this editor
-		window.visual_editors.forEach(function(visual_editor)
+		page_data.visual_editors.forEach(function(visual_editor)
 		{
 			if (event.target === visual_editor.editor.content.get(0))
 				visual_editor.enable_tools()

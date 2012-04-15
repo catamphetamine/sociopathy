@@ -1,8 +1,10 @@
 package resources
 
 import javax.ws.rs._
+import javax.ws.rs.core._
 
 import javanese.Whirlpool
+import com.twitter.json.Json
 
 /*
 @GET
@@ -21,24 +23,20 @@ class Hasher
 {	
 	@GET 
 	@Produces(Array("text/plain"))
-	def whirlpool() : String =
+	def приветствие() : String =
 	{
-		"Available algorythms: whirlpool"
+		"Доступные алгоритмы: whirlpool"
 	}
 
 	@GET 
-	@Path("whirlpool/{value}")
-	@Produces(Array("text/plain"))
-	def whirlpool(@PathParam("value") value : String) : String =
+	@Path("whirlpool/{что}")
+	//@Produces(Array("text/plain"))
+	@Produces(Array(MediaType.APPLICATION_JSON))
+	def whirlpool(@DefaultValue(Nil) @PathParam("что") что : String) : String =
 	{
-		val whirlpool = new Whirlpool()
-		
-        val digest = new Array[Byte](Whirlpool.DIGESTBYTES)
-		
-        whirlpool.NESSIEinit()
-        whirlpool.NESSIEadd(value)
-        whirlpool.NESSIEfinalize(digest)
-		
-		Whirlpool.display(digest)
+		//if (value == null)
+		//	throw new IllegalArgumentException("Что захешировать?")
+	
+		Json.build(Map("hash" -> Whirlpool.hash(что))).toString
 	}
 }

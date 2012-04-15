@@ -4,22 +4,29 @@ var Batch_loader = new Class
 	
 	options:
 	{
+		parameters: {},
 		get_data: function(data) { return data },
 		finished: function() {},
 		done: function() {},
 		done_more: function() {},
 		before_done_output: function() {},
 		before_done_more_output: function() {},
-		get_id: function(object) { return object._id }
+		get_id: function(object) { return object._id },
+		reverse: false
 	},
 	
 	есть_ли_ещё: true,
 	index: 1,
 	
+	page: { number: 0 },
+	
 	initialize: function(options)
 	{
 		this.setOptions(options)
 
+		if (options.skip_pages)
+			this.page.number += options.skip_pages
+		
 		$(window).scrollTop(0)
 		this.$scroll_detector = $('#scroll_detector')
 	},
@@ -57,10 +64,15 @@ var Batch_loader = new Class
 		var data = { сколько: count }
 		
 		if (this.latest)
-			data.после = this.latest
+			data.с = this.latest
+			
+		if (this.options.skip_pages)
+			data.пропустить = this.options.skip_pages * this.options.batch_size
 			
 		if (this.options.order)
 			data.порядок = this.options.order
+		
+		data = Object.merge(this.options.parameters, data)
 		
 		Ajax.get(this.options.url, data)
 		.ошибка(function(ошибка)
@@ -74,18 +86,30 @@ var Batch_loader = new Class
 				
 			var data_list = loader.options.get_data(data)
 			loader.index += data_list.length
+			
+			if (!data_list.is_empty())
+			{
+				if (!loader.options.reverse)
+					loader.page.number++
+				else
+					loader.page.number--
+			}
+
 			callback(null, data_list)
 		})
+	},
+	
+	no_data_yet: function()
+	{
+		return this.index <= 1
 	},
 	
 	load: function()
 	{
 		var loader = this
 		
-		var first_load = true
-		if (loader.index > 1)
-			first_load = false
-			
+		var is_first_batch = loader.no_data_yet()
+		
 		this.batch(function(ошибка, список)
 		{
 			if (ошибка)
@@ -99,26 +123,32 @@ var Batch_loader = new Class
 				loader.options.show(объект)
 			})
 			
-			if (first_load)
-				loader.options.before_done_output()
-			else
-				loader.options.before_done_more_output()
-			
 			if (!список.is_empty())
 			{
 				if (loader.options.order === 'обратный')
+				{
+					loader.earliest = loader.options.get_id(список[список.length - 1])
 					loader.latest = loader.options.get_id(список[0])
+				}
 				else
+				{
+					loader.earliest = loader.options.get_id(список[0])
 					loader.latest = loader.options.get_id(список[список.length - 1])
+				}
 			}
+			
+			if (is_first_batch)
+				loader.options.before_done_output.bind(loader)()
+			else
+				loader.options.before_done_more_output.bind(loader)()
 			
 			if (!loader.есть_ли_ещё)
 				loader.options.finished()
 				
 			loader.options.callback(null, function()
 			{			
-				if (first_load)
-					loader.options.done()
+				if (is_first_batch)
+					loader.options.done.bind(loader)()
 				else
 					loader.options.done_more.bind(loader)()
 				
@@ -134,8 +164,13 @@ var Batch_loader = new Class
 	load_more: function()
 	{
 		this.deactivate()
-		this.options.loading_more()
 		this.load()
+		
+		var loader = this
+		return function()
+		{
+			loader.options.loading_more()
+		}
 	}
 })
 
@@ -281,6 +316,12 @@ var Data_templater = new Class
 		loader.options.callback = conditional.callback
 		loader.options.loading_more = conditional.loading_more
 		
+		var load_data = function()
+		{
+			if (options.load_data !== false)
+				loader.load()
+		}
+		
 		if (options.data)
 		{
 			var latest_deferred
@@ -288,15 +329,18 @@ var Data_templater = new Class
 				if (options.data.hasOwnProperty(property))
 				{
 					if (latest_deferred)
-						latest_deferred = latest_deferred.pipe(function() { return load_template(options.data[property].template_url) })
+						latest_deferred = latest_deferred.pipe(function()
+						{
+							return load_template(options.data[property].template_url)
+						})
 					else
 						latest_deferred = load_template(options.data[property].template_url)
 				}
 			
-			latest_deferred.done(function() { loader.load() })
+			latest_deferred.done(load_data)
 		}
 		else
-			load_template(options.template_url).done(function() { loader.load() })
+			load_template(options.template_url).done(load_data)
 			
 		function load_template(template_url)
 		{
