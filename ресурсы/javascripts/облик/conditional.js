@@ -54,8 +54,18 @@ function initialize_conditional($this, options)
 	$this.show()
 	loading.fade_in(fade_in_duration)
 	
-	var switch_elements = function(from, to, callback)
+	var switch_elements = function(from, to, callback, options)
 	{
+		if (options)
+		{
+			if (options.immediate)
+			{
+				from.css('opacity', 0).hide()
+				to.css('opacity', 1).show()
+				return callback()
+			}
+		}
+	
 		from.fade_out(fade_out_duration, function()
 		{
 			to.fade_in(fade_in_duration, callback)
@@ -75,7 +85,8 @@ function initialize_conditional($this, options)
 			
 			if (callback)
 				callback()
-		})
+		},
+		{ immediate: true })
 	}
 	
 	var error_counter = 0
@@ -92,27 +103,9 @@ function initialize_conditional($this, options)
 			loading = loading_more
 		}
 		
-		if (message)
-		{
-			if (message.уровень)
-			{
-				switch (message.уровень)
-				{
-					case 'ничего страшного':
-						error.html('<span class="nothing_serious">' + message.текст + '</span>')
-						break;
-				
-					default:
-						error.text(message.текст)
-				}
-			}
-			else
-			{
-				error.text(message)
-			}
-		}
-		else
-			error.text(error.attr('default_message'))
+		if (message && message != 'Произошла ошибка на сервере')
+			//message = error.attr('default_message')
+			error.empty().append(ошибка_на_экране(message))
 		
 		switch_elements(loading, error, function()
 		{

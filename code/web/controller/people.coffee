@@ -58,9 +58,6 @@ http.get '/люди', (ввод, вывод) ->
 				more_id_criteria = { $lt: люди[люди.length - 1]._id }
 				sort = 1
 				
-			console.log(люди)
-			console.log(more_id_criteria)
-				
 			хранилище.collection('people').find({ _id: more_id_criteria }, { limit: 1, sort: [['$natural', sort]] }).toArray @
 		
 		.сделать (ещё_люди) ->

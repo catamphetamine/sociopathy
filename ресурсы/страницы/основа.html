@@ -145,40 +145,14 @@
 		
 		<script src="/javascripts/socket.io.js"></script>
 				
-		<script>
-			var panel
-			var content
-			
-			var page_data
-			
-			$(document).on('fully_loaded', function()
-			{
-				content = $('#content')
-				document_fully_loaded()
-				
-				$.getScript('/javascripts/less.js', function()
-				{
-					panel = new Panel()
-					
-					$(document).trigger('styles_loaded')
-					
-					initialize_page()
-					
-					panel.page_initialized()
-				
-					page_loaded()
-					
-					check_browser_support()
-					
-					$('.non_selectable').disableTextSelect()
-					
-					go_to_anchor()
-				})
-			})
-		</script>
+		<link rel="stylesheet/less" href="/облик/личная карточка.css"/>
+		<link rel="stylesheet/less" href="/облик/поле поиска.css"/>
 	
 		<script src="/javascripts/режимы.js"></script> 
 		<script src="/javascripts/облик/подсказки.js"></script> 
+		
+		<script src="/javascripts/dynamic page content.js"></script>
+		<script src="/javascripts/облик/окошко входа.js"></script>
 		 
 		 <!-- не убирается в файл, так как less обрабатывает стили при загрузке страницы, поэтому был бы виден мусор -->
 		 <style>
@@ -188,7 +162,7 @@
 				top: 0;
 				left: 0;
 				
-				z-index: 1000;
+				z-index: 2;
 				
 				width: 100%;
 				height: 100%;
@@ -198,6 +172,14 @@
 				cursor: wait;
 				
 				text-align: center;
+				
+				font-family: Arial, sans-serif, Myriad Pro;
+				font-size: 30px;
+			}
+			
+			#loading_screen, #loading_screen .content .error.nothing_serious
+			{
+				color: #bfbfbf;
 			}
 			
 			#loading_screen[status=error]
@@ -205,28 +187,18 @@
 				cursor: default;
 			}
 			
-			.page_loading_error
-			{
-				text-align: center;
-				font-family: Georgia, Times New Roman, Minion Pro;
-				font-size: 30px;
-				/*color: #9c4646;*/
-				color: #3f3f3f;
-				position: relative;
-				top: 50%;
-				margin-top: -13px;
-			}
-			
-			/*
-			#loading_screen .text
+			#loading_screen .content .error
 			{
 				display: inline-block;
-				font-family: Helvetica, Arial, sans-serif;
-				font-size: 30px;
-				color: #afafaf;
-				opacity: 0;
+				color: #9c4646;
 			}
-			*/
+			
+			#loading_screen .content .loading
+			{
+				display: inline-block;
+				opacity: 0;
+				visibility: hidden;
+			}
 		</style>
 		 
 		<link rel="shortcut icon" href="/картинки/значок.png">
@@ -234,52 +206,11 @@
 
 	<body class="loading">
 		<div id="loading_screen">
-			<!--
-			<span class="text">Страница загружается</span>
-			-->
+			<div class="content">
+				<img class="loading" src="/картинки/страница загружается.png"/>
+				<span class="error" style="display: none">Возможно что-то сломалось</span>
+			</div>
 		</div>
-		
-		<script>
-			//$('#loading_screen').height($(document).height())
-			/*
-			$('#loading_screen .text').css
-			({
-				'margin-top': (($(window).height() - 30) / 2) + 'px',
-				opacity: 1
-			})
-			*/
-		</script>
-		
-		<script>
-			var пользователь = null
-			
-			var host = parseUri().host
-			var Options =
-			{
-				Upload_server_port: 8090,
-				Websocket_server: host + ':8080',
-				User_is_online_for: 8 * 60,
-				Book_shelf_size: 6,
-				Minimum_book_shelves: 3,
-				Video:
-				{
-					Icon:
-					{
-						Size:
-						{
-							Width: 640
-						}
-					},
-					Size:
-					{
-						Width: 560,
-						Height: 315
-					}
-				}
-			}
-			
-			//window.Options = Options
-		</script>
 				
 		<aside>
 			<nav>
@@ -310,9 +241,9 @@
 			</nav>
 		</aside>
 
-		<!-- Non-static content starts -->
-		<script src="/javascripts/non-static content.js"></script>
-		<!-- Non-static content ends -->
+		<div id="page"></div>
+		
+		<div class="margin_bug_fixer">&nbsp</div>
 				
 		<footer></footer>
 

@@ -12,7 +12,8 @@ var Batch_loader = new Class
 		before_done_output: function() {},
 		before_done_more_output: function() {},
 		get_id: function(object) { return object._id },
-		reverse: false
+		reverse: false,
+		Ajax: Ajax
 	},
 	
 	есть_ли_ещё: true,
@@ -24,6 +25,10 @@ var Batch_loader = new Class
 	{
 		this.setOptions(options)
 
+		if (page)
+			if (!this.options.Ajax)
+				this.options.Ajax = page.Ajax
+			
 		if (options.skip_pages)
 			this.page.number += options.skip_pages
 		
@@ -74,7 +79,7 @@ var Batch_loader = new Class
 		
 		data = Object.merge(this.options.parameters, data)
 		
-		Ajax.get(this.options.url, data)
+		this.options.Ajax.get(this.options.url, data)
 		.ошибка(function(ошибка)
 		{
 			callback(ошибка)
@@ -144,7 +149,7 @@ var Batch_loader = new Class
 			
 			if (!loader.есть_ли_ещё)
 				loader.options.finished()
-				
+			
 			loader.options.callback(null, function()
 			{			
 				if (is_first_batch)
@@ -213,13 +218,17 @@ var Data_loader = new Class
 	initialize: function(options)
 	{
 		this.setOptions(options)
+		
+		if (page)
+			if (!this.options.Ajax)
+				this.options.Ajax = page.Ajax
 	},
 
 	get: function(callback)
 	{
 		var loader = this
 		
-		Ajax.get(this.options.url, this.options.parameters)
+		this.options.Ajax.get(this.options.url, this.options.parameters)
 		.ошибка(function(ошибка)
 		{
 			callback(ошибка)
@@ -264,6 +273,11 @@ var Data_templater = new Class
 ({
 	initialize: function(options, loader)
 	{
+		if (page)
+			options.Ajax = options.Ajax || page.Ajax
+
+		options.Ajax = options.Ajax || Ajax
+	
 		var conditional = options.conditional
 		if (conditional.constructor === jQuery)
 			conditional = initialize_conditional(options.conditional)
@@ -313,6 +327,8 @@ var Data_templater = new Class
 				show_item(item, options)
 		}
 		
+		loader.options.Ajax = options.Ajax
+		
 		loader.options.callback = conditional.callback
 		loader.options.loading_more = conditional.loading_more
 		
@@ -345,7 +361,7 @@ var Data_templater = new Class
 		function load_template(template_url)
 		{
 			var deferred = $.Deferred()
-			Ajax.get(template_url, {}, { type: 'html' })
+			options.Ajax.get(template_url, {}, { type: 'html' })
 			.ошибка(function()
 			{
 				conditional.callback('Не удалось загрузить страницу')

@@ -12,7 +12,7 @@ var Scroller = new Class
 	
 	watching: function(element)
 	{
-		return this.elements.contains(element)
+		return this.elements.contains(element.node())
 	},
 	
 	watch: function(element, previous_top_offset_in_window)
@@ -20,14 +20,14 @@ var Scroller = new Class
 		if (typeof previous_top_offset_in_window === 'undefined')
 			previous_top_offset_in_window = $(window).height() + 1
 	
-		this.elements.push(element)
+		this.elements.push(element.node())
 		element.data('top_offset_in_window', previous_top_offset_in_window)
 		this.check_for_events(element)
 	},
 	
 	unwatch: function(element)
 	{
-		this.elements.erase(element)
+		this.elements.remove(element.node())
 	},
 	
 	reset: function(element)
@@ -38,7 +38,7 @@ var Scroller = new Class
 	{
 		this.elements.forEach(function(element)
 		{
-			this.check_for_events(element)
+			this.check_for_events($(element))
 		},
 		this)
 	},

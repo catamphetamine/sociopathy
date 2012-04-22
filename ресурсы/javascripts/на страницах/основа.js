@@ -1,130 +1,91 @@
-/**
- * Welcome page initialization
- */
+var first_time_page_loading = true
 
-var enter_window
+var пользователь = null
+			
+var panel
+var content
 
-var поле_имени
-var поле_пароля
-var кнопка_отмены
-var кнопка_входа
+var page
 
-var login_form
-
-// create dialog
-function initialize_enter_window()
+var host = parseUri().host
+var Options =
 {
-	enter_window = $("#enter_window").dialog_window
-	({
-		'close on escape': true,
-		'on open': function() { $('#enter_window input:first').focus() }
-	})
-	
-	поле_имени = enter_window.content.find('input').eq(0)
-	поле_пароля = enter_window.content.find('input').eq(1)
-	
-	enter_window.on_enter = function()
+	Upload_server_port: 8090,
+	Websocket_server: host + ':8080',
+	User_is_online_for: 8 * 60,
+	Book_shelf_size: 6,
+	Minimum_book_shelves: 3,
+	Video:
 	{
-		кнопка_входа.push()
+		Icon:
+		{
+			Size:
+			{
+				Width: 640
+			}
+		},
+		Size:
+		{
+			Width: 560,
+			Height: 315
+		}
 	}
-	
-	login_form = new Form(enter_window.content.find('form').eq(0))
-	
-	кнопка_отмены = activate_button('#enter_window .buttons .cancel', { 'prevent double submission': true, physics: 'quick pushing' })
-	.does(function() { enter_window.close() })	
-	
-	кнопка_входа = activate_button('#enter_window .buttons .enter', { 'prevent double submission': true })
-	.does(function() { войти({ имя: поле_имени.val(), пароль: поле_пароля.val() }) }).submits(login_form)
-	
-	enter_window.register_controls
-	(
-		login_form,
-		кнопка_отмены,
-		кнопка_входа
-	)
 }
 
-$(document).on('fully_loaded', function()
+$(function()
 {
-	initialize_enter_window()
-	    
-	function проверить_адрес_на_вход()
+	loading_page()
+
+	Page.element = $('#page')
+
+	подгрузить_шаблоны(function()
 	{
-		if (!пользователь)
-			if (get_hash() === "войти")
-				enter_window.open()
-	}
-	
-	проверить_адрес_на_вход()
-	//window.onhashchange = проверить_адрес_на_вход
-	
-	$('.enter').live('click', function(event)
-	{
-		event.preventDefault()
+		вставить_общее_содержимое(function()
+		{
+			navigate_to_page()
 		
-		if (!пользователь)
-			enter_window.open()
-	})
-		
-	$('.logout').click(function(event)
-	{
-		event.preventDefault()
-		выйти()
+			check_browser_support()
+		})
 	})
 })
 
-function войти(data)
+$(document).on('page_initialized', function()
 {
-	var loading = loading_indicator.show()
-	Ajax.post('/приложение/вход', data)
-	.ошибка(function(ошибка)
-	{
-		loading.hide()
-		error(ошибка)
-		поле_пароля.focus()
-		кнопка_входа.unlock({ force: true })
-	})
-	.ok(function(данные)
-	{ 
-		loading.hide()
-		enter_window.close()
-		
-		window.location.reload()
-	})
-}
+	ajaxify_internal_links(Page.element)
+})
 
-function выйти()
+$(document).on('page_loaded', function()
 {
-	var loading = loading_indicator.show()
-	Ajax.post('/приложение/выход')
-	.ошибка(function(ошибка)
+	var after_styles = function()
 	{
-		loading.hide()
-		error(ошибка)
-	})
-	.ok(function(данные)
-	{ 
-		loading.hide()
-		//window.location.reload()
-		window.location = '/'
-	})
-}
-
-Validation.вход =
-{
-	имя: function(имя, callback)
-	{
-		if (имя.length == 0)
-			return callback({ error: 'Введите ваше имя' })
+		page.load()
 			
-		callback()
-	},
+		ajaxify_internal_links()
 	
-	пароль: function(пароль, callback)
-	{
-		if (пароль.length == 0)
-			return callback({ error: 'Введите ваш пароль' })
-			
-		callback()
+		page_loaded()
+		
+		$('.non_selectable').disableTextSelect()
+		
+		go_to_anchor()
+		
+		navigating = false
 	}
-}
+	
+	if (first_time_page_loading)
+	{
+		$.getScript('/javascripts/less.js', function()
+		{
+			if (пользователь)
+				$('#logo').remove()
+		
+			panel = new Panel()
+			panel.highlight_current_page()
+			
+			after_styles()
+		})
+	}
+	else
+	{
+		Less.load_style(get_page_less_style_link(), after_styles)
+	}
+})

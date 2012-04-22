@@ -1,107 +1,123 @@
-Режим.пообещать('правка')
-	
-function initialize_page()
+(function()
 {
-	if (page_data.раздел)
-		title(раздел.название)
-	else
-		title('Читальня')
-
-	Подсказки.подсказка('В этом разделе вы можете читать и писать заметки на всевозможные темы.')
-
-	insert_search_bar_into($('#panel'))
-	$('.on_the_right_side_of_the_panel').css('right', $('#search').outerWidth(true) + parseInt($('#search').css('right')) + 'px')
-	
-	$('#categories').disableTextSelect()
-
-	var путь_к_разделу
-	var match = путь_страницы().match(/читальня\/(.+)/)
-	if (match)
-		путь_к_разделу = match[1]
+	Режим.пообещать('правка')
 		
-	new Data_templater
-	({
-		data:
-		{
-			подразделы:
-			{
-				template_url: '/страницы/кусочки/раздел читальни.html',
-				item_container: $('#categories'),
-				postprocess_element: function(item)
-				{
-					return $('<li/>').append(item)
-				}
-			},
-			заметки:
-			{
-				template_url: '/страницы/кусочки/заметка раздела читальни.html',
-				item_container: $('#articles'),
-				postprocess_element: function(item)
-				{
-					return $('<li/>').append(item)
-				}
-			}
-		},
-		conditional: $('#category_list_block[type=conditional]')
-	},
-	new  Data_loader
-	({
-		url: '/приложение/раздел читальни',
-		parameters: { путь: путь_к_разделу },
-		before_done_output: categories_loaded
-	}))
-
-	$(window).resize(center_categories_list)
-	center_categories_list()
-}
-
-function categories_loaded()
-{
-	Режим.разрешить('правка')
-}
-
-function center_categories_list()
-{
-	center_list($('#categories'), { space: $('#content'), item_width: 250, item_margin: 40 })
-}
-
-function path_breadcrumbs(path, delta)
-{
-	if (!delta)
-		delta = 0
-
-	var path_parts = path.split('/')
+	//var on_the_right_side_of_the_panel_right
 	
-	var path_html = ''
-	
-	var i = 0
-	var how_much = path_parts.length + delta
-	while (i < how_much)
+	page.load = function()
 	{
-		link_path = ''
-		
-		var j = 0
-		while (j <= i)
-		{
-			if (j > 0)
-				link_path += '/'
-			link_path += path_parts[j]
-			j++
-		}
+		if (!page.data.раздел)
+			title('Читальня')
 	
-		if (i < how_much - 1)
-			path_html += '<a href="/читальня/' + link_path + '">'
+		Подсказки.подсказка('В этом разделе вы можете читать и писать заметки на всевозможные темы.')
+	
+		//insert_search_bar_into($('#panel'))
 		
-		path_html += path_parts[i]
+		//on_the_right_side_of_the_panel_right = $('.on_the_right_side_of_the_panel').css('right')
+		//$('.on_the_right_side_of_the_panel').css('right', $('#search').outerWidth(true) + parseInt($('#search').css('right')) + 'px')
+		
+		$('#categories').disableTextSelect()
+	
+		var путь_к_разделу
+		var match = путь_страницы().match(/читальня\/(.+)/)
+		if (match)
+			путь_к_разделу = match[1]
 			
-		if (i < how_much - 1)
+		var conditional = initialize_conditional($('.main_conditional'))
+
+		function show_content()
 		{
-			path_html += '</a>'
-			path_html += ' → '
-		}
+			new Data_templater
+			({
+				data:
+				{
+					подразделы:
+					{
+						template_url: '/страницы/кусочки/раздел читальни.html',
+						item_container: $('#categories'),
+						postprocess_element: function(item)
+						{
+							return $('<li/>').append(item)
+						}
+					},
+					заметки:
+					{
+						template_url: '/страницы/кусочки/заметка раздела читальни.html',
+						item_container: $('#articles'),
+						postprocess_element: function(item)
+						{
+							return $('<li/>').append(item)
+						}
+					}
+				},
+				conditional: conditional
+			},
+			new  Data_loader
+			({
+				url: '/приложение/читальня/раздел',
+				parameters: { _id: page.data.раздел },
+				get_data: function(data)
+				{
+					title(data.раздел.название)
 			
-		i++
+					data.раздел.подразделы.forEach(function(подраздел)
+					{
+						if (путь_к_разделу)
+							подраздел.путь = путь_к_разделу + '/' + подраздел.название
+						else
+							подраздел.путь = подраздел.название
+					})
+					
+					data.раздел.заметки.forEach(function(заметка)
+					{
+						if (путь_к_разделу)
+							заметка.путь = путь_к_разделу + '/' + заметка.название
+						else
+							подраздел.путь = подраздел.название
+					})
+				
+					return data.раздел
+				},
+				before_done_output: categories_loaded
+			}))
+		
+			page.on($(window), 'resize.library', center_categories_list)
+			center_categories_list()
+		}
+		
+		if (!путь_к_разделу)
+			return show_content()
+				
+		var link = '/читальня'
+		var crumbs = [{ title: 'Читальня', link: link }]
+		
+		путь_к_разделу.split('/').forEach(function(раздел_или_заметка)
+		{
+			link += '/' + раздел_или_заметка
+			crumbs.push({ title: раздел_или_заметка , link: link })
+		})
+		
+		breadcrumbs
+		(crumbs,
+		show_content,
+		function() { conditional.callback('Не удалось получить данные') })
 	}
 	
-	return path_html
-}
+	page.unload = function()
+	{
+		//remove_search_bar()
+		//$('.on_the_right_side_of_the_panel').css('right', on_the_right_side_of_the_panel_right)
+	}
+	
+	function categories_loaded()
+	{
+		Режим.разрешить('правка')
+		
+		$(document).trigger('page_initialized')
+	}
+	
+	function center_categories_list()
+	{
+		center_list($('#categories'), { space: $('#content'), item_width: 250, item_margin: 40 })
+	}
+})()

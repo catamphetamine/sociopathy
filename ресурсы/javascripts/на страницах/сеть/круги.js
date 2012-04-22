@@ -1,42 +1,46 @@
-title('Круги')
-
-//Режим.пообещать('правка')
-//Режим.пообещать('действия')
-
-function initialize_page()
+(function()
 {
-	var conditional = initialize_conditional($('.main_conditional[type=conditional]'))
+	title('Круги')
 	
-	new Data_templater
-	({
-		template_url: '/страницы/кусочки/круг в списке кругов.html',
-		item_container: $('#circles'),
-		postprocess_element: function(item)
-		{
-			return $('<li/>').append(item)
-		},
-		conditional: conditional
-	},
-	new  Data_loader
-	({
-		url: '/приложение/пользователь/круги',
-		before_done_output: circles_loaded,
-		get_data: function(data)
-		{
-			var круги = []
+	//Режим.пообещать('правка')
+	//Режим.пообещать('действия')
+	
+	page.load = function()
+	{
+		var conditional = initialize_conditional($('.main_conditional'))
 		
-			Object.each(data.круги, function(value, key)
+		new Data_templater
+		({
+			template_url: '/страницы/кусочки/круг в списке кругов.html',
+			item_container: $('#circles'),
+			postprocess_element: function(item)
 			{
-				круги.push({ название: key, члены: value })
-			})
+				return $('<li/>').append(item)
+			},
+			conditional: conditional
+		},
+		new  Data_loader
+		({
+			url: '/приложение/пользователь/круги',
+			before_done_output: circles_loaded,
+			get_data: function(data)
+			{
+				var круги = []
 			
-			return круги
-		}
-	}))
-}
-
-function circles_loaded()
-{
-//	Режим.разрешить('правка')
-//	Режим.разрешить('действия')
-}
+				Object.each(data.круги, function(value, key)
+				{
+					круги.push({ название: key, члены: value })
+				})
+				
+				return круги
+			}
+		}))
+	}
+	
+	function circles_loaded()
+	{
+		$(document).trigger('page_initialized')
+	//	Режим.разрешить('правка')
+	//	Режим.разрешить('действия')
+	}
+})()

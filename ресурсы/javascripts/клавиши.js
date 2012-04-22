@@ -99,19 +99,19 @@ var Клавиши =
 		if (keys.contains('Ctrl'))
 		{
 			ctrl = true
-			keys.erase('Ctrl')
+			keys.remove('Ctrl')
 		}
 			
 		if (keys.contains('Alt'))
 		{
 			alt = true
-			keys.erase('Alt')
+			keys.remove('Alt')
 		}
 			
 		if (keys.contains('Shift'))
 		{
 			shift = true
-			keys.erase('Shift')
+			keys.remove('Shift')
 		}
 
 		if (ctrl)

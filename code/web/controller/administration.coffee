@@ -210,6 +210,7 @@ http.post '/хранилище/заполнить', (ввод, вывод) ->
 	return if пользовательское.требуется_вход(ввод, вывод)
 	
 	человек = null
+	разделы = null
 	
 	цепь(вывод)
 		.сделать ->
@@ -615,7 +616,7 @@ http.post '/хранилище/заполнить', (ввод, вывод) ->
 			хранилище.createCollection 'library_categories', @
 			
 		.сделать ->
-			хранилище.collection('library_categories').ensureIndex 'путь', yes, @
+			хранилище.collection('library_categories').ensureIndex 'id', yes, @
 			
 		.сделать ->
 			хранилище.collection('library_categories').ensureIndex 'надраздел', no, @
@@ -625,9 +626,9 @@ http.post '/хранилище/заполнить', (ввод, вывод) ->
 			for название in [ 'Физика', 'Строительство', 'Механизация', 'Словесность', 'Власть', 'Душеведение', 'Общество', 'Летопись' ]
 				разделы.push
 					название: название
-					'путь': название
+					id: название
 					
-			@ null, разделы
+			@.done(разделы)
 			
 		.все_вместе (раздел) ->
 			хранилище.collection('library_categories').save раздел, @
@@ -638,12 +639,51 @@ http.post '/хранилище/заполнить', (ввод, вывод) ->
 		.сделать (физика) ->
 			электромагнетизм = 
 				название: 'Электромагнетизм'
-				'путь': 'Физика/Электромагнетизм'
+				id: 'Электромагнетизм'
 				надраздел: физика._id
 				style_classes: 'smaller'
 			
 			хранилище.collection('library_categories').save электромагнетизм, @
 
+		# пути разделов и заметок
+			
+		.сделать ->
+			хранилище.collection('library_paths').drop @
+					
+		.ошибка (ошибка) ->
+			if ошибка.message == 'ns not found'
+				return no
+			console.error ошибка
+			вывод.send ошибка: ошибка
+				
+		.сделать ->
+			хранилище.createCollection 'library_paths', @
+
+		.сделать ->
+			хранилище.collection('library_paths').ensureIndex 'путь', yes, @
+
+		.сделать ->
+			хранилище.collection('library_paths').ensureIndex 'раздел', no, @
+
+		.сделать ->
+			хранилище.collection('library_paths').ensureIndex 'заметка', no, @
+			
+		# заполнить пути разделов
+
+		.сделать ->
+			хранилище.collection('library_categories').find({ название: { $ne: 'Электромагнетизм' }}).toArray @
+			
+		.все_вместе (раздел) ->
+			хранилище.collection('library_paths').save({ путь: раздел.название, раздел: раздел._id }, @)
+		
+		.сделать ->
+			хранилище.collection('library_categories').findOne({ название: 'Электромагнетизм' }, @)
+			
+		.сделать (раздел) ->
+			хранилище.collection('library_paths').save({ путь: 'Физика/Электромагнетизм', раздел: раздел._id, разделы: [раздел.надраздел] }, @)
+	
+		# черновики заметок
+			
 		.сделать ->
 			хранилище.collection('library_article_drafts').drop @
 					
@@ -662,6 +702,8 @@ http.post '/хранилище/заполнить', (ввод, вывод) ->
 		.сделать ->
 			хранилище.collection('library_article_drafts').ensureIndex '_id человека', yes, @
 
+		# заметки
+			
 		.сделать ->
 			хранилище.collection('library_articles').drop @
 					
@@ -675,11 +717,13 @@ http.post '/хранилище/заполнить', (ввод, вывод) ->
 			хранилище.createCollection 'library_articles', @
 
 		.сделать ->
-			хранилище.collection('library_articles').ensureIndex 'путь', yes, @
+			хранилище.collection('library_articles').ensureIndex 'id', yes, @
 
 		.сделать ->
 			хранилище.collection('library_articles').ensureIndex 'раздел', no, @
 
+		# заметка
+			
 		.сделать () ->
 			хранилище.collection('library_categories').findOne { название: 'Физика' }, @
 			
@@ -706,12 +750,20 @@ http.post '/хранилище/заполнить', (ввод, вывод) ->
 			
 			материальная_точка = 
 				название: 'Материальная точка'
-				путь: 'Физика/Материальная точка'
+				id: 'Материальная точка'
 				раздел: физика._id
 				содержимое: заметка
 			
 			хранилище.collection('library_articles').save материальная_точка, @
 			
+		# заполнить пути заметок
+
+		.сделать ->
+			хранилище.collection('library_articles').findOne({}, @)
+			
+		.сделать (заметка) ->
+			хранилище.collection('library_paths').save({ путь: 'Физика/Материальная точка', заметка: заметка._id, разделы: [заметка.раздел] }, @)
+				
 		# заполнить болталку
 			
 		.сделать ->

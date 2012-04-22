@@ -30,13 +30,20 @@ class Цепь
 							[].where_am_i()
 							throw 'no web output'
 						@обработчик_ошибок_по_умолчанию = (ошибка) ->
+							данные_ошибки = 
+								ошибка: ошибка.error
+							
+							if ошибка.options?
+								данные_ошибки.уровень = ошибка.options.уровень
+								
 							if ошибка.display_this_error?
-								console.error ошибка.error
-								вывод.send ошибка: ошибка.error
+								console.error(ошибка.error)
+								вывод.send(данные_ошибки)
 							else
 								ошибка = снасти.ошибка(ошибка)
-								console.error ошибка
-								вывод.send ошибка: yes
+								console.error(ошибка)
+								данные_ошибки.ошибка = yes
+								вывод.send(данные_ошибки)
 					when 'websocket'
 						соединение = arguments[1]
 						@обработчик_ошибок_по_умолчанию = (ошибка) ->
@@ -143,10 +150,12 @@ class Цепь
 				return @callback(null, result)
 			функция_возврата(null, result)
 		
-		функция_возврата.error = (error) =>
+		функция_возврата.error = (error, options) =>
+			if not error?
+				error = 'Произошла ошибка на сервере'
 			if @callback?
 				return @callback(error)
-			функция_возврата({ error: error, display_this_error: true })
+			функция_возврата({ error: error, display_this_error: true, options: options })
 		
 		функция_возврата
 		

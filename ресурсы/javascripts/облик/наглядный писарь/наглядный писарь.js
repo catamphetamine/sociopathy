@@ -30,9 +30,14 @@ var Visual_editor = new Class
 		//this.disable_context_menu()
 		this.disable_tab()
 		
-		if (!page_data.visual_editors)
-			page_data.visual_editors = []
-		page_data.visual_editors.push(this)		
+		if (!page.data.visual_editors)
+			page.data.visual_editors = []
+		page.data.visual_editors.push(this)		
+	},
+	
+	unload: function()
+	{
+		this.unload_tools()
 	},
 	
 	activate_tools_inside_content: function()

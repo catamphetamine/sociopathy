@@ -43,22 +43,16 @@ var Panel = new Class
 			if (!title)
 				return
 			
-			// tooltip text
-			var text_node = $menu_item.contents()
+			// tooltip
+			$('<em/>').append($menu_item.contents()).appendTo($menu_item)
 
 			// place the panel menu item
-			var $hyperlink = $("<a/>")
-			$hyperlink.appendTo($menu_item)
+			var $hyperlink = $('<a/>')
 			$hyperlink.addClass('image')
-			
+			$hyperlink.prependTo($menu_item)
+
 			if (link)
 				$hyperlink.attr('href', link)
-			
-			// tooltip
-			$menu_item.append("<em></em>")
-			
-			// place the tooltip text
-			$("em", $menu_item).append(text_node)
 			
 			// activate panel menu item fading
 			var button = new image_button
@@ -112,7 +106,7 @@ var Panel = new Class
 			}
 			
 			tooltip.addClass('panel_menu_tooltip')
-			$(document).find('body').append(tooltip)
+			$('body').append(tooltip)
 			
 			tooltip.data('menu item', menu_item)
 			panel.buttons[menu_item.parent().attr('name')].tooltip = tooltip
@@ -172,10 +166,12 @@ var Panel = new Class
 		$('#panel').children().disableTextSelect()
 	},
 	
-	page_initialized: function()
+	highlight_current_page: function()
 	{
-		
 		var panel = this
+		
+		var previously_highlighted_menu_item = panel.highlighted_menu_item
+		
 		function check_for_current_page(options)
 		{
 			if (options.page)
@@ -185,15 +181,50 @@ var Panel = new Class
 			if (options.page_pattern)
 				if (!Страница.matches(options.page_pattern))
 					return
-					
+			
+			if (previously_highlighted_menu_item && options.button === previously_highlighted_menu_item)
+				return
+			
 			panel.toggle_buttons
 			({
-				hide: { button: { title: options.button } },
-				show: { button: { title: options.button + ' (выбрано)' } }
+				hide:
+				{
+					button: { title: options.button },
+					fade_in_duration: 0,
+					fade_out_duration: 1
+				},
+				show:
+				{
+					button: { title: options.button + ' (выбрано)' },
+					fade_in_duration: 0.1,
+					fade_out_duration: 0.1
+				},
+				//fade: true
 			})
+			
+			panel.highlighted_menu_item = options.button
+			
+			if (previously_highlighted_menu_item)
+				panel.toggle_buttons
+				({
+					hide:
+					{
+						button: { title: previously_highlighted_menu_item + ' (выбрано)' },
+						fade_in_duration: 0.1,
+						fade_out_duration: 0.1
+					},
+					show:
+					{
+						button: { title: previously_highlighted_menu_item },
+						fade_in_duration: 0,
+						fade_out_duration: 1
+					},
+					//fade: true
+				})
 		}
 		
 		check_for_current_page({ page: 'читальня', button: 'читальня' })
+		check_for_current_page({ page: 'заметка', button: 'читальня' })
 		check_for_current_page({ page: 'люди', button: 'люди' })
 		check_for_current_page({ page: 'человек/человек', button: 'люди' })
 		check_for_current_page({ page_pattern: 'помощь(/.*)?', button: 'помощь' })
@@ -222,8 +253,6 @@ var Panel = new Class
 		
 		hide_button.parent().append(show_button)
 		
-		this.buttons[options.show.button.title].tooltip.update_position()
-		
 		var activate = function(these_options)
 		{
 			options = Object.merge(options, these_options)
@@ -240,6 +269,8 @@ var Panel = new Class
 				show_button.fade_in(options.show.fade_in_duration)
 				hide_button.fade_out(options.hide.fade_out_duration)
 			}
+		
+			panel.buttons[options.show.button.title].tooltip.update_position()
 		}
 		
 		var deactivate = function(these_options)
@@ -267,7 +298,8 @@ var Panel = new Class
 		}
 		else
 		{
-			options.immediate = true
+			if (!options.fade)
+				options.immediate = true
 			activate()
 		}
 	},

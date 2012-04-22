@@ -1,31 +1,3 @@
-// internationalization
-$.i18n.setLocale("ru")
-
-if (!$.fn.prop)
-	$.fn.prop = $.fn.attr
-
-// dimensions
-
-function get_page_height()
-{
-	return $(document).height();
-}
-
-function get_page_width()
-{
-	return $(document).width();
-}
-	
-function get_viewport_height()
-{
-	return $(window).height();
-}
-
-function get_viewport_width()
-{
-	return $(window).width();
-}
-
 function get_scroll_x() 
 {
 	if (document.documentElement && document.documentElement.scrollLeft)
@@ -77,127 +49,56 @@ function get_scroll_position()
 }
 
 /**
- * disables page scrolling
- */
-
-var namespace = 'main'
-
-function disable_scroll()
-{
-	$(window).on('scroll.' + namespace, {scroll_position: get_scroll_position()}, function(event) 
-	{
-		window.scrollTo(event.data.scroll_position.x, event.data.scroll_position.y)
-    	return false
-	})
-}
-
-/**
- * enables page scrolling
- */
-function enable_scroll()
-{
-	$(window).unbind('scroll.' + namespace)
-}
-
-/**
- * centers elements vertically
- */
-
-var content_top_padding = 0 // will be computed on document load
-
-$(function()
-{
-	content_top_padding = $('#panel').height()
-	$('#content_top_padding').height(content_top_padding)
-})
-
-function center_horizontally()
-{
-	$('[center~="horizontally"]').each(function()
-	{
-		var $element = $(this)
-		var position = $element.css('position')
-		
-		switch (position)
-		{
-			case 'absolute':
-				$element.css('left', parseInt(($(window).width() - $element.width()) / 2) + 'px')
-				return
-				
-			case 'relative':
-				var pixels = parseInt(($(window).width() - $element.width()) / 2)
-				$element.css('left', pixels + 'px')
-				$element.css('margin-right', '-' + pixels + 'px')
-				return
-				
-			default:
-				if ($element.attr('class'))
-					var classes =  '.' + $element.attr('class')
-				else
-					var classes =  ''
-				
-				alert('Unable to center ' + $element.get(0).tagName.toLowerCase() + '#' + $element.attr('id') + classes + ' horizontally')
-				return
-		}		
-	})
-}
-
-$(window).resize(center_horizontally)
-
-/*
-function center_vertically()
-{
-	$(".middle").each(function()
-	{
-		var $element = $(this)
-		
-		var parent_height = parseInt($element.parent().height())
-		var height = parseInt($element.height())
-		
-		if (parent_height <= height)
-		{
-			$element.css({ top: 'auto' })
-			return
-		}
-
-		var content_padding_amendment = 0
-		
-		if ($element.prop('parent') === 'content')
-			content_top_padding
-		
-		$element.css
-		({
-			top: Math.round((parent_height - content_padding_amendment - height) / 2) + 'px'
-		})
-	})
-}
-*/
-
-//$(window).resize(center_vertically)
-
-/**
  * show loading screen
+ */
 function loading_page()
 {
-	$("body").css({ height: '100%', overflow: 'hidden' })
+	if (!first_time_page_loading)
+	{
+		$('aside').css('z-index', 2)
+		$('.on_the_right_side_of_the_panel').css('z-index', 2)
+	}
+		
+	var loading_screen = $('#loading_screen')
+	
+	if (first_time_page_loading)
+		loading_screen.height($(document).height())
+	else
+		loading_screen.height($(document).height() - $('#panel').height())
+	
+	loading_screen.find('> .content').css
+	({
+		'margin-top': (($(window).height() - 30) / 2) + 'px'
+	})
+	
+	loading_screen.find('.loading').fade_in(2.0, { maximum_opacity: 0.5 })
+	
+	loading_screen.fade_in(0.2)
+	$('body').addClass('loading')
+		
+	return function()
+	{
+		loading_screen.stop_animator().fade_in(0)
+	}
 }
- */
 
 /**
  * hide loading screen
  */
 function page_loaded()
 {
-	$('#loading_screen').fadeOut(300, function() { $('#loading_screen').remove() })
-	//$("body").css({ overflow: 'auto' })
-	$('body').removeClass('loading')
-	
-	//var $content = $('#content')
-	//$content.height((parseInt($content.height()) - parseInt($content.css('padding-top'))) + 'px')
-}
+	if (first_time_page_loading)
+		first_time_page_loading = false
 
-// placeholder - will be overridden
-function initialize_page() {}
+	var loading_screen = $('#loading_screen')
+	
+	loading_screen.fade_out(0.2, function()
+	{
+		loading_screen.find('.loading').stop_animator().fade_out(0)
+	})
+	
+	$('body').removeClass('loading')
+}
 
 // get jQuery element
 function get_element(selector_or_element)
@@ -285,11 +186,10 @@ function go_to_anchor()
 		return
 
 	var header
-	var container = $('#content');
 	
 	['h1', 'h2', 'h3', 'h4', 'h5', 'h6'].forEach(function(tag)
 	{
-		container.find(tag).each(function()
+		content.find(tag).each(function()
 		{
 			if (header)
 				return
@@ -313,39 +213,27 @@ function go_to_anchor()
 function add_anchor_to_url(anchor)
 {
 	window.location.hash = anchor
-	return
 	
+	/*
 	var hash_index = window.location.indexOf('#')
 	if (hash_index)
 		window.location = window.location.substring(0, hash_index) + '#' + anchor
 	else
 		window.location = window.location + '#' + anchor
+	*/
 }
 
-$(document).on('fully_loaded', function()
+$(document).on('page_loaded', function()
 {
-	var container = $('#content');
-	
 	['h1', 'h2', 'h3', 'h4', 'h5', 'h6'].forEach(function(tag)
 	{
-		container.find(tag).each(function()
+		content.find(tag).each(function()
 		{
 			var element = $(this)
 			if (element.children().length > 0)
 				return
 			
-			/*	
-			if (element[0].tagName.toLowerCase() !== 'h2')
-			{
-				element.css('display', 'inline')
-				
-				var dummy = $('<div></div>')
-				dummy.disableTextSelect()
-				element.after(dummy)				
-			}
-			*/
-			
-			element.click(function(event)
+			element.on('click.page', function(event)
 			{
 				event.preventDefault()
 				
@@ -471,9 +359,11 @@ $(function()
 		body.addClass('webkit')
 })
 
-function путь_страницы()
+function путь_страницы(url)
 {
-	var путь = parseUri(decodeURI(window.location)).path.substring(1)
+	url = url || window.location
+	
+	var путь = parseUri(decodeURI(url)).path.substring(1)
 	
 	var hash_index = путь.indexOf('#')
 	if (hash_index >= 0)
@@ -561,13 +451,11 @@ function title(text)
 	document.title = text
 }
 
-function document_fully_loaded() {}
-
 function breadcrumbs(path, on_ok, on_error)
 {
 	var template_url = '/страницы/кусочки/breadcrumbs.html'
 
-	Ajax.get(template_url, {}, { type: 'html' })
+	page.Ajax.get(template_url, {}, { type: 'html' })
 	.ошибка(function()
 	{
 		on_error()
@@ -594,12 +482,12 @@ function initialize_body_edit_mode_effects()
 	var background_fade_time = dummy_div.transition_duration() * 1000
 	var edit_mode_background_color = dummy_div.css('background-color')
 	
-	$(document).on('режим.правка', function()
+	page.on($(document), 'режим.правка', function()
 	{
 		$('body').stop(true, false).animate({ 'background-color': edit_mode_background_color }, background_fade_time)
 	})
 
-	$(document).on('режим.переход', function(event, из, в)
+	page.on($(document), 'режим.переход', function(event, из, в)
 	{
 		if (из === 'правка')
 		{
@@ -620,4 +508,54 @@ function set_new_url(url, title, data)
 	title = title || window.title
 	data = data || {}
 	window.history.pushState(data, title, url)
+}
+
+function ajaxify_internal_links(where)
+{
+	if (!where)
+		where = $('body')
+		
+	where.find('a').each(function()
+	{
+		var link = $(this)
+		var url = link.attr('href')
+		
+		if (!url.starts_with('/'))
+			return
+			
+		if (link.data('ajaxified'))
+			return
+			
+		if (link.attr('dummy'))
+			return
+			
+		link.click(function(event)
+		{
+			event.preventDefault()
+			
+			navigate_to_page(url,
+			{
+				before: function() { set_new_url(url) }
+			})
+		})
+		
+		link.data('ajaxified', true)
+	})
+}
+
+var класс_ошибки_по_уровню = function(уровень)
+{
+	switch (уровень)
+	{
+		case 'ничего страшного':
+			return 'nothing_serious'
+	}
+}
+
+var ошибка_на_экране = function(ошибка)
+{
+	if (!ошибка.текст)
+		return $('<span/>').text(ошибка)
+		
+	return $('<span/>').addClass(класс_ошибки_по_уровню(ошибка.уровень)).text(ошибка.текст)
 }

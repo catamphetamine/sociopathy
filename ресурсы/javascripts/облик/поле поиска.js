@@ -8,9 +8,18 @@ function insert_search_bar_into($element)
 		'</span>'
 	)
 	
+	// if it wasn't removed
 	$('#logo').hide()
 	
 	initialize_search_bar()
+}
+
+function remove_search_bar()
+{
+	// if it wasn't removed
+	$('#logo').show()
+	
+	$('#search').remove()
 }
 
 function initialize_search_bar()

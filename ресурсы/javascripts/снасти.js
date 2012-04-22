@@ -22,6 +22,20 @@ var Ajax =
 	
 	request: function(method, url, data, options)
 	{
+		//var id = Math.random() + '@' + new Date().getTime()
+		var result =
+		{
+			valid: true,
+			expired: function()
+			{
+				return !this.valid
+			},
+			expire: function()
+			{
+				this.valid = false
+			}
+		}
+	
 		options = options || {}
 		
 		options.type = options.type || 'json'
@@ -48,59 +62,63 @@ var Ajax =
 		
 		var on_error = default_on_error
 		
-		var result =
+		result.ok = function(ok)
 		{
-			ok: function(ok)
+			var on_ok = function(data)
 			{
-				var on_ok = function(data)
-				{
-					if ($.isFunction(ok))
-						ok(data)
-					else if (typeof(ok) === 'string')
-						info(ok)
-					else
-						error('Неправильная настройка ok: ' + ok)
-				}
-				
-				ajax.success(function(data, textStatus)
-				{
-					if (data.ошибка)
-					{
-						var message = data.ошибка
-						if (message == true)
-							message = Default_ajax_error_message
-						return on_error(message)
-					}
-					
-					on_ok(data)
-				})
-				
-				return result
-			},
-			ошибка: function(ошибка)
-			{
-				on_error = function(сообщение)
-				{
-					if (сообщение === 'Internal Server Error')
-						сообщение = Default_ajax_error_message
-					
-					if ($.isFunction(ошибка))
-						ошибка(сообщение)
-					else if (сообщение && typeof сообщение === 'string')
-						error(сообщение)
-					else if (typeof ошибка === 'string')
-						error(ошибка)
-					else
-						default_on_error()
-				}
-				
-				ajax.error(function(jqXHR, textStatus, errorThrown)
-				{
-					on_error(errorThrown)
-				})
-				
-				return result
+				if ($.isFunction(ok))
+					ok(data)
+				else if (typeof(ok) === 'string')
+					info(ok)
+				else
+					error('Неправильная настройка ok: ' + ok)
 			}
+			
+			ajax.success(function(data, textStatus)
+			{
+				if (result.expired())
+					return
+			
+				if (data.ошибка)
+				{
+					var message = data.ошибка
+					if (message == true)
+						message = Default_ajax_error_message
+					return on_error(message, data.уровень)
+				}
+				
+				on_ok(data)
+			})
+			
+			return result
+		}
+		
+		result.ошибка = function(ошибка)
+		{
+			if (result.expired())
+				return
+				
+			on_error = function(сообщение, уровень)
+			{
+				if (сообщение === 'Internal Server Error')
+					сообщение = Default_ajax_error_message
+				
+				if ($.isFunction(ошибка))
+					ошибка(сообщение, уровень)
+				else if (сообщение && typeof сообщение === 'string')
+					error(сообщение)
+				else if (typeof ошибка === 'string')
+					error(ошибка)
+				else
+					default_on_error()
+			}
+			
+			ajax.error(function(jqXHR, textStatus, errorThrown)
+			{
+				on_error(errorThrown)
+			})
+			
+			return result
 		}
 		
 		return result
@@ -396,6 +414,7 @@ function update_intelligent_dates()
 	})
 }
 
+/*
 function получить_шаблон(options, callback)
 {
 	Ajax.get(options.url, {}, { type: 'html' })
@@ -413,6 +432,7 @@ function получить_шаблон(options, callback)
 		callback()
 	})
 }
+*/
 
 function get_image(url, callback)
 {
@@ -525,7 +545,10 @@ function match_url(url, start, patterns)
 function center_list(list, options)
 {
 	if (list.css('position') !== 'relative')
-		return alert('list position must be relative')
+	{
+		console.log(list)
+		throw 'centered list position must be relative'
+	}
 		
 	function calculate_width(count)
 	{
@@ -609,4 +632,38 @@ function inscribe(options)
 	}
 	
 	return result
+}
+
+Array.prototype.remove = function(element)
+{
+	var i = 0
+	while (i < this.length)
+	{
+		if (this[i] === element)
+		{
+			this.splice(i, 1)
+			continue
+		}
+		
+		i++
+	}
+}
+
+Array.prototype.debug = function()
+{
+	console.log('---')
+	
+	if (!this.length)
+		console.log('< empty >')
+
+	var i = 0
+	while (i < this.length)
+	{
+		console.log(i + ':')
+		console.log(this[i])
+		
+		i++
+	}
+	
+	console.log('---')
 }

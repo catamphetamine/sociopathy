@@ -252,7 +252,7 @@ var button = new Class
 		{
 			this.unlock = (function()
 			{
-				button.locks.erase(this)
+				button.locks.remove(this)
 				
 				if (button.locks.is_empty())
 					if (button.is_rolled_over)

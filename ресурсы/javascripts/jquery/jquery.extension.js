@@ -156,7 +156,7 @@ $.fn.slide_in_from_top = function(duration, easing, callback)
 			callback)
 			
 		default:
-			throw 'Unsupported css position: ' + this.css('position')
+			throw 'Unsupported css position: ' + this.css('position') + ', for element ' + this.outer_html()
 	}
 }
 
@@ -179,7 +179,7 @@ $.fn.move_out_upwards = function(duration)
 			})
 	
 		default:
-			throw 'Unsupported css position: ' + this.css('position')
+			throw 'Unsupported css position: ' + this.css('position') + ', for element ' + this.outer_html()
 	}
 }
 
@@ -221,7 +221,7 @@ $.fn.slide_out_upwards = function(duration)
 			duration)
 	
 		default:
-			throw 'Unsupported css position: ' + this.css('position')
+			throw 'Unsupported css position: ' + this.css('position') + ', for element ' + this.outer_html()
 	}
 }
 
@@ -266,7 +266,7 @@ $.fn.slide_in_from_bottom = function(duration, easing, callback)
 			callback)
 			
 		default:
-			throw 'Unsupported css position: ' + this.css('position')
+			throw 'Unsupported css position: ' + this.css('position') + ', for element ' + this.outer_html()
 	}
 }
 
@@ -301,6 +301,13 @@ $.fn.stop_animation = function()
 {
 	if (this.is(":animated")) 
 		this.stop(true /* clear queue */, false /* don't jump to queue end */)
+	return this
+}
+
+$.fn.stop_animator = function()
+{
+	if (this.length > 0)
+		animator.stop(this)
 	return this
 }
 
@@ -495,6 +502,11 @@ $.fn.belongs_to = function(parent)
 $.fn.exists = function()
 {
 	return this.length > 0
+}
+
+$.fn.node = function()
+{
+	return this[0]
 }
 
 $.fn.transition_duration = function()

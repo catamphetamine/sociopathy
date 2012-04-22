@@ -1,3 +1,9 @@
+// internationalization
+//$.i18n.setLocale("ru")
+
+//if (!$.fn.prop)
+//	$.fn.prop = $.fn.attr
+	
 /**
  * jQuery i18n, 
  * Copyright under the MIT license http://www.opensource.org/licenses/mit-license.php

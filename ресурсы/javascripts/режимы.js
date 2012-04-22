@@ -71,7 +71,20 @@ var Режим = (function()
 		
 		if (в === 'правка' && !пользователь)
 		{
-			info('Вы не можете сейчас ничего править, так как вы не вошли в нашу сеть. Если вы являетесь членом нашей сети, <a href=\'#войти\'  class=\'enter\'>войдите</a>. Если же вы не являетесь членом нашей сети, вы можете попробовать <a href=\'http://localhost:8081/прописка\'>прописаться</a>.')
+			var options =
+			{
+				process: function(element)
+				{
+					element.find('.enter').on('click', function(event)
+					{
+						event.preventDefault()
+						
+						if (!пользователь)
+							enter_window.open()
+					})
+				}
+			}
+			info('Вы не можете сейчас ничего править, так как вы не вошли в нашу сеть. Если вы являетесь членом нашей сети, <a href=\'#войти\'  class=\'enter\'>войдите</a>. Если же вы не являетесь членом нашей сети, вы можете попробовать <a href=\'http://localhost:8081/прописка\'>прописаться</a>.', options)
 			return false
 		}
 
@@ -165,7 +178,7 @@ var Режим = (function()
 	
 	$(function() 
 	{
-		$(document).keydown(function(event) 
+		$(document).on('keydown', function(event) 
 		{
 			if (Клавиши.is('Ctrl', 'Shift', 'Digit_1', event))
 				return перейти_в_режим('обычный')
@@ -175,17 +188,6 @@ var Режим = (function()
 				
 			if (Клавиши.is('Ctrl', 'Shift', 'Digit_5', event))
 				return перейти_в_режим('действия')
-				
-			/*
-			if (Клавиши.is('Ctrl', 'Shift', 'Digit_4', event))
-				return alert('test')
-				
-			if (Клавиши.is('Ctrl', 'Shift', 'Digit_5', event))
-				return alert('test')
-				
-			if (Клавиши.is('Ctrl', 'Shift', 'Digit_6', event))
-				return alert('test')
-			*/
 		})
 	})
 	

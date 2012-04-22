@@ -73,7 +73,7 @@ var Message =
 		
 		remove: function($element)
 		{
-			this.messages.erase($element)
+			this.messages.remove($element)
 			this.check()
 		},
 		
@@ -180,6 +180,9 @@ var Message =
 		
 		var message_itself = $('<div class="popup_panel"/>').html(text)
 		
+		if (options.process)
+			options.process(message_itself)
+		
 		var message = $('<div class="popup_panel_container"/>')
 		message.addClass('popup_message')
 		message.addClass(type)
@@ -258,7 +261,7 @@ function error(text) { Message.error(text) }
 
 // testing
 /*
-$(document).on('fully_loaded', function()
+$(document).on('page_loaded', function()
 {
 	setTimeout(function()
 	{

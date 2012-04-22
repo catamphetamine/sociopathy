@@ -1,90 +1,93 @@
-title('Книги. ' + адресное_имя)
-
-Режим.пообещать('правка')
-Режим.пообещать('действия')
-
-function initialize_page()
+(function()
 {
-	var conditional = initialize_conditional($('.main_conditional[type=conditional]'))
+	title('Книги. ' + page.data.адресное_имя)
 	
-	new Data_templater
-	({
-		template_url: '/страницы/кусочки/книжный шкаф.html',
-		item_container: $('.bookshelf_container'),
-		/*
-		postprocess_element: function(item)
-		{
-			return $('<li/>').append(item)
-		},
-		*/
-		conditional: conditional
-	},
-	new  Data_loader
-	({
-		url: '/приложение/человек/книги',
-		parameters: { 'адресное имя': адресное_имя },
-		before_done_output: books_loaded,
-		done: books_shown,
-		get_data: function(data)
-		{
-			var books = data.книги
-			
-			while (books.length % Options.Book_shelf_size > 0
-					|| books.length < Options.Book_shelf_size * Options.Minimum_book_shelves)
-			{
-				books.push({})
-			}
-			
-			var shelves = []
-			
-			while (books.length > Options.Book_shelf_size)
-			{
-				shelves.push({ books: books.splice(0, Options.Book_shelf_size) })
-			}
-			
-			shelves.push({ books: books })
-			
-			return { shelves: shelves }
-		}
-	}))
-}
-
-function books_loaded()
-{
-	$('.bookshelf_container .book_place').css('opacity', 0)
-}
-
-function books_shown()
-{
-	$('.book.no_icon .author').fill_with_text()
-	$('.book.no_icon .title').fill_with_text({ 'center vertically': true })
+	Режим.пообещать('правка')
+	Режим.пообещать('действия')
 	
-	$('.book_place .book_info').each(function()
+	page.load = function()
 	{
-		var info = $(this)
-		var book_place = info.parent()
+		var conditional = initialize_conditional($('.main_conditional'))
 		
-		info.css
+		new Data_templater
 		({
-			left: -parseInt((info.outerWidth() - book_place.width()) / 2) + 'px',
-			top: parseInt(book_place.height() * 0.9) + 'px'
-		})
-		
-		info.css('opacity')
-		
-		info.hide()
-		
-		activate_popup
+			template_url: '/страницы/кусочки/книжный шкаф.html',
+			item_container: $('.bookshelf_container'),
+			/*
+			postprocess_element: function(item)
+			{
+				return $('<li/>').append(item)
+			},
+			*/
+			conditional: conditional
+		},
+		new  Data_loader
 		({
-			activator: book_place.find('.book'),
-			popup: info,
-			fade_in_duration: 0.1,
-			fade_out_duration: 0.1
-		})
-	})
+			url: '/приложение/человек/книги',
+			parameters: { 'адресное имя': page.data.адресное_имя },
+			before_done_output: books_loaded,
+			done: books_shown,
+			get_data: function(data)
+			{
+				var books = data.книги
+				
+				while (books.length % Options.Book_shelf_size > 0
+						|| books.length < Options.Book_shelf_size * Options.Minimum_book_shelves)
+				{
+					books.push({})
+				}
+				
+				var shelves = []
+				
+				while (books.length > Options.Book_shelf_size)
+				{
+					shelves.push({ books: books.splice(0, Options.Book_shelf_size) })
+				}
+				
+				shelves.push({ books: books })
+				
+				return { shelves: shelves }
+			}
+		}))
+	}
 	
-	$('.bookshelf_container .book_place').animate({ opacity: 1 }, 500)
+	function books_loaded()
+	{
+		$('.bookshelf_container .book_place').css('opacity', 0)
+	}
+	
+	function books_shown()
+	{
+		$('.book.no_icon .author').fill_with_text()
+		$('.book.no_icon .title').fill_with_text({ 'center vertically': true })
 		
-	Режим.разрешить('правка')
-	Режим.разрешить('действия')
-}
+		$('.book_place .book_info').each(function()
+		{
+			var info = $(this)
+			var book_place = info.parent()
+			
+			info.css
+			({
+				left: -parseInt((info.outerWidth() - book_place.width()) / 2) + 'px',
+				top: parseInt(book_place.height() * 0.9) + 'px'
+			})
+			
+			info.css('opacity')
+			
+			info.hide()
+			
+			activate_popup
+			({
+				activator: book_place.find('.book'),
+				popup: info,
+				fade_in_duration: 0.1,
+				fade_out_duration: 0.1
+			})
+		})
+		
+		$('.bookshelf_container .book_place').animate({ opacity: 1 }, 500)
+			
+		Режим.разрешить('правка')
+		Режим.разрешить('действия')
+	}
+})()

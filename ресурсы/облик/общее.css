@@ -485,21 +485,18 @@ h1, h2, h3, h4, h5, h6
 [type=loading], [type=loading_more]
 {
 	color: #9f9f9f;
+	opacity: 0;
 }
 
 [type=error], [type=loading_more_error]
 {
 	color: #9c4646;
+	opacity: 0;
 	
 	.nothing_serious
 	{
 		color: #3f3f3f;
 	}
-}
-
-[type=conditional]
-{
-	display: none
 }
 
 .picture
@@ -1118,4 +1115,22 @@ body[mode="правка"] .rich_formatting a
 {
 	background-color: #afafaf;
 	.css_transition_duration(300ms);
+}
+
+#page .error
+{
+	margin-top: 200px;
+	text-align: center;
+	
+	color: #9c4646;
+
+	> .nothing_serious
+	{
+		color: #3f3f3f;
+	}
+}
+
+.margin_bug_fixer
+{
+	max-height: 0;
 }

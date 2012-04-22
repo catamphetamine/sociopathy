@@ -4,7 +4,7 @@ var actions = $('.popup_menu_container')
 actions.find('.call').click(function(event)
 {
 	event.preventDefault()
-	alert(1)
+	// action
 })
 
 activate_popup_menu

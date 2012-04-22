@@ -365,3 +365,29 @@ jsdom  = require 'jsdom'
 jQuery = require('fs').readFileSync(process.cwd() + '/code/web/tools/jquery.js').toString()
 
 	
+	
+
+/**
+ * disables page scrolling
+ */
+
+/*
+var namespace = 'main'
+
+function disable_scroll()
+{
+	$(window).on('scroll.' + namespace, {scroll_position: get_scroll_position()}, function(event) 
+	{
+		window.scrollTo(event.data.scroll_position.x, event.data.scroll_position.y)
+    	return false
+	})
+}
+*/
+
+/**
+ * enables page scrolling
+function enable_scroll()
+{
+	$(window).unbind('scroll.' + namespace)
+}
+ */

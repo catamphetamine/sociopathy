@@ -1,9 +1,21 @@
 Visual_editor.implement
 ({
+	unload_tools: function()
+	{
+		if (!this.tools_element)
+			return
+			
+		this.tools_element.floating_top_bar('unload')
+		this.tools_element.appendTo(this.tools_element_parent)
+	},
+	
 	initialize_tools_container: function()
 	{
 		var tools = $('.visual_editor_tools')
+		this.tools_element_parent = tools.parent()
+		
 		var сontainer = $('.visual_editor_tools_container')
+		
 		tools.disableTextSelect()
 		tools.appendTo(сontainer)
 		tools.parent().show()
@@ -955,10 +967,10 @@ $(function()
 	// с этим кодом, если фокус уходит на visual_editor_tools, то они перестают работать
 	$(document).on('focusout', function(event)
 	{
-		if (!page_data.visual_editors)
+		if (!page.data.visual_editors)
 			return
 			
-		page_data.visual_editors.forEach(function(visual_editor)
+		page.data.visual_editors.forEach(function(visual_editor)
 		{
 			// если бы можно было знать, куда приземляется фокус, то можно было бы поставить условие
 			if (event.target === visual_editor.editor.content.get(0))
@@ -971,18 +983,18 @@ $(function()
 	
 	$(document).on('focusin', function(event)
 	{
-		if (!page_data.visual_editors)
+		if (!page.data.visual_editors)
 			return
 			
 		// disable all the other editors
-		page_data.visual_editors.forEach(function(visual_editor)
+		page.data.visual_editors.forEach(function(visual_editor)
 		{
 			if (event.target !== visual_editor.editor.content.get(0))
 				visual_editor.disable_tools()
 		})
 		
 		// enable this editor
-		page_data.visual_editors.forEach(function(visual_editor)
+		page.data.visual_editors.forEach(function(visual_editor)
 		{
 			if (event.target === visual_editor.editor.content.get(0))
 				visual_editor.enable_tools()

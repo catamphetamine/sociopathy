@@ -10,6 +10,10 @@
 			case 'hide':
 				return hide_floating_top_bar.bind(this)()
 				
+			case 'unload':
+				var container = this.parent()
+				прокрутчик.unwatch(container)
+			
 			default:
 				return create_floating_top_bar.bind(this)()
 		}
@@ -19,7 +23,7 @@
 	{
 		var $this = this
 		var container = this.parent()
-	
+		
 		container.on('disappearing_upwards.scroller', function(event)
 		{
 			event.stopPropagation()

@@ -12,16 +12,10 @@
 	}
 </style>
 			
-<link rel="stylesheet/less" href="/облик/поле поиска.css"/>
-
 <section id="content" class="reading">
-	<div id="category_list_block" class="main_conditional" type="conditional">
+	<div class="main_conditional">
 		<div type="ok">
-			{{if путь}}
-				<div class="breadcrumbs">
-					{{html path_breadcrumbs(путь)}}
-				</div>
-			{{/if}}
+			<div class="breadcrumbs_container"></div>
 			
 			<ul id="categories">
 			</ul>

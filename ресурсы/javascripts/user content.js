@@ -3,9 +3,13 @@ $('#extra_panel_menu li').each(function()
 {
 	panel_menu.append(this)
 })
+$('#extra_panel_menu').remove()
 
-$(document).on('styles_loaded', function()
+$(document).on('page_loaded', function()
 {
+	if (!first_time_page_loading)
+		return
+		
 	if (!Страница.is('новости'))
 		if (пользователь.новости.есть_новые_новости)
 			panel.new_news({ immediate: true })

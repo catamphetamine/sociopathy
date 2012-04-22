@@ -1,3 +1,6 @@
-function initialize_page()
+(function()
 {
-}
+	page.load = function()
+	{
+	}
+})()
