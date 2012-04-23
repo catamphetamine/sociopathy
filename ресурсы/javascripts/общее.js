@@ -51,14 +51,22 @@ function get_scroll_position()
 /**
  * show loading screen
  */
-function loading_page()
+function loading_page(options)
 {
+	options = options || {}
+	
 	if (!first_time_page_loading)
 	{
 		$('aside').css('z-index', 2)
 		$('.on_the_right_side_of_the_panel').css('z-index', 2)
 	}
-		
+	
+	if (options.full)
+	{
+		$('aside').css('z-index', 1)
+		$('.on_the_right_side_of_the_panel').css('z-index', 1)
+	}
+	
 	var loading_screen = $('#loading_screen')
 	
 	if (first_time_page_loading)
@@ -233,7 +241,7 @@ $(document).on('page_loaded', function()
 			if (element.children().length > 0)
 				return
 			
-			element.on('click.page', function(event)
+			element.on_page('click.scroll', function(event)
 			{
 				event.preventDefault()
 				
@@ -482,12 +490,12 @@ function initialize_body_edit_mode_effects()
 	var background_fade_time = dummy_div.transition_duration() * 1000
 	var edit_mode_background_color = dummy_div.css('background-color')
 	
-	page.on($(document), 'режим.правка', function()
+	$(document).on_page('режим.правка', function()
 	{
 		$('body').stop(true, false).animate({ 'background-color': edit_mode_background_color }, background_fade_time)
 	})
 
-	page.on($(document), 'режим.переход', function(event, из, в)
+	$(document).on_page('режим.переход', function(event, из, в)
 	{
 		if (из === 'правка')
 		{
@@ -558,4 +566,17 @@ var ошибка_на_экране = function(ошибка)
 		return $('<span/>').text(ошибка)
 		
 	return $('<span/>').addClass(класс_ошибки_по_уровню(ошибка.уровень)).text(ошибка.текст)
+}
+
+function random_id()
+{
+	return Math.random() + '@' + new Date().getTime()
+}
+
+$.fn.on_page = function(event, action)
+{
+	if (!page)
+		throw 'Page hasn\'t been initialized yet'
+		
+	page.on(this, event, action)
 }

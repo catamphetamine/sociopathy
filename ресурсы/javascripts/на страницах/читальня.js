@@ -81,7 +81,7 @@
 				before_done_output: categories_loaded
 			}))
 		
-			page.on($(window), 'resize.library', center_categories_list)
+			$(window).on_page('resize.library', center_categories_list)
 			center_categories_list()
 		}
 		

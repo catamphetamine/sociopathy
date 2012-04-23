@@ -49,6 +49,7 @@ require './controller/general'
 require './controller/blog'
 require './controller/books'
 require './controller/friends'
+require './controller/websocket'
 
 #global.memcache_available = false
 global.memcache.on 'connect', () ->

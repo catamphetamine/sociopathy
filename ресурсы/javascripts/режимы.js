@@ -1,11 +1,29 @@
 var Режим = (function()
 {
-	var режим = 'обычный'
+	var режим
 
-	var режимы = []
-	var обещания = {}
+	var режимы
+	var обещания
 	
-	var разрешённые_режимы = { обычный: true }
+	var разрешённые_режимы
+
+	var проверки_перехода
+	
+	var сообщение_о_выключенной_правке = 'Сейчас здесь нечего править'
+
+	var переходы_разрешены
+	
+	сбросить()
+	
+	function сбросить()
+	{
+		проверки_перехода = []
+		режим = 'обычный'
+		разрешённые_режимы = { обычный: true }
+		переходы_разрешены = true
+		обещания = {}
+		режимы = []
+	}
 	
 	режимы.push
 	({
@@ -35,10 +53,6 @@ var Режим = (function()
 			//$('[editable=true]').attr('contenteditable', true)
 		}
 	})
-	
-	var проверки_перехода = []
-	
-	var сообщение_о_выключенной_правке = 'Сейчас здесь нечего править'
 	
 	function возможен_ли_переход(из, в)
 	{
@@ -143,7 +157,7 @@ var Режим = (function()
 			{
 				$(this)
 					.attr('contenteditable', true)
-					.on('keypress.режим_правка', function(event)
+					.on_page('keypress.режим_правка', function(event)
 					{
 						if (Клавиши.is('Enter', event))
 							return false
@@ -245,8 +259,6 @@ var Режим = (function()
 		}
 	})
 	
-	var переходы_разрешены = true
-	
 	result.заморозить_переходы = function()
 	{
 		переходы_разрешены = false
@@ -269,11 +281,11 @@ var Режим = (function()
 		})
 	}
 	
-	result.activate_edit_actions = function(options) //, on_cancel
+	result.activate_edit_actions = function(options)
 	{
 		var on_save = options.on_save
 	
-		actions = $('#edit_mode_actions')
+		actions = $('.edit_mode_actions').clone()
 		actions.appendTo($('body')).move_out_downwards().disableTextSelect()
 
 		save_changes_button = activate_button(actions.find('.done'), { 'prevent double submission': true })
@@ -283,12 +295,7 @@ var Режим = (function()
 		{
 			if (в === 'правка')	
 				actions.slide_in_from_bottom()
-			//else if (из === 'правка')
-			//	actions.slide_out_downwards()
 		})
-		
-		//cancel_button = activate_button(actions.find('.cancel'), { 'prevent double submission': true })
-		//.does(on_cancel)	
 	}
 	
 	result.разрешить = function(название)
@@ -304,6 +311,11 @@ var Режим = (function()
 	result.пообещать = function(в)
 	{
 		обещания[в] = true
+	}
+	
+	result.сбросить = function()
+	{
+		сбросить()
 	}
 	
 	return result

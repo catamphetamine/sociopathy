@@ -34,7 +34,7 @@
 				get_data: function(data) { return data.альбомы }
 			}))
 		
-			page.on($(window), 'resize.albums', center_albums_list)
+			$(window).on_page('resize.albums', center_albums_list)
 			center_albums_list()
 		},
 		function() { conditional.callback('Не удалось получить данные') })

@@ -132,10 +132,20 @@ var Page = new Class
 	
 	ajaxes: [],
 	
+	when_loaded_actions: [],
+	
+	when_loaded: function(action)
+	{
+		if (this.status === 'loaded')
+			return action()
+			
+		this.when_loaded_actions.push(action)
+	},
+	
 	initialize: function(options)
 	{
 		this.setOptions(options)
-		
+		 
 		var page = this
 		this.Ajax =
 		{
@@ -169,8 +179,24 @@ var Page = new Class
 		}
 	},
 	
+	full_load: function()
+	{
+		this.load()
+		
+		this.when_loaded_actions.forEach(function(action)
+		{
+			action()
+		})
+		
+		this.when_loaded_actions.empty()
+		
+		this.status = 'loaded'
+	},
+	
 	full_unload: function()
 	{
+		Режим.сбросить()
+	
 		this.unload()
 		
 		this.event_handlers.forEach(function(handler)

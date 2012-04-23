@@ -125,33 +125,6 @@ var Ajax =
 	}
 }
 
-function disable_links()
-{
-	$('a').each(function()
-	{
-		var link = $(this)
-		/*
-		if (link.attr('href'))
-			link.data('href', link.attr('href')).removeAttr('href')
-		*/
-		
-		link.on('click.disable_links_while_ajaxing', function(event)
-		{
-			event.preventDefault()
-		})
-	})
-}
-
-function enable_links()
-{
-	$('a').each(function()
-	{
-		var link = $(this)
-		if (link.data('href'))
-			link.attr('href', link.data('href'))
-	})
-}
-
 function get_highest_z_index(top_z)
 {
 	if (!top_z)

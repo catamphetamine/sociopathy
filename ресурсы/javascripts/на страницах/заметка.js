@@ -118,7 +118,7 @@
 			
 		function initialize_editor()
 		{
-			page.on($(document), 'режим.правка', function(event)
+			$(document).on_page('режим.правка', function(event)
 			{
 				visual_editor.show_tools()
 				
@@ -128,7 +128,7 @@
 				visual_editor.editor.caret.move_to(visual_editor.editor.content.find('> *:first'))
 			})
 			
-			page.on($(document), 'режим.переход', function(event, из, в)
+			$(document).on_page('режим.переход', function(event, из, в)
 			{
 				if (из === 'правка')
 					visual_editor.hide_tools()
@@ -230,7 +230,7 @@
 				})
 			})
 			
-			page.on($(document), 'режим.переход', function(event, из, в)
+			$(document).on_page('режим.переход', function(event, из, в)
 			{
 				if (из === 'правка')
 				{
@@ -240,7 +240,7 @@
 			})
 		}
 		
-		page.on($(document), 'режим.правка', function(event)
+		$(document).on_page('режим.правка', function(event)
 		{
 			edit_mode_actions.slide_in_from_bottom()
 			visual_editor.activate_tools_inside_content()

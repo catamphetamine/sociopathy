@@ -43,7 +43,7 @@
 				}
 			}))
 		
-			page.on($(window), 'resize.pictures', center_pictures_list)
+			$(window).on_page('resize.pictures', center_pictures_list)
 			center_pictures_list()
 			
 			//$('#content').disableTextSelect()
@@ -110,12 +110,11 @@
 			}
 		}
 		
-		var progress = $('.progress_bar .bar .progress')
-		
-		function update_progress()
-		{
-			progress.width(parseInt(get_picture_number() * ($(window).width() / all_icons.length)))
-		}
+		var progress = new Progress
+		({
+			element: $('.progress_bar .bar .progress'),
+			maximum: all_icons.length
+		})
 		
 		function show_picture_file(icon)
 		{
@@ -170,7 +169,7 @@
 				
 				container.show()
 				
-				update_progress()
+				progress.update(get_picture_number())
 			})
 		}
 		
@@ -195,7 +194,7 @@
 		{
 			picture.fade_in(0.0, function() { picture.focus() })
 		
-			page.on($(document), 'keydown' + namespace, function(event) 
+			$(document).on_page('keydown' + namespace, function(event) 
 			{
 				if (Клавиши.is('Escape', event))
 					return hide_picture()
@@ -214,7 +213,7 @@
 				}
 			})
 			
-			page.on($(document), 'keyup' + namespace, function(event) 
+			$(document).on_page('keyup' + namespace, function(event) 
 			{
 				//if (Клавиши.is('Shift', event))
 				

@@ -164,6 +164,8 @@
 	margin-top: 50px;	
 	
 	text-align: center;
+	
+	display: none;
 }
 
 .join_button_block [type=loading], .join_button_block [type=error]

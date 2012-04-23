@@ -1134,3 +1134,13 @@ body[mode="правка"] .rich_formatting a
 {
 	max-height: 0;
 }
+
+.collapsed
+{
+	display: none;
+}
+
+.shown
+{
+	display: block;
+}

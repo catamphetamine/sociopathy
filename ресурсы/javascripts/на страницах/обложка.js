@@ -174,7 +174,7 @@
 		
 		if (получить_настройку_запроса('приглашение'))
 		{
-			conditional = initialize_conditional($('.join_button_block'))
+			conditional = initialize_conditional($('.join_button_block').show())
 			check_invite(conditional.callback)
 		}	
 	}

@@ -75,7 +75,7 @@ var navigating = false;
 				// если кука user - кривая, то она уже сама удалилась на сервере,
 				// и просто перезагрузить страницу, чтобы войти в качестве гостя
 				if (ошибка === 'Пользователь не найден')
-					return window.location.reload()
+					return window.location = '/'
 				
 				page_loading_error()
 			})
@@ -135,7 +135,7 @@ var navigating = false;
 		
 		if (options.before)
 			options.before()
-		
+				
 		new_page = new Page()
 		
 		var immediate_loading_page

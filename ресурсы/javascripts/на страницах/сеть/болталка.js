@@ -135,7 +135,7 @@
 		},
 		loader)
 		
-		page.on($(window), 'scroll.chat', function()
+		$(window).on_page('scroll.chat', function()
 		{
 			check_if_there_are_still_unread_messages()
 		})
@@ -148,6 +148,13 @@
 	page.unload = function()
 	{
 		$('.who_is_online_bar').floating_top_bar('unload')
+		
+		if (болталка)
+		{
+			болталка.emit('выход')
+			//alert(болталка.websocket.disconnectSync)
+			//болталка.websocket.disconnectSync()
+		}
 	}
 	
 	function check_if_there_are_still_unread_messages()
@@ -373,14 +380,14 @@
 		
 		connect_to_chat(function()
 		{
-			page.on($(window), 'focus.chat', function()
+			$(window).on_page('focus.chat', function()
 			{
 				is_away = false
 				dismiss_new_messages_notifications()
 				болталка.emit('смотрит')
 			})
 			
-			page.on($(window), 'blur.chat', function()
+			$(window).on_page('blur.chat', function()
 			{
 				is_away = true
 				болталка.emit('не смотрит')
@@ -543,21 +550,23 @@
 	}
 	
 	var болталка
+	var болталка_подключена = false
 	// handle reconnect
-	var first_connection
+	var first_connection = true
 	
 	function connect_to_chat(callback)
 	{
-		болталка = io.connect('http://' + Options.Websocket_server + '/болталка', { transports: ['websocket'] })
+		болталка = io.connect('http://' + Options.Websocket_server + '/болталка', { transports: ['websocket'], 'force new connection': true })
 		
 		болталка.on('connect', function()
 		{
+			болталка_подключена = true
 			болталка.emit('пользователь', $.cookie('user'))
 		})
 		
 		болталка.on('готов', function()
 		{
-			if (!first_connection)
+			if (first_connection)
 			{
 				callback()
 				first_connection = false

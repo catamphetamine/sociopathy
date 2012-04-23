@@ -3,6 +3,8 @@
 	title('Люди')
 	
 	var bottom_loader
+		
+	var всего_людей
 	
 	page.load = function()
 	{
@@ -29,7 +31,7 @@
 			batch_size: Batch_size,
 			skip_pages: skip_pages + 1,
 			reverse: true,
-			parameters: { раньше: true },
+			parameters: { раньше: true, всего: всего_людей },
 			get_data: function (data)
 			{
 				return data.люди
@@ -97,8 +99,12 @@
 			url: '/приложение/люди',
 			batch_size: Batch_size,
 			skip_pages: skip_pages,
+			parameters: { всего: всего_людей },
 			get_data: function(data)
 			{
+				if (!всего_людей)
+					всего_людей = data.всего
+					
 				return data.люди
 			},
 			before_done_output: function()
@@ -111,6 +117,8 @@
 			},
 			before_done_more_output: function()
 			{
+				new_people_loaded()
+				
 				if (this.page.number > 1)
 					set_url('/люди/' + this.page.number)
 				else 
@@ -136,8 +144,22 @@
 		bottom_loader.deactivate()
 	}
 	
+	var progress
+	
 	function new_people_loaded()
 	{
+		if (!progress)
+		{
+			progress = new Progress
+			({
+				element: $('.progress_bar .bar .progress'),
+				maximum: всего_людей
+			})
+			
+			//$('body').css('margin-bottom', progress.options.element.outerHeight(true) + 'px')
+		}
+		
+		progress.update(bottom_loader.уже_загружено())
 		ajaxify_internal_links(content)
 	}
 })()

@@ -220,12 +220,12 @@
 	
 		//var highlight_color = '#44adcb'
 		
-		page.on($(document), 'режим.правка', function()
+		$(document).on_page('режим.правка', function()
 		{
 			//the_picture.animate({ 'boxShadow': '0 0 20px ' + highlight_color })
 		})
 	
-		page.on($(document), 'режим.переход', function(event, из, в)
+		$(document).on_page('режим.переход', function(event, из, в)
 		{
 			if (из === 'правка')
 			{
@@ -391,7 +391,7 @@
 			}
 		})
 	
-		page.on($(document), 'режим.правка', function(event)
+		$(document).on_page('режим.правка', function(event)
 		{
 			//info('Вы можете сменить картинку (120 на 120), нажав на неё.')
 	

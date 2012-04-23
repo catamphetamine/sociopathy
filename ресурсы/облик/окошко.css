@@ -23,6 +23,17 @@ body.osx .popup .top_bar
 	padding-top: 10px;
 }
  
+ 
+.popup_veil.shown
+{
+	visibility: visible;
+}
+	
+.popup_veil.collapsed
+{
+	visibility: hidden;
+}
+	
 .popup_veil
 {
 	display: block;

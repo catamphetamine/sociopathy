@@ -32,6 +32,43 @@ var Options =
 	}
 }
 
+if (путь_страницы() === 'сеть' || путь_страницы().starts_with('сеть/'))
+	if (!$.cookie('user'))
+		window.location = '/'
+
+var эфир = io.connect('http://' + Options.Websocket_server + '/эфир', { transports: ['websocket'] })
+
+/*
+var болталка = io.connect('http://' + Options.Websocket_server + '/болталка', { transports: ['websocket'] })
+var болталка_готова
+
+var когда_болталка_готова = function(callback)
+{
+	if (болталка_готова)
+		return callback()
+		
+	сделать_когда_болталка_готова.push(callback)
+}
+
+var болталка_first_connection = true
+болталка.on('готов', function()
+{
+	болталка_готова = true
+	
+	if (болталка_first_connection)
+	{
+		callback()
+		болталка_first_connection = false
+	}
+	else
+	{
+		who_is_online_bar_list.empty()
+	}
+	
+	внести_пользователя_в_список_вверху(пользователь, { куда: 'в начало' })
+})
+*/
+
 $(function()
 {
 	loading_page()
@@ -58,7 +95,7 @@ $(document).on('page_loaded', function()
 {
 	var after_styles = function()
 	{
-		page.load()
+		page.full_load()
 			
 		ajaxify_internal_links()
 	

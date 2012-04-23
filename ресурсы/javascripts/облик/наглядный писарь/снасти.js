@@ -6,13 +6,13 @@ Visual_editor.implement
 			return
 			
 		this.tools_element.floating_top_bar('unload')
-		this.tools_element.appendTo(this.tools_element_parent)
+		//this.tools_element.appendTo(this.tools_element_parent)
 	},
 	
 	initialize_tools_container: function()
 	{
-		var tools = $('.visual_editor_tools')
-		this.tools_element_parent = tools.parent()
+		var tools = this.tools_element
+		//this.tools_element_parent = tools.parent()
 		
 		var сontainer = $('.visual_editor_tools_container')
 		
@@ -20,7 +20,7 @@ Visual_editor.implement
 		tools.appendTo(сontainer)
 		tools.parent().show()
 		
-		this.tools_element = tools
+		//this.tools_element = tools
 			
 		// toolbar
 
@@ -30,7 +30,7 @@ Visual_editor.implement
 		})
 		.bind(this))
 		
-		initialize_more_less_tools()
+		this.initialize_more_less_tools()
 	},
 
 	set_proper_tools_state: function()
@@ -87,7 +87,8 @@ Visual_editor.implement
 		var visual_editor = this
 		var editor = this.editor
 	
-		var tools = $('.visual_editor_tools')
+		var tools = $('.visual_editor_tools').clone()
+		this.tools_element = tools
 	
 		var Tools = {}
 		
@@ -957,6 +958,47 @@ Visual_editor.implement
 		})
 		
 		this.Tools = Tools
+	},
+	
+	// more tools / less tools
+	initialize_more_less_tools: function()
+	{
+		var tools = this.tools_element
+		var main_tools = tools.find('.main_tools')
+		var additional_tools = tools.find('.additional_tools')
+		
+		var main_tools_height = main_tools.height()
+	
+		var show_all_tools = new image_button(tools.find('.more'), { 'auto unlock': false })
+		show_all_tools.does(function()
+		{
+			additional_tools.slide_in_from_top()
+			
+			show_all_tools.element.fadeOut(function()
+			{
+				hide_additional_tools.element.fadeIn(function()
+				{
+					hide_additional_tools.unlock()
+					tools.trigger('more.visual_editor_tools')
+				})
+			})
+		})
+		
+		var hide_additional_tools = new image_button(tools.find('.less'), { 'auto unlock': false })
+		hide_additional_tools.lock()
+		hide_additional_tools.does(function()
+		{
+			additional_tools.slide_out_upwards()
+			
+			hide_additional_tools.element.fadeOut(function()
+			{
+				show_all_tools.element.fadeIn(function()
+				{
+					show_all_tools.unlock()
+					tools.trigger('less.visual_editor_tools')
+				})
+			})
+		})
 	}
 })
 
@@ -1001,44 +1043,3 @@ $(function()
 		})
 	})
 })
-
-// more tools / less tools
-function initialize_more_less_tools()
-{
-	var tools = $('.visual_editor_tools')
-	var main_tools = tools.find('.main_tools')
-	var additional_tools = tools.find('.additional_tools')
-	
-	var main_tools_height = main_tools.height()
-
-	var show_all_tools = new image_button(tools.find('.more'), { 'auto unlock': false })
-	show_all_tools.does(function()
-	{
-		additional_tools.slide_in_from_top()
-		
-		show_all_tools.element.fadeOut(function()
-		{
-			hide_additional_tools.element.fadeIn(function()
-			{
-				hide_additional_tools.unlock()
-				tools.trigger('more.visual_editor_tools')
-			})
-		})
-	})
-	
-	var hide_additional_tools = new image_button(tools.find('.less'), { 'auto unlock': false })
-	hide_additional_tools.lock()
-	hide_additional_tools.does(function()
-	{
-		additional_tools.slide_out_upwards()
-		
-		hide_additional_tools.element.fadeOut(function()
-		{
-			show_all_tools.element.fadeIn(function()
-			{
-				show_all_tools.unlock()
-				tools.trigger('less.visual_editor_tools')
-			})
-		})
-	})
-}

@@ -85,8 +85,9 @@ var enter_window
 			кнопка_входа.unlock({ force: true })
 		})
 		.ok(function(данные)
-		{ 
+		{
 			loading.hide()
+			loading_page({ full: true })
 			enter_window.close()
 			
 			window.location.reload()
@@ -105,7 +106,8 @@ var enter_window
 		.ok(function(данные)
 		{ 
 			loading.hide()
-			//window.location.reload()
+			loading_page({ full: true })
+			
 			window.location = '/'
 		})
 	}

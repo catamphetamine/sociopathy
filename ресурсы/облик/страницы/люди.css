@@ -1,3 +1,5 @@
+@import "/облик/вспомогательный.less";
+
 #person_slideshow
 {
 	height: 100%;
@@ -63,4 +65,35 @@
 {
 	margin-left: auto;
 	margin-right: auto;
+}
+
+.progress_bar
+{
+	position: fixed;
+	bottom: 0px;
+	
+	width: 100%;
+	text-align: center;
+	
+	font-size: 0;
+}
+
+.progress_bar
+{
+	.bar
+	{
+		&, .progress
+		{
+			height: 4px;
+			
+			border-top-right-radius: 2px;
+			border-bottom-right-radius: 2px;
+		}
+		
+		.progress
+		{
+			background-color: #4f4f4f;
+			.css_transition(width, 500ms);
+		}
+	}
 }

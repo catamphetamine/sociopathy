@@ -145,12 +145,17 @@ var dialog_window = new Class
 		if (this.options.theme === 'slide_from_top')
 			this.container.children().eq(0).css('top', 0)
 		
-		this.content.find('input:first').focus()
-		
 		if (this.content.css('display') !== 'inline-block')
 			this.content.css('display', 'inline-block')
 		
 		this.rise()
+		
+		// hack
+		var dialog_window = this
+		setTimeout(function()
+		{
+			dialog_window.content.find('input:first').focus()
+		}, 0)
 
 		// prevent tabbing out of modal dialog windows
 //		if (this.options.modal)

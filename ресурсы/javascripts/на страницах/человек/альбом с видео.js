@@ -43,7 +43,7 @@
 				}
 			}))
 		
-			page.on($(window), 'resize.videos', center_videos_list)
+			$(window).on_page('resize.videos', center_videos_list)
 			center_videos_list()
 			
 			//$('#content').disableTextSelect()
@@ -115,12 +115,11 @@
 			}
 		}
 		
-		var progress = $('.progress_bar .bar .progress')
-		
-		function update_progress()
-		{
-			progress.width(parseInt(get_video_number() * ($(window).width() / all_icons.length)))
-		}
+		var progress = new Progress
+		({
+			element: $('.progress_bar .bar .progress'),
+			maximum: all_icons.length
+		})
 		
 		function show_video_file(image, options)
 		{
@@ -160,7 +159,7 @@
 			
 			container.prepend($('<div/>').addClass('video').html(code)).show()
 			
-			update_progress()
+			progress.update(get_video_number())
 		}
 		
 		content.find('.video').click(function(event)
@@ -183,7 +182,7 @@
 		{
 			video.fade_in(0.3, function() { video.focus() })
 		
-			page.on($(document), 'keydown' + namespace, function(event) 
+			$(document).on_page('keydown' + namespace, function(event) 
 			{
 				if (Клавиши.is('Escape', event))
 					return hide_video()

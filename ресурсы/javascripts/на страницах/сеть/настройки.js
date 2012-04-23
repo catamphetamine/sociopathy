@@ -37,7 +37,7 @@
 	
 	function подготовить_режим_правки()
 	{
-		page.on($(document), 'режим.правка', function(event)
+		$(document).on_page('режим.правка', function(event)
 		{
 			page.data.старая_почта = get_email()
 		})

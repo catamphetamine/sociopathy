@@ -21,6 +21,11 @@ var Batch_loader = new Class
 	
 	page: { number: 0 },
 	
+	уже_загружено: function()
+	{
+		return this.page.number * this.options.batch_size
+	},
+	
 	initialize: function(options)
 	{
 		this.setOptions(options)
@@ -31,9 +36,6 @@ var Batch_loader = new Class
 			
 		if (options.skip_pages)
 			this.page.number += options.skip_pages
-		
-		$(window).scrollTop(0)
-		this.$scroll_detector = $('#scroll_detector')
 	},
 
 	batch: function(возврат)
@@ -183,23 +185,31 @@ var Batch_loader_with_infinite_scroll = new Class
 ({
 	Extends: Batch_loader,
 
+	initialize: function(options)
+	{
+		this.parent(options)
+		
+		$(window).scrollTop(0)
+		this.options.scroll_detector = $('#scroll_detector')
+	},
+	
 	activate: function()
 	{
 		var loader = this
 		
-		this.$scroll_detector.on('appearing_on_bottom.scroller', function(event)
+		this.options.scroll_detector.on('appearing_on_bottom.scroller', function(event)
 		{
 			loader.load_more()
 			event.stopPropagation()
 		})
 		
-		прокрутчик.watch(this.$scroll_detector)
+		прокрутчик.watch(this.options.scroll_detector)
 	},
 	
 	deactivate: function()
 	{
-		this.$scroll_detector.unbind('.scroller')
-		прокрутчик.unwatch(this.$scroll_detector)
+		this.options.scroll_detector.unbind('.scroller')
+		прокрутчик.unwatch(this.options.scroll_detector)
 	}
 })
 
