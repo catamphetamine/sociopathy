@@ -66,11 +66,16 @@
 		
 		var container = video.find('.container')
 		
-		function previous_video()
+		function previous_video(options)
 		{
+			options = options || {}
+			
 			var previous_video_icon = current_video_icon.parent().prev().children().eq(0)
 			if (!previous_video_icon.exists())
-				return hide_video()
+				if (options.dont_close)
+					return false
+				else
+					return hide_video()
 			
 			container.empty()
 			show_video_file(previous_video_icon)
@@ -81,11 +86,16 @@
 			previous_video()
 		})
 		
-		function next_video()
+		function next_video(options)
 		{
+			options = options || {}
+			
 			var next_video_icon = current_video_icon.parent().next().children().eq(0)
 			if (!next_video_icon.exists())
-				return hide_video()
+				if (options.dont_close)
+					return false
+				else
+					return hide_video()
 			
 			container.empty()
 			show_video_file(next_video_icon)
@@ -120,6 +130,8 @@
 			element: $('.progress_bar .bar .progress'),
 			maximum: all_icons.length
 		})
+		
+		var scroll_navigation
 		
 		function show_video_file(image, options)
 		{
@@ -157,7 +169,10 @@
 			else if (image.attr('youtube_video_id'))
 				code = Youtube.Video.embed_code(image.attr('youtube_video_id'), options)
 			
-			container.prepend($('<div/>').addClass('video').html(code)).show()
+			var video_block = $('<div/>').addClass('video').html(code)
+			container.prepend(video_block).show()
+			
+			scroll_navigation.activate(video_block)
 			
 			progress.update(get_video_number())
 		}
@@ -166,12 +181,27 @@
 		{
 			event.preventDefault()
 			
+			scroll_navigation = new Scroll_navigation
+			({
+				previous: previous_video,
+				next: next_video,
+				previous_fast: function()
+				{
+					previous_video({ dont_close: true })
+				},
+				next_fast: function()
+				{
+					next_video({ dont_close: true })
+				}
+			})
+			
 			show_video_file($(this), { play: true })
 			show_video()
 		})
 		
 		function hide_video()
 		{
+			scroll_navigation.deactivate()
 			$(document).unbind(namespace)
 			video.unbind(namespace)
 			video.fade_out(0.0)
@@ -180,6 +210,9 @@
 		
 		function show_video()
 		{
+			scroll_navigation.activate(video.find('.previous'))
+			scroll_navigation.activate(video.find('.next'))
+			
 			video.fade_in(0.3, function() { video.focus() })
 		
 			$(document).on_page('keydown' + namespace, function(event) 

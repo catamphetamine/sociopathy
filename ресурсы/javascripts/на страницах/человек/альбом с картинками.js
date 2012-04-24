@@ -56,6 +56,8 @@
 		center_list($('#pictures'), { space: $('#content'), item_width: 400, item_margin: 40 })
 	}
 	
+	var scroll_navigation = new Scroll_navigation()
+	
 	function pictures_loaded()
 	{
 		var picture = $('.show_picture')
@@ -63,11 +65,16 @@
 		
 		var container = picture.find('.container')
 		
-		function previous_picture()
+		function previous_picture(options)
 		{
+			options = options || {}
+			
 			var previous_picture_icon = current_picture_icon.parent().prev().children().eq(0)
 			if (!previous_picture_icon.exists())
-				return hide_picture()
+				if (options.dont_close)
+					return false
+				else
+					return hide_picture()
 			
 			show_picture_file(previous_picture_icon)
 		}
@@ -77,11 +84,16 @@
 			previous_picture()
 		})
 		
-		function next_picture()
+		function next_picture(options)
 		{
+			options = options || {}
+			
 			var next_picture_icon = current_picture_icon.parent().next().children().eq(0)
 			if (!next_picture_icon.exists())
-				return hide_picture()
+				if (options.dont_close)
+					return false
+				else
+					return hide_picture()
 			
 			show_picture_file(next_picture_icon)
 		}
@@ -138,6 +150,7 @@
 					return
 			
 				var image = $(result.image)
+				container.find('> .picture').remove()
 				container.prepend($('<div/>').addClass('picture').append(image))
 	
 				var initial_width = result.image.width
@@ -155,6 +168,8 @@
 					event.preventDefault()
 					next_picture()
 				})
+				
+				scroll_navigation.activate(image)
 				
 				var size = inscribe
 				({
@@ -179,12 +194,27 @@
 			
 			container.empty()
 			
+			scroll_navigation = new Scroll_navigation
+			({
+				previous: previous_picture,
+				next: next_picture,
+				previous_fast: function()
+				{
+					previous_picture({ dont_close: true })
+				},
+				next_fast: function()
+				{
+					next_picture({ dont_close: true })
+				}
+			})
+			
 			show_picture_file($(this))
 			show_picture()
 		})
 		
 		function hide_picture()
 		{
+			scroll_navigation.deactivate()
 			$(document).unbind(namespace)
 			picture.unbind(namespace)
 			picture.fade_out(0.0)
@@ -192,6 +222,9 @@
 		
 		function show_picture()
 		{
+			scroll_navigation.activate(picture.find('.previous'))
+			scroll_navigation.activate(picture.find('.next'))
+			
 			picture.fade_in(0.0, function() { picture.focus() })
 		
 			$(document).on_page('keydown' + namespace, function(event) 
@@ -219,24 +252,24 @@
 				
 				container.css('cursor', 'default')
 			})
-			
-			picture.find('.close').disableTextSelect().on('click' + namespace, function(event) 
-			{
-				hide_picture()
-			})
-			
-			picture.find('.previous').on('contextmenu' + namespace, function(event) 
-			{
-				event.preventDefault()
-				picture.find('.close').click()
-			})
-			
-			picture.find('.next').on('contextmenu' + namespace, function(event) 
-			{
-				event.preventDefault()
-				picture.find('.close').click()
-			})
 		}
+		
+		picture.find('.close').disableTextSelect().on('click' + namespace, function(event) 
+		{
+			hide_picture()
+		})
+		
+		picture.find('.previous').on('contextmenu' + namespace, function(event) 
+		{
+			event.preventDefault()
+			picture.find('.close').click()
+		})
+		
+		picture.find('.next').on('contextmenu' + namespace, function(event) 
+		{
+			event.preventDefault()
+			picture.find('.close').click()
+		})
 		
 		/*
 		picture.find('.close').click(function(event)

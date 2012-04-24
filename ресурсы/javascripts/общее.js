@@ -539,6 +539,9 @@ function ajaxify_internal_links(where)
 			
 		link.click(function(event)
 		{
+			if (event.button)
+				return
+				
 			event.preventDefault()
 			
 			navigate_to_page(url,

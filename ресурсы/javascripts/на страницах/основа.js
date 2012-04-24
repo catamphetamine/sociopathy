@@ -123,6 +123,7 @@ $(document).on('page_loaded', function()
 	}
 	else
 	{
+		//console.log(get_page_less_style_link())
 		Less.load_style(get_page_less_style_link(), after_styles)
 	}
 })
