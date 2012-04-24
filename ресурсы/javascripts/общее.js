@@ -231,13 +231,19 @@ function add_anchor_to_url(anchor)
 	*/
 }
 
-$(document).on('page_loaded', function()
+function activate_anchors()
 {
 	['h1', 'h2', 'h3', 'h4', 'h5', 'h6'].forEach(function(tag)
 	{
 		content.find(tag).each(function()
 		{
 			var element = $(this)
+			
+			if (element.data('anchored'))
+				return
+				
+			element.data('anchored', true)
+			
 			if (element.children().length > 0)
 				return
 			
@@ -253,6 +259,11 @@ $(document).on('page_loaded', function()
 			})
 		})
 	})
+}
+
+$(document).on('page_loaded', function()
+{
+	activate_anchors()
 })
 
 String.prototype.count = function(what)
@@ -543,6 +554,9 @@ function ajaxify_internal_links(where)
 				return
 				
 			event.preventDefault()
+			
+			if ('/' + путь_страницы() === url)
+				return
 			
 			navigate_to_page(url,
 			{

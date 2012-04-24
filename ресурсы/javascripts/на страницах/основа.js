@@ -88,6 +88,7 @@ $(function()
 
 $(document).on('page_initialized', function()
 {
+	activate_anchors()
 	ajaxify_internal_links(Page.element)
 })
 
