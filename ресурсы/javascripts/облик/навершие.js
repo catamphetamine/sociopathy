@@ -233,6 +233,7 @@ var Panel = new Class
 		check_for_current_page({ page: 'сеть/обсуждения', button: 'обсуждения' })
 		check_for_current_page({ page: 'сеть/беседы', button: 'беседы' })
 		check_for_current_page({ page: 'человек/дневник', button: 'дневник' })
+		check_for_current_page({ page: 'человек/журнал', button: 'журнал' })
 		check_for_current_page({ page: 'человек/книги', button: 'книги' })
 		check_for_current_page({ page: 'сеть/круги', button: 'круги' })
 		check_for_current_page({ page: 'сеть/настройки', button: 'настройки' })
@@ -241,6 +242,12 @@ var Panel = new Class
 
 	toggle_buttons: function(options)
 	{
+		if (!this.buttons[options.hide.button.title])
+			return console.log('No button to hide: ' + options.hide.button.title)
+	
+		if (!this.buttons[options.show.button.title])
+			return console.log('No button to show: ' + options.show.button.title)
+			
 		var hide_button = this.buttons[options.hide.button.title].element
 		var show_button = this.buttons[options.show.button.title].element
 		

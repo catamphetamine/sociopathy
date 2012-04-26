@@ -275,6 +275,9 @@ module.exports = снасти
 Array.prototype.is_empty = () ->
 	@length == 0
 	
+Array.prototype.пусто = () ->
+	@is_empty()
+	
 Array.prototype.trim = () ->
 	array = []
 	@forEach (element) ->

@@ -59,6 +59,11 @@
 			.include_padding_in_width();
 			padding-left: @side_columns_padding;
 			
+			> li
+			{
+				display: none;
+			}
+			
 			.add_to_circles, .remove_from_circles
 			{
 				display: none;
@@ -73,12 +78,14 @@
 			line-height: 1.8em;
 			font-size: 32px;
 			
-			a
+			> li, > li > a
 			{
 				white-space: nowrap;
 			
 				.css_transition();
 				color: #7f7f7f;
+				
+				cursor: pointer;
 				
 				&:hover
 				{

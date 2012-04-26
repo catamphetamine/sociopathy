@@ -46,7 +46,7 @@ var Ajax =
 		({
 			url: url, 
 			type: method,
-			cache: true,
+			cache: false,
 			data: data, 
 			dataType: options.type,
 			
@@ -465,16 +465,19 @@ function iterate(array, condition, action)
 	}
 }
 
-function match_url(url, start, patterns)
+function match_url(url, start, patterns, options)
 {
 	if (url === '')
 		return
 
 	if (typeof start !== 'string')
 	{
+		options = patterns
 		patterns = start
 		start = ''
 	}
+	
+	options = options || {}
 
 	if (start === '/')
 		start = ''
@@ -510,9 +513,14 @@ function match_url(url, start, patterns)
 		
 		if (url.starts_with(key))
 		{
+			matched = true
 			return action(url.substring(key.length + 1))
 		}
 	})
+	
+	if (!matched)
+		if (options.no_match)
+			return options.no_match()
 }
 
 function center_list(list, options)

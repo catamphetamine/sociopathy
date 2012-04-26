@@ -1,8 +1,4 @@
-Warning.
-The encoding is broken, supposedly on GitHub itself.
-To download the master branch in correct encoding,
-execute "git clone git@github.com:kuchumovn/sociopathy.git" in your console
-or email me: kuchumovn@gmail.com, and I'll send you the full archive via email.
+* The following description is in Russian, and so are the sources
 
 Sociopathy
    необычная социальная сеть

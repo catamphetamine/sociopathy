@@ -76,17 +76,33 @@
 				link.attr('href', link.attr('href').replace('//', '/' + пользователь_сети['адресное имя'] + '/')).removeAttr('dummy')
 		})
 		
+		if (!пользователь_сети['есть ли картинки?'])
+			links.find('.pictures').parent().hide()
+		
+		if (!пользователь_сети['есть ли видеозаписи?'])
+			links.find('.videos').parent().hide()
+		
 		links.show()
 		
-		if (пользователь && пользователь._id !== пользователь_сети._id)
+		if (пользователь)
 		{
-			//links.find('.common_friends').show()
+			if (пользователь._id !== пользователь_сети._id)
+			{
+				actions.find('.start_conversation').show()
+				actions.find('.call').show()
+				
+				if (пользователь_сети.в_круге)
+					actions.find('.remove_from_circles').show()
+				else
+					actions.find('.add_to_circles').show()
+					
+				actions.show()
+			}
+		}
+		else
+		{
+			//actions.find('.contact_by_email').show()
 			actions.show()
-			
-			if (пользователь_сети.в_круге)
-				actions.find('.remove_from_circles').show()
-			else
-				actions.find('.add_to_circles').show()
 		}
 	
 		avatar = id_card.find('.picture')
@@ -114,6 +130,12 @@
 		actions.find('.start_conversation').click(function(event)
 		{
 			event.preventDefault()
+		})
+		
+		actions.find('.contact_by_email').click(function(event)
+		{
+			event.preventDefault()
+			info('Не сделано')
 		})
 		
 		actions.find('.call').click(function(event)
