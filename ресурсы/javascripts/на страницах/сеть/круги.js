@@ -7,7 +7,7 @@
 	
 	page.load = function()
 	{
-		var conditional = initialize_conditional($('.main_conditional'))
+		var conditional = initialize_conditional($('.main_conditional'), { immediate: true })
 		
 		new Data_templater
 		({
@@ -40,7 +40,10 @@
 	function circles_loaded()
 	{
 		$(document).trigger('page_initialized')
+		
 	//	Режим.разрешить('правка')
 	//	Режим.разрешить('действия')
 	}
+	
+	page.needs_initializing = true
 })()

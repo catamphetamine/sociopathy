@@ -90,23 +90,35 @@ $(document).on('page_initialized', function()
 {
 	activate_anchors()
 	ajaxify_internal_links(Page.element)
+	
+	if (page.Data_store.что)
+		page.Data_store.load(function(data)
+		{
+			page.Data_store.populate(data)
+			page_initialized()
+		})
+	else
+		page_initialized()
 })
 
 $(document).on('page_loaded', function()
 {
 	var after_styles = function()
 	{
-		page.full_load()
-			
-		ajaxify_internal_links()
+		page.full_load(function()
+		{	
+			ajaxify_internal_links()
+		
+			$(document).trigger('display_page')
 	
-		page_loaded()
-		
-		$('.non_selectable').disableTextSelect()
-		
-		go_to_anchor()
-		
-		navigating = false
+			page_loaded()
+			
+			$('.non_selectable').disableTextSelect()
+			
+			go_to_anchor()
+			
+			navigating = false
+		})
 	}
 	
 	if (first_time_page_loading)

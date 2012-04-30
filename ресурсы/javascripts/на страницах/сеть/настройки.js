@@ -13,7 +13,7 @@
 		email = $('#content').find('.email')
 		No_email_text = email.text()
 	
-		var conditional = initialize_conditional($('.main_conditional'))
+		var conditional = initialize_conditional($('.main_conditional'), { immediate: true })
 		
 		new Data_loader
 		({
@@ -33,6 +33,8 @@
 		
 		Режим.activate_edit_actions({ on_save: save_changes })
 		Режим.разрешить('правка')
+		
+		$(document).trigger('page_initialized')
 	}
 	
 	function подготовить_режим_правки()
@@ -85,4 +87,6 @@
 			Режим.изменения_сохранены()
 		})
 	}
+	
+	page.needs_initializing = true
 })()

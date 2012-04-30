@@ -42,18 +42,20 @@ var Ajax =
 	
 		Default_ajax_error_message = 'Произошла ошибка на сервере'
 		
-		var ajax = $.ajax
-		({
+		var jQuery_options = 
+		{
 			url: url, 
 			type: method,
 			cache: false,
 			data: data, 
 			dataType: options.type,
-			
-			//beforeSend: function() { disable_links() },
-			//complete: function() { enable_links() },
 			timeout: 15000
-		})
+		}
+		
+		if (options.jQuery)
+			$.extend(jQuery_options, options.jQuery)
+			
+		var ajax = $.ajax(jQuery_options)
 		
 		var default_on_error = function(сообщение)
 		{
@@ -81,10 +83,11 @@ var Ajax =
 			
 				if (data.ошибка)
 				{
-					var message = data.ошибка
-					if (message == true)
-						message = Default_ajax_error_message
-					return on_error(message, data.уровень)
+					var сообщение = data.ошибка
+					if (сообщение == true)
+						сообщение = Default_ajax_error_message
+						
+					return on_error(сообщение, data.уровень)
 				}
 				
 				on_ok(data)
@@ -647,4 +650,20 @@ Array.prototype.debug = function()
 	}
 	
 	console.log('---')
+}
+
+Array.prototype.last = function()
+{
+	if (!this.length)
+		throw "Array is empty"
+		
+	return this[this.length - 1]
+}
+
+Array.prototype.first = function()
+{
+	if (!this.length)
+		throw "Array is empty"
+		
+	return this[0]
 }

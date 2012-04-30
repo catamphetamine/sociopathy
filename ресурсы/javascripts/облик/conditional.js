@@ -1,9 +1,17 @@
 function initialize_conditional($this, options)
 {
+	options = options || {}
+
 	var conditional
 
 	var fade_in_duration = 0.2
 	var fade_out_duration = 0.2
+	
+	if (options.immediate)
+	{
+		fade_in_duration = 0
+		fade_out_duration = 0
+	}
 	
 	var every = $this.children()
 

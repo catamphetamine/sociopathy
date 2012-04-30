@@ -238,6 +238,7 @@ var Panel = new Class
 		check_for_current_page({ page: 'сеть/круги', button: 'круги' })
 		check_for_current_page({ page: 'сеть/настройки', button: 'настройки' })
 		check_for_current_page({ page: 'сеть/мусорка', button: 'мусорка' })
+		check_for_current_page({ page: 'управление', button: 'управление' })
 	},
 
 	toggle_buttons: function(options)

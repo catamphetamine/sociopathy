@@ -7,7 +7,7 @@
 	
 	page.load = function()
 	{
-		var conditional = initialize_conditional($('.main_conditional'))
+		var conditional = initialize_conditional($('.main_conditional'), { immediate: true })
 		
 		new Data_templater
 		({
@@ -58,8 +58,8 @@
 	
 	function books_shown()
 	{
-		$('.book.no_icon .author').fill_with_text()
-		$('.book.no_icon .title').fill_with_text({ 'center vertically': true })
+		$('.book.no_icon .author').fill_with_text({ Font_size_increment_step: 2 })
+		$('.book.no_icon .title').fill_with_text({ 'center vertically': true, Font_size_increment_step: 2 })
 		
 		$('.book_place .book_info').each(function()
 		{
@@ -89,5 +89,7 @@
 			
 		Режим.разрешить('правка')
 		Режим.разрешить('действия')
+		
+		$(document).trigger('page_initialized')
 	}
 })()

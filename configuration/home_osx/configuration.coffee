@@ -17,11 +17,11 @@ global.Options =
 		Session:
 			Redis:
 				Prefix: 'website_session:'
-	Picture:
-		Generic:
-			Size: 120
-		Chat:
-			Size: 48
+		Picture:
+			Generic:
+				Size: 120
+			Chat:
+				Size: 48
 	ImageMagick:
 		Convert:
 			Path: '/opt/local/bin/convert'

@@ -6,6 +6,16 @@
 		
 	var всего_людей
 	
+	var progress_bar
+	
+	function set_page_number(number)
+	{
+		if (number > 1)
+			set_url('/люди/' + number)
+		else 
+			set_url('/люди')
+	}
+	
 	page.load = function()
 	{
 		Подсказки.подсказка('Здесь вы можете посмотреть список участников нашей сети. Список подгружается по мере того, как вы прокручиваете его вниз.')
@@ -34,16 +44,19 @@
 			parameters: { раньше: true, всего: всего_людей },
 			get_data: function (data)
 			{
+				if (data.люди.is_empty())
+					return
+				
+				data.люди.last().страница = this.page.number - 1
+				data.люди.last().первый = true
+				
 				return data.люди
 			},
 			before_done_more: function()
 			{
 				new_people_loaded()
 			
-				if (this.page.number > 1)
-					set_url('/люди/' + this.page.number)
-				else 
-					set_url('/люди')
+				//set_page_number(this.page.number)
 				
 				if (this.есть_ли_ещё)
 					previous_people_link.fade_in(0.2)
@@ -54,6 +67,24 @@
 			}
 		})
 		
+		function activate_id_card_scrolling(data, id_card)
+		{
+			if (data.первый)
+			{
+				id_card.on('appearing_on_bottom.scroller', function(event)
+				{
+					set_page_number(data.страница)
+					event.stopPropagation()
+				})
+				
+				id_card.on('disappearing_downwards.scroller', function(event)
+				{
+					set_page_number(data.страница - 1)
+					event.stopPropagation()
+				})
+			}
+		}
+	
 		function show_previous_people(event)
 		{
 			event.preventDefault()
@@ -68,7 +99,12 @@
 			})
 		}
 		
-		top_loader.activate = function() { previous_people_link.on('click', show_previous_people) }
+		top_loader.activate = function()
+		{
+			previous_people_link.fade_in(0)
+			previous_people_link.on('click', show_previous_people)
+		}
+		
 		top_loader.deactivate = function() { previous_people_link.unbind() }
 		
 		new Data_templater
@@ -78,7 +114,14 @@
 			show: function(data, options)
 			{
 				var id_card = $.tmpl(options.template_url, data)
+					
 				$('#id_cards').prepend($('<li/>').append(id_card))
+				
+				if (!data.страница)
+					return
+			
+				activate_id_card_scrolling(data, id_card)
+				прокрутчик.watch(id_card)
 			},
 			conditional: previous_people_conditional,
 			load_data: false
@@ -105,6 +148,12 @@
 				if (!всего_людей)
 					всего_людей = data.всего
 					
+				if (data.люди.is_empty())
+					return
+				
+				data.люди.first().страница = this.page.number + 1
+				data.люди.first().первый = true
+					
 				return data.люди
 			},
 			before_done_output: function()
@@ -114,15 +163,13 @@
 				top_loader.index++
 				top_loader.latest = bottom_loader.earliest
 				previous_people_conditional.callback()
+				//$(document).trigger('page_initialized')
 			},
 			before_done_more_output: function()
 			{
 				new_people_loaded()
 				
-				if (this.page.number > 1)
-					set_url('/люди/' + this.page.number)
-				else 
-					set_url('/люди')
+				//set_page_number(this.page.number)
 			}
 		})
 		
@@ -130,18 +177,30 @@
 		({
 			template_url: '/страницы/кусочки/личная карточка.html',
 			item_container: $('#id_cards'),
-			postprocess_element: function(item)
+			show: function(data, options)
 			{
-				return $('<li/>').append(item)
+				var id_card = $.tmpl(options.template_url, data)
+				
+				$('#id_cards').append($('<li/>').append(id_card))
+				
+				if (!data.страница)
+					return
+					
+				activate_id_card_scrolling(data, id_card)
+				прокрутчик.watch(id_card)
 			},
 			conditional: main_conditional
 		},
 		bottom_loader)
+		
+		progress_bar = $('.vertical_progress_bar')
+		progress_bar.appendTo('body')
 	}
 	
 	page.unload = function()
 	{
 		bottom_loader.deactivate()
+		progress_bar.remove()
 	}
 	
 	var progress
@@ -152,9 +211,12 @@
 		{
 			progress = new Progress
 			({
-				element: $('.progress_bar .bar .progress'),
-				maximum: всего_людей
+				element: $('.vertical_progress_bar .bar .progress'),
+				maximum: всего_людей,
+				vertical: true
 			})
+			
+			progress_bar.show()
 			
 			//$('body').css('margin-bottom', progress.options.element.outerHeight(true) + 'px')
 		}
@@ -162,4 +224,6 @@
 		progress.update(bottom_loader.уже_загружено())
 		ajaxify_internal_links(content)
 	}
+	
+	//page.needs_initializing = true
 })()

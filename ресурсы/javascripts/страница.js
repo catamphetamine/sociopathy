@@ -187,9 +187,46 @@ var Page = new Class
 				return result
 			}		
 		}
+		
+		this.Data_store =
+		{
+			populate: $.noop,
+			collect: $.noop,
+			load: function(возврат)
+			{
+				var data_store = this
+				
+				this.load_draft(function(черновик)
+				{
+					if (черновик)
+						return возврат(черновик)
+						
+					return возврат(data_store.deduce())
+				})
+			},
+			deduce: function()
+			{
+				return {}
+			},
+			load_draft: function(возврат)
+			{
+				var data_store = this
+				
+				page.Ajax.get('/приложение/сеть/черновик', { что: data_store.что })
+				.ok(function(data)
+				{
+					возврат(data.черновик)
+				})
+				.ошибка(function()
+				{
+					error('Не удалось проверить черновик')
+					возврат()
+				})
+			}
+		}
 	},
 	
-	full_load: function()
+	full_load: function(возврат)
 	{
 		this.load()
 		
@@ -201,6 +238,7 @@ var Page = new Class
 		this.when_loaded_actions.empty()
 		
 		this.status = 'loaded'
+		возврат()
 	},
 	
 	full_unload: function()
@@ -211,6 +249,7 @@ var Page = new Class
 		
 		this.event_handlers.forEach(function(handler)
 		{
+			console.log(handler.event)
 			handler.element.unbind(handler.event)
 		})
 		

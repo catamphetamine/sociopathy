@@ -52,6 +52,27 @@ function Form(element)
 		
 			this.label = form.element.find('label[for=' + this.name + ']')
 			
+			var input = this
+			
+			if (this.label.hasClass('in-place_input_label'))
+			{
+				this.label.on('click', function(event)
+				{
+					input.element.focus()
+				})
+				
+				this.element.on('keypress', function(event)
+				{
+					input.label.css({ opacity: 0, 'z-index': -1 })
+				})
+				
+				this.element.on('blur', function(event)
+				{
+					if (!$(this).val())
+						input.label.css({ opacity: 1, 'z-index': 0 })
+				})
+			}
+			
 			this.reset = function()
 			{
 				// if there is any error message - hide it

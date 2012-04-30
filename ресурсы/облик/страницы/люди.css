@@ -67,33 +67,38 @@
 	margin-right: auto;
 }
 
-.progress_bar
+.vertical_progress_bar
 {
 	position: fixed;
-	bottom: 0px;
+	top: 0;
+	right: 0;
 	
-	width: 100%;
-	text-align: center;
+	height: 100%;
 	
 	font-size: 0;
+	display: none;
+	
+	z-index: 2;
 }
 
-.progress_bar
+.vertical_progress_bar
 {
 	.bar
 	{
 		&, .progress
 		{
-			height: 4px;
+			height: 100%;
+	
+			width: 4px;
 			
-			border-top-right-radius: 2px;
+			border-bottom-left-radius: 2px;
 			border-bottom-right-radius: 2px;
 		}
 		
 		.progress
 		{
 			background-color: #4f4f4f;
-			.css_transition(width, 500ms);
+			.css_transition(height, 500ms);
 		}
 	}
 }

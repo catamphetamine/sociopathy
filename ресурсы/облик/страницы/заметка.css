@@ -41,30 +41,6 @@
 
 #article_edit_mode_actions
 {
-	display: none;
-
-	width: 100%;
-	
-	background-color: #d2d2d2;
-	
-	position: fixed;
-	bottom: 0;
-	left: 0;
-	
-	overflow: hidden;
-	padding-top: 8px;
-	
-	text-align: center;
-	
-	.cancel, .done
-	{
-		display: inline-block;
-	}
-	
-	.cancel
-	{
-		margin-left: 50px;
-	}
 }
 
 #article_edit_mode_actions, #article_edit_mode_actions_placeholder

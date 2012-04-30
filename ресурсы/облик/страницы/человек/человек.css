@@ -50,6 +50,11 @@
 			{
 				display: none;
 			}
+			
+			> li
+			{
+				display: none;
+			}
 		}
 		
 		#actions
@@ -98,6 +103,8 @@
 
 #content
 {
+	margin-bottom: 30px;
+
 	> .error
 	{
 		text-align: center;
@@ -131,6 +138,7 @@
 			white-space: nowrap;
 			
 			background-color: #ffffff;
+			box-shadow: 0 0 20px white;
 			
 			padding: 40px;
 			

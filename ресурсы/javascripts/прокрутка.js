@@ -15,13 +15,14 @@ var Scroller = new Class
 		return this.elements.contains(element.node())
 	},
 	
-	watch: function(element, previous_top_offset_in_window)
+	watch: function(element)
 	{
-		if (typeof previous_top_offset_in_window === 'undefined')
-			previous_top_offset_in_window = $(window).height() + 1
+		//if (typeof previous_top_offset_in_window === 'undefined')
+		//	previous_top_offset_in_window = $(window).height() + 1
 	
 		this.elements.push(element.node())
-		element.data('top_offset_in_window', previous_top_offset_in_window)
+		element.data('first_time_with_scroller', true)
+		//element.data('top_offset_in_window', previous_top_offset_in_window)
 		this.check_for_events(element)
 	},
 	
@@ -49,20 +50,97 @@ var Scroller = new Class
 	
 		var top_offset_in_window = element.offset().top - $(window).scrollTop()
 		
+		var first_time = element.data('first_time_with_scroller')
+		if (first_time)
+			element.data('first_time_with_scroller', false)
+		
 		var previous_top_offset_in_window = element.data('top_offset_in_window')
 		element.data('top_offset_in_window', top_offset_in_window)
 		
 		var delta = top_offset_in_window - previous_top_offset_in_window
-		var window_height = $(window).height()
 		
-		if (top_offset_in_window < 0 && previous_top_offset_in_window >= 0)
-			element.trigger('disappearing_upwards.scroller')
-		else if (previous_top_offset_in_window < 0 && top_offset_in_window >= 0
-					&& (top_offset_in_window + element.height() <=  window_height || element.height() > window_height))
-			element.trigger('fully_appeared_on_top.scroller')
-		else if (previous_top_offset_in_window > window_height
-					&& top_offset_in_window <=  window_height)
-			element.trigger('appearing_on_bottom.scroller', window_height - top_offset_in_window)
+		var window_height = $(window).height()
+		var height = element.height()
+		
+		var top_is_visible = top_offset_in_window >= 0 && top_offset_in_window < window_height
+		var bottom_is_visible = top_offset_in_window + height >= 0 && top_offset_in_window + height < window_height
+		
+		var top_was_visible = false
+		var bottom_visible = false
+		
+		if (!first_time)
+		{
+			top_was_visible = previous_top_offset_in_window >= 0 && previous_top_offset_in_window < window_height
+			bottom_visible = previous_top_offset_in_window + height >= 0 && previous_top_offset_in_window + height < window_height
+		}
+		
+		var upwards
+		var downwards
+		if (!first_time)
+		{
+			upwards = top_offset_in_window < previous_top_offset_in_window
+			downwards = !upwards
+		}
+		
+		if (!first_time && top_was_visible && !top_is_visible)
+		{
+			if (upwards)
+				element.trigger('disappearing_upwards.scroller')
+			else
+				element.trigger('disappearing_downwards.scroller')
+		}
+		
+		if (!top_was_visible && top_is_visible && bottom_is_visible)
+		{
+			if (first_time || downwards)
+				element.trigger('fully_appeared_on_top.scroller')
+		}
+		
+		if (!top_was_visible && top_is_visible)
+		{
+			if (first_time || upwards)
+				element.trigger('appearing_on_bottom.scroller', window_height - top_offset_in_window)
+		}
+		
+		if (!first_time)
+		{
+			if (previous_top_offset_in_window < 0 && top_offset_in_window >= window_height && downwards)
+			{
+				if (bottom_is_visible)
+					element.trigger('disappearing_downwards.scroller')
+				else
+					element.trigger('disappearing_downwards.scroller')
+//					element.trigger('disappeared_downwards.scroller')
+			}
+			
+			if (previous_top_offset_in_window >= window_height && top_offset_in_window < 0 && upwards)
+			{
+				if (bottom_is_visible)
+					element.trigger('disappearing_upwards.scroller')
+				else
+					element.trigger('disappearing_upwards.scroller')
+//					element.trigger('disappeared_upwards.scroller')
+			}
+		}
+		else
+		{
+			if (!top_is_visible && !bottom_is_visible)
+			{
+				if (downwards)
+					element.trigger('disappearing_downwards.scroller')
+				else
+					element.trigger('disappearing_upwards.scroller')
+			}
+		}
+		
+		/*
+		if (top_offset_in_window + height <= 0)
+			element.data('visible', false)
+		else if (top_offset_in_window >= window_height)
+			element.data('visible', false)
+		else
+			element.data('visible', true)
+		*/
 	},
 	
 	scroll_to: function(element, options, callback)

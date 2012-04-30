@@ -23,7 +23,7 @@
 		if (match)
 			путь_к_разделу = match[1]
 			
-		var conditional = initialize_conditional($('.main_conditional'))
+		var conditional = initialize_conditional($('.main_conditional'), { immediate: true })
 
 		function show_content()
 		{
@@ -120,4 +120,6 @@
 	{
 		center_list($('#categories'), { space: $('#content'), item_width: 250, item_margin: 40 })
 	}
+	
+	page.needs_initializing = true
 })()

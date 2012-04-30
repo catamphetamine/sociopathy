@@ -146,7 +146,7 @@ var navigating = false;
 			
 			clear_previous_page_data()
 			page = new_page
-			
+				
 			//new_page.data.данные_для_страницы.название_страницы = Страница.эта()
 			//page.data.название_страницы = new_page.data.данные_для_страницы.название_страницы
 		

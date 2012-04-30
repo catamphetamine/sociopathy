@@ -20,5 +20,14 @@ $(document).on('page_loaded', function()
 		
 	if (!Страница.is('обсуждения'))
 		if (пользователь.обсуждения.есть_новые_новости)
-			panel.new_discussions({ immediate: true })	
+			panel.new_discussions({ immediate: true })
+})
+
+$(document).on('display_page', function()
+{
+	if (пользователь && пользователь.управляющий)
+	{
+		panel.buttons.управление.element.parent().show()
+		panel.buttons.управление.tooltip.update_position()
+	}
 })

@@ -2,6 +2,14 @@
 {
 	page.load = function()
 	{
+		/*
+		panel.buttons.управление.element.parent().show()
+		panel.buttons.управление.tooltip.update_position()
+		*/
+		
+		if (!пользователь.управляющий)
+			return window.location = '/'
+		
 		$('#reset_database').click(function(event)
 		{
 			event.preventDefault()

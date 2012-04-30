@@ -97,7 +97,21 @@ function page_loaded()
 {
 	if (first_time_page_loading)
 		first_time_page_loading = false
+		
+	if (!page.needs_initializing)
+		hide_page_loading_screen()
+}
 
+function page_initialized()
+{
+	if (!page.needs_initializing)
+		return
+
+	hide_page_loading_screen()
+}
+
+function hide_page_loading_screen()
+{
 	var loading_screen = $('#loading_screen')
 	
 	loading_screen.fade_out(0.2, function()
@@ -143,6 +157,26 @@ String.prototype.set_character_at = function(index, character)
 		return this
 		
 	return this.substr(0, index) + character + this.substr(index + 1)
+}
+
+String.prototype.before = function(what)
+{
+	var index = this.indexOf(what)
+	
+	if (index < 0)
+		return this
+		
+	return this.substring(0, index)
+}
+
+String.prototype.after = function(what)
+{
+	var index = this.indexOf(what)
+	
+	if (index < 0)
+		return this
+		
+	return this.substring(index + what.length)
 }
 
 String.prototype.beautify = function()
@@ -513,6 +547,8 @@ function initialize_body_edit_mode_effects()
 			$('body').stop(true, false).animate({ 'background-color': initial_background_color }, background_fade_time)
 		}
 	})
+	
+	dummy_div.remove()
 }
 
 function set_url(url, title, data)
@@ -596,4 +632,12 @@ $.fn.on_page = function(event, action)
 		throw 'Page hasn\'t been initialized yet'
 		
 	page.on(this, event, action)
+}
+
+function anti_cache_postfix(url)
+{
+	if (!url)
+		return '?' + new Date().getTime()
+	
+	return url.before('?') + anti_cache_postfix()
 }

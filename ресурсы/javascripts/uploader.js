@@ -1,18 +1,12 @@
-function Uploader(input, options)
-{
-	var $this = this
+var Uploader = new Class
+({
+	Implements: [Options],
 
-	// Default settings (mostly debug functions)
-	this.settings =
+	options:
 	{
 		prefix: 'file',
 		multiple: false,
-		autoUpload: false,
-		url: window.location.href,
-		onprogress: function(event)
-		{
-			//console.log(event)
-		},
+		auto_upload: false,
 		error: function(error)
 		{
 			//console.log('error')
@@ -21,63 +15,74 @@ function Uploader(input, options)
 		{
 			//console.log(data)
 		}
-	}
+	},
 	
-	$.extend(this.settings, options)
+	initialize: function(input, options)
+	{
+		this.setOptions(options)
+	
+		if (!this.options.Ajax)
+			return alert('Uploader needs an Ajax option')
+		
+		if (input instanceof jQuery)
+			input = input[0]
+			
+		this.input = input
+	
+		if (this.options.auto_upload)
+			this.input.onchange = this.send
+	},
 
-	this.input = input
-	this.xhr = new XMLHttpRequest()
-
-	this.send = function()
+	send: function()
 	{
 		// Make sure there is at least one file selected
-		if ($this.input.files.length < 1)
+		if (this.input.files.length < 1)
 		{
-			if ($this.settings.error)
-				$this.settings.error('Must select a file to upload')
+			if (this.options.error)
+				this.options.error('Must select a file to upload')
 				
 			return false
 		}
 		
 		// Don't allow multiple file uploads if not specified
-		if($this.settings.multiple === false && $this.input.files.length > 1)
+		if (this.options.multiple === false && this.input.files.length > 1)
 		{
-			if($this.settings.error)
-				$this.settings.error('Can only upload one file at a time')
+			if (this.options.error)
+				this.options.error('Can only upload one file at a time')
 				
 			return false
 		}
 		
-		// Must determine whether to send one or all of the selected files
-		if($this.settings.multiple) 
-			$this.multiSend($this.input.files)
+		if (this.options.multiple) 
+			this.multiSend(this.input.files)
 		else 
-			$this.singleSend($this.input.files[0])
-	}
+			this.singleSend(this.input.files[0])
+	},
 
-	// Prep a single file for upload
-	this.singleSend = function(file)
+	singleSend: function(file)
 	{
 		var data = new FormData()
-		data.append(String($this.settings.prefix), file)
-		$this.upload(data)
-	}
+		data.append(String(this.options.prefix), file)
+		this.upload(data)
+	},
 
-	// Prepare all of the input files for upload
-	this.multiSend = function(files)
+	multiSend: function(files)
 	{
 		var data = new FormData()
-		for(var i = 0; i < files.length; i++)
-			data.append(String($this.settings.prefix)+String(i), files[i])
-		$this.upload(data)
-	}
-
-	// The actual upload calls
-	this.upload = function(data)
-	{
-		var url = $this.settings.url
 		
-		var parameter = $this.settings.parameter
+		files.forEach(function(file, i)
+		{
+			data.append(this.options.prefix + i, file)
+		})
+		
+		this.upload(data)
+	},
+
+	upload: function(data)
+	{
+		var url = this.options.url
+		
+		var parameter = this.options.parameter
 		if (parameter)
 		{
 			if (url.indexOf('?') >= 0)
@@ -87,59 +92,31 @@ function Uploader(input, options)
 				
 			url += encodeURIComponent(parameter.name) + '=' + encodeURIComponent(parameter.value)
 		}
-			
-		$this.xhr.open('POST', url, true)
-		$this.xhr.send(data)
-	}
-
-	// Modify options after instantiation
-	this.setOpt = function(opt, val)
-	{
-		$this.settings[opt] = val
-		return $this
-	}
-	
-	this.getOpt = function(opt)
-	{
-		return $this.settings[opt]
-	}
-
-	// Set the input element after instantiation
-	this.setInput = function(elem)
-	{
-		$this.input = elem
-		return $this
-	}
-	
-	this.getInput = function()
-	{
-		return $this.input
-	}
-	
-	// Basic setup for the XHR stuff
-	if(this.settings.progress)
-		this.xhr.upload.addEventListener('progress', this.settings.progress, false)
 		
-	this.xhr.onreadystatechange = function(ev)
-	{
-		if ($this.xhr.readyState == 4)
+		var uploader = this
+	
+		this.options.Ajax.post(url, data,
 		{
-			if ($this.xhr.status == 200 || $this.xhr.status == 0)
+			type: 'json',
+			jQuery:
 			{
-				if ($this.settings.success)
-					$this.settings.success(JSON.parse($this.xhr.responseText), ev)
-					
-				$this.input.value = ''
-			}
-			else
+				contentType: false,
+				processData: false
+			},
+			before: function(XmlHttpRequest)
 			{
-				if($this.settings.error)
-					$this.settings.error($this.xhr)
+				if (uploader.options.progress)
+					XmlHttpRequest.upload.addEventListener('progress', uploader.options.progress, false)
 			}
-		}
+		})
+		.ok(function(data)
+		{
+			uploader.input.value = ''
+			uploader.options.success(data)
+		})
+		.ошибка(function(error)
+		{
+			uploader.options.error(error)
+		})
 	}
-
-	// onChange event for autoUploads
-	if (this.settings.autoUpload)
-		this.input.onchange = this.send
-}
+})

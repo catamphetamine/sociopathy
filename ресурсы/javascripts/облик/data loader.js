@@ -91,7 +91,7 @@ var Batch_loader = new Class
 			if (!data['есть ещё?'])
 				loader.есть_ли_ещё = false
 				
-			var data_list = loader.options.get_data(data)
+			var data_list = loader.options.get_data.bind(loader)(data)
 			loader.index += data_list.length
 			
 			if (!data_list.is_empty())
@@ -222,12 +222,16 @@ var Data_loader = new Class
 		parameters: {},
 		get_data: function(data) { return data },
 		done: function() {},
+		show: function() {},
 		before_done_output: function() {}
 	},
 	
 	initialize: function(options)
 	{
 		this.setOptions(options)
+		
+		if (this.options.conditional)
+			this.options.callback = this.options.conditional.callback
 		
 		if (page)
 			if (!this.options.Ajax)
@@ -245,7 +249,7 @@ var Data_loader = new Class
 		})
 		.ok(function(data)
 		{
-			callback(null, loader.options.get_data(data))
+			callback(null, loader.options.get_data.bind(loader)(data))
 		})
 	},
 	
