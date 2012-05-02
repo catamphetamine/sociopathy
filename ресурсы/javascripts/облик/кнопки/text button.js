@@ -2,7 +2,11 @@
  * Text Button
  * 
  * This script creates eye-candy buttons with smooth animated hover and click effects.
- * 
+ *
+ * Usage:
+ *
+ * var add_book = text_button.new($('.main_content .add_book')).does(function() { alert('test') })
+ *
  * Requires jQuery, MooTools, Button. 
  * 
  * Copyright (c) 2010 Nikolay Kuchumov
@@ -29,7 +33,21 @@ var text_button = new Class
 	
 	initialize: function(selector_or_element, options)
 	{
-		this.parent(selector_or_element, $.extend({}, this.default_options, options))		
+		var element = button.get_element(selector_or_element)
+		
+		if (element.is('button'))
+		{
+			var boundary_html = element.boundary_html()
+			var new_element = $(boundary_html.opening.replace(/^<button/, '<div ') + boundary_html.closing.replace(/<\/button>$/, '</div>'))
+			new_element.css('display', 'inline-block')
+
+			new_element.append($('<label/>').html(element.html()))
+			
+			element.replaceWith(new_element)
+			element = new_element
+		}
+	
+		this.parent(element, $.extend({}, this.default_options, options))		
 	},
 	
 	prepare: function()
@@ -77,7 +95,7 @@ var text_button = new Class
 		var styles = this.$element.attr('styles')
 		
 		if (!styles)
-			return []
+			return ['generic']
 			
 		return styles.split(', ')
 	},
@@ -169,6 +187,7 @@ var text_button = new Class
 			'min-height': this.skin.height + 'px',
 			'max-height': this.skin.height + 'px',
 
+			// strange bug in FireFox
 			'width': this.skin['side bar size'] + 'px',
 
 			'background_position_x': 'left',
@@ -182,6 +201,9 @@ var text_button = new Class
 			'-webkit-transform': 'scaleX(-1)',
 			'transform': 'scaleX(-1)'
 		})
+		
+		// fixes a strange bug in FireFox - an empty pixel stripe before the right side
+		right_part.width(right_part.width() - 1)
 
 		idle_frame.prepend(left_part).append(right_part)
 
@@ -347,4 +369,35 @@ text_button.add_skin = function(name, settings)
 	button.prototype.skins = button.prototype.skins || {}
 	
 	button.prototype.skins[name] = settings
+}
+
+text_button['new'] = function(selector, options)
+{
+	var element = $(selector)
+
+	options = options || {}
+	options.selector = selector
+
+	if (!options.physics)
+		options.physics = 'classic'
+		
+	if (element.attr('dark'))
+		element.data('button_type', 'dark generic')
+	else
+		element.data('button_type', 'generic')
+			
+	return button.physics[options.physics](new text_button
+	(
+		element,
+		Object.append
+		(
+			{
+				skin: 'sociopathy',
+				
+				// miscellaneous
+				'button type':  element.attr('type') || element.data('button_type'), // || 'generic',
+			},
+			options
+		)
+	))
 }

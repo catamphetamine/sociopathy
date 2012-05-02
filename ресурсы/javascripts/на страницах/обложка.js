@@ -78,13 +78,13 @@
 	// create join dialog buttons
 	function initialize_join_dialog_buttons()
 	{
-		join_dialog_cancel_button = activate_button('#join_dialog .buttons .cancel', { 'prevent double submission': true })
+		join_dialog_cancel_button = text_button.new('#join_dialog .buttons .cancel', { 'prevent double submission': true })
 		.does(function() { join_dialog.close() })
 		
-		join_dialog_next_button = activate_button('#join_dialog .buttons .next')
+		join_dialog_next_button = text_button.new('#join_dialog .buttons .next')
 		.does(function() { join_form_slider.next(function() { $('#join_dialog .slider .slide:eq(' + (join_form_slider.slider.index - 1) + ') input:first').focus() }) })
 		
-		join_dialog_done_button = activate_button('#join_dialog .buttons .done', { 'prevent double submission': true })
+		join_dialog_done_button = text_button.new('#join_dialog .buttons .done', { 'prevent double submission': true })
 		.does(function() { join_form_slider.done() })
 	}
 	

@@ -29,10 +29,10 @@ var enter_window
 		
 		login_form = new Form(enter_window.content.find('form').eq(0))
 		
-		кнопка_отмены = activate_button('#enter_window .buttons .cancel', { 'prevent double submission': true, physics: 'quick pushing' })
+		кнопка_отмены = text_button.new('#enter_window .buttons .cancel', { 'prevent double submission': true, physics: 'quick pushing' })
 		.does(function() { enter_window.close() })	
 		
-		кнопка_входа = activate_button('#enter_window .buttons .enter', { 'prevent double submission': true })
+		кнопка_входа = text_button.new('#enter_window .buttons .enter', { 'prevent double submission': true })
 		.does(function() { войти({ имя: поле_имени.val(), пароль: поле_пароля.val() }) }).submits(login_form)
 		
 		enter_window.register_controls

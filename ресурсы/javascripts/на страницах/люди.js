@@ -69,20 +69,20 @@
 		
 		function activate_id_card_scrolling(data, id_card)
 		{
-			if (data.первый)
+			if (!data.первый)
+				return
+			
+			id_card.on('appearing_on_bottom.scroller', function(event)
 			{
-				id_card.on('appearing_on_bottom.scroller', function(event)
-				{
-					set_page_number(data.страница)
-					event.stopPropagation()
-				})
-				
-				id_card.on('disappearing_downwards.scroller', function(event)
-				{
-					set_page_number(data.страница - 1)
-					event.stopPropagation()
-				})
-			}
+				set_page_number(data.страница)
+				event.stopPropagation()
+			})
+			
+			id_card.on('disappearing_downwards.scroller', function(event)
+			{
+				set_page_number(data.страница - 1)
+				event.stopPropagation()
+			})
 		}
 	
 		function show_previous_people(event)

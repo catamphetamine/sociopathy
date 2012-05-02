@@ -3303,7 +3303,19 @@ Less.unload_style = function(link)
 Less.load_style = function(link, callback)
 {
 	var style_element = $('head').find('link[href="' + link + '"]')
-	loadStyleSheet(style_element[0], callback, false, 0)
+	
+	// loadStyleSheet(sheet, callback, reload, remaining)
+	// callback(error, root, data, sheet, { local: false, lastModified: lastModified, remaining: remaining });
+	
+	var internal_callback = function(error, parsed_document, data, sheet, info)
+	{
+		if (parsed_document)
+			createCSS(parsed_document.toCSS(), sheet, info.lastModified)
+			
+		callback()
+	}
+	
+	loadStyleSheet(style_element[0], internal_callback, false, 0)
 }
 
 /**  Less custom changes end */

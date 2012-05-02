@@ -26,6 +26,8 @@ var Страница =
 						new_page.data.адресное_имя = value
 						название_страницы = 'человек/человек'
 						
+						new_page.data.пользователь_сети = { 'адресное имя': value }
+						
 						match_url(rest,
 						{
 							'дневник': function(rest)
@@ -249,7 +251,6 @@ var Page = new Class
 		
 		this.event_handlers.forEach(function(handler)
 		{
-			console.log(handler.event)
 			handler.element.unbind(handler.event)
 		})
 		

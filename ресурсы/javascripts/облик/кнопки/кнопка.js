@@ -156,7 +156,7 @@ var button = new Class
 		this.pushing.self = this
 
 		// get the element
-		this.element = get_element(selector_or_element)
+		this.element = button.get_element(selector_or_element)
 		this.$element = this.element
 		
 		// custom preparations
@@ -536,8 +536,11 @@ var button = new Class
 	
 	does: function(fn, options)
 	{
+		// getter
 		if (arguments.length == 0)
 			return this.options.action
+			
+		// setter
 			
 		this.options.action = fn.bind(this)
 		
@@ -612,4 +615,12 @@ button.physics =
 		
 		return the_button
 	}
+}
+
+button.get_element = function(selector_or_element)
+{
+	if (typeof selector_or_element === "string")
+		return $(selector_or_element)
+		
+	return selector_or_element
 }

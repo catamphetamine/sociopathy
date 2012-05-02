@@ -7,6 +7,57 @@
 	
 	page.load = function()
 	{
+		var add_book = text_button.new($('.main_content .add_book')).does(function()
+		{
+			alert(1)
+		})
+		
+		add_book.element.invisible()
+		
+		Режим.добавить_проверку_перехода(function(из, в)
+		{
+			if (в === 'правка')
+			{
+				if (!page.data.пользователь_сети)
+				{
+					info('Здесь нечего править')
+					return false
+				}
+				
+				if (пользователь['адресное имя'] !== page.data.пользователь_сети['адресное имя'])
+				{
+					info('Это не ваши личные данные, и вы не можете их править.')
+					return false
+				}
+			}
+		})
+	
+		$(document).on_page('режим.переход', function(event, из, в)
+		{
+			if (в === 'правка')
+			{
+				add_book.element.fade_in(0.2)
+				
+				$('.book_place .book').each(function()
+				{
+					var book = $(this)
+					book.on('click.режим_правка', function(event)
+					{
+						event.preventDefault()
+						alert(2)
+					})
+				})
+				
+				return
+			}
+			
+			if (из === 'правка')
+			{
+				add_book.element.fade_out(0.2)
+				return
+			}
+		})
+		
 		var conditional = initialize_conditional($('.main_conditional'), { immediate: true })
 		
 		new Data_templater
@@ -53,7 +104,7 @@
 	
 	function books_loaded()
 	{
-		$('.bookshelf_container .book_place').css('opacity', 0)
+		$('.bookshelf_container .book_place').invisible()
 	}
 	
 	function books_shown()
@@ -71,8 +122,6 @@
 				left: -parseInt((info.outerWidth() - book_place.width()) / 2) + 'px',
 				top: parseInt(book_place.height() * 0.9) + 'px'
 			})
-			
-			info.css('opacity')
 			
 			info.hide()
 			

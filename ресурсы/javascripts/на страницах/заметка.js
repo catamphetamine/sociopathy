@@ -166,11 +166,11 @@
 			edit_mode_actions = $('#article_edit_mode_actions')
 			edit_mode_actions.appendTo($('body')).move_out_downwards().disableTextSelect()
 		
-			save_button = activate_button(edit_mode_actions.find('.done'), { 'prevent double submission': true })
+			save_button = text_button.new(edit_mode_actions.find('.done'), { 'prevent double submission': true })
 			.does(function()
 			{
 				var loading = loading_indicator.show()
-				page.Ajax.post('/приложение/заметка/сохранить',
+				page.Ajax.put('/приложение/читальня/заметка',
 				{
 					_id: заметка._id,
 					title: get_title(),
@@ -198,12 +198,13 @@
 				})
 			})
 			
-			cancel_button = activate_button(edit_mode_actions.find('.cancel'), { 'prevent double submission': true })
+			cancel_button = text_button.new(edit_mode_actions.find('.cancel'), { 'prevent double submission': true })
 			.does(function()
 			{
 				var loading = loading_indicator.show()
-				page.Ajax.delete('/приложение/заметка/черновик/удалить',
+				page.Ajax.delete('/приложение/черновик,
 				{
+					что: "заметка",
 					_id: заметка._id
 				})
 				.ошибка(function(ошибка)

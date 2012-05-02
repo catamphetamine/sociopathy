@@ -338,14 +338,20 @@ http.post '/хранилище/заполнить', (ввод, вывод) ->
 					название: 'Скрытые связи',
 					id: 'Фритьоф Капра «Скрытые связи»',
 					файл: 'книга.pdf',
-					обложка: 'обложка.jpg'
+					обложка:
+						ширина: 88,
+						высота: 140,
+						картинка: 'обложка.jpg'
 				},
 				{
 					сочинитель: 'Edward Tufte',
 					название: 'Visual Explanations',
 					id: 'Edward Tufte «Visual Explanations»',
 					ссылка: 'http://rutracker.org/forum/viewtopic.php?t=1488663',
-					обложка: 'обложка.jpg'
+					обложка:
+						ширина: 100,
+						высота: 126,
+						картинка: 'обложка.jpg'
 				},
 				{
 					сочинитель: 'Кон И.С.',
@@ -647,6 +653,9 @@ http.post '/хранилище/заполнить', (ввод, вывод) ->
 			хранилище.collection('library_categories').ensureIndex 'id', yes, @
 			
 		.сделать ->
+			хранилище.collection('library_categories').ensureIndex 'название', no, @
+			
+		.сделать ->
 			хранилище.collection('library_categories').ensureIndex 'надраздел', no, @
 
 		.сделать ->
@@ -780,6 +789,9 @@ http.post '/хранилище/заполнить', (ввод, вывод) ->
 
 		.сделать ->
 			хранилище.collection('library_articles').ensureIndex 'id', yes, @
+
+		.сделать ->
+			хранилище.collection('library_articles').ensureIndex 'название', no, @
 
 		.сделать ->
 			хранилище.collection('library_articles').ensureIndex 'раздел', no, @

@@ -16,7 +16,7 @@
 var image_chooser = function(selector_or_element, options)
 {
 	// get the element
-	var $element = get_element(selector_or_element)
+	var $element = button.get_element(selector_or_element)
 	
 	// the set of choosable images
 	var choises = $("span[value]", $element)

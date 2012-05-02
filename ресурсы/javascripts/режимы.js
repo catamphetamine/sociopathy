@@ -295,7 +295,7 @@ var Режим = (function()
 		actions = $('.edit_mode_actions').clone()
 		actions.appendTo($('body')).move_out_downwards().disableTextSelect()
 
-		save_changes_button = activate_button(actions.find('.done'), { 'prevent double submission': true })
+		save_changes_button = text_button.new(actions.find('.done'), { 'prevent double submission': true })
 		.does(on_save)
 		
 		$(document).on('режим.переход', function(event, из, в)

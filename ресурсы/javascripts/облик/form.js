@@ -63,6 +63,9 @@ function Form(element)
 				
 				this.element.on('keypress', function(event)
 				{
+					if (event.ctrlKey || event.metaKey || event.altKey)
+						return
+						
 					input.label.css({ opacity: 0, 'z-index': -1 })
 				})
 				
@@ -92,7 +95,8 @@ function Form(element)
 					if (result && result.error)
 					{
 						form.element.focus()
-						form.error(result.error)
+					
+						form.error(result.error, input)
 						
 						error.is_form_validation = true
 						return error_callback(result.error)
@@ -111,12 +115,22 @@ function Form(element)
 					this.error_label.slide_out()
 			}
 			
-			// if this field has an error
-			this.error = function(error)
+			this.error_message = function(text)
 			{
+				error(text)
+			}
+			
+			// if this field has an error
+			this.error = function(error, input)
+			{
+				var label = form.element.find('label[for=' + input.name + ']')
+	
+				if (this.label.hasClass('in-place_input_label'))
+					return this.error_message(error)
+			
 				// prepare the error label
 				this.label.attr("error", new String(error).escape_html())
-	
+			
 				// if the error label hasn't been created - create it
 				if (!this.error_label)
 				{

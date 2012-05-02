@@ -122,15 +122,6 @@ function hide_page_loading_screen()
 	$('body').removeClass('loading')
 }
 
-// get jQuery element
-function get_element(selector_or_element)
-{
-	if (typeof selector_or_element === "string")
-		return $(selector_or_element)
-		
-	return selector_or_element
-}
-
 $(function()
 {
 	$('form').submit(function(event)
@@ -138,87 +129,6 @@ $(function()
 		event.preventDefault()
 	})
 })
-
-RegExp.escape = function(string)
-{
-	var specials = new RegExp("[.*+?|()\\[\\]{}\\\\]", "g")
-	return string.replace(specials, "\\$&")
-}
-
-String.prototype.replace_all = function(what, with_what)
-{
-	var regexp = new RegExp(RegExp.escape(what), "g")
-	return this.replace(regexp, with_what)
-}
-
-String.prototype.set_character_at = function(index, character)
-{
-	if (index > this.length - 1)
-		return this
-		
-	return this.substr(0, index) + character + this.substr(index + 1)
-}
-
-String.prototype.before = function(what)
-{
-	var index = this.indexOf(what)
-	
-	if (index < 0)
-		return this
-		
-	return this.substring(0, index)
-}
-
-String.prototype.after = function(what)
-{
-	var index = this.indexOf(what)
-	
-	if (index < 0)
-		return this
-		
-	return this.substring(index + what.length)
-}
-
-String.prototype.beautify = function()
-{
-	var string = this + ''
-	
-	function replace_quotes(which, string)
-	{
-		var quote_index = -1
-		var found_quote_type
-		while ((quote_index = string.indexOf(which, quote_index + 1)) >= 0)
-		{
-			if (found_quote_type === 'odd')
-				found_quote_type = 'even'
-			else
-				found_quote_type = 'odd'
-		
-			var beautiful_quote
-			if (found_quote_type === 'odd')
-				beautiful_quote = '«'
-			else
-				beautiful_quote = '»'
-				
-			string = string.set_character_at(quote_index, beautiful_quote)
-		}
-		
-		return string
-	}
-	
-	string = replace_quotes('"', string)
-	//string = replace_quotes("'", string)
-	
-	string = string.replace_all(' - ', ' — ')
-
-	// заменить три точки на троеточие
-	string = string.replace(/([^\.]+)\.\.\.([^\.]+)/g, '$1…$2')
-	string = string.replace(/^\.\.\.([^\.]+)/g, '…$1')
-	string = string.replace(/([^\.]+)\.\.\.$/g, '$1…')
-	string = string.replace(/^\.\.\.$/g, '…')
-	
-	return string
-}
 
 function go_to_anchor()
 {
@@ -300,106 +210,6 @@ $(document).on('page_loaded', function()
 	activate_anchors()
 })
 
-String.prototype.count = function(what)
-{
-	if (typeof(what) === 'string')
-	{
-		var count = 0
-		var index = -1
-		while ((index = this.indexOf(what, index + 1)) >= 0)
-			count++
-		
-		return count
-	}
-	
-	if (what.constructor === RegExp)
-	{
-		var match = this.match(what)
-		if (!match)
-			return 0
-			
-		return this.match(what).length
-	}
-}
-
-String.prototype.matches = function(pattern)
-{
-	var expression = pattern
-	if (expression.constructor !== 'RegExp')
-		expression = new RegExp(pattern, 'g')
-	
-	var match = this.match(expression)
-	if (!match)
-		return false
-		
-	return true //this.match(what).length
-}
-
-function now()
-{
-	return new Date()
-}
-
-Array.prototype.is_empty = function()
-{
-	return this.length === 0
-}
-
-String.prototype.starts_with = function(substring) 
-{
-	return this.indexOf(substring) === 0
-}
-
-String.prototype.ends_with = function(substring) 
-{
-	var index = this.lastIndexOf(substring)
-	return index >= 0 && index === this.length - substring.length
-}
-
-String.prototype.chop_on_the_end = function(how_much) 
-{
-	return this.substring(0, this.length - how_much)
-}
-
-String.prototype.trim_trailing_comma = function()
-{
-	var text = this.trim()
-	
-	if (text.match(/[^\.]+\.$/))
-		text = text.substring(0, text.length - 1)
-		
-	return text
-}
-
-String.prototype.is_multiline = function()
-{
-	return this.contains('\n')
-}
-
-String.prototype.contains = function(what)
-{
-	return this.indexOf(what) >= 0
-}
-
-String.prototype.collapse_lines = function()
-{
-	return this.replace(/\n/g, '')
-}
-
-/*
-Object.forEach = function(object, action)
-{
-	Object.each(object, function(value, key)
-	{
-		if (object.hasOwnProperty(key))
-		{
-			console.log(key)
-			action(value, key)
-		}
-	})
-}
-*/
-
 $(function()
 {
 	var body = $('body')
@@ -426,62 +236,6 @@ function путь_страницы(url)
 		путь = путь.chop_on_the_end(1)
 		
 	return путь
-}
-
-// HTML escaping
-
-String.prototype.escape_html = function() 
-{
-	return this.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
-}
-
-Function.prototype.ticking = function(period, bind, arguments)
-{
-	var running = true
-	var timeout_id
-	
-	var func = this
-	var periodical = function()
-	{
-		if (func() === false)
-			return
-		if (running)
-			next()
-	}
-	
-	var next = function()
-	{
-		timeout_id = periodical.delay(period, bind, arguments)
-	}
-	
-	periodical()
-	return { stop: function() { clearTimeout(timeout_id); running = false } }
-}
-
-function activate_button(selector, options)
-{
-	var element = $(selector)
-
-	options = options || {}
-	options.selector = selector
-
-	if (!options.physics)
-		options.physics = 'classic'
-		
-	return button.physics[options.physics](new text_button
-	(
-		element,
-		Object.append
-		(
-			{
-				skin: 'sociopathy',
-				
-				// miscellaneous
-				'button type':  element.attr('type'), // || 'generic',
-			},
-			options
-		)
-	))
 }
 
 $(function()
@@ -565,6 +319,17 @@ function set_new_url(url, title, data)
 	window.history.pushState(data, title, url)
 }
 
+// copied from enginex.conf
+var Page_url_patterns =
+[
+	/^\/$/,
+	/^\/люди(\/(.*))?$/,
+	/^\/читальня(\/(.*))?$/,
+	/^\/помощь(\/(.*))?$/,
+	/^\/управление(\/(.*))?$/,
+	/^\/сеть\/болталка(\/(.*))?$/
+]
+
 function ajaxify_internal_links(where)
 {
 	if (!where)
@@ -581,7 +346,27 @@ function ajaxify_internal_links(where)
 		if (link.data('ajaxified'))
 			return
 			
+		if (link.data('static'))
+			return
+			
 		if (link.attr('dummy'))
+			return
+		
+		var is_a_page = false
+		
+		var i = 0
+		while (i < Page_url_patterns.length)
+		{
+			if (url.match(Page_url_patterns[i]))
+			{
+				is_a_page = true
+				break
+			}
+			
+			i++
+		}
+			
+		if (!is_a_page)
 			return
 			
 		link.click(function(event)

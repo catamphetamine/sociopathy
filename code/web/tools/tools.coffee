@@ -327,6 +327,13 @@ Object.merge_recursive = (obj1, obj2) ->
 	return obj1
 
 Object.выбрать = (названия, object) ->
+	if object instanceof Array
+		i = 0
+		while i < object.length
+			object[i] = Object.выбрать(названия, object[i])
+			i++
+		return object
+		
 	поля = {}
 	for название in названия
 		поля[название] = object[название]
@@ -338,3 +345,7 @@ Object.keys = (object) ->
 		if object.hasOwnProperty(key)
 			keys.push(key)
 	keys
+	
+RegExp.escape = (string) ->
+	specials = new RegExp("[.*+?|()\\[\\]{}\\\\]", 'g')
+	new String(string).replace(specials, "\\$&")

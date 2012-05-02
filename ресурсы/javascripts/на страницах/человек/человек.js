@@ -50,7 +50,6 @@
 	
 	page.unload = function()
 	{
-		
 	}
 	
 	var когда_был_здесь

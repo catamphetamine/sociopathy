@@ -21,7 +21,7 @@ var image_button = new Class
 	{
 		this.options['image format'] = 'png'
 
-		var element = get_element(id_or_element)
+		var element = button.get_element(id_or_element)
 
 		this.options.width = element.width()
 		this.options.height = element.height()

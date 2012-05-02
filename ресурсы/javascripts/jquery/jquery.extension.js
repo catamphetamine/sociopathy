@@ -380,6 +380,13 @@ $.fn.outer_html = function()
 
 $.fn.boundary_html = function()
 {
+	var html = $('<div/>').append(this.eq(0).clone().empty()).html()
+	
+	var opening = html.before('</')
+	
+	return { opening: opening, closing: html.substring(opening.length) }
+	
+	/*
 	var outer_html = this.outer_html()
 	var inner_html = this.html()
 	
@@ -387,6 +394,7 @@ $.fn.boundary_html = function()
 	var closing_boundary_start = opening_boundary_stop + inner_html.length
 	
 	return { opening: outer_html.substring(0, opening_boundary_stop), closing: outer_html.substring(closing_boundary_start) }
+	*/
 }
 
 $.fn.find_parent = function(filter)
@@ -524,6 +532,11 @@ $.fn.transition_duration = function()
 	return
 }
 
+$.fn.invisible = function()
+{
+	return this.css({ opacity: 0 })
+}
+
 // get current time
 /*
 var $time = Date.now || function() 
@@ -546,26 +559,6 @@ function object_info(object)
 	}
 	
 	return info
-}
-
-String.prototype.count_occurences = function(substring) 
-{   
-    return (this.length - this.replace(new RegExp(substring, "g"), '').length) / substring.length
-}
-
-String.prototype.underscore = function()
-{
-	return this.replace(/[\s]+/, "_")
-}
-
-String.prototype.starts_with = function(substring) 
-{
-	return (this.match("^" + substring) == substring)
-}
-
-String.prototype.ends_with = function(substring) 
-{
-	return (this.match(substring + "$") == substring)
 }
 
 // miscellaneous

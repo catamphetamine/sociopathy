@@ -13,7 +13,6 @@
 	[type=ok]
 	{
 		text-align: center;
-		
 	}
 }
 
@@ -22,7 +21,21 @@
 	text-align: center;
 		
 	padding-bottom: 100px;
-	padding-top: 150px;
+	padding-top: 70px;
+	
+	.main_content
+	{
+		.add_book_container
+		{
+			margin-bottom: 30px;
+			
+			height: 60px;
+			
+			.add_book
+			{
+			}
+		}
+	}
 }
 
 .book_info
@@ -274,4 +287,9 @@
 			background-image: url('/картинки/книжный шкаф/торец полки.png');
 		}
 	}
+}
+
+body[mode="правка"] .book
+{
+	cursor: pointer !important;
 }

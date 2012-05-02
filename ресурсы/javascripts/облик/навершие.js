@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Panel
  * 
  * This script creates top panel bar with clickable menu items having tooltips.

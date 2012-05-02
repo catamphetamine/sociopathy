@@ -40,7 +40,7 @@ function simple_value_dialog_window(options)
 		}
 	})
 		
-	var cancel = activate_button(dialog_window.content.find('.buttons .cancel'), { 'prevent double submission': true })
+	var cancel = text_button.new(dialog_window.content.find('.buttons .cancel'), { 'prevent double submission': true })
 	.does(function()
 	{
 		dialog_window.cancel()
@@ -49,7 +49,7 @@ function simple_value_dialog_window(options)
 	
 	var validating_form = new Form(form)
 	
-	var ok = activate_button(dialog_window.content.find('.buttons .ok'), { 'prevent double submission': true })
+	var ok = text_button.new(dialog_window.content.find('.buttons .ok'), { 'prevent double submission': true })
 	.does(function()
 	{
 		dialog_window.close()
