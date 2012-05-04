@@ -85,21 +85,21 @@ var Scroller = new Class
 		if (!first_time && top_was_visible && !top_is_visible)
 		{
 			if (upwards)
-				element.trigger('disappearing_upwards.scroller')
+				element.trigger('disappears_on_top.scroller')
 			else
-				element.trigger('disappearing_downwards.scroller')
+				element.trigger('disappears_on_bottom.scroller')
 		}
 		
 		if (!top_was_visible && top_is_visible && bottom_is_visible)
 		{
 			if (first_time || downwards)
-				element.trigger('fully_appeared_on_top.scroller')
+				element.trigger('fully_appears_on_top.scroller')
 		}
 		
 		if (!top_was_visible && top_is_visible)
 		{
 			if (first_time || upwards)
-				element.trigger('appearing_on_bottom.scroller', window_height - top_offset_in_window)
+				element.trigger('appears_on_bottom.scroller', window_height - top_offset_in_window)
 		}
 		
 		if (!first_time)
@@ -107,19 +107,19 @@ var Scroller = new Class
 			if (previous_top_offset_in_window < 0 && top_offset_in_window >= window_height && downwards)
 			{
 				if (bottom_is_visible)
-					element.trigger('disappearing_downwards.scroller')
+					element.trigger('disappears_on_bottom.scroller')
 				else
-					element.trigger('disappearing_downwards.scroller')
-//					element.trigger('disappeared_downwards.scroller')
+					element.trigger('disappears_on_bottom.scroller')
+//					element.trigger('disappeared_on_bottom.scroller')
 			}
 			
 			if (previous_top_offset_in_window >= window_height && top_offset_in_window < 0 && upwards)
 			{
 				if (bottom_is_visible)
-					element.trigger('disappearing_upwards.scroller')
+					element.trigger('disappears_on_top.scroller')
 				else
-					element.trigger('disappearing_upwards.scroller')
-//					element.trigger('disappeared_upwards.scroller')
+					element.trigger('disappears_on_top.scroller')
+//					element.trigger('disappeared_on_top.scroller')
 			}
 		}
 		else
@@ -127,9 +127,9 @@ var Scroller = new Class
 			if (!top_is_visible && !bottom_is_visible)
 			{
 				if (downwards)
-					element.trigger('disappearing_downwards.scroller')
+					element.trigger('disappears_on_bottom.scroller')
 				else
-					element.trigger('disappearing_upwards.scroller')
+					element.trigger('disappears_on_top.scroller')
 			}
 		}
 		

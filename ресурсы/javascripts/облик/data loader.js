@@ -197,7 +197,7 @@ var Batch_loader_with_infinite_scroll = new Class
 	{
 		var loader = this
 		
-		this.options.scroll_detector.on('appearing_on_bottom.scroller', function(event)
+		this.options.scroll_detector.on('appears_on_bottom.scroller', function(event)
 		{
 			loader.load_more()
 			event.stopPropagation()

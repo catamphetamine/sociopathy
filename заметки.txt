@@ -628,3 +628,20 @@ ticking, timeout, periodic, periodical, delay
 // сделать "отменить правки"
 
 // привязывать книги к разделу или заметке
+
+
+вертикально выравнивать названия книг на обложках
+
+
+
+
+
+			
+			// my vertical centering hack
+			/*
+			if (options['center vertically'])
+			{
+				var label = $('<span/>').text(container.text()).appendTo(container.empty())
+				label.css({ position: 'relative', top: parseInt((container.height() - label.height()) / 2) + 'px' })
+			}
+			*/

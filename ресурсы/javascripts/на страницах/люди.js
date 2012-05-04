@@ -72,13 +72,13 @@
 			if (!data.первый)
 				return
 			
-			id_card.on('appearing_on_bottom.scroller', function(event)
+			id_card.on('appears_on_bottom.scroller', function(event)
 			{
 				set_page_number(data.страница)
 				event.stopPropagation()
 			})
 			
-			id_card.on('disappearing_downwards.scroller', function(event)
+			id_card.on('disappears_on_bottom.scroller', function(event)
 			{
 				set_page_number(data.страница - 1)
 				event.stopPropagation()
