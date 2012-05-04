@@ -159,7 +159,7 @@ function go_to_anchor()
 	})
 	
 	if (header)
-		прокрутчик.scroll_to(header, { make_room_for_text_readability : true })
+		прокрутчик.scroll_to(header, { make_room_for_text_readability: true })
 }
 
 function add_anchor_to_url(anchor)

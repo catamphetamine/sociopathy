@@ -41,7 +41,14 @@ var text_button = new Class
 			var new_element = $(boundary_html.opening.replace(/^<button/, '<div ') + boundary_html.closing.replace(/<\/button>$/, '</div>'))
 			new_element.css('display', 'inline-block')
 
-			new_element.append($('<label/>').html(element.html()))
+			if (element.find('> label').exists())
+			{
+				new_element.append(element.children())
+			}
+			else
+			{
+				new_element.append($('<label/>').html(element.html()))
+			}
 			
 			element.replaceWith(new_element)
 			element = new_element
@@ -302,6 +309,9 @@ var text_button = new Class
 	
 	add_icon: function($element)
 	{
+		if (!this.options.icon.name)
+			return
+			
 		// set icon margin type
 		
 		var margin_type

@@ -191,7 +191,7 @@ var Scroller = new Class
 			callback()
 		}
 		
-		options.duration = options.duration || 1000
+		options.duration = options.duration || this.scroll_duration(Math.abs($(window).scrollTop() - y))
 		
 		scroller.animate({ scrollTop: y + 'px' }, options.duration, 'easeInOutCubic', function()
 		{
@@ -207,6 +207,16 @@ var Scroller = new Class
 			$(document).unbind(namespace)
 			finished()
 		})
+	},
+	
+	scroll_duration: function(x)
+	{
+		var value = -Math.log(x)
+		
+		if (value < 0)
+			value = 0
+			
+		return 1000 * value + 700
 	}
 })
 

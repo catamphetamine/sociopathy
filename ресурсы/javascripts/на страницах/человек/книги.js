@@ -5,14 +5,89 @@
 	Режим.пообещать('правка')
 	Режим.пообещать('действия')
 	
+	Validation.книги =
+	{
+		название: function(название, callback)
+		{
+			if (название.length === 0)
+				return callback({ error: 'Укажите название книги' })
+				
+			callback()
+		},
+		
+		сочинитель: function(сочинитель, callback)
+		{
+			if (сочинитель.length === 0)
+				return callback({ error: 'Укажите сочинителя книги' })
+				
+			callback()
+		}
+	}
+	
+	var add_book_window
+	
 	page.load = function()
 	{
-		var add_book = text_button.new($('.main_content .add_book')).does(function()
+		add_book_window = simple_value_dialog_window
+		({
+			id: 'add_book_window',
+			title: 'Добавить книгу',
+			fields:
+			[{
+				id: 'название',
+				description: 'Название',
+				validation: 'книги.название',
+				'in-place label': true
+			},
+			{
+				id: 'сочинитель',
+				description: 'Сочинитель',
+				validation: 'книги.сочинитель',
+				'in-place label': true
+			}],
+			ok_button_text: { 'add': 'Добавить', 'apply': 'Применить' },
+			ok: function(data)
+			{
+				info('Добавить книгу')
+				console.log(data)
+			},
+			on_open: function()
+			{
+				
+			},
+			on_cancel: function()
+			{
+			}
+		})
+		.window
+		
+		var image = $('<img/>')
+		image.attr('src', '/картинки/на страницах/человек/книги/обложка не загружена.jpg')
+		image.addClass('no_icon')
+		
+		image.on('click', function()
 		{
-			alert(1)
+			info('выбрать картинку')
 		})
 		
-		add_book.element.invisible()
+		var image_centerer = $('<table/>')
+		
+		var image_centerer_row = $('<tr/>')
+		image_centerer_row.appendTo(image_centerer)
+
+		var image_centerer_cell = $('<td/>')
+		image_centerer_cell.appendTo(image_centerer_row)
+		image_centerer_cell.append(image)
+		
+		add_book_window.content.find('.icon').append(image_centerer)
+		
+		var add_book = text_button.new($('.main_content .add_book')).does(function()
+		{
+			add_book_window.content.removeClass('edit').addClass('add')
+			add_book_window.open()
+		})
+		
+		add_book.element.invisible().hide()
 		
 		Режим.добавить_проверку_перехода(function(из, в)
 		{
@@ -44,7 +119,7 @@
 					book.on('click.режим_правка', function(event)
 					{
 						event.preventDefault()
-						alert(2)
+						info("открыть окошко правки книги")
 					})
 				})
 				

@@ -3,6 +3,14 @@ function simple_value_dialog_window(options)
 	var element = $("#simple_value_dialog").clone()
 
 	element.attr('id', options.id)
+	
+	/*
+	if (options.id)
+		element.attr('id', options.id)
+	else
+		element.removeAttr('id', options.id)
+	*/
+		
 	element.appendTo('body')
 	element.attr('title', options.title)
 
@@ -12,8 +20,11 @@ function simple_value_dialog_window(options)
 	{
 		field.label = $('<label/>')
 		field.label.attr('for', field.id)
-		field.label.text(field.description)
+		field.label.html(field.description)
 		field.label.appendTo(form)
+		
+		if (field['in-place label'])
+			field.label.addClass('in-place_input_label')
 		
 		field.input = $('<input/>')
 		field.input.addClass('field')
@@ -24,14 +35,27 @@ function simple_value_dialog_window(options)
 		if (field.validation)
 			field.input.attr('validation', field.validation)
 	})
-		
+	
 	var dialog_window = element.dialog_window
 	({
 		'close on escape': true,
 		'on open': function()
 		{
+			options.fields.forEach(function(field, index)
+			{
+				if (field.label.hasClass('in-place_input_label'))
+					field.label.css({ 'z-index': 0, opacity: 1 })
+			})
+					
 			if (options.on_open)
 				options.on_open.bind(dialog_window)()
+		},
+		'on close': function()
+		{
+			options.fields.forEach(function(field, index)
+			{
+				field.input.val('')
+			})
 		},
 		'on cancel': function()
 		{
@@ -40,7 +64,27 @@ function simple_value_dialog_window(options)
 		}
 	})
 		
-	var cancel = text_button.new(dialog_window.content.find('.buttons .cancel'), { 'prevent double submission': true })
+	if (options.ok_button_text)
+	{
+		var label = dialog_window.content.find('.buttons .ok label')
+	
+		if (typeof options.ok_button_text === 'string')
+		{
+			label.text(options.ok_button_text)
+		}
+		else if (typeof options.ok_button_text === 'object')
+		{
+			var parent = label.parent()
+			label.remove()
+			
+			Object.each(options.ok_button_text, function(text, style_class)
+			{
+				$('<label/>').addClass(style_class).text(text).appendTo(parent)
+			})
+		}
+	}
+	
+	var cancel = text_button.new(dialog_window.content.find('.buttons .cancel'), { 'prevent double submission': true, physics: 'fast' })
 	.does(function()
 	{
 		dialog_window.cancel()
@@ -53,7 +97,21 @@ function simple_value_dialog_window(options)
 	.does(function()
 	{
 		dialog_window.close()
-		options.ok.bind(this)(options.fields[0].input.val())
+		
+		var data
+		
+		if (options.fields.length > 1)
+		{
+			data = {}
+			options.fields.forEach(function(field)
+			{
+				data[field.id] = field.input.val()
+			})
+		}
+		else
+			data = options.fields[0].input.val()
+			
+		options.ok.bind(this)(data)
 	}
 	.bind(dialog_window))
 	.submits(validating_form)
@@ -65,5 +123,10 @@ function simple_value_dialog_window(options)
 		ok.push()
 	}
 	
-	return dialog_window
+	var result =
+	{
+		window: dialog_window
+	}
+	
+	return result
 }

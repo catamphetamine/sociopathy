@@ -4,7 +4,7 @@
 	
 	page.load = function()
 	{
-		$('.faq ul li').each(function()
+		$('.faq ul li, .todo ul li').each(function()
 		{
 			question_and_answer = $(this)
 			

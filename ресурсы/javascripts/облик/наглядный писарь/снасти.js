@@ -230,6 +230,7 @@ Visual_editor.implement
 						tool.restore_caret()
 					}
 				})
+				.window
 			},
 			
 			apply: function()
@@ -395,6 +396,7 @@ Visual_editor.implement
 						tool.restore_caret()
 					}
 				})
+				.window
 			},
 			
 			apply: function()
@@ -536,6 +538,7 @@ Visual_editor.implement
 						tool.restore_caret()
 					}
 				})
+				.window
 			},
 	
 			apply: function()
@@ -721,6 +724,7 @@ Visual_editor.implement
 						tool.restore_caret()
 					}
 				})
+				.window
 			},
 			
 			apply: function()

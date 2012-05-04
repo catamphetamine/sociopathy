@@ -2,7 +2,12 @@
 
 #content.help
 {
-	.help_section
+	.help_section.faq ul li .question:after
+	{
+		content: '?'
+	}
+	
+	.help_section.todo, .help_section.faq
 	{
 		ul
 		{
@@ -15,11 +20,6 @@
 				{
 					cursor: pointer;
 					color: @link_color;
-				}
-				
-				.question:after
-				{
-					content: '?'
 				}
 				
 				.answer

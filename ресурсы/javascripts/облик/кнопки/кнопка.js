@@ -599,7 +599,7 @@ button.physics =
 		return the_button
 	},
 	
-	'quick pushing': function(the_button)
+	'fast': function(the_button)
 	{
 		the_button.setOptions
 		({

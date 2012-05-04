@@ -42,6 +42,10 @@ online = redis.createClient()
 					соединение.broadcast.emit('user_online', Object.выбрать(['адресное имя', 'имя', '_id', 'пол'], пользователь))
 					соединение.emit 'готов'
 			
+			# maybe hack attempt
+			if not пользователь?
+				return
+			
 			соединение.on 'смотрит', () ->
 				соединение.broadcast.emit('смотрит', Object.выбрать_поля(['_id'], пользователь))
 					

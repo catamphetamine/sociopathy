@@ -29,7 +29,7 @@ var enter_window
 		
 		login_form = new Form(enter_window.content.find('form').eq(0))
 		
-		кнопка_отмены = text_button.new('#enter_window .buttons .cancel', { 'prevent double submission': true, physics: 'quick pushing' })
+		кнопка_отмены = text_button.new('#enter_window .buttons .cancel', { 'prevent double submission': true, physics: 'fast' })
 		.does(function() { enter_window.close() })	
 		
 		кнопка_входа = text_button.new('#enter_window .buttons .enter', { 'prevent double submission': true })

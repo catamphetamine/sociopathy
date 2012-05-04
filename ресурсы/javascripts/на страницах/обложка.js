@@ -78,7 +78,7 @@
 	// create join dialog buttons
 	function initialize_join_dialog_buttons()
 	{
-		join_dialog_cancel_button = text_button.new('#join_dialog .buttons .cancel', { 'prevent double submission': true })
+		join_dialog_cancel_button = text_button.new('#join_dialog .buttons .cancel', { 'prevent double submission': true, physics: 'fast' })
 		.does(function() { join_dialog.close() })
 		
 		join_dialog_next_button = text_button.new('#join_dialog .buttons .next')

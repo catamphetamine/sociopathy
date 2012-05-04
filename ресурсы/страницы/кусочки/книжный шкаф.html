@@ -21,10 +21,10 @@
 																	
 									<div class="book {{if book.обложка}} {{else}}no_icon{{/if}} non_selectable">
 										{{if book.файл}}
-											<a href="/загруженное/книги/${book.id}/${book.файл}">
+											<a target="_blank" href="/загруженное/книги/${book.id}/${book.файл}">
 										{{else}}
 											{{if book.ссылка}}
-												<a href="${book.ссылка}">
+												<a target="_blank" href="${book.ссылка}">
 											{{/if}}
 										{{/if}}
 									
