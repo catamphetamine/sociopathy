@@ -27,6 +27,7 @@ var Progress = new Class
 				$(window).on_page('resize.progress_bar', function()
 				{
 					progress.set_maximum_width()
+					progress.update()
 				})
 			}
 			else if (progress.options.vertical && !options.maximum_height)
@@ -36,6 +37,7 @@ var Progress = new Class
 				$(window).on_page('resize.progress_bar', function()
 				{
 					progress.set_maximum_height()
+					progress.update()
 				})
 			}
 		})
@@ -53,6 +55,11 @@ var Progress = new Class
 	
 	update: function(count)
 	{
+		if (count)
+			this.count = count
+		else
+			count = this.count
+		
 		if (!this.options.vertical)
 			return this.options.element.width(parseInt(count * this.options.maximum_width / this.options.maximum))
 			

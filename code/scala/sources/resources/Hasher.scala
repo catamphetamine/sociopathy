@@ -32,7 +32,7 @@ class Hasher
 	@Path("whirlpool/{что}")
 	//@Produces(Array("text/plain"))
 	@Produces(Array(MediaType.APPLICATION_JSON))
-	def whirlpool(@DefaultValue(Nil) @PathParam("что") что : String) : String =
+	def whirlpool(@DefaultValue("") @PathParam("что") что : String) : String =
 	{
 		//if (value == null)
 		//	throw new IllegalArgumentException("Что захешировать?")

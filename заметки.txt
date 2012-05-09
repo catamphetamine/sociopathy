@@ -645,3 +645,7 @@ ticking, timeout, periodic, periodical, delay
 				label.css({ position: 'relative', top: parseInt((container.height() - label.height()) / 2) + 'px' })
 			}
 			*/
+
+			
+при нажатии на загрузку картинки - проверять, есть ли эта книга в базе
+

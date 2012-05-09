@@ -6,8 +6,8 @@ var Scroller = new Class
 
 	initialize: function()
 	{
-		$(window).on('scroll', this.process_scroll)
-		//$(window).on('resize', this.reset)
+		$(window).on('scroll', this.process_scroll.bind(this))
+		//$(window).on('resize', this.reset.bind(this))
 	},
 	
 	watching: function(element)
@@ -17,6 +17,9 @@ var Scroller = new Class
 	
 	watch: function(element)
 	{
+		if (this.elements.contains(element.node()))
+			return
+			
 		//if (typeof previous_top_offset_in_window === 'undefined')
 		//	previous_top_offset_in_window = $(window).height() + 1
 	

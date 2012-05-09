@@ -1,35 +1,139 @@
-apply plugin: 'groovy'
+apply plugin: 'scala'
 
-description = 'Sociopathy Rest Api'
+ext.scala_version = '2.9.1'
+ext.description = 'Accessing various calculation tasks'
+ext.classes_directory = new File('classes')
 
-repositories {
-    mavenCentral()
+def delete_folder(File folder)
+{
+    if (folder.isDirectory())
+	{
+        String[] children = folder.list()
+		int i = 0
+        while (i < children.length)
+		{
+            boolean success = delete_folder(new File(folder, children[i]))
+            if (!success)
+			{
+                return false
+            }
+			i++
+        }
+    }
+
+    // The directory is now empty so delete it
+    return folder.delete()
 }
 
-dependencies {
-    groovy group: 'org.codehaus.groovy', name: 'groovy', version: '1.7.10'
-    compile group: 'commons-collections', name: 'commons-collections', version: '3.2'
-    testCompile group: 'junit', name: 'junit', version: '4.+'
-}
-
-//systemProperties 'порт': '8090'
-	
-task hello << {
-    println 'Hello world!'
-}
-
-classes_directory = new File('классы')
-
-task resources << {
+task clean_output_folders <<
+{
 	// remove classes_directory
-	classes_directory.remove()
+	delete_folder(classes_directory)
 	classes_directory.mkdirs()
     // do something
 }
 
-task compile(dependsOn: 'resources') << {
-    if (classes_directory.isDirectory()) {
-        println 'The class directory exists. I can operate'
+//'clean_output_folders', 
+task go(dependsOn: ['compileJava', 'compileScalaScala'], type: JavaExec) {
+	main = 'Main'
+	classpath = sourceSets.main.runtimeClasspath
+	standardInput = System.in
+	//args 'arguments`'
+	systemProperty 'port', '8090'
+}
+
+sourceSets
+{
+    main
+	{
+        java
+		{
+            srcDir 'sources'
+        }
+        resources
+		{
+            srcDir 'resources'
+        }
     }
-    // do something
+	scala
+	{
+        scala
+		{
+            srcDir 'sources'
+        }
+	}
+}
+
+sourceSets.main.output.classesDir = 'classes'
+sourceSets.main.output.resourcesDir = 'classes'
+		
+sourceSets.scala.output.classesDir = 'classes'
+sourceSets.scala.output.resourcesDir = 'classes'
+
+dependencies
+{
+	// Libraries needed to run the scala tools
+	scalaTools group: 'org.scala-lang', name: 'scala-compiler' version: scala_version
+	scalaTools group: 'org.scala-lang', name: 'scala-library' version: scala_version
+	
+	compile group: 'org.scala-lang', name: 'scala-library' version: scala_version
+	scalaCompile group: 'org.scala-lang', name: 'scala-library' version: scala_version
+	
+	jersey_version = '1.12'
+	
+	scalaCompile group: 'asm', name: 'asm', version: '3.3.1'
+	scalaCompile group: 'javax.ws.rs', name: 'jsr311-api', version: '1.1.1'
+	scalaCompile group: 'com.sun.jersey', name: 'jersey-bundle', version: jersey_version
+	scalaCompile group: 'com.sun.jersey', name: 'jersey-client', version: jersey_version
+	scalaCompile group: 'com.sun.jersey', name: 'jersey-core', version: jersey_version
+	scalaCompile group: 'com.sun.jersey', name: 'jersey-server', version: jersey_version
+	//scalaCompile group: 'com.sun.jersey', name: 'jersey-servlet', version: jersey_version
+	scalaCompile group: 'com.sun.jersey', name: 'jersey-grizzly2', version: jersey_version
+	scalaCompile group: 'com.sun.jersey', name: 'jersey-bundle', version: jersey_version
+
+	runtime group: 'asm', name: 'asm', version: '3.3.1'
+	runtime group: 'javax.ws.rs', name: 'jsr311-api', version: '1.1.1'
+	runtime group: 'com.sun.jersey', name: 'jersey-bundle', version: jersey_version
+	runtime group: 'com.sun.jersey', name: 'jersey-client', version: jersey_version
+	runtime group: 'com.sun.jersey', name: 'jersey-core', version: jersey_version
+	runtime group: 'com.sun.jersey', name: 'jersey-server', version: jersey_version
+	//runtime group: 'com.sun.jersey', name: 'jersey-servlet', version: jersey_version
+	runtime group: 'com.sun.jersey', name: 'jersey-bundle', version: jersey_version
+	runtime group: 'com.sun.jersey', name: 'jersey-grizzly2', version: jersey_version
+	
+	scalaCompile fileTree(dir: 'libraries', include: '*.jar')
+	scalaCompile files('classes')
+	
+	runtime fileTree(dir: 'libraries', include: '*.jar')
+	runtime files('classes')
+}
+
+compileScala
+{
+    scalaCompileOptions.useCompileDaemon = true
+	destinationDir = file('classes')
+	source = file('sources')
+}
+
+/*
+List groovy = ["org.codehaus.groovy:groovy-all:1.8.4@jar",
+               "commons-cli:commons-cli:1.0@jar",
+               "org.apache.ant:ant:1.8.2@jar"]
+List hibernate = ['org.hibernate:hibernate:3.0.5@jar', 'somegroup:someorg:1.0@jar']
+dependencies
+{
+    runtime groovy, hibernate
+}
+*/
+
+repositories
+{
+    mavenCentral()
+	/*
+    flatDir
+	{
+        name "static"
+        dirs "libraries"
+    }
+	*/
 }

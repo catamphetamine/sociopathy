@@ -9,6 +9,11 @@ import java.util.Map
 
 import java.lang.Integer
 
+import com.sun.jersey.api.container.grizzly2.GrizzlyServerFactory
+
+import com.sun.jersey.api.core._
+import java.io._
+
 object Main
 {
     def port (default_port : Integer) : Integer =
@@ -37,28 +42,21 @@ object Main
     val Адрес = адрес()
 
 	@throws (classOf[IOException])
-    def запустить () : com.sun.grizzly.http.SelectorThread =
+    def запустить () : HttpServer =
 	{
-        val настройки = new HashMap[String, String]()
-
-        настройки.put("com.sun.jersey.config.property.packages", "resources")
-
         System.out.println("Starting grizzly...")
 		
-        GrizzlyWebContainerFactory.create(Адрес, настройки)
+        val настройки = new PackagesResourceConfig("resources")
+        GrizzlyServerFactory.createHttpServer(Адрес, настройки)
     }
     
 	@throws (classOf[IOException])
     def main (настройки : Array[String]) =
 	{
-        val server = запустить()
-		server.run()//listen()
+		val server = запустить()
 		
-        System.out.println(String.format("Jersey app started with WADL available at "
-                + "%sapplication.wadl\nTry out %shelloworld\nHit enter to stop it...",
-                Адрес, Адрес))
-		
-        System.in.read()
-        server.stopEndpoint()
+		System.in.read()
+
+		server.stop()
     }    
 }
