@@ -4,11 +4,11 @@ var navigate_to_page
 var раздел_или_заметка
 
 var navigating = false;
-	
+
 (function()
 {
 	var кусочки = ['loading popup', 'simple value dialog window', 'unsupported browser popup', 'наглядный писарь', 'нижняя панель режима правки', 'окошко входа']
-	var шаблоны = ['маленький аватар', 'chat user icon']
+	var шаблоны = ['маленький аватар', 'chat user icon', 'содержимое мусорки']
 	
 	подгрузить_шаблоны = function(callback)
 	{
@@ -54,8 +54,11 @@ var navigating = false;
 			})
 		}
 		
-		подгрузить_шаблоны(function()
+		подгрузить_шаблоны(function(ошибка)
 		{
+			if (ошибка)
+				return callback(true)
+				
 			вставить_кусочки(function()
 			{
 				callback()

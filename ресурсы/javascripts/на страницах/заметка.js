@@ -33,7 +33,7 @@
 			new Data_templater
 			({
 				template_url: '/страницы/кусочки/заметка читальни.html',
-				item_container: content.find('div[type=ok]'),
+				container: content.find('div[type=ok]'),
 				conditional: conditional
 			},
 			new  Data_loader
@@ -46,7 +46,7 @@
 	
 					return data.заметка
 				},
-				before_done_output: article_loaded
+				before_done: article_loaded
 			}))
 		},
 		function() { conditional.callback('Не удалось получить данные') })

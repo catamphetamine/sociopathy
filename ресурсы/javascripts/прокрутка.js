@@ -40,9 +40,10 @@ var Scroller = new Class
 	
 	process_scroll: function()
 	{
-		this.elements.forEach(function(element)
+		var scroller = this
+		this.elements.for_each(function()
 		{
-			this.check_for_events($(element))
+			scroller.check_for_events($(this))
 		},
 		this)
 	},

@@ -138,7 +138,7 @@
 		new Data_templater
 		({
 			template_url: '/страницы/кусочки/книжный шкаф.html',
-			item_container: $('.bookshelf_container'),
+			container: $('.bookshelf_container'),
 			/*
 			postprocess_element: function(item)
 			{
@@ -151,7 +151,7 @@
 		({
 			url: '/приложение/человек/книги',
 			parameters: { 'адресное имя': page.data.адресное_имя },
-			before_done_output: books_loaded,
+			before_done: books_loaded,
 			done: books_shown,
 			get_data: function(data)
 			{

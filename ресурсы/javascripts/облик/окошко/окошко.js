@@ -86,7 +86,6 @@ var dialog_window = new Class
 			.addClass('popup')
 			.appendTo(this.container)
 		
-		
 		// set dialog title bar
 		$('<h1/>')
 			.addClass("top_bar non_selectable")
@@ -152,10 +151,7 @@ var dialog_window = new Class
 		
 		// hack
 		var dialog_window = this
-		setTimeout(function()
-		{
-			dialog_window.content.find('input:first').focus()
-		}, 0)
+		dialog_window.content.find('input:first').focus()
 
 		// prevent tabbing out of modal dialog windows
 //		if (this.options.modal)

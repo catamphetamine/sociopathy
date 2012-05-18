@@ -1,19 +1,19 @@
 * The following description is in Russian, and so are the sources
+** Utf-8 Git for Windows: http://code.google.com/p/utf8-git-on-windows/
 
 Sociopathy
    необычная социальная сеть
 
-Изпользуемые технологии:
+Используемые технологии:
    Html 5
    Css 3 (Less)
-   Javascript (jQuery, Mootools, Node.js, Express, WebSocket)
+   Javascript (jQuery, Mootools, Node.js (+ Express, Node-fibers), WebSocket)
    MongoDB
    NginX
-   //Apache + v8cgi
    Redis
    Memcache
    ImageMagick
-   Scala (Jersey, Grizzly, Ant)
+   Scala (Scalatra, Jetty, Gradle)
 
 Статика отдаётся NginX'ом.
 Страницы шаблонизуются прямо в окне обозревателя.

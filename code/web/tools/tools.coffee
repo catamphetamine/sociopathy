@@ -314,8 +314,6 @@ String.prototype.to_unix_file_name = ->
 	@replace(/\//g, encodeURIComponent('/'))
 	#.replace(/\|/g, encodeURIComponent('|')).replace(/;/g, encodeURIComponent(';'))
 	
-console.log("afsd/lfaksjdf.|flasdj;afds".to_unix_file_name())
-	
 Object.merge_recursive = (obj1, obj2) ->
 	for ключ, значение of obj2
 		#if obj2.hasOwnProperty(ключ)
@@ -339,7 +337,7 @@ Object.выбрать = (названия, object) ->
 		поля[название] = object[название]
 	поля
 	
-Object.keys = (object) ->
+Object.get_keys = (object) ->
 	keys = []
 	for key, value of object
 		if object.hasOwnProperty(key)

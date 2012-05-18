@@ -1,4 +1,5 @@
 require 'coffee-script'
+
 global.redis = require 'redis'
 	
 global.mode = 'development'

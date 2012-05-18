@@ -20,7 +20,7 @@
 			new Data_templater
 			({
 				template_url: '/страницы/кусочки/видео в альбоме.html',
-				item_container: $('#videos'),
+				container: $('#videos'),
 				postprocess_element: function(item)
 				{
 					return $('<li/>').append(item)
@@ -31,7 +31,7 @@
 			({
 				url: '/приложение/человек/видео/альбом',
 				parameters: { 'адресное имя': page.data.адресное_имя, альбом: page.data.альбом },
-				before_done_output: videos_loaded,
+				before_done: videos_loaded,
 				get_data: function(data)
 				{
 					if (data.альбом.описание)

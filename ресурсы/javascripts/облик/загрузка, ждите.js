@@ -47,6 +47,9 @@ var loading_indicator = new (function()
 	
 	this.start_animation = function()
 	{
+		// на всякий случай, вдруг stop не вызовется
+		this.stop_animation()
+		
 		this.animator = this.switch_frame.bind(this).ticking(Interval)
 		this.ellipsis_animator = this.switch_ellipsis_frame.bind(this).ticking(Ellipsis_ticking_interval)
 	}

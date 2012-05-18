@@ -110,7 +110,7 @@
 		new Data_templater
 		({
 			template_url: '/страницы/кусочки/личная карточка.html',
-			item_container: $('#id_cards'),
+			container: $('#id_cards'),
 			show: function(data, options)
 			{
 				var id_card = $.tmpl(options.template_url, data)
@@ -156,7 +156,7 @@
 					
 				return data.люди
 			},
-			before_done_output: function()
+			before_done: function()
 			{
 				new_people_loaded()
 			
@@ -165,7 +165,7 @@
 				previous_people_conditional.callback()
 				//$(document).trigger('page_initialized')
 			},
-			before_done_more_output: function()
+			before_done_more: function()
 			{
 				new_people_loaded()
 				
@@ -176,7 +176,7 @@
 		new Data_templater
 		({
 			template_url: '/страницы/кусочки/личная карточка.html',
-			item_container: $('#id_cards'),
+			container: $('#id_cards'),
 			show: function(data, options)
 			{
 				var id_card = $.tmpl(options.template_url, data)

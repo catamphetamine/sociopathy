@@ -19,7 +19,7 @@
 			new Data_templater
 			({
 				template_url: '/страницы/кусочки/альбом с видео в списке альбомов.html',
-				item_container: $('#albums'),
+				container: $('#albums'),
 				postprocess_element: function(item)
 				{
 					return $('<li/>').append(item)
@@ -30,7 +30,7 @@
 			({
 				url: '/приложение/человек/видео/альбомы',
 				parameters: { 'адресное имя': page.data.адресное_имя },
-				before_done_output: albums_loaded,
+				before_done: albums_loaded,
 				get_data: function(data) { return data.альбомы }
 			}))
 		

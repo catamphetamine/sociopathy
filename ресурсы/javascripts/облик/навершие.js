@@ -159,6 +159,9 @@ var Panel = new Class
 			this.initialize_new_messages_indication()
 			this.initialize_news_feed_indication()
 			this.initialize_new_discussions_indication()
+			
+			//this.buttons.мусорка.element.parent().show()
+			//this.buttons.мусорка.tooltip.update_position()
 		}
 
 		//this.new_news.bind(this).delay(1000)

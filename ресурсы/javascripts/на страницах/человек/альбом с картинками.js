@@ -20,7 +20,7 @@
 			new Data_templater
 			({
 				template_url: '/страницы/кусочки/картинка в альбоме.html',
-				item_container: $('#pictures'),
+				container: $('#pictures'),
 				postprocess_element: function(item)
 				{
 					return $('<li/>').append(item)
@@ -31,7 +31,7 @@
 			({
 				url: '/приложение/человек/картинки/альбом',
 				parameters: { 'адресное имя': page.data.адресное_имя, альбом: page.data.альбом },
-				before_done_output: pictures_loaded,
+				before_done: pictures_loaded,
 				get_data: function(data)
 				{
 					if (data.альбом.описание)

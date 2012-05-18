@@ -75,8 +75,11 @@ $(function()
 
 	Page.element = $('#page')
 
-	подгрузить_шаблоны(function()
+	подгрузить_шаблоны(function(ошибка)
 	{
+		if (ошибка)
+			return
+			
 		вставить_общее_содержимое(function()
 		{
 			navigate_to_page()
@@ -106,7 +109,7 @@ $(document).on('page_loaded', function()
 	var after_styles = function()
 	{
 		page.full_load(function()
-		{	
+		{
 			ajaxify_internal_links()
 		
 			$(document).trigger('display_page')
@@ -130,7 +133,7 @@ $(document).on('page_loaded', function()
 		
 			panel = new Panel()
 			panel.highlight_current_page()
-			
+
 			after_styles()
 		})
 	}

@@ -104,6 +104,8 @@ Array.prototype.is_empty = function()
 	return this.length === 0
 }
 
+Array.prototype.пусто = Array.prototype.is_empty
+
 String.prototype.starts_with = function(substring) 
 {
 	return this.indexOf(substring) === 0
@@ -261,4 +263,12 @@ String.prototype.starts_with = function(substring)
 String.prototype.ends_with = function(substring) 
 {
 	return (this.match(substring + "$") == substring)
+}
+
+Array.prototype.for_each = function(action)
+{
+	Array.prototype.forEach .bind(this)(function(element, index)
+	{
+		action.bind(element)(element, index)
+	})
 }

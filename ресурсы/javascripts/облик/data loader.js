@@ -5,15 +5,22 @@ var Batch_loader = new Class
 	options:
 	{
 		parameters: {},
-		get_data: function(data) { return data },
+		get_data: function(data)
+		{
+			if (this.options.data)
+				return data[this.options.data]
+				
+			return data
+		},
 		finished: function() {},
 		done: function() {},
 		done_more: function() {},
-		before_done_output: function() {},
-		before_done_more_output: function() {},
+		before_done: function() {},
+		before_done_more: function() {},
 		get_id: function(object) { return object._id },
 		reverse: false,
-		Ajax: Ajax
+		Ajax: Ajax,
+		each: function() {}
 	},
 	
 	есть_ли_ещё: true,
@@ -102,6 +109,11 @@ var Batch_loader = new Class
 					loader.page.number--
 			}
 
+			data_list.for_each(function()
+			{
+				loader.options.each.bind(this)(data_list)
+			})
+			
 			callback(null, data_list)
 		})
 	},
@@ -125,9 +137,9 @@ var Batch_loader = new Class
 				return
 			}
 		
-			список.forEach(function(объект)
+			список.for_each(function()
 			{
-				loader.options.show(объект)
+				loader.options.show(this)
 			})
 			
 			if (!список.is_empty())
@@ -145,19 +157,19 @@ var Batch_loader = new Class
 			}
 			
 			if (is_first_batch)
-				loader.options.before_done_output.bind(loader)()
+				loader.options.before_done.bind(loader)(список)
 			else
-				loader.options.before_done_more_output.bind(loader)()
+				loader.options.before_done_more.bind(loader)(список)
 			
 			if (!loader.есть_ли_ещё)
-				loader.options.finished()
+				loader.options.finished(список)
 			
 			loader.options.callback(null, function()
 			{			
 				if (is_first_batch)
-					loader.options.done.bind(loader)()
+					loader.options.done.bind(loader)(список)
 				else
-					loader.options.done_more.bind(loader)()
+					loader.options.done_more.bind(loader)(список)
 				
 				if (loader.есть_ли_ещё)
 					loader.activate()
@@ -220,10 +232,18 @@ var Data_loader = new Class
 	options:
 	{
 		parameters: {},
-		get_data: function(data) { return data },
+		get_data: function(data)
+		{
+			if (this.options.data)
+				return data[this.options.data]
+				
+			return data
+		},
 		done: function() {},
 		show: function() {},
-		before_done_output: function() {}
+		before_done: function() {},
+		each: function() {},
+		Ajax: Ajax
 	},
 	
 	initialize: function(options)
@@ -249,7 +269,15 @@ var Data_loader = new Class
 		})
 		.ok(function(data)
 		{
-			callback(null, loader.options.get_data.bind(loader)(data))
+			data = loader.options.get_data.bind(loader)(data)
+			
+			if (data instanceof Array)
+				data.for_each(function()
+				{
+					loader.options.each.bind(this)(data)
+				})
+			
+			callback(null, data)
 		})
 	},
 	
@@ -268,16 +296,16 @@ var Data_loader = new Class
 			if (список.constructor !== Array)
 				список = [список]
 				
-			список.forEach(function(объект)
+			список.for_each(function()
 			{
-				loader.options.show(объект)
+				loader.options.show(this)
 			})
 			
-			loader.options.before_done_output()
+			loader.options.before_done(список)
 				
 			loader.options.callback(null, function()
 			{
-				loader.options.done()
+				loader.options.done(список)
 			})
 		})
 	}
@@ -287,6 +315,13 @@ var Data_templater = new Class
 ({
 	initialize: function(options, loader)
 	{
+		loader = loader || options.loader
+		
+		if (options.data)
+		{
+			loader = new Data_loader(options.data)
+		}
+	
 		if (page)
 			options.Ajax = options.Ajax || page.Ajax
 
@@ -308,8 +343,19 @@ var Data_templater = new Class
 		else
 			show_item = function(data, options)
 			{
-				var item = $.tmpl(options.template_url, data)
-				options.postprocess_element(item).appendTo(options.item_container)
+				var item
+				
+				if (options.template)
+				{
+					if (typeof options.template === 'string')
+						item = $.tmpl(options.template, data)
+					else
+						item = $.tmpl(options.template, data)
+				}
+				else
+					item = $.tmpl(options.template_url, data)
+					
+				options.postprocess_element(item).appendTo(options.container)
 			}
 		
 		if (!options.process_data)
@@ -317,23 +363,23 @@ var Data_templater = new Class
 		
 		loader.options.show = function(item)
 		{
-			if (options.data)
+			if (options.data_structure)
 			{
 				var items = item
-				for (var property in options.data)
-					if (options.data.hasOwnProperty(property))
+				for (var property in options.data_structure)
+					if (options.data_structure.hasOwnProperty(property))
 						if (items[property])
 						{
 							if (items[property].constructor === Array)
 							{
-								items[property].forEach(function(item)
+								items[property].for_each(function()
 								{
-									show_item(item, options.process_data(options.data[property]))
+									show_item(this, options.process_data(options.data_structure[property]))
 								})
 							}
 							else
 							{
-								show_item(items[property], options.process_data(options.data[property]))
+								show_item(items[property], options.process_data(options.data_structure[property]))
 							}
 						}
 			}
@@ -346,25 +392,28 @@ var Data_templater = new Class
 		loader.options.callback = conditional.callback
 		loader.options.loading_more = conditional.loading_more
 		
+		if (options.before_done)
+			loader.options.before_done = options.before_done
+		
 		var load_data = function()
 		{
 			if (options.load_data !== false)
 				loader.load()
 		}
 		
-		if (options.data)
+		if (options.data_structure)
 		{
 			var latest_deferred
-			for (var property in options.data)
-				if (options.data.hasOwnProperty(property))
+			for (var property in options.data_structure)
+				if (options.data_structure.hasOwnProperty(property))
 				{
 					if (latest_deferred)
 						latest_deferred = latest_deferred.pipe(function()
 						{
-							return load_template(options.data[property].template_url)
+							return load_template(options.data_structure[property].template_url)
 						})
 					else
-						latest_deferred = load_template(options.data[property].template_url)
+						latest_deferred = load_template(options.data_structure[property].template_url)
 				}
 			
 			latest_deferred.done(load_data)
@@ -375,6 +424,13 @@ var Data_templater = new Class
 		function load_template(template_url)
 		{
 			var deferred = $.Deferred()
+			
+			if (!template_url)
+			{
+				deferred.resolve()
+				return deferred
+			}
+			
 			options.Ajax.get(template_url, {}, { type: 'html' })
 			.ошибка(function()
 			{

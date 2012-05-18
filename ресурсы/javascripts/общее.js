@@ -240,11 +240,11 @@ function путь_страницы(url)
 
 $(function()
 {
-	if (navigator.userAgent.indexOf("Mac"))
+	if (navigator.userAgent.indexOf("Mac") >= 0)
 	{
 		$('body').addClass('osx')
 	}
-	else if (navigator.userAgent.indexOf("Mac"))
+	else if (navigator.userAgent.indexOf("Windows") >= 0)
 	{
 		$('body').addClass('windows')
 	}
@@ -327,7 +327,7 @@ var Page_url_patterns =
 	/^\/читальня(\/(.*))?$/,
 	/^\/помощь(\/(.*))?$/,
 	/^\/управление(\/(.*))?$/,
-	/^\/сеть\/болталка(\/(.*))?$/
+	/^\/сеть\/((.*))?$/,
 ]
 
 function ajaxify_internal_links(where)

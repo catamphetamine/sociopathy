@@ -192,11 +192,17 @@ function неточное_время(время)
 	var time
 	
 	if (typeof время === 'string')
-		time = Date.parse(время).getTime()
+		time = (Date.parse(время) || new Date()).getTime()
 	else if (typeof время === 'number')
 		time = время
+	else if (typeof время === 'Date')
+		time = время.getTime()
 	else
+	{
+		console.log(время)
+		console.log(typeof время)
 		throw 'Unsupported time: ' + время
+	}
 
 	var разница = (new Date().getTime() - time) / 1000
 	

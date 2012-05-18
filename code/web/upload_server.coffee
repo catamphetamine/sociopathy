@@ -85,5 +85,5 @@ global.square_resize = (что, во_что, размер, возврат) ->
 			"-extent"
 			"#{размер}x#{размер}"
 		]
-	
+		
 	image_magick.resize(options, возврат) #(error, output, errors_output) ->

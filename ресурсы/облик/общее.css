@@ -1214,3 +1214,14 @@ label.in-place_input_label
 	margin-left: 13px;
 	cursor: text;
 }
+
+.center
+{
+	text-align: center;
+	
+	> *
+	{
+		text-align: left;
+		display: inline-block;
+	}
+}

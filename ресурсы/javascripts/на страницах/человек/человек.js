@@ -12,7 +12,7 @@
 	page.load = function()
 	{	
 		id_card = $('#id_card')
-		content = $('#id_card_block [type="ok"]')
+		content = $('.main_content')
 		
 		Режим.добавить_проверку_перехода(function(из, в)
 		{
@@ -35,15 +35,15 @@
 		new Data_templater
 		({
 			template_url: '/страницы/кусочки/личная карточка.html',
-			item_container: id_card,
-			conditional: initialize_conditional($('#id_card_block'), { immediate: true })
+			container: id_card,
+			conditional: initialize_conditional($('.main_conditional'), { immediate: true })
 		},
 		new  Data_loader
 		({
 			url: '/приложение/человек',
 			parameters: { адресное_имя: page.data.адресное_имя },
 			get_data: function (data) { page.data.пользователь_сети = data; return data },
-			before_done_output: before_id_card_shown,
+			before_done: before_id_card_shown,
 			done: id_card_loaded
 		}))
 	}
@@ -204,7 +204,7 @@
 		когда_был_здесь = new Date(когда_был_здесь)
 	
 		id_card.find('.last_action_time').attr('date', когда_был_здесь.getTime())
-		update_intelligent_dates.ticking(60 * 1000)
+		page.ticking(update_intelligent_dates, 60 * 1000)
 		
 		var maximum_opacity = id_card.find('.was_here').css('opacity')
 		
@@ -218,7 +218,7 @@
 			id_card.find('.was_here').fade_out(0.3)
 		})
 	
-		update_online_status.ticking(2 * 1000)
+		page.ticking(update_online_status, 2 * 1000)
 	}
 	
 	function update_online_status()

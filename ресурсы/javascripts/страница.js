@@ -146,6 +146,10 @@ var Page = new Class
 	
 	when_loaded_actions: [],
 	
+	ticking_actions: [],
+	
+	void: false,
+	
 	when_loaded: function(action)
 	{
 		if (this.status === 'loaded')
@@ -245,18 +249,25 @@ var Page = new Class
 	
 	full_unload: function()
 	{
+		this.void = true
+		
 		Режим.сбросить()
 	
 		this.unload()
 		
-		this.event_handlers.forEach(function(handler)
+		this.event_handlers.for_each(function()
 		{
-			handler.element.unbind(handler.event)
+			this.element.unbind(this.event)
 		})
 		
-		this.ajaxes.forEach(function(ajax)
+		this.ajaxes.for_each(function()
 		{
-			ajax.expire()
+			this.expire()
+		})
+		
+		this.ticking_actions.for_each(function()
+		{
+			this.stop()
 		})
 	},
 	
@@ -267,5 +278,10 @@ var Page = new Class
 			
 		this.event_handlers.push({ element: element, event: event })
 		element.on(event, action)
+	},
+	
+	ticking: function(action, interval)
+	{
+		this.ticking_actions.push(action.ticking(interval))
 	}
 })

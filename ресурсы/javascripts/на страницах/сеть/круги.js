@@ -12,7 +12,7 @@
 		new Data_templater
 		({
 			template_url: '/страницы/кусочки/круг в списке кругов.html',
-			item_container: $('#circles'),
+			container: $('#circles'),
 			postprocess_element: function(item)
 			{
 				return $('<li/>').append(item)
@@ -22,7 +22,7 @@
 		new  Data_loader
 		({
 			url: '/приложение/пользователь/круги',
-			before_done_output: circles_loaded,
+			before_done: circles_loaded,
 			get_data: function(data)
 			{
 				var круги = []

@@ -93,7 +93,7 @@
 		new Data_templater
 		({
 			template_url: '/страницы/кусочки/сообщение в болталке.html',
-			item_container: chat,
+			container: chat,
 			conditional: conditional,
 			postprocess_element: function(item)
 			{
@@ -142,7 +142,7 @@
 		
 		// таким образом мы исправим случай, когда поле ввода было большим при скролле,
 		// но потом уменьшилось при удалении всего, и табличка о новых сообщениях осталась висеть
-		check_if_there_are_still_unread_messages.ticking(1000)
+		page.ticking(check_if_there_are_still_unread_messages, 1000)
 	}
 	
 	page.unload = function()
@@ -369,6 +369,8 @@
 	
 	function chat_loaded()
 	{
+		page.ticking(update_intelligent_dates, 60 * 1000)
+		
 		chat_top_offset = chat.offset().top
 	
 		new_messages_smooth_border.css('width', '100%')
@@ -465,7 +467,7 @@
 				visual_editor.editor.content.focus()
 			
 			//adjust_chat_listing_margin()
-			adjust_chat_listing_margin.ticking(1000)
+			page.ticking(adjust_chat_listing_margin, 1000)
 			
 			compose_message.fadeIn()
 			
@@ -564,8 +566,12 @@
 			болталка.emit('пользователь', $.cookie('user'))
 		})
 		
+		var страница = page
 		болталка.on('готов', function()
 		{
+			if (страница.void)
+				return
+				
 			if (first_connection)
 			{
 				callback()
@@ -651,11 +657,7 @@
 		return сообщение
 	}
 	
-	$(function()
-	{	
-		update_intelligent_dates.ticking(60 * 1000)
-	})
-	
+	/*
 	function show_testing_messages()
 	{
 		setTimeout(function()
@@ -688,6 +690,7 @@
 		},
 		3000)
 	}
+	*/
 	
 	//var attention_symbol = '•'
 	var attention_symbol = '⁕'

@@ -29,12 +29,12 @@
 		{
 			new Data_templater
 			({
-				data:
+				data_structure:
 				{
 					подразделы:
 					{
 						template_url: '/страницы/кусочки/раздел читальни.html',
-						item_container: $('#categories'),
+						container: $('#categories'),
 						postprocess_element: function(item)
 						{
 							return $('<li/>').append(item)
@@ -43,7 +43,7 @@
 					заметки:
 					{
 						template_url: '/страницы/кусочки/заметка раздела читальни.html',
-						item_container: $('#articles'),
+						container: $('#articles'),
 						postprocess_element: function(item)
 						{
 							return $('<li/>').append(item)
@@ -78,7 +78,7 @@
 				
 					return data.раздел
 				},
-				before_done_output: categories_loaded
+				before_done: categories_loaded
 			}))
 		
 			$(window).on_page('resize.library', center_categories_list)

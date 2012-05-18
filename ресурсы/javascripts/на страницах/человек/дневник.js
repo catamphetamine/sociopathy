@@ -13,7 +13,7 @@
 		new Data_templater
 		({
 			template_url: '/страницы/кусочки/записи дневника.html',
-			item_container: blog,
+			container: blog,
 			conditional: $('.main_conditional'),
 			done: blog_loaded
 		},
