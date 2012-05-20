@@ -1,62 +1,44 @@
-import com.sun.jersey.api.container.grizzly.GrizzlyWebContainerFactory
-import org.glassfish.grizzly.http.server.HttpServer
+import org.mortbay.jetty.Server
+import org.mortbay.jetty.servlet.{Context, ServletHolder}
 
-import javax.ws.rs.core.UriBuilder
-import java.io.IOException
-import java.net.URI
-import java.util.HashMap
-import java.util.Map
+import tools._
 
-import java.lang.Integer
-
-import com.sun.jersey.api.container.grizzly2.GrizzlyServerFactory
-
-import com.sun.jersey.api.core._
-import java.io._
-
-object Main
+object Main extends App
 {
-    def port (default_port : Integer) : Integer =
+	// создаём Jetty
+	val server = new Server(System.getProperty("port").toInt)
+	val root = new Context(server, "/", Context.SESSIONS)
+	
+	// в каком пакете искать наши Rest веб-сервисы
+	val package_name : String = System.getProperty("package")
+	
+	// каждый класс ScalatraServlet из этого пакета (и подпакетов) "замапить" на свой путь.
+	// путь определяется методом "path" этого класса.
+	for (handler <- PackageScanner.getClasses(package_name) if classOf[org.scalatra.ScalatraServlet].isAssignableFrom(handler))
 	{
-        val port = System.getProperty("port")
-        if (port == null)
-			return default_port
-			
+		// создаём сервлет из этого класса
+		val servlet = handler.newInstance().asInstanceOf[javax.servlet.Servlet]
+		
+		// на какой путь "замапим" сервлет
 		try
 		{
-			return Integer.parseInt(port)
+			// получаем это из метода path()
+			val path = handler.getMethod("path").invoke(servlet).toString
+			
+			// "мапим" сервлет на этот путь в Jetty
+			root.addServlet(new ServletHolder(servlet), path + "/*")
+			
+			println(handler.getPackage().getName() + "." + handler.getName() + " is mapped to " + path)
 		}
-		catch
+		catch 
 		{
-			case ошибка : NumberFormatException => {}
+			// не написан метод path() у сервлета
+			case error: NoSuchMethodException => 
+				throw new RuntimeException("Method path() not found in class " + handler.getPackage().getName() + "." + handler.getName())
 		}
-        
-		default_port
-    }
-    
-    def адрес () : URI =
-	{
-        UriBuilder.fromUri("http://localhost/").port(port(8080)).build()
-    }
-
-    val Адрес = адрес()
-
-	@throws (classOf[IOException])
-    def запустить () : HttpServer =
-	{
-        System.out.println("Starting grizzly...")
-		
-        val настройки = new PackagesResourceConfig("resources")
-        GrizzlyServerFactory.createHttpServer(Адрес, настройки)
-    }
-    
-	@throws (classOf[IOException])
-    def main (настройки : Array[String]) =
-	{
-		val server = запустить()
-		
-		System.in.read()
-
-		server.stop()
-    }    
+	}
+	
+	// запускаем Jetty
+	server.start()
+	server.join()
 }

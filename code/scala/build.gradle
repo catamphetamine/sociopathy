@@ -1,139 +1,68 @@
+// используем язык Scala
 apply plugin: 'scala'
 
 ext.scala_version = '2.9.1'
+ext.jersey_version = '1.12'
 ext.description = 'Accessing various calculation tasks'
-ext.classes_directory = new File('classes')
 
-def delete_folder(File folder)
-{
-    if (folder.isDirectory())
-	{
-        String[] children = folder.list()
-		int i = 0
-        while (i < children.length)
-		{
-            boolean success = delete_folder(new File(folder, children[i]))
-            if (!success)
-			{
-                return false
-            }
-			i++
-        }
-    }
-
-    // The directory is now empty so delete it
-    return folder.delete()
-}
-
-task clean_output_folders <<
-{
-	// remove classes_directory
-	delete_folder(classes_directory)
-	classes_directory.mkdirs()
-    // do something
-}
-
-//'clean_output_folders', 
-task go(dependsOn: ['compileJava', 'compileScalaScala'], type: JavaExec) {
+// основная задача — запускает наш веб-сервис
+// сначала запускает «compileJava» и «compileScala», а потом уже выполняется сама
+task go(dependsOn: ['compileJava', 'compileScala'], type: JavaExec) {
 	main = 'Main'
 	classpath = sourceSets.main.runtimeClasspath
 	standardInput = System.in
-	//args 'arguments`'
+	systemProperty 'package', 'web'
 	systemProperty 'port', '8090'
 }
 
+// наборы исходных кодов
 sourceSets
 {
-    main
+	// главный
+	main
 	{
-        java
+		java
 		{
-            srcDir 'sources'
-        }
-        resources
+			// исходники Явы искать в папке «sources»
+			srcDir 'sources'
+		}
+		scala
 		{
-            srcDir 'resources'
-        }
-    }
-	scala
-	{
-        scala
-		{
-            srcDir 'sources'
-        }
+			// исходники Scala искать в папке «sources»
+			srcDir 'sources'
+		}
 	}
 }
 
+// скомпилированные классы класть в папку «classes»
 sourceSets.main.output.classesDir = 'classes'
-sourceSets.main.output.resourcesDir = 'classes'
+
+// используемые библиотеки
+dependencies
+{
+	// служебные библиотеки для обработки Scala из Gradle
+	scalaTools group: 'org.scala-lang', name: 'scala-compiler', version: scala_version
+	scalaTools group: 'org.scala-lang', name: 'scala-library', version: scala_version
+	
+	// прочие библиотеки, используемые в программе
+	
+	compile group: 'org.scalatra', name: 'scalatra_2.9.1', version: '2.1.0.M1'
+	runtime group: 'org.scalatra', name: 'scalatra_2.9.1', version: '2.1.0.M1'
+			
+	compile group: 'org.mortbay.jetty', name: 'jetty', version: '7.0.0.pre5'
+	runtime group: 'org.mortbay.jetty', name: 'jetty', version: '7.0.0.pre5'
 		
-sourceSets.scala.output.classesDir = 'classes'
-sourceSets.scala.output.resourcesDir = 'classes'
-
-dependencies
-{
-	// Libraries needed to run the scala tools
-	scalaTools group: 'org.scala-lang', name: 'scala-compiler' version: scala_version
-	scalaTools group: 'org.scala-lang', name: 'scala-library' version: scala_version
+	compile group: 'javax.servlet', name: 'javax.servlet-api', version: '3.0.1'
+            
+	// до кучи можно просто класть jar-ники в папку «libraries», 
+	// и они тоже подхватятся в качестве библиотек
 	
-	compile group: 'org.scala-lang', name: 'scala-library' version: scala_version
-	scalaCompile group: 'org.scala-lang', name: 'scala-library' version: scala_version
-	
-	jersey_version = '1.12'
-	
-	scalaCompile group: 'asm', name: 'asm', version: '3.3.1'
-	scalaCompile group: 'javax.ws.rs', name: 'jsr311-api', version: '1.1.1'
-	scalaCompile group: 'com.sun.jersey', name: 'jersey-bundle', version: jersey_version
-	scalaCompile group: 'com.sun.jersey', name: 'jersey-client', version: jersey_version
-	scalaCompile group: 'com.sun.jersey', name: 'jersey-core', version: jersey_version
-	scalaCompile group: 'com.sun.jersey', name: 'jersey-server', version: jersey_version
-	//scalaCompile group: 'com.sun.jersey', name: 'jersey-servlet', version: jersey_version
-	scalaCompile group: 'com.sun.jersey', name: 'jersey-grizzly2', version: jersey_version
-	scalaCompile group: 'com.sun.jersey', name: 'jersey-bundle', version: jersey_version
-
-	runtime group: 'asm', name: 'asm', version: '3.3.1'
-	runtime group: 'javax.ws.rs', name: 'jsr311-api', version: '1.1.1'
-	runtime group: 'com.sun.jersey', name: 'jersey-bundle', version: jersey_version
-	runtime group: 'com.sun.jersey', name: 'jersey-client', version: jersey_version
-	runtime group: 'com.sun.jersey', name: 'jersey-core', version: jersey_version
-	runtime group: 'com.sun.jersey', name: 'jersey-server', version: jersey_version
-	//runtime group: 'com.sun.jersey', name: 'jersey-servlet', version: jersey_version
-	runtime group: 'com.sun.jersey', name: 'jersey-bundle', version: jersey_version
-	runtime group: 'com.sun.jersey', name: 'jersey-grizzly2', version: jersey_version
-	
-	scalaCompile fileTree(dir: 'libraries', include: '*.jar')
-	scalaCompile files('classes')
-	
+	compile fileTree(dir: 'libraries', include: '*.jar')
 	runtime fileTree(dir: 'libraries', include: '*.jar')
-	runtime files('classes')
 }
 
-compileScala
-{
-    scalaCompileOptions.useCompileDaemon = true
-	destinationDir = file('classes')
-	source = file('sources')
-}
-
-/*
-List groovy = ["org.codehaus.groovy:groovy-all:1.8.4@jar",
-               "commons-cli:commons-cli:1.0@jar",
-               "org.apache.ant:ant:1.8.2@jar"]
-List hibernate = ['org.hibernate:hibernate:3.0.5@jar', 'somegroup:someorg:1.0@jar']
-dependencies
-{
-    runtime groovy, hibernate
-}
-*/
-
+// откуда качать используемые библиотеки
 repositories
 {
     mavenCentral()
-	/*
-    flatDir
-	{
-        name "static"
-        dirs "libraries"
-    }
-	*/
 }

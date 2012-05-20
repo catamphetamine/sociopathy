@@ -11,9 +11,14 @@ get_launch_options = ->
 
 launch_options = get_launch_options()
 
-require "./../../configuration/#{launch_options.server}/configuration.coffee"
+require './tools/language'
+
+# configuration
+global.Options = require "./configuration.coffee"
+Object.merge_recursive(global.Options, require "./../../configuration/#{launch_options.server}/configuration.coffee")
 require "./../../configuration/#{launch_options.server}/configuration.private.coffee"
 
+# memcache
 memcache = require('memcache')
 global.memcache = new memcache.Client(Options.Memcache.Port, 'localhost')
 global.хранилище = require('mongoskin').db('localhost:' + Options.MongoDB.Port + '/' + Options.MongoDB.Database + '?auto_reconnect')
@@ -71,4 +76,4 @@ new Цепочка()
 	.сделать ->
 		global.redis.createClient().del('chat:online', @)
 	.сделать ->					
-		global.приложение.listen Options.Web_server.Port, '0.0.0.0'
+		global.приложение.listen(Options.Web_server.Port, '0.0.0.0')

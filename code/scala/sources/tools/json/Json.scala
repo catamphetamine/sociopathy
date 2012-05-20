@@ -135,7 +135,7 @@ object Json {
         case 0x22 => "\\\""
         case 0x5c => "\\\\"
         case 0x2f => "\\/"     // to avoid sending "</"
-        case c => quotedChar(c)
+        case c => c.toChar //quotedChar(c)
       }
     }.mkString("") + "\""
   }

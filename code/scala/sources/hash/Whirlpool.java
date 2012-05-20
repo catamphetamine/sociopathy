@@ -55,7 +55,7 @@
  *
  */
 
-package javanese;
+package hash;
  
 import java.util.Arrays;
 
