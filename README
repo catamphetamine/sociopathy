@@ -7,7 +7,7 @@ Sociopathy
 Используемые технологии:
    Html 5
    Css 3 (Less)
-   Javascript (jQuery, Mootools, Node.js (+ Express, Node-fibers), WebSocket)
+   Javascript (jQuery, Mootools, Node.js (+ Express), WebSocket)
    MongoDB
    NginX
    Redis
@@ -39,24 +39,12 @@ Apache + v8cgi больше не используются. Можно их не 
 поставить redis
 поставить node.js
 поставить nginx, и в nginx.conf в разделе "http" добавить "include c:\путь к папаке sociopathy\enginex.conf;"
-поставить apache (как службу; и сказать ему слушать 8082-ой порт), прикрутить к нему v8cgi, и в httpd.conf указать "DocumentRoot "c:/путь к папаке sociopathy/code/cgi""
-
-/*
-Listen 8082
-
-LoadModule v8cgi_module c:\work\v8cgi\mod_v8cgi.dll
-<IfModule mime_module>
-	AddHandler v8cgi-script .ssjs .sjs
-	ThreadsPerChild 1 
-</IfModule>
-*/
 
 настроить "run/mongodb.bat"
 настроить "run/node.js.bat"
 настроить "run/memcache.bat"
 настроить "run/redis.bat"
 настроить "run/nginx.bat"
-настроить "run/apache.bat"
 запустить "запустить.bat"
 
 зайти обозревателем по адресу localhost:8081/управление

@@ -51,10 +51,10 @@ require './controller/chat'
 require './controller/library'
 require './controller/people'
 require './controller/user'
-require './controller/general'
-require './controller/blog'
+require './controller/diary'
+require './controller/journal'
 require './controller/books'
-require './controller/friends'
+require './controller/news'
 require './controller/websocket'
 
 #global.memcache_available = false

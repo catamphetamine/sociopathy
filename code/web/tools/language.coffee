@@ -73,3 +73,29 @@ Object.get_keys = (object) ->
 RegExp.escape = (string) ->
 	specials = new RegExp("[.*+?|()\\[\\]{}\\\\]", 'g')
 	new String(string).replace(specials, "\\$&")
+	
+String.prototype.starts_with = (substring) ->
+	@indexOf(substring) == 0
+
+String.prototype.ends_with = (substring) ->
+	index = @lastIndexOf(substring)
+	index >= 0 && index == @length - substring.length
+	
+Array.prototype.map_to = (mapper) ->
+	result = []
+	@forEach (element) ->
+		result.push(mapper.bind(element)())
+	result
+	
+Array.prototype.zip = (array) ->
+	if array.length != @length
+		throw 'Zipped array lengths don\'t match'
+		
+	result = []
+		
+	i = 0
+	while i < @length
+		result.push [@[i], array[i]]
+		i++
+		
+	result

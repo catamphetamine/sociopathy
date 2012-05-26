@@ -21,15 +21,15 @@
 		},
 		new  Data_loader
 		({
-			url: '/приложение/пользователь/круги',
+			url: '/приложение/сеть/пользователь/круги',
 			before_done: circles_loaded,
 			get_data: function(data)
 			{
 				var круги = []
 			
-				Object.each(data.круги, function(value, key)
+				data.круги.for_each(function()
 				{
-					круги.push({ название: key, члены: value })
+					круги.push({ название: this.круг, члены: this.члены })
 				})
 				
 				return круги

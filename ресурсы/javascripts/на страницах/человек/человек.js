@@ -146,7 +146,7 @@
 		{
 			event.preventDefault()
 			
-			page.Ajax.put('/приложение/пользователь/круги/состав', { кого: page.data.пользователь_сети._id })
+			page.Ajax.put('/приложение/сеть/пользователь/круги/состав', { кого: page.data.пользователь_сети._id })
 			.ok(function()
 			{
 				actions.find('.add_to_circles').hide()
@@ -158,7 +158,7 @@
 		{
 			event.preventDefault()
 			
-			Ajax['delete']('/приложение/пользователь/круги/состав', { кого: page.data.пользователь_сети._id })
+			Ajax['delete']('/приложение/сеть/пользователь/круги/состав', { кого: page.data.пользователь_сети._id })
 			.ok(function()
 			{
 				actions.find('.remove_from_circles').hide()

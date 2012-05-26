@@ -156,7 +156,6 @@
 				var initial_width = result.image.width
 				var initial_height = result.image.height
 				
-				var link = $('<a/>').attr('target', '_blank').attr('href', 'http://google.ru').appendTo('body')
 				image.on('click', function(event) 
 				{
 					if (Клавиши.is('Shift', event))
@@ -188,7 +187,7 @@
 			})
 		}
 		
-		content.find('.icon').click(function(event)
+		content.find('.icon').on('click', function(event)
 		{
 			event.preventDefault()
 			

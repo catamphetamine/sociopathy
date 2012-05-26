@@ -41,7 +41,10 @@
 			
 			> .cover
 			{
-				.rounded_corners(8px);
+				&, > img
+				{
+					.rounded_corners(8px);
+				}
 			}
 			
 			> .title
