@@ -12,10 +12,12 @@
 		({
 			template_url: '/страницы/кусочки/новость.html',
 			container: page.news,
+			/*
 			postprocess_element: function(item)
 			{
 				return $('<li/>').append(item)
 			},
+			*/
 			conditional: conditional,
 			loader: new  Data_loader
 			({

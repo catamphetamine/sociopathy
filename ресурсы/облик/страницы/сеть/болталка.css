@@ -1,7 +1,8 @@
 @import "/облик/вспомогательный.less";
+@import "/облик/author_content_date.less";
 
-@user_picture_top: 12px;
-@user_picture_left: 16px;
+@user_picture_top: @AuthorContentDate_user_picture_top;
+@user_picture_left: @AuthorContentDate_user_picture_left;
 	
 #chat_container
 {
@@ -53,32 +54,9 @@
 }
 	
 .chat_user_icon
-{
-	display: inline-block;
-	position: relative;
-	
-	.picture, .real_picture,
-	.user_offline_picture_glow, .user_online_picture_glow
-	{
-		width: @user_icon_size;
-		height: @user_icon_size;
-		
-		border-radius: 4px;
-	}
-	
-	.picture
-	{
-		border-style: solid;
-		border-color: #7f7f7f;
-		border-width: 1px;
-	}
-		
+{	
 	.real_picture
 	{
-		position: absolute;
-		top: 0;
-		left: 0;
-		
 		.actions
 		{
 			position: absolute;
@@ -101,44 +79,6 @@
 		}
 	}
 	
-	.user_offline_picture_glow, .user_online_picture_glow, .picture
-	{
-		display: inline-block;
-		
-		position: relative;
-	}
-	
-	.user_online_picture_glow, .user_offline_picture_glow
-	{
-		margin-right: -@user_icon_size;
-	
-		.css_transition_property(opacity);
-		.css_transition_duration(1000ms);
-		.css_transition_easing(ease-in-out);
-		
-		/* compensates 1px border */
-		position: relative;
-		top: -1px;
-		right: -1px;
-	}
-	
-	.user_online_picture_glow
-	{
-		opacity: 0;
-		.beautiful_shadow_5(0px, 0px, 2px, 4px, 8px,10px, 20px, 0.25, 8, 155, 0);
-	}
-	
-	.user_offline_picture_glow
-	{
-		.beautiful_shadow_3(0px, 0px, 8px, 3px, 4px, 0.3);
-	}
-	
-	.picture
-	{
-		background-image: url('/картинки/temporary/картинка с навершия.jpg');
-		background-repeat: no-repeat;
-	}
-	
 	.away, .typing, .erased
 	{
 		font-size: 10px;
@@ -158,46 +98,22 @@
 	}
 }
 
-.chat .author
-{
-	.exact_height(@user_picture_top + @user_icon_size + 10px);
-}
-
-.chat .author .chat_user_icon
-{
-	top: @user_picture_top;
-	left: @user_picture_left;
-}
-
-.chat .author.online
-{
-	.user_offline_picture_glow
-	{
-		opacity: 0;
-	}
-	
-	.user_online_picture_glow
-	{
-		opacity: 1;
-	}
-}
-
 .chat .author.is_away .away, .who_is_online li.is_away .away,
 .chat .author.is_typing .typing, .who_is_online li.is_typing .typing
 {
 	opacity: 0.8;
 }
 
-@inter_column_padding: 25px;
-@author_column_padding: 30px;
-@author_column_right_padding: 26px;
-@author_column_width: 300px;
-@message_bottom_padding: 0px;
-@author_icon_margin_left: 20px;
-@time_column_padding: 20px;
-@time_column_width: 220px;
+@inter_column_padding: @AuthorContentDate_inter_column_padding;
+@author_column_left_padding: @AuthorContentDate_author_column_left_padding;
+@author_column_right_padding: @AuthorContentDate_author_column_right_padding;
+@author_column_width: @AuthorContentDate_author_column_width;
+@message_bottom_padding: @AuthorContentDate_message_bottom_padding;
+@author_icon_margin_left: @AuthorContentDate_author_icon_margin_left;
+@time_column_padding: @AuthorContentDate_time_column_padding;
+@time_column_width: @AuthorContentDate_time_column_width;
 
-.chat > li .text, #compose_message > article
+#compose_message > article
 {
 	font-size: 34px;
 }
@@ -206,110 +122,22 @@ ul.chat
 {
 	/* margin: 0, т.к. в яваскрипте это подразумевается (на этом работает прокрутка) */
 
-	position: relative;
-	z-index: 0;
+	> li:nth-child(odd)
+	{
+		background-color: white;
+	}
 	
-	top: 0;
-	
-	margin: 0;
-	padding: 0;
-
-	list-style-type: none;
-	
-	font-size: 0;
-
 	> li.new_author:nth-child(odd)
 	{
 		background-color: #f6f6f6;
 	}
 	
-	> li
+	> .content_wrapper
 	{
-		position: relative;
-		display: inline-block;
-		width: 100%;
-		
-		> .author
-		{
-			padding-left: @author_column_padding;
-			padding-right: @author_column_right_padding;
-			padding-bottom: @message_bottom_padding;
-			
-			.exact_width(@author_column_width);
-			.three_column_layout_left(@author_column_width);
-			
-			overflow: hidden;
-			
-			/* text-overflow: ellipsis; */
-			
-			text-align: right;
-			color: @blue_color;
-			
-			> a
-			{
-				display: inline-block;
-				border: 0;
-				
-				.name
-				{
-					font-face: Tahoma, Arial, Helvetica;
-					font-size: 26px;
-					
-					display: inline-block;
-					margin-top: 19px;
-					vertical-align: top;
-					
-					max-width: @author_column_width - @user_icon_size - @author_icon_margin_left;
-					overflow: hidden;
-					text-overflow: ellipsis;
-				}
-			}
-			
-			> a:after
-			{
-				content: "\A";
-				white-space: pre;
-			}
-		}
-			
-		.text_wrapper > .text, .when
-		{
-			padding-top: 12px;
-		}
-		
-		.text_wrapper
-		{
-			float: left;
-			width: 100%;
-			
-			> .text
-			{
-				padding-left: @inter_column_padding;
-				padding-right: @inter_column_padding;
-				
-				.three_column_layout_center(@author_column_padding + @author_column_width + @author_column_right_padding, @inter_column_padding + @time_column_width + @time_column_padding);
-				
-				white-space: pre-wrap;
-				word-wrap: break-word;
-			}
-		}
-			
-		.when
-		{
-			padding-left: @inter_column_padding;
-			padding-right: @time_column_padding;
-			
-			text-align: right;
-			color: #afafaf;
-			
-			font-size: 20px;
-			
-			position: relative;
-			top: 13px;
-			
-			.three_column_layout_right(@inter_column_padding + @time_column_width + @time_column_padding);
-			
-			.exact_width(@time_column_width);
+		> .content
+		{		
+			white-space: pre-wrap;
+			word-wrap: break-word;
 		}
 	}
 }
@@ -322,7 +150,8 @@ ul.chat
 	}
 }
 
-@user_icon_size: 48px;
+@user_icon_size: @AuthorContentDate_user_icon_size;
+
 @top_padding: 5px;
 @bottom_padding: 5px;
 @user_icon_margin: 8px;
@@ -457,7 +286,7 @@ ul.chat
 
 #compose_message > article
 {
-	margin-left: @author_column_padding + @author_column_width + @author_column_right_padding;
+	margin-left: @author_column_left_padding + @author_column_width + @author_column_right_padding;
 	margin-right: @inter_column_padding + @time_column_width + @time_column_padding;
 	padding-left: @inter_column_padding;
 	padding-right: @inter_column_padding;
@@ -484,7 +313,7 @@ body
 .popup_menu_container.of_message_author
 {
 	margin-top: @user_picture_top + 2 * @user_icon_size / 3;
-	margin-left: @author_column_padding + @author_column_width - @user_picture_left;
+	margin-left: @author_column_left_padding + @author_column_width - @user_picture_left;
 }
 
 .popup_menu_container.of_online_user

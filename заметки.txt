@@ -377,6 +377,14 @@ push новых сообщений
 // сделать защиту от перехвата пароля: с каждого отдельного компа нужно для первого входа вводить код из email (или жать ссылку из email)
 
 
+ajaxify chat profile links (and other chat links, if they are internal - in the addMessage function)
+
+
+
+вынести people_private
+
+// sociopathy tex - set up height (in url)
+
 
 если зайти сразу на страницу управления - съезжает подсказка
 

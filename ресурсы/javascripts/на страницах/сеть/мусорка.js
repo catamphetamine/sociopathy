@@ -18,7 +18,7 @@
 			({
 				url: '/приложение/сеть/мусорка',
 				data: 'содержимое',
-				each: function() { this.когда_выброшено = new Date(this.когда_выброшено) }
+				each: function() { parse_date(this, 'когда_выброшено') }
 			})
 		})
 	}
