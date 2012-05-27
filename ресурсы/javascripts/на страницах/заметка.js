@@ -33,7 +33,7 @@
 			new Data_templater
 			({
 				template_url: '/страницы/кусочки/заметка читальни.html',
-				container: content.find('div[type=ok]'),
+				container: content.find('.main_content'),
 				conditional: conditional
 			},
 			new  Data_loader
@@ -202,7 +202,7 @@
 			.does(function()
 			{
 				var loading = loading_indicator.show()
-				page.Ajax.delete('/приложение/черновик,
+				page.Ajax.delete('/приложение/черновик',
 				{
 					что: "заметка",
 					_id: заметка._id

@@ -192,15 +192,16 @@ function неточное_время(время)
 	var time
 	
 	if (typeof время === 'string')
-		time = (Date.parse(время) || new Date()).getTime()
+		time = (Date.parse(время) || new Date(время)).getTime()
 	else if (typeof время === 'number')
 		time = время
-	else if (typeof время === 'Date')
+	else if (время.constructor === Date)
 		time = время.getTime()
 	else
 	{
 		console.log(время)
 		console.log(typeof время)
+		console.log(время.constructor)
 		throw 'Unsupported time: ' + время
 	}
 
@@ -373,6 +374,22 @@ function get_hash()
 {
   var hash = decodeURIComponent(window.location.hash)
   return hash.substring(1)
+}
+
+function parse_dates(where, property)
+{
+	where.for_each(function()
+	{
+		this[property] = new Date(this[property])
+	})
+}
+
+function parse_date(where, property)
+{
+	if (!where[property])
+		return
+		
+	where[property] = new Date(where[property])
 }
 
 function update_intelligent_dates()

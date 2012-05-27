@@ -150,6 +150,8 @@ var Page = new Class
 	
 	void: false,
 	
+	queries: [],
+	
 	when_loaded: function(action)
 	{
 		if (this.status === 'loaded')
@@ -232,8 +234,24 @@ var Page = new Class
 		}
 	},
 	
+	query: function(selector, variable)
+	{
+		this.queries.push({ variable: variable, selector: selector })
+	},
+	
 	full_load: function(возврат)
 	{
+		var page = this
+		this.queries.for_each(function()
+		{
+			page[this.variable] = content.find(this.selector)
+		})
+		
+		//this.ticking(update_intelligent_dates, 50) // testing
+		this.ticking(update_intelligent_dates, 60 * 1000)
+
+		this.queries.empty()
+		
 		this.load()
 		
 		this.when_loaded_actions.forEach(function(action)

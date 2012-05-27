@@ -45,7 +45,7 @@
 					width: 400px;
 					height: 267px;
 					
-					.rounded_corners(8px);
+					border-radius: 8px;
 					
 					.beautiful_shadow_5(0px, 3px, 20px, 12px, 2px, 8px, 4px, 0.2);
 				}

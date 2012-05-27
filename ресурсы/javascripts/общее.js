@@ -68,11 +68,9 @@ function loading_page(options)
 	}
 	
 	var loading_screen = $('#loading_screen')
-	
-	if (first_time_page_loading)
-		loading_screen.height($(document).height())
-	else
-		loading_screen.height($(document).height() - $('#panel').height())
+
+	var min_height = first_time_page_loading ? $(document).height() : $(document).height() - $('#panel').height()
+	loading_screen.css('min-height', $(document).height() + 'px')
 	
 	loading_screen.find('> .content').css
 	({
@@ -371,7 +369,7 @@ function ajaxify_internal_links(where)
 			
 		link.click(function(event)
 		{
-			if (event.button)
+			if (event.button || event.ctrlKey || event.metaKey)
 				return
 				
 			event.preventDefault()

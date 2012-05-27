@@ -51,13 +51,8 @@
 			batch_size: Messages_batch_size,
 			get_data: function (data)
 			{
-				var сообщения = []
-				data.сообщения.forEach(function(сообщение)
-				{
-					сообщения.push(преобразовать_время(сообщение))
-				})
-			
-				return сообщения
+				parse_dates(data.сообщения, 'время')
+				return data.сообщения
 			},
 			done: chat_loaded,
 			done_more: function()
@@ -369,8 +364,6 @@
 	
 	function chat_loaded()
 	{
-		page.ticking(update_intelligent_dates, 60 * 1000)
-		
 		chat_top_offset = chat.offset().top
 	
 		new_messages_smooth_border.css('width', '100%')
@@ -647,53 +640,9 @@
 			error(ошибка)
 		})
 	}
-	
-	function преобразовать_время(сообщение)
-	{
-		сообщение.точное_время = new Date(сообщение.время).getTime() //Date.parse(сообщение.время, 'dd.MM.yyyy HH:mm').getTime()
-		сообщение.время = неточное_время(сообщение.точное_время)
-		сообщение.сейчас = new Date().getTime()
-		
-		return сообщение
-	}
-	
-	/*
-	function show_testing_messages()
-	{
-		setTimeout(function()
-		{
-			add_message
-			(преобразовать_время({
-				"отправитель": {"имя":"Анна Каренина","адресное имя":"Анна Каренина", _id: '2'},
-				сообщение: "Меж тем Онегина явленье ","время":"2012-01-07T12:13:33.040Z","_id":"4efb4e3b8dfcc5e42c000036"
-			}))
-			
-			add_message
-			(преобразовать_время({
-				"отправитель": {"имя":"Василий Иванович","адресное имя":"Василий Иванович", _id: '1'},
-				сообщение: "Меж тем Онегина явленье ","время":"2012-01-07T12:13:33.040Z","_id":"4efb4e3b8dfcc5e42c000036"
-			}))
-			
-			add_message
-			(преобразовать_время({
-				"отправитель": {"имя":"Василий Иванович","адресное имя":"Василий Иванович", _id: '1'},
-				сообщение: "Меж тем Онегина явленье ","время":"2012-01-07T12:13:33.040Z","_id":"4efb4e3b8dfcc5e42c000036"
-			}))
-			
-			add_message
-			(преобразовать_время({
-				"отправитель": {"имя":"Василий Иванович","адресное имя":"Василий Иванович", _id: '1'},
-				сообщение: "Меж тем Онегина явленье ","время":"2012-01-07T12:13:33.040Z","_id":"4efb4e3b8dfcc5e42c000036"
-			}))
-			
-			$('.background').addClass('test')
-		},
-		3000)
-	}
-	*/
-	
+
 	//var attention_symbol = '•'
-	var attention_symbol = '⁕'
+	var attention_symbol = '•'
 	
 	function new_messages_notification()
 	{

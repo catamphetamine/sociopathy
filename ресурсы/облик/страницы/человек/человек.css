@@ -126,7 +126,7 @@
 				border-style: solid;
 				border-color: #afafaf;
 				
-				.rounded_corners(10px);
+				border-radius: 10px;
 				
 				.beautiful_shadow_3(0, 0, 4px, 6px, 10px, 0.1);
 			}
@@ -149,7 +149,7 @@
 			margin-right: auto;
 			display: inline-block;
 			
-			.rounded_corners(10px);
+			border-radius: 10px;
 			
 			.minor_info
 			{

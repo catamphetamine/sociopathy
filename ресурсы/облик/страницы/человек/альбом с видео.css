@@ -49,7 +49,7 @@
 					overflow: hidden;
 					
 					.beautiful_shadow_5(0px, 3px, 20px, 12px, 2px, 8px, 4px, 0.2);
-					.rounded_corners(10px);
+					border-radius: 10px;
 					
 					border-style: solid;
 					border-color: #7f7f7f;

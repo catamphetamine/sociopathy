@@ -33,7 +33,6 @@
 		{
 			main_content.find('.trash').show()
 			main_content.find('.trash').find('th').disableTextSelect()
-			page.ticking(update_intelligent_dates, 60 * 1000)
 		}
 	}
 })()

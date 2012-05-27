@@ -1,12 +1,15 @@
 var Youtube =
 {
-	load_pictures: function()
+	load_pictures: function(where)
 	{
-		$('.youtube_video_picture').each(function()
+		if (!where)
+			where = $('body')
+			
+		where.find('.youtube_video_picture').each(function()
 		{
-			var element = $(this)
-			var id = element.attr('youtube_video_id')
-			element.attr('src', 'http://img.youtube.com/vi/' + id + '/0.jpg')
+			var image = $(this)
+			var id = image.attr('youtube_video_id')
+			image.attr('src', 'http://img.youtube.com/vi/' + id + '/0.jpg')
 		})
 	},
 	

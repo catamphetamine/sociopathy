@@ -146,15 +146,15 @@ class Цепь
 			функция_возврата
 			
 		функция_возврата.done = (result) =>
-			if @callback?
-				return @callback(null, result)
+			#if @callback?
+			#	return @callback(null, result)
 			функция_возврата(null, result)
 		
 		функция_возврата.error = (error, options) =>
 			if not error?
 				error = 'Произошла ошибка на сервере'
-			if @callback?
-				return @callback(error)
+			#if @callback?
+			#	return @callback(error)
 			функция_возврата({ error: error, display_this_error: true, options: options })
 		
 		функция_возврата
@@ -237,6 +237,8 @@ class Цепь
 				@одновременные_действия = []
 
 		if not действие?
+			if @callback?
+				return @callback(null, переменные)
 			return
 	
 		вид_предыдущего_действия = @вид_предыдущего_действия

@@ -593,7 +593,7 @@ pre, code
 	
 	.popup_menu
 	{
-		.rounded_corners(4px);
+		border-radius: 4px;
 
 		opacity: 0.8;
 		

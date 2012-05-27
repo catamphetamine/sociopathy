@@ -1,0 +1,79 @@
+@import "/облик/вспомогательный.less";
+
+#content
+{
+	margin-top: 80px;
+	padding-bottom: 50px;
+	
+	p.description
+	{
+		color: #7f7f7f;
+		
+		margin-left: 120px;
+		margin-right: 120px;	
+	}
+}
+
+#news
+{
+	margin-top: 50px;
+	margin-left: 50px;
+	
+	list-style-type: none;
+	
+	> li
+	{
+		display: block;
+		
+		margin-top: 40px;
+		margin-bottom: 40px;
+		
+		.when
+		{
+			color: #7f7f7f;
+		}
+		
+		> .video_uploaded
+		{
+			img
+			{
+				display: inline-block;
+		
+				margin: 40px;
+				
+				background-color: black;
+				color: white;
+				text-align: center;
+				
+				width: 640px;
+				height: 360px;
+				
+				overflow: hidden;
+				
+				.beautiful_shadow_5(0px, 3px, 20px, 12px, 2px, 8px, 4px, 0.2);
+				border-radius: 10px;
+				
+				border-style: solid;
+				border-color: #7f7f7f;
+				border-width: 1px;
+			}
+		}
+		
+		> .picture_uploaded
+		{
+			img
+			{
+				display: inline-block;
+				
+				margin: 40px;
+			
+				width: 400px;
+				height: 267px;
+				
+				border-radius: 8px;
+				
+				.beautiful_shadow_5(0px, 3px, 20px, 12px, 2px, 8px, 4px, 0.2);
+			}
+		}
+	}
+}

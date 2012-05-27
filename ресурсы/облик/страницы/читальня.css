@@ -35,7 +35,7 @@
 		li
 		{
 			cursor: pointer;
-			.rounded_corners(10px);
+			border-radius: 10px;
 			overflow: hidden;
 
 			display: inline-block;
@@ -98,7 +98,7 @@
 					background-color: #ffffff;
 					opacity: 0.95;
 
-					.rounded_corners(10px);
+					border-radius: 10px;
 					
 					.css_transition(200ms);
 				
@@ -117,7 +117,7 @@
 
 			.frame
 			{
-				.rounded_corners(10px);
+				border-radius: 10px;
 				overflow: hidden;
 			}
 		}

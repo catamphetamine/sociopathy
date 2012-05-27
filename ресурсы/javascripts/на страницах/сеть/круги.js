@@ -21,7 +21,7 @@
 		},
 		new  Data_loader
 		({
-			url: '/приложение/сеть/пользователь/круги',
+			url: '/приложение/сеть/круги',
 			before_done: circles_loaded,
 			get_data: function(data)
 			{

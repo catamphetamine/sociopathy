@@ -1,11 +1,18 @@
 var Vimeo =
 {
-	load_pictures: function()
+	load_pictures: function(where)
 	{
-		$('.vimeo_video_picture').each(function()
+		if (!where)
+			where = $('body')
+			
+		where.find('.vimeo_video_picture').each(function()
 		{
-			var element = $(this)
-			Vimeo.load_picture(element.attr('vimeo_video_id'))
+			var image = $(this)
+			
+			if (image.data('loaded'))
+				return
+				
+			Vimeo.load_picture(image.attr('vimeo_video_id'))
 		})
 	},
 	
@@ -25,6 +32,7 @@ var Vimeo =
 		var image = $('.vimeo_video_picture[vimeo_video_id="' + data[0].id + '"]')
 		image.attr('src', data[0].thumbnail_large)
 		image.css('opacity', 1)
+		image.data('loaded', true)
 	},
 	
 	Video:

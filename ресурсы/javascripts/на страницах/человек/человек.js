@@ -42,7 +42,12 @@
 		({
 			url: '/приложение/человек',
 			parameters: { адресное_имя: page.data.адресное_имя },
-			get_data: function (data) { page.data.пользователь_сети = data; return data },
+			get_data: function (data)
+			{
+				parse_date(data, 'когда был здесь')
+				page.data.пользователь_сети = data
+				return data
+			},
 			before_done: before_id_card_shown,
 			done: id_card_loaded
 		}))
@@ -146,7 +151,7 @@
 		{
 			event.preventDefault()
 			
-			page.Ajax.put('/приложение/сеть/пользователь/круги/состав', { кого: page.data.пользователь_сети._id })
+			page.Ajax.put('/приложение/сеть/круги/состав', { кого: page.data.пользователь_сети._id })
 			.ok(function()
 			{
 				actions.find('.add_to_circles').hide()
@@ -158,7 +163,7 @@
 		{
 			event.preventDefault()
 			
-			Ajax['delete']('/приложение/сеть/пользователь/круги/состав', { кого: page.data.пользователь_сети._id })
+			Ajax['delete']('/приложение/сеть/круги/состав', { кого: page.data.пользователь_сети._id })
 			.ok(function()
 			{
 				actions.find('.remove_from_circles').hide()
@@ -203,8 +208,10 @@
 		
 		когда_был_здесь = new Date(когда_был_здесь)
 	
-		id_card.find('.last_action_time').attr('date', когда_был_здесь.getTime())
-		page.ticking(update_intelligent_dates, 60 * 1000)
+		id_card.find('.last_action_time')
+			.attr('date', когда_был_здесь.getTime())
+			.addClass('intelligent_date')
+			.text(неточное_время(когда_был_здесь))
 		
 		var maximum_opacity = id_card.find('.was_here').css('opacity')
 		
