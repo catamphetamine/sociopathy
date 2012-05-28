@@ -8,7 +8,7 @@ var navigating = false;
 (function()
 {
 	var кусочки = ['loading popup', 'simple value dialog window', 'unsupported browser popup', 'наглядный писарь', 'нижняя панель режима правки', 'окошко входа']
-	var шаблоны = ['маленький аватар', 'chat user icon', 'содержимое мусорки']
+	var шаблоны = ['маленький аватар', 'user icon', 'chat user icon', 'содержимое мусорки']
 	
 	подгрузить_шаблоны = function(callback)
 	{

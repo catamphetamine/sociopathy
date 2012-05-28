@@ -225,23 +225,20 @@ ul.chat
 			
 			.picture
 			{
-				border: 0;
-					
 				background-image: url('/картинки/temporary/картинка с навершия.jpg');
 			}
 			
-			/* compensate border absense */
-			.user_online_picture_glow, .user_offline_picture_glow
-			{
-				top: 0;
-				right: 0;
-			}
 			
 			li
 			{
 				display: inline-block;
 				margin: @user_icon_margin;
 					
+				.user_offline_picture_glow
+				{
+					opacity: 1 !important;
+				}
+				
 				a
 				{
 					display: inline-block;

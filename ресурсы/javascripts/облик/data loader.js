@@ -193,6 +193,8 @@ var Batch_loader = new Class
 	}
 })
 
+var Batch_data_loader = Batch_loader
+
 var Batch_loader_with_infinite_scroll = new Class
 ({
 	Extends: Batch_loader,
@@ -202,7 +204,7 @@ var Batch_loader_with_infinite_scroll = new Class
 		this.parent(options)
 		
 		$(window).scrollTop(0)
-		this.options.scroll_detector = $('#scroll_detector')
+		this.options.scroll_detector = this.options.scroll_detector || $('#scroll_detector')
 	},
 	
 	activate: function()
@@ -224,6 +226,8 @@ var Batch_loader_with_infinite_scroll = new Class
 		прокрутчик.unwatch(this.options.scroll_detector)
 	}
 })
+
+var Batch_data_loader_with_infinite_scroll = Batch_loader_with_infinite_scroll
 
 var Data_loader = new Class
 ({

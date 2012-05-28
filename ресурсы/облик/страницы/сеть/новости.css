@@ -39,7 +39,8 @@
 					{
 						display: inline-block;
 				
-						margin: 40px;
+						margin-top: 20px;
+						margin-bottom: 20px;
 						
 						background-color: black;
 						color: white;
@@ -65,7 +66,8 @@
 					{
 						display: inline-block;
 						
-						margin: 40px;
+						margin-top: 20px;
+						margin-bottom: 20px;
 					
 						width: 400px;
 						height: 267px;
@@ -77,5 +79,13 @@
 				}
 			}
 		}
+	}
+}
+
+.author_content_date
+{
+	> li:nth-child(odd)
+	{
+		background-color: #ecf3f4;
 	}
 }

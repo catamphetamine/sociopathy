@@ -52,7 +52,7 @@ http.get '/люди', (ввод, вывод) ->
 			пользовательское.взять({ _id: id_criteria }, { options: { limit: ввод.настройки.сколько, sort: [['$natural', sort]] }}, @.в 'люди')
 
 		.сделать (люди) ->
-			return @() if люди.length == 0
+			return @() if люди.length < ввод.настройки.сколько
 			
 			more_id_criteria  = {}
 			sort = null
@@ -64,7 +64,7 @@ http.get '/люди', (ввод, вывод) ->
 				more_id_criteria = { $lt: люди[люди.length - 1]._id }
 				sort = 1
 				
-			пользовательское.взять({ _id: more_id_criteria }, { options: { limit: 1, sort: [['$natural', sort]] }}, @)
+			пользовательское.взять({ _id: more_id_criteria }, { options: { limit: 1 }}, @)
 		
 		.сделать (ещё_люди) ->
 			@.$['есть ещё?'] = no
@@ -232,5 +232,5 @@ http.get '/человек/книги', (ввод, вывод) ->
 http.get '/сеть/черновик', (ввод, вывод) ->
 	цепь(вывод)
 		.сделать ->
-			console.log(ввод.настройки.что)
+			#console.log(ввод.настройки.что)
 			вывод.send({})

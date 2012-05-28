@@ -45,12 +45,7 @@
 				${пользователь.имя}
 			</span>
 			
-			<div class="user_icon">
-				<div class="user_offline_picture_glow"></div>
-				<div class="picture" title="${пользователь.имя}">
-					<div class="real_picture" style="background-image: url('/загруженное/люди/${пользователь['адресное имя']}/картинка/маленькая.jpg')"></div>
-				</div>
-			</div>
+			{{tmpl(пользователь) "user icon"}}
 		</a>
 	</div>	
 		

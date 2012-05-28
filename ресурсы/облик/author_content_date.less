@@ -10,6 +10,88 @@
 @AuthorContentDate_user_picture_top: 12px;
 @AuthorContentDate_user_picture_left: 16px;
 
+.online > .user_icon
+{
+	.user_offline_picture_glow
+	{
+		opacity: 0;
+	}
+	
+	.user_online_picture_glow
+	{
+		opacity: 1;
+	}
+}
+			
+.user_icon
+{
+	display: inline-block;
+	position: relative;
+	
+	font-size: 0;
+
+	> .picture, > .picture > .real_picture,
+	.user_offline_picture_glow, .user_online_picture_glow
+	{
+		width: @AuthorContentDate_user_icon_size;
+		height: @AuthorContentDate_user_icon_size;
+		
+		border-radius: 4px;
+	}
+	
+	.picture
+	{
+		border-style: solid;
+		border-color: #7f7f7f;
+		border-width: 1px;
+	}
+		
+	.real_picture
+	{
+		position: absolute;
+		top: 0;
+		left: 0;
+	}
+	
+	.user_offline_picture_glow, .user_online_picture_glow, .picture
+	{
+		display: inline-block;
+		
+		position: relative;
+	}
+	
+	.user_online_picture_glow, .user_offline_picture_glow
+	{
+		margin-right: -@AuthorContentDate_user_icon_size;
+	
+		.css_transition_property(opacity);
+		.css_transition_duration(1000ms);
+		.css_transition_easing(ease-in-out);
+		
+		/* compensates 1px border */
+		position: relative;
+		top: -1px;
+		right: -1px;
+	}
+	
+	.user_online_picture_glow
+	{
+		opacity: 0;
+		.beautiful_shadow_5(0px, 0px, 2px, 4px, 8px,10px, 20px, 0.25, 8, 155, 0);
+	}
+	
+	.user_offline_picture_glow
+	{
+		.beautiful_shadow_3(0px, 0px, 8px, 3px, 4px, 0.3);
+	}
+	
+	.picture
+	{
+		background-image: url('/картинки/temporary/картинка с навершия.jpg');
+		background-repeat: no-repeat;
+	}
+}
+
 .author_content_date
 {
 	/* margin: 0, т.к. в яваскрипте это подразумевается (на этом работает прокрутка) */
@@ -55,19 +137,6 @@
 			.exact_width(@AuthorContentDate_author_column_width);
 			.exact_height(@AuthorContentDate_user_picture_top + @AuthorContentDate_user_icon_size + 10px);
 			
-			&.online
-			{
-				.user_offline_picture_glow
-				{
-					opacity: 0;
-				}
-				
-				.user_online_picture_glow
-				{
-					opacity: 1;
-				}
-			}
-			
 			> a
 			{
 				display: inline-block;
@@ -86,77 +155,11 @@
 					overflow: hidden;
 					text-overflow: ellipsis;
 				}
-					
+				
 				.user_icon
 				{
-					display: inline-block;
-					position: relative;
-					
-					font-size: 0;
-		
 					top: @AuthorContentDate_user_picture_top;
 					left: @AuthorContentDate_user_picture_left;
-
-					.picture, .real_picture,
-					.user_offline_picture_glow, .user_online_picture_glow
-					{
-						width: @AuthorContentDate_user_icon_size;
-						height: @AuthorContentDate_user_icon_size;
-						
-						border-radius: 4px;
-					}
-					
-					.picture
-					{
-						border-style: solid;
-						border-color: #7f7f7f;
-						border-width: 1px;
-					}
-						
-					.real_picture
-					{
-						position: absolute;
-						top: 0;
-						left: 0;
-					}
-					
-					.user_offline_picture_glow, .user_online_picture_glow, .picture
-					{
-						display: inline-block;
-						
-						position: relative;
-					}
-					
-					.user_online_picture_glow, .user_offline_picture_glow
-					{
-						margin-right: -@AuthorContentDate_user_icon_size;
-					
-						.css_transition_property(opacity);
-						.css_transition_duration(1000ms);
-						.css_transition_easing(ease-in-out);
-						
-						/* compensates 1px border */
-						position: relative;
-						top: -1px;
-						right: -1px;
-					}
-					
-					.user_online_picture_glow
-					{
-						opacity: 0;
-						.beautiful_shadow_5(0px, 0px, 2px, 4px, 8px,10px, 20px, 0.25, 8, 155, 0);
-					}
-					
-					.user_offline_picture_glow
-					{
-						.beautiful_shadow_3(0px, 0px, 8px, 3px, 4px, 0.3);
-					}
-					
-					.picture
-					{
-						background-image: url('/картинки/temporary/картинка с навершия.jpg');
-						background-repeat: no-repeat;
-					}
 				}
 			}
 			

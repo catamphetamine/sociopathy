@@ -1,1 +1,7 @@
-body {}
+.author_content_date
+{
+	> li:nth-child(odd)
+	{
+		background-color: #f4ecf0;
+	}
+}

@@ -194,5 +194,5 @@ http.get '/болталка/сообщения', (ввод, вывод) ->
 	хранилище.collection('chat').find({ _id: id_criteria }, { limit: ограничение, sort: [['$natural', -1]] }).toArray возврат
 
 sanitize = (html, возврат) ->
-	console.log('возврат')
+	#console.log('возврат')
 	возврат(null, html)

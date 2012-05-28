@@ -81,6 +81,10 @@ String.prototype.ends_with = (substring) ->
 	index = @lastIndexOf(substring)
 	index >= 0 && index == @length - substring.length
 	
+Array.prototype.last = () ->
+	return if @пусто()
+	@[@length - 1]
+	
 Array.prototype.map_to = (mapper) ->
 	result = []
 	@forEach (element) ->

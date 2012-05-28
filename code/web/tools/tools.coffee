@@ -142,7 +142,7 @@ file_system = require 'fs'
 		return ввод.cookies[имя]
 		
 	cookie = ввод.headers.cookie || ввод.headers['x-cookie']
-	console.log cookie
+	
 	if cookie?
 		try
 			ввод.cookies = connect_utilities.parseCookie(cookie)

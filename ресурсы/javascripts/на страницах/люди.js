@@ -163,13 +163,10 @@
 				top_loader.index++
 				top_loader.latest = bottom_loader.earliest
 				previous_people_conditional.callback()
-				//$(document).trigger('page_initialized')
 			},
 			before_done_more: function()
 			{
 				new_people_loaded()
-				
-				//set_page_number(this.page.number)
 			}
 		})
 		
@@ -217,13 +214,9 @@
 			})
 			
 			progress_bar.show()
-			
-			//$('body').css('margin-bottom', progress.options.element.outerHeight(true) + 'px')
 		}
 		
 		progress.update(bottom_loader.уже_загружено())
 		ajaxify_internal_links(content)
 	}
-	
-	//page.needs_initializing = true
 })()
