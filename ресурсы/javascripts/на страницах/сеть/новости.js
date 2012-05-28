@@ -19,6 +19,7 @@
 				batch_size: 5,
 				scroll_detector: content.find('#scroll_detector'),
 				before_done: news_loaded,
+				before_done_more: function() { ajaxify_internal_links(page.news) },
 				get_data: function(data)
 				{
 					parse_dates(data.новости, 'когда')

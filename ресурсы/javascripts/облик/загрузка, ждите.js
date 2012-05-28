@@ -22,7 +22,8 @@ var loading_indicator = new (function()
 	var images_path = "/картинки/лиса"
 
 	// available loading indicators
-	var frames = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
+	var frames = []
+	var fox_frames = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
 	
 	var current_frame_index = 0
 	
@@ -36,9 +37,9 @@ var loading_indicator = new (function()
 		
 		var frames_container = loading_indicator.find('.frames')
 		
-		frames.forEach(function(frame, i)
+		fox_frames.for_each(function()
 		{
-			frames[i] = $('<div/>').addClass('frame').css('background-image', 'url("' + images_path + '/' + frame + '.png' + '")').appendTo(frames_container)
+			frames.push($('<div/>').addClass('frame').css('background-image', 'url("' + images_path + '/' + this + '.png' + '")').appendTo(frames_container))
 		})
 		
 		this.content = frames_container.parent()

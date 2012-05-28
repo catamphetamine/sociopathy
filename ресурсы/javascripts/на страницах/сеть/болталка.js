@@ -54,6 +54,8 @@
 				parse_dates(data.сообщения, 'время')
 				return data.сообщения
 			},
+			before_done: function() { ajaxify_internal_links(chat) },
+			before_done_more: function() { ajaxify_internal_links(chat) },
 			done: chat_loaded,
 			done_more: function()
 			{
@@ -260,6 +262,8 @@
 		{
 			content.appendTo(chat)
 			
+			ajaxify_internal_links(content)
+			
 			// после append'а, т.к. стили
 			if (is_another_users_message)
 				initialize_call_action(content, content.attr('author'), 'of_message_author', function() { return this_author.hasClass('online') })
@@ -338,6 +342,7 @@
 		
 		container.css('opacity', '0')
 		container.appendTo(who_is_online_bar_list)
+		ajaxify_internal_links(content)
 		
 		// после append'а, т.к. стили
 		if (user._id !== пользователь._id)
