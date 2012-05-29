@@ -278,7 +278,7 @@ file_system = require 'fs'
 	new Цепочка(возврат)
 		.сделать ->
 			query_options = { limit: ввод.настройки.сколько, sort: [['$natural', -1]] }
-			query = require('cloneextend').clone(options.of)
+			query = Object.clone(options.query)
 			
 			if с?
 				с =  collection.id(с)
@@ -291,7 +291,7 @@ file_system = require 'fs'
 			if batch.length < ввод.настройки.сколько
 				return @.done()
 			
-			more = require('cloneextend').clone(options.of)
+			more = Object.clone(options.query)
 			more._id = { $lt: batch.last()._id }
 			collection.find(more, { limit: 1 }).toArray(@)
 		

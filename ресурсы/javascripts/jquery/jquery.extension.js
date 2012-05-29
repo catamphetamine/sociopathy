@@ -611,3 +611,8 @@ function get_function(variable)
 	if (typeof variable == "function")
 		return variable
 }
+
+$.fn.is_empty = function()
+{
+	return this.children().length === 0
+}

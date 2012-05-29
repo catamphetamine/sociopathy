@@ -1,18 +1,20 @@
-@import "/облик/вспомогательный.less";
-
-.main_conditional
+.main_content
 {
-	[type=loading], [type=error]
+	margin-top: 140px;
+		
+	#diary
 	{
-		text-align: center;
-		margin-bottom: 50px;
-		margin-top: 250px;
-	}
+		list-style-type: none;
 	
-	[type=ok]
+		> li
+		{
+		
+		}
+	}
+
+	.empty
 	{
+		display: none;
 		text-align: center;
-		margin-bottom: 50px;
-		margin-top: 250px;
 	}
 }

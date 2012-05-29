@@ -16,7 +16,7 @@
 			loader: new  Batch_data_loader_with_infinite_scroll
 			({
 				url: '/приложение/сеть/новости',
-				batch_size: 5,
+				batch_size: 10,
 				scroll_detector: content.find('#scroll_detector'),
 				before_done: news_loaded,
 				before_done_more: function() { ajaxify_internal_links(page.news) },

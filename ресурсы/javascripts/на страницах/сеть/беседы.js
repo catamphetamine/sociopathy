@@ -1,7 +1,7 @@
+title('Беседы')
+	
 (function()
 {
-	title('Беседы')
-	
 	page.query('#talks', 'talks')
 	
 	page.load = function()
@@ -16,7 +16,7 @@
 			loader: new  Batch_data_loader_with_infinite_scroll
 			({
 				url: '/приложение/сеть/беседы',
-				batch_size: 5,
+				batch_size: 10,
 				scroll_detector: content.find('#scroll_detector'),
 				before_done: talks_loaded,
 				before_done_more: function() { ajaxify_internal_links(page.talks) },

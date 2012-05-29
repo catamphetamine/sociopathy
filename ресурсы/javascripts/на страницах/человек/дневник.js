@@ -1,31 +1,48 @@
 (function()
 {
-	title('Дневник. ' + page.data.адресное_имя)
+	title('Дневник. ' + page.data.пользователь_сети.имя)
 	
-	var blog
-	
-	Подсказки.подсказка('Здесь вы можете почитать дневник этого человека.')
+	page.query('#diary', 'diary')
 	
 	page.load = function()
 	{
-		blog = $('#blog')
-	
+		var conditional = initialize_conditional($('.main_conditional'), { immediate: true })
+		
 		new Data_templater
 		({
-			template_url: '/страницы/кусочки/записи дневника.html',
-			container: blog,
-			conditional: $('.main_conditional'),
-			done: blog_loaded
-		},
-		new  Data_loader
-		({
-			url: '/приложение/дневник',
-			parameters: { адресное_имя: page.data.адресное_имя },
-			get_data: function (data) { page.data.дневник = data; return data }
-		}))
+			template_url: '/страницы/кусочки/запись в дневнике в списке.html',
+			container: page.diary,
+			conditional: conditional,
+			loader: new  Batch_data_loader_with_infinite_scroll
+			({
+				url: '/приложение/человек/дневник',
+				parameters: { сочинитель: page.data.пользователь_сети['адресное имя'] },
+				batch_size: 10,
+				scroll_detector: content.find('#scroll_detector'),
+				before_done: diary_loaded,
+				before_done_more: function() { ajaxify_internal_links(page.diary) },
+				get_data: function(data)
+				{
+					parse_dates(data.дневник, 'время')
+					return data.дневник
+				}
+			})
+		})
 	}
 	
-	function blog_loaded()
+	function diary_loaded()
 	{
+		$(document).trigger('page_initialized')
+		
+		if (page.diary.is_empty())
+		{
+			page.diary.remove()
+			content.find('.main_content').find('> .empty').show()
+		}
+		
+	//	Режим.разрешить('правка')
+	//	Режим.разрешить('действия')
 	}
+	
+	page.needs_initializing = true
 })()

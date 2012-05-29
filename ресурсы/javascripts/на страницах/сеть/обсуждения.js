@@ -1,7 +1,7 @@
-(function()
-{
-	title('Обсуждения')
+title('Обсуждения')
 	
+(function()
+{	
 	page.query('#discussions', 'discussions')
 	
 	page.load = function()
@@ -16,7 +16,7 @@
 			loader: new  Batch_data_loader_with_infinite_scroll
 			({
 				url: '/приложение/сеть/обсуждения',
-				batch_size: 5,
+				batch_size: 10,
 				scroll_detector: content.find('#scroll_detector'),
 				before_done: discussions_loaded,
 				before_done_more: function() { ajaxify_internal_links(page.discussions) },
