@@ -56,6 +56,8 @@ require './controller/journal'
 require './controller/books'
 require './controller/news'
 require './controller/circles'
+require './controller/talks'
+require './controller/discussions'
 require './controller/websocket'
 
 #global.memcache_available = false

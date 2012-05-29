@@ -270,4 +270,37 @@ file_system = require 'fs'
 	id = id.to_unix_file_name()
 	id
 	
+снасти.batch_loading = (ввод, options, возврат) ->
+	с = ввод.настройки.с
+	collection = хранилище.collection(options.from)
+	data = null
+	
+	new Цепочка(возврат)
+		.сделать ->
+			query_options = { limit: ввод.настройки.сколько, sort: [['$natural', -1]] }
+			query = require('cloneextend').clone(options.of)
+			
+			if с?
+				с =  collection.id(с)
+				query._id = { $lt: с }
+			
+			collection.find(query, query_options).toArray(@)
+			
+		.сделать (batch) ->
+			data = batch
+			if batch.length < ввод.настройки.сколько
+				return @.done()
+			
+			more = require('cloneextend').clone(options.of)
+			more._id = { $lt: batch.last()._id }
+			collection.find(more, { limit: 1 }).toArray(@)
+		
+		.сделать (more) ->
+			if more? && !more.пусто()
+				@.$['есть ещё?'] = yes
+			else
+				@.$['есть ещё?'] = no
+				
+			return @.done(data)
+	
 module.exports = снасти

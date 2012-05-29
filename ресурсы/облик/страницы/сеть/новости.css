@@ -6,12 +6,11 @@
 	margin-top: 80px;
 	padding-bottom: 50px;
 	
-	p.description
+	.circle
 	{
-		color: #7f7f7f;
-		
-		margin-left: 120px;
-		margin-right: 120px;	
+		margin-left: 60px;
+		margin-right: 60px;
+		margin-bottom: 60px;
 	}
 }
 

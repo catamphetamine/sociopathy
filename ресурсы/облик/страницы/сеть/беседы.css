@@ -1,3 +1,13 @@
+#talks
+{
+	list-style-type: none;
+
+	> li
+	{
+	
+	}
+}
+
 .author_content_date
 {
 	> li:nth-child(odd)

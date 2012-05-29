@@ -1,1 +1,17 @@
-body {}
+#discussions
+{
+	list-style-type: none;
+
+	> li
+	{
+	
+	}
+}
+
+.author_content_date
+{
+	> li:nth-child(odd)
+	{
+		background-color: #f5ffee;
+	}
+}

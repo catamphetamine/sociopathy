@@ -103,3 +103,7 @@ Array.prototype.zip = (array) ->
 		i++
 		
 	result
+	
+Array.prototype.put = (element) ->
+	if @indexOf(element) < 0
+		@push(element)
