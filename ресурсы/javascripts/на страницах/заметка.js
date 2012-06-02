@@ -33,7 +33,7 @@
 			new Data_templater
 			({
 				template_url: '/страницы/кусочки/заметка читальни.html',
-				container: content.find('.main_content'),
+				container: page.get('.main_content'),
 				conditional: conditional
 			},
 			new  Data_loader

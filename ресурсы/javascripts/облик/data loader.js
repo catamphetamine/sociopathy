@@ -1,3 +1,16 @@
+function loader_get_data(data)
+{
+	if (this.options.data)
+	{
+		if (typeof this.options.data === 'string')
+			return data[this.options.data]
+		else if (typeof this.options.data === 'function')
+			return this.options.data(data)
+	}
+		
+	return data
+}
+
 var Batch_loader = new Class
 ({
 	Implements: [Options],
@@ -5,13 +18,7 @@ var Batch_loader = new Class
 	options:
 	{
 		parameters: {},
-		get_data: function(data)
-		{
-			if (this.options.data)
-				return data[this.options.data]
-				
-			return data
-		},
+		get_data: loader_get_data,
 		finished: function() {},
 		done: function() {},
 		done_more: function() {},
@@ -236,13 +243,7 @@ var Data_loader = new Class
 	options:
 	{
 		parameters: {},
-		get_data: function(data)
-		{
-			if (this.options.data)
-				return data[this.options.data]
-				
-			return data
-		},
+		get_data: loader_get_data,
 		done: function() {},
 		show: function() {},
 		before_done: function() {},
@@ -325,7 +326,13 @@ var Data_templater = new Class
 		{
 			loader = new Data_loader(options.data)
 		}
-	
+		
+		if (!options.container)
+			options.container = options.to
+			
+		if (!options.conditional)
+			options.conditional = initialize_conditional(page.get('.main_conditional'), { immediate: true })
+		
 		if (page)
 			options.Ajax = options.Ajax || page.Ajax
 

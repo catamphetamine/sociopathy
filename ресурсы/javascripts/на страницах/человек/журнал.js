@@ -18,7 +18,7 @@
 				url: '/приложение/человек/журнал',
 				parameters: { сочинитель: page.data.пользователь_сети['адресное имя'] },
 				batch_size: 10,
-				scroll_detector: content.find('#scroll_detector'),
+				scroll_detector: page.get('#scroll_detector'),
 				before_done: journal_loaded,
 				before_done_more: function() { ajaxify_internal_links(page.journal) },
 				get_data: function(data)
@@ -37,7 +37,7 @@
 		if (page.journal.is_empty())
 		{
 			page.journal.remove()
-			content.find('.main_content').find('> .empty').show()
+			page.get('.main_content').find('> .empty').show()
 		}
 		
 	//	Режим.разрешить('правка')

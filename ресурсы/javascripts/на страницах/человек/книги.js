@@ -1,7 +1,5 @@
 (function()
 {
-	title('Книги. ' + page.data.адресное_имя)
-	
 	Режим.пообещать('правка')
 	Режим.пообещать('действия')
 	
@@ -28,6 +26,8 @@
 	
 	page.load = function()
 	{
+		title('Книги. ' + page.data.адресное_имя)
+	
 		add_book_window = simple_value_dialog_window
 		({
 			id: 'add_book_window',

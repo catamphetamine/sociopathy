@@ -22,10 +22,10 @@
 	
 		$('#content').disableTextSelect()
 	
-		var main_conditional = initialize_conditional(content.find('.main_conditional'))
+		var main_conditional = initialize_conditional(page.get('.main_conditional'))
 		
-		var previous_people_block = content.find('.previous_people_conditional')
-		previous_people_block.prependTo(content.find('.main_conditional > [type=ok]'))
+		var previous_people_block = page.get('.previous_people_conditional')
+		previous_people_block.prependTo(page.get('.main_conditional > [type=ok]'))
 		var previous_people_conditional = initialize_conditional(previous_people_block)
 		
 		var Batch_size = 8
@@ -217,6 +217,6 @@
 		}
 		
 		progress.update(bottom_loader.уже_загружено())
-		ajaxify_internal_links(content)
+		ajaxify_internal_links(page.content)
 	}
 })()

@@ -17,7 +17,7 @@
 			({
 				url: '/приложение/сеть/новости',
 				batch_size: 10,
-				scroll_detector: content.find('#scroll_detector'),
+				scroll_detector: page.get('#scroll_detector'),
 				before_done: news_loaded,
 				before_done_more: function() { ajaxify_internal_links(page.news) },
 				get_data: function(data)

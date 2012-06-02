@@ -177,7 +177,7 @@
 			progress.update(get_video_number())
 		}
 		
-		content.find('.video').click(function(event)
+		page.get('.video').click(function(event)
 		{
 			event.preventDefault()
 			

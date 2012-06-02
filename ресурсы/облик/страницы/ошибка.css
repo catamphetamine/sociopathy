@@ -1,0 +1,17 @@
+#content
+{
+	margin-top: 200px;
+	margin-bottom: 200px;
+	
+	margin-left: 100px;
+	margin-right: 100px;
+	
+	text-align: center;
+	
+	.url
+	{
+		display: block;
+		color: #7f7f7f;
+		margin-top: 20px;
+	}
+}

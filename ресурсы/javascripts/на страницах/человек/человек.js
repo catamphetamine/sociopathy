@@ -186,7 +186,7 @@
 		var image = $('<img/>')
 		image.attr('src', '/загруженное/люди/' + page.data.пользователь_сети.имя + '/фотография.jpg')
 	
-		content.find('> .photo').append(image)
+		page.get('> .photo').append(image)
 	}
 	
 	function show_online_status()
@@ -264,7 +264,7 @@
 	
 	function show_links()
 	{
-		var links_block = content.find('.miscellaneous .links')
+		var links_block = page.get('.miscellaneous .links')
 		
 		if (!page.data.пользователь_сети.ссылки || page.data.пользователь_сети.ссылки.is_empty())
 			return links_block.hide()

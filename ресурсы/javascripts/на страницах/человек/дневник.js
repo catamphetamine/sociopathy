@@ -18,7 +18,7 @@
 				url: '/приложение/человек/дневник',
 				parameters: { сочинитель: page.data.пользователь_сети['адресное имя'] },
 				batch_size: 10,
-				scroll_detector: content.find('#scroll_detector'),
+				scroll_detector: page.get('#scroll_detector'),
 				before_done: diary_loaded,
 				before_done_more: function() { ajaxify_internal_links(page.diary) },
 				get_data: function(data)
@@ -37,7 +37,7 @@
 		if (page.diary.is_empty())
 		{
 			page.diary.remove()
-			content.find('.main_content').find('> .empty').show()
+			page.get('.main_content').find('> .empty').show()
 		}
 		
 	//	Режим.разрешить('правка')

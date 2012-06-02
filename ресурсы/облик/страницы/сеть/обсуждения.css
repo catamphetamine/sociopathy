@@ -7,11 +7,3 @@
 	
 	}
 }
-
-.author_content_date
-{
-	> li:nth-child(odd)
-	{
-		background-color: #f5ffee;
-	}
-}

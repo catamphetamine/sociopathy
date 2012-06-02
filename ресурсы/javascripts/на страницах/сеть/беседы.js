@@ -1,4 +1,4 @@
-title('Беседы')
+title('Беседы');
 	
 (function()
 {
@@ -6,21 +6,18 @@ title('Беседы')
 	
 	page.load = function()
 	{
-		var conditional = initialize_conditional($('.main_conditional'), { immediate: true })
-		
 		new Data_templater
 		({
-			template_url: '/страницы/кусочки/беседа.html',
-			container: page.talks,
-			conditional: conditional,
+			template: 'беседа в списке бесед',
+			to: page.talks,
 			loader: new  Batch_data_loader_with_infinite_scroll
 			({
 				url: '/приложение/сеть/беседы',
 				batch_size: 10,
-				scroll_detector: content.find('#scroll_detector'),
+				scroll_detector: page.get('#scroll_detector'),
 				before_done: talks_loaded,
 				before_done_more: function() { ajaxify_internal_links(page.talks) },
-				get_data: function(data)
+				data: function(data)
 				{
 					parse_dates(data.беседы, 'создана')
 					return data.беседы
@@ -32,6 +29,12 @@ title('Беседы')
 	function talks_loaded()
 	{
 		$(document).trigger('page_initialized')
+		
+		if (page.talks.is_empty())
+		{
+			page.talks.remove()
+			page.get('.main_content').find('> .empty').show()
+		}
 		
 	//	Режим.разрешить('правка')
 	//	Режим.разрешить('действия')

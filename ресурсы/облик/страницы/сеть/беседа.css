@@ -1,0 +1,15 @@
+@import "/облик/вспомогательный.less";
+@import "/облик/author_content_date.less";
+
+#content
+{
+	margin-top: 100px;
+}
+
+.author_content_date
+{
+	> li:nth-child(odd)
+	{
+		background-color: #fff8fb;
+	}
+}

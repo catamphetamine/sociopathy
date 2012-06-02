@@ -534,7 +534,7 @@ function match_url(url, start, patterns, options)
 			}
 			
 			matched = true
-			return action(url.substring(0, slash), rest)
+			return action(decodeURIComponent(url.substring(0, slash)), rest)
 		}
 		
 		if (url.starts_with(key))

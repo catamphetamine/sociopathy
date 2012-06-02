@@ -31,7 +31,8 @@
 										{{if book.обложка}}
 											<img width="${book.обложка.ширина}" height="${book.обложка.высота}" class="icon" src="/загруженное/книги/${book.id}/${book.обложка.картинка}"/>
 										{{else}}
-											<div class="author">${book.сочинитель}</div><div class="title">${book.название}</div>
+											<div class="author"><div class="center_vertically"><div>${book.сочинитель}</div></div></div>
+											<div class="title"><div class="center_vertically"><div>${book.название}</div></div></div>
 											<div class="icon"></div>
 										{{/if}}
 

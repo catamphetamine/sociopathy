@@ -40,6 +40,9 @@ global.image_magick.convert.path = Options.ImageMagick.Convert.Path
 
 global.почта = require './tools/email'
 
+global.db = (collection) ->
+	хранилище.collection(collection)
+
 #global.почта.письмо(кому: 'Николай Кучумов <kuchumovn@gmail.com>', тема: 'Test', сообщение: 'Проверка {{связи}}', данные: { связи: 'связи' })
 
 require './tools/date'

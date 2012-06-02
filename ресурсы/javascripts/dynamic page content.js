@@ -7,8 +7,26 @@ var navigating = false;
 
 (function()
 {
-	var кусочки = ['loading popup', 'simple value dialog window', 'unsupported browser popup', 'наглядный писарь', 'нижняя панель режима правки', 'окошко входа']
-	var шаблоны = ['маленький аватар', 'user icon', 'chat user icon', 'содержимое мусорки']
+	var кусочки =
+	[
+		'loading popup',
+		'simple value dialog window',
+		'unsupported browser popup',
+		'наглядный писарь',
+		'нижняя панель режима правки', 'окошко входа'
+	]
+	
+	var шаблоны =
+	[
+		'маленький аватар',
+		'user icon',
+		'chat user icon',
+		'содержимое мусорки',
+		'обсуждение в списке обсуждений',
+		'беседа в списке бесед',
+		'сообщение обсуждения',
+		'сообщение беседы'
+	]
 	
 	подгрузить_шаблоны = function(callback)
 	{
@@ -89,7 +107,7 @@ var navigating = false;
 				пользователь = данные.пользователь
 				
 				if (!пользователь && Страница.эта().starts_with('сеть/'))
-					window.location = '/'
+					window.location = '/прописка'
 	
 				возврат()
 			})
@@ -155,7 +173,7 @@ var navigating = false;
 		
 			var finish = function()
 			{
-				content = $('#content')
+				page.content = $('#content')
 				$('*').unbind('.page')
 				$(document).trigger('page_loaded')
 			}
@@ -223,7 +241,11 @@ var navigating = false;
 				url: get_page_javascript_link(),
 				dataType: "script",
 				success: function() { callback() },
-				error: function() { alert('Page script not loaded (possible syntax error): ' + get_page_javascript_link()) }
+				error: function()
+				{
+					window.onerror()
+					console.log('Page script not loaded (possible syntax error): ' + get_page_javascript_link())
+				}
 			})
 		}
 		

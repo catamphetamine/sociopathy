@@ -82,6 +82,29 @@ var Страница =
 					}
 				})
 			},
+			'сеть/беседы': function(rest)
+			{
+				match_url(rest,
+				{
+					'*': function(value, rest)
+					{
+						название_страницы = 'сеть/беседа'
+						
+						new_page.data.беседа = { id: value }
+					}
+				})
+			},
+			'сеть/обсуждения': function(rest)
+			{
+				match_url(rest,
+				{
+					'*': function(value, rest)
+					{
+						название_страницы = 'сеть/обсуждение'
+						new_page.data.обсуждение = { id: value }
+					}
+				})
+			},
 			'читальня': function(rest)
 			{
 				match_url(rest,
@@ -234,6 +257,11 @@ var Page = new Class
 		}
 	},
 	
+	get: function(selector)
+	{
+		return this.content.find(selector)
+	},
+	
 	query: function(selector, variable)
 	{
 		this.queries.push({ variable: variable, selector: selector })
@@ -244,7 +272,7 @@ var Page = new Class
 		var page = this
 		this.queries.for_each(function()
 		{
-			page[this.variable] = content.find(this.selector)
+			page[this.variable] = page.get(this.selector)
 		})
 		
 		//this.ticking(update_intelligent_dates, 50) // testing

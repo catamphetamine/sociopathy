@@ -187,7 +187,7 @@
 			})
 		}
 		
-		content.find('.icon').on('click', function(event)
+		page.get('.icon').on('click', function(event)
 		{
 			event.preventDefault()
 			

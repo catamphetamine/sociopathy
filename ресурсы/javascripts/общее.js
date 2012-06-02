@@ -139,7 +139,7 @@ function go_to_anchor()
 	
 	['h1', 'h2', 'h3', 'h4', 'h5', 'h6'].forEach(function(tag)
 	{
-		content.find(tag).each(function()
+		page.get(tag).each(function()
 		{
 			if (header)
 				return
@@ -177,7 +177,7 @@ function activate_anchors()
 {
 	['h1', 'h2', 'h3', 'h4', 'h5', 'h6'].forEach(function(tag)
 	{
-		content.find(tag).each(function()
+		page.get(tag).each(function()
 		{
 			var element = $(this)
 			
@@ -423,4 +423,25 @@ function anti_cache_postfix(url)
 		return '?' + new Date().getTime()
 	
 	return url.before('?') + anti_cache_postfix()
+}
+
+window.onerror = function()
+{
+	navigating = false
+	
+	if (first_time_page_loading)
+	{
+		if (путь_страницы() !== 'ошибка')
+			window.location = '/ошибка' + '?' + 'url=' + encodeURI(window.location)
+	}
+	else
+	{
+		page_loaded()
+		$("#page").empty().html('<div class="error">Ошибка на странице</div>')
+	}
+}
+
+function escape_id(id)
+{
+	return id.replace_all('?', '%3F').replace_all('/', '%2F')
 }

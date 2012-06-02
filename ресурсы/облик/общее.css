@@ -1225,3 +1225,35 @@ label.in-place_input_label
 		display: inline-block;
 	}
 }
+
+.center_vertically
+{
+	display: table;
+	height: 100%;
+	
+	> div
+	{
+		display: table-cell;
+		vertical-align: middle;
+	}
+}
+
+#page > .error
+{
+	margin-top: 200px;
+	margin-bottom: 200px;
+	
+	margin-left: 100px;
+	margin-right: 100px;
+	
+	text-align: center;
+}
+
+.main_content
+{
+	.empty
+	{
+		display: none;
+		text-align: center;
+	}
+}
