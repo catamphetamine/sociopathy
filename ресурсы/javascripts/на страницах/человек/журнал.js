@@ -1,6 +1,6 @@
 (function()
 {
-	title('Журнал. ' + page.data.пользователь_сети.имя)
+	title('Журнал. ' + page.data.пользователь_сети['адресное имя'])
 	
 	page.query('#journal', 'journal')
 	

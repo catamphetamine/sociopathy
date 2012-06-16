@@ -1,9 +1,19 @@
-#discussions
+.main_content
 {
-	list-style-type: none;
-
-	> li
-	{
+	margin-top: 80px;
+	margin-bottom: 80px;
 	
+	margin-left: 60px;
+	margin-right: 60px;
+	
+	#discussions
+	{
+		list-style-type: none;
+		padding: 0;
+	
+		> li
+		{
+		
+		}
 	}
 }

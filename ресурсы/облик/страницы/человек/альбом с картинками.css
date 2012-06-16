@@ -93,7 +93,7 @@
 				width: 50%;
 				height: 100%;
 				
-				cursor: w-resize;
+				cursor: url('/картинки/cursor/влево (белый).png') 32 0, auto;
 			}
 			
 			.next
@@ -105,7 +105,7 @@
 				width: 50%;
 				height: 100%;
 				
-				cursor: e-resize;
+				cursor: url('/картинки/cursor/вправо (белый).png') 0 0, auto;
 			}
 		}
 	}

@@ -160,17 +160,20 @@ function go_to_anchor()
 		прокрутчик.scroll_to(header, { make_room_for_text_readability: true })
 }
 
+function get_url_without_hash()
+{
+	var url = window.location.href
+	
+	var hash_index = url.indexOf('#')
+	if (hash_index >= 0)
+		return url.substring(0, hash_index)
+
+	return url
+}
+
 function add_anchor_to_url(anchor)
 {
-	window.location.hash = anchor
-	
-	/*
-	var hash_index = window.location.indexOf('#')
-	if (hash_index)
-		window.location = window.location.substring(0, hash_index) + '#' + anchor
-	else
-		window.location = window.location + '#' + anchor
-	*/
+	set_url(get_url_without_hash() + '#' + anchor)
 }
 
 function activate_anchors()

@@ -553,7 +553,6 @@ function center_list(list, options)
 {
 	if (list.css('position') !== 'relative')
 	{
-		console.log(list)
 		throw 'centered list position must be relative'
 	}
 		

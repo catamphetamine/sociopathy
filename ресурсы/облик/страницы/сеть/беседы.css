@@ -1,17 +1,19 @@
-#talks
+.main_content
 {
-	list-style-type: none;
-
-	> li
-	{
+	margin-top: 80px;
+	margin-bottom: 80px;
 	
-	}
-}
-
-.author_content_date
-{
-	> li:nth-child(odd)
+	margin-left: 60px;
+	margin-right: 60px;
+	
+	#talks
 	{
-		background-color: #f4ecf0;
+		list-style-type: none;
+		padding: 0;
+	
+		> li
+		{
+		
+		}
 	}
 }

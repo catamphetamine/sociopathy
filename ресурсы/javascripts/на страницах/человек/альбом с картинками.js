@@ -130,6 +130,8 @@
 		
 		function show_picture_file(icon)
 		{
+			set_url('/люди/' + page.data.адресное_имя + '/картинки/' + page.data.альбом + '/' + icon.attr('picture_id'))
+		
 			current_picture_icon = icon
 		
 			container.empty().hide()
@@ -213,6 +215,8 @@
 		
 		function hide_picture()
 		{
+			set_url('/люди/' + page.data.адресное_имя + '/картинки/' + page.data.альбом)
+		
 			scroll_navigation.deactivate()
 			$(document).unbind(namespace)
 			picture.unbind(namespace)
@@ -277,6 +281,8 @@
 			hide_video()
 		})
 		*/
+		
+		$('#pictures').find('> li > [picture_id="' + page.data.картинка + '"]').click()
 	
 		Режим.разрешить('правка')
 		Режим.разрешить('действия')

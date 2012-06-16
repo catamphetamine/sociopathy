@@ -136,6 +136,11 @@ $(document).on('page_loaded', function()
 
 			after_styles()
 		})
+		
+		$(window).on('popstate', function()
+		{
+			navigate_to_page()
+		})
 	}
 	else
 	{

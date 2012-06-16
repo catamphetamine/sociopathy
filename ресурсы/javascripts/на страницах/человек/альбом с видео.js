@@ -53,7 +53,7 @@
 	
 	function center_videos_list()
 	{
-		center_list($('#videos'), { space: content, item_width: Options.Video.Icon.Size.Width + 2 /* border */, item_margin: 40 })
+		center_list($('#videos'), { space: page.content, item_width: Options.Video.Icon.Size.Width + 2 /* border */, item_margin: 40 })
 	}
 	
 	function videos_loaded()
@@ -135,6 +135,8 @@
 		
 		function show_video_file(image, options)
 		{
+			set_url('/люди/' + page.data.адресное_имя + '/видео/' + page.data.альбом + '/' + image.attr('video_id'))
+		
 			options = options || {}
 		
 			current_video_icon = image
@@ -201,6 +203,8 @@
 		
 		function hide_video()
 		{
+			set_url('/люди/' + page.data.адресное_имя + '/видео/' + page.data.альбом)
+		
 			scroll_navigation.deactivate()
 			$(document).unbind(namespace)
 			video.unbind(namespace)
@@ -253,6 +257,8 @@
 		})
 		*/
 	
+		$('#videos').find('> li > [video_id="' + page.data.видеозапись + '"]').click()
+		
 		Режим.разрешить('правка')
 		Режим.разрешить('действия')
 		

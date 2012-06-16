@@ -224,24 +224,55 @@ var Panel = new Class
 					},
 					//fade: true
 				})
+				
+			return true
 		}
 		
-		check_for_current_page({ page: 'читальня', button: 'читальня' })
-		check_for_current_page({ page: 'заметка', button: 'читальня' })
-		check_for_current_page({ page: 'люди', button: 'люди' })
-		check_for_current_page({ page: 'человек/человек', button: 'люди' })
-		check_for_current_page({ page_pattern: 'помощь(/.*)?', button: 'помощь' })
-		check_for_current_page({ page: 'сеть/новости', button: 'новости' })
-		check_for_current_page({ page: 'сеть/болталка', button: 'болталка' })
-		check_for_current_page({ page: 'сеть/обсуждения', button: 'обсуждения' })
-		check_for_current_page({ page: 'сеть/беседы', button: 'беседы' })
-		check_for_current_page({ page: 'человек/дневник', button: 'дневник' })
-		check_for_current_page({ page: 'человек/журнал', button: 'журнал' })
-		check_for_current_page({ page: 'человек/книги', button: 'книги' })
-		check_for_current_page({ page: 'сеть/круги', button: 'круги' })
-		check_for_current_page({ page: 'сеть/настройки', button: 'настройки' })
-		check_for_current_page({ page: 'сеть/мусорка', button: 'мусорка' })
-		check_for_current_page({ page: 'управление', button: 'управление' })
+		var checks =
+		[
+			{ page: 'читальня', button: 'читальня' },
+			{ page: 'заметка', button: 'читальня' },
+			{ page: 'люди', button: 'люди' },
+			
+			{ page: 'человек/человек', button: 'люди' },
+			{ page_pattern: 'помощь(/.*)?', button: 'помощь' },
+			
+			{ page: 'сеть/новости', button: 'новости' },
+			{ page: 'сеть/болталка', button: 'болталка' },
+			
+			{ page: 'сеть/обсуждения', button: 'обсуждения' },
+			{ page: 'сеть/обсуждение', button: 'обсуждения' },
+			
+			{ page: 'сеть/беседы', button: 'беседы' },
+			{ page: 'сеть/беседа', button: 'беседы' },
+			
+			{ page: 'человек/дневник', button: 'дневник' },
+			{ page: 'человек/запись в дневнике', button: 'дневник' },
+			
+			{ page: 'человек/журнал', button: 'журнал' },
+			{ page: 'человек/запись в журнале', button: 'журнал' },
+			
+			{ page: 'человек/книги', button: 'книги' },
+			
+			{ page: 'человек/картинки', button: 'люди' },
+			{ page: 'человек/альбом с картинками', button: 'люди' },
+			{ page: 'человек/видео', button: 'люди' },
+			{ page: 'человек/альбом с видео', button: 'люди' },
+			
+			{ page: 'сеть/круги', button: 'круги' },
+			{ page: 'сеть/настройки', button: 'настройки' },
+			{ page: 'сеть/мусорка', button: 'мусорка' },
+			
+			{ page: 'управление', button: 'управление' }
+		]
+		
+		var i = 0
+		while (i < checks.length)
+		{
+			if (check_for_current_page(checks[i]))
+				break
+			i++
+		}
 	},
 
 	toggle_buttons: function(options)
