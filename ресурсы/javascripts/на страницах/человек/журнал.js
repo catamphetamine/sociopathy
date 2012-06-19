@@ -8,24 +8,32 @@
 	{
 		var conditional = initialize_conditional($('.main_conditional'), { immediate: true })
 		
-		new Data_templater
-		({
-			template_url: '/страницы/кусочки/запись в журнале в списке.html',
-			container: page.journal,
-			conditional: conditional,
-			loader: new  Batch_data_loader_with_infinite_scroll
+		breadcrumbs
+		([
+			{ title: page.data.адресное_имя, link: '/люди/' + page.data.адресное_имя },
+			{ title: 'Журнал', link: '/люди/' + page.data.адресное_имя + '/журнал' }
+		],
+		function()
+		{
+			new Data_templater
 			({
-				url: '/приложение/человек/журнал',
-				parameters: { сочинитель: page.data.пользователь_сети['адресное имя'] },
-				batch_size: 10,
-				scroll_detector: page.get('#scroll_detector'),
-				before_done: journal_loaded,
-				before_done_more: function() { ajaxify_internal_links(page.journal) },
-				get_data: function(data)
-				{
-					parse_dates(data.журнал, 'время')
-					return data.журнал
-				}
+				template_url: '/страницы/кусочки/запись в журнале в списке.html',
+				container: page.journal,
+				conditional: conditional,
+				loader: new  Batch_data_loader_with_infinite_scroll
+				({
+					url: '/приложение/человек/журнал',
+					parameters: { сочинитель: page.data.пользователь_сети['адресное имя'] },
+					batch_size: 10,
+					scroll_detector: page.get('#scroll_detector'),
+					before_done: journal_loaded,
+					before_done_more: function() { ajaxify_internal_links(page.journal) },
+					get_data: function(data)
+					{
+						parse_dates(data.журнал, 'время')
+						return data.журнал
+					}
+				})
 			})
 		})
 	}

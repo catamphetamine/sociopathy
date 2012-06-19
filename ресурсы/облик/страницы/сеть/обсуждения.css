@@ -1,3 +1,5 @@
+@import "/облик/user icon.less";
+
 .main_content
 {
 	margin-top: 80px;
@@ -6,6 +8,12 @@
 	margin-left: 60px;
 	margin-right: 60px;
 	
+	> h3
+	{
+		color: #7f7f7f;
+		margin-bottom: 60px;
+	}
+	
 	#discussions
 	{
 		list-style-type: none;
@@ -13,7 +21,20 @@
 	
 		> li
 		{
-		
+			> a.small_avatar
+			{
+				display: inline-block;
+				vertical-align: bottom;
+			}
+			
+			> a.discussion
+			{
+				display: inline-block;
+				margin-bottom: 12px;
+				margin-left: 8px;
+			}
+			
+			margin-bottom: 8px;
 		}
 	}
 }

@@ -690,7 +690,6 @@ ticking, timeout, periodic, periodical, delay
 
 
 
-сделать иконки у обсуждений и бесед
 
 
 

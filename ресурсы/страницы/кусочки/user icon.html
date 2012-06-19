@@ -1,7 +1,7 @@
-<div class="user_icon">
+<div class="user_icon small">
 	<div class="user_offline_picture_glow"></div>
 	<div class="user_online_picture_glow"></div>
 	<div class="picture" title="${имя}">
-		<div class="real_picture" style="background-image: url('/загруженное/люди/${$data['адресное имя']}/картинка/маленькая.jpg')"></div>
+		<img class="real_picture"	{{if $data['загружен ли аватар?']}}{{else}} style="display: none" {{/if}} src="/загруженное/люди/${$data['адресное имя']}/картинка/маленькая.jpg${anti_cache_postfix()}"/>
 	</div>
 </div>

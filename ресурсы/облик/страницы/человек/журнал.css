@@ -5,6 +5,13 @@
 	
 	margin-left: 60px;
 	margin-right: 60px;
+	
+	.breadcrumbs_container
+	{
+		margin-left: 0;
+		margin-right: 0;
+		margin-bottom: 50px;
+	}
 		
 	#journal
 	{

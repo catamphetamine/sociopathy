@@ -6,23 +6,31 @@
 	{
 		var conditional = initialize_conditional($('.main_conditional'), { immediate: true })
 		
-		new Data_templater
-		({
-			template_url: '/страницы/кусочки/запись в дневнике.html',
-			container: page.entry,
-			conditional: conditional,
-			loader: new  Data_loader
+		breadcrumbs
+		([
+			{ title: page.data.адресное_имя, link: '/люди/' + page.data.адресное_имя },
+			{ title: 'Дневник', link: '/люди/' + page.data.адресное_имя + '/дневник' }
+		],
+		function()
+		{
+			new Data_templater
 			({
-				url: '/приложение/человек/дневник/запись',
-				parameters: { запись: page.data.запись },
-				before_done: entry_loaded,
-				get_data: function(data)
-				{
-					title(data.запись.название + '. ' + 'Дневник. ' + page.data.пользователь_сети['адресное имя'])
-
-					parse_date(data.запись, 'когда')
-					return data.запись
-				}
+				template_url: '/страницы/кусочки/запись в дневнике.html',
+				container: page.entry,
+				conditional: conditional,
+				loader: new  Data_loader
+				({
+					url: '/приложение/человек/дневник/запись',
+					parameters: { запись: page.data.запись },
+					before_done: entry_loaded,
+					get_data: function(data)
+					{
+						title(data.запись.название + '. ' + 'Дневник. ' + page.data.пользователь_сети['адресное имя'])
+	
+						parse_date(data.запись, 'когда')
+						return data.запись
+					}
+				})
 			})
 		})
 	}
