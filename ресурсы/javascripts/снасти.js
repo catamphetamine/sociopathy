@@ -561,6 +561,7 @@ function center_list(list, options)
 		return count * (options.item_width + (options.item_margin * 2))
 	}
 	
+	var margins = parseInt(list.css('margin-left')) + parseInt(list.css('margin-right'))
 	var available_width = parseInt(options.space.width())
 	
 	var count = 0
@@ -569,20 +570,20 @@ function center_list(list, options)
 	while (true)
 	{
 		count++
-		width = calculate_width(count)
+		width = calculate_width(count) + margins
 		
 		if (width <= available_width)
-			suitable_width = width
+			suitable_width = width - margins
 		else
 			break
 	}
 	
 	list.width(suitable_width)
-	var delta = (available_width - suitable_width) / 2
+	var left_shift = (available_width - margins - suitable_width) / 2
 	list.css
 	({
-		left: delta + 'px',
-		'margin-right': -delta + 'px'
+		left: left_shift + 'px',
+		'margin-right': parseInt(list.css('margin-right')) - left_shift + 'px'
 	})
 }
 

@@ -180,7 +180,7 @@
 	
 	function show_photo()
 	{
-		if (!page.data.пользователь_сети.фотография)
+		if (!page.data.пользователь_сети['загружена ли фотография?'])
 			return
 	
 		var image = $('<img/>')

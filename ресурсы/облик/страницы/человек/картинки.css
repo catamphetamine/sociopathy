@@ -8,9 +8,9 @@
 #albums
 {
 	list-style-type: none;
+	padding: 0;
 	
 	position: relative;
-	padding-left: 0;
 
 	> li
 	{

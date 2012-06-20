@@ -2,10 +2,7 @@
 
 #content
 {
-	padding-left: 40px;
-	padding-right: 40px;
-	
-	margin-top: 50px;
+	margin-top: 60px;
 
 	.picture_description
 	{
@@ -27,6 +24,9 @@
 		{
 			list-style-type: none;
 			padding: 0;
+			
+			margin-left: 40px;
+			margin-right: 40px;
 			
 			position: relative;
 		

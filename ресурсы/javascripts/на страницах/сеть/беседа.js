@@ -20,6 +20,12 @@
 				before_done_more: function() { ajaxify_internal_links(page.talk) },
 				data: function(data)
 				{
+					breadcrumbs
+					([
+						{ title: 'Беседы', link: '/сеть/беседы' },
+						{ title: data.название, link: '/сеть/беседы/' + page.data.беседа.id }
+					])
+					
 					parse_dates(data.сообщения, 'когда')
 					return data.сообщения
 				}

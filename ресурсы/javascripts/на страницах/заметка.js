@@ -7,49 +7,57 @@
 	var acquiring_edit_lock
 	
 	var заметка = page.data.заметка
+	var неправленная_заметка
 		
 	var visual_editor
-		
+	
 	page.load = function()
 	{
 		Подсказки.подсказка('Вы можете внести свои правки в эту заметку. Для этого потребуется перейти в <a href=\'/помощь/режимы\'>режим правки</a>.')
 		Подсказки.ещё_подсказка('Во время правки, для того, чтобы вернуться в режим набора обычного текста, нажмите Shift + Пробел.')
 		
-		var link = '/читальня'
-		var crumbs = [{ title: 'Читальня', link: link }]
-		
-		page.data.путь_к_заметке.split('/').forEach(function(раздел_или_заметка)
+		function get_breadcrumbs()
 		{
-			link += '/' + раздел_или_заметка
-			crumbs.push({ title: раздел_или_заметка , link: link })
-		})
+			var link = '/читальня'
+			var crumbs = [{ title: 'Читальня', link: link }]
+			
+			page.data.путь_к_заметке.split('/').forEach(function(раздел_или_заметка)
+			{
+				link += '/' + раздел_или_заметка
+				crumbs.push({ title: раздел_или_заметка , link: link })
+			})
+			
+			return crumbs
+		}
+
+		breadcrumbs(get_breadcrumbs())
 		
 		var conditional = initialize_conditional($('.main_conditional'))
 		
-		breadcrumbs
-		(crumbs,
-		function()
-		{
-			new Data_templater
-			({
-				template_url: '/страницы/кусочки/заметка читальни.html',
-				container: page.get('.main_content'),
-				conditional: conditional
-			},
-			new  Data_loader
-			({
-				url: '/приложение/читальня/заметка',
-				parameters: { _id: page.data.заметка },
-				get_data: function(data)
-				{
-					title(data.заметка.название)
-	
-					return data.заметка
-				},
-				before_done: article_loaded
-			}))
+		new Data_templater
+		({
+			template_url: '/страницы/кусочки/заметка читальни.html',
+			container: page.get('.main_content'),
+			conditional: conditional
 		},
-		function() { conditional.callback('Не удалось получить данные') })
+		new  Data_loader
+		({
+			url: '/приложение/читальня/заметка',
+			parameters: { _id: page.data.заметка },
+			get_data: function(data)
+			{
+				title(data.заметка.название)
+			   
+				неправленная_заметка =
+				{
+					title: data.заметка.название,
+					content: data.заметка.содержимое
+				}
+
+				return data.заметка
+			},
+			before_done: article_loaded
+		}))
 	}
 	
 	page.unload = function()
@@ -65,7 +73,7 @@
 		
 		var main_header = $('article h1')
 		
-		visual_editor = new Visual_editor('#content > article section')
+		visual_editor = new Visual_editor('.main_content > article > section')
 		
 		// изначально в режиме просмотра - отключить снасти
 		visual_editor.unbind()
@@ -100,6 +108,16 @@
 		initialize_editor()
 		initialize_actions()
 	
+		function get_title()
+		{
+			return visual_editor.editor.content.parent().find('> h1').text()
+		}
+		
+		function set_title(title)
+		{
+			return visual_editor.editor.content.parent().find('> h1').text(title)
+		}
+		
 		Режим.добавить_проверку_перехода(function(из, в)
 		{
 			if (в === 'правка' || в === 'действия')
@@ -150,16 +168,6 @@
 			})
 		}
 		
-		function get_title()
-		{
-			return visual_editor.editor.content.parent().find('> h1').text()
-		}
-		
-		function set_title(title)
-		{
-			return visual_editor.editor.content.parent().find('> h1').text(title)
-		}
-		
 		var edit_mode_actions
 		function initialize_actions()
 		{
@@ -169,13 +177,15 @@
 			save_button = text_button.new(edit_mode_actions.find('.done'), { 'prevent double submission': true })
 			.does(function()
 			{
-				var loading = loading_indicator.show()
-				page.Ajax.put('/приложение/читальня/заметка',
+				var data =
 				{
-					_id: заметка._id,
+					_id: заметка,
 					title: get_title(),
 					content: visual_editor.editor.content.html()
-				})
+				}
+				
+				var loading = loading_indicator.show()
+				page.Ajax.put('/приложение/читальня/заметка', data)
 				.ошибка(function(ошибка)
 				{
 					loading.hide()
@@ -195,6 +205,12 @@
 					})
 					Режим.обычный()
 					info('Правки сохранены')
+					
+					неправленная_заметка =
+					{
+						title: data.title,
+						content: data.content
+					}
 				})
 			})
 			
@@ -205,7 +221,7 @@
 				page.Ajax.delete('/приложение/черновик',
 				{
 					что: "заметка",
-					_id: заметка._id
+					_id: заметка
 				})
 				.ошибка(function(ошибка)
 				{
@@ -224,10 +240,11 @@
 					{
 						cancel_button.unlock()
 					})
+					
 					Режим.обычный()
 					
-					visual_editor.editor.load_content(заметка.содержимое)
-					set_title(заметка.название)
+					visual_editor.editor.load_content(неправленная_заметка.содержимое)
+					set_title(неправленная_заметка.название)
 				})
 			})
 			
@@ -263,32 +280,32 @@
 			})
 			*/
 		})
-	}
-	
-	function acquire_edit_lock(режим)
-	{
-		page.Ajax.post('/приложение/получить_право_на_правку_заметки', { _id: заметка._id })
-		.ошибка(function(ошибка)
+		
+		function acquire_edit_lock(режим)
 		{
-			acquiring_edit_lock.hide()
-			Режим.разрешить_переходы()
-			error(ошибка)
-		})
-		.ok(function(data)
-		{
-			acquiring_edit_lock.hide()
-			
-			var кто_правит = data['кто правит']
-			if (кто_правит)
+			page.Ajax.post('/приложение/получить_право_на_правку_заметки', { _id: заметка })
+			.ошибка(function(ошибка)
 			{
+				acquiring_edit_lock.hide()
 				Режим.разрешить_переходы()
-				//return warning('<a href=\'/люди/' + кто_правит['адресное имя'] + '\'>' + кто_правит.имя + '</a> уже правит эту заметку. Можете написать ' + (кто_правит.пол === 'мужской' ? 'ему' : 'ей') + ', чтобы ' + (кто_правит.пол === 'мужской' ? 'он сохранил' : 'она сохранила') + ' внесённые правки (либо ' + (кто_правит.пол === 'мужской' ? 'удалил' : 'удалила') + ' черновик), \n и тогда эта заметка снова станет доступной для правки.')
-				return warning('<a href=\'/люди/' + кто_правит['адресное имя'] + '\'>' + /* дыра */ кто_правит.имя + '</a> уже правит эту заметку. Можете написать ' + (кто_правит.пол === 'мужской' ? 'ему' : 'ей') + ', чтобы ' + (кто_правит.пол === 'мужской' ? 'он сохранил (или отменил)' : 'она сохранила (или отменила)') + ' внесённые правки, \n и тогда эта заметка снова станет доступной для правки.')
-			}
-			
-			право_на_правку_получено = true
-			Режим.разрешить_переходы()
-			Режим.перейти(режим)
-		})
+				error(ошибка)
+			})
+			.ok(function(data)
+			{
+				acquiring_edit_lock.hide()
+				
+				var кто_правит = data['кто правит']
+				if (кто_правит)
+				{
+					Режим.разрешить_переходы()
+					//return warning('<a href=\'/люди/' + кто_правит['адресное имя'] + '\'>' + кто_правит.имя + '</a> уже правит эту заметку. Можете написать ' + (кто_правит.пол === 'мужской' ? 'ему' : 'ей') + ', чтобы ' + (кто_правит.пол === 'мужской' ? 'он сохранил' : 'она сохранила') + ' внесённые правки (либо ' + (кто_правит.пол === 'мужской' ? 'удалил' : 'удалила') + ' черновик), \n и тогда эта заметка снова станет доступной для правки.')
+					return warning('<a href=\'/люди/' + кто_правит['адресное имя'] + '\'>' + /* дыра */ кто_правит.имя + '</a> уже правит эту заметку. Можете написать ' + (кто_правит.пол === 'мужской' ? 'ему' : 'ей') + ', чтобы ' + (кто_правит.пол === 'мужской' ? 'он сохранил (или отменил)' : 'она сохранила (или отменила)') + ' внесённые правки, \n и тогда эта заметка снова станет доступной для правки.')
+				}
+				
+				право_на_правку_получено = true
+				Режим.разрешить_переходы()
+				Режим.перейти(режим)
+			})
+		}
 	}
 })()

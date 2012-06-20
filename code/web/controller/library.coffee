@@ -108,7 +108,9 @@ http.get "/раздел или заметка?", (ввод, вывод) ->
 				
 http.post "/получить_право_на_правку_заметки", (ввод, вывод) ->
 	return if пользовательское.требуется_вход(ввод, вывод)
+	console.log(123)
 	_id = хранилище.collection('library_articles').id(ввод.body._id)
+	
 	цепь(вывод)
 		.сделать ->
 			хранилище.collection('library_articles').findOne({ _id: _id }, @)

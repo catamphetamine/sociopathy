@@ -9,46 +9,41 @@
 	{
 		var conditional = initialize_conditional($('.main_conditional'))
 		
-		breadcrumbs
-		([
-			{ title: page.data.адресное_имя, link: '/люди/' + page.data.адресное_имя },
-			{ title: 'Видео', link: '/люди/' + page.data.адресное_имя + '/видео' },
-			{ title: page.data.альбом, link: '/люди/' + page.data.адресное_имя + '/видео/' + page.data.альбом }
-		],
-		function()
-		{
-			new Data_templater
-			({
-				template_url: '/страницы/кусочки/видео в альбоме.html',
-				container: $('#videos'),
-				postprocess_element: function(item)
-				{
-					return $('<li/>').append(item)
-				},
-				conditional: conditional
+		new Data_templater
+		({
+			template_url: '/страницы/кусочки/видео в альбоме.html',
+			container: $('#videos'),
+			postprocess_element: function(item)
+			{
+				return $('<li/>').append(item)
 			},
-			new  Data_loader
-			({
-				url: '/приложение/человек/видео/альбом',
-				parameters: { 'адресное имя': page.data.адресное_имя, альбом: page.data.альбом },
-				before_done: videos_loaded,
-				get_data: function(data)
+			conditional: conditional
+		},
+		new  Data_loader
+		({
+			url: '/приложение/человек/видео/альбом',
+			parameters: { 'адресное имя': page.data.адресное_имя, альбом: page.data.альбом },
+			before_done: videos_loaded,
+			get_data: function(data)
+			{
+				if (data.альбом.описание)
 				{
-					if (data.альбом.описание)
-					{
-						$('#videos').before($('<p/>').addClass('description').text(data.альбом.описание))
-					}
-					
-					return data.альбом.видео
+					$('#videos').before($('<p/>').addClass('description').text(data.альбом.описание))
 				}
+				
+				breadcrumbs
+				([
+					{ title: data.пользователь.имя, link: '/люди/' + page.data.адресное_имя },
+					{ title: 'Видео', link: '/люди/' + page.data.адресное_имя + '/видео' },
+					{ title: data.альбом.название, link: '/люди/' + page.data.адресное_имя + '/видео/' + page.data.альбом }
+				])
+				
+				return data.альбом.видео
+			}
 			}))
 		
-			$(window).on_page('resize.videos', center_videos_list)
-			center_videos_list()
-			
-			//$('#content').disableTextSelect()
-		},
-		function() { conditional.callback('Не удалось получить данные') })
+		$(window).on_page('resize.videos', center_videos_list)
+		center_videos_list()
 	}
 	
 	function center_videos_list()

@@ -134,55 +134,53 @@
 		})
 		
 		var conditional = initialize_conditional($('.main_conditional'), { immediate: true })
-		
-		breadcrumbs
-		([
-			{ title: page.data.адресное_имя, link: '/люди/' + page.data.адресное_имя },
-			{ title: 'Книги', link: '/люди/' + page.data.адресное_имя + '/книги' }
-		],
-		function()
-		{
-			new Data_templater
-			({
-				template_url: '/страницы/кусочки/книжный шкаф.html',
-				container: $('.bookshelf_container'),
-				/*
-				postprocess_element: function(item)
-				{
-					return $('<li/>').append(item)
-				},
-				*/
-				conditional: conditional
+
+		new Data_templater
+		({
+			template_url: '/страницы/кусочки/книжный шкаф.html',
+			container: $('.bookshelf_container'),
+			/*
+			postprocess_element: function(item)
+			{
+				return $('<li/>').append(item)
 			},
-			new  Data_loader
-			({
-				url: '/приложение/человек/книги',
-				parameters: { 'адресное имя': page.data.адресное_имя },
-				before_done: books_loaded,
-				done: books_shown,
-				get_data: function(data)
+			*/
+			conditional: conditional
+		},
+		new  Data_loader
+		({
+			url: '/приложение/человек/книги',
+			parameters: { 'адресное имя': page.data.адресное_имя },
+			before_done: books_loaded,
+			done: books_shown,
+			get_data: function(data)
+			{
+				breadcrumbs
+				([
+					{ title: data.пользователь.имя, link: '/люди/' + page.data.адресное_имя },
+					{ title: 'Книги', link: '/люди/' + page.data.адресное_имя + '/книги' }
+				])
+				
+				var books = data.книги
+				
+				while (books.length % Options.Book_shelf_size > 0
+						|| books.length < Options.Book_shelf_size * Options.Minimum_book_shelves)
 				{
-					var books = data.книги
-					
-					while (books.length % Options.Book_shelf_size > 0
-							|| books.length < Options.Book_shelf_size * Options.Minimum_book_shelves)
-					{
-						books.push({})
-					}
-					
-					var shelves = []
-					
-					while (books.length > Options.Book_shelf_size)
-					{
-						shelves.push({ books: books.splice(0, Options.Book_shelf_size) })
-					}
-					
-					shelves.push({ books: books })
-					
-					return { shelves: shelves }
+					books.push({})
 				}
-			}))
-		})
+				
+				var shelves = []
+				
+				while (books.length > Options.Book_shelf_size)
+				{
+					shelves.push({ books: books.splice(0, Options.Book_shelf_size) })
+				}
+				
+				shelves.push({ books: books })
+				
+				return { shelves: shelves }
+			}
+		}))
 	}
 	
 	function books_loaded()

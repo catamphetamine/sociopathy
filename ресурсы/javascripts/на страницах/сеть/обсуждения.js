@@ -6,6 +6,11 @@ title('Обсуждения');
 	
 	page.load = function()
 	{
+		breadcrumbs
+		([
+			{ title: 'Обсуждения', link: '/сеть/обсуждение' }
+		])
+		
 		new Data_templater
 		({
 			template: 'обсуждение в списке обсуждений',

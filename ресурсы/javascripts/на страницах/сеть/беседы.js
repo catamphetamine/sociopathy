@@ -6,6 +6,11 @@ title('Беседы');
 	
 	page.load = function()
 	{
+		breadcrumbs
+		([
+			{ title: 'Беседы', link: '/сеть/беседы' }
+		])
+					
 		new Data_templater
 		({
 			template: 'беседа в списке бесед',

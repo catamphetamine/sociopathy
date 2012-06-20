@@ -4,8 +4,7 @@
 
 .visual_editor_tools_container
 {
-	margin-left: -@article_side_padding;
-	margin-right: -@article_side_padding;
+	margin-top: 40px;
 
 	min-height: 2 * @visual_editor_tools_panel_height;
 	/* max-height: 2 * @visual_editor_tools_panel_height; */
@@ -20,13 +19,14 @@
 
 #content.article
 {
-	padding-left: @article_side_padding;
-	padding-right: @article_side_padding;
-	
-	padding-bottom: 40px;
+	margin-top: 60px;
+	margin-bottom: 60px;
 	
 	article
 	{
+		padding-left: @article_side_padding;
+		padding-right: @article_side_padding;
+		
 		font-family: @textual_font;
 	
 		font-size: @textual_font_size;
@@ -52,12 +52,4 @@
 .visual_editor_tools_container
 {
 	/* margin-top: 30px; */
-}
-
-.breadcrumbs_container
-{
-	margin-left: 0px;
-	margin-right: 0px;
-	
-	margin-top: 40px;
 }

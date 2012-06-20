@@ -3,13 +3,27 @@
 
 #content
 {
-	margin-top: 100px;
-}
+	margin-top: 60px;
+	margin-bottom: 60px;
 
-.author_content_date
-{
-	> li:nth-child(odd)
+	.main_content
 	{
-		background-color: #fff8fb;
+		> .empty
+		{
+			margin-top: 100px;
+		}
+	
+		#talk
+		{
+			margin-top: 40px;
+			
+			.author_content_date
+			{
+				> li:nth-child(odd)
+				{
+					background-color: #fff8fb;
+				}
+			}
+		}
 	}
 }

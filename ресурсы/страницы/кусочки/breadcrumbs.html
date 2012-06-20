@@ -10,7 +10,7 @@
 			</a>
 		{{/if}}
 		
-		{{if index < path.length - 1}}
+		{{if index < path.length - 1 && path[index + 1].title}}
 			 → 
 		{{/if}}
 	{{/each}}

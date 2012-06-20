@@ -72,19 +72,22 @@
 		if (!путь_к_разделу)
 			return show_content()
 				
-		var link = '/читальня'
-		var crumbs = [{ title: 'Читальня', link: link }]
-		
-		путь_к_разделу.split('/').forEach(function(раздел_или_заметка)
+		function get_breadcrumbs()
 		{
-			link += '/' + раздел_или_заметка
-			crumbs.push({ title: раздел_или_заметка , link: link })
-		})
+			var link = '/читальня'
+			var crumbs = [{ title: 'Читальня', link: link }]
+			
+			путь_к_разделу.split('/').forEach(function(раздел_или_заметка)
+			{
+				link += '/' + раздел_или_заметка
+				crumbs.push({ title: раздел_или_заметка , link: link })
+			})
+			
+			return crumbs
+		}
 		
-		breadcrumbs
-		(crumbs,
-		show_content,
-		function() { conditional.callback('Не удалось получить данные') })
+		breadcrumbs(get_breadcrumbs())
+		show_content()
 	}
 	
 	page.unload = function()

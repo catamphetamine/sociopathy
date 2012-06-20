@@ -261,19 +261,7 @@ function title(text)
 
 function breadcrumbs(path, on_ok, on_error)
 {
-	var template_url = '/страницы/кусочки/breadcrumbs.html'
-
-	page.Ajax.get(template_url, {}, { type: 'html' })
-	.ошибка(function()
-	{
-		on_error()
-	})
-	.ok(function(template) 
-	{
-		$.template(template_url, template)
-		$('.breadcrumbs_container').append($.tmpl(template_url, { path: path }))
-		on_ok()
-	})
+	$('.breadcrumbs_container').append($.tmpl('breadcrumbs', { path: path }))
 }
 
 // чтобы не было ошибок по консоли в обозревателе

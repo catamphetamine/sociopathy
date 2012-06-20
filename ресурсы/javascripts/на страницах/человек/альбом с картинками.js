@@ -9,46 +9,41 @@
 	{
 		var conditional = initialize_conditional($('.main_conditional'))
 		
-		breadcrumbs
-		([
-			{ title: page.data.адресное_имя, link: '/люди/' + page.data.адресное_имя },
-			{ title: 'Картинки', link: '/люди/' + page.data.адресное_имя + '/картинки' },
-			{ title: page.data.альбом, link: '/люди/' + page.data.адресное_имя + '/картинки/' + page.data.альбом }
-		],
-		function()
-		{
-			new Data_templater
-			({
-				template_url: '/страницы/кусочки/картинка в альбоме.html',
-				container: $('#pictures'),
-				postprocess_element: function(item)
-				{
-					return $('<li/>').append(item)
-				},
-				conditional: $('.main_conditional')
+		new Data_templater
+		({
+			template_url: '/страницы/кусочки/картинка в альбоме.html',
+			container: $('#pictures'),
+			postprocess_element: function(item)
+			{
+				return $('<li/>').append(item)
 			},
-			new  Data_loader
-			({
-				url: '/приложение/человек/картинки/альбом',
-				parameters: { 'адресное имя': page.data.адресное_имя, альбом: page.data.альбом },
-				before_done: pictures_loaded,
-				get_data: function(data)
-				{
-					if (data.альбом.описание)
-					{
-						$('#pictures').before($('<p/>').addClass('description').text(data.альбом.описание))
-					}
-					
-					return data.альбом.картинки
-				}
-			}))
-		
-			$(window).on_page('resize.pictures', center_pictures_list)
-			center_pictures_list()
-			
-			//$('#content').disableTextSelect()
+			conditional: $('.main_conditional')
 		},
-		function() { conditional.callback('Не удалось получить данные') })
+		new  Data_loader
+		({
+			url: '/приложение/человек/картинки/альбом',
+			parameters: { 'адресное имя': page.data.адресное_имя, альбом: page.data.альбом },
+			before_done: pictures_loaded,
+			get_data: function(data)
+			{
+				if (data.альбом.описание)
+				{
+					$('#pictures').before($('<p/>').addClass('description').text(data.альбом.описание))
+				}
+				
+				breadcrumbs
+				([
+					{ title: data.пользователь.имя, link: '/люди/' + page.data.адресное_имя },
+					{ title: 'Картинки', link: '/люди/' + page.data.адресное_имя + '/картинки' },
+					{ title: data.альбом.название, link: '/люди/' + page.data.адресное_имя + '/картинки/' + page.data.альбом }
+				])
+				
+				return data.альбом.картинки
+			}
+		}))
+	
+		$(window).on_page('resize.pictures', center_pictures_list)
+		center_pictures_list()
 	}
 	
 	function center_pictures_list()

@@ -20,6 +20,12 @@
 				before_done_more: function() { ajaxify_internal_links(page.discussion) },
 				data: function(data)
 				{
+					breadcrumbs
+					([
+						{ title: 'Обсуждения', link: '/сеть/обсуждения' },
+						{ title: data.название, link: '/сеть/обсуждения/' + page.data.обсуждение.id }
+					])
+					
 					parse_dates(data.сообщения, 'когда')
 					return data.сообщения
 				}
