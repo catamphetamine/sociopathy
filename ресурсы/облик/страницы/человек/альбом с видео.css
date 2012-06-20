@@ -8,6 +8,7 @@
 	{
 		color: white;
 		font-size: 20px;
+		margin-bottom: 40px;
 	}
 	
 	.main_content
@@ -68,6 +69,21 @@
 		{
 			background-color: rgba(0, 0, 0, 0.89);
 			
+			overflow-y: auto;
+			
+			&.shown
+			{
+				.previous
+				{
+					cursor: url('/картинки/cursor/влево (белый).png') 32 0, auto;
+				}
+				
+				.next
+				{
+					cursor: url('/картинки/cursor/вправо (белый).png') 0 0, auto;
+				}
+			}
+			
 			.container
 			{
 				margin: 10px;
@@ -124,7 +140,7 @@
 .progress_bar
 {
 	position: absolute;
-	bottom: 0px;
+	top: 0px;
 	
 	width: 100%;
 	text-align: center;

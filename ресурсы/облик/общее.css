@@ -17,6 +17,11 @@ body
 	min-height: 100%;
 }
 
+body.no_scrollbar
+{
+	overflow: hidden;
+}
+
 html, body
 {
 	margin: 0;

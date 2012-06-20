@@ -136,15 +136,15 @@
 		
 			current_video_icon = image
 		
+			video.removeClass('shown')
 			container.empty().hide()
 		
 			var description_height = 0
 			if (image.next().is('p'))
 			{
 				description = $('<p/>').addClass('video_description').text(image.next().text())
-				description.appendTo(content)
-				description_height = description.outerHeight(true)
 				description.appendTo(container)
+				description_height = description.outerHeight(true)
 			}
 		
 			var size = inscribe
@@ -170,6 +170,7 @@
 			container.prepend(video_block).show()
 			
 			scroll_navigation.activate(video_block)
+			video.addClass('shown')
 			
 			progress.update(get_video_number())
 		}
@@ -203,15 +204,17 @@
 			scroll_navigation.deactivate()
 			$(document).unbind(namespace)
 			video.unbind(namespace)
-			video.fade_out(0.0)
+			video.fade_out(0)
+			$('body').removeClass('no_scrollbar')
 			container.empty()
 		}
 		
 		function show_video()
 		{
-			scroll_navigation.activate(video.find('.previous'))
-			scroll_navigation.activate(video.find('.next'))
+			//scroll_navigation.activate(video.find('.previous'))
+			//scroll_navigation.activate(video.find('.next'))
 			
+			$('body').addClass('no_scrollbar')
 			video.fade_in(0.3, function() { video.focus() })
 		
 			$(document).on_page('keydown' + namespace, function(event) 

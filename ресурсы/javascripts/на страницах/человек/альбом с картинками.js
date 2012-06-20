@@ -129,15 +129,15 @@
 		
 			current_picture_icon = icon
 		
+			picture.removeClass('shown')
 			container.empty().hide()
 			
 			var description_height = 0
 			if (icon.next().is('p'))
 			{
 				description = $('<p/>').addClass('picture_description').text(icon.next().text())
-				description.appendTo(content)
-				description_height = description.outerHeight(true)
 				description.appendTo(container)
+				description_height = description.outerHeight(true)
 			}
 				
 			var url = icon.attr('picture')
@@ -179,6 +179,7 @@
 				image.height(size.height)
 				
 				container.show()
+				picture.addClass('shown')
 				
 				progress.update(get_picture_number())
 			})
@@ -215,15 +216,17 @@
 			scroll_navigation.deactivate()
 			$(document).unbind(namespace)
 			picture.unbind(namespace)
-			picture.fade_out(0.0)
+			picture.fade_out(0)
+			$('body').removeClass('no_scrollbar')
 		}
 		
 		function show_picture()
 		{
-			scroll_navigation.activate(picture.find('.previous'))
-			scroll_navigation.activate(picture.find('.next'))
+			//scroll_navigation.activate(picture.find('.previous'))
+			//scroll_navigation.activate(picture.find('.next'))
 			
-			picture.fade_in(0.0, function() { picture.focus() })
+			$('body').addClass('no_scrollbar')
+			picture.fade_in(0, function() { picture.focus() })
 		
 			$(document).on_page('keydown' + namespace, function(event) 
 			{

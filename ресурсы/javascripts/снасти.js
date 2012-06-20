@@ -583,7 +583,7 @@ function center_list(list, options)
 	list.css
 	({
 		left: left_shift + 'px',
-		'margin-right': parseInt(list.css('margin-right')) - left_shift + 'px'
+		//'margin-right': parseInt(list.css('margin-right')) - left_shift + 'px' // breaks on resize
 	})
 }
 
