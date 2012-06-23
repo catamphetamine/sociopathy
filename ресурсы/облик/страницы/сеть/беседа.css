@@ -19,7 +19,7 @@
 			
 			.author_content_date
 			{
-				> li:nth-child(odd)
+				> li.odd
 				{
 					background-color: #fff8fb;
 				}

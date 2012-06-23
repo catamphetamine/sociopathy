@@ -20,6 +20,10 @@
 	
 	.picture
 	{
+		display: inline-block;
+		
+		position: relative;
+		
 		border-style: solid;
 		border-color: #7f7f7f;
 		border-width: 1px;
@@ -32,25 +36,16 @@
 		left: 0;
 	}
 	
-	.user_offline_picture_glow, .user_online_picture_glow, .picture
-	{
-		display: inline-block;
-		
-		position: relative;
-	}
-	
 	.user_online_picture_glow, .user_offline_picture_glow
 	{
-		margin-right: -@small_user_icon_size;
-	
 		.css_transition_property(opacity);
 		.css_transition_duration(1000ms);
 		.css_transition_easing(ease-in-out);
 		
 		/* compensates 1px border */
-		position: relative;
-		top: -1px;
-		right: -1px;
+		position: absolute;
+		top: 1px;
+		right: 1px;
 	}
 	
 	.user_online_picture_glow

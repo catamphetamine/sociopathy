@@ -871,7 +871,7 @@ body[mode="правка"] .rich_formatting a
 		}
 	}
 	
-	.on_the_right_side_of_the_panel .picture, .chat_user_icon .picture
+	.on_the_right_side_of_the_panel .picture, .user_icon .picture
 	{
 		opacity: 0.4;
 		
@@ -1265,5 +1265,5 @@ label.in-place_input_label
 
 #page
 {
-	margin-bottom: -40px;
+	margin-bottom: -38px; /* compensates margin bug */
 }

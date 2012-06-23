@@ -174,7 +174,19 @@ var Scroller = new Class
 		var window_height = parseInt($(window).height())
 		if (y + window_height > document_height)
 			y = document_height - window_height
-		
+	
+		this.scroll_to_y(y, options, callback)
+	},
+	
+	scroll_to_bottom: function()
+	{
+		this.scroll_to_y($(document).height() - $(window).height())
+	},
+	
+	scroll_to_y: function(y, options, callback)
+	{
+		options = options || {}
+	
 		var scroller
 		if ($.browser.webkit)
 			scroller = $('body')
@@ -192,7 +204,9 @@ var Scroller = new Class
 				return
 				
 			finalized = true
-			callback()
+			
+			if (callback)
+				callback()
 		}
 		
 		options.duration = options.duration || this.scroll_duration(Math.abs($(window).scrollTop() - y))

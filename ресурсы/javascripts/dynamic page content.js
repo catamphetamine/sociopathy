@@ -26,7 +26,8 @@ var navigating = false;
 		'беседа в списке бесед',
 		'сообщение обсуждения',
 		'сообщение беседы',
-		 'breadcrumbs'
+		 'breadcrumbs',
+		 'сообщение в болталке'
 	]
 	
 	подгрузить_шаблоны = function(callback)
