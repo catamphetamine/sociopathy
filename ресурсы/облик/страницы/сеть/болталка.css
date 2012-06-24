@@ -1,91 +1,9 @@
 @import "/облик/вспомогательный.less";
 @import "/облик/author_content_date.less";
 
-@user_picture_top: @AuthorContentDate_user_picture_top;
-@user_picture_left: @AuthorContentDate_user_picture_left;
-	
-#chat_container
+.main_content
 {
 	margin-top: 50px;
-	/* margin-bottom: 50px; */
-	
-	.send_message
-	{
-		text-align: center;
-		display: none;
-	
-		.send_message_inner
-		{
-			text-align: right;
-			display: inline-block;
-			
-			.message
-			{
-				width: 600px;
-				height: 100px;
-			}
-			
-			.send
-			{
-				margin-top: 10px;
-				display: inline-block;
-			}
-		}
-	}
-}
-
-.chat, .who_is_online
-{
-	.user_icon
-	{	
-		.real_picture
-		{
-			.actions
-			{
-				position: absolute;
-				top: 50px;
-				left: 40px;
-				
-				font-size: 20px;
-				white-space: nowrap;
-				
-				color: white;
-				background-color: black;
-				opacity: 0.8;
-				
-				padding-left: 10px;
-				padding-right: 10px;
-				padding-top: 6px;
-				padding-bottom: 6px;
-				
-				border-radius: 4px;
-			}
-		}
-		
-		.away, .typing, .erased
-		{
-			font-size: 10px;
-			position: absolute;
-			bottom: 0;
-			color: white;
-			background-color: black;
-			opacity: 0;
-			width: 100%;
-			text-align: center;
-			padding-bottom: 2px;
-			font-family: Verdana;
-						
-			.css_transition_property(opacity);
-			.css_transition_duration(500ms);
-			.css_transition_easing(ease-in-out);
-		}
-	}
-}
-
-.chat .author.is_away .away, .who_is_online li.is_away .away,
-.chat .author.is_typing .typing, .who_is_online li.is_typing .typing
-{
-	opacity: 0.8;
 }
 
 @inter_column_padding: @AuthorContentDate_inter_column_padding;
@@ -96,11 +14,6 @@
 @author_icon_margin_left: @AuthorContentDate_author_icon_margin_left;
 @time_column_padding: @AuthorContentDate_time_column_padding;
 @time_column_width: @AuthorContentDate_time_column_width;
-
-#compose_message > article
-{
-	font-size: 34px;
-}
 
 ul.chat
 {
@@ -114,15 +27,6 @@ ul.chat
 	> li.even
 	{
 		background-color: #f6f6f6;
-	}
-	
-	> .content_wrapper
-	{
-		> .content
-		{		
-			white-space: pre-wrap;
-			word-wrap: break-word;
-		}
 	}
 }
 
@@ -265,92 +169,8 @@ ul.chat
 	}
 }
 
-#compose_message > article
-{
-	margin-left: @author_column_left_padding + @author_column_width + @author_column_right_padding;
-	margin-right: @inter_column_padding + @time_column_width + @time_column_padding;
-	padding-left: @inter_column_padding;
-	padding-right: @inter_column_padding;
-	
-	
-	.hint, .tagged_hint
-	{
-		color: #7f7f7f !important;
-		margin: 0;
-	}
-}
-
-.visual_editor_tools_container
-{
-	z-index: 0;
-}
-
 body
 {
 	overflow-x: hidden;
 	overflow-y: scroll;
-}
-
-.popup_menu_container.of_message_author
-{
-	margin-top: @user_picture_top + 2 * @user_icon_size / 3;
-	margin-left: @author_column_left_padding + @author_column_width - @user_picture_left;
-}
-
-.popup_menu_container.of_online_user
-{
-	margin-top: 4 * @user_icon_size / 7;
-	margin-left: 4 * @user_icon_size / 7;
-}
-
-#compose_message
-{
-	position: fixed;
-	bottom: 0;
-	
-	width: 100%;
-	
-	background-color: white;
-	
-	article > p.tagged_hint
-	{
-		text-indent: 0;
-	}
-	
-	article
-	{
-		margin-top: 15px;
-		margin-bottom: 5px;
-	}
-	
-	.visual_editor_tools .more
-	{
-		background-image: url('/картинки/на страницах/заметка/скрыть разширенное.png');
-	}
-	
-	.visual_editor_tools .less
-	{
-		background-image: url('/картинки/на страницах/заметка/показать всё.png');
-	}
-}
-
-.rich_formatting
-{
-	.citation
-	{
-		padding: 0;
-	}
-}
-
-.scroll_down_to_new_messages
-{
-	display: none;
-
-	position: fixed;
-	bottom: 20px;
-	right: 20px;
-	
-	z-index: 1;
-	
-	cursor: pointer;
 }

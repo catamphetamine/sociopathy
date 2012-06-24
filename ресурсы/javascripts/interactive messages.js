@@ -79,7 +79,8 @@ var Interactive_messages = function(options)
 				})
 		},
 		show_editor: options.show_editor,
-		on_load: options.on_load
+		on_load: options.on_load,
+		on_first_time_data: options.on_first_time_data
 	})
 	
 	messages.options.connection = options.connection

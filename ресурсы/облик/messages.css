@@ -1,21 +1,145 @@
+@import "/облик/user icon.less";
+@import "/облик/author_content_date.less";
+
+@user_icon_size: @small_user_icon_size;
+
+@user_picture_top: @AuthorContentDate_user_picture_top;
+@user_picture_left: @AuthorContentDate_user_picture_left;
+
+@inter_column_padding: @AuthorContentDate_inter_column_padding;
+@author_column_left_padding: @AuthorContentDate_author_column_left_padding;
+@author_column_right_padding: @AuthorContentDate_author_column_right_padding;
+@author_column_width: @AuthorContentDate_author_column_width;
+@message_bottom_padding: @AuthorContentDate_message_bottom_padding;
+@author_icon_margin_left: @AuthorContentDate_author_icon_margin_left;
+@time_column_padding: @AuthorContentDate_time_column_padding;
+@time_column_width: @AuthorContentDate_time_column_width;
+
 .messages_framework
 {
 	> .older
 	{
 		text-align: center;
-		height: 120px;
+		white-space: nowrap;
+		
+		margin-top: 20px;
+		
+		height: 56px;
 		
 		.more_container
 		{
 			position: absolute;
 			width: 100%;
 			text-align: center;
+			
+			> div
+			{
+				margin: 0;
+			}
 		}
 		
 		> a
 		{
-			position: relative;
-			top: 50px;
 		}
 	}
+	
+	> ul
+	{
+		> .content_wrapper
+		{
+			> .content
+			{		
+				white-space: pre-wrap;
+				word-wrap: break-word;
+			}
+		}
+	}
+}
+
+.scroll_down_to_new_messages
+{
+	display: none;
+
+	position: fixed;
+	bottom: 20px;
+	right: 20px;
+	
+	z-index: 1;
+	
+	cursor: pointer;
+}
+
+#compose_message
+{
+	position: fixed;
+	bottom: 0;
+	
+	width: 100%;
+	
+	background-color: white;
+	
+	article > p.tagged_hint
+	{
+		text-indent: 0;
+	}
+	
+	article
+	{
+		margin-top: 15px;
+		margin-bottom: 5px;
+	}
+	
+	.visual_editor_tools .more
+	{
+		background-image: url('/картинки/на страницах/заметка/скрыть разширенное.png');
+	}
+	
+	.visual_editor_tools .less
+	{
+		background-image: url('/картинки/на страницах/заметка/показать всё.png');
+	}
+}
+
+.popup_menu_container.of_message_author
+{
+	margin-top: @user_picture_top + 2 * @user_icon_size / 3;
+	margin-left: @author_column_left_padding + @author_column_width - @user_picture_left;
+}
+
+.popup_menu_container.of_online_user
+{
+	margin-top: 4 * @user_icon_size / 7;
+	margin-left: 4 * @user_icon_size / 7;
+}
+
+.rich_formatting
+{
+	.citation
+	{
+		padding: 0;
+	}
+}
+
+#compose_message > article
+{
+	margin-left: @author_column_left_padding + @author_column_width + @author_column_right_padding;
+	margin-right: @inter_column_padding + @time_column_width + @time_column_padding;
+	padding-left: @inter_column_padding;
+	padding-right: @inter_column_padding;
+	
+	.hint, .tagged_hint
+	{
+		color: #7f7f7f !important;
+		margin: 0;
+	}
+}
+
+#compose_message > article
+{
+	font-size: 34px;
+}
+
+.visual_editor_tools_container
+{
+	z-index: 0;
 }

@@ -37,7 +37,7 @@
 		messages.load()
 	}
 	
-	function data_loaded()
+	function discussion_loaded()
 	{
 		$(document).trigger('page_initialized')
 		

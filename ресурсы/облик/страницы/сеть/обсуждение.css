@@ -13,10 +13,13 @@
 			margin-top: 100px;
 		}
 		
+		.more_container
+		{
+			margin-top: 30px;
+		}
+		
 		#discussion
 		{
-			margin-top: 40px;
-			
 			.author_content_date
 			{
 				> li.odd

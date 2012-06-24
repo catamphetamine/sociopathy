@@ -15,7 +15,7 @@
 		Подсказки.ещё_подсказка('Вверху вы видите список людей, у которых сейчас открыта болталка.')
 		Подсказки.ещё_подсказка('Также, в списке сообщений, пользователи, у которых сейчас открыта болталка, подсвечены зелёным.')
 
-		chat = $('#chat_container .chat')
+		chat = $('.main_content .chat')
 		
 		messages = Interactive_messages
 		({
@@ -53,11 +53,11 @@
 	{
 		$('.who_is_online_bar').floating_top_bar('unload')
 		
-		if (болталка)
+		if (messages.connection)
 		{
-			болталка.emit('выход')
-			//alert(болталка.websocket.disconnectSync)
-			//болталка.websocket.disconnectSync()
+			messages.connection.emit('выход')
+			//alert(messages.connection.websocket.disconnectSync)
+			//messages.connection.websocket.disconnectSync()
 		}
 	}
 		

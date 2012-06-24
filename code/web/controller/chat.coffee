@@ -98,6 +98,8 @@ online = redis.createClient()
 								#соединение.broadcast.emit('сообщение', данные_сообщения)
 								болталка.emit('сообщение', данные_сообщения)
 					
+					disconnected = false
+					
 					выход = ->
 						delete соединения_пользователей[пользователь._id.toString()]
 						цепь(websocket)
@@ -106,14 +108,16 @@ online = redis.createClient()
 								
 							.сделать () ->
 								соединение.broadcast.emit('отцепился', Object.выбрать(['_id'], пользователь))
-								#соединение.emit('disconnect')
+								disconnected = true
 								соединение.disconnect()
 		
 					соединение.on 'выход', () ->
-						выход()
+						if not disconnected
+							выход()
 						
 					соединение.on 'disconnect', () ->
-						выход()
+						if not disconnected
+							выход()
 					
 Max_batch_size = 1000
 						

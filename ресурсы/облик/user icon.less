@@ -65,3 +65,54 @@
 		background-repeat: no-repeat;
 	}
 }
+
+.user_icon.with_away_status
+{	
+	.real_picture
+	{
+		.actions
+		{
+			position: absolute;
+			top: 50px;
+			left: 40px;
+			
+			font-size: 20px;
+			white-space: nowrap;
+			
+			color: white;
+			background-color: black;
+			opacity: 0.8;
+			
+			padding-left: 10px;
+			padding-right: 10px;
+			padding-top: 6px;
+			padding-bottom: 6px;
+			
+			border-radius: 4px;
+		}
+	}
+	
+	.away, .typing, .erased
+	{
+		font-size: 10px;
+		position: absolute;
+		bottom: 0;
+		color: white;
+		background-color: black;
+		opacity: 0;
+		width: 100%;
+		text-align: center;
+		padding-bottom: 2px;
+		font-family: Verdana;
+					
+		.css_transition_property(opacity);
+		.css_transition_duration(500ms);
+		.css_transition_easing(ease-in-out);
+	}
+	
+	.author.is_away .away,
+	.author.is_typing .typing
+	{
+		opacity: 0.8;
+	}
+}
