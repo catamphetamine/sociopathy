@@ -32,25 +32,6 @@
 			}
 		}
 	}
-	
-	> .older
-	{
-		text-align: center;
-		height: 120px;
-		
-		.more_container
-		{
-			position: absolute;
-			width: 100%;
-			text-align: center;
-		}
-		
-		> a
-		{
-			position: relative;
-			top: 50px;
-		}
-	}
 }
 
 .chat, .who_is_online

@@ -422,8 +422,8 @@ window.onerror = function()
 	
 	if (first_time_page_loading)
 	{
-		if (путь_страницы() !== 'ошибка')
-			window.location = '/ошибка' + '?' + 'url=' + encodeURI(window.location)
+		//if (путь_страницы() !== 'ошибка')
+			//window.location = '/ошибка' + '?' + 'url=' + encodeURI(window.location)
 	}
 	else
 	{

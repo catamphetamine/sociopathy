@@ -8,11 +8,13 @@ var Messages = new Class
 	
 	new_messages: [],
 	
+	away_users: {},
+	
 	options:
 	{
 		max_messages: 200,
 		new_message_sound: new Audio("/звуки/new message.ogg"),
-		messages_batch_size: 32,
+		messages_batch_size: 18,
 		check_if_there_are_still_unread_messages_interval: 1000
 	},
 	
@@ -20,10 +22,10 @@ var Messages = new Class
 	{
 		this.setOptions(options)
 	
-		this.on_page_load()	
+		//this.load()	
 	},
 		
-	on_page_load: function()
+	load: function()
 	{
 		this.new_messages_smooth_border = $('.new_messages_smooth_border')
 
@@ -39,6 +41,11 @@ var Messages = new Class
 			прокрутчик.scroll_to_bottom()
 			messages.indicate_no_new_messages()
 		})
+		
+		this.options.prepend_message = this.options.prepend_message.bind(this)
+		this.options.after_append = this.options.after_append.bind(this)
+		this.options.construct_message = this.options.construct_message.bind(this)
+		this.options.send_message = this.options.send_message.bind(this)
 		
 		this.initialize_loaders()
 		
@@ -57,29 +64,56 @@ var Messages = new Class
 		var messages = this
 		var options = this.options
 		
+		var data_source_url
+		var data_source_parameters = {}
+		
+		if (typeof options.data_source === 'object')
+		{
+			data_source_url = options.data_source.url
+			
+			if (options.data_source.parameters)
+				data_source_parameters = options.data_source.parameters
+		}
+		
+		var first_time_data = true
+		
 		var loader = new Batch_loader
 		({
-			url: options.data_source,
+			url: data_source_url,
+			parameters: data_source_parameters,
 			batch_size: options.messages_batch_size,
 			get_data: function(data)
 			{
-				parse_dates(data.сообщения, 'время')
+				if (options.on_first_time_data)
+					if (first_time_data)
+						options.on_first_time_data(data)
+					
+				if (options.on_data)
+					options.on_data(data)
+					
+				first_time_data = false
+				
+				parse_dates(data.сообщения, 'когда')
 				return data.сообщения
 			},
 			before_done: function() { ajaxify_internal_links(options.container) },
 			before_done_more: function() { ajaxify_internal_links(options.container) },
 			done: function()
 			{
-				messages.options.on_load.bind(messages)(messages.on_load())
+				messages.container_top_offset = messages.options.container.offset().top
+		
+				messages.new_messages_smooth_border.css('width', '100%')
+			
+				messages.options.on_load.bind(messages)(messages.on_load)
 			},
 			done_more: function()
 			{
 				if (this.есть_ли_ещё)
-					options.more_link.fadeIn(300)
+					options.more_link.fade_in(0.1)
 			},
 			finished: function()
 			{
-				options.more_link.hide()
+				options.more_link.fade_out(0.1)
 			}
 		})
 		
@@ -298,75 +332,75 @@ var Messages = new Class
 
 	on_load: function()
 	{
-		this.container_top_offset = this.options.container.offset().top
+		var messages = this
+		
+		var visual_editor = new Visual_editor('#compose_message > article')
+		
+		var send_message_timeout
 
-		this.new_messages_smooth_border.css('width', '100%')
-	
-		return (function()
+		if (this.options.set_up_visual_editor)
+			this.options.set_up_visual_editor.bind(this)(visual_editor)
+		
+		visual_editor.on_break = function()
 		{
-			var messages = this
-			
-			var visual_editor = new Visual_editor('#compose_message > article')
-			
-			var send_message_timeout
-	
-			if (this.options.set_up_visual_editor)
-				this.options.set_up_visual_editor(visual_editor)
-			
-			visual_editor.on_break = function()
-			{
-				var node = document.createTextNode(' ')
-				visual_editor.editor.content[0].appendChild(node)
-				visual_editor.editor.caret.move_to(node)
-			}
-			
-			var hint = $('<p/>').appendTo(visual_editor.editor.content)
-			visual_editor.tagged_hint(hint, 'Вводите сообщение здесь')
-			
-			var editor_initial_html = visual_editor.editor.content.html()
-	
-			function send_message()
-			{
-				var message = visual_editor.editor.content.html().trim()
-				if (!message)
-					return
-					
-				visual_editor.editor.content.html(editor_initial_html)
-				visual_editor.editor.caret.move_to(visual_editor.editor.content[0].firstChild)
+			var node = document.createTextNode(' ')
+			visual_editor.editor.content[0].appendChild(node)
+			visual_editor.editor.caret.move_to(node)
+		}
+		
+		var hint = $('<p/>').appendTo(visual_editor.editor.content)
+		visual_editor.tagged_hint(hint, 'Вводите сообщение здесь')
+		
+		var editor_initial_html = visual_editor.editor.content.html()
+
+		function send_message()
+		{
+			var message = visual_editor.editor.content.html().trim()
+			if (!message)
+				return
 				
-				messages.options.send_message(message)
-			}
+			visual_editor.editor.content.html(editor_initial_html)
+			visual_editor.editor.caret.move_to(visual_editor.editor.content[0].firstChild)
 			
-			visual_editor.enter_pressed_in_container = function()
-			{
-				send_message()
-				messages.check_if_there_are_still_unread_messages()
-			}
-			
-			visual_editor.enter_pressed = function(result)
-			{
-				send_message()
-				messages.check_if_there_are_still_unread_messages()
-			}
-			
-			visual_editor.Tools.Subheading.turn_off()
-			visual_editor.initialize_tools_container()
-			
-			visual_editor.tools_element.on('more.visual_editor_tools', this.adjust_listing_margin)
-			visual_editor.tools_element.on('less.visual_editor_tools', this.adjust_listing_margin)
-			
-			visual_editor.show_tools()
-			
-			if ($.browser.mozilla)
-				visual_editor.editor.content.focus()
-			
-			page.ticking(this.adjust_listing_margin, 1000)
-			
-			this.compose_message.fadeIn()
-			
-			visual_editor.editor.caret.move_to(visual_editor.editor.content.find('> *:first'))
-		})
-		.bind(this)
+			messages.options.send_message(message)
+		}
+		
+		visual_editor.enter_pressed_in_container = function()
+		{
+			send_message()
+			messages.check_if_there_are_still_unread_messages()
+		}
+		
+		visual_editor.enter_pressed = function(result)
+		{
+			send_message()
+			messages.check_if_there_are_still_unread_messages()
+		}
+		
+		visual_editor.Tools.Subheading.turn_off()
+		visual_editor.initialize_tools_container()
+		
+		visual_editor.tools_element.on('more.visual_editor_tools', this.adjust_listing_margin)
+		visual_editor.tools_element.on('less.visual_editor_tools', this.adjust_listing_margin)
+		
+		this.visual_editor = visual_editor
+		
+		if (this.options.show_editor)
+			this.show_editor()
+	},
+
+	show_editor: function()
+	{
+		this.visual_editor.show_tools()
+		
+		if ($.browser.mozilla)
+			this.visual_editor.editor.content.focus()
+		
+		page.ticking(this.adjust_listing_margin, 1000)
+		
+		this.compose_message.fadeIn()
+		
+		this.visual_editor.editor.caret.move_to(this.visual_editor.editor.content.find('> *:first'))
 	},
 	
 	should_roll: function()
@@ -377,14 +411,6 @@ var Messages = new Class
 		if ($.browser.mozilla)
 			amendment = 1
 			
-		console.log(this.options.container.offset().top)
-		console.log(this.options.container.outerHeight())
-		
-		console.log(this.container_top_offset + this.options.container.outerHeight())
-		 
-		console.log($(window).scrollTop() + $(window).height() - this.compose_message.height())
-		 
-		
 		if (this.container_top_offset + this.options.container.outerHeight() - amendment > $(window).scrollTop() + $(window).height() - this.compose_message.height())
 			return false
 		
