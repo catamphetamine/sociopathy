@@ -16,7 +16,23 @@ session = require('./connect_session')(get_session_id, redis_store)
 access_logger = (ввод, вывод, следующий) ->
 	следующий()
 	return if not ввод.session?
-	хранилище.collection('people').update({ _id: ввод.session.пользователь._id }, { $set: { 'когда был здесь': new Date() }})
+	
+	когда_был_здесь = new Date()
+	хранилище.collection('people').update({ _id: ввод.session.пользователь._id }, { $set: { 'когда был здесь': когда_был_здесь }})
+	
+	check_online_status = () ->
+		new Цепочка()
+			.сделать ->
+				хранилище.collection('people').findOne({ _id: ввод.session.пользователь._id }, @)
+			.сделать (пользователь) ->
+				if пользователь['когда был здесь'].getTime() == когда_был_здесь.getTime()
+					эфир.offline(ввод.session.пользователь)
+				delete ввод.session.data.online_timeout
+	
+	if ввод.session.data.online_timeout?
+		clearTimeout(ввод.session.data.online_timeout)
+		
+	ввод.session.data.online_timeout = setTimeout(check_online_status, Options.User.Online.Timeout)
 	
 remember_me = (ввод, вывод, следующий) ->
 	тайный_ключ = ввод.cookies.user

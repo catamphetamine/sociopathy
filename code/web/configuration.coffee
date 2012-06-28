@@ -13,6 +13,8 @@ module.exports =
 		Session:
 			Redis:
 				Prefix: 'website_session:'
+		Online:
+			Timeout: 5 * 60 * 1000
 		Picture:
 			Generic:
 				Size: 120

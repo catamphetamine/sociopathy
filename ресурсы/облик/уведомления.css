@@ -3,6 +3,7 @@
 .popup_message
 {
 	display: inline-block;
+	text-align: left;
 			
 	margin-top: 20px;
 	margin-right: 20px;
@@ -50,64 +51,84 @@
 	}	
 }
 
-.message_container
+/*
+	> .messages_container
+	{
+		position: fixed;
+		right: 0;
+		top: 0;
+		
+		z-index: 2;
+		
+		text-align: right;
+		width: 100%;
+			
+		> .message_container
+		{
+			position: relative;
+*/
+
+body
 {
-	position: fixed;
-	right: 0;
-	top: 0;
-
-	.info
+	> .message_container
 	{
-		> div
+		position: fixed;
+		right: 0;
+		top: 0;
+	
+		.info
 		{
-			/* .message(); */
-			
-			color: #303030;
-			text-shadow: 1px 1px 0px #ffffff;
-			
-			border-color: #7f7f7f;
-			
-			background-color: #eef2f4;
-			.top_to_bottom_gradient(#eef2f4, #d6dde0);
-		}
-	}
-
-	.error
-	{
-		padding: 2px;
-		border-width: 1px;
-			
-		> div
-		{
-			color: #faefef;
-			text-shadow: 1px 1px 0px #000000;
-			
-			border-width: 1px;
-			border-color: #400500;
-			
-			background-color: #a42e2e;
-			.top_to_bottom_gradient(#a42e2e, #742b2b);
-			
-			.close
+			> div
 			{
-				background-image: url('/картинки/уведомления/закрыть ошибку.png');	
+				/* .message(); */
+				
+				color: #303030;
+				text-shadow: 1px 1px 0px #ffffff;
+				
+				border-color: #7f7f7f;
+				
+				background-color: #eef2f4;
+				.top_to_bottom_gradient(#eef2f4, #d6dde0);
 			}
 		}
-	}
-
-	.warning
-	{
-		> div
+	
+		.error
 		{
-			/* .message(); */
-			
-			color: #281b00;
-			text-shadow: 1px 1px 0px #f3e69f;
-			
-			border-color: #918658;
-			
-			background-color: #f7dc72;
-			.top_to_bottom_gradient(#f7dc72, #d6b52f);
+			padding: 2px;
+			border-width: 1px;
+				
+			> div
+			{
+				color: #faefef;
+				text-shadow: 1px 1px 0px #000000;
+				
+				border-width: 1px;
+				border-color: #400500;
+				
+				background-color: #a42e2e;
+				.top_to_bottom_gradient(#a42e2e, #742b2b);
+				
+				.close
+				{
+					background-image: url('/картинки/уведомления/закрыть ошибку.png');	
+				}
+			}
+		}
+	
+		.warning
+		{
+			> div
+			{
+				/* .message(); */
+				
+				color: #281b00;
+				text-shadow: 1px 1px 0px #f3e69f;
+				
+				border-color: #918658;
+				
+				background-color: #f7dc72;
+				.top_to_bottom_gradient(#f7dc72, #d6b52f);
+			}
 		}
 	}
 }

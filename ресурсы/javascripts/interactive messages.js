@@ -109,7 +109,7 @@ var Interactive_messages = function(options)
 	}
 	
 	messages.кто_подцеплен = {}
-	messages.кто_подцеплен[пользователь._id] = true
+	//messages.кто_подцеплен[пользователь._id] = true
 	
 	messages.подцепился = function(пользователь)
 	{
@@ -117,7 +117,7 @@ var Interactive_messages = function(options)
 		
 		this.options.container.find('> li[author="' + пользователь._id + '"]').each(function()
 		{
-			$(this).find('.author').addClass('online')
+			$(this).find('> .author').addClass('online')
 		})
 		
 		if (this.options.connection.on_user_connected)
@@ -329,6 +329,11 @@ var Interactive_messages = function(options)
 	}
 	
 	new_message_channel(options.connection)
+
+	messages.on_load_actions.push(function()
+	{
+		messages.подцепился(пользователь)
+	})
 	
 	return messages
 }

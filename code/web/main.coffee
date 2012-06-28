@@ -61,7 +61,7 @@ require './controller/news'
 require './controller/circles'
 require './controller/talks'
 require './controller/discussions'
-require './controller/websocket'
+global.эфир = require './controller/ether'
 
 #global.memcache_available = false
 global.memcache.on 'connect', () ->

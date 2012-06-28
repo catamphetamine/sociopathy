@@ -10,6 +10,8 @@ var Messages = new Class
 	
 	away_users: {},
 	
+	on_load_actions: [],
+	
 	options:
 	{
 		max_messages: 200,
@@ -333,6 +335,8 @@ var Messages = new Class
 	on_load: function()
 	{
 		var messages = this
+		
+		this.on_load_actions.for_each(function() { this.bind(messages)() })
 		
 		var visual_editor = new Visual_editor('#compose_message > article')
 		

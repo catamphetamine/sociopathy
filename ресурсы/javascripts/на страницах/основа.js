@@ -38,6 +38,29 @@ if (путь_страницы() === 'сеть' || путь_страницы().st
 
 var эфир = io.connect('http://' + Options.Websocket_server + '/эфир', { transports: ['websocket'] })
 
+эфир.on('connect', function()
+{
+	эфир.emit('пользователь', $.cookie('user'))
+})
+
+эфир.on('who is online', function(пользователи)
+{
+	пользователи.for_each(function()
+	{
+		//info(this._id + ' is already online')
+	})
+})
+
+эфир.on('online', function(пользователь)
+{
+	//info(пользователь._id + ' online')
+})
+
+эфир.on('offline', function(пользователь)
+{
+	//info(пользователь._id + ' offline')
+})
+
 /*
 var болталка = io.connect('http://' + Options.Websocket_server + '/болталка', { transports: ['websocket'] })
 var болталка_готова

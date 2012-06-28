@@ -43,8 +43,16 @@ var Message =
 			})
 			
 			$element.remove()
-					
 			setTimeout(function() { Message.state_machine.next() }, 1000)
+			
+			/*
+			$element.css('opacity', 0)
+			$element.animate({ marginBottom: -free_space }, 1000, 'easeInOutQuad', function()
+			{
+				$element.remove()
+				Message.state_machine.next()
+			})
+			*/
 		})
 		.bind(this))
 	},
@@ -53,9 +61,9 @@ var Message =
 	{
 		var occupied_space = 0
 		
-		$('body .message_container').each(function()
+		$('body > .message_container').each(function()
 		{
-			occupied_space += $(this).height()
+			occupied_space += $(this).outerHeight(true)
 		})
 		
 		return occupied_space
@@ -213,6 +221,17 @@ var Message =
 		var opacity = message.css('opacity')
 		message.css('opacity', 0)
 
+		/*
+		var messages_container = $('body > .messages_container')
+		if (!messages_container.exists())
+		{
+			messages_container = $('<div/>').addClass('messages_container')
+			messages_container.appendTo('body')
+		}
+		
+		message_container.appendTo(messages_container)
+		*/
+		
 		/*
 		new image_button(close_button).does(function()
 		{
