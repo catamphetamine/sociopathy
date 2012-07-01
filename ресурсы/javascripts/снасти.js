@@ -640,3 +640,31 @@ function inscribe(options)
 	
 	return result
 }
+
+var Map = function()
+{
+	this.store = {}
+	
+	this.get = function(key)
+	{
+		return this.store[key]
+	}
+	
+	this.set = function(key, value)
+	{
+		this.store[key] = value
+	}
+	
+	this.has = function(key)
+	{
+		return typeof this.get(key) !== 'undefined'
+	}
+	
+	this.for_each = function(action)
+	{
+		Object.for_each(this.store, function(key, value)
+		{
+			action(value)
+		})
+	}
+}

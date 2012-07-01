@@ -17,6 +17,22 @@
 
 		chat = $('.main_content .chat')
 		
+		page.пользователь_в_сети = function(пользователь)
+		{
+			chat.find('> li[author="' + пользователь._id + '"]').each(function()
+			{
+				$(this).find('> .author').addClass('online')
+			})
+		},
+		
+		page.пользователь_вышел = function(пользователь)
+		{
+			chat.find('> li[author="' + пользователь._id + '"]').each(function()
+			{
+				$(this).find('> .author').removeClass('online')
+			})
+		}
+		
 		messages = Interactive_messages
 		({
 			data_source:
@@ -28,6 +44,16 @@
 			scroller: прокрутчик,
 			show_editor: true,
 			on_load: chat_loaded,
+			before_prepend: function(message)
+			{
+				var author = message.find('.author')
+				if (Эфир.кто_в_сети.has(message.attr('author')))
+					author.addClass('online')
+			},
+			on_message_data: function(data)
+			{
+				Эфир.следить_за_пользователем(data.отправитель)
+			},
 			connection:
 			{
 				path: '/болталка',

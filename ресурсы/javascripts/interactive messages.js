@@ -7,24 +7,29 @@ var Interactive_messages = function(options)
 		data_source: options.data_source,
 		prepend_message: function(data, prepend)
 		{
-			data.show_online_status = true
 			var message = $.tmpl('сообщение в болталке', data)
 			message.find('.popup_menu_container').prependTo(message)
 			
 			var author = message.find('.author')
-			if (this.is_online(author.attr('author')))
-				author.addClass('online')
+			if (this.is_connected(author.attr('author')))
+				author.addClass('connected')
 			
 			message.find('.text').find('a').attr('target', '_blank')
 			
 			if (away_users[data.отправитель._id])
 				message.find('.author').addClass('is_away')
 				
+			if (options.before_prepend)	
+				options.before_prepend(message)
+				
 			prepend(message)
 
 			// после preprend, т.к. стили				
 			if (data.отправитель._id !== пользователь._id)
-				this.initialize_call_action(message, message.attr('author'), 'of_message_author', function() { return message.find('.author').hasClass('online') })
+				this.initialize_call_action(message, message.attr('author'), 'of_message_author', function()
+				{
+					return message.find('.author').hasClass('online')
+				})
 		},
 		more_link: options.more_link,
 		container: options.container,
@@ -55,7 +60,6 @@ var Interactive_messages = function(options)
 		},
 		construct_message: function(data)
 		{
-			data.show_online_status = true
 			var message = $.tmpl('сообщение в болталке', data)
 		
 			if (away_users[data.отправитель._id])
@@ -80,7 +84,8 @@ var Interactive_messages = function(options)
 		},
 		show_editor: options.show_editor,
 		on_load: options.on_load,
-		on_first_time_data: options.on_first_time_data
+		on_first_time_data: options.on_first_time_data,
+		on_message_data: options.on_message_data
 	})
 	
 	messages.options.connection = options.connection
@@ -117,7 +122,7 @@ var Interactive_messages = function(options)
 		
 		this.options.container.find('> li[author="' + пользователь._id + '"]').each(function()
 		{
-			$(this).find('> .author').addClass('online')
+			$(this).find('> .author').addClass('connected')
 		})
 		
 		if (this.options.connection.on_user_connected)
@@ -130,7 +135,7 @@ var Interactive_messages = function(options)
 			this.options.connection.on_user_disconnected(пользователь)
 	}
 	
-	messages.is_online = function(id)
+	messages.is_connected = function(id)
 	{
 		if (this.кто_подцеплен[id])
 			return true

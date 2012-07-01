@@ -96,6 +96,13 @@ var Messages = new Class
 				first_time_data = false
 				
 				parse_dates(data.сообщения, 'когда')
+				
+				if (options.on_message_data)
+					data.сообщения.for_each(function()
+					{
+						options.on_message_data(this)
+					})
+					
 				return data.сообщения
 			},
 			before_done: function() { ajaxify_internal_links(options.container) },

@@ -190,6 +190,9 @@ var Page = new Class
 	
 	queries: [],
 	
+	tracked: {},
+	tracked_collectors: {},
+	
 	when_loaded: function(action)
 	{
 		if (this.status === 'loaded')
@@ -330,6 +333,20 @@ var Page = new Class
 		{
 			this.stop()
 		})
+		
+		Object.for_each(this.tracked, function(key, value)
+		{
+			if (!this.tracked_collectors[key])
+			{
+				console.log('* Uncollected tracked data: "' + key + '" = ' + value)
+			}
+			else
+				this.tracked_collectors[key].bind(value)()
+				
+			delete this.tracked[key]
+		})
+		
+		this.tracked = {}
 	},
 	
 	on: function(element, event, action)
@@ -344,5 +361,35 @@ var Page = new Class
 	ticking: function(action, interval)
 	{
 		this.ticking_actions.push(action.ticking(interval))
+	},
+	
+	track: function(key, value, collector)
+	{
+		this.tracked[key] = value
+		
+		this.tracked_collectors[key] = collector
+		
+		/*
+		if (!this.tracked[key])
+			this.tracked[key] = []
+			
+		if (value instanceof Array)
+		{
+			value.for_each(function(this)
+			{
+				this.tracked[key].push(value)
+			})
+		}
+		else
+			this.tracked[key].push(value)
+		*/
+	},
+	
+	пользователь_в_сети: function(пользователь)
+	{
+	},
+	
+	пользователь_вышел: function(пользователь)
+	{
 	}
 })

@@ -21,10 +21,7 @@ online = redis.createClient()
 					соединения[соединение.id] = соединение
 						
 					@.done()
-					
-				.сделать ->
-					online.hset('ether:online', пользователь._id.toString(), JSON.stringify(пользователь), @)
-				
+			
 				.сделать ->
 					online.hgetall('ether:online', @)
 					
@@ -35,23 +32,32 @@ online = redis.createClient()
 							who_is_online_info.push(JSON.parse(json))
 							
 					соединение.emit('who is online', who_is_online_info)
-					#соединение.broadcast.emit('online', Object.выбрать(['_id'], пользователь))
-					соединение.emit 'готов'
+					@.done()
 					
-					for id, listener of listeners
-						listener.online(пользователь)
+				.сделать ->
+					online.hget('ether:online', пользователь._id.toString(), @)
 					
+				.сделать (was_online) ->
+					if not was_online?
+						online.hset('ether:online', пользователь._id.toString(), JSON.stringify(пользователь))
+				
+						for id, listener of listeners
+							listener.online(пользователь)
+							
+					@.done()
+					
+				.сделать ->
 					listener = {}
 					
 					_id = пользователь._id.toString()
 					
 					listener.online = (user) =>
-						if _id != user._id.toString()
-							соединение.emit('online', Object.выбрать(['_id'], user))
+						#if _id != user._id.toString()
+						соединение.emit('online', Object.выбрать(['_id'], user))
 							
 					listener.offline = (user) ->
-						if _id != user._id.toString()
-							соединение.emit('offline', Object.выбрать(['_id'], user))
+						#if _id != user._id.toString()
+						соединение.emit('offline', Object.выбрать(['_id'], user))
 					
 					listener.пользователь = _id
 					listeners[соединение.id] = listener
@@ -90,6 +96,9 @@ online = redis.createClient()
 					соединение.on 'disconnect', () ->
 						if not disconnected
 							выход()
+							
+					соединение.emit('online', Object.выбрать(['_id'], пользователь))
+					соединение.emit 'готов'
 							
 exports.offline = (пользователь) ->
 	for id, listener of listeners

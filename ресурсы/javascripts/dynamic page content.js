@@ -108,6 +108,8 @@ var navigating = false;
 				
 				пользователь = данные.пользователь
 				
+				$(document).trigger('authenticated')
+				
 				if (!пользователь && Страница.эта().starts_with('сеть/'))
 					window.location = '/прописка'
 	
@@ -214,6 +216,7 @@ var navigating = false;
 				return
 	
 			page.full_unload()
+			$(document).trigger('page_unloaded')
 		
 			Page.element.empty()
 			

@@ -228,6 +228,11 @@
 						left: 18px;
 						
 						font-family: DINPro;
+						
+						> *
+						{
+							margin: auto;
+						}
 					}
 					
 					.title

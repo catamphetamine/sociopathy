@@ -272,3 +272,12 @@ Array.prototype.for_each = function(action)
 		action.bind(element)(element, index)
 	})
 }
+
+Object.for_each = function(object, handler)
+{
+	Object.each(object, function(value, key)
+	{
+		if (object.hasOwnProperty(key))
+			handler.bind(value)(key, value)
+	})
+}
