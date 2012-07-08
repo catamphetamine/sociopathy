@@ -272,7 +272,7 @@ file_system = require 'fs'
 	
 снасти.batch_loading = (ввод, options, возврат) ->
 	с = ввод.настройки.с
-	collection = хранилище.collection(options.from)
+	collection = db(options.from)
 	data = null
 	
 	new Цепочка(возврат)

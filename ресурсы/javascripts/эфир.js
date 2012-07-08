@@ -42,7 +42,7 @@ $(document).on('authenticated', function()
 				эфир.emit('пользователь', $.cookie('user'))
 			})
 			
-			эфир.on('who is online', function(пользователи)
+			эфир.on('кто здесь', function(пользователи)
 			{
 				пользователи.for_each(function()
 				{

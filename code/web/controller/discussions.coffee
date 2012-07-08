@@ -9,20 +9,48 @@ http.get '/сеть/обсуждения', (ввод, вывод, пользов
 		.сделать ->
 			вывод.send @.$
 			
-http.get '/сеть/обсуждение', (ввод, вывод, пользователь) ->
-	цепь(вывод)
+options =
+	id: 'discussions'
+	uri: '/обсуждение'
+	data_uri: '/сеть/обсуждение/сообщения'
+	
+options.сообщения_чего = (ввод, возврат) ->
+	new Цепочка(возврат)
 		.сделать ->
 			if ввод.настройки._id?
 				return db('discussions').findOne({ _id: ввод.настройки._id }, @)
-				
 			db('discussions').findOne({ id: ввод.настройки.id }, @)
+			
+		.сделать (сообщения_чего) ->
+			@.done(сообщения_чего)
+			#@.done({ _id: сообщения_чего._id.toString() })
+			
+options.messages_collection_id = 'messages'
+options.messages_query = (environment) -> { общение: environment.сообщения_чего._id }
 		
-		.сделать (обсуждение) ->
-			@.$.название = обсуждение.название
-			снасти.batch_loading(ввод, { from: 'messages', query: { общение: обсуждение._id } }, @.в 'сообщения')
+options.с_какого_выбрать = (ввод, environment, возврат) ->
+	new Цепочка(возврат)
+		.сделать ->
+			db('people_sessions').findOne({ пользователь: environment.пользователь._id }, @)
+			
+		.сделать (session) ->
+			return @.done() if not session?
+			return @.done() if not session.последние_сообщения_в_обсуждениях?
+			@.done(session.последние_сообщения_в_обсуждениях[environment.сообщения_чего._id])
+			
+options.save = (сообщение, environment, возврат) ->
+	new Цепочка(возврат)
+		.сделать ->
+			db('messages').save({ отправитель: environment.пользователь._id, сообщение: сообщение, когда: new Date(), общение: environment.сообщения_чего._id }, @.в 'сообщение')
 			
 		.сделать ->
-			пользовательское.подставить(@.$.сообщения, 'отправитель', @)
-			
+			in_session_id = "последние_сообщения_в_обсуждениях." + environment.сообщения_чего._id
+			actions = {}
+			actions.$set = {}
+			actions.$set[in_session_id] = сообщение._id
+			db('people_sessions').update({ _id: environment.пользователь._id }, actions, @)
+		
 		.сделать ->
-			вывод.send @.$
+			@.done(@.$.сообщение)
+	
+discussion = messages.messages(options)

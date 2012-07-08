@@ -93,6 +93,11 @@ var Messages = new Class
 				if (options.on_data)
 					options.on_data(data)
 					
+				if (first_time_data)
+				{
+					messages.options.environment = data.environment
+				}
+				
 				first_time_data = false
 				
 				parse_dates(data.сообщения, 'когда')
@@ -112,7 +117,7 @@ var Messages = new Class
 				messages.container_top_offset = messages.options.container.offset().top
 		
 				messages.new_messages_smooth_border.css('width', '100%')
-			
+				
 				messages.options.on_load.bind(messages)(messages.on_load)
 			},
 			done_more: function()
@@ -150,8 +155,14 @@ var Messages = new Class
 			conditional: conditional,
 			show: function(data, options)
 			{
+				if (messages.options.container.find('> li[message_id="' + data._id + '"]').exists())
+					return
+				
 				function prepend(message)
 				{
+					if (messages.options.container.find('> li[message_id="' + message.attr('message_id') + '"]').exists())
+						return
+				
 					var next_in_time = messages.options.container.find('> li.new_author:first')
 					
 					if (next_in_time.attr('author') === data.отправитель._id)
@@ -178,6 +189,8 @@ var Messages = new Class
 							message.addClass('odd')
 					}
 				
+					message.attr('message_id', data._id)
+					
 					messages.options.container.prepend(message)
 				}
 				
@@ -218,32 +231,22 @@ var Messages = new Class
 		this.indicate_new_messages()
 	},
 	
-	add_message: function(data)
+	render: function(data)
 	{
-		if (!data)
-		{
-			if (this.messages_to_add.is_empty())
-				return
-				
-			data = this.messages_to_add[0]
-		}
-		else
-		{
-			this.messages_to_add.push(data)
-			if (this.messages_to_add.length > 1)
-				return
-		}
+		if (this.options.template)
+			return $.tmpl(this.options.template, data)
 		
-		var previous = this.options.container.find('> li:last')
+		return this.options.construct_message(data)
+	},
+	
+	append_message: function(previous, data)
+	{
+		var message = this.render(data)
+		
+		message.attr('message_id', data._id)
+		
 		var same_author = (previous.attr('author') === data.отправитель._id)
 		
-		var message
-		
-		if (this.options.template)
-			message = $.tmpl(this.options.template, data)
-		else
-			message = this.options.construct_message(data)
-	
 		if (same_author)
 		{
 			message.find('.author').children().remove()
@@ -263,7 +266,60 @@ var Messages = new Class
 			else
 				message.addClass('odd')
 		}
-
+		
+		return message
+	},
+	
+	has_message: function(data)
+	{
+		var has = false
+		
+		this.messages_to_add.for_each(function()
+		{
+			if (this._id === data._id)
+				has = true
+		})
+		
+		if (has)
+			return true
+		
+		return this.options.container.find('> li[message_id="' + data._id + '"]').exists()
+	},
+	
+	add_message: function(data)
+	{
+		if (!data)
+		{
+			if (this.messages_to_add.is_empty())
+				return
+				
+			data = this.messages_to_add[0]
+		}
+		else
+		{		
+			if (this.has_message(data))
+				return
+			
+			this.messages_to_add.push(data)
+			if (this.messages_to_add.length > 1)
+				return
+		}
+			
+		var after
+		
+		if (data.after)
+		{
+			if (data.after instanceof jQuery)
+				after = data.after
+			else
+				after = this.options.container.find('> li[message_id="'+ data.after + '"]')
+		}
+		
+		if (!after || !after.exists())
+			after = this.options.container.find('> li:last')
+			
+		var message = this.append_message(after, data)
+	
 		// убрать сверху лишние сообщения
 		var remove_old_messages = function()
 		{
@@ -313,7 +369,7 @@ var Messages = new Class
 		}
 		
 		append = append.bind(this)
-		
+					
 		if (!this.should_roll())
 		{
 			append()

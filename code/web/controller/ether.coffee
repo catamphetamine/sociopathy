@@ -31,7 +31,7 @@ online = redis.createClient()
 						if id + '' != пользователь._id + ''
 							who_is_online_info.push(JSON.parse(json))
 							
-					соединение.emit('who is online', who_is_online_info)
+					соединение.emit('кто здесь', who_is_online_info)
 					@.done()
 					
 				.сделать ->

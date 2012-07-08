@@ -1,4 +1,4 @@
-connect = require 'connect'
+#connect = require 'connect'
 express = require 'express'
 
 redis_session_store_constructor = require('./connect_redis_session_store')(express)
@@ -18,14 +18,14 @@ access_logger = (ввод, вывод, следующий) ->
 	return if not ввод.session?
 	
 	когда_был_здесь = new Date()
-	хранилище.collection('people').update({ _id: ввод.session.пользователь._id }, { $set: { 'когда был здесь': когда_был_здесь }})
+	db('people_sessions').update({ пользователь: ввод.session.пользователь._id }, { $set: { 'когда был здесь': когда_был_здесь }})
 	
 	check_online_status = () ->
 		new Цепочка()
 			.сделать ->
-				хранилище.collection('people').findOne({ _id: ввод.session.пользователь._id }, @)
-			.сделать (пользователь) ->
-				if пользователь['когда был здесь'].getTime() == когда_был_здесь.getTime()
+				db('people_sessions').findOne({ пользователь: ввод.session.пользователь._id }, @)
+			.сделать (session) ->
+				if session['когда был здесь'].getTime() == когда_был_здесь.getTime()
 					эфир.offline(ввод.session.пользователь)
 				delete ввод.session.data.online_timeout
 	
@@ -86,11 +86,8 @@ module.exports = (приложение) ->
 	
 	['get', 'post', 'put', 'delete'].forEach (способ) ->
 		снасти.http[способ] = (адрес, возврат) ->
-			адрес = encodeURI(адрес)
 			старый_возврат = возврат
 			возврат = (ввод, вывод) ->
-				user = undefined
-				
 				if адрес.starts_with('/сеть/') || адрес.starts_with('/управление/')
 					return if пользовательское.требуется_вход(ввод, вывод)
 				
@@ -98,15 +95,15 @@ module.exports = (приложение) ->
 						if ошибка?
 							return вывод.send(ошибка: ошибка)
 								
-						user = пользователь
-						
 						if адрес.starts_with('/управление/')
 							if пользователь.имя != 'Дождь со Снегом'
 								return вывод.send(ошибка: 'Вы не Главный Управляющий')
+										
+						старый_возврат(ввод, вывод, пользователь)
 					)
+				else
+					старый_возврат(ввод, вывод)
 						
-				старый_возврат(ввод, вывод, user)
-				
-			приложение[способ](адрес, возврат)
+			приложение[способ](encodeURI(адрес), возврат)
 		
 	снасти

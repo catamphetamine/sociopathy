@@ -8,13 +8,13 @@ exports.войти = (пользователь, ввод, вывод, возвр
 		ввод.session.пользователь = { _id: пользователь._id }
 		return возврат(null, пользователь)
 		
-	цепь(вывод)
+	new Цепочка(возврат)
 		.сделать ->
 			пользовательское.тайный_ключ(пользователь._id, @)
 			
 		.сделать (тайный_ключ) ->
 			вывод.cookie('user', тайный_ключ, { expires: Cookie_expiration_date, httpOnly: false })
-			возврат(null, пользователь)
+			@.done(пользователь)
 	
 exports.выйти = (ввод, вывод) ->
 	ввод.session.destroy()
@@ -58,7 +58,7 @@ exports.не_он = (_id, ввод, вывод) ->
 exports.опознать = (тайный_ключ, возврат) ->
 	new Цепочка(возврат)
 		.сделать ->
-			хранилище.collection('people_private_keys').findOne({ 'тайный ключ': тайный_ключ }, @)
+			db('people_private_keys').findOne({ 'тайный ключ': тайный_ключ }, @)
 			
 		.сделать (данные) ->
 			if not данные?
@@ -73,10 +73,12 @@ exports.сделать_тайный_ключ = (пользователь) ->
 	
 exports.тайный_ключ = (_id, возврат) ->
 	if typeof _id == 'string'
-		_id = хранилище.collection('people').id(_id)
+		_id = db('people').id(_id)
+		
 	new Цепочка(возврат)
 		.сделать ->
-			хранилище.collection('people_private_keys').findOne({ пользователь: _id }, @)
+			db('people_private_keys').findOne({ пользователь: _id }, @)
+			
 		.сделать (тайный_ключ) ->
 			@.done(тайный_ключ['тайный ключ'])
 
@@ -102,7 +104,7 @@ exports.приглашение = ->
 	
 exports.создать = (человек, возврат) ->
 	человек['скрытые поля'] = ['почта', 'пароль', 'когда пришёл']
-	хранилище.collection('people').save(человек, возврат)
+	db('people').save(человек, возврат)
 	
 exports.скрыть = (человек) ->
 	if человек['скрытые поля']?
@@ -135,15 +137,16 @@ exports.взять = (_id, настройки, возврат) ->
 			else if example['имя']? && typeof(example['имя']) == 'string'
 				single = true		
 	else if (typeof(_id) == 'string')
-		example = { _id: хранилище.collection('people').id(_id) }
+		example = { _id: db('people').id(_id) }
 		single = true
 		
 	new Цепочка(возврат)
 		.сделать ->
 			if single
-				хранилище.collection('people').findOne(example, @)
+				db('people').findOne(example, @)
 			else
-				хранилище.collection('people').find(example, options).toArray(@)
+				db('people').find(example, options).toArray(@)
+				
 		.сделать (result) ->
 			if not настройки.полностью?
 				if single
@@ -192,5 +195,11 @@ exports.подставить = (куда, переменная, возврат) 
 			
 			@.done()
 			
-exports.поля = (пользователь) ->
-	Object.выбрать(['имя', 'адресное имя', 'пол', '_id', 'загружен ли аватар?'], пользователь)
+exports.поля = (поля, пользователь) ->
+	if !(поля instanceof Array)
+		пользователь = поля
+		поля = ['имя', 'адресное имя', 'пол', 'загружен ли аватар?']
+		
+	выбранное = Object.выбрать(поля, пользователь)
+	выбранное._id = пользователь._id.toString()
+	выбранное

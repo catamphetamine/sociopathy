@@ -73,6 +73,9 @@ var Interactive_messages = function(options)
 		},
 		after_append: function(message, data)
 		{
+			if (Эфир.кто_в_сети.has(message.attr('author')))
+				message.find('> .author').addClass('online')
+		
 			var is_another_users_message = data.отправитель._id !== пользователь._id
 	
 			// после append'а, т.к. стили
@@ -144,7 +147,7 @@ var Interactive_messages = function(options)
 	}
 	
 	var is_away = false
-	
+
 	var old_on_load = messages.on_load
 	messages.on_load = function()
 	{
@@ -166,15 +169,17 @@ var Interactive_messages = function(options)
 			old_on_load()
 		})
 	}
-
+	
 	function new_message_channel(options)
 	{
 		var alarm_sound = new Audio("/звуки/alarm.ogg")
 	
 		var connected = false
+		var disconnected = false
+		var reconnected = false
 		
 		// handle reconnect
-		var first_connection = true
+		//var first_connection = true
 		
 		var status_classes =
 		{
@@ -242,12 +247,58 @@ var Interactive_messages = function(options)
 		{
 			var messages = this
 			
+			var накопленные_сообщения = []
+			var пропущенные_сообщения_учтены = false
+			
 			var connection = io.connect('http://' + Options.Websocket_server + options.path, { transports: ['websocket'], 'force new connection': true })
 			
 			connection.on('connect', function()
 			{
 				connected = true
+				
+				if (disconnected)
+				{
+					disconnected = false
+					reconnected = true
+				}
+				
 				connection.emit('пользователь', $.cookie('user'))
+			})
+			
+			connection.on('пользователь подтверждён', function()
+			{
+				connection.emit('environment', messages.options.environment)
+			})
+			
+			connection.on('disconnect', function()
+			{
+				connected = false
+				disconnected = true
+				
+				накопленные_сообщения = []
+				пропущенные_сообщения_учтены = false
+			})
+			
+			connection.on('пропущенные сообщения', function(сообщения)
+			{
+				var after = сообщения.shift()._id
+				сообщения.reverse().for_each(function()
+				{
+					this.after = after
+					after = this._id
+					messages.add_message(this)
+				})
+				
+				накопленные_сообщения.for_each(function()
+				{
+					messages.add_message(this)
+				})
+				
+				if (сообщения.length > 1 || накопленные_сообщения.length > 0)
+					if (is_away)
+						messages.new_messages_notification()
+				
+				пропущенные_сообщения_учтены = true
 			})
 			
 			var страница = page
@@ -256,10 +307,12 @@ var Interactive_messages = function(options)
 				if (страница.void)
 					return
 					
-				if (first_connection)
+				if (!reconnected)
 				{
 					callback()
-					first_connection = false
+					
+					if (options.on_connection)
+						options.on_connection()
 				}
 				else
 				{
@@ -267,8 +320,10 @@ var Interactive_messages = function(options)
 						options.on_reconnection()
 				}
 				
-				if (options.on_connection)
-					options.on_connection()
+				messages.подцепился(пользователь)
+				
+				connection.emit('получить пропущенные сообщения', { _id: messages.options.container.find('> li:last').attr('message_id') })
+				connection.emit('кто здесь?')
 			})
 			
 			connection.on('кто здесь', function(data)
@@ -289,13 +344,20 @@ var Interactive_messages = function(options)
 				messages.отцепился(пользователь)
 			})
 			
-			connection.on('сообщение', function(данные)
+			connection.on('сообщение', function(сообщение)
 			{
+				parse_date(сообщение, 'когда')
+				
+				if (!пропущенные_сообщения_учтены)
+				{
+					накопленные_сообщения.push(сообщение)
+					return
+				}
+					
 				if (is_away)
 					messages.new_messages_notification()
 			
-				parse_date(данные, 'когда')
-				messages.add_message(данные)
+				messages.add_message(сообщение)
 			})
 			
 			connection.on('смотрит', function(пользователь)
@@ -335,10 +397,5 @@ var Interactive_messages = function(options)
 	
 	new_message_channel(options.connection)
 
-	messages.on_load_actions.push(function()
-	{
-		messages.подцепился(пользователь)
-	})
-	
 	return messages
 }

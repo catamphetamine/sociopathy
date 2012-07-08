@@ -12,7 +12,7 @@
 			to: page.talk,
 			loader: new  Batch_data_loader_with_infinite_scroll
 			({
-				url: '/приложение/сеть/беседа',
+				url: '/приложение/сеть/беседа/сообщения',
 				parameters: { _id: page.data.беседа._id, id: page.data.беседа.id },
 				batch_size: 10,
 				scroll_detector: page.get('#scroll_detector'),

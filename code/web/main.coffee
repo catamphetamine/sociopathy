@@ -18,6 +18,9 @@ global.Options = require "./configuration.coffee"
 Object.merge_recursive(global.Options, require "./../../configuration/#{launch_options.server}/configuration.coffee")
 require "./../../configuration/#{launch_options.server}/configuration.private.coffee"
 
+global.db = (collection) ->
+	хранилище.collection(collection)
+	
 # memcache
 memcache = require('memcache')
 global.memcache = new memcache.Client(Options.Memcache.Port, 'localhost')
@@ -40,8 +43,7 @@ global.image_magick.convert.path = Options.ImageMagick.Convert.Path
 
 global.почта = require './tools/email'
 
-global.db = (collection) ->
-	хранилище.collection(collection)
+global.messages = require './controller/messages'
 
 #global.почта.письмо(кому: 'Николай Кучумов <kuchumovn@gmail.com>', тема: 'Test', сообщение: 'Проверка {{связи}}', данные: { связи: 'связи' })
 

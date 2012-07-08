@@ -58,10 +58,26 @@
 	}
 	
 	var когда_был_здесь
+	var offline = false
 	
 	function before_id_card_shown()
 	{
 		title(page.data.пользователь_сети.имя)
+
+		Эфир.следить_за_пользователем(page.data.пользователь_сети._id)
+		
+		page.пользователь_в_сети = function(пользователь)
+		{
+			offline = false
+			когда_был_здесь = new Date()
+			update_online_status()
+		},
+		
+		page.пользователь_вышел = function(пользователь)
+		{
+			offline = true
+			update_online_status()
+		}
 		
 		var links = $('#links')
 		var actions = $('#actions')
@@ -202,7 +218,9 @@
 			}
 		}
 		
-		когда_был_здесь = page.data.пользователь_сети['когда был здесь']
+		if (!когда_был_здесь)
+			когда_был_здесь = page.data.пользователь_сети['когда был здесь']
+			
 		if (!когда_был_здесь)
 			return
 		
@@ -231,7 +249,11 @@
 	function update_online_status()
 	{
 		var остылость = (new Date().getTime() - когда_был_здесь.getTime()) / (Options.User_is_online_for * 1000)
-		if (остылость > 1)
+		
+		if (offline)
+			остылость = 1
+		
+		if (остылость >= 1)
 		{
 			online_status.online.css({ opacity: 0 })
 			online_status.offline.css({ opacity: 1 })
