@@ -27,6 +27,11 @@ options.сообщения_чего = (ввод, возврат) ->
 			
 options.messages_collection_id = 'messages'
 options.messages_query = (environment) -> { общение: environment.сообщения_чего._id }
+
+options.extra_get = (data, environment, возврат) ->
+	data.название = environment.сообщения_чего.название
+	data._id = environment.сообщения_чего._id
+	возврат()
 		
 options.с_какого_выбрать = (ввод, environment, возврат) ->
 	new Цепочка(возврат)
@@ -35,8 +40,9 @@ options.с_какого_выбрать = (ввод, environment, возврат)
 			
 		.сделать (session) ->
 			return @.done() if not session?
-			return @.done() if not session.последние_сообщения_в_обсуждениях?
-			@.done(session.последние_сообщения_в_обсуждениях[environment.сообщения_чего._id])
+			return @.done() if not session.последние_прочитанные_сообщения?
+			return @.done() if not session.последние_прочитанные_сообщения.обсуждения?
+			@.done(session.последние_прочитанные_сообщения.обсуждения[environment.сообщения_чего._id])
 			
 options.save = (сообщение, environment, возврат) ->
 	new Цепочка(возврат)
@@ -44,7 +50,7 @@ options.save = (сообщение, environment, возврат) ->
 			db('messages').save({ отправитель: environment.пользователь._id, сообщение: сообщение, когда: new Date(), общение: environment.сообщения_чего._id }, @.в 'сообщение')
 			
 		.сделать ->
-			in_session_id = "последние_сообщения_в_обсуждениях." + environment.сообщения_чего._id
+			in_session_id = "последние_прочитанные_сообщения.обсуждения." + environment.сообщения_чего._id
 			actions = {}
 			actions.$set = {}
 			actions.$set[in_session_id] = сообщение._id
@@ -53,4 +59,4 @@ options.save = (сообщение, environment, возврат) ->
 		.сделать ->
 			@.done(@.$.сообщение)
 	
-discussion = messages.messages(options)
+messages.messages(options)

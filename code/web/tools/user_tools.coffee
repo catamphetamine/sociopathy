@@ -147,7 +147,10 @@ exports.взять = (_id, настройки, возврат) ->
 			else
 				db('people').find(example, options).toArray(@)
 				
-		.сделать (result) ->
+		.сделать (result) ->		
+			if not result?
+				return @.done()
+				
 			if not настройки.полностью?
 				if single
 					пользовательское.скрыть(result)

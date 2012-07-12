@@ -12,18 +12,25 @@ var Scroller = new Class
 	
 	watching: function(element)
 	{
-		return this.elements.contains(element.node())
+		var contains = false
+		this.elements.for_each(function()
+		{
+			if (this.node() === element.node())
+				contains = true
+		})
+		
+		return contains
 	},
 	
 	watch: function(element)
 	{
-		if (this.elements.contains(element.node()))
+		if (this.watching(element))
 			return
 			
 		//if (typeof previous_top_offset_in_window === 'undefined')
 		//	previous_top_offset_in_window = $(window).height() + 1
 	
-		this.elements.push(element.node())
+		this.elements.push(element)
 		element.data('first_time_with_scroller', true)
 		//element.data('top_offset_in_window', previous_top_offset_in_window)
 		this.check_for_events(element)
@@ -31,7 +38,17 @@ var Scroller = new Class
 	
 	unwatch: function(element)
 	{
-		this.elements.remove(element.node())
+		var i = 0
+		while (i < this.elements.length)
+		{
+			if (this.elements[i].node() === element.node())
+			{
+				this.elements.splice(i, 1)
+				return this.unwatch(element)
+			}
+			
+			i++
+		}
 	},
 	
 	reset: function(element)
@@ -43,7 +60,7 @@ var Scroller = new Class
 		var scroller = this
 		this.elements.for_each(function()
 		{
-			scroller.check_for_events($(this))
+			scroller.check_for_events(this)
 		},
 		this)
 	},
@@ -89,21 +106,21 @@ var Scroller = new Class
 		if (!first_time && top_was_visible && !top_is_visible)
 		{
 			if (upwards)
-				element.trigger('disappears_on_top.scroller')
+				element.trigger('disappears_on_top')
 			else
-				element.trigger('disappears_on_bottom.scroller')
+				element.trigger('disappears_on_bottom')
 		}
 		
 		if (!top_was_visible && top_is_visible && bottom_is_visible)
 		{
 			if (first_time || downwards)
-				element.trigger('fully_appears_on_top.scroller')
+				element.trigger('fully_appears_on_top')
 		}
 		
 		if (!top_was_visible && top_is_visible)
 		{
 			if (first_time || upwards)
-				element.trigger('appears_on_bottom.scroller', window_height - top_offset_in_window)
+				element.trigger('appears_on_bottom', window_height - top_offset_in_window)
 		}
 		
 		if (!first_time)
@@ -111,19 +128,18 @@ var Scroller = new Class
 			if (previous_top_offset_in_window < 0 && top_offset_in_window >= window_height && downwards)
 			{
 				if (bottom_is_visible)
-					element.trigger('disappears_on_bottom.scroller')
+					element.trigger('disappears_on_bottom')
 				else
-					element.trigger('disappears_on_bottom.scroller')
-//					element.trigger('disappeared_on_bottom.scroller')
+					element.trigger('disappears_on_bottom')
+//					element.trigger('disappeared_on_bottom')
 			}
 			
 			if (previous_top_offset_in_window >= window_height && top_offset_in_window < 0 && upwards)
 			{
 				if (bottom_is_visible)
-					element.trigger('disappears_on_top.scroller')
+					element.trigger('disappears_on_top')
 				else
-					element.trigger('disappears_on_top.scroller')
-//					element.trigger('disappeared_on_top.scroller')
+					element.trigger('disappears_on_top')
 			}
 		}
 		else
@@ -131,20 +147,11 @@ var Scroller = new Class
 			if (!top_is_visible && !bottom_is_visible)
 			{
 				if (downwards)
-					element.trigger('disappears_on_bottom.scroller')
+					element.trigger('disappears_on_bottom')
 				else
-					element.trigger('disappears_on_top.scroller')
+					element.trigger('disappears_on_top')
 			}
 		}
-		
-		/*
-		if (top_offset_in_window + height <= 0)
-			element.data('visible', false)
-		else if (top_offset_in_window >= window_height)
-			element.data('visible', false)
-		else
-			element.data('visible', true)
-		*/
 	},
 	
 	scroll_to: function(element, options, callback)
@@ -238,9 +245,4 @@ var Scroller = new Class
 	}
 })
 
-var прокрутчик
-
-$(function()
-{
-	прокрутчик = new Scroller()
-})
+var прокрутчик = new Scroller()

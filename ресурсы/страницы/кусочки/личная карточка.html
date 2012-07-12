@@ -43,14 +43,14 @@
 		<div class="value">...</div>
 	</section>
 	
-	<section class="miscellaneous">
+	<section class="miscellaneous" {{if with_online_status}}{{else}} style="display: none" {{/if}}>
 		<!-- person's online_status -->
 		<div class="online_status">
 			<div class="online"></div>
 			<div class="offline"></div>
 			<div class="was_here non_selectable">
 				<span class="line">{{if пол === 'мужской'}} Был {{else}} Была {{/if}} в сети <span class="last_action_time"></span>.</span>
-				<a href="${window.location}">Перепроверить</a>
+				<a href="/люди/${$data['адресное имя']}">Перепроверить</a>
 			</div>
 		</div>	
 	

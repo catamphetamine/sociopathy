@@ -365,8 +365,8 @@ function ajaxify_internal_links(where)
 				
 			event.preventDefault()
 			
-			if ('/' + путь_страницы() === url)
-				return
+			//if ('/' + путь_страницы() === url)
+			//	return
 			
 			navigate_to_page(url,
 			{

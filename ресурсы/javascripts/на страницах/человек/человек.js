@@ -32,11 +32,17 @@
 			}
 		})
 	
+		var conditional = initialize_conditional($('.main_conditional'), { immediate: true })
+		conditional.on_error(function()
+		{
+			$(document).trigger('page_initialized')
+		})
+		
 		new Data_templater
 		({
 			template_url: '/страницы/кусочки/личная карточка.html',
 			container: id_card,
-			conditional: initialize_conditional($('.main_conditional'), { immediate: true })
+			conditional: conditional
 		},
 		new  Data_loader
 		({
@@ -46,6 +52,7 @@
 			{
 				parse_date(data, 'когда был здесь')
 				page.data.пользователь_сети = data
+				data.with_online_status = true
 				return data
 			},
 			before_done: before_id_card_shown,
@@ -64,7 +71,7 @@
 	{
 		title(page.data.пользователь_сети.имя)
 
-		Эфир.следить_за_пользователем(page.data.пользователь_сети._id)
+		Эфир.следить_за_пользователем(page.data.пользователь_сети)
 		
 		page.пользователь_в_сети = function(пользователь)
 		{
@@ -186,12 +193,11 @@
 				actions.find('.add_to_circles').show()
 			})
 		})
-		
-		$(document).trigger('page_initialized')
 	}
 	
 	function id_card_loaded()
 	{
+		$(document).trigger('page_initialized')
 	}
 	
 	function show_photo()

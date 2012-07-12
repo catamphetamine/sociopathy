@@ -33,7 +33,6 @@ var Interactive_messages = function(options)
 		},
 		more_link: options.more_link,
 		container: options.container,
-		scroller: прокрутчик,
 		set_up_visual_editor: function(visual_editor)
 		{
 			var messages = this
@@ -69,6 +68,9 @@ var Interactive_messages = function(options)
 		},
 		send_message: function(message)
 		{
+			if (!this.connection || !this.connection.is_ready)
+				return false
+		
 			this.connection.emit('сообщение', message)
 		},
 		after_append: function(message, data)
@@ -128,12 +130,16 @@ var Interactive_messages = function(options)
 			$(this).find('> .author').addClass('connected')
 		})
 		
+		messages.внести_пользователя_в_список_вверху(пользователь)
+				
 		if (this.options.connection.on_user_connected)
 			this.options.connection.on_user_connected(пользователь)
 	}
 	
 	messages.отцепился = function(пользователь)
 	{
+		messages.убрать_пользователя_из_списка_вверху(пользователь)
+				
 		if (this.options.connection.on_user_disconnected)
 			this.options.connection.on_user_disconnected(пользователь)
 	}
@@ -148,9 +154,57 @@ var Interactive_messages = function(options)
 	
 	var is_away = false
 
+	function get_last_message_id()
+	{
+		var last_message = messages.options.container.find('> li:last')
+		
+		if (!last_message.exists())
+			return
+			
+		return last_message.attr('message_id')
+	}
+	
+	var updated_latest_message_read
+	
+	messages.update_latest_read_message = function()
+	{
+		if (updated_latest_message_read)
+			if (updated_latest_message_read == this.latest_message_read)
+				return
+				
+		if (!this.latest_message_read)
+			return
+			
+		if (this.последнее_прочитанное_сообщение)
+			if (this.latest_message_read <= this.последнее_прочитанное_сообщение)
+				return
+	
+		if (!this.connection || !this.connection.is_ready)
+			return // (function() { messages.read(_id) }).delay(200) // no simple "delay" with ajax navigation, use page.delay
+		
+		this.connection.emit('прочитано', this.latest_message_read)
+		updated_latest_message_read = this.latest_message_read
+	}
+	.bind(messages)
+	
 	var old_on_load = messages.on_load
 	messages.on_load = function()
 	{
+		messages.who_is_connected_bar_list = page.get('.who_is_connected')
+		messages.who_is_connected_bar_list.parent().floating_top_bar()
+		
+		messages.unload = function()
+		{
+			messages.who_is_connected_bar_list.parent().floating_top_bar('unload')
+			
+			if (messages.connection)
+			{
+				messages.connection.emit('выход')
+				//alert(messages.connection.websocket.disconnectSync)
+				//messages.connection.websocket.disconnectSync()
+			}
+		}
+		
 		messages.connect(function()
 		{
 			$(window).on_page('focus.messages', function()
@@ -193,7 +247,9 @@ var Interactive_messages = function(options)
 		var the_options = options
 		
 		if (!options.away_aware_elements)
-			options.away_aware_elements = ['.chat > li[author="${id}"] .author']
+			options.away_aware_elements = []
+			
+		options.away_aware_elements.push('.who_is_connected > li[user="{id}"]')
 		
 		function set_status(id, status, options)
 		{
@@ -251,6 +307,7 @@ var Interactive_messages = function(options)
 			var пропущенные_сообщения_учтены = false
 			
 			var connection = io.connect('http://' + Options.Websocket_server + options.path, { transports: ['websocket'], 'force new connection': true })
+			connection.is_ready = false
 			
 			connection.on('connect', function()
 			{
@@ -274,6 +331,8 @@ var Interactive_messages = function(options)
 			{
 				connected = false
 				disconnected = true
+				
+				connection.is_ready = false
 				
 				накопленные_сообщения = []
 				пропущенные_сообщения_учтены = false
@@ -307,17 +366,25 @@ var Interactive_messages = function(options)
 				if (страница.void)
 					return
 					
+				connection.is_ready = true
+					
 				if (!reconnected)
 				{
 					callback()
 					
+					page.ticking(messages.update_latest_read_message, 2000)
+					
+					messages.внести_пользователя_в_список_вверху(пользователь, { куда: 'в начало' })
+
 					if (options.on_connection)
-						options.on_connection()
+						options.on_connection.bind(messages)()
 				}
 				else
 				{
+					messages.who_is_connected_bar_list.empty()
+					
 					if (options.on_reconnection)
-						options.on_reconnection()
+						options.on_reconnection.bind(messages)()
 				}
 				
 				messages.подцепился(пользователь)
@@ -394,7 +461,41 @@ var Interactive_messages = function(options)
 			messages.connection = connection
 		}
 	}
+
+	messages.внести_пользователя_в_список_вверху = function(user, options)
+	{
+		if (messages.who_is_connected_bar_list.find('> li[user="' + user._id + '"]').exists())
+			return
 	
+		var container = $('<li user="' + user._id + '"></li>')
+		container.addClass('online')
+		
+		$.tmpl('chat user icon', { отправитель: user }).appendTo(container)
+		
+		if (options)
+			if (options.куда === 'в начало')
+				return container.prependTo(messages.who_is_connected_bar_list)
+		
+		container.css('opacity', '0')
+		container.appendTo(messages.who_is_connected_bar_list)
+		ajaxify_internal_links(content)
+		
+		// после append'а, т.к. стили
+		if (user._id !== пользователь._id)
+			messages.initialize_call_action(container, user._id, 'of_online_user')
+			
+		animator.fade_in(container, { duration: 1 }) // in seconds
+	}
+	
+	messages.убрать_пользователя_из_списка_вверху = function(пользователь)
+	{
+		var icon = messages.who_is_connected_bar_list.find('[user="' + пользователь._id + '"]')
+		icon.fadeOut(500, function()
+		{
+			icon.remove()
+		})
+	}
+		
 	new_message_channel(options.connection)
 
 	return messages

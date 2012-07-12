@@ -2,13 +2,11 @@ exports.messages = (options) ->
 	connected = redis.createClient()
 	
 	соединения_пользователей = {}
-	
-	environment = {}
 
 	if not options.messages_collection_id?
 		options.messages_collection_id = options.id
 			
-	messages = (query, parameters, callback) ->
+	messages = (query, parameters, environment, callback) ->
 		if not query?
 			return db(options.messages_collection_id)
 			
@@ -16,11 +14,18 @@ exports.messages = (options) ->
 		if options.messages_query?
 			messages_query = options.messages_query(environment)
 
-		return messages().find(Object.merge_recursive(query, messages_query), parameters).toArray(callback)
+		query = Object.merge_recursive(query, messages_query)
+		
+		if parameters.count_query?
+			return messages().count(query, callback)
+			
+		return messages().find(query, parameters).toArray(callback)
 		
 	connection = websocket
 		.of(options.uri)
 		.on 'connection', (соединение) ->
+			environment = {}
+	
 			соединение.on 'пользователь', (тайный_ключ) ->
 				пользователь = null
 				цепь_websocket(соединение)
@@ -61,7 +66,7 @@ exports.messages = (options) ->
 						соединение.on 'получить пропущенные сообщения', (с_какого) ->
 							new цепь_websocket(соединение)
 								.сделать ->
-									messages({ _id: { $gte: messages().id(с_какого._id) } }, {}, @.в 'сообщения')
+									messages({ _id: { $gte: messages().id(с_какого._id) } }, {}, environment, @.в 'сообщения')
 								.сделать ->
 									пользовательское.подставить(@.$.сообщения, 'отправитель', @)
 								.сделать ->
@@ -120,14 +125,17 @@ exports.messages = (options) ->
 						соединение.on 'disconnect', () ->
 							if not disconnected
 								выход()
-								
+									
+						соединение.on 'environment', (environment_data) ->
+							environment.сообщения_чего = environment_data.сообщения_чего
+							соединение.emit 'готов'
+									
+						соединение.on 'прочитано', (_id) ->
+							db('people_sessions').update({ пользователь: environment.пользователь._id }, { $set: { последнее_прочитанное_сообщение_в_болталке: _id } }, @)
+				
 						соединение.emit 'пользователь подтверждён'
 						
-			соединение.on 'environment', (environment_data) ->
-				environment.сообщения_чего = environment_data.сообщения_чего
-				соединение.emit 'готов'
-						
-	Max_batch_size = 1000
+	Max_batch_size = 30
 
 	sanitize = (html, возврат) ->
 		#console.log('возврат')
@@ -135,12 +143,13 @@ exports.messages = (options) ->
 		
 	http.get options.data_uri, (ввод, вывод, пользователь) ->
 		#if options.data_uri.starts_with('/сеть/')
+		environment = {}
 		environment.пользователь = пользователь
+		
 		цепь(вывод)
 			.сделать ->
 				if options.сообщения_чего?
-					if not environment.сообщения_чего?
-						return options.сообщения_чего(ввод, @)
+					return options.сообщения_чего(ввод, @)
 				return @.done()
 				
 			.сделать (сообщения_чего) ->
@@ -150,27 +159,45 @@ exports.messages = (options) ->
 	
 			.сделать (с_какого_выбрать) ->
 				if not с_какого_выбрать?
-					return messages({}, { limit: ввод.настройки.сколько, sort: [['$natural', -1]] }, @.в 'сообщения')
-				выбрать(с_какого_выбрать, ввод.настройки.сколько, ввод, @.в 'сообщения')
+					return messages({}, { limit: ввод.настройки.сколько, sort: [['$natural', -1]] }, environment, @.в 'сообщения')
+				выбрать(с_какого_выбрать, ввод.настройки.сколько, ввод, environment, @.в 'сообщения')
 					
 			.сделать ->
 				пользовательское.подставить(@.$.сообщения, 'отправитель', @)
 				
 			.сделать ->
+				db('people_sessions').findOne({ пользователь: пользователь._id }, @)
+				
+			.сделать (session) ->
+				if session.последнее_прочитанное_сообщение_в_болталке?
+					@.$.последнее_прочитанное_сообщение = session.последнее_прочитанное_сообщение_в_болталке
+				@.done()
+
+			.сделать ->
+				if options.extra_get?
+					return options.extra_get(@.$, environment, @)
+				@.done()
+				
+			.сделать ->
 				сообщения = @.$.сообщения
 				return @.done() if сообщения.length == 0
-				messages({ _id: { $lt: сообщения[сообщения.length - 1]._id }}, { sort: [['$natural', -1]], limit: 1 }, @)
+				messages({ _id: { $lt: сообщения[сообщения.length - 1]._id }}, { limit: 1 }, environment, @)
 					
 			.сделать (ещё_сообщения) ->
 				есть_ли_ещё = no
 				if ещё_сообщения? && ещё_сообщения.length > 0
 					есть_ли_ещё = yes
 					
-				client_environment =
+				@.$.environment =
 					пользователь: пользовательское.поля(['_id'], пользователь)
 					сообщения_чего: environment.сообщения_чего
 					
-				вывод.send({ сообщения: @.$.сообщения, 'есть ещё?': есть_ли_ещё, environment: client_environment })
+				@.$['есть ещё?'] = есть_ли_ещё
+				
+				for сообщение in @.$.сообщения
+					сообщение._id = сообщение._id.toString()
+					
+				вывод.send(@.$)
 	
 	начиная_с_какого_выбрать = (ввод, environment, возврат) ->
 		if ввод.настройки.с?
@@ -189,7 +216,7 @@ exports.messages = (options) ->
 
 			.сделать ->
 				id = environment.пользователь._id
-				messages({ отправитель: id }, { sort: [['$natural', -1]], limit: 1 }, @)
+				messages({ отправитель: id }, { sort: [['$natural', -1]], limit: 1 }, environment, @)
 			
 			.сделать (сообщения) ->
 				сообщение = сообщения[0]
@@ -197,17 +224,17 @@ exports.messages = (options) ->
 					return @.done({ с: сообщение._id, ограничение: Max_batch_size, откуда: 'позже' })
 				return @.done()
 					
-	выбрать = (с_какого, сколько, ввод, возврат) ->
+	выбрать = (с_какого, сколько, ввод, environment, возврат) ->
 		с = с_какого.с
-		ограничение = сколько
+		#ограничение = сколько
 		сравнение_id = null
 		
 		if not с_какого.откуда?
 			с_какого.откуда = 'раньше'
 		
-		if с_какого.ограничение?
-			if ограничение > с_какого.ограничение
-				ограничение = с_какого.ограничение
+		#if с_какого.ограничение?
+		#	if ограничение > с_какого.ограничение
+		#		ограничение = с_какого.ограничение
 			
 		if с_какого.откуда == 'раньше'
 			сравнение_id = '$lte'
@@ -222,6 +249,31 @@ exports.messages = (options) ->
 		
 		id_criteria = {}
 		id_criteria[сравнение_id] = с
-		messages({ _id: id_criteria }, { limit: ограничение, sort: [['$natural', -1]] }, возврат)
+		
+		parameters = { sort: [['$natural', -1]] }
+		if сколько?
+			parameters.limit = сколько
+
+		new Цепочка(возврат)
+			.сделать ->
+				messages({ _id: id_criteria }, Object.merge_recursive({ count_query: yes }, parameters), environment, @)
+				
+			.сделать (сколько_есть) ->
+				if с_какого.ограничение?
+					if сколько_есть > с_какого.ограничение
+						new Цепочка(возврат)
+							.сделать ->
+								messages({}, { limit: 1, sort: [['$natural', -1]] }, environment, @)
+								
+							.сделать (message) ->
+								if message.пусто()
+									return @.done([])
+								последнее_сообщение = message[0]
+								return выбрать(последнее_сообщение, с_какого.ограничение, ввод, environment, возврат)
+								
+				@.done()
+			
+			.сделать ->
+				messages({ _id: id_criteria }, parameters, environment, @)
 	
 	connection

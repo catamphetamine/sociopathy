@@ -6,19 +6,6 @@
 	
 	page.load = function()
 	{
-		title(page.data.обсуждение.id)
-		
-		messages = Interactive_messages
-		({
-			
-			show_editor: false,
-			on_load: ,
-			connection:
-			{
-			}
-		})
-		
-		
 		messages = Interactive_messages
 		({
 			data_source:
@@ -28,6 +15,11 @@
 			},
 			on_first_time_data: function(data)
 			{
+				console.log(data)
+				title(data.название)
+				
+				page.data.обсуждение._id = data._id
+				
 				breadcrumbs
 				([
 					{ title: 'Обсуждения', link: '/сеть/обсуждения' },
@@ -36,7 +28,6 @@
 			},
 			more_link: $('.messages_framework > .older > a'),
 			container: page.discussion,
-			scroller: прокрутчик,
 			show_editor: true,
 			on_load: discussion_loaded,
 			before_prepend: function(message)
@@ -52,18 +43,10 @@
 			connection:
 			{
 				path: '/обсуждение/' + page.data.обсуждение._id,
-				on_reconnection: function() { who_is_online_bar_list.empty() },
-				on_connection: function()
-				{
-					внести_пользователя_в_список_вверху(пользователь, { куда: 'в начало' })
-				},
 				away_aware_elements:
 				[
-					'.who_is_online > li[user="{id}"]',
-					'.chat > li[author="{id}"] .author'
-				],
-				on_user_connected: внести_пользователя_в_список_вверху,
-				on_user_disconnected: пользователь_вышел_из_болталки
+					'.discussion > li[author="{id}"] .author'
+				]
 			}
 		})
 		

@@ -97,6 +97,8 @@ function initialize_conditional($this, options)
 		{ immediate: true })
 	}
 	
+	var on_error_actions = []
+	
 	var error_counter = 0
 	var on_error = function(message, on_error_callback)
 	{
@@ -119,6 +121,11 @@ function initialize_conditional($this, options)
 		{
 			conditional.state = 'error'
 			
+			on_error_actions.for_each(function()
+			{
+				this()
+			})
+			
 			if (on_error_callback)
 				on_error_callback()
 		})
@@ -134,7 +141,11 @@ function initialize_conditional($this, options)
 	{
 		callback: callback,
 		state: 'loading',
-		loading_more: loading_more_function
+		loading_more: loading_more_function,
+		on_error: function(action)
+		{
+			on_error_actions.push(action)
+		}
 	}
 	
 	return conditional

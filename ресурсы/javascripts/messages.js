@@ -17,12 +17,14 @@ var Messages = new Class
 		max_messages: 200,
 		new_message_sound: new Audio("/звуки/new message.ogg"),
 		messages_batch_size: 18,
-		check_if_there_are_still_unread_messages_interval: 1000
+		check_if_there_are_still_unread_messages_interval: 1000,
 	},
 	
 	initialize: function(options)
 	{
-		this.setOptions(options)
+		this.options.прокрутчик = прокрутчик
+		this.options = $.extend(true, this.options, options)
+		//this.setOptions(options) // bug
 	
 		//this.load()	
 	},
@@ -40,7 +42,7 @@ var Messages = new Class
 		this.scroll_down_to_new_messages.on('click', function(event)
 		{
 			event.preventDefault()
-			прокрутчик.scroll_to_bottom()
+			messages.options.прокрутчик.scroll_to_bottom()
 			messages.indicate_no_new_messages()
 		})
 		
@@ -60,7 +62,11 @@ var Messages = new Class
 		// но потом уменьшилось при удалении всего, и табличка о новых сообщениях осталась висеть
 		page.ticking(this.check_if_there_are_still_unread_messages, this.options.check_if_there_are_still_unread_messages_interval)
 	},
-		
+	
+	unload: function()
+	{	
+	},
+	
 	initialize_loaders: function()
 	{
 		var messages = this
@@ -96,6 +102,9 @@ var Messages = new Class
 				if (first_time_data)
 				{
 					messages.options.environment = data.environment
+					
+					if (data.последнее_прочитанное_сообщение)
+						messages.последнее_прочитанное_сообщение = data.последнее_прочитанное_сообщение
 				}
 				
 				first_time_data = false
@@ -190,6 +199,8 @@ var Messages = new Class
 					}
 				
 					message.attr('message_id', data._id)
+					
+					messages.process_message_element(message)
 					
 					messages.options.container.prepend(message)
 				}
@@ -286,6 +297,19 @@ var Messages = new Class
 		return this.options.container.find('> li[message_id="' + data._id + '"]').exists()
 	},
 	
+	process_message_element: function(message)
+	{
+		var _id = message.attr('message_id')
+		message.on('fully_appears_on_bottom', (function()
+		{
+			this.options.прокрутчик.unwatch(message)
+			this.message_read(_id)
+		})
+		.bind(this))
+		
+		this.options.прокрутчик.watch(message)
+	},
+	
 	add_message: function(data)
 	{
 		if (!data)
@@ -358,6 +382,8 @@ var Messages = new Class
 		
 		var is_another_users_message = data.отправитель._id !== пользователь._id
 		
+		this.process_message_element(message)
+	
 		var append = function()
 		{
 			message.appendTo(this.options.container)
@@ -388,11 +414,20 @@ var Messages = new Class
 		}
 		
 		append()
-		this.options.scroller.scroll_to(this.options.container, { top_offset: this.container_top_offset, bottom: true, duration: 700 }, function()
+		this.options.прокрутчик.scroll_to(this.options.container, { top_offset: this.container_top_offset, bottom: true, duration: 700 }, function()
 		{
 			remove_old_messages()
 			next()
 		})
+	},
+	
+	message_read: function(_id)
+	{
+		if (this.latest_message_read)
+			if (this.latest_message_read >= _id)
+				return
+				
+		this.latest_message_read = _id
 	},
 
 	on_load: function()
@@ -426,10 +461,13 @@ var Messages = new Class
 			if (!message)
 				return
 				
+			if (messages.options.send_message(message) === false)
+			{
+				return warning('Потеряно соединение с сервером')
+			}
+			
 			visual_editor.editor.content.html(editor_initial_html)
 			visual_editor.editor.caret.move_to(visual_editor.editor.content[0].firstChild)
-			
-			messages.options.send_message(message)
 		}
 		
 		visual_editor.enter_pressed_in_container = function()
