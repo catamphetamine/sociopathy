@@ -127,7 +127,8 @@ var Messages = new Class
 		
 				messages.new_messages_smooth_border.css('width', '100%')
 				
-				messages.options.on_load.bind(messages)(messages.on_load)
+				messages.options.on_load.bind(messages)()
+				messages.on_load()
 			},
 			done_more: function()
 			{
@@ -157,7 +158,7 @@ var Messages = new Class
 		loader.activate = function() { options.more_link.on('click', show_more_messages) }
 		loader.deactivate = function() { options.more_link.unbind() }
 			
-		var conditional = $('#chat_block')
+		var conditional = $('.main_conditional')
 	
 		new Data_templater
 		({

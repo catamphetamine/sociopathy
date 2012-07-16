@@ -190,6 +190,28 @@ var Interactive_messages = function(options)
 	var old_on_load = messages.on_load
 	messages.on_load = function()
 	{
+		var пользователь_в_сети = page.пользователь_в_сети
+		page.пользователь_в_сети = function(пользователь)
+		{
+			пользователь_в_сети(пользователь)
+			
+			messages.options.container.find('> li[author="' + пользователь._id + '"]').each(function()
+			{
+				$(this).find('> .author').addClass('online')
+			})
+		}
+		
+		var пользователь_вышел = page.пользователь_вышел
+		page.пользователь_вышел = function(пользователь)
+		{
+			пользователь_вышел(пользователь)
+			
+			messages.options.container.find('> li[author="' + пользователь._id + '"]').each(function()
+			{
+				$(this).find('> .author').removeClass('online')
+			})
+		}
+		
 		messages.who_is_connected_bar_list = page.get('.who_is_connected')
 		messages.who_is_connected_bar_list.parent().floating_top_bar()
 		

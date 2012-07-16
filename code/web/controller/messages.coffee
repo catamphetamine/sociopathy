@@ -10,21 +10,35 @@ exports.messages = (options) ->
 		if not query?
 			return db(options.messages_collection_id)
 			
+		collection = messages()
+			
 		messages_query = {}
 		if options.messages_query?
-			messages_query = options.messages_query(environment)
+			messages_query = options.messages_query(collection, environment)
 
 		query = Object.merge_recursive(query, messages_query)
 		
 		if parameters.count_query?
-			return messages().count(query, callback)
+			return collection.count(query, callback)
 			
-		return messages().find(query, parameters).toArray(callback)
+		return collection.find(query, parameters).toArray(callback)
 		
 	connection = websocket
 		.of(options.uri)
 		.on 'connection', (соединение) ->
 			environment = {}
+	
+			connected_data_source = ->
+				if not environment.сообщения_чего?
+					return options.id + ':connected'
+				options.id + ':' + environment.сообщения_чего._id + ':connected'
+	
+			broadcast = ->
+				if not environment.сообщения_чего?
+					return соединение.broadcast
+				websocket.sockets.in(environment.сообщения_чего._id)
+	
+			initialize = null
 	
 			соединение.on 'пользователь', (тайный_ключ) ->
 				пользователь = null
@@ -40,12 +54,6 @@ exports.messages = (options) ->
 						соединения_пользователей[пользователь._id.toString()] = соединение
 						@()
 						
-					.сделать ->
-						connected.hset(options.id + ':connected', пользователь._id.toString(), JSON.stringify(пользовательское.поля(пользователь)), @)
-					
-					.сделать ->
-						соединение.broadcast.emit('подцепился', пользовательское.поля(пользователь))
-				
 						# maybe hack attempt
 						if not пользователь?
 							return
@@ -53,7 +61,7 @@ exports.messages = (options) ->
 						соединение.on 'кто здесь?', ->
 							new цепь_websocket(соединение)
 								.сделать ->
-									connected.hgetall(options.id + ':connected', @)
+									connected.hgetall(connected_data_source(), @)
 									
 								.сделать (who_is_connected) ->
 									who_is_connected_info = []
@@ -73,10 +81,10 @@ exports.messages = (options) ->
 									соединение.emit('пропущенные сообщения', @.$.сообщения)
 								
 						соединение.on 'смотрит', () ->
-							соединение.broadcast.emit('смотрит', пользовательское.поля([], пользователь))
+							broadcast().emit('смотрит', пользовательское.поля([], пользователь))
 								
 						соединение.on 'не смотрит', () ->
-							соединение.broadcast.emit('не смотрит', пользовательское.поля([], пользователь))
+							broadcast().emit('не смотрит', пользовательское.поля([], пользователь))
 						
 						соединение.on 'вызов', (_id) ->
 							вызываемый = соединения_пользователей[_id]
@@ -85,7 +93,7 @@ exports.messages = (options) ->
 							вызываемый.emit('вызов', пользователь)
 						
 						соединение.on 'пишет', ->
-							соединение.broadcast.emit('пишет', пользовательское.поля([], пользователь))
+							broadcast().emit('пишет', пользовательское.поля([], пользователь))
 						
 						соединение.on 'сообщение', (сообщение) ->
 							цепь_websocket(соединение)
@@ -103,18 +111,18 @@ exports.messages = (options) ->
 										когда: сообщение.когда
 									
 									соединение.emit('сообщение', данные_сообщения)
-									соединение.broadcast.emit('сообщение', данные_сообщения)
+									broadcast().emit('сообщение', данные_сообщения)
 						
 						disconnected = false
 						
 						выход = ->
 							delete соединения_пользователей[пользователь._id.toString()]
-							цепь(websocket)
+							цепь_websocket(соединение)
 								.сделать ->
-									connected.hdel(options.id + ':connected', пользователь._id, @)
+									connected.hdel(connected_data_source(), пользователь._id, @)
 									
 								.сделать () ->
-									соединение.broadcast.emit('отцепился', пользовательское.поля([], пользователь))
+									broadcast().emit('отцепился', пользовательское.поля([], пользователь))
 									disconnected = true
 									соединение.disconnect()
 			
@@ -127,8 +135,18 @@ exports.messages = (options) ->
 								выход()
 									
 						соединение.on 'environment', (environment_data) ->
+							if environment.сообщения_чего?
+								соединение.join(environment.сообщения_чего._id)
+							
 							environment.сообщения_чего = environment_data.сообщения_чего
-							соединение.emit 'готов'
+							
+							цепь_websocket(соединение)
+								.сделать ->
+									connected.hset(connected_data_source(), пользователь._id.toString(), JSON.stringify(пользовательское.поля(пользователь)), @)
+								
+								.сделать ->
+									broadcast().emit('подцепился', пользовательское.поля(пользователь))
+									соединение.emit 'готов'
 									
 						соединение.on 'прочитано', (_id) ->
 							db('people_sessions').update({ пользователь: environment.пользователь._id }, { $set: { последнее_прочитанное_сообщение_в_болталке: _id } }, @)

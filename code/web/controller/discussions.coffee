@@ -26,7 +26,11 @@ options.сообщения_чего = (ввод, возврат) ->
 			#@.done({ _id: сообщения_чего._id.toString() })
 			
 options.messages_collection_id = 'messages'
-options.messages_query = (environment) -> { общение: environment.сообщения_чего._id }
+
+options.messages_query = (collection, environment) ->
+	if environment.сообщения_чего._id.toHexString?
+		return { общение: environment.сообщения_чего._id }
+	{ общение: collection.id(environment.сообщения_чего._id) }
 
 options.extra_get = (data, environment, возврат) ->
 	data.название = environment.сообщения_чего.название

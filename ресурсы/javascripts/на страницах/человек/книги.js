@@ -49,7 +49,6 @@
 			ok: function(data)
 			{
 				info('Добавить книгу')
-				console.log(data)
 			},
 			on_open: function()
 			{

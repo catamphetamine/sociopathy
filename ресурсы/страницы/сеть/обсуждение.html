@@ -22,14 +22,22 @@
 			</ul>
 		
 			<div class="empty">Пусто</div>
-		
-			<div type="loading">Загружаем сообщения</div>
-			<div type="error">Не удалось загрузить сообщения</div>
 			
-			<div type="loading_more">Загружаем ещё</div>
-			<div type="loading_more_error">Не удалось догрузить сообщения</div>
+			<div class="scroll_down_to_new_messages popup_panel_container">
+				<div class="popup_panel">
+					↓ новые сообщения
+				</div>
+			</div>
 		</div>
+		
+		<div type="loading">Загружаем сообщения</div>
+		<div type="error">Не удалось загрузить сообщения</div>
 	</div>
 	
-	<div id="scroll_detector"></div>
+	<div id="compose_message" style="display: none">
+		<div class="visual_editor_tools_container"></div>
+		
+		<!-- лишних пробелов в article не ставить -->
+		<article contenteditable="true" class="rich_formatting"></article>
+	</div>
 </section>

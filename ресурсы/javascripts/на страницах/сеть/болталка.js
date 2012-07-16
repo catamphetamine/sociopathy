@@ -15,22 +15,6 @@
 
 		chat = $('.main_content .chat')
 		
-		page.пользователь_в_сети = function(пользователь)
-		{
-			chat.find('> li[author="' + пользователь._id + '"]').each(function()
-			{
-				$(this).find('> .author').addClass('online')
-			})
-		},
-		
-		page.пользователь_вышел = function(пользователь)
-		{
-			chat.find('> li[author="' + пользователь._id + '"]').each(function()
-			{
-				$(this).find('> .author').removeClass('online')
-			})
-		}
-		
 		messages = Interactive_messages
 		({
 			data_source:
@@ -69,8 +53,8 @@
 		messages.unload()
 	}
 		
-	chat_loaded = function(finish_initialization)
+	chat_loaded = function() //finish_initialization)
 	{
-		finish_initialization()
+		//finish_initialization()
 	}
 })()

@@ -15,7 +15,7 @@
 			},
 			on_first_time_data: function(data)
 			{
-				console.log(data)
+				//console.log(data)
 				title(data.название)
 				
 				page.data.обсуждение._id = data._id
@@ -42,7 +42,7 @@
 			},
 			connection:
 			{
-				path: '/обсуждение/' + page.data.обсуждение._id,
+				path: '/обсуждение',
 				away_aware_elements:
 				[
 					'.discussion > li[author="{id}"] .author'
@@ -53,19 +53,23 @@
 		messages.load()
 	}
 	
-	function discussion_loaded()
+	function discussion_loaded() //finish_initialization)
 	{
-		$(document).trigger('page_initialized')
+		//$(document).trigger('page_initialized')
 		
+		/*
 		if (page.discussion.is_empty())
 		{
 			page.discussion.remove()
 			page.get('.main_content').find('> .empty').show()
 		}
+		*/
+		
+		//finish_initialization()
 		
 	//	Режим.разрешить('правка')
 	//	Режим.разрешить('действия')
 	}
 	
-	page.needs_initializing = true
+	//page.needs_initializing = true
 })()

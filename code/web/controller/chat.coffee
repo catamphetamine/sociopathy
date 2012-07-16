@@ -23,4 +23,4 @@ options.save = (сообщение, environment, возврат) ->
 		.сделать ->
 			@.done(@.$.сообщение)
 	
-chat = messages.messages(options)
+messages.messages(options)
