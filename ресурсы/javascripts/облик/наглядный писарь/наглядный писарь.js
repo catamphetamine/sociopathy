@@ -32,6 +32,7 @@ var Visual_editor = new Class
 		
 		if (!page.data.visual_editors)
 			page.data.visual_editors = []
+			
 		page.data.visual_editors.push(this)		
 	},
 	
@@ -61,6 +62,21 @@ var Visual_editor = new Class
 	tagged_hint: function(element, text)
 	{
 		element.text(text).addClass('tagged_hint')
+	},
+	
+	store_content: function()
+	{
+		this.editor.data('content', this.editor.content.html())
+	},
+	
+	restore_content: function()
+	{
+		this.editor.load_content(this.editor.data('content'))
+	},
+	
+	focus: function()
+	{
+		this.editor.caret.move_to(this.editor.content[0].firstChild)
 	},
 
 	can_edit: function()

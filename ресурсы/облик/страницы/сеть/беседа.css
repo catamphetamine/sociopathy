@@ -25,5 +25,10 @@
 				}
 			}
 		}
+		
+		.who_is_connected_container
+		{
+			margin-bottom: 40px;
+		}
 	}
 }

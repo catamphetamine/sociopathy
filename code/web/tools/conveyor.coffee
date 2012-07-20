@@ -29,7 +29,10 @@ class Цепь
 							console.error 'no web output'
 							[].where_am_i()
 							throw 'no web output'
+							
 						@обработчик_ошибок_по_умолчанию = (ошибка) ->
+							console.error '* Error'
+							
 							данные_ошибки = 
 								ошибка: ошибка.error
 							
@@ -157,9 +160,10 @@ class Цепь
 			функция_возврата
 			
 		функция_возврата.done = (result) =>
-			#if @callback?
-			#	return @callback(null, result)
 			функция_возврата(null, result)
+			
+		функция_возврата.return = (result) =>
+			@callback(null, result)
 		
 		функция_возврата.error = (error, options) =>
 			if not error?

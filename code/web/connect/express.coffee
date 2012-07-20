@@ -18,7 +18,7 @@ access_logger = (ввод, вывод, следующий) ->
 	return if not ввод.session?
 	
 	когда_был_здесь = new Date()
-	db('people_sessions').update({ пользователь: ввод.session.пользователь._id }, { $set: { 'когда был здесь': когда_был_здесь }})
+	db('people_sessions').update({ пользователь: ввод.session.пользователь._id }, { $set: { 'когда был здесь': когда_был_здесь }}) #, online: yes
 	
 	check_online_status = () ->
 		new Цепочка()
@@ -27,6 +27,7 @@ access_logger = (ввод, вывод, следующий) ->
 			.сделать (session) ->
 				if session['когда был здесь'].getTime() == когда_был_здесь.getTime()
 					эфир.offline(ввод.session.пользователь)
+					#db('people_sessions').update({ пользователь: ввод.session.пользователь._id }, { $set: { online: no } })
 				delete ввод.session.data.online_timeout
 	
 	if ввод.session.data.online_timeout?

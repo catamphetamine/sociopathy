@@ -18,6 +18,7 @@ online = redis.createClient()
 						
 					пользователь = пользовательское.поля(user)
 					
+					соединение.пользователь = { _id: пользователь._id }
 					соединения[соединение.id] = соединение
 						
 					@.done()
@@ -79,9 +80,9 @@ online = redis.createClient()
 								
 						return finish() if still_online
 							
-						цепь(websocket)
+						цепь_websocket(соединение)
 							.сделать ->
-									online.hdel('ether:online', пользователь._id, @)
+								online.hdel('ether:online', пользователь._id, @)
 								
 							.сделать () ->
 								for id, listener of listeners
@@ -103,3 +104,27 @@ online = redis.createClient()
 exports.offline = (пользователь) ->
 	for id, listener of listeners
 		listener.offline(пользователь)
+			
+exports.отправить = (data, _id, возврат) ->
+	#if typeof _id == 'string'
+	#	_id = db('people').id(_id)
+
+	for connection in connections
+		if connection.пользователь._id + '' == _id + ''
+			connection.emit(data)
+			return yes
+	
+	console.error 'Пользователь не в сети: ' + _id
+	return no
+	
+exports.в_сети_ли = (_id, возврат) ->
+	new Цепочка(возврат)
+		.сделать ->
+			online.hget('ether:online', _id + '', @)
+			
+		.сделать (user) ->
+			is_online = no
+			if user?
+				is_online = yes
+				
+			@.return(is_online)

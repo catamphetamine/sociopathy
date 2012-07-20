@@ -201,12 +201,17 @@ var Messages = new Class
 				
 					message.attr('message_id', data._id)
 					
-					messages.process_message_element(message)
-					
 					messages.options.container.prepend(message)
 				}
 				
-				messages.options.prepend_message(data, prepend)
+				return messages.options.prepend_message(data, prepend)
+			},
+			after_all_shown: function(elements)
+			{
+				elements.for_each(function()
+				{
+					messages.process_message_element($(this))
+				})
 			},
 			order: 'обратный'
 		},
@@ -308,6 +313,15 @@ var Messages = new Class
 		})
 		.bind(this))
 		
+		message.data('прокрутчик.get_bottom_margin', function()
+		{
+			var compose_message = $('#compose_message')
+			if (!compose_message.exists())
+				return 0
+				
+			return compose_message.outerHeight()
+		})
+		
 		this.options.прокрутчик.watch(message)
 	},
 	
@@ -382,12 +396,12 @@ var Messages = new Class
 		next = next.bind(this)
 		
 		var is_another_users_message = data.отправитель._id !== пользователь._id
-		
-		this.process_message_element(message)
 	
 		var append = function()
 		{
 			message.appendTo(this.options.container)
+		
+			this.process_message_element(message)
 			
 			ajaxify_internal_links(message)
 			
@@ -453,6 +467,7 @@ var Messages = new Class
 		
 		var hint = $('<p/>').appendTo(visual_editor.editor.content)
 		visual_editor.tagged_hint(hint, 'Вводите сообщение здесь')
+		visual_editor.store_content()
 		
 		var editor_initial_html = visual_editor.editor.content.html()
 
@@ -468,7 +483,7 @@ var Messages = new Class
 			}
 			
 			visual_editor.editor.content.html(editor_initial_html)
-			visual_editor.editor.caret.move_to(visual_editor.editor.content[0].firstChild)
+			visual_editor.focus()
 		}
 		
 		visual_editor.enter_pressed_in_container = function()
@@ -537,7 +552,7 @@ var Messages = new Class
 	},
 	
 	//var attention_symbol = '•'
-	attention_symbol: '•',
+	attention_symbol: '• ',
 	
 	new_messages_notification: function()
 	{
@@ -549,7 +564,7 @@ var Messages = new Class
 	
 	dismiss_new_messages_notifications: function()
 	{
-		if (document.title.indexOf(this.attention_symbol) === 0)
-			document.title = document.title.substring(1)
+		if (title().indexOf(this.attention_symbol) === 0)
+			title(title().substring(this.attention_symbol.length))
 	}
 })

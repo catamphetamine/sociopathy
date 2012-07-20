@@ -1,7 +1,5 @@
 exports.messages = (options) ->
 	connected = redis.createClient()
-	
-	соединения_пользователей = {}
 
 	if not options.messages_collection_id?
 		options.messages_collection_id = options.id
@@ -23,9 +21,12 @@ exports.messages = (options) ->
 			
 		return collection.find(query, parameters).toArray(callback)
 		
+	соединения = {}
+	
 	connection = websocket
 		.of(options.uri)
 		.on 'connection', (соединение) ->
+			соединения[соединение.id] = соединение
 			environment = {}
 	
 			connected_data_source = ->
@@ -33,10 +34,15 @@ exports.messages = (options) ->
 					return options.id + ':connected'
 				options.id + ':' + environment.сообщения_чего._id + ':connected'
 	
-			broadcast = ->
+			broadcast = (id, content) ->
 				if not environment.сообщения_чего?
-					return соединение.broadcast
-				websocket.sockets.in(environment.сообщения_чего._id)
+					return соединение.broadcast.emit(id, content)
+					
+				connected_clients = соединение.manager.rooms['/обсуждение/' + environment.сообщения_чего._id + '']
+				if connected_clients?
+					for connection_id in connected_clients
+						соединения[connection_id].emit(id, content)
+				#websocket.sockets.in(environment.сообщения_чего._id + '').emit()
 	
 			initialize = null
 	
@@ -51,8 +57,6 @@ exports.messages = (options) ->
 							return send ошибка: 'пользователь не найден: ' + тайный_ключ
 						пользователь = user
 						environment.пользователь = пользователь
-						соединения_пользователей[пользователь._id.toString()] = соединение
-						@()
 						
 						# maybe hack attempt
 						if not пользователь?
@@ -81,19 +85,19 @@ exports.messages = (options) ->
 									соединение.emit('пропущенные сообщения', @.$.сообщения)
 								
 						соединение.on 'смотрит', () ->
-							broadcast().emit('смотрит', пользовательское.поля([], пользователь))
+							broadcast('смотрит', пользовательское.поля([], пользователь))
 								
 						соединение.on 'не смотрит', () ->
-							broadcast().emit('не смотрит', пользовательское.поля([], пользователь))
+							broadcast('не смотрит', пользовательское.поля([], пользователь))
 						
 						соединение.on 'вызов', (_id) ->
-							вызываемый = соединения_пользователей[_id]
-							if not вызываемый
-								return соединение.emit('ошибка', 'Вызываемый пользователь недоступен')
-							вызываемый.emit('вызов', пользователь)
+							цепь_websocket(соединение)
+								.сделать ->
+									if not ether.отправить({ 'вызов', пользователь }, _id)
+										return соединение.emit('ошибка', 'Вызываемый пользователь недоступен')
 						
 						соединение.on 'пишет', ->
-							broadcast().emit('пишет', пользовательское.поля([], пользователь))
+							broadcast('пишет', пользовательское.поля([], пользователь))
 						
 						соединение.on 'сообщение', (сообщение) ->
 							цепь_websocket(соединение)
@@ -101,28 +105,32 @@ exports.messages = (options) ->
 									sanitize(сообщение, @)
 									
 								.сделать (сообщение) ->
-									options.save(сообщение, environment, @)
+									options.save(сообщение, environment, @._.в 'сообщение')
 									
-								.сделать (сообщение) ->
+								.сделать ->
+									options.message_read(@._.сообщение._id, environment, @)
+									
+								.сделать ->
 									данные_сообщения =
-										_id: сообщение._id.toString()
+										_id: @._.сообщение._id.toString()
 										отправитель: пользовательское.поля(пользователь)
-										сообщение: сообщение.сообщение
-										когда: сообщение.когда
+										сообщение: @._.сообщение.сообщение
+										когда: @._.сообщение.когда
 									
 									соединение.emit('сообщение', данные_сообщения)
-									broadcast().emit('сообщение', данные_сообщения)
+									broadcast('сообщение', данные_сообщения)
 						
 						disconnected = false
 						
 						выход = ->
-							delete соединения_пользователей[пользователь._id.toString()]
+							delete соединения[соединение.id]
+						
 							цепь_websocket(соединение)
 								.сделать ->
 									connected.hdel(connected_data_source(), пользователь._id, @)
 									
-								.сделать () ->
-									broadcast().emit('отцепился', пользовательское.поля([], пользователь))
+								.сделать ->
+									broadcast('отцепился', пользовательское.поля([], пользователь))
 									disconnected = true
 									соединение.disconnect()
 			
@@ -135,21 +143,26 @@ exports.messages = (options) ->
 								выход()
 									
 						соединение.on 'environment', (environment_data) ->
-							if environment.сообщения_чего?
-								соединение.join(environment.сообщения_чего._id)
-							
-							environment.сообщения_чего = environment_data.сообщения_чего
-							
+							if environment_data.сообщения_чего?
+								соединение.join(environment_data.сообщения_чего._id + '')
+								environment.сообщения_чего = options.сообщения_чего_from_string(environment_data.сообщения_чего)
+						
 							цепь_websocket(соединение)
 								.сделать ->
 									connected.hset(connected_data_source(), пользователь._id.toString(), JSON.stringify(пользовательское.поля(пользователь)), @)
 								
 								.сделать ->
-									broadcast().emit('подцепился', пользовательское.поля(пользователь))
+									broadcast('подцепился', пользовательское.поля(пользователь))
 									соединение.emit 'готов'
 									
 						соединение.on 'прочитано', (_id) ->
-							db('people_sessions').update({ пользователь: environment.пользователь._id }, { $set: { последнее_прочитанное_сообщение_в_болталке: _id } }, @)
+							console.log('прочитано')
+							console.log(_id)
+							console.log(environment.пользователь.имя)
+							цепь_websocket(соединение)
+								.сделать ->
+									if options.message_read?
+										options.message_read(messages().id(_id), environment, @)
 				
 						соединение.emit 'пользователь подтверждён'
 						
@@ -163,17 +176,25 @@ exports.messages = (options) ->
 		#if options.data_uri.starts_with('/сеть/')
 		environment = {}
 		environment.пользователь = пользователь
-		
+			
 		цепь(вывод)
 			.сделать ->
 				if options.сообщения_чего?
 					return options.сообщения_чего(ввод, @)
-				return @.done()
+				@.done()
 				
 			.сделать (сообщения_чего) ->
 				if сообщения_чего?
 					environment.сообщения_чего = сообщения_чего
-				начиная_с_какого_выбрать(ввод, environment, @.в 'с_какого_выбрать')
+				@.done()
+					
+			.сделать ->
+				if options.latest_read_message?
+					return options.latest_read_message(environment, @.в 'последнее_прочитанное_сообщение')
+				@.done()
+
+			.сделать ->
+				начиная_с_какого_выбрать(@.$.последнее_прочитанное_сообщение, ввод, environment, @.в 'с_какого_выбрать')
 	
 			.сделать (с_какого_выбрать) ->
 				if not с_какого_выбрать?
@@ -182,14 +203,6 @@ exports.messages = (options) ->
 					
 			.сделать ->
 				пользовательское.подставить(@.$.сообщения, 'отправитель', @)
-				
-			.сделать ->
-				db('people_sessions').findOne({ пользователь: пользователь._id }, @)
-				
-			.сделать (session) ->
-				if session.последнее_прочитанное_сообщение_в_болталке?
-					@.$.последнее_прочитанное_сообщение = session.последнее_прочитанное_сообщение_в_болталке
-				@.done()
 
 			.сделать ->
 				if options.extra_get?
@@ -217,19 +230,14 @@ exports.messages = (options) ->
 					
 				вывод.send(@.$)
 	
-	начиная_с_какого_выбрать = (ввод, environment, возврат) ->
+	начиная_с_какого_выбрать = (последнее_прочитанное_сообщение, ввод, environment, возврат) ->
 		if ввод.настройки.с?
 			return возврат.done({ с: db(options.id).id(ввод.настройки.с), прихватить_границу: no, откуда: 'раньше' })
 	
 		new Цепочка(возврат)
 			.сделать ->
-				if options.с_какого_выбрать?
-					return options.с_какого_выбрать(ввод, environment, @)
-				@.done()
-			
-			.сделать (с_какого_выбрать) ->
-				if с_какого_выбрать?
-					return возврат({ с: db(options.id).id(с_какого_выбрать), ограничение: Max_batch_size, откуда: 'позже' })
+				if последнее_прочитанное_сообщение?
+					return @.return({ с: последнее_прочитанное_сообщение, ограничение: Max_batch_size, откуда: 'позже' })
 				@.done()
 
 			.сделать ->
@@ -240,7 +248,7 @@ exports.messages = (options) ->
 				сообщение = сообщения[0]
 				if сообщение?
 					return @.done({ с: сообщение._id, ограничение: Max_batch_size, откуда: 'позже' })
-				return @.done()
+				@.done()
 					
 	выбрать = (с_какого, сколько, ввод, environment, возврат) ->
 		с = с_какого.с

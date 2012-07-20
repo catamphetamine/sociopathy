@@ -196,10 +196,12 @@ Visual_editor.implement
 		
 		editor.on('keydown', function(event)
 		{
-			var keyCode = event.which
-			
 			if (event.ctrlKey || event.shiftKey || event.altKey || event.metaKey)
 				return
+			
+			visual_editor.store_content()
+			
+			var keyCode = event.which
 			
 			if (keyCode === Клавиши.Dot)
 			{
@@ -215,8 +217,27 @@ Visual_editor.implement
 			}
 		})
 		
+		var keypress_happened = false
+		
+		editor.on('keyup', function(event)
+		{
+			if (event.ctrlKey || event.shiftKey || event.altKey || event.metaKey)
+				return
+				
+			// if you start loading the page, and then alt+tab,
+			// and then alt+tab after it's loaded, no keypress event fires
+			if (!keypress_happened)
+			{
+				visual_editor.restore_content()
+				visual_editor.focus()
+				//return event.preventDefault()
+			}
+		})
+		
 		editor.on('keypress', (function(event)
 		{
+			keypress_happened = true
+			
 			if (!visual_editor.can_edit())
 				return
 				
@@ -226,7 +247,9 @@ Visual_editor.implement
 				return editor.checkpoint()
 			}
 			
-			if (!event.charCode)
+			var character_code = event.charCode // || event.which
+			
+			if (!character_code)
 				return
 				
 			if (event.altKey || event.ctrlKey)
@@ -247,7 +270,7 @@ Visual_editor.implement
 					if (editor.content[0].firstChild.tagName.toLowerCase() === 'br')
 						editor.content[0].removeChild(editor.content[0].firstChild)
 			
-			var character = String.fromCharCode(event.charCode)
+			var character = String.fromCharCode(character_code)
 
 			if (character === ' ')
 			{

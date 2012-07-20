@@ -81,18 +81,27 @@ var Scroller = new Class
 		var delta = top_offset_in_window - previous_top_offset_in_window
 		
 		var window_height = $(window).height()
+		
+		var get_bottom_margin = element.data('прокрутчик.get_bottom_margin')
+		if (get_bottom_margin)
+		{
+			window_height -= get_bottom_margin()
+			if (window_height < 0)
+				return window_height = 0
+		}	
+		
 		var height = element.height()
 		
 		var top_is_visible = top_offset_in_window >= 0 && top_offset_in_window < window_height
 		var bottom_is_visible = top_offset_in_window + height >= 0 && top_offset_in_window + height < window_height
 		
 		var top_was_visible = false
-		var bottom_visible = false
+		var bottom_was_visible = false
 		
 		if (!first_time)
 		{
 			top_was_visible = previous_top_offset_in_window >= 0 && previous_top_offset_in_window < window_height
-			bottom_visible = previous_top_offset_in_window + height >= 0 && previous_top_offset_in_window + height < window_height
+			bottom_was_visible = previous_top_offset_in_window + height >= 0 && previous_top_offset_in_window + height < window_height
 		}
 		
 		var upwards
@@ -111,10 +120,13 @@ var Scroller = new Class
 				element.trigger('disappears_on_bottom')
 		}
 		
-		if (!top_was_visible && top_is_visible && bottom_is_visible)
+		if ((!top_was_visible || (top_was_visible && !bottom_was_visible)) && top_is_visible && bottom_is_visible)
 		{
 			if (first_time || downwards)
 				element.trigger('fully_appears_on_top')
+				
+			if (first_time || upwards)
+				element.trigger('fully_appears_on_bottom')
 		}
 		
 		if (!top_was_visible && top_is_visible)

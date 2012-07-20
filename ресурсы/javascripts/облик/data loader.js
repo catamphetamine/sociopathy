@@ -144,9 +144,10 @@ var Batch_loader = new Class
 				return
 			}
 		
+			var elements = []
 			список.for_each(function()
 			{
-				loader.options.show(this)
+				elements.push(loader.options.show(this))
 			})
 			
 			if (!список.is_empty())
@@ -172,7 +173,10 @@ var Batch_loader = new Class
 				loader.options.finished(список)
 			
 			loader.options.callback(null, function()
-			{			
+			{
+				if (loader.options.after_all_shown)
+					loader.options.after_all_shown(elements)
+					
 				if (is_first_batch)
 					loader.options.done.bind(loader)(список)
 				else
@@ -301,15 +305,19 @@ var Data_loader = new Class
 			if (список.constructor !== Array)
 				список = [список]
 				
+			var elements = []
 			список.for_each(function()
 			{
-				loader.options.show(this)
+				elements.push(loader.options.show(this))
 			})
 			
 			loader.options.before_done(список)
 				
 			loader.options.callback(null, function()
 			{
+				if (loader.options.after_all_shown)
+					loader.options.after_all_shown(elements)
+				
 				loader.options.done(список)
 			})
 		})
@@ -372,6 +380,8 @@ var Data_templater = new Class
 		if (!options.process_data)
 			options.process_data = function(data) { return data }
 		
+		loader.options.after_all_shown = options.after_all_shown
+		
 		loader.options.show = function(item)
 		{
 			if (options.data_structure)
@@ -395,7 +405,7 @@ var Data_templater = new Class
 						}
 			}
 			else
-				show_item(item, options)
+				return show_item(item, options)
 		}
 		
 		loader.options.Ajax = options.Ajax

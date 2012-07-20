@@ -30,6 +30,8 @@ var Interactive_messages = function(options)
 				{
 					return message.find('.author').hasClass('online')
 				})
+			
+			return message
 		},
 		more_link: options.more_link,
 		container: options.container,
@@ -436,7 +438,7 @@ var Interactive_messages = function(options)
 			connection.on('сообщение', function(сообщение)
 			{
 				parse_date(сообщение, 'когда')
-				
+
 				if (!пропущенные_сообщения_учтены)
 				{
 					накопленные_сообщения.push(сообщение)

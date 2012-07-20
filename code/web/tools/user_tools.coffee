@@ -206,3 +206,17 @@ exports.поля = (поля, пользователь) ->
 	выбранное = Object.выбрать(поля, пользователь)
 	выбранное._id = пользователь._id.toString()
 	выбранное
+	
+###
+exports.в_сети_ли = (_id, возврат) ->
+	if typeof _id == 'string'
+		_id = db('people').id(_id)
+		
+	new Цепочка(возврат)
+		.сделать ->
+			db('people_sessions').findOne({ пользователь: _id }, @)
+		.сделать (session) ->
+			if not session.online?
+				return @.done(no)
+			@.done(session.online)
+###

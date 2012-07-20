@@ -9,12 +9,13 @@ var Editor = new Class
 	{
 		this.content_selector = content_selector
 		this.content = this.get_content()
+		
 		this.apply_content_style()
 		
 		this.caret = new Editor.Caret(this)
 		this.selection = new Editor.Selection(this)
 		this.time_machine = new Editor.Time_machine(this)
-		
+
 		this.on('paste', (function()
 		{
 			var container = this.caret.container()
@@ -38,6 +39,22 @@ var Editor = new Class
 	get_content: function()
 	{
 		return $(this.content_selector)
+	},
+
+	data: function(name, data)
+	{
+		if (typeof data === 'undefined')
+		{
+			if (!this.data_store)
+				return
+				
+			return this.data_store[name]
+		}
+		
+		if (!this.data_store)
+			this.data_store = {}
+			
+		this.data_store[name] = data
 	},
 
 	on: function(event, handler)
