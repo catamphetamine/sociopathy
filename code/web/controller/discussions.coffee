@@ -54,7 +54,6 @@ options.latest_read_message = (environment, возврат) ->
 			return @.done() if not session.последние_прочитанные_сообщения.обсуждения?
 			@.done(session.последние_прочитанные_сообщения.обсуждения[environment.сообщения_чего._id])
 			
-			
 options.message_read = (_id, environment, возврат) ->
 	new Цепочка(возврат)
 		.сделать ->

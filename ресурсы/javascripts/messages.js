@@ -551,8 +551,9 @@ var Messages = new Class
 		this.lift_messages_by(this.compose_message.height())
 	},
 	
+	// http://en.wikipedia.org/wiki/Template:Unicode_chart_Dingbats
 	//var attention_symbol = '•'
-	attention_symbol: '• ',
+	attention_symbol: '✽ ',
 	
 	new_messages_notification: function()
 	{
@@ -560,11 +561,14 @@ var Messages = new Class
 			title(this.attention_symbol + title())
 			
 		this.options.new_message_sound.play()
+		site_icon.animate_site_icon()
 	},
 	
 	dismiss_new_messages_notifications: function()
 	{
 		if (title().indexOf(this.attention_symbol) === 0)
 			title(title().substring(this.attention_symbol.length))
+			
+		site_icon.stop_site_icon_animation()
 	}
 })
