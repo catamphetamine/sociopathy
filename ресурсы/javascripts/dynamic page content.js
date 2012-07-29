@@ -108,7 +108,7 @@ var navigating = false;
 				
 				пользователь = данные.пользователь
 				
-				$(document).trigger('authenticated')
+				$(document).trigger('authenticated', данные)
 				
 				if (!пользователь && Страница.эта().starts_with('сеть/'))
 					window.location = '/прописка'

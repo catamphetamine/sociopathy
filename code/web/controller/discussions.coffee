@@ -23,7 +23,6 @@ options.сообщения_чего = (ввод, возврат) ->
 			
 		.сделать (сообщения_чего) ->
 			@.done(Object.выбрать(['_id', 'название'], сообщения_чего))
-			#@.done({ _id: сообщения_чего._id.toString() })
 			
 options.сообщения_чего_from_string = (сообщения_чего) ->
 	if сообщения_чего._id.toHexString?
@@ -54,15 +53,24 @@ options.latest_read_message = (environment, возврат) ->
 			return @.done() if not session.последние_прочитанные_сообщения.обсуждения?
 			@.done(session.последние_прочитанные_сообщения.обсуждения[environment.сообщения_чего._id])
 			
+options.notificate = (_id, environment, возврат) ->
+	new Цепочка(возврат)
+		.сделать ->
+			db('people_sessions').update({ пользователь: { $ne: environment.пользователь._id } }, { $addToSet: { 'новости.обсуждения': _id.toString() } }, @)
+			
+		.сделать ->	
+			эфир.отправить_всем_кроме('новости', 'обсуждения', { болталка: _id.toString() }, environment.пользователь._id, @)
+
 options.message_read = (_id, environment, возврат) ->
 	new Цепочка(возврат)
 		.сделать ->
-			in_session_id = "последние_прочитанные_сообщения.обсуждения." + environment.сообщения_чего._id
-			actions = {}
-			actions.$set = {}
-			actions.$set[in_session_id] = _id
+			actions = { $set: {} }
+			actions.$set["последние_прочитанные_сообщения.обсуждения." + environment.сообщения_чего._id] = _id
 			db('people_sessions').update({ пользователь: environment.пользователь._id }, actions, @)
-		
+			
+		.сделать ->
+			db('people_sessions').update({ пользователь: environment.пользователь._id }, { $pull: { 'новости.обсуждения': _id.toString() } }, @)
+
 options.save = (сообщение, environment, возврат) ->
 	new Цепочка(возврат)
 		.сделать ->

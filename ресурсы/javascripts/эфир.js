@@ -37,12 +37,17 @@ $(document).on('authenticated', function()
 			
 			эфир = io.connect('http://' + Options.Websocket_server + '/эфир', { transports: ['websocket'] })
 			
-			эфир.on('connect', function()
+			var on = function(group, name, handler)
+			{
+				эфир.on(group + ':' + name, handler)
+			}
+			
+			on('пользователи', 'connect', function()
 			{
 				эфир.emit('пользователь', $.cookie('user'))
 			})
 			
-			эфир.on('кто здесь', function(пользователи)
+			on('пользователи', 'кто здесь', function(пользователи)
 			{
 				пользователи.for_each(function()
 				{
@@ -53,7 +58,7 @@ $(document).on('authenticated', function()
 				})
 			})
 			
-			эфир.on('online', function(пользователь)
+			on('пользователи', 'online', function(пользователь)
 			{
 				//info(пользователь._id + ' online')
 				Эфир.кто_в_сети.set(пользователь._id.toString(), пользователь)
@@ -62,13 +67,21 @@ $(document).on('authenticated', function()
 					page.пользователь_в_сети(пользователь)
 			})
 			
-			эфир.on('offline', function(пользователь)
+			on('пользователи', 'offline', function(пользователь)
 			{
 				//info(пользователь._id + ' offline')
 				delete Эфир.кто_в_сети[пользователь._id.toString()]
 					
 				if (за_кем_следить.has(пользователь._id.toString()))
 					page.пользователь_вышел(пользователь)
+			})
+			
+			var alarm_sound = new Audio("/звуки/alarm.ogg")
+	
+			on('общее', 'вызов', function(пользователь)
+			{
+				alarm_sound.play()
+				info('Вас вызывает ' + пользователь.имя)
 			})
 		})()
 	}

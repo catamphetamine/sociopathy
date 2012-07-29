@@ -24,11 +24,21 @@ var Messages = new Class
 	{
 		this.options.прокрутчик = прокрутчик
 		this.options = $.extend(true, this.options, options)
-		//this.setOptions(options) // bug
-	
+		//this.setOptions(options) // doesn't work - mootools bug
 		//this.load()	
 	},
 		
+	create_message_element: function(data)
+	{
+		data.когда_примерно = неточное_время(data.когда)
+		var message = $.tmpl('сообщение в болталке', data)
+		
+		if (data.новое)
+			message.addClass('new')
+			
+		return message
+	},
+	
 	load: function()
 	{
 		this.new_messages_smooth_border = $('.new_messages_smooth_border')
@@ -305,6 +315,9 @@ var Messages = new Class
 	
 	process_message_element: function(message)
 	{
+		if (!message.hasClass('new'))
+			return
+		
 		var _id = message.attr('message_id')
 		message.on('fully_appears_on_bottom', (function()
 		{
@@ -488,7 +501,9 @@ var Messages = new Class
 		
 		visual_editor.enter_pressed_in_container = function()
 		{
-			send_message()
+			if (!send_message())
+				return
+				
 			messages.check_if_there_are_still_unread_messages()
 		}
 		
@@ -551,24 +566,14 @@ var Messages = new Class
 		this.lift_messages_by(this.compose_message.height())
 	},
 	
-	// http://en.wikipedia.org/wiki/Template:Unicode_chart_Dingbats
-	//var attention_symbol = '•'
-	attention_symbol: '✽ ',
-	
 	new_messages_notification: function()
 	{
-		if (title().indexOf(this.attention_symbol) !== 0)
-			title(this.attention_symbol + title())
-			
 		this.options.new_message_sound.play()
-		site_icon.animate_site_icon()
+		site_icon.something_new()
 	},
 	
 	dismiss_new_messages_notifications: function()
-	{
-		if (title().indexOf(this.attention_symbol) === 0)
-			title(title().substring(this.attention_symbol.length))
-			
-		site_icon.stop_site_icon_animation()
+	{	
+		site_icon.nothing_new()
 	}
 })

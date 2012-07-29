@@ -1,5 +1,5 @@
 @echo off
 
-set DIRECTORY=c:\work\memcache
+set DIRECTORY=e:\work\memcache
 
 call %DIRECTORY%\memcached -vv

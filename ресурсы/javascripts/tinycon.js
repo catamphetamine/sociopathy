@@ -15,6 +15,10 @@
 	var faviconImage = null;
 	var canvas = null;
 	
+	var cached_frames = []
+
+	var favicon
+		
 	//var sizes = {};
 	
 	var Max_width = 16;
@@ -115,7 +119,7 @@
 			return updateTitle(string);
 		}
 		
-		var context = getCanvas().getContext("2d");
+		var context = getCanvas().getContext("2d")
 		
 		var draw_options
 			
@@ -132,12 +136,16 @@
 		
 		//draw_options.colour = draw_options.colour || '#000000'
 		
-		var string = string;
-		var src = getCurrentFavicon();
+		var src
 		
-		faviconImage = new Image();
-		faviconImage.onload = function() {
+		if (draw_options.favicon)
+			src = draw_options.favicon.source
+		else
+			src = getCurrentFavicon()
 			
+		faviconImage = new Image();
+		faviconImage.onload = function()
+		{	
 			// clear canvas  
 			context.clearRect(0, 0, 16, 16);
 
@@ -147,10 +155,18 @@
 			// draw bubble over the top
 			if (string) drawBubble(context, string, draw_options);
 			
-			// refresh tag in page
-			refreshFavicon();
+			// refresh tag in page	
+			if (draw_options.favicon)
+			{
+				draw_options.favicon.get().remove()
+				var canvas_data_url = getCanvas().toDataURL()
+				cached_frames[draw_options.frame] = canvas_data_url
+				draw_options.favicon.create().attr('href', canvas_data_url).appendTo('head')
+			}
+			else
+				refreshFavicon()
 		};
-		
+			
 		// allow cross origin resource requests if the image is not a data:uri
 		// as detailed here: https://github.com/mrdoob/three.js/issues/1305
 		if (!src.match(/^data/)) {
@@ -362,7 +378,11 @@
 		}
 			
 		stop_animation = true
-		on_animation_stopped = action
+		on_animation_stopped = function()
+		{
+			action()
+		}
+		
 		return true
 	}
 	
@@ -389,6 +409,8 @@
 			if (options.animate)
 			{
 				animating = true
+				
+				cached_frames = []
 				
 				var interval = options.animate.duration / (options.animate.frames - 1)
 				
@@ -417,7 +439,17 @@
 						reverse = false
 					
 					options.color = Tinycon.interpolate_colour(options.animate.color.from, options.animate.color.to, options.animate.frames - 1, frame)
-					drawFavicon(string, options)
+					
+					if (cached_frames[frame])
+					{
+						options.favicon.get().remove()
+						options.favicon.create().attr('href', cached_frames[frame]).appendTo('head')
+					}
+					else
+					{
+						options.frame = frame
+						drawFavicon(string, options)
+					}
 					
 					if (!reverse)
 						frame++

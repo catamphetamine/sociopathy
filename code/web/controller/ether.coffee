@@ -105,17 +105,25 @@ exports.offline = (пользователь) ->
 	for id, listener of listeners
 		listener.offline(пользователь)
 			
-exports.отправить = (data, _id, возврат) ->
-	#if typeof _id == 'string'
-	#	_id = db('people').id(_id)
-
-	for connection in connections
-		if connection.пользователь._id + '' == _id + ''
-			connection.emit(data)
-			return yes
-	
-	console.error 'Пользователь не в сети: ' + _id
-	return no
+exports.отправить = (group, name, data, _id, возврат) ->
+	new Цепочка(возврат)
+		.сделать ->
+			for connection in соединения
+				if connection.пользователь._id + '' == _id + ''
+					connection.emit(group + ':' + name, data)
+					return @.done(yes)
+			
+			console.error 'Пользователь не в сети: ' + _id
+			return @.done(no)
+			
+exports.отправить_всем_кроме = (group, name, data, _id, возврат) ->
+	new Цепочка(возврат)
+		.сделать ->
+			for connection in соединения
+				if connection.пользователь._id + '' != _id + ''
+					connection.emit(group + ':' + name, data)
+			
+			@.done()
 	
 exports.в_сети_ли = (_id, возврат) ->
 	new Цепочка(возврат)
@@ -127,4 +135,4 @@ exports.в_сети_ли = (_id, возврат) ->
 			if user?
 				is_online = yes
 				
-			@.return(is_online)
+			return @.return(is_online)

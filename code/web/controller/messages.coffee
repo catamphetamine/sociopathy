@@ -18,9 +18,45 @@ exports.messages = (options) ->
 		
 		if parameters.count_query?
 			return collection.count(query, callback)
-			
-		return collection.find(query, parameters).toArray(callback)
 		
+		new Цепочка(callback)
+			.сделать ->
+				collection.find(query, parameters).toArray(@._.в 'сообщения')
+				
+			.сделать (сообщения) ->
+				db('people_sessions').findOne({ пользователь: environment.пользователь._id }, @)
+				
+			.сделать (session) ->
+				if not session.новое?
+					return @.return(@._.сообщения)
+					
+				switch options.id
+					when  'chat'
+						if not session.новости.болталка?
+							break
+						
+						for сообщение in @._.сообщения
+							if сообщение._id + '' < session.новости.болталка
+								сообщение.новое = yes
+						
+					when  'discussions'
+						if not session.новости.обсуждения?
+							break
+						
+						for сообщение in @._.сообщения
+							if session.новости.обсуждения.has(сообщение._id + '')
+								сообщение.новое = yes
+					
+					when  'talks'
+						if not session.новости.беседы?
+							break
+						
+						for сообщение in @._.сообщения
+							if session.новости.беседы.has(сообщение._id + '')
+								сообщение.новое = yes
+				
+				return @.return(@._.сообщения)
+
 	соединения = {}
 	
 	connection = websocket
@@ -85,15 +121,15 @@ exports.messages = (options) ->
 									соединение.emit('пропущенные сообщения', @.$.сообщения)
 								
 						соединение.on 'смотрит', () ->
-							broadcast('смотрит', пользовательское.поля([], пользователь))
+							broadcast('смотрит', пользовательское.поля(пользователь))
 								
 						соединение.on 'не смотрит', () ->
-							broadcast('не смотрит', пользовательское.поля([], пользователь))
+							broadcast('не смотрит', пользовательское.поля(пользователь))
 						
 						соединение.on 'вызов', (_id) ->
 							цепь_websocket(соединение)
 								.сделать ->
-									if not ether.отправить({ 'вызов', пользователь }, _id)
+									if not эфир.отправить('общее', 'вызов', пользовательское.поля(пользователь), _id)
 										return соединение.emit('ошибка', 'Вызываемый пользователь недоступен')
 						
 						соединение.on 'пишет', ->
@@ -109,6 +145,14 @@ exports.messages = (options) ->
 									
 								.сделать ->
 									options.message_read(@._.сообщение._id, environment, @)
+									
+								.сделать ->
+									if options.subscribe?
+										return options.subscribe(environment, @)
+									@.done()
+									
+								.сделать ->
+									options.notificate(@._.сообщение._id, environment, @)
 									
 								.сделать ->
 									данные_сообщения =
@@ -156,9 +200,9 @@ exports.messages = (options) ->
 									соединение.emit 'готов'
 									
 						соединение.on 'прочитано', (_id) ->
-							console.log('прочитано')
-							console.log(_id)
-							console.log(environment.пользователь.имя)
+							#console.log('прочитано')
+							#console.log(_id)
+							#console.log(environment.пользователь.имя)
 							цепь_websocket(соединение)
 								.сделать ->
 									if options.message_read?

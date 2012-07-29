@@ -7,7 +7,7 @@ var Interactive_messages = function(options)
 		data_source: options.data_source,
 		prepend_message: function(data, prepend)
 		{
-			var message = $.tmpl('сообщение в болталке', data)
+			var message = this.options.construct_message(data)
 			message.find('.popup_menu_container').prependTo(message)
 			
 			var author = message.find('.author')
@@ -61,7 +61,7 @@ var Interactive_messages = function(options)
 		},
 		construct_message: function(data)
 		{
-			var message = $.tmpl('сообщение в болталке', data)
+			var message = this.create_message_element(data)
 		
 			if (away_users[data.отправитель._id])
 				message.find('.author').addClass('is_away')
@@ -234,7 +234,7 @@ var Interactive_messages = function(options)
 			$(window).on_page('focus.messages', function()
 			{
 				is_away = false
-				messages.dismiss_new_messages_notifications()
+				//messages.dismiss_new_messages_notifications()
 				messages.connection.emit('смотрит')
 			})
 			
@@ -250,8 +250,6 @@ var Interactive_messages = function(options)
 	
 	function new_message_channel(options)
 	{
-		var alarm_sound = new Audio("/звуки/alarm.ogg")
-	
 		var connected = false
 		var disconnected = false
 		var reconnected = false
@@ -365,10 +363,11 @@ var Interactive_messages = function(options)
 			connection.on('пропущенные сообщения', function(сообщения)
 			{
 				var after = сообщения.shift()._id
-				сообщения.reverse().for_each(function()
+				сообщения.for_each(function()
 				{
 					this.after = after
 					after = this._id
+					parse_date(this, 'когда')
 					messages.add_message(this)
 				})
 				
@@ -461,12 +460,6 @@ var Interactive_messages = function(options)
 			{
 				away_users[пользователь._id] = true
 				set_status(пользователь._id, 'не смотрит')
-			})
-			
-			connection.on('вызов', function(пользователь)
-			{
-				alarm_sound.play()
-				info('Вас вызывает ' + пользователь.имя)
 			})
 			
 			connection.on('пишет', function(пользователь)

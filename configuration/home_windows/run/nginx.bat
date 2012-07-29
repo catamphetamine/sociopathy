@@ -1,6 +1,6 @@
 rem @echo off
 
-set NGINX_DIRECTORY=c:\work\nginx
+set NGINX_DIRECTORY=e:\work\nginx
 
 set DIRECTORY=%CD%
 

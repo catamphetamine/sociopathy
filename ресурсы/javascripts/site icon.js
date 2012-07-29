@@ -1,4 +1,5 @@
 /*
+// icon animation through tinycon.js
 Tinycon.setOptions
 ({
 	font: '16px arial',
@@ -6,39 +7,6 @@ Tinycon.setOptions
 	background: 'transparent',
 	fallback: false
 })
-
-//Tinycon.setSize('•', { x: 7.5, y: 8.5, center: true })
-
-var animating_site_icon = false
-
-function animate_site_icon()
-{
-	if (animating_site_icon)
-		return
-		
-	animating_site_icon = true
-		
-	Tinycon.text('•',
-	{
-		position: { webkit: { x: 7.5, y: 8.5}, gecko: { x: 8.0, y: 8.5}, center: true },
-		animate:
-		{
-			color:
-			{
-				from: '#000000',
-				to: '#ffffff'
-			},
-			duration: 1000,
-			frames: 2
-		}
-	})
-}
-
-function stop_site_icon_animation()
-{
-	Tinycon.text('', { callback: function() { animating_site_icon = false } })
-}
-*/
 
 var site_icon = new (new Class
 ({
@@ -52,19 +20,93 @@ var site_icon = new (new Class
 	set: function(name)
 	{
 		this.element.remove()
-		this.element = $('<link id="site_icon" type="image/x-icon" rel="shortcut icon"/>')
+		this.element = this.create()
 		this.element.attr('href', this.путь + name + '.png')
-		this.element.appendTo('head');
+		this.element.appendTo('head')
 	},
 	
-	animating_site_icon: false,
-	
-	animate_site_icon: function()
+	create: function()
 	{
-		if (this.animating_site_icon)
+		return $('<link id="site_icon" type="image/x-icon" rel="shortcut icon"/>')
+	},
+	
+	animating: false,
+	
+	something_new: function()
+	{
+		if (this.animating)
 			return
 			
-		this.animating_site_icon = true
+		this.animating = true
+		
+		//this.set('внимание 1')
+		
+		var site_icon = this
+		
+		Tinycon.text('•',
+		{
+			favicon:
+			{
+				get: function() { return $('#site_icon') },
+				source: site_icon.путь + 'внимание 1' + '.png',
+				create: site_icon.create
+			},
+			position: { webkit: { x: 7.5, y: 8.5}, gecko: { x: 8.0, y: 8.5}, center: true },
+			animate:
+			{
+				color:
+				{
+					from: '#000000',
+					to: '#ffffff'
+				},
+				duration: 1000,
+				frames: 2
+			}
+		})
+	},
+	
+	nothing_new: function()
+	{
+		if (!this.animating)
+			return
+			
+		var site_icon = this
+		
+		Tinycon.stop_animation_and_do(function()
+		{
+			site_icon.set('основной')
+			site_icon.animating = false
+		})
+	}
+}))()
+*/
+
+// icon animation
+var Image_sequence_icon = new Class
+({
+	initialize: function()
+	{
+		this.element = $('#site_icon')	
+	},
+
+	путь: '/картинки/значки/',
+	
+	set: function(name)
+	{
+		this.element.remove()
+		this.element = $('<link id="site_icon" type="image/x-icon" rel="shortcut icon"/>')
+		this.element.attr('href', this.путь + name + '.png')
+		this.element.appendTo('head')
+	},
+	
+	animating: false,
+	
+	something_new: function()
+	{
+		if (this.animating)
+			return
+			
+		this.animating = true
 		
 		this.set('внимание 1')
 		
@@ -89,14 +131,95 @@ var site_icon = new (new Class
 		change_icon()
 	},
 	
-	stop_site_icon_animation: function()
+	nothing_new: function()
 	{
-		if (!this.animating_site_icon)
+		if (!this.animating)
 			return
 			
 		clearTimeout(this.animation_timeout)
-		this.animating_site_icon = false
+		this.animating = false
 		
 		this.set('основной')
 	}
-}))()
+})
+
+// Window title animation, since icon animation crashes Chrome
+var Text_and_icon = new Class
+({
+	initialize: function()
+	{
+		this.element = $('#site_icon')	
+	},
+
+	путь: '/картинки/значки/',
+	
+	// http://en.wikipedia.org/wiki/Template:Unicode_chart_Dingbats
+	//attention_symbol = '•'
+	attention_symbol: '✽ ',
+
+	set: function(name)
+	{
+		this.element.remove()
+		this.element = $('<link id="site_icon" type="image/x-icon" rel="shortcut icon"/>')
+		this.element.attr('href', this.путь + name + '.png')
+		this.element.appendTo('head')
+	},
+	
+	prepend_asterisk: function()
+	{
+		title(site_icon.attention_symbol + title())
+	},
+	
+	remove_asterisk: function()
+	{
+		title(title().substring(this.attention_symbol.length))
+	},
+	
+	has_asterisk: function()
+	{
+		return title().indexOf(this.attention_symbol) === 0
+	},
+	
+	something_new: function()
+	{
+		if (this.animating)
+			return
+			
+		this.animating = true
+		
+		this.set('внимание 1')
+		
+		var site_icon = this
+		var change_title = (function()
+		{
+			if (!this.has_asterisk())
+				this.prepend_asterisk()
+			else
+				this.remove_asterisk()
+				
+			this.animation_timeout = change_title.delay(1000)
+		})
+		.bind(this)
+		
+		change_title()
+	},
+	
+	nothing_new: function()
+	{
+		if (!this.animating)
+			return
+			
+		clearTimeout(this.animation_timeout)
+		this.animating = false
+		
+		if (this.has_asterisk())
+			this.remove_asterisk()
+		
+		this.set('основной')
+	}
+})
+
+var site_icon = new Text_and_icon()
+//var site_icon = new Image_sequence_icon()
+
+//site_icon.something_new()

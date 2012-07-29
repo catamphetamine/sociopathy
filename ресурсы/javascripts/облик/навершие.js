@@ -156,9 +156,10 @@ var Panel = new Class
 	
 		if (пользователь)
 		{
-			this.initialize_new_messages_indication()
+			this.initialize_new_talk_messages_indication()
 			this.initialize_news_feed_indication()
-			this.initialize_new_discussions_indication()
+			this.initialize_new_discussion_messages_indication()
+			this.initialize_new_chat_messages_indication()
 			
 			//this.buttons.мусорка.element.parent().show()
 			//this.buttons.мусорка.tooltip.update_position()
@@ -241,10 +242,10 @@ var Panel = new Class
 			{ page: 'сеть/болталка', button: 'болталка' },
 			
 			{ page: 'сеть/обсуждения', button: 'обсуждения' },
-			{ page: 'сеть/обсуждение', button: 'обсуждения' },
+			//{ page: 'сеть/обсуждение', button: 'обсуждения' },
 			
 			{ page: 'сеть/беседы', button: 'беседы' },
-			{ page: 'сеть/беседа', button: 'беседы' },
+			//{ page: 'сеть/беседа', button: 'беседы' },
 			
 			{ page: 'человек/дневник', button: 'дневник' },
 			{ page: 'человек/запись в дневнике', button: 'дневник' },
@@ -370,7 +371,7 @@ var Panel = new Class
 		})
 	},
 	
-	initialize_new_messages_indication: function(options)
+	initialize_new_talk_messages_indication: function(options)
 	{
 		options = options || {}
 	
@@ -388,13 +389,13 @@ var Panel = new Class
 				fade_in_duration: 1,
 				fade_out_duration: 1
 			},
-			activation_name: 'new_messages',
-			deactivation_name: 'no_more_new_messages',
+			activation_name: 'new_talk_messages',
+			deactivation_name: 'no_more_new_talk_messages',
 			immediate: options.immediate
 		})
 	},
 	
-	initialize_new_discussions_indication: function(options)
+	initialize_new_discussion_messages_indication: function(options)
 	{
 		options = options || {}
 	
@@ -412,8 +413,32 @@ var Panel = new Class
 				fade_in_duration: 1,
 				fade_out_duration: 1
 			},
-			activation_name: 'new_discussions',
-			deactivation_name: 'no_more_new_discussions',
+			activation_name: 'new_discussion_messages',
+			deactivation_name: 'no_more_new_discussion_messages',
+			immediate: options.immediate
+		})
+	},
+	
+	initialize_new_chat_messages_indication: function(options)
+	{
+		options = options || {}
+	
+		this.toggle_buttons
+		({
+			hide:
+			{
+				button: { title: 'болталка' },
+				fade_in_duration: 0.5,
+				fade_out_duration: 1.5
+			},
+			show:
+			{
+				button: { title: 'болталка (непрочитанные)' },
+				fade_in_duration: 1,
+				fade_out_duration: 1
+			},
+			activation_name: 'new_chat_messages',
+			deactivation_name: 'no_more_new_chat_messages',
 			immediate: options.immediate
 		})
 	}

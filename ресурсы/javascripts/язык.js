@@ -277,7 +277,19 @@ Object.for_each = function(object, handler)
 {
 	Object.each(object, function(value, key)
 	{
-		if (object.hasOwnProperty(key))
-			handler.bind(value)(key, value)
+		//if (object.hasOwnProperty(key))
+		handler.bind(value)(key, value)
 	})
+}
+
+Object.пусто = function(object)
+{
+	var пусто = true
+	Object.each(object, function(value, key)
+	{
+		//if (object.hasOwnProperty(key))
+		пусто = false
+	})
+	
+	return пусто
 }

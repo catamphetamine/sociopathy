@@ -69,7 +69,7 @@ var dialog_window = new Class
 			{
 				// close on escape key
 				if (self.options['close on escape'] && event.keyCode &&
-					event.keyCode === Event.Keys.esc) 
+					event.keyCode === Клавиши.Escape) 
 				{	
 					event.preventDefault()
 					self.cancel()
@@ -107,7 +107,7 @@ var dialog_window = new Class
 		this.content.on('keydown', function(event) 
 		{
 			// if Enter key pressed
-			if (event.keyCode == Event.Keys.enter)
+			if (event.keyCode == Клавиши.Enter)
 			{
 				if (self.on_enter)
 				{
@@ -117,7 +117,7 @@ var dialog_window = new Class
 			}
 			
 			// if Tab key pressed
-			//if (event.keyCode == Event.Keys.tab) 
+			//if (event.keyCode == Клавиши.Tab) 
 			//	return false
 		})
 	},
@@ -166,7 +166,7 @@ var dialog_window = new Class
 	// prevent tabbing out of modal dialog windows
 	swallow_outer_tabulation: function(event) 
 	{	
-		if (event.keyCode !== Event.Keys.tab)
+		if (event.keyCode !== Клавиши.Tab)
 			return
 
 		var tabbables = $(':tabbable', this)

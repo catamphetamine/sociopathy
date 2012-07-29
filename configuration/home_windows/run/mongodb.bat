@@ -1,6 +1,6 @@
 @echo off
 
-set MONGODB_DIRECTORY=c:\work\mongodb
+set MONGODB_DIRECTORY=e:\work\mongodb
 
 rem set OLDDIR=%CD%
 
