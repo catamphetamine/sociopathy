@@ -391,3 +391,55 @@ function enable_scroll()
 	$(window).unbind('scroll.' + namespace)
 }
  */
+
+
+
+
+
+
+
+			#connections = карта_соединений_по_виду_сообщения(group, name)
+
+
+				###
+				for id, connection of connections
+					if connection.пользователь?
+						if connection.пользователь._id + '' == _id + ''
+							user_connections.push(connection)
+				
+				for connection in user_connections
+					if options._id? && connection.custom_data? && connection.custom_data._id?
+						if connection.custom_data._id != options._id
+							continue
+					connection.emit(group + ':' + name, data)
+					return @.done(yes)
+				
+				connections = соединения.эфир
+				###
+				
+				
+								###
+				for id, connection of connections
+					if connection.пользователь?
+						user_id = connection.пользователь._id + ''
+						if user_id != options.кроме + ''
+							if not users_connections[user_id]?
+								users_connections[user_id] = []
+							users_connections[user_id].push(connection)
+				
+				for user_id, user_connections of users_connections
+					for connection in user_connections
+						if options._id? && connection.custom_data? && connection.custom_data._id?
+							if connection.custom_data._id != options._id
+								continue
+						connection.emit(group + ':' + name, data)
+						notificated_users[user_id] = yes
+						break
+					
+				connections = соединения.эфир
+				###
+						
+
+
+
+

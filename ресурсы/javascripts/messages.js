@@ -15,7 +15,7 @@ var Messages = new Class
 	options:
 	{
 		max_messages: 200,
-		new_message_sound: new Audio("/звуки/new message.ogg"),
+		new_message_sound: new Audio("/звуки/пук.ogg"),
 		messages_batch_size: 18,
 		check_if_there_are_still_unread_messages_interval: 1000,
 	},
@@ -25,7 +25,12 @@ var Messages = new Class
 		this.options.прокрутчик = прокрутчик
 		this.options = $.extend(true, this.options, options)
 		//this.setOptions(options) // doesn't work - mootools bug
-		//this.load()	
+		//this.load()
+		
+		$(document).on('focused', function()
+		{
+			прокрутчик.process_scroll({ first_time: true })
+		})
 	},
 		
 	create_message_element: function(data)
@@ -43,9 +48,14 @@ var Messages = new Class
 	{
 		this.new_messages_smooth_border = $('.new_messages_smooth_border')
 
+		var messages = this
+		
 		this.compose_message = $('#compose_message')
 		
-		var messages = this
+		this.compose_message.click(function()
+		{
+			 //messages.compose_message.find('> article').focus()
+		})
 		
 		this.scroll_down_to_new_messages = $('.scroll_down_to_new_messages')
 		this.scroll_down_to_new_messages_opacity = this.scroll_down_to_new_messages.css('opacity') || 1
@@ -318,11 +328,26 @@ var Messages = new Class
 		if (!message.hasClass('new'))
 			return
 		
+		var read = false
+		
 		var _id = message.attr('message_id')
-		message.on('fully_appears_on_bottom', (function()
+		message.on('bottom_appears', (function()
 		{
-			this.options.прокрутчик.unwatch(message)
+			if (!Focus.focused)
+				return
+		
+			//this.options.прокрутчик.unwatch(message)
+		
+			if (this.options.on_message_bottom_appears)
+				this.options.on_message_bottom_appears(_id)
+					
+			message.removeClass('new')
+						
+			if (read)
+				return
+		
 			this.message_read(_id)
+			read = true
 		})
 		.bind(this))
 		
@@ -451,6 +476,9 @@ var Messages = new Class
 	
 	message_read: function(_id)
 	{
+		if (this.options.on_message_read)
+				this.options.on_message_read(_id)
+		
 		if (this.latest_message_read)
 			if (this.latest_message_read >= _id)
 				return
@@ -568,7 +596,9 @@ var Messages = new Class
 	
 	new_messages_notification: function()
 	{
-		this.options.new_message_sound.play()
+		if (this.options.new_message_sound)
+				this.options.new_message_sound.play()
+				
 		site_icon.something_new()
 	},
 	

@@ -157,6 +157,8 @@ var Text_and_icon = new Class
 	//attention_symbol = '•'
 	attention_symbol: '✽ ',
 
+	delay: 3000,
+	
 	set: function(name)
 	{
 		this.element.remove()
@@ -180,10 +182,24 @@ var Text_and_icon = new Class
 		return title().indexOf(this.attention_symbol) === 0
 	},
 	
-	something_new: function()
+	something_new: function(options)
 	{
 		if (this.animating)
 			return
+		
+		options = options || {}
+		
+		if (!options.immediate)
+		{
+			this.delayed = function()
+			{
+				this.delayed = null
+				this.something_new({ immediate: true })
+			}
+			.bind(this)
+			.delay(this.delay)
+			return
+		}
 			
 		this.animating = true
 		
@@ -206,10 +222,18 @@ var Text_and_icon = new Class
 	
 	nothing_new: function()
 	{
+		if (this.delayed)
+		{
+			clearTimeout(this.delayed)
+			this.delayed = null
+			return
+		}
+		
 		if (!this.animating)
 			return
 			
 		clearTimeout(this.animation_timeout)
+		this.animation_timeout = null
 		this.animating = false
 		
 		if (this.has_asterisk())

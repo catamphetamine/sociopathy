@@ -1,11 +1,38 @@
 var Новости = new (new Class
 ({
+	//задержка_уведомления_о_новостях: 3000,
+	
 	что_нового:
 	{
 		новости: [],
 		беседы: {},
 		обсуждения: {},
 		болталка: []
+	},
+	
+	звуки:
+	{
+		беседы: new Audio("/звуки/звонок.ogg"),
+		обсуждения: new Audio("/звуки/звонок.ogg")
+	},
+	
+	появились_новости: function()
+	{
+		//if (!this.есть_новости)
+		//	this.задержанное_уведомление_о_новостях = site_icon.something_new.delay(this.задержка_уведомления_о_новостях)
+		
+		if (!this.есть_новости)
+			site_icon.something_new()
+		
+		this.есть_новости = true
+	},
+	
+	звуковое_оповещение: function(чего)
+	{
+		if (!звуки[чего])
+			return //throw 'Sound not found for ' + чего
+		
+		звуки[чего].play()
 	},
     
 	болталка: function(новое_сообщение)
@@ -14,16 +41,11 @@ var Новости = new (new Class
 		if (this.что_нового.болталка.пусто())
 			indicate = true
 			
-		this.что_нового.болталка = новое_сообщение
+		this.что_нового.болталка.push(новое_сообщение)
 		
 		if (indicate)
 		{
 			panel.new_chat_messages()
-			
-			//if (!this.есть_новости)
-			//	site_icon.something_new()
-			
-			//this.есть_новости = true
 		}
 			
 		//panel.new_chat_messages({ immediate: true })
@@ -31,6 +53,9 @@ var Новости = new (new Class
     
 	обсуждение: function(обсуждение, новые_сообщения)
 	{
+		if (!(новые_сообщения instanceof Array))
+			новые_сообщения = [новые_сообщения]
+			
 		if (!this.что_нового.обсуждения[обсуждение])
 			this.что_нового.обсуждения[обсуждение] = []
 			
@@ -38,21 +63,21 @@ var Новости = new (new Class
 		if (this.что_нового.обсуждения[обсуждение].пусто())
 			indicate = true
 			
-		this.что_нового.обсуждения.combine(новые_сообщения)
+		this.что_нового.обсуждения[обсуждение].combine(новые_сообщения)
 		
 		if (indicate)
 		{
 			panel.new_discussion_messages()
 			
-			if (!this.есть_новости)
-				site_icon.something_new()
-			
-			this.есть_новости = true
+			this.появились_новости()
 		}
 	},
     
 	беседа: function(беседа, новые_сообщения)
 	{
+		if (!(новые_сообщения instanceof Array))
+			новые_сообщения = [новые_сообщения]
+			
 		if (!this.что_нового.беседы[беседа])
 			this.что_нового.беседы[беседа] = []
 			
@@ -60,16 +85,13 @@ var Новости = new (new Class
 		if (this.что_нового.беседы[беседа].пусто())
 			indicate = true
 			
-		this.что_нового.беседы.combine(новые_сообщения)
+		this.что_нового.беседы[беседа].combine(новые_сообщения)
 		
 		if (indicate)
 		{
 			panel.new_talk_messages()
 			
-			if (!this.есть_новости)
-				site_icon.something_new()
-			
-			this.есть_новости = true
+			this.появились_новости()
 		}
 	},
     
@@ -85,10 +107,7 @@ var Новости = new (new Class
 		{
 			panel.new_news()
 			
-			if (!this.есть_новости)
-				site_icon.something_new()
-			
-			this.есть_новости = true
+			//this.появились_новости()
 		}
 	},
 	
@@ -118,6 +137,7 @@ var Новости = new (new Class
 				return
 			
 			this.что_нового.беседы[что.беседа].remove(что.сообщение)
+			
 			if (this.что_нового.беседы[что.беседа].пусто())
 			{
 				delete this.что_нового.беседы[что.беседа]
@@ -135,6 +155,14 @@ var Новости = new (new Class
 			&& Object.пусто(this.что_нового.обсуждения)
 			&& Object.пусто(this.что_нового.беседы))
 		{
+			/*
+			if (this.задержанное_уведомление_о_новостях)
+			{
+				clearTimeout(this.задержанное_уведомление_о_новостях)
+				this.задержанное_уведомление_о_новостях = null
+			}
+			*/
+			
 			site_icon.nothing_new()
 			this.есть_новости = false
 		}

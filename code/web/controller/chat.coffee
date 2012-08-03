@@ -2,7 +2,9 @@ options =
 	id: 'chat'
 	uri: '/болталка'
 	data_uri: '/сеть/болталка/сообщения'
-	
+
+options.in_ether_id = 'болталка'
+
 options.latest_read_message = (environment, возврат) ->
 	new Цепочка(возврат)
 		.сделать ->
@@ -19,7 +21,10 @@ options.notificate = (_id, environment, возврат) ->
 			db('people_sessions').update({ пользователь: { $ne: environment.пользователь._id } }, { $set: { 'новости.болталка': _id.toString() } }, @)
 			
 		.сделать ->	
-			эфир.отправить_всем_кроме('новости', 'болталка', { болталка: _id.toString() }, environment.пользователь._id, @)
+			эфир.отправить('новости', 'болталка', { _id: _id.toString() }, { кроме: environment.пользователь._id })
+			if not эфир.есть_соединение('болталка')
+				эфир.отправить_одному_соединению('новости', 'звуковое оповещение', { чего: 'болталка' }, { кроме: environment.пользователь._id })
+			@.done()
 
 options.message_read = (_id, environment, возврат) ->
 	new Цепочка(возврат)

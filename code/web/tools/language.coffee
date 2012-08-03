@@ -70,6 +70,12 @@ Object.get_keys = (object) ->
 			keys.push(key)
 	keys
 	
+Object.пусто = (object) ->
+	for key, value of object
+		if object.hasOwnProperty(key)
+			return no
+	return yes
+	
 RegExp.escape = (string) ->
 	specials = new RegExp("[.*+?|()\\[\\]{}\\\\]", 'g')
 	new String(string).replace(specials, "\\$&")

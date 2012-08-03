@@ -2,50 +2,63 @@
 {
 	page.query('#talk', 'talk')
 	
+	var messages
+	
 	page.load = function()
 	{
-		title(page.data.беседа.id)
-	
-		new Data_templater
+		messages = Interactive_messages
 		({
-			template: 'сообщение беседы',
-			to: page.talk,
-			loader: new  Batch_data_loader_with_infinite_scroll
-			({
+			data_source:
+			{
 				url: '/приложение/сеть/беседа/сообщения',
-				parameters: { _id: page.data.беседа._id, id: page.data.беседа.id },
-				batch_size: 10,
-				scroll_detector: page.get('#scroll_detector'),
-				before_done: data_loaded,
-				before_done_more: function() { ajaxify_internal_links(page.talk) },
-				data: function(data)
-				{
-					breadcrumbs
-					([
-						{ title: 'Беседы', link: '/сеть/беседы' },
-						{ title: data.название, link: '/сеть/беседы/' + page.data.беседа.id }
-					])
-					
-					parse_dates(data.сообщения, 'когда')
-					return data.сообщения
-				}
-			})
+				parameters: { _id: page.data.беседа._id, id: page.data.беседа.id }
+			},
+			on_first_time_data: function(data)
+			{
+				//console.log(data)
+				title(data.название)
+				
+				page.data.беседа._id = data._id
+				
+				breadcrumbs
+				([
+					{ title: 'Беседы', link: '/сеть/беседы' },
+					{ title: data.название, link: '/сеть/беседы/' + page.data.беседа.id }
+				])
+			},
+			more_link: $('.messages_framework > .older > a'),
+			container: page.talk,
+			show_editor: true,
+			on_load: talk_loaded,
+			on_message_bottom_appears: function(_id)
+			{
+				Новости.прочитано({ беседа: page.data.беседа._id, сообщение: _id })
+			},
+			before_prepend: function(message)
+			{
+				var author = message.find('.author')
+				if (Эфир.кто_в_сети.has(message.attr('author')))
+					author.addClass('online')
+			},
+			on_message_data: function(data)
+			{
+				Эфир.следить_за_пользователем(data.отправитель)
+			},
+			connection:
+			{
+				path: '/беседа',
+				away_aware_elements:
+				[
+					'.talk > li[author="{id}"] .author'
+				]
+			}
 		})
+		
+		messages.load()
 	}
 	
-	function data_loaded()
+	function talk_loaded()
 	{
 		$(document).trigger('page_initialized')
-		
-		if (page.talk.is_empty())
-		{
-			page.talk.remove()
-			page.get('.main_content').find('> .empty').show()
-		}
-		
-	//	Режим.разрешить('правка')
-	//	Режим.разрешить('действия')
 	}
-	
-	page.needs_initializing = true
 })()

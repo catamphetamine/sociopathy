@@ -424,6 +424,7 @@ window.onerror = function()
 	{
 		//if (путь_страницы() !== 'ошибка')
 		//	window.location = '/ошибка' + '?' + 'url=' + encodeURI(window.location)
+		error('Ошибка на сайте')
 	}
 	else
 	{

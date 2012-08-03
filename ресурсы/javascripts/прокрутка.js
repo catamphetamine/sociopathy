@@ -55,12 +55,12 @@ var Scroller = new Class
 	{
 	},
 	
-	process_scroll: function()
+	process_scroll: function(options)
 	{
 		var scroller = this
 		this.elements.for_each(function()
 		{
-			scroller.check_for_events(this)
+			scroller.check_for_events(this, options)
 		},
 		this)
 	},
@@ -74,6 +74,8 @@ var Scroller = new Class
 		var first_time = element.data('first_time_with_scroller')
 		if (first_time)
 			element.data('first_time_with_scroller', false)
+			
+		first_time = first_time || options.first_time
 		
 		var previous_top_offset_in_window = element.data('top_offset_in_window')
 		element.data('top_offset_in_window', top_offset_in_window)
@@ -104,12 +106,24 @@ var Scroller = new Class
 			bottom_was_visible = previous_top_offset_in_window + height >= 0 && previous_top_offset_in_window + height < window_height
 		}
 		
+		// the element is moving up or down?
 		var upwards
 		var downwards
 		if (!first_time)
 		{
 			upwards = top_offset_in_window < previous_top_offset_in_window
 			downwards = !upwards
+		}
+		
+		if (first_time)
+		{
+			if (bottom_is_visible)
+				element.trigger('bottom_appears')
+		}
+		else
+		{
+			if (upwards && !bottom_was_visible && bottom_is_visible)
+				element.trigger('bottom_appears')
 		}
 		
 		if (!first_time && top_was_visible && !top_is_visible)

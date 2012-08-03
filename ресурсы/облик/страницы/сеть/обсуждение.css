@@ -18,13 +18,15 @@
 			margin-top: 30px;
 		}
 		
-		#discussion
+		#discussion.author_content_date
 		{
-			.author_content_date
+			> li.odd
 			{
-				> li.odd
+				background-color: #f5ffee;
+				
+				&.new
 				{
-					background-color: #f5ffee;
+					background-color: #e3fee2;
 				}
 			}
 		}

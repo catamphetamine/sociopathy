@@ -63,6 +63,7 @@ exports.messages = (options) ->
 		.of(options.uri)
 		.on 'connection', (соединение) ->
 			соединения[соединение.id] = соединение
+			эфир.соединения[options.in_ether_id][соединение.id] = соединение
 			environment = {}
 	
 			connected_data_source = ->
@@ -74,7 +75,7 @@ exports.messages = (options) ->
 				if not environment.сообщения_чего?
 					return соединение.broadcast.emit(id, content)
 					
-				connected_clients = соединение.manager.rooms['/обсуждение/' + environment.сообщения_чего._id + '']
+				connected_clients = соединение.manager.rooms[options.uri + '/' + environment.сообщения_чего._id + '']
 				if connected_clients?
 					for connection_id in connected_clients
 						соединения[connection_id].emit(id, content)
@@ -129,7 +130,7 @@ exports.messages = (options) ->
 						соединение.on 'вызов', (_id) ->
 							цепь_websocket(соединение)
 								.сделать ->
-									if not эфир.отправить('общее', 'вызов', пользовательское.поля(пользователь), _id)
+									if not эфир.отправить('общее', 'вызов', пользовательское.поля(пользователь), { пользователь: _id })
 										return соединение.emit('ошибка', 'Вызываемый пользователь недоступен')
 						
 						соединение.on 'пишет', ->
@@ -168,6 +169,7 @@ exports.messages = (options) ->
 						
 						выход = ->
 							delete соединения[соединение.id]
+							delete эфир.соединения[options.in_ether_id][соединение.id]
 						
 							цепь_websocket(соединение)
 								.сделать ->
@@ -189,6 +191,9 @@ exports.messages = (options) ->
 						соединение.on 'environment', (environment_data) ->
 							if environment_data.сообщения_чего?
 								соединение.join(environment_data.сообщения_чего._id + '')
+								if not соединение.custom_data?
+									соединение.custom_data = {}
+								соединение.custom_data._id = environment_data.сообщения_чего._id + ''
 								environment.сообщения_чего = options.сообщения_чего_from_string(environment_data.сообщения_чего)
 						
 							цепь_websocket(соединение)

@@ -34,9 +34,10 @@ var dialog_window = new Class
 		width: 'auto',
 		height: 'auto',
 		
-		collapse_duration: 300,
+		show_duration: 0.2,
+		collapse_duration: 0.1,
 		
-		theme: 'fade'
+		//theme: 'fade'
 		//theme: 'slide_from_top'
 		//theme: 'bubble'
 	},
@@ -75,7 +76,7 @@ var dialog_window = new Class
 					self.cancel()
 				}
 			})
-			.addClass(this.options.theme)
+			//.addClass(this.options.theme)
 		
 		if (options.veil_style)
 			this.container.css(options.veil_style)
@@ -151,16 +152,20 @@ var dialog_window = new Class
 		
 		// hack
 		var dialog_window = this
-		dialog_window.content.find('input:first').focus()
-
-		// prevent tabbing out of modal dialog windows
-//		if (this.options.modal)
-		this.container.on('keypress.' + this.namespace, this.swallow_outer_tabulation)
-					
-//		z_indexer.register(this)
-
-		this.is_open = true
-		this.content.trigger('open')
+				
+		this.container.fade_in(this.options.show_duration, (function()
+		{
+			dialog_window.content.find('input:first').focus()
+			
+			// prevent tabbing out of modal dialog windows
+			//		if (this.options.modal)
+			this.container.on('keypress.' + this.namespace, this.swallow_outer_tabulation)
+			
+			//		z_indexer.register(this)
+			
+			this.is_open = true
+			this.content.trigger('open')
+		}).bind(this))
 	},
 	
 	// prevent tabbing out of modal dialog windows
@@ -202,10 +207,10 @@ var dialog_window = new Class
 	// closes the dialog window
 	close: function(callback) 
 	{
-		this.container.removeClass('shown').addClass('collapsed')
-		
 		var closed = function()
 		{
+			this.container.removeClass('shown').addClass('collapsed')
+		
 			if (this.options['on close'])
 				this.options['on close'].bind(this.content)()
 			
@@ -226,7 +231,7 @@ var dialog_window = new Class
 			this.content.trigger('close')
 		}
 		
-		closed.bind(this).delay(this.options.collapse_duration)
+		this.container.fade_out(this.options.collapse_duration, closed.bind(this))
 	},
 
 	/**

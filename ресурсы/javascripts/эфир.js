@@ -42,7 +42,7 @@ $(document).on('authenticated', function()
 				эфир.on(group + ':' + name, handler)
 			}
 			
-			on('пользователи', 'connect', function()
+			эфир.on('connect', function()
 			{
 				эфир.emit('пользователь', $.cookie('user'))
 			})
@@ -76,12 +76,37 @@ $(document).on('authenticated', function()
 					page.пользователь_вышел(пользователь)
 			})
 			
-			var alarm_sound = new Audio("/звуки/alarm.ogg")
+			var звук_вызова = new Audio("/звуки/вызов.ogg")
 	
 			on('общее', 'вызов', function(пользователь)
 			{
-				alarm_sound.play()
+				звук_вызова.play()
 				info('Вас вызывает ' + пользователь.имя)
+			})
+			
+			on('новости', 'звуковое оповещение', function(чего)
+			{
+				Новости.звуковое_оповещение(чего)
+			})
+			
+			on('новости', 'болталка', function(data)
+			{
+				Новости.болталка(data._id)
+			})
+			
+			on('новости', 'беседы', function(data)
+			{
+				Новости.беседа(data._id, data.сообщение)
+			})
+			
+			on('новости', 'обсуждения', function(data)
+			{
+				Новости.обсуждение(data._id, data.сообщение)
+			})
+			
+			on('новости', 'новости', function(data)
+			{
+				Новости.новости(data._id)
 			})
 		})()
 	}

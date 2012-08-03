@@ -13,15 +13,20 @@
 			margin-top: 100px;
 		}
 	
-		#talk
+		.more_container
 		{
-			margin-top: 40px;
-			
-			.author_content_date
+			margin-top: 30px;
+		}
+		
+		#talk.author_content_date
+		{
+			> li.odd
 			{
-				> li.odd
+				background-color: #fff8fb;
+				
+				&.new
 				{
-					background-color: #fff8fb;
+					background-color: #fff0f3;
 				}
 			}
 		}

@@ -30,6 +30,10 @@
 			container: page.discussion,
 			show_editor: true,
 			on_load: discussion_loaded,
+			on_message_bottom_appears: function(_id)
+			{
+				Новости.прочитано({ обсуждение: page.data.обсуждение._id, сообщение: _id })
+			},
 			before_prepend: function(message)
 			{
 				var author = message.find('.author')
@@ -55,7 +59,7 @@
 	
 	function discussion_loaded() //finish_initialization)
 	{
-		//$(document).trigger('page_initialized')
+		$(document).trigger('page_initialized')
 		
 		/*
 		if (page.discussion.is_empty())

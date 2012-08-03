@@ -1,4 +1,10 @@
-соединения = {}
+соединения =
+	эфир: {}
+	болталка: {}
+	беседы: {}
+	обсуждения: {}
+	новости: {}
+	
 listeners = {}
 
 online = redis.createClient()
@@ -6,6 +12,10 @@ online = redis.createClient()
 эфир = websocket
 	.of('/эфир')
 	.on 'connection', (соединение) ->
+		соединения.эфир[соединение.id] = соединение
+		
+		соединение.вид = 'эфир'
+		
 		соединение.on 'пользователь', (тайный_ключ) ->
 			пользователь = null
 			цепь_websocket(соединение)
@@ -19,7 +29,6 @@ online = redis.createClient()
 					пользователь = пользовательское.поля(user)
 					
 					соединение.пользователь = { _id: пользователь._id }
-					соединения[соединение.id] = соединение
 						
 					@.done()
 			
@@ -66,7 +75,7 @@ online = redis.createClient()
 					disconnected = false
 					
 					выход = ->
-						delete соединения[соединение.id]
+						delete соединения.эфир[соединение.id]
 						delete listeners[соединение.id]
 				
 						still_online = false
@@ -104,27 +113,82 @@ online = redis.createClient()
 exports.offline = (пользователь) ->
 	for id, listener of listeners
 		listener.offline(пользователь)
+
+карта_соединений_по_виду_сообщения = (group, name) ->
+	if group? && name?
+		if group == 'новости' && name == 'новости'
+			return соединения.новости
 			
-exports.отправить = (group, name, data, _id, возврат) ->
-	new Цепочка(возврат)
-		.сделать ->
-			for connection in соединения
-				if connection.пользователь._id + '' == _id + ''
-					connection.emit(group + ':' + name, data)
-					return @.done(yes)
+		if group == 'новости' && name == 'беседы'
+			return соединения.беседы
 			
-			console.error 'Пользователь не в сети: ' + _id
-			return @.done(no)
+		if group == 'новости' && name == 'обсуждения'
+			return соединения.обсуждения
 			
-exports.отправить_всем_кроме = (group, name, data, _id, возврат) ->
-	new Цепочка(возврат)
-		.сделать ->
-			for connection in соединения
-				if connection.пользователь._id + '' != _id + ''
-					connection.emit(group + ':' + name, data)
+		if group == 'новости' && name == 'болталка'
+			return соединения.болталка
 			
-			@.done()
+	return соединения.эфир
+
+exports.отправить = (group, name, data, options, возврат) ->
+	возврат = возврат || (() ->)
 	
+	new Цепочка(возврат)
+		.сделать ->
+			connections = соединения.эфир
+			
+			if options.пользователь?
+				for id, connection of connections
+					if connection.пользователь?
+						if connection.пользователь._id + '' == options.пользователь + ''
+							connection.emit(group + ':' + name, data)
+						
+				return @.done(yes)
+		
+			if options.кроме?
+				for id, connection of connections
+					if connection.пользователь?
+						if connection.пользователь._id + '' != options.кроме + ''
+							connection.emit(group + ':' + name, data)
+						
+				return @.done(yes)
+    
+exports.есть_соединение = (вид) ->
+	return not Object.пусто(соединения[вид])
+	        
+exports.отправить_одному_соединению = (group, name, data, options, возврат) ->
+	возврат = возврат || (() ->)
+	
+	new Цепочка(возврат)
+		.сделать ->
+			connections = соединения.эфир
+				
+			if options.пользователь?
+				user_connections = []
+						
+				for id, connection of connections
+					if connection.пользователь?
+						if connection.пользователь._id + '' == _id + ''
+							connection.emit(group + ':' + name, data)
+							return @.done(yes)
+						
+				console.error('No connections for user: ' + options.пользователь)
+				return @.done(no)
+		
+			else if options.кроме?
+				notificated_users = []
+				
+				users_connections = {}
+				
+				for id, connection of connections
+					if connection.пользователь?
+						user_id = connection.пользователь._id + ''
+						if !notificated_users.has(user_id) && user_id != options.кроме + ''
+							connection.emit(group + ':' + name, data)
+							notificated_users[user_id] = yes
+						
+				return @.done(yes)
+            
 exports.в_сети_ли = (_id, возврат) ->
 	new Цепочка(возврат)
 		.сделать ->
@@ -136,3 +200,5 @@ exports.в_сети_ли = (_id, возврат) ->
 				is_online = yes
 				
 			return @.return(is_online)
+			
+exports.соединения = соединения

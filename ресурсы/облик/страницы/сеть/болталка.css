@@ -19,6 +19,11 @@ ul.chat
 {
 	/* margin: 0, т.к. в яваскрипте это подразумевается (на этом работает прокрутка) */
 
+	> li.new
+	{
+		background-color: #f0fbff;
+	}
+	
 	> li.odd
 	{
 		background-color: white;
@@ -27,6 +32,11 @@ ul.chat
 	> li.even
 	{
 		background-color: #f6f6f6;
+	
+		&.new
+		{
+			background-color: #ececec;
+		}
 	}
 }
 

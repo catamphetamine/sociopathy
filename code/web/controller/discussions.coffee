@@ -14,6 +14,8 @@ options =
 	uri: '/обсуждение'
 	data_uri: '/сеть/обсуждение/сообщения'
 	
+options.in_ether_id = 'обсуждения'
+
 options.сообщения_чего = (ввод, возврат) ->
 	new Цепочка(возврат)
 		.сделать ->
@@ -59,7 +61,10 @@ options.notificate = (_id, environment, возврат) ->
 			db('people_sessions').update({ пользователь: { $ne: environment.пользователь._id } }, { $addToSet: { 'новости.обсуждения': _id.toString() } }, @)
 			
 		.сделать ->	
-			эфир.отправить_всем_кроме('новости', 'обсуждения', { болталка: _id.toString() }, environment.пользователь._id, @)
+			эфир.отправить('новости', 'обсуждения', { _id: environment.сообщения_чего._id.toString(), сообщение: _id.toString() }, { кроме: environment.пользователь._id })
+			if not эфир.есть_соединение('обсуждения')
+				эфир.отправить_одному_соединению('новости', 'звуковое оповещение', { чего: 'обсуждения' }, { кроме: environment.пользователь._id, _id: environment.сообщения_чего._id.toString() })
+			@.done()
 
 options.message_read = (_id, environment, возврат) ->
 	new Цепочка(возврат)
@@ -74,6 +79,12 @@ options.message_read = (_id, environment, возврат) ->
 options.save = (сообщение, environment, возврат) ->
 	new Цепочка(возврат)
 		.сделать ->
-			db('messages').save({ отправитель: environment.пользователь._id, сообщение: сообщение, когда: new Date(), общение: environment.сообщения_чего._id }, @.в 'сообщение')
+			db('messages').save({ отправитель: environment.пользователь._id, сообщение: сообщение, когда: new Date(), общение: environment.сообщения_чего._id }, @._.в 'сообщение')
+	
+		.сделать ->
+			db('discussions').update({ _id: environment.сообщения_чего._id }, { $addToSet: { подписчики: environment.пользователь._id } }, @)
+			
+		.сделать ->
+			@.done(@._.сообщение)
 	
 messages.messages(options)

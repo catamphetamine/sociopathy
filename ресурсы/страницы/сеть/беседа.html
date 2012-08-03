@@ -12,6 +12,12 @@
 			
 			<ul id="talk" class="author_content_date">
 			</ul>
+			
+			<div class="scroll_down_to_new_messages popup_panel_container">
+				<div class="popup_panel">
+					↓ новые сообщения
+				</div>
+			</div>
 		
 			<div class="empty">Пусто</div>
 		
@@ -23,5 +29,10 @@
 		</div>
 	</div>
 	
-	<div id="scroll_detector"></div>
+	<div id="compose_message" style="display: none">
+		<div class="visual_editor_tools_container"></div>
+		
+		<!-- лишних пробелов в article не ставить -->
+		<article contenteditable="true" class="rich_formatting"></article>
+	</div>
 </section>

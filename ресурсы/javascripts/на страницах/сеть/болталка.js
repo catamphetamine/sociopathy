@@ -25,6 +25,10 @@
 			container: chat,
 			show_editor: true,
 			on_load: chat_loaded,
+			on_message_bottom_appears: function(_id)
+			{
+				Новости.прочитано({ болталка: _id })
+			},
 			before_prepend: function(message)
 			{
 				var author = message.find('.author')

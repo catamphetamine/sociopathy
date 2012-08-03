@@ -35,6 +35,8 @@ var Interactive_messages = function(options)
 		},
 		more_link: options.more_link,
 		container: options.container,
+		on_message_read: options.on_message_read,
+		on_message_bottom_appears: options.on_message_bottom_appears,
 		set_up_visual_editor: function(visual_editor)
 		{
 			var messages = this
@@ -106,6 +108,10 @@ var Interactive_messages = function(options)
 		actions.find('.call').click(function(event)
 		{
 			event.preventDefault()
+			
+			if (!this.connection || !this.connection.is_ready)
+				return error('Потеряна связь с сервером')
+		
 			messages.connection.emit('вызов', user_id)
 		})
 		
@@ -438,6 +444,11 @@ var Interactive_messages = function(options)
 			{
 				parse_date(сообщение, 'когда')
 
+				//console.log(сообщение)
+				
+				if (сообщение.отправитель._id != пользователь._id)
+					сообщение.новое = true
+				
 				if (!пропущенные_сообщения_учтены)
 				{
 					накопленные_сообщения.push(сообщение)
