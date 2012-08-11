@@ -128,10 +128,8 @@
 
 #compose_message > article
 {
-	margin-left: @author_column_left_padding + @author_column_width + @author_column_right_padding;
-	margin-right: @inter_column_padding + @time_column_width + @time_column_padding;
-	padding-left: @inter_column_padding;
-	padding-right: @inter_column_padding;
+	padding-left: @author_column_left_padding + @author_column_width + @author_column_right_padding + @inter_column_padding;
+	padding-right: @inter_column_padding + @time_column_width + @time_column_padding + @inter_column_padding;
 	
 	.hint, .tagged_hint
 	{

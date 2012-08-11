@@ -1,13 +1,6 @@
 #connect = require 'connect'
 express = require 'express'
-
-redis_session_store_constructor = require('./connect_redis_session_store')(express)
-		
-redis_store = new redis_session_store_constructor({ prefix: Options.User.Session.Redis.Prefix })
-global.redis_session_store = redis_store
-get_session_id = (ввод) ->
-	ввод.cookies.user
-session = require('./connect_session')(get_session_id, redis_store)
+session = require './connect_session'
 
 получатель_настроек = (ввод, вывод, следующий) ->
 	ввод.настройки = снасти.настройки(ввод)
@@ -18,22 +11,31 @@ access_logger = (ввод, вывод, следующий) ->
 	return if not ввод.session?
 	
 	когда_был_здесь = new Date()
-	db('people_sessions').update({ пользователь: ввод.session.пользователь._id }, { $set: { 'когда был здесь': когда_был_здесь }}) #, online: yes
+	db('people_sessions').update({ пользователь: ввод.пользователь._id }, { $set: { 'когда был здесь': когда_был_здесь }}) #, online: yes
 	
 	check_online_status = () ->
 		new Цепочка()
 			.сделать ->
-				db('people_sessions').findOne({ пользователь: ввод.session.пользователь._id }, @)
+				db('people_sessions').findOne({ пользователь: ввод.пользователь._id }, @)
+				
 			.сделать (session) ->
-				if session['когда был здесь'].getTime() == когда_был_здесь.getTime()
-					эфир.offline(ввод.session.пользователь)
-					#db('people_sessions').update({ пользователь: ввод.session.пользователь._id }, { $set: { online: no } })
-				delete ввод.session.data.online_timeout
+				session.get('когда был здесь', @)
+				
+			.сделать (когда_был_здесь_в_последний_раз) ->
+				if когда_был_здесь_в_последний_раз.getTime() == когда_был_здесь.getTime()
+					эфир.offline(ввод.пользователь)
+					#db('people_sessions').update({ пользователь: ввод.пользователь._id }, { $set: { online: no } })
+				ввод.session.delete('online_timeout')
 	
-	if ввод.session.data.online_timeout?
-		clearTimeout(ввод.session.data.online_timeout)
-		
-	ввод.session.data.online_timeout = setTimeout(check_online_status, Options.User.Online.Timeout)
+	new Цепочка()
+		.сделать ->
+			ввод.session.get('online_timeout', @)
+			
+		.сделать (online_timeout) ->
+			if online_timeout?
+				clearTimeout(online_timeout)
+				
+			ввод.session.set({ online_timeout: setTimeout(check_online_status, Options.User.Online.Timeout) })
 	
 remember_me = (ввод, вывод, следующий) ->
 	тайный_ключ = ввод.cookies.user
@@ -41,7 +43,7 @@ remember_me = (ввод, вывод, следующий) ->
 	if not тайный_ключ?
 		return следующий()
 		
-	if ввод.session.пользователь?
+	if ввод.пользователь?
 		return следующий()
 		
 	следующий = снасти.приостановить_ввод(ввод, следующий)
@@ -96,9 +98,9 @@ module.exports = (приложение) ->
 						if ошибка?
 							return вывод.send(ошибка: ошибка)
 								
-						if адрес.starts_with('/управление/')
-							if пользователь.имя != 'Дождь со Снегом'
-								return вывод.send(ошибка: 'Вы не Главный Управляющий')
+						#if адрес.starts_with('/управление/')
+						#	if not пользователь.полномочия || not пользователь.полномочия.has('управляющий')
+						#		return вывод.send(ошибка: 'Вы не Главный Управляющий')
 										
 						старый_возврат(ввод, вывод, пользователь)
 					)

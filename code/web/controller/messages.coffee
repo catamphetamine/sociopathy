@@ -94,6 +94,7 @@ exports.messages = (options) ->
 							return send ошибка: 'пользователь не найден: ' + тайный_ключ
 						пользователь = user
 						environment.пользователь = пользователь
+						соединение.пользователь = { _id: пользователь._id }
 						
 						# maybe hack attempt
 						if not пользователь?

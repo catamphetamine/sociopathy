@@ -424,12 +424,13 @@ window.onerror = function()
 	{
 		//if (путь_страницы() !== 'ошибка')
 		//	window.location = '/ошибка' + '?' + 'url=' + encodeURI(window.location)
-		error('Ошибка на сайте')
+		error('Ошибка на сайте', { sticky: true })
 	}
 	else
 	{
 		page_loaded()
-		$("#page").empty().html('<div class="error">Ошибка на странице</div>')
+		//$("#page").empty().html('<div class="error">Ошибка на странице</div>')
+		error('Ошибка на странице', { sticky: true })
 	}
 }
 

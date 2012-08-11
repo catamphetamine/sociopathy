@@ -153,8 +153,26 @@ exports.отправить = (group, name, data, options, возврат) ->
 						
 				return @.done(yes)
     
-exports.есть_соединение = (вид) ->
-	return not Object.пусто(соединения[вид])
+exports.соединение_с = (вид, options) ->
+	if Object.пусто(соединения[вид])
+		return false
+	
+	for id, connection of соединения[вид]
+		if connection.пользователь?
+			if connection.пользователь._id + '' == options.пользователь
+				if connection.custom_data?
+					if connection.custom_data._id == options._id + ''
+						return connection
+		
+	return false
+    
+exports.пользователи = () ->
+	пользователи = {}
+	
+	for id, connection of соединения.эфир
+		пользователи[connection.пользователь._id + ''] = yes
+		
+	return Object.get_keys(пользователи)
 	        
 exports.отправить_одному_соединению = (group, name, data, options, возврат) ->
 	возврат = возврат || (() ->)
@@ -167,8 +185,12 @@ exports.отправить_одному_соединению = (group, name, dat
 				user_connections = []
 						
 				for id, connection of connections
+					console.log('!!!!!!!!!!!!!!!!!!!!!!!!!')
+					console.log(connection.пользователь)
+					console.log('!!!!!!!!!!!!!!!!!!!!!!!!! _id')
+					console.log(options.пользователь + '')
 					if connection.пользователь?
-						if connection.пользователь._id + '' == _id + ''
+						if connection.пользователь._id + '' == options.пользователь + ''
 							connection.emit(group + ':' + name, data)
 							return @.done(yes)
 						

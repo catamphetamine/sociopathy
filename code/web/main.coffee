@@ -45,6 +45,8 @@ global.почта = require './tools/email'
 
 global.messages = require './controller/messages'
 
+global.session = require './session'
+
 #global.почта.письмо(кому: 'Николай Кучумов <kuchumovn@gmail.com>', тема: 'Test', сообщение: 'Проверка {{связи}}', данные: { связи: 'связи' })
 
 require './tools/date'

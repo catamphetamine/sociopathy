@@ -1,6 +1,6 @@
 (function()
 {
-	title('Дневник. ' + page.data.пользователь_сети['адресное имя'])
+	title('Дневник')
 	
 	page.query('#diary', 'diary')
 	
@@ -23,6 +23,8 @@
 				before_done_more: function() { ajaxify_internal_links(page.diary) },
 				get_data: function(data)
 				{
+					title('Дневник. ' + data.пользователь.имя)
+					
 					breadcrumbs
 					([
 						{ title: data.пользователь.имя, link: '/люди/' + page.data.адресное_имя },

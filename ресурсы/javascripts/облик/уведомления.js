@@ -246,6 +246,9 @@ var Message =
 			maximum_opacity: opacity,
 			callback: function()
 			{
+				if (options.sticky)
+					return
+				
 				(function() 
 				{
 					Message.vanisher.schedule(message_container)
@@ -273,10 +276,10 @@ var Message =
 	}
 }
 
-function show(text) { Message.info(text) }
-function info(text) { Message.info(text) }
-function warning(text) { Message.warning(text) }
-function error(text) { Message.error(text) }
+function show(text, options) { Message.info(text, options) }
+function info(text, options) { Message.info(text, options) }
+function warning(text, options) { Message.warning(text, options) }
+function error(text, options) { Message.error(text, options) }
 
 // testing
 /*

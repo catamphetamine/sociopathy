@@ -29,10 +29,10 @@ var Новости = new (new Class
 	
 	звуковое_оповещение: function(чего)
 	{
-		if (!звуки[чего])
+		if (!this.звуки[чего])
 			return //throw 'Sound not found for ' + чего
 		
-		звуки[чего].play()
+		this.звуки[чего].play()
 	},
     
 	болталка: function(новое_сообщение)

@@ -29,11 +29,21 @@ $(document).on('authenticated', function(event, data)
 		Новости.болталка(data.новости.болталка)
 })
 
+function есть_ли_полномочия(какие)
+{
+	return пользователь && пользователь.полномочия && пользователь.полномочия.contains(какие)
+}
+
 $(document).on('display_page', function()
 {
-	if (пользователь && пользователь.управляющий)
+	if (доступна_ли_страница_управления())
 	{
 		panel.buttons.управление.element.parent().show()
 		panel.buttons.управление.tooltip.update_position()
 	}
 })
+
+function доступна_ли_страница_управления()
+{
+	return есть_ли_полномочия('управляющий') || есть_ли_полномочия('приглашения')
+}

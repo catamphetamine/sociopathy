@@ -2,46 +2,58 @@
 {
 	page.load = function()
 	{
-		if (!пользователь || !пользователь.управляющий)
-			return window.location = '/'
+		//if (!доступна_ли_страница_управления())
+		//	return window.location = '/'
 		
-		$('#reset_database').click(function(event)
+		if (!пользователь)
 		{
-			event.preventDefault()
-			
-			page.Ajax.post('/приложение/хранилище/заполнить')
-			.ошибка('Не удалось заполнить хранилище')
-			.ok('Хранилище заполнено')
-		})
-		
-		$('#update_database').click(function(event)
-		{
-			event.preventDefault()
-			
-			page.Ajax.post('/приложение/хранилище/изменить')
-			.ошибка('Не удалось изменить хранилище')
-			.ok('Хранилище изменено')
-		})
-		
-		$('#get_invite').click(function(event)
-		{
-			event.preventDefault()
-			
-			page.Ajax.post('/приложение/приглашение/выдать')
-			.ошибка('Не удалось выдать приглашение')
-			.ok(function(data)
+			$('#reset_database').show().find('> a').click(function(event)
 			{
-				info(data.ключ)
+				event.preventDefault()
+				
+				page.Ajax.post('/приложение/хранилище/заполнить')
+				.ошибка('Не удалось заполнить хранилище')
+				.ok('Хранилище заполнено')
 			})
-		})
+		}
 		
-		$('#add_users').click(function(event)
+		if (есть_ли_полномочия('управляющий'))
 		{
-			event.preventDefault()
-			
-			page.Ajax.post('/приложение/хранилище/создать_пользователей')
-			.ошибка('Не удалось создать пользователей')
-			.ok('Пользователи созданы')
-		})
+			$('#update_database').show().find('> a').click(function(event)
+			{
+				event.preventDefault()
+				
+				page.Ajax.post('/приложение/управление/хранилище/изменить')
+				.ошибка('Не удалось изменить хранилище')
+				.ok('Хранилище изменено')
+			})
+		}
+		
+		if (есть_ли_полномочия('управляющий') || есть_ли_полномочия('приглашения'))
+		{
+			$('#get_invite').show().find('> a').click(function(event)
+			{
+				event.preventDefault()
+				
+				page.Ajax.post('/приложение/управление/приглашение/выдать')
+				.ошибка('Не удалось выдать приглашение')
+				.ok(function(data)
+				{
+					info(data.ключ, { sticky: true })
+				})
+			})
+		}
+		
+		if (есть_ли_полномочия('управляющий'))
+		{
+			$('#add_users').show().find('> a').click(function(event)
+			{
+				event.preventDefault()
+				
+				page.Ajax.post('/приложение/управление/хранилище/создать_пользователей')
+				.ошибка('Не удалось создать пользователей')
+				.ok('Пользователи созданы')
+			})
+		}
 	}
 })()

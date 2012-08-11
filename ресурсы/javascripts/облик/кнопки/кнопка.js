@@ -250,13 +250,19 @@ var button = new Class
 	
 		var lock = new (function()
 		{
+			button.element.addClass('locked')
+					
 			this.unlock = (function()
 			{
 				button.locks.remove(this)
 				
 				if (button.locks.is_empty())
+				{
+					button.element.removeClass('locked')
+					
 					if (button.is_rolled_over)
 						button.on_roll_over()
+				}
 			})
 			.bind(this)
 		})()

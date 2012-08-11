@@ -9,6 +9,11 @@
  * @github kuchumovn
  */
 
+.button.locked *
+{
+	cursor: wait !important;
+}
+
 .generic_button label
 {
 	display: inline-block;
