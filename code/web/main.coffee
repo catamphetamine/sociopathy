@@ -1,3 +1,5 @@
+domain = require 'domain'
+
 require 'coffee-script'
 
 global.redis = require 'redis'
@@ -85,5 +87,13 @@ global.memcache.connect()
 new Цепочка()	
 	.сделать ->
 		global.redis.createClient().del('chat:online', @)
-	.сделать ->					
-		global.приложение.listen(Options.Web_server.Port, '0.0.0.0')
+		
+	.сделать ->
+		web_server_domain = domain.create()
+		
+		web_server_domain.on 'error', (error) ->
+			console.error('Application error:')
+			console.error('Error', error)
+			
+		web_server_domain.run ->
+			global.приложение.listen(Options.Web_server.Port, '0.0.0.0')
