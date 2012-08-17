@@ -25,6 +25,21 @@ title('Беседы');
 				data: function(data)
 				{
 					parse_dates(data.беседы, 'создана')
+					
+					data.беседы.for_each(function()
+					{
+						var беседа = this
+						
+						iterate(this.подписчики || [], function(подписчик)
+						{
+							return подписчик === пользователь._id
+						},
+						function()
+						{
+							беседа.подписан = true
+						})
+					})
+					
 					return data.беседы
 				}
 			})
@@ -39,6 +54,47 @@ title('Беседы');
 		{
 			page.talks.remove()
 			page.get('.main_content').find('> .empty').show()
+		}
+		else
+		{
+			page.talks.find('> li').each(function()
+			{
+				var talk = $(this)
+				var container = talk.find('> .unsubscribe')
+				
+				var the_button = button.physics.simple(new image_button(container.find('> button'),
+				{
+					'auto unlock': false
+				}))
+				
+				container.on('mouseenter', function()
+				{
+					container.css('opacity', 1)
+				})
+				
+				container.on('mouseleave', function()
+				{
+					container.css('opacity', 0)
+				})
+				
+				container.css('opacity', 0)
+				
+				the_button.does(function()
+				{
+					Ajax.delete('/приложение/сеть/беседы/подписка',
+					{
+						_id: talk.attr('_id')
+					})
+					.ok(function()
+					{
+						the_button.element.fade_out(0.3)
+					})
+					.ошибка(function()
+					{
+						the_button.unlock()
+					})
+				})
+			})
 		}
 		
 	//	Режим.разрешить('правка')

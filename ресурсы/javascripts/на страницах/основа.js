@@ -99,6 +99,9 @@ $(document).on('page_loaded', function()
 				$('#logo').remove()
 		
 			panel = new Panel()
+			
+			$(document).trigger('panel_loaded')
+			   
 			panel.highlight_current_page()
 
 			after_styles()

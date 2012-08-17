@@ -28,22 +28,10 @@ online = redis.createClient()
 						
 					пользователь = пользовательское.поля(user)
 					
-					соединение.пользователь = { _id: пользователь._id }
+					соединение.пользователь = { _id: db('people').id(пользователь._id) }
 						
 					@.done()
-			
-				.сделать ->
-					online.hgetall('ether:online', @)
-					
-				.сделать (who_is_online) ->
-					who_is_online_info = []
-					for id, json of who_is_online
-						if id + '' != пользователь._id + ''
-							who_is_online_info.push(JSON.parse(json))
-							
-					соединение.emit('кто здесь', who_is_online_info)
-					@.done()
-					
+				
 				.сделать ->
 					online.hget('ether:online', пользователь._id.toString(), @)
 					
@@ -107,7 +95,16 @@ online = redis.createClient()
 						if not disconnected
 							выход()
 							
-					соединение.emit('online', Object.выбрать(['_id'], пользователь))
+					#соединение.emit('online', Object.выбрать(['_id'], пользователь))
+					
+					соединение.on 'уведомления', () ->
+						цепь_websocket(соединение)
+							.сделать ->
+								новости.уведомления(соединение.пользователь, @)
+								
+							.сделать (уведомления) ->
+								соединение.emit('новости' + ':' + 'уведомления', уведомления)
+							
 					соединение.emit 'готов'
 							
 exports.offline = (пользователь) ->
@@ -131,6 +128,7 @@ exports.offline = (пользователь) ->
 	return соединения.эфир
 
 exports.отправить = (group, name, data, options, возврат) ->
+	options = options || {}
 	возврат = возврат || (() ->)
 	
 	new Цепочка(возврат)
@@ -160,6 +158,8 @@ exports.соединение_с = (вид, options) ->
 	for id, connection of соединения[вид]
 		if connection.пользователь?
 			if connection.пользователь._id + '' == options.пользователь
+				if not options._id?
+					return connection
 				if connection.custom_data?
 					if connection.custom_data._id == options._id + ''
 						return connection
@@ -185,10 +185,6 @@ exports.отправить_одному_соединению = (group, name, dat
 				user_connections = []
 						
 				for id, connection of connections
-					console.log('!!!!!!!!!!!!!!!!!!!!!!!!!')
-					console.log(connection.пользователь)
-					console.log('!!!!!!!!!!!!!!!!!!!!!!!!! _id')
-					console.log(options.пользователь + '')
 					if connection.пользователь?
 						if connection.пользователь._id + '' == options.пользователь + ''
 							connection.emit(group + ':' + name, data)
@@ -198,16 +194,16 @@ exports.отправить_одному_соединению = (group, name, dat
 				return @.done(no)
 		
 			else if options.кроме?
-				notificated_users = []
+				notified_users = []
 				
 				users_connections = {}
 				
 				for id, connection of connections
 					if connection.пользователь?
 						user_id = connection.пользователь._id + ''
-						if !notificated_users.has(user_id) && user_id != options.кроме + ''
+						if !notified_users.has(user_id) && user_id != options.кроме + ''
 							connection.emit(group + ':' + name, data)
-							notificated_users[user_id] = yes
+							notified_users[user_id] = yes
 						
 				return @.done(yes)
             

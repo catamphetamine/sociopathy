@@ -1,3 +1,5 @@
+@import "/облик/вспомогательный.less";
+
 .main_content
 {
 	margin-top: 60px;
@@ -26,6 +28,33 @@
 	
 		> li
 		{
+			position: relative;
+			
+			> .unsubscribe
+			{
+				position: absolute;
+				left: -80px;
+				top: -8px;
+				
+				width: 80px;
+				height: 64px;
+				
+				.css_transition(100ms);
+				
+				> .button
+				{
+					top: -23px;
+					left: 19px;
+				}
+				
+				> button
+				{
+					background-image: url('/картинки/кнопки/отписаться.png');
+					width: 43px;
+					height: 43px;
+				}
+			}
+			
 			> a.small_avatar
 			{
 				display: inline-block;

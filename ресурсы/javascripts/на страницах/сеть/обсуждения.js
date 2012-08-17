@@ -42,6 +42,47 @@ title('Обсуждения');
 			page.discussions.remove()
 			page.get('.main_content').find('> .empty').show()
 		}
+		else
+		{
+			page.discussions.find('> li').each(function()
+			{
+				var discussion = $(this)
+				var container = discussion.find('> .unsubscribe')
+				
+				var the_button = button.physics.simple(new image_button(container.find('> button'),
+				{
+					'auto unlock': false
+				}))
+				
+				container.on('mouseenter', function()
+				{
+					container.css('opacity', 1)
+				})
+				
+				container.on('mouseleave', function()
+				{
+					container.css('opacity', 0)
+				})
+				
+				container.css('opacity', 0)
+				
+				the_button.does(function()
+				{
+					Ajax.delete('/приложение/сеть/обсуждения/подписка',
+					{
+						_id: talk.attr('_id')
+					})
+					.ok(function()
+					{
+						the_button.element.fade_out(0.3)
+					})
+					.ошибка(function()
+					{
+						the_button.unlock()
+					})
+				})
+			})
+		}
 		
 	//	Режим.разрешить('правка')
 	//	Режим.разрешить('действия')

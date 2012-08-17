@@ -35,25 +35,6 @@ var text_button = new Class
 	{
 		var element = button.get_element(selector_or_element)
 		
-		if (element.is('button'))
-		{
-			var boundary_html = element.boundary_html()
-			var new_element = $(boundary_html.opening.replace(/^<button/, '<div ') + boundary_html.closing.replace(/<\/button>$/, '</div>'))
-			new_element.css('display', 'inline-block')
-
-			if (element.find('> label').exists())
-			{
-				new_element.append(element.children())
-			}
-			else
-			{
-				new_element.append($('<label/>').html(element.html()))
-			}
-			
-			element.replaceWith(new_element)
-			element = new_element
-		}
-	
 		this.parent(element, $.extend({}, this.default_options, options))		
 	},
 	
@@ -225,7 +206,8 @@ var text_button = new Class
 		
 		this.content = idle_frame.html()
 		
-		return this.$element
+		return idle_frame
+		//return this.$element
 	},
 	
 	build_ready_frame: function()

@@ -251,13 +251,30 @@ $(function()
 	}
 })
 
-function title(text)
+var title = (function()
 {
-	if (!text)
-		return document.title
+	var notify_title_changed = true
+	function title(text)
+	{
+		if (!text)
+			return document.title
+			
+		document.title = text
 		
-	document.title = text
-}
+		if (window_notification)
+			if (window_notification.title_changed)
+			{
+				if (!notify_title_changed)
+					return
+				
+				notify_title_changed = false
+				window_notification.title_changed()
+				notify_title_changed = true
+			}
+	}
+	
+	return title
+})()
 
 function breadcrumbs(path, on_ok, on_error)
 {

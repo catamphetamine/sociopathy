@@ -7,13 +7,13 @@ var Новости = new (new Class
 		новости: [],
 		беседы: {},
 		обсуждения: {},
-		болталка: []
+		болталка: null
 	},
 	
 	звуки:
 	{
-		беседы: new Audio("/звуки/звонок.ogg"),
-		обсуждения: new Audio("/звуки/звонок.ogg")
+		беседы: new Audio("/звуки/пук.ogg"),
+		обсуждения: new Audio("/звуки/пук.ogg")
 	},
 	
 	появились_новости: function()
@@ -22,7 +22,7 @@ var Новости = new (new Class
 		//	this.задержанное_уведомление_о_новостях = site_icon.something_new.delay(this.задержка_уведомления_о_новостях)
 		
 		if (!this.есть_новости)
-			site_icon.something_new()
+			window_notification.something_new()
 		
 		this.есть_новости = true
 	},
@@ -38,10 +38,10 @@ var Новости = new (new Class
 	болталка: function(новое_сообщение)
 	{
 		var indicate = false
-		if (this.что_нового.болталка.пусто())
+		if (!this.что_нового.болталка)
 			indicate = true
 			
-		this.что_нового.болталка.push(новое_сообщение)
+		this.что_нового.болталка = новое_сообщение
 		
 		if (indicate)
 		{
@@ -146,9 +146,12 @@ var Новости = new (new Class
 		}
 		else if (что.болталка)
 		{
-			this.что_нового.болталка.remove(что.болталка)
-			if (this.что_нового.болталка.пусто())
-				panel.no_more_new_chat_messages()
+			if (this.что_нового.болталка)
+				if (this.что_нового.болталка <= что.болталка)
+				{
+					this.что_нового.болталка = null
+					panel.no_more_new_chat_messages()
+				}
 		}
 		
 		if (this.что_нового.новости.пусто()
@@ -163,7 +166,7 @@ var Новости = new (new Class
 			}
 			*/
 			
-			site_icon.nothing_new()
+			window_notification.nothing_new()
 			this.есть_новости = false
 		}
 	}

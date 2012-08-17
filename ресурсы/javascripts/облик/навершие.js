@@ -163,6 +163,15 @@ var Panel = new Class
 			
 			//this.buttons.мусорка.element.parent().show()
 			//this.buttons.мусорка.tooltip.update_position()
+			
+			var loading_indicator = $('#panel_menu > li > .loading')
+			var opacity = loading_indicator.css('opacity')
+			
+			this.loading =
+			{
+				show: function() { loading_indicator.css('opacity', opacity) },
+				hide: function() { loading_indicator.css('opacity', 0) }
+			}
 		}
 
 		//this.new_news.bind(this).delay(1000)

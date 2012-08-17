@@ -63,6 +63,8 @@ var button = new Class
 		
 		'pushed frame fade in duration': 0.2,
 		'pushed frame fade out duration': 0.5,
+		
+		//overlay: false
 	},
 
 	// locking button while being pushed
@@ -150,13 +152,14 @@ var button = new Class
 	{
 		// apply options
 		this.setOptions(options)
-
+		
 		// back reference		
 		var self = this
 		this.pushing.self = this
 
+		this.element = this.preprocess(button.get_element(selector_or_element))
+	
 		// get the element
-		this.element = button.get_element(selector_or_element)
 		this.$element = this.element
 		
 		// custom preparations
@@ -168,7 +171,7 @@ var button = new Class
 		this.frames.ready = this.build_ready_frame()
 		this.frames.pushed = this.build_pushed_frame()
 		
-		this.frames.idle.addClass('button')
+		this.element.addClass('button')
 		
 		// stylize
 		
@@ -176,7 +179,7 @@ var button = new Class
 		
 		// bind events
 		
-		this.$element.on('mouseenter.' + this.namespace, function() 
+		this.element.on('mouseenter.' + this.namespace, function() 
 		{
 			this.is_rolled_over = true
 			
@@ -188,7 +191,7 @@ var button = new Class
 		}.
 		bind(this))
 		
-		this.$element.on('mouseleave.' + this.namespace, function() 
+		this.element.on('mouseleave.' + this.namespace, function() 
 		{
 			this.is_rolled_over = false
 			
@@ -200,7 +203,7 @@ var button = new Class
 		}.
 		bind(this))
 
-		this.$element.on('click.' + this.namespace, function() 
+		this.element.on('click.' + this.namespace, function() 
 		{
 			// if is locked - exit
 			if (this.is_locked())
@@ -213,6 +216,31 @@ var button = new Class
 			this.on_push()
 		}.
 		bind(this))
+	},
+	
+	preprocess: function(element)
+	{
+		// if the element is a 'button' - convert it to a 'div'
+		if (element.is('button'))
+		{
+			var boundary_html = element.boundary_html()
+			var new_element = $(boundary_html.opening.replace(/^<button/, '<div ') + boundary_html.closing.replace(/<\/button>$/, '</div>'))
+			new_element.css('display', 'inline-block')
+
+			if (element.find('> label').exists())
+			{
+				new_element.append(element.children())
+			}
+			else
+			{
+				new_element.append($('<label/>').html(element.html()))
+			}
+			
+			element.replaceWith(new_element)
+			element = new_element
+		}
+		
+		return element
 	},
 
 	is_auto_unlock: function()
@@ -269,7 +297,7 @@ var button = new Class
 		
 		this.locks.push(lock)
 		
-		this.on_roll_out()
+		this.on_lock()
 		
 		return lock
 	},
@@ -352,7 +380,12 @@ var button = new Class
 
 		if (this.options.css3)
 			this.$element.addClass('ready')
-		else
+		else if (this.options.overlay === false)
+		{
+			this.fade_out('idle')
+			this.fade_in('ready') 
+		}
+		else 
 			this.fade_in('ready') 
 	},
 	
@@ -362,6 +395,24 @@ var button = new Class
 
 		if (this.options.css3)
 			this.$element.removeClass('ready')
+		else if (this.options.overlay === false)
+		{
+			this.fade_out('ready')
+			this.fade_in('idle') 
+		}
+		else
+			this.fade_out('ready') 
+	},
+	
+	on_lock: function() 
+	{
+//		animator.stop(this.frames.ready)
+
+		if (this.options.css3)
+			this.$element.removeClass('ready')
+		else if (this.options.overlay === false)
+		{
+		}
 		else
 			this.fade_out('ready') 
 	},
@@ -370,7 +421,7 @@ var button = new Class
 	{
 		var on_action = function() 
 		{
-			this.on_roll_out()
+			this.after_pushed()
 			
 			this.execute_action()
 			this.unpush()
@@ -386,8 +437,32 @@ var button = new Class
 			this.$element.addClass('pushed')
 			on_action.delay(delay)
 		}
+		else if (this.options.overlay === false)
+		{
+			this.fade_out('ready')
+			this.fade_in('pushed', on_action)
+		}
 		else
 			this.fade_in('pushed', on_action)
+	},
+	
+	after_pushed: function() 
+	{
+//		animator.stop(this.frames.ready)
+
+		return
+
+		/*
+		if (this.options.css3)
+			this.$element.removeClass('ready')
+		else if (this.options.overlay === false)
+		{
+			this.fade_out('ready')
+			this.fade_in('idle') 
+		}
+		else
+			this.fade_out('ready')
+		*/
 	},
 	
 	unpush: function()
@@ -397,6 +472,11 @@ var button = new Class
 			var delay = this.$element.css('transition-duration')
 			this.$element.removeClass('pushed')
 			this.can_unlock_the_pushing_lock.delay(delay)
+		}
+		else if (this.options.overlay === false)
+		{
+			//this.fade_in('ready')
+			this.fade_out('pushed', this.can_unlock_the_pushing_lock)
 		}
 		else
 			this.fade_out('pushed', this.can_unlock_the_pushing_lock)
@@ -431,7 +511,7 @@ var button = new Class
 			return
 		
 		//this.frames.idle.hide()
-		this.$element.hide()
+		this.element.hide()
 		this.is_shown = false
 	},
 	
@@ -605,7 +685,7 @@ button.physics =
 		return the_button
 	},
 	
-	'fast': function(the_button)
+	fast: function(the_button)
 	{
 		the_button.setOptions
 		({
@@ -614,6 +694,26 @@ button.physics =
 			
 			'pushed frame fade in duration': 0.1,
 			'pushed frame fade out duration': 0.5,
+
+			'pushed frame fade in easing': 'swing',
+			'pushed frame fade out easing': 'swing'
+		})
+		
+		return the_button
+	},
+	
+	simple: function(the_button)
+	{
+		the_button.setOptions
+		({
+			'idle frame fade in duration': 0.3,
+			'idle frame fade out duration': 0.3,
+				
+			'ready frame fade in duration': 0.3,
+			'ready frame fade out duration': 0.3,
+			
+			'pushed frame fade in duration': 0.3,
+			'pushed frame fade out duration': 0.3,
 
 			'pushed frame fade in easing': 'swing',
 			'pushed frame fade out easing': 'swing'

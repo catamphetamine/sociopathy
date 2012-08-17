@@ -37,16 +37,9 @@
 	background-image: url('/картинки/навершие/background.png');
 	background-repeat: repeat-x;
 
-	-webkit-box-shadow: 0px 1px 2px #7f7f7f;
-	-moz-box-shadow: 0px 1px 2px #7f7f7f;
-	-o-box-shadow: 0px 1px 2px #7f7f7f;
 	box-shadow: 0px 1px 2px #7f7f7f;
 	
-	-webkit-user-select: none;
-	-khtml-user-select: none;
-	-moz-user-select: none;
-	-o-user-select: none;
-	user-select: none;
+	.user_select(none);
 }
 
 #panel_menu
@@ -155,4 +148,19 @@ a.image
 		margin-left: 14px;
 		margin-right: -2px;
 	}
+}
+
+#panel_menu > li > .loading
+{
+	width: 16px;
+	height: 16px;
+	
+	background-image: url('/картинки/1.gif');
+	
+	margin-top: 24px;
+	margin-left: 24px;
+	
+	opacity: 0.3;
+	
+	.css_transition(300ms, opacity);
 }

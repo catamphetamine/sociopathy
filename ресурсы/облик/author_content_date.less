@@ -41,17 +41,28 @@
 	list-style-type: none;
 	
 	font-size: 0;
-
-	> li.odd
-	{
-		background-color: #f6f6f6;
-	}
 	
 	> li
 	{
 		position: relative;
 		display: inline-block;
 		width: 100%;
+		
+		.css_transition(500ms, background-color);
+		
+		&.new
+		{
+		}
+	
+		&.odd
+		{
+			background-color: #f6f6f6;
+			
+			&.new
+			{
+				background-color: #f0fbff;
+			}
+		}
 		
 		> .author
 		{

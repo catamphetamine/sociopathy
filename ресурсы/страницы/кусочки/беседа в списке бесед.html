@@ -1,4 +1,10 @@
-<li>
+<li _id="${_id}">
+	{{if подписан}}
+		<div class="unsubscribe">
+			<button></button>
+		</div>
+	{{/if}}
+	
 	{{each(index, участник) участники}}
 		{{tmpl(участник) 'маленький аватар'}}
 	{{/each}}

@@ -63,7 +63,7 @@ require './controller/user'
 require './controller/diary'
 require './controller/journal'
 require './controller/books'
-require './controller/news'
+global.новости = require './controller/news'
 require './controller/circles'
 require './controller/talks'
 require './controller/discussions'
@@ -85,9 +85,6 @@ global.memcache.on 'error', (error) ->
 global.memcache.connect()
 	
 new Цепочка()	
-	.сделать ->
-		global.redis.createClient().del('chat:online', @)
-		
 	.сделать ->
 		web_server_domain = domain.create()
 		

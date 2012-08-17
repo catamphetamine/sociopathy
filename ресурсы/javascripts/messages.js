@@ -599,11 +599,11 @@ var Messages = new Class
 		if (this.options.new_message_sound)
 				this.options.new_message_sound.play()
 				
-		site_icon.something_new()
+		window_notification.something_new()
 	},
 	
 	dismiss_new_messages_notifications: function()
 	{	
-		site_icon.nothing_new()
+		window_notification.nothing_new()
 	}
 })

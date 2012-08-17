@@ -26,7 +26,7 @@ var Interactive_messages = function(options)
 
 			// после preprend, т.к. стили				
 			if (data.отправитель._id !== пользователь._id)
-				this.initialize_call_action(message, message.attr('author'), 'of_message_author', function()
+				this.initialize_user_actions(message, message.attr('author'), 'of_message_author', function()
 				{
 					return message.find('.author').hasClass('online')
 				})
@@ -86,7 +86,7 @@ var Interactive_messages = function(options)
 	
 			// после append'а, т.к. стили
 			if (is_another_users_message)
-				this.initialize_call_action(message, message.attr('author'), 'of_message_author', function()
+				this.initialize_user_actions(message, message.attr('author'), 'of_message_author', function()
 				{
 					return message.find('.author').hasClass('online')
 				})
@@ -99,13 +99,18 @@ var Interactive_messages = function(options)
 	
 	messages.options.connection = options.connection
 	
-	messages.initialize_call_action = function(user_icon, user_id, style_class, condition)
+	messages.initialize_user_actions = function(user_icon, user_id, style_class, condition)
 	{
 		var messages = this
 		
 		var actions = user_icon.find('.popup_menu_container')
 		
-		actions.find('.call').click(function(event)
+		var menu_element = actions.find('> .popup_menu')
+		
+		if (menu_element.children().length === 0)
+			return
+		
+		menu_element.find('> .call').click(function(event)
 		{
 			event.preventDefault()
 			
@@ -510,7 +515,7 @@ var Interactive_messages = function(options)
 		
 		// после append'а, т.к. стили
 		if (user._id !== пользователь._id)
-			messages.initialize_call_action(container, user._id, 'of_online_user')
+			messages.initialize_user_actions(container, user._id, 'of_online_user')
 			
 		animator.fade_in(container, { duration: 1 }) // in seconds
 	}

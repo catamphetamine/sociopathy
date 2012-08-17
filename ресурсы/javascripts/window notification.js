@@ -169,7 +169,7 @@ var Text_and_icon = new Class
 	
 	prepend_asterisk: function()
 	{
-		title(site_icon.attention_symbol + title())
+		title(this.attention_symbol + title())
 	},
 	
 	remove_asterisk: function()
@@ -243,7 +243,111 @@ var Text_and_icon = new Class
 	}
 })
 
-var site_icon = new Text_and_icon()
+var Minimalistic_window_notification = new Class
+({
+	initialize: function()
+	{
+		this.element = $('#site_icon')	
+	},
+
+	путь: '/картинки/значки/',
+	
+	// http://en.wikipedia.org/wiki/Template:Unicode_chart_Dingbats
+	//attention_symbol = '•'
+	attention_symbol: '✽ ',
+
+	delay: 3000,
+	
+	prepends_asterisk: false,
+	
+	set: function(name)
+	{
+		this.element.remove()
+		this.element = $('<link id="site_icon" type="image/x-icon" rel="shortcut icon"/>')
+		this.element.attr('href', this.путь + name + '.png')
+		this.element.appendTo('head')
+	},
+	
+	prepend_asterisk: function()
+	{
+		title(this.attention_symbol + title())
+	},
+	
+	remove_asterisk: function()
+	{
+		title(title().substring(this.attention_symbol.length))
+	},
+	
+	has_asterisk: function()
+	{
+		return title().indexOf(this.attention_symbol) === 0
+	},
+	
+	// поскольку при ajax-овых переходах между страницами меняется title,
+	// то его постоянно следует проверять на наличие звёздочки
+	title_changed: function()
+	{
+		if (!this.prepends_asterisk)
+			return
+		
+		if (!this.notifying)
+			return
+		
+		if (!this.has_asterisk())
+			this.prepend_asterisk()
+	},
+	
+	something_new: function(options)
+	{
+		if (this.notifying)
+			return
+		
+		options = options || {}
+		
+		if (!options.immediate)
+		{
+			this.delayed = function()
+			{
+				this.delayed = null
+				this.something_new({ immediate: true })
+			}
+			.bind(this)
+			.delay(this.delay)
+			return
+		}
+			
+		this.notifying = true
+		
+		this.set('внимание 1')
+		
+		if (this.prepends_asterisk)
+			this.prepend_asterisk()
+	},
+	
+	nothing_new: function()
+	{
+		if (this.delayed)
+		{
+			clearTimeout(this.delayed)
+			this.delayed = null
+			return
+		}
+		
+		if (!this.notifying)
+			return
+			
+		this.notifying = false
+		
+		if (this.prepends_asterisk)
+			if (this.has_asterisk())
+				this.remove_asterisk()
+			
+		this.set('основной')
+	}
+})
+
+var window_notification = new Minimalistic_window_notification()
+//var site_icon = new Text_and_icon()
 //var site_icon = new Image_sequence_icon()
 
 //site_icon.something_new()
