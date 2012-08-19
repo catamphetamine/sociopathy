@@ -18,7 +18,7 @@ options.latest_read_message = (environment, возврат) ->
 options.notify = (_id, environment, возврат) ->
 	new Цепочка(возврат)
 		.сделать ->
-			db('people_sessions').update({ пользователь: { $ne: environment.пользователь._id } }, { $set: { 'новости.болталка': _id.toString() } }, @)
+			db('people_sessions').update({ пользователь: { $ne: environment.пользователь._id } }, { $set: { 'новости.болталка': _id.toString() } }, { multi: yes }, @)
 			
 		.сделать ->
 			эфир.отправить('новости', 'болталка', { _id: _id.toString() }, { кроме: environment.пользователь._id })
@@ -26,7 +26,7 @@ options.notify = (_id, environment, возврат) ->
 				if пользователь != environment.пользователь._id + ''
 					соединение_с_обсуждением = эфир.соединение_с('болталка', { пользователь: environment.пользователь._id })
 					if not соединение_с_обсуждением
-						эфир.отправить_одному_соединению('новости', 'звуковое оповещение', { чего: 'болталка' }, { пользователь: пользователь })
+						эфир.отправить_одному_соединению('новости', 'звуковое оповещение', { чего: 'болталка' }, { кому: пользователь })
 			@.done()
 
 options.message_read = (_id, environment, возврат) ->
@@ -37,8 +37,8 @@ options.message_read = (_id, environment, возврат) ->
 			db('people_sessions').update({ пользователь: environment.пользователь._id }, actions, @)
 			
 		.сделать ->
-			db('people_sessions').update({ пользователь: environment.пользователь._id, новости: { болталка: _id.toString() } }, { $unset: { 'новости.болталка': _id.toString() } }, @)
-
+			db('people_sessions').update({ пользователь: environment.пользователь._id, 'новости.болталка': _id.toString() }, { $unset: { 'новости.болталка': _id.toString() } }, @)
+			
 options.save = (сообщение, environment, возврат) ->
 	new Цепочка(возврат)
 		.сделать ->

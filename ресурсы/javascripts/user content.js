@@ -39,7 +39,7 @@ $(document).on('display_page', function()
 	if (доступна_ли_страница_управления())
 	{
 		panel.buttons.управление.element.parent().show()
-		panel.buttons.управление.tooltip.update_position()
+		//panel.buttons.управление.tooltip.update_position()
 	}
 })
 

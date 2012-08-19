@@ -58,16 +58,29 @@ options.latest_read_message = (environment, возврат) ->
 options.notify = (_id, environment, возврат) ->
 	new Цепочка(возврат)
 		.сделать ->
-			set_id = 'новости.обсуждения.' + environment.сообщения_чего._id.toString()
-			db('people_sessions').update({ пользователь: { $ne: environment.пользователь._id } }, { $addToSet: { set_id: _id.toString() } }, @)
+			db('discussions').findOne({ _id: environment.сообщения_чего._id }, @._.в 'обсуждение')
 			
+		.сделать (обсуждение) ->
+			set_id = 'новости.обсуждения.' + environment.сообщения_чего._id.toString()
+			add_to_set = {}
+			add_to_set[set_id] = _id.toString()
+			db('people_sessions').update({ $and: [ { пользователь: { $ne: environment.пользователь._id } }, пользователь: { $in: обсуждение.подписчики } ] }, { $addToSet: add_to_set }, { multi: yes }, @)
+
 		.сделать ->	
-			эфир.отправить('новости', 'обсуждения', { _id: environment.сообщения_чего._id.toString(), сообщение: _id.toString() }, { кроме: environment.пользователь._id })
+			подписчики = @._.обсуждение.подписчики.map((_id) -> _id.toString())
+			
+			for подписчик in подписчики
+				if подписчик != environment.пользователь._id.toString()
+					эфир.отправить('новости', 'обсуждения', { _id: environment.сообщения_чего._id.toString(), сообщение: _id.toString() }, { кому: подписчик })
+
 			for пользователь in эфир.пользователи()
 				if пользователь != environment.пользователь._id + ''
+					if !подписчики.has(пользователь)
+						continue
 					соединение_с_обсуждением = эфир.соединение_с('обсуждения', { пользователь: environment.пользователь._id, _id: environment.сообщения_чего._id.toString() })
 					if not соединение_с_обсуждением
-						эфир.отправить_одному_соединению('новости', 'звуковое оповещение', { чего: 'обсуждения' }, { пользователь: пользователь })
+						эфир.отправить_одному_соединению('новости', 'звуковое оповещение', { чего: 'обсуждения' }, { кому: пользователь })
+						
 			@.done()
 
 options.message_read = (_id, environment, возврат) ->
@@ -78,9 +91,18 @@ options.message_read = (_id, environment, возврат) ->
 			db('people_sessions').update({ пользователь: environment.пользователь._id }, actions, @)
 			
 		.сделать ->
-			set_id = 'новости.обсуждения.' + environment.сообщения_чего._id.toString()
-			db('people_sessions').update({ пользователь: environment.пользователь._id }, { $pull: { set_id: _id.toString() } }, @)
+			@._.set_id = 'новости.обсуждения.' + environment.сообщения_чего._id.toString()
+			pull = {}
+			pull[@._.set_id] = _id.toString()
+			db('people_sessions').update({ пользователь: environment.пользователь._id }, { $pull: pull }, @)
 
+		.сделать ->
+			query = { пользователь: environment.пользователь._id }
+			query[@._.set_id] = []
+			unset = {}
+			unset[@._.set_id] = yes
+			db('people_sessions').update(query, { $unset: unset }, @)
+			
 options.save = (сообщение, environment, возврат) ->
 	new Цепочка(возврат)
 		.сделать ->

@@ -32,32 +32,37 @@ exports.messages = (options) ->
 						db('people_sessions').findOne({ пользователь: environment.пользователь._id }, @)
 						
 					.сделать (session) ->
-						if not session.новое?
-							return @.return(@._.сообщения)
-							
 						switch options.id
 							when  'chat'
 								if not session.новости.болталка?
 									break
 								
 								for сообщение in @._.сообщения
-									if сообщение._id + '' < session.новости.болталка
+									if сообщение._id + '' <= session.новости.болталка
 										сообщение.новое = yes
 								
 							when  'discussions'
 								if not session.новости.обсуждения?
 									break
+									
+								discussion = environment.сообщения_чего._id.toString()
+								if not session.новости.обсуждения[discussion]?
+									break
 								
 								for сообщение in @._.сообщения
-									if session.новости.обсуждения.has(сообщение._id + '')
+									if session.новости.обсуждения[discussion].has(сообщение._id + '')
 										сообщение.новое = yes
 							
 							when  'talks'
 								if not session.новости.беседы?
 									break
+									
+								talk = environment.сообщения_чего._id.toString()
+								if not session.новости.беседы[talk]?
+									break
 								
 								for сообщение in @._.сообщения
-									if session.новости.беседы.has(сообщение._id + '')
+									if session.новости.беседы[talk].has(сообщение._id + '')
 										сообщение.новое = yes
 						
 						return @.return(@._.сообщения)
@@ -136,7 +141,7 @@ exports.messages = (options) ->
 								соединение.on 'вызов', (_id) ->
 									цепь_websocket(соединение)
 										.сделать ->
-											if not эфир.отправить('общее', 'вызов', пользовательское.поля(пользователь), { пользователь: _id })
+											if not эфир.отправить('общее', 'вызов', пользовательское.поля(пользователь), { кому: _id })
 												return соединение.emit('ошибка', 'Вызываемый пользователь недоступен')
 								
 								соединение.on 'пишет', ->
@@ -211,14 +216,17 @@ exports.messages = (options) ->
 											соединение.emit 'готов'
 											
 								соединение.on 'прочитано', (_id) ->
-									#console.log('прочитано')
-									#console.log(_id)
-									#console.log(environment.пользователь.имя)
 									цепь_websocket(соединение)
 										.сделать ->
 											if options.message_read?
 												options.message_read(messages().id(_id), environment, @)
-						
+												
+											сообщения_чего = null
+											if environment.сообщения_чего?
+												сообщения_чего = environment.сообщения_чего._id.toString()
+												
+											эфир.отправить('новости', 'прочитано', { что: options.in_ether_id, сообщения_чего: сообщения_чего, _id: _id.toString() })
+
 								соединение.emit 'пользователь подтверждён'
 								
 			Max_batch_size = 30
@@ -249,7 +257,7 @@ exports.messages = (options) ->
 						@.done()
 		
 					.сделать ->
-						начиная_с_какого_выбрать(@.$.последнее_прочитанное_сообщение, ввод, environment, @.в 'с_какого_выбрать')
+						начиная_с_какого_выбрать(@.$.последнее_прочитанное_сообщение, ввод, environment, @)#.в 'с_какого_выбрать')
 			
 					.сделать (с_какого_выбрать) ->
 						if not с_какого_выбрать?
@@ -266,6 +274,10 @@ exports.messages = (options) ->
 						
 					.сделать ->
 						сообщения = @.$.сообщения
+						
+						# strange bug
+						@.$.xxx = @.$.сообщения
+						
 						return @.done() if сообщения.length == 0
 						messages({ _id: { $lt: сообщения[сообщения.length - 1]._id }}, { limit: 1 }, environment, @)
 							
@@ -279,6 +291,9 @@ exports.messages = (options) ->
 							сообщения_чего: environment.сообщения_чего
 							
 						@.$['есть ещё?'] = есть_ли_ещё
+
+						# strange bug
+						@.$.сообщения = @.$.xxx
 						
 						for сообщение in @.$.сообщения
 							сообщение._id = сообщение._id.toString()

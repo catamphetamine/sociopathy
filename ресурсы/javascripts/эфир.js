@@ -129,6 +129,29 @@ $(document).on('panel_loaded', function()
 			info('Вас вызывает ' + пользователь.имя)
 		})
 		
+		on('новости', 'прочитано', function(data)
+		{
+			function transform()
+			{
+				switch (data.что)
+				{
+					case 'новости':
+						return { новость: data._id }
+					
+					case 'болталка':
+						return { болталка: data._id }
+					
+					case 'беседы':
+						return { беседа: data.сообщения_чего, сообщение: data._id }
+					
+					case 'обсуждения':
+						return { обсуждение: data.сообщения_чего, сообщение: data._id }
+				}
+			}
+			
+			Новости.прочитано(transform(data))
+		})
+		
 		on('новости', 'звуковое оповещение', function(data)
 		{
 			//alert('звуковое оповещение')
@@ -159,7 +182,9 @@ $(document).on('panel_loaded', function()
 		{
 			//console.log(data)
 			
-			if (data.новости)
+			Новости.сброс()
+			
+			if (data.новости && !data.новости.пусто())
 			{
 				Новости.новости(data.новости)
 			}

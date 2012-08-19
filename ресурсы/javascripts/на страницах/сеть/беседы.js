@@ -61,6 +61,9 @@ title('Беседы');
 			{
 				var talk = $(this)
 				var container = talk.find('> .unsubscribe')
+			
+				if (Новости.что_нового.беседы[talk.attr('_id')])
+					talk.addClass('new')
 				
 				var the_button = button.physics.simple(new image_button(container.find('> button'),
 				{

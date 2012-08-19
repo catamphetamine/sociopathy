@@ -170,7 +170,7 @@
 		if (пользователь)
 		{
 			panel.buttons.мусорка.element.parent().show()
-			panel.buttons.мусорка.tooltip.update_position()
+			//panel.buttons.мусорка.tooltip.update_position()
 		}
 		*/
 		

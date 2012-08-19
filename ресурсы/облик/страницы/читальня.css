@@ -6,6 +6,15 @@
 	margin-bottom: 60px;
 	
 	overflow: auto;
+	
+	.main_content
+	{
+		> .empty
+		{
+			display: none;
+			margin-top: 100px;
+		}
+	}
 }
 
 .breadcrumbs_container

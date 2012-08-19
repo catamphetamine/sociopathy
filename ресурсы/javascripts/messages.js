@@ -27,7 +27,7 @@ var Messages = new Class
 		//this.setOptions(options) // doesn't work - mootools bug
 		//this.load()
 		
-		$(document).on('focused', function()
+		page.on('focused.messages', function()
 		{
 			прокрутчик.process_scroll({ first_time: true })
 		})
@@ -325,8 +325,7 @@ var Messages = new Class
 	
 	process_message_element: function(message)
 	{
-		if (!message.hasClass('new'))
-			return
+		var was_new = message.hasClass('new')
 		
 		var read = false
 		
@@ -336,17 +335,31 @@ var Messages = new Class
 			if (!Focus.focused)
 				return
 		
+			if (!was_new)
+			{
+				if (_id > this.последнее_прочитанное_сообщение)
+					if (!this.read_message(_id))
+						return 
+				
+				return
+			}
+		
 			//this.options.прокрутчик.unwatch(message)
 		
 			if (this.options.on_message_bottom_appears)
 				this.options.on_message_bottom_appears(_id)
-					
-			message.removeClass('new')
-						
+				
 			if (read)
 				return
+			
+			if (!this.read_message(_id))
+				return 
+					
+			if (this.options.on_message_read)
+				this.options.on_message_read(_id)
 		
-			this.message_read(_id)
+			message.removeClass('new')
+		
 			read = true
 		})
 		.bind(this))
@@ -473,18 +486,6 @@ var Messages = new Class
 			next()
 		})
 	},
-	
-	message_read: function(_id)
-	{
-		if (this.options.on_message_read)
-				this.options.on_message_read(_id)
-		
-		if (this.latest_message_read)
-			if (this.latest_message_read >= _id)
-				return
-				
-		this.latest_message_read = _id
-	},
 
 	on_load: function()
 	{
@@ -597,7 +598,7 @@ var Messages = new Class
 	new_messages_notification: function()
 	{
 		if (this.options.new_message_sound)
-				this.options.new_message_sound.play()
+			this.options.new_message_sound.play()
 				
 		window_notification.something_new()
 	},

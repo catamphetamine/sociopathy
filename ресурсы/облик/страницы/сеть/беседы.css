@@ -29,6 +29,24 @@
 		> li
 		{
 			position: relative;
+			.css_transition(500ms, background-color);
+			
+			border-radius: 6px;
+			
+			margin-bottom: 4px;
+			margin-top: 4px;
+			
+			padding-top: 10px;
+			padding-left: 10px;
+			padding-right: 10px;
+			padding-bottom: 2px;
+			
+			&.new
+			{
+				background-color: #F0FBFF;
+				box-shadow: 0 0 4px #F0FBFF;
+				border-radius: 6px;
+			}
 			
 			> .unsubscribe
 			{

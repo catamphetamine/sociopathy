@@ -351,6 +351,13 @@ var Page = new Class
 	
 	on: function(element, event, action)
 	{
+		if (typeof element === 'string')
+		{
+			action = event
+			event = element
+			element = $(document)
+		}
+		
 		if (!event.contains('.'))
 			throw 'You must specify a namespace for page event: ' + event
 			

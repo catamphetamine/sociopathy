@@ -4,6 +4,8 @@
 		
 	//var on_the_right_side_of_the_panel_right
 	
+	var empty = false
+	
 	page.load = function()
 	{
 		if (!page.data.раздел)
@@ -59,6 +61,9 @@
 				get_data: function(data)
 				{
 					title(data.раздел.название)
+					
+					if (data.раздел.заметки.пусто() && data.раздел.подразделы.пусто())
+						empty = true
 			
 					return data.раздел
 				},
@@ -98,7 +103,10 @@
 	
 	function categories_loaded()
 	{
-		Режим.разрешить('правка')
+		if (!empty)
+			Режим.разрешить('правка')
+		else
+			page.get('.main_content > .empty').show()
 		
 		$(document).trigger('page_initialized')
 	}

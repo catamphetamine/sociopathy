@@ -135,10 +135,10 @@ exports.отправить = (group, name, data, options, возврат) ->
 		.сделать ->
 			connections = соединения.эфир
 			
-			if options.пользователь?
+			if options.кому?
 				for id, connection of connections
 					if connection.пользователь?
-						if connection.пользователь._id + '' == options.пользователь + ''
+						if connection.пользователь._id + '' == options.кому + ''
 							connection.emit(group + ':' + name, data)
 						
 				return @.done(yes)
@@ -150,6 +150,12 @@ exports.отправить = (group, name, data, options, возврат) ->
 							connection.emit(group + ':' + name, data)
 						
 				return @.done(yes)
+			
+			for id, connection of connections
+				if connection.пользователь?
+					connection.emit(group + ':' + name, data)
+					
+			return @.done(yes)
     
 exports.соединение_с = (вид, options) ->
 	if Object.пусто(соединения[вид])
@@ -181,16 +187,16 @@ exports.отправить_одному_соединению = (group, name, dat
 		.сделать ->
 			connections = соединения.эфир
 				
-			if options.пользователь?
+			if options.кому?
 				user_connections = []
 						
 				for id, connection of connections
 					if connection.пользователь?
-						if connection.пользователь._id + '' == options.пользователь + ''
+						if connection.пользователь._id + '' == options.кому + ''
 							connection.emit(group + ':' + name, data)
 							return @.done(yes)
 						
-				console.error('No connections for user: ' + options.пользователь)
+				console.error('No connections for user: ' + options.кому)
 				return @.done(no)
 		
 			else if options.кроме?

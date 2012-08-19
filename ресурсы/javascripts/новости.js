@@ -34,9 +34,32 @@ var Новости = new (new Class
 		
 		this.звуки[чего].play()
 	},
-    
+	
+	сброс: function()
+	{
+		что_нового =
+		{
+			новости: [],
+			беседы: {},
+			обсуждения: {},
+			болталка: null
+		}
+		
+		window_notification.nothing_new()
+		this.есть_новости = false
+		
+		panel.no_more_new_chat_messages()
+	},
+	
 	болталка: function(новое_сообщение)
 	{
+		if (Страница.эта() === 'сеть/болталка')
+		{
+			var message = page.get('#chat > li[message_id="' + новое_сообщение + '"]')
+			if (message.exists() && !message.hasClass('new'))
+				return //alert('not new')
+		}
+		
 		var indicate = false
 		if (!this.что_нового.болталка)
 			indicate = true
@@ -53,6 +76,29 @@ var Новости = new (new Class
     
 	обсуждение: function(обсуждение, новые_сообщения)
 	{
+		if (Страница.эта() === 'сеть/обсуждения')
+		{
+			var discussion = page.get('#discussions > li[_id="' + обсуждение + '"]')
+				
+			if (discussion.exists())
+				discussion.addClass('new')
+		}
+		if (Страница.эта() === 'сеть/обсуждение')
+		{
+			var сообщения = Array.clone(новые_сообщения)
+			новые_сообщения = []
+			
+			сообщения.for_each(function()
+			{
+				var message = page.get('#discussion > li[message_id="' + this + '"]')
+				
+				if (message.exists() && !message.hasClass('new'))
+					return //alert('not new')
+				
+				новые_сообщения.push(this)
+			})
+		}
+		
 		if (!(новые_сообщения instanceof Array))
 			новые_сообщения = [новые_сообщения]
 			
@@ -75,6 +121,29 @@ var Новости = new (new Class
     
 	беседа: function(беседа, новые_сообщения)
 	{
+		if (Страница.эта() === 'сеть/беседы')
+		{
+			var talk = page.get('#talks > li[_id="' + беседа + '"]')
+				
+			if (talk.exists())
+				talk.addClass('new')
+		}
+		else if (Страница.эта() === 'сеть/беседа')
+		{
+			var сообщения = Array.clone(новые_сообщения)
+			новые_сообщения = []
+			
+			сообщения.for_each(function()
+			{
+				var message = page.get('#talk > li[message_id="' + this + '"]')
+				
+				if (message.exists() && !message.hasClass('new'))
+					return //alert('not new')
+				
+				новые_сообщения.push(this)
+			})
+		}
+		
 		if (!(новые_сообщения instanceof Array))
 			новые_сообщения = [новые_сообщения]
 			
@@ -129,6 +198,14 @@ var Новости = new (new Class
 			{
 				delete this.что_нового.обсуждения[что.обсуждение]
 				panel.no_more_new_discussion_messages()
+				
+				if (Страница.эта() === 'сеть/обсуждения')
+				{
+					var discussion = page.get('#discussions > li[_id="' + что.обсуждение + '"]')
+						
+					if (discussion.exists())
+						discussion.removeClass('new')
+				}
 			}
 		}
 		else if (что.беседа)
@@ -142,6 +219,14 @@ var Новости = new (new Class
 			{
 				delete this.что_нового.беседы[что.беседа]
 				panel.no_more_new_talk_messages()
+					
+				if (Страница.эта() === 'сеть/беседы')
+				{
+					var talk = page.get('#talks > li[_id="' + что.беседа + '"]')
+						
+					if (talk.exists())
+						talk.removeClass('new')
+				}
 			}
 		}
 		else if (что.болталка)

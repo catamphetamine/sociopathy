@@ -164,8 +164,6 @@ var Interactive_messages = function(options)
 			
 		return false
 	}
-	
-	var is_away = false
 
 	function get_last_message_id()
 	{
@@ -177,26 +175,13 @@ var Interactive_messages = function(options)
 		return last_message.attr('message_id')
 	}
 	
-	var updated_latest_message_read
-	
-	messages.update_latest_read_message = function()
+	messages.read_message = function(_id)
 	{
-		if (updated_latest_message_read)
-			if (updated_latest_message_read == this.latest_message_read)
-				return
-				
-		if (!this.latest_message_read)
-			return
-			
-		if (this.последнее_прочитанное_сообщение)
-			if (this.latest_message_read <= this.последнее_прочитанное_сообщение)
-				return
-	
 		if (!this.connection || !this.connection.is_ready)
-			return // (function() { messages.read(_id) }).delay(200) // no simple "delay" with ajax navigation, use page.delay
+			return false
 		
-		this.connection.emit('прочитано', this.latest_message_read)
-		updated_latest_message_read = this.latest_message_read
+		this.connection.emit('прочитано', _id)
+		return true
 	}
 	.bind(messages)
 	
@@ -244,14 +229,12 @@ var Interactive_messages = function(options)
 		{
 			$(window).on_page('focus.messages', function()
 			{
-				is_away = false
 				//messages.dismiss_new_messages_notifications()
 				messages.connection.emit('смотрит')
 			})
 			
 			$(window).on_page('blur.messages', function()
 			{
-				is_away = true
 				messages.connection.emit('не смотрит')
 			})
 			
@@ -388,8 +371,17 @@ var Interactive_messages = function(options)
 				})
 				
 				if (сообщения.length > 1 || накопленные_сообщения.length > 0)
-					if (is_away)
+				{
+					var notify = false
+					сообщения.for_each(function()
+					{
+						if (this.отправитель._id !== пользователь._id)
+							notify = true
+					})
+					
+					if (notify)
 						messages.new_messages_notification()
+				}
 				
 				пропущенные_сообщения_учтены = true
 			})
@@ -406,8 +398,6 @@ var Interactive_messages = function(options)
 				{
 					callback()
 					
-					page.ticking(messages.update_latest_read_message, 2000)
-					
 					messages.внести_пользователя_в_список_вверху(пользователь, { куда: 'в начало' })
 
 					if (options.on_connection)
@@ -423,7 +413,12 @@ var Interactive_messages = function(options)
 				
 				messages.подцепился(пользователь)
 				
-				connection.emit('получить пропущенные сообщения', { _id: messages.options.container.find('> li:last').attr('message_id') })
+				var latest_message = messages.options.container.find('> li:last').attr('message_id')
+				if (!latest_message)
+					error('Не удалось загрузить сообщения')
+				else
+					connection.emit('получить пропущенные сообщения', { _id: latest_message })
+					
 				connection.emit('кто здесь?')
 			})
 			
@@ -459,8 +454,8 @@ var Interactive_messages = function(options)
 					накопленные_сообщения.push(сообщение)
 					return
 				}
-					
-				if (is_away)
+				
+				if (сообщение.отправитель._id !== пользователь._id)
 					messages.new_messages_notification()
 			
 				messages.add_message(сообщение)

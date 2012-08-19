@@ -11,6 +11,89 @@
  * @github kuchumovn
  */
 
+var есть_ли_новости = function(what)
+{
+	switch (what)
+	{
+		case 'болталка':
+			return Новости.что_нового.болталка != null
+		
+		case 'беседы':
+			return !Object.пусто(Новости.что_нового.беседы)
+			
+		case 'обсуждения':
+			return !Object.пусто(Новости.что_нового.обсуждения)
+			
+		case 'новости':
+			return !Новости.что_нового.новости.пусто()
+	}
+}
+
+var page_buttons =
+[
+	{ page: 'читальня', button: 'читальня' },
+	{ page: 'заметка', button: 'читальня' },
+	{ page: 'люди', button: 'люди' },
+	
+	{ page: 'человек/человек', button: 'люди' },
+	{ page_pattern: 'помощь(/.*)?', button: 'помощь' },
+	
+	{ page: 'сеть/новости', button: 'новости' },
+	{ page: 'сеть/болталка', button: 'болталка' },
+	
+	{ page: 'сеть/обсуждения', button: 'обсуждения' },
+	//{ page: 'сеть/обсуждение', button: 'обсуждения' },
+	
+	{ page: 'сеть/беседы', button: 'беседы' },
+	//{ page: 'сеть/беседа', button: 'беседы' },
+	
+	{ page: 'человек/дневник', button: 'дневник' },
+	{ page: 'человек/запись в дневнике', button: 'дневник' },
+	
+	{ page: 'человек/журнал', button: 'журнал' },
+	{ page: 'человек/запись в журнале', button: 'журнал' },
+	
+	{ page: 'человек/книги', button: 'книги' },
+	
+	{ page: 'человек/картинки', button: 'люди' },
+	{ page: 'человек/альбом с картинками', button: 'люди' },
+	{ page: 'человек/видео', button: 'люди' },
+	{ page: 'человек/альбом с видео', button: 'люди' },
+	
+	{ page: 'сеть/круги', button: 'круги' },
+	{ page: 'сеть/настройки', button: 'настройки' },
+	{ page: 'сеть/мусорка', button: 'мусорка' },
+	
+	{ page: 'управление', button: 'управление' }
+]
+
+var match_page = function(options)
+{
+	if (options.page)
+		if (!Страница.is(options.page))
+			return false
+	
+	if (options.page_pattern)
+		if (!Страница.matches(options.page_pattern))
+			return false
+		
+	return true
+}
+
+var get_page_button = function()
+{
+	var i = 0
+	while (i < page_buttons.length)
+	{
+		var page_and_button = page_buttons[i]
+		
+		if (match_page(page_and_button))
+			return page_and_button.button
+		
+		i++
+	}
+}
+
 var Panel = new Class
 ({
 	icon_size: 60,
@@ -44,7 +127,8 @@ var Panel = new Class
 				return
 			
 			// tooltip
-			$('<em/>').append($menu_item.contents()).appendTo($menu_item)
+			//$('<em/>').append($menu_item.contents()).appendTo($menu_item)
+			$menu_item.empty()
 
 			// place the panel menu item
 			var $hyperlink = $('<a/>')
@@ -81,6 +165,22 @@ var Panel = new Class
 			
 			if ($menu_item.attr('hidden'))
 				$menu_item.hide()
+				
+			var type = title
+			if (type.indexOf(' (') >= 0)
+				type = type.substring(0, type.indexOf(' ('))
+				
+			if (type !== title)
+			{
+				button.element.css
+				({
+					position: 'absolute',
+					'z-index': -1,
+					opacity: 0
+				})
+			
+				button.element.appendTo(panel.buttons[type].element.parent().node())
+			}
 		})
 	},
 	
@@ -118,6 +218,8 @@ var Panel = new Class
 			
 			tooltip.update_position()
 			
+			return
+			
 			$(this).hover
 			(
 				// on mouse roll over - show
@@ -152,7 +254,7 @@ var Panel = new Class
 	initialize: function()
 	{
 		this.activate_buttons(this.options.images_path)
-		this.activate_tooltips()
+		//this.activate_tooltips()
 	
 		if (пользователь)
 		{
@@ -185,161 +287,134 @@ var Panel = new Class
 		
 		var previously_highlighted_menu_item = panel.highlighted_menu_item
 		
-		function check_for_current_page(options)
+		function highlight_current_page_button(page_button)
 		{
-			if (options.page)
-				if (!Страница.is(options.page))
-					return
-			
-			if (options.page_pattern)
-				if (!Страница.matches(options.page_pattern))
-					return
-			
-			if (previously_highlighted_menu_item && options.button === previously_highlighted_menu_item)
+			if (previously_highlighted_menu_item && page_button === previously_highlighted_menu_item)
 				return
 			
 			panel.toggle_buttons
 			({
-				hide:
-				{
-					button: { title: options.button },
-					fade_in_duration: 0,
-					fade_out_duration: 1
-				},
-				show:
-				{
-					button: { title: options.button + ' (выбрано)' },
-					fade_in_duration: 0.1,
-					fade_out_duration: 0.1
-				},
-				//fade: true
+				type: page_button,
+				fade_in_duration: 0,
+				fade_out_duration: 0,
+				show: { button: { current: true } }
 			})
 			
-			panel.highlighted_menu_item = options.button
+			panel.highlighted_menu_item = page_button
 			
 			if (previously_highlighted_menu_item)
+			{
 				panel.toggle_buttons
 				({
-					hide:
-					{
-						button: { title: previously_highlighted_menu_item + ' (выбрано)' },
-						fade_in_duration: 0.1,
-						fade_out_duration: 0.1
-					},
-					show:
-					{
-						button: { title: previously_highlighted_menu_item },
-						fade_in_duration: 0,
-						fade_out_duration: 1
-					},
-					//fade: true
+					type: previously_highlighted_menu_item,
+					fade_in_duration: 0,
+					fade_out_duration: 0,
+					hide: { button: { current: true } }
 				})
+			}
 				
 			return true
 		}
+	
+		var page_button = get_page_button()
 		
-		var checks =
-		[
-			{ page: 'читальня', button: 'читальня' },
-			{ page: 'заметка', button: 'читальня' },
-			{ page: 'люди', button: 'люди' },
-			
-			{ page: 'человек/человек', button: 'люди' },
-			{ page_pattern: 'помощь(/.*)?', button: 'помощь' },
-			
-			{ page: 'сеть/новости', button: 'новости' },
-			{ page: 'сеть/болталка', button: 'болталка' },
-			
-			{ page: 'сеть/обсуждения', button: 'обсуждения' },
-			//{ page: 'сеть/обсуждение', button: 'обсуждения' },
-			
-			{ page: 'сеть/беседы', button: 'беседы' },
-			//{ page: 'сеть/беседа', button: 'беседы' },
-			
-			{ page: 'человек/дневник', button: 'дневник' },
-			{ page: 'человек/запись в дневнике', button: 'дневник' },
-			
-			{ page: 'человек/журнал', button: 'журнал' },
-			{ page: 'человек/запись в журнале', button: 'журнал' },
-			
-			{ page: 'человек/книги', button: 'книги' },
-			
-			{ page: 'человек/картинки', button: 'люди' },
-			{ page: 'человек/альбом с картинками', button: 'люди' },
-			{ page: 'человек/видео', button: 'люди' },
-			{ page: 'человек/альбом с видео', button: 'люди' },
-			
-			{ page: 'сеть/круги', button: 'круги' },
-			{ page: 'сеть/настройки', button: 'настройки' },
-			{ page: 'сеть/мусорка', button: 'мусорка' },
-			
-			{ page: 'управление', button: 'управление' }
-		]
-		
-		var i = 0
-		while (i < checks.length)
-		{
-			if (check_for_current_page(checks[i]))
-				break
-			i++
-		}
+		if (page_button)
+			highlight_current_page_button(page_button)
 	},
 
 	toggle_buttons: function(options)
 	{
-		if (!this.buttons[options.hide.button.title])
-			return console.log('No button to hide: ' + options.hide.button.title)
-	
-		if (!this.buttons[options.show.button.title])
-			return console.log('No button to show: ' + options.show.button.title)
+		var type = options.type
+		
+		var get_button = function(options)
+		{
+			options = options || {}
 			
-		var hide_button = this.buttons[options.hide.button.title].element
-		var show_button = this.buttons[options.show.button.title].element
+			var news = false
+			var current = false
+			
+			if (options.new || есть_ли_новости(type))
+				news = true
+				
+			if (options.current || get_page_button() === type)
+				current = true
+				
+			var postfix = ''
+				
+			if (news)
+			{
+				if (current)
+					postfix = ' (выбрано и непрочитанные)'
+				else
+					postfix = ' (непрочитанные)'
+			}
+			else if (current)
+				postfix = ' (выбрано)'
+			
+			return this.buttons[type + postfix].element
+		}
+		.bind(this)
 		
-		show_button.css
-		({
-			position: 'absolute',
-			'z-index': -1,
-			opacity: 0
-		})
+		var get_hidden_button = function () { return get_button(options.hide ? options.hide.button : {}) }
+		var get_shown_button = function () { return get_button(options.show ? options.show.button : {}) }
 		
-		hide_button.parent().append(show_button)
-		
+		var get_buttons_to_hide = function()
+		{
+			var hide_buttons = []
+			
+			get_hidden_button().parent().children().each(function()
+			{
+				if (this !== get_shown_button().node())
+					hide_buttons.push($(this))
+			})
+			
+			return hide_buttons
+		}
+			
 		var activate = function(these_options)
 		{
 			options = Object.merge(options, these_options)
-			
-			show_button.css('z-index', 0)
+				
+			get_shown_button().css('z-index', 0)
 			
 			if (options.immediate)
 			{
-				hide_button.hide()
-				show_button.show().css('opacity', 1)
+				get_buttons_to_hide().for_each(function()
+				{
+					this.hide()
+				})
+				
+				get_shown_button().show().css('opacity', 1)
 			}
 			else
 			{
-				show_button.fade_in(options.show.fade_in_duration)
-				hide_button.fade_out(options.hide.fade_out_duration)
+				get_shown_button().fade_in(options.fade_in_duration)
+				
+				get_buttons_to_hide().for_each(function()
+				{
+					this.fade_out(options.fade_out_duration)
+				})
 			}
 		
-			panel.buttons[options.show.button.title].tooltip.update_position()
+			//panel.buttons[options.type].tooltip.update_position()
 		}
+		.bind(this)
 		
 		var deactivate = function(these_options)
 		{
 			options = Object.merge(options, these_options)
 		
-			show_button.css('z-index', -1)
+			get_shown_button().css('z-index', -1)
 			
 			if (options.immediate)
 			{
-				show_button.hide()
-				hide_button.show().css('opacity', 1)
+				get_shown_button().hide()
+				get_hidden_button().show().css('opacity', 1)
 			}
 			else
 			{
-				hide_button.fade_in(options.hide.fade_in_duration)
-				show_button.fade_out(options.show.fade_out_duration)
+				get_hidden_button().fade_in(options.fade_in_duration)
+				get_shown_button().fade_out(options.fade_out_duration)
 			}
 		}
 		
@@ -350,8 +425,9 @@ var Panel = new Class
 		}
 		else
 		{
-			if (!options.fade)
-				options.immediate = true
+			//if (!options.fade)
+			//	options.immediate = true
+				
 			activate()
 		}
 	},
@@ -362,17 +438,12 @@ var Panel = new Class
 		
 		this.toggle_buttons
 		({
-			hide:
-			{
-				button: { title: 'новости' },
-				fade_in_duration: 0.5,
-				fade_out_duration: 3
-			},
+			type: 'новости',
+			fade_in_duration: 2,
+			fade_out_duration: 3,
 			show:
 			{
-				button: { title: 'новости (непрочитанные)' },
-				fade_in_duration: 2,
-				fade_out_duration: 1
+				button: { new: true }
 			},
 			activation_name: 'new_news',
 			deactivation_name: 'no_more_new_news',
@@ -386,17 +457,12 @@ var Panel = new Class
 	
 		this.toggle_buttons
 		({
-			hide:
-			{
-				button: { title: 'беседы' },
-				fade_in_duration: 0.5,
-				fade_out_duration: 1
-			},
+			type: 'беседы',
+			fade_in_duration: 1,
+			fade_out_duration: 1.5,
 			show:
 			{
-				button: { title: 'беседы (непрочитанные)' },
-				fade_in_duration: 1,
-				fade_out_duration: 1
+				button: { new: true }
 			},
 			activation_name: 'new_talk_messages',
 			deactivation_name: 'no_more_new_talk_messages',
@@ -410,17 +476,12 @@ var Panel = new Class
 	
 		this.toggle_buttons
 		({
-			hide:
-			{
-				button: { title: 'обсуждения' },
-				fade_in_duration: 0.5,
-				fade_out_duration: 1.5
-			},
+			type: 'обсуждения',
+			fade_in_duration: 1,
+			fade_out_duration: 1.5,
 			show:
 			{
-				button: { title: 'обсуждения (непрочитанные)' },
-				fade_in_duration: 1,
-				fade_out_duration: 1
+				button: { new: true }
 			},
 			activation_name: 'new_discussion_messages',
 			deactivation_name: 'no_more_new_discussion_messages',
@@ -434,17 +495,12 @@ var Panel = new Class
 	
 		this.toggle_buttons
 		({
-			hide:
-			{
-				button: { title: 'болталка' },
-				fade_in_duration: 0.5,
-				fade_out_duration: 1.5
-			},
+			type: 'болталка',
+			fade_in_duration: 1,
+			fade_out_duration: 1.5,
 			show:
 			{
-				button: { title: 'болталка (непрочитанные)' },
-				fade_in_duration: 1,
-				fade_out_duration: 1
+				button: { new: true }
 			},
 			activation_name: 'new_chat_messages',
 			deactivation_name: 'no_more_new_chat_messages',
