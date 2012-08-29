@@ -675,10 +675,10 @@ Visual_editor.implement
 				Validation.наглядный_писарь.видео = function(value, callback)
 				{
 					if (!value)
-						return callback({ error: 'Введите адрес видео на YouTube' })
+						return callback({ error: 'Вставьте ссылку на видео' })
 						
-					if (!Youtube.Video.id(value))
-						return callback({ error: 'Неправильный адрес видео на YouTube' })
+					if (!Youtube.Video.id(value) && !Vimeo.Video.id(value))
+						return callback({ error: 'Не получается вставить это видео' })
 						
 					callback()
 				}
@@ -690,7 +690,7 @@ Visual_editor.implement
 					fields:
 					[{
 						id: 'url',
-						description: 'Введите адрес видео на YouTube',
+						description: 'Ссылка на видео (YouTube или Vimeo)',
 						validation: 'наглядный_писарь.видео'
 					}],
 					ok: function(url)
@@ -705,12 +705,28 @@ Visual_editor.implement
 						}
 						*/
 					
+						var video
+					
+						if (Youtube.Video.id(url))
+						{
+							video = $(Youtube.Video.embed_code(Youtube.Video.id(url)))
+						}
+						else if (Vimeo.Video.id(url))
+						{
+							video = $(Vimeo.Video.embed_code(Vimeo.Video.id(url)))
+						}
+						else
+							return error ('Хостинг видео не поддерживается: ' + value)
+					
+						/*
 						var video = $('<iframe/>')
 						video.attr('src', 'http://www.youtube-nocookie.com/embed/' + Youtube.Video.id(url) + '?rel=0&wmode=transparent')
 						video.attr('width', 560)
 						video.attr('height', 315)
 						video.attr('frameborder', 0)
 						video.attr('allowfullscreen', 'true')
+						*/
+						
 						tool.mark_type(video)
 					
 						tool.on_success(editor.insert(video))
