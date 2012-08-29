@@ -210,7 +210,20 @@ function неточное_время(время)
 	var окончание_единицы_измерения
 	
 	if (разница < 0)
-		return время
+	{
+		if (-разница > 60 * 1000)
+		{
+			console.log('разница: ' + разница)
+			console.log('сейчас: ' + new Date())
+			console.log('пришло: ' + время)
+			console.log('now time: ' + new Date().getTime())
+			console.log('time: ' + time)
+			
+			return время
+		}
+		
+		разница = 0
+	}
 	
 	var точные_минуты = разница / 60
 	var минуты = Math.floor(точные_минуты)

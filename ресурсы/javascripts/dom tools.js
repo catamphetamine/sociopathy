@@ -96,6 +96,48 @@ var Dom_tools =
 		return text_node
 	},
 	
+	child_text_node: function(element)
+	{
+		var text_node
+		var tools = this
+		
+		element = this.normalize(element)
+		
+		Array.for_each(element.childNodes, function()
+		{
+			if (tools.is_text_node(this))
+				text_node = this
+		})
+		
+		return text_node
+	},
+	
+	append_text: function(text, to)
+	{
+		var last_node = this.get_last_child(to)
+		if (last_node && this.is_text_node(last_node))
+			return last_node.nodeValue += text
+		
+		to.appendChild(document.createTextNode(text))
+		
+		/*
+		var text_node = Dom_tools.child_text_node(to)
+		
+		if (!text_node)
+			return to.appendChild(document.createTextNode(text))
+		
+		text_node.nodeValue += text
+		*/
+	},
+	
+	to_text: function(node)
+	{
+		if (Dom_tools.is_text_node(node))
+			return node.nodeValue
+		
+		return $(node).outer_html()
+	},
+	
 	insert_x_after_y: function (x, y)
 	{
 		if (y.nextSibling)
@@ -134,6 +176,14 @@ var Dom_tools =
 	},
 	
 	get_last_child: function(element)
+	{
+		if (element.childNodes.length === 0)
+			return
+			
+		return element.childNodes[element.childNodes.length - 1]
+	},
+	
+	get_last_descendant: function(element)
 	{
 		if (element.childNodes.length === 0)
 			return

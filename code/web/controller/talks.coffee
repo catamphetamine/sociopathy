@@ -86,9 +86,15 @@ options.notify = (_id, environment, возврат) ->
 options.message_read = (_id, environment, возврат) ->
 	new Цепочка(возврат)
 		.сделать ->
+			path = "последние_прочитанные_сообщения.беседы." + environment.сообщения_чего._id
+			
 			actions = { $set: {} }
-			actions.$set["последние_прочитанные_сообщения.беседы." + environment.сообщения_чего._id] = _id
-			db('people_sessions').update({ пользователь: environment.пользователь._id }, actions, @)
+			actions.$set[path] = _id
+			
+			query = { пользователь: environment.пользователь._id }
+			query[path] = { $lt: _id }
+			
+			db('people_sessions').update(query, actions, @)
 			
 		.сделать ->
 			@._.set_id = 'новости.беседы.' + environment.сообщения_чего._id.toString()

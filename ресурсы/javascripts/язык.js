@@ -142,6 +142,8 @@ String.prototype.contains = function(what)
 	return this.indexOf(what) >= 0
 }
 
+String.prototype.has = String.prototype.contains
+
 String.prototype.collapse_lines = function()
 {
 	return this.replace(/\n/g, '')
@@ -255,6 +257,7 @@ String.prototype.underscore = function()
 	return this.replace(/[\s]+/, "_")
 }
 
+/*
 String.prototype.starts_with = function(substring) 
 {
 	return (this.match("^" + substring) == substring)
@@ -264,13 +267,24 @@ String.prototype.ends_with = function(substring)
 {
 	return (this.match(substring + "$") == substring)
 }
+*/
 
 Array.prototype.for_each = function(action)
 {
-	Array.prototype.forEach .bind(this)(function(element, index)
+	Array.prototype.forEach.bind(this)(function(element, index)
 	{
 		action.bind(element)(element, index)
 	})
+}
+
+Array.for_each = function(array, action)
+{
+	var i = 0
+	while (i < array.length)
+	{
+		action.bind(array[i])()
+		i++
+	}
 }
 
 Object.for_each = function(object, handler)
@@ -292,4 +306,16 @@ Object.пусто = function(object)
 	})
 	
 	return пусто
+}
+
+Object.key = function(object)
+{
+	var the_key
+	
+	Object.for_each(object, function(key)
+	{
+		the_key = key
+	})
+	
+	return the_key
 }

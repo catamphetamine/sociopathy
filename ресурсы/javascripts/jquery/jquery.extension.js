@@ -616,3 +616,15 @@ $.fn.is_empty = function()
 {
 	return this.children().length === 0
 }
+
+/*
+$.fn.escaped_html = function()
+{
+	return this.text()
+}
+*/
+
+$.fn.escaped_outer_html = function()
+{
+	return $("<div/>").text(this.outer_html()).html()
+}

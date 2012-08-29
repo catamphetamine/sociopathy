@@ -199,7 +199,7 @@ Editor.Caret = new Class
 			return false
 			
 		var range = caret.cloneRange()
-		range.selectNodeContents(Dom_tools.get_last_child(this.container().get(0)))
+		range.selectNodeContents(Dom_tools.get_last_descendant(this.container().get(0)))
 		
 		if (this.offset(caret) < range.endOffset)
 			return false

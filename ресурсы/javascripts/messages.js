@@ -325,7 +325,8 @@ var Messages = new Class
 	
 	process_message_element: function(message)
 	{
-		var was_new = message.hasClass('new')
+		if (!message.hasClass('new'))
+			return
 		
 		var read = false
 		
@@ -335,6 +336,7 @@ var Messages = new Class
 			if (!Focus.focused)
 				return
 		
+			/*
 			if (!was_new)
 			{
 				if (_id > this.последнее_прочитанное_сообщение)
@@ -343,6 +345,7 @@ var Messages = new Class
 				
 				return
 			}
+			*/
 		
 			//this.options.прокрутчик.unwatch(message)
 		
