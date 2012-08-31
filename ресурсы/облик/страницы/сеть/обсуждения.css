@@ -1,92 +1,95 @@
 @import "/облик/user icon.less";
 
-.main_content
+#content
 {
-	margin-top: 60px;
-	margin-bottom: 60px;
-	
-	margin-left: 80px;
-	margin-right: 80px;
-	
-	> .breadcrumbs_container
-	{
-		margin: 0;
-	}
-	
-	> h3
-	{
-		color: #7f7f7f;
-		margin-bottom: 60px;
-	}
-	
-	#discussions
+	.main_content
 	{
 		margin-top: 60px;
-	
-		list-style-type: none;
-		padding: 0;
-	
-		> li
-		{
-			position: relative;
-			.css_transition(500ms, background-color);
+		margin-bottom: 60px;
 		
-			border-radius: 6px;
-			
-			margin-bottom: 4px;
-			margin-top: 4px;
-			
-			padding-top: 10px;
-			padding-left: 10px;
-			padding-right: 10px;
-			padding-bottom: 2px;
-			
-			&.new
+		margin-left: 80px;
+		margin-right: 80px;
+		
+		> .breadcrumbs_container
+		{
+			margin: 0;
+		}
+		
+		> h3
+		{
+			color: #7f7f7f;
+			margin-bottom: 60px;
+		}
+		
+		#discussions
+		{
+			margin-top: 60px;
+		
+			list-style-type: none;
+			padding: 0;
+		
+			> li
 			{
-				background-color: #F0FBFF;
-				box-shadow: 0 0 4px #F0FBFF;
+				position: relative;
+				.css_transition(500ms, background-color);
+			
 				border-radius: 6px;
-			}
-			
-			> .unsubscribe
-			{
-				position: absolute;
-				left: -80px;
-				top: -8px;
 				
-				width: 80px;
-				height: 64px;
+				margin-bottom: 4px;
+				margin-top: 4px;
 				
-				.css_transition(100ms);
+				padding-top: 10px;
+				padding-left: 10px;
+				padding-right: 10px;
+				padding-bottom: 2px;
 				
-				> .button
+				&.new
 				{
-					top: -23px;
-					left: 19px;
+					background-color: #F0FBFF;
+					box-shadow: 0 0 4px #F0FBFF;
+					border-radius: 6px;
 				}
 				
-				> button
+				> .unsubscribe
 				{
-					background-image: url('/картинки/кнопки/отписаться.png');
-					width: 43px;
-					height: 43px;
+					position: absolute;
+					left: -80px;
+					top: -8px;
+					
+					width: 80px;
+					height: 64px;
+					
+					.css_transition(100ms);
+					
+					> .button
+					{
+						top: -23px;
+						left: 19px;
+					}
+					
+					> button
+					{
+						background-image: url('/картинки/кнопки/отписаться.png');
+						width: 43px;
+						height: 43px;
+					}
 				}
+				
+				> a.small_avatar
+				{
+					display: inline-block;
+					vertical-align: bottom;
+				}
+				
+				> a.discussion
+				{
+					display: inline-block;
+					margin-bottom: 12px;
+					margin-left: 8px;
+				}
+				
+				margin-bottom: 8px;
 			}
-			
-			> a.small_avatar
-			{
-				display: inline-block;
-				vertical-align: bottom;
-			}
-			
-			> a.discussion
-			{
-				display: inline-block;
-				margin-bottom: 12px;
-				margin-left: 8px;
-			}
-			
-			margin-bottom: 8px;
 		}
 	}
 }

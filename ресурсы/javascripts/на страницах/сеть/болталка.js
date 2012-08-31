@@ -1,6 +1,7 @@
 (function()
 {
 	title('Болталка')
+	Режим.пообещать('правка')
 	
 	var messages
 	
@@ -24,6 +25,7 @@
 			more_link: $('.messages_framework > .older > a'),
 			container: chat,
 			show_editor: true,
+			edit_path: 'болталка',
 			on_load: chat_loaded,
 			on_message_bottom_appears: function(_id)
 			{
@@ -57,7 +59,7 @@
 		messages.unload()
 	}
 		
-	chat_loaded = function() //finish_initialization)
+	chat_loaded = function()
 	{
 		//finish_initialization()
 	}

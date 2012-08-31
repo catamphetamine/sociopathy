@@ -1,32 +1,35 @@
-.main_content
+#content
 {
-	margin-top: 60px;
-	margin-bottom: 60px;
-	
-	margin-left: 80px;
-	margin-right: 80px;
-		
-	.breadcrumbs_container
+	.main_content
 	{
-		margin-left: 0;
-		margin-right: 0;
-		margin-bottom: 50px;
-	}
+		margin-top: 60px;
+		margin-bottom: 60px;
 		
-	#diary
-	{
-		list-style-type: none;
-		padding: 0;
-	
-		> li
+		margin-left: 80px;
+		margin-right: 80px;
+			
+		.breadcrumbs_container
 		{
-		
+			margin-left: 0;
+			margin-right: 0;
+			margin-bottom: 50px;
 		}
-	}
-
-	.empty
-	{
-		display: none;
-		text-align: center;
+			
+		#diary
+		{
+			list-style-type: none;
+			padding: 0;
+		
+			> li
+			{
+			
+			}
+		}
+	
+		.empty
+		{
+			display: none;
+			text-align: center;
+		}
 	}
 }

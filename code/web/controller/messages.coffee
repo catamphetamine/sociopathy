@@ -261,7 +261,7 @@ exports.messages = (options) ->
 			
 					.сделать (с_какого_выбрать) ->
 						if not с_какого_выбрать?
-							return messages({}, { limit: ввод.настройки.сколько, sort: [['$natural', -1]] }, environment, @.в 'сообщения')
+							return messages({}, { limit: ввод.настройки.сколько, sort: [['_id', -1]] }, environment, @.в 'сообщения')
 						выбрать(с_какого_выбрать, ввод.настройки.сколько, ввод, environment, @.в 'сообщения')
 							
 					.сделать ->
@@ -312,7 +312,7 @@ exports.messages = (options) ->
 		
 					.сделать ->
 						id = environment.пользователь._id
-						messages({ отправитель: id }, { sort: [['$natural', -1]], limit: 1 }, environment, @)
+						messages({ отправитель: id }, { sort: [['_id', -1]], limit: 1 }, environment, @)
 					
 					.сделать (сообщения) ->
 						сообщение = сообщения[0]
@@ -346,7 +346,7 @@ exports.messages = (options) ->
 				id_criteria = {}
 				id_criteria[сравнение_id] = с
 				
-				parameters = { sort: [['$natural', -1]] }
+				parameters = { sort: [['_id', -1]] }
 				if сколько?
 					parameters.limit = сколько
 		
@@ -359,7 +359,7 @@ exports.messages = (options) ->
 							if сколько_есть > с_какого.ограничение
 								new Цепочка(возврат)
 									.сделать ->
-										messages({}, { limit: 1, sort: [['$natural', -1]] }, environment, @)
+										messages({}, { limit: 1, sort: [['_id', -1]] }, environment, @)
 										
 									.сделать (message) ->
 										if message.пусто()
@@ -373,3 +373,54 @@ exports.messages = (options) ->
 						messages({ _id: id_criteria }, parameters, environment, @)
 			
 			#return @.return(connection)
+	
+	result = {}
+	
+	result.enable_message_editing = (url, options) ->
+		options = options || {}
+		
+		http.post '/сеть/' + url + '/сообщения/правка', (ввод, вывод, пользователь) ->
+			цепь(вывод)
+				.сделать ->
+					@.done(JSON.parse(ввод.body.messages))
+					
+				.все_вместе (data) ->
+					if options.update?
+						options.update(data._id, data.content, @)
+					else
+						_id = db('messages').id(data._id)
+						db('messages').update({ _id: _id }, { $set: { сообщение: data.content } }, @)
+					
+					#new Цепочка(@)
+						#.сделать ->		
+						#	db('messages').update({ _id: _id }, { $set: { сообщение: data.content } }, @)
+					
+						#.сделать ->		
+						#	db('messages').findOne({ _id: _id }, @)
+							
+						#.сделать (message) ->	
+						#	options.notify(message._id, { правка: yes, сообщения_чего: { _id: message.общение }, пользователь: пользователь }, @)
+					
+				.сделать ->
+					вывод.send {}
+					
+	result.enable_unsubscription = (url) ->
+		http.delete '/сеть/' + url + '/подписка', (ввод, вывод, пользователь) ->
+			_id = ввод.body._id
+			
+			цепь(вывод)
+				.сделать ->
+					db(options.id).update({ _id: db(options.id).id(_id) }, { $pull: { подписчики: пользователь._id } }, @)
+					
+				.сделать ->
+					set_id = 'новости.' + options.in_session_id + '.' + _id
+					db('people_sessions').update({ пользователь: environment.пользователь._id }, { $unset: set_id }, @)
+					
+				.сделать ->
+					новости.уведомления(пользователь, @)
+					
+				.сделать (уведомления) ->
+					эфир.отправить('новости', 'уведомления', уведомления)
+					вывод.send {}
+					
+	result

@@ -30,6 +30,8 @@ var Visual_editor = new Class
 		//this.disable_context_menu()
 		this.disable_tab()
 		
+		this.add_global_hotkey()
+		
 		if (!page.data.visual_editors)
 			page.data.visual_editors = []
 			

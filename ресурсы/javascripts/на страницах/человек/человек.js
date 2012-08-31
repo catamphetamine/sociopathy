@@ -369,49 +369,48 @@
 			return this.allow_to_redo()
 		}
 		*/
-		
-		Режим.заморозить_переходы()
-		var loading = loading_indicator.show()
 	
 		var данные = page.Data_store.collect()
-	
-		page.Ajax.put('/приложение/человек/данные', данные.общее)
-		.ошибка(function(ошибка)
-		{
-			loading.hide()
-			Режим.разрешить_переходы()
-			
-			error(ошибка)
-		})
-		.ok(function()
-		{
-			$('.authenticated_user .name').text(данные.общее.имя)
-			
-			var small_picture = $('.authenticated_user .real_picture')
-			small_picture.attr('src', anti_cache_postfix(small_picture.attr('src'))).show()
 		
-			if (!image_file_name)
+		Режим.save_changes_to_server
+		({
+			continues: true,
+			anything_changed: function()
 			{
-				loading.hide()
-				Режим.разрешить_переходы()
-				return Режим.изменения_сохранены()
-			}
+				return true
+			},
 			
-			page.Ajax.put('/приложение/человек/картинка', данные.картинка)
-			.ошибка(function(ошибка)
+			data: данные.общее,
+			
+			url: '/приложение/сеть/человек/данные',
+			method: 'put',
+			
+			ok: function()
 			{
-				loading.hide()
-				Режим.разрешить_переходы()
+				$('.authenticated_user .name').text(данные.общее.имя)
 				
-				error(ошибка)
-			})
-			.ok(function()
-			{
-				loading.hide()
-				Режим.разрешить_переходы()
-				
-				Режим.изменения_сохранены()
-				image_file_name = null
+				var small_picture = $('.authenticated_user .real_picture')
+				small_picture.attr('src', anti_cache_postfix(small_picture.attr('src'))).show()
+	
+				Режим.save_changes_to_server
+				({
+					загрузка: loading,
+					anything_changed: function()
+					{
+						if (image_file_name)
+							return true
+					},
+					
+					data: данные.картинка,
+					
+					url: '/приложение/сеть/человек/картинка',
+					method: 'put',
+					
+					ok: function()
+					{
+						image_file_name = null
+					}
+				})
 			})
 		})
 	}
@@ -428,7 +427,7 @@
 		{
 			//url: '/загрузка/человек/сменить картинку',
 			//url: '/приложение/человек/сменить картинку',
-			url: 'http://' + host + ':' + Options.Upload_server_port + '/человек/картинка',
+			url: 'http://' + host + ':' + Options.Upload_server_port + '/сеть/человек/картинка',
 			parameter: { name: 'user', value: $.cookie('user') },
 			success: function(data)
 			{

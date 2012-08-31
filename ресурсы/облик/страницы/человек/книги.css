@@ -21,7 +21,7 @@
 	padding-bottom: 100px;
 	margin-top: 60px;
 	
-	> .main_conditional > .main_content
+	.main_content
 	{
 		margin-left: 80px;
 		margin-right: 80px;

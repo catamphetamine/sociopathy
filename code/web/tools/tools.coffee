@@ -277,7 +277,7 @@ file_system = require 'fs'
 	
 	new Цепочка(возврат)
 		.сделать ->
-			query_options = { limit: ввод.настройки.сколько, sort: [['$natural', -1]] }
+			query_options = { limit: ввод.настройки.сколько, sort: [['_id', -1]] }
 			query = Object.clone(options.query)
 			
 			if с?

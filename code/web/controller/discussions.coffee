@@ -15,6 +15,7 @@ options =
 	data_uri: '/сеть/обсуждение/сообщения'
 	
 options.in_ether_id = 'обсуждения'
+options.in_session_id = 'обсуждения'
 
 options.сообщения_чего = (ввод, возврат) ->
 	new Цепочка(возврат)
@@ -120,22 +121,6 @@ options.save = (сообщение, environment, возврат) ->
 		.сделать ->
 			@.done(@._.сообщение)
 	
-messages.messages(options)
-
-http.delete '/сеть/обсуждения/подписка', (ввод, вывод, пользователь) ->
-	_id = ввод.body._id
-	
-	цепь(вывод)
-		.сделать ->
-			db('discussions').update({ _id: db('discussions').id(_id) }, { $pull: { подписчики: пользователь._id } }, @)
-			
-		.сделать ->
-			set_id = 'новости.обсуждения.' + _id
-			db('people_sessions').update({ пользователь: environment.пользователь._id }, { $unset: set_id }, @)
-			
-		.сделать ->
-			новости.уведомления(пользователь, @)
-			
-		.сделать (уведомления) ->
-			эфир.отправить('новости', 'обновить', уведомления)
-			вывод.send {}
+result = messages.messages(options)
+result.enable_message_editing('обсуждения')
+result.enable_unsubscription('обсуждения')

@@ -1,6 +1,7 @@
 (function()
 {
 	page.query('#talk', 'talk')
+	Режим.пообещать('правка')
 	
 	var messages
 	
@@ -28,7 +29,8 @@
 			},
 			more_link: $('.messages_framework > .older > a'),
 			container: page.talk,
-			show_editor: true,
+			//show_editor: true,
+			edit_path: 'беседы',
 			on_load: talk_loaded,
 			on_message_bottom_appears: function(_id)
 			{
@@ -56,7 +58,7 @@
 		
 		messages.load()
 	}
-	
+		
 	function talk_loaded()
 	{
 		$(document).trigger('page_initialized')

@@ -1,9 +1,12 @@
 @import "/облик/вспомогательный.less";
 @import "/облик/author_content_date.less";
 
-.main_content
+#content
 {
-	margin-top: 50px;
+	.main_content
+	{
+		margin-top: 50px;
+	}
 }
 
 @inter_column_padding: @AuthorContentDate_inter_column_padding;

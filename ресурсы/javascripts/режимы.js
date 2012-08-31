@@ -122,7 +122,7 @@ var Режим = (function()
 		return true
 	}
 	
-	function перейти_в_режим(mode)
+	function перейти_в_режим(mode, options)
 	{
 		if (!возможен_ли_переход(режим, mode))
 			return
@@ -151,7 +151,7 @@ var Режим = (function()
 		var описание_режима = найти_описание_режима(mode)
 		описание_режима.перейти(режим)
 		
-		$(document).trigger('режим.переход', [режим, mode])
+		$(document).trigger('режим.переход', [режим, mode, options])
 		$(document).trigger('режим.' + mode)
 	
 		$('*').unbind('.режим_' + режим)
@@ -201,32 +201,42 @@ var Режим = (function()
 	{
 		$(document).on('keydown', function(event) 
 		{
-			if (Клавиши.is('Ctrl', 'Shift', 'Digit_1', event))
+			if (Клавиши.is('Alt', 'Shift', '1', event))
 				return перейти_в_режим('обычный')
 				
-			if (Клавиши.is('Ctrl', 'Shift', 'Digit_3', event))
+			if (Клавиши.is('Alt', 'Shift', '2', event))
 				return перейти_в_режим('правка')
 				
-			if (Клавиши.is('Ctrl', 'Shift', 'Digit_5', event))
+			if (Клавиши.is('Alt', 'Shift', '3', event))
 				return перейти_в_режим('действия')
 		})
 	})
 	
-	var переход_в_режим = function(в_какой, из_какого, действие)
+	var при_переходе_в_режим = function(из_какого, в_какой, действие)
 	{
-		if ($.isFunction(в_какой))
+		if ($.isFunction(из_какого))
 		{
-			действие = в_какой
+			действие = из_какого
 			в_какой = null
 			из_какого = null
 		}
-		else if ($.isFunction(из_какого))
+		else if ($.isFunction(в_какой))
 		{
-			действие = из_какого
-			из_какого = null
+			действие = в_какой
+			
+			if (typeof из_какого === 'string')
+			{
+				в_какой = из_какого
+				из_какого = null
+			}
+			else
+			{
+				в_какой = из_какого.в
+				из_какого = из_какого.из
+			}
 		}
 		
-		$(document).on('режим.переход', function(event, из, в)
+		$(document).on_page('режим.переход', function(event, из, в, options)
 		{
 			if (в_какой)
 				if (в_какой !== в)
@@ -236,7 +246,12 @@ var Режим = (function()
 				if (из_какого !== из)
 					return
 					
-			действие(в, из)
+			options = options || {}
+					
+			options.из = из
+			options.в = в
+			
+			действие(options)
 		})
 	}
 	
@@ -278,25 +293,54 @@ var Режим = (function()
 	
 	var actions
 	var save_changes_button
+	var cancel_changes_button
 	
 	result.изменения_сохранены = function()
 	{
-		перейти_в_режим('обычный')
+		$(document).trigger('режим.изменения_сохранены')
+		
+		перейти_в_режим('обычный', { saved: true })
 		actions.slide_out_downwards(300, function()
 		{
 			save_changes_button.unlock()
 		})
 	}
 	
+	result.изменения_отменены = function()
+	{
+		$(document).trigger('режим.изменения_отменены')
+		
+		перейти_в_режим('обычный', { discarded: true })
+		actions.slide_out_downwards(300, function()
+		{
+			cancel_changes_button.unlock()
+		})
+	}
+	
+	result.ошибка_правки = function()
+	{
+		cancel_changes_button.unlock()
+		save_changes_button.unlock()
+	}
+	
 	result.activate_edit_actions = function(options)
 	{
 		var on_save = options.on_save
+		var on_cancel = options.on_cancel || function()
+		{	
+			//var загрузка = loading_indicator.show()
+			Режим.изменения_отменены()
+			reload_page()
+		}
 	
 		actions = $('.edit_mode_actions').clone()
 		actions.appendTo($('body')).move_out_downwards().disableTextSelect()
 
 		save_changes_button = text_button.new(actions.find('.done'), { 'prevent double submission': true })
 		.does(on_save)
+		
+		cancel_changes_button = text_button.new(actions.find('.cancel'), { 'prevent double submission': true })
+		.does(on_cancel)
 		
 		$(document).on('режим.переход', function(event, из, в)
 		{
@@ -323,6 +367,51 @@ var Режим = (function()
 	result.сбросить = function()
 	{
 		сбросить()
+	}
+	
+	result.при_переходе = при_переходе_в_режим
+	
+	result.save_changes_to_server = function(options)
+	{
+		if (options.anything_changed)
+			if (!options.anything_changed())
+			{
+				if (options.загрузка)
+				{
+					options.загрузка.hide()
+					Режим.разрешить_переходы()
+				}
+				
+				return Режим.изменения_сохранены()
+			}
+			
+		Режим.заморозить_переходы()
+		var загрузка = options.загрузка || loading_indicator.show()
+			
+		page.Ajax[options.method || 'post'](options.url, options.data)
+		.ошибка(function(ошибка)
+		{
+			загрузка.hide()
+			Режим.разрешить_переходы()
+			Режим.ошибка_правки()
+			
+			error(ошибка)
+			
+			if (options.error)
+				options.error()
+		})
+		.ok(function()
+		{
+			if (options.continues !== false)
+			{
+				загрузка.hide()
+				Режим.разрешить_переходы()
+				Режим.изменения_сохранены()
+			}
+			
+			if (options.ok)
+				options.ok()
+		})
 	}
 	
 	return result

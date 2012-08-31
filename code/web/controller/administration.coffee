@@ -564,6 +564,11 @@ http.post '/хранилище/заполнить', (ввод, вывод) ->
 					сочинитель: 'Роберт Чалдини',
 					название: 'Психология влияния',
 					id: 'Роберт Чалдини «Психология влияния»'
+				},
+				{
+					сочинитель: 'George Ritzer',
+					название: 'The McDonaldization of Society',
+					id: 'George Ritzer «The McDonaldization of Society»'
 				}
 			]
 					

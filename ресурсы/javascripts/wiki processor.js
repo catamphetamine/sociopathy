@@ -79,7 +79,7 @@ var Wiki_processor = new (new Class
 				}
 			})
 			
-			console.log(xml)
+			//console.log(xml)
 			xml = $('<wiki/>').html(xml).node()
 		}
 		
@@ -124,7 +124,7 @@ var Wiki_processor = new (new Class
 		if (!syntax)
 			return Dom_tools.append_text(Dom_tools.to_text(node), target)
 	
-		console.log('syntax found')
+		//console.log('syntax found')
 		
 		var html_element
 		if (syntax.html_tag)
@@ -137,6 +137,7 @@ var Wiki_processor = new (new Class
 			html_element = syntax.decorate(element)
 		
 		target = $(target)
+		html_element.attr('author', element.attr('author'))
 		html_element.appendTo(target)
 		
 		//console.log(html_element)
@@ -145,12 +146,12 @@ var Wiki_processor = new (new Class
 		
 		Array.for_each(node.childNodes, function()
 		{
-			console.log(this)
-			console.log(html_element.node())
+			//console.log(this)
+			//console.log(html_element.node())
 			processor.decorate_node(this, html_element.node())
 		})
 		
-		console.log('finished processing children')
+		//console.log('finished processing children')
 	},
 	
 	parse: function(xml)
@@ -167,6 +168,12 @@ var Wiki_processor = new (new Class
 		})
 		
 		var xml = output.html()
+		
+//		xml = xml.replace_all('<br>', '\n')
+//		xml = xml.replace_all('<br/>', '\n')
+
+		xml = xml.replace_all('&lt;br&gt;', '')
+		xml = xml.replace_all('&lt;br/&gt;', '')
 	
 		Object.for_each(this.Syntax, function(tag, syntax)
 		{
@@ -200,7 +207,7 @@ var Wiki_processor = new (new Class
 			}
 		})
 		
-		return xml
+		return xml.trim()
 	},
 			
 	parse_node: function(node, target)
@@ -210,11 +217,11 @@ var Wiki_processor = new (new Class
 		
 		var processor = this
 		
-		console.log('parse_node')
-		console.log(node)
+		//console.log('parse_node')
+		//console.log(node)
 		
-		console.log('target')
-		console.log(target)
+		//console.log('target')
+		//console.log(target)
 		
 		var element
 		if (!Dom_tools.is_text_node(node))
@@ -224,11 +231,11 @@ var Wiki_processor = new (new Class
 		if (element)
 			syntax = processor.find_syntax_for(element)
 		
-		console.log('element')
-		console.log(element)
+		//console.log('element')
+		//console.log(element)
 			
-		console.log('syntax')
-		console.log(syntax)
+		//console.log('syntax')
+		//console.log(syntax)
 		
 		if (!syntax)
 			return Dom_tools.append_text(Dom_tools.to_text(node), target)
@@ -245,14 +252,15 @@ var Wiki_processor = new (new Class
 			syntax.parse(element, wiki_element)
 		
 		target = $(target)
+		wiki_element.attr('author', element.attr('author'))
 		wiki_element.appendTo(target)
 		
 		if (syntax.break)
 			return
 		
-		console.log(wiki_element)
-		console.log('process children')
-		console.log(node.childNodes)
+		//console.log(wiki_element)
+		//console.log('process children')
+		//console.log(node.childNodes)
 		
 		Array.for_each(node.childNodes, function()
 		{
@@ -287,22 +295,22 @@ var Wiki_processor = new (new Class
 			"<пункт><ссылка на=\"http://phys.msu.ru/\">ФизФак МГУ</ссылка></пункт>" +
 			"</список>"
 				
-		console.log(wiki)
+		//console.log(wiki)
 				
 		var html = this.decorate(wiki)
 		
-		console.log('*** html ***')
-		console.log(html)
+		//console.log('*** html ***')
+		//console.log(html)
 		
 		$(html).appendTo('body')
 		
-		console.log('*** parsing html ***')
+		//console.log('*** parsing html ***')
 		
 		var same_wiki = this.parse(html)
 		same_wiki = same_wiki.replace_all('&lt;', '<').replace_all('&gt;', '>')
 		
-		console.log('*** wiki ***')
-		console.log(same_wiki)
+		//console.log('*** wiki ***')
+		//console.log(same_wiki)
 		
 		$('<pre/>').text(same_wiki).appendTo('body')
 		

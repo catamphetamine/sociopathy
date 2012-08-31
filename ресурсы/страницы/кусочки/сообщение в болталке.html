@@ -1,6 +1,6 @@
 <li author="${отправитель._id}">
 	<div class="content_wrapper">
-		<div class="content multiline_text rich_formatting">{{html сообщение}}</div>
+		<div class="content multiline_text rich_formatting">{{html Wiki_processor.decorate(сообщение)}}</div>
 	</div>
 
 	<div class="author no_word_carrying {{if is_online(отправитель._id)}}online{{/if}}">

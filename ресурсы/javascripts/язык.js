@@ -287,6 +287,11 @@ Array.for_each = function(array, action)
 	}
 }
 
+Array.prototype.has = function(element)
+{
+	return this.indexOf(element) >= 0
+}
+
 Object.for_each = function(object, handler)
 {
 	Object.each(object, function(value, key)

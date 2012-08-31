@@ -1,6 +1,7 @@
 (function()
 {
 	page.query('#discussion', 'discussion')
+	Режим.пообещать('правка')
 	
 	var messages
 	
@@ -28,7 +29,8 @@
 			},
 			more_link: $('.messages_framework > .older > a'),
 			container: page.discussion,
-			show_editor: true,
+			//show_editor: true,
+			edit_path: 'обсуждения',
 			on_load: discussion_loaded,
 			on_message_bottom_appears: function(_id)
 			{
@@ -60,20 +62,5 @@
 	function discussion_loaded() //finish_initialization)
 	{
 		$(document).trigger('page_initialized')
-		
-		/*
-		if (page.discussion.is_empty())
-		{
-			page.discussion.remove()
-			page.get('.main_content').find('> .empty').show()
-		}
-		*/
-		
-		//finish_initialization()
-		
-	//	Режим.разрешить('правка')
-	//	Режим.разрешить('действия')
 	}
-	
-	//page.needs_initializing = true
 })()

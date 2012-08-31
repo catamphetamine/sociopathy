@@ -395,6 +395,17 @@ function ajaxify_internal_links(where)
 	})
 }
 
+function reload_page()
+{
+	console.log(parseUri(window.location).relative)
+	navigate_to_page(parseUri(window.location).relative)
+}
+
+function reload_web_page()
+{
+	document.location.reload(true)
+}
+
 var класс_ошибки_по_уровню = function(уровень)
 {
 	switch (уровень)

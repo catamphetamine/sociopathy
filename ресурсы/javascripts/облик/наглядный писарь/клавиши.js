@@ -139,7 +139,45 @@ Visual_editor.implement
 				visual_editor.enter_pressed(result)
 		})
 	},
+	
+	add_global_hotkey: function()
+	{
+		function is_node_editable(node)
+		{
+			if (node.getAttribute('contenteditable') == 'true')
+				return true
+			
+			if (node instanceof HTMLDocument)
+				return false
+			
+			if (!(node.parentNode instanceof HTMLDocument))
+				return is_node_editable(node.parentNode)
+		}
 		
+		var visual_editor = this
+		
+		$(document).on('keypress', function(event)
+		{
+			if (!Клавиши.is(' ', event))
+				return
+			
+			if (!event.target)
+				return
+			
+			if (event.target instanceof HTMLInputElement
+				|| event.target instanceof HTMLTextAreaElement)
+				return
+			
+			if (is_node_editable(event.target))
+				return
+			
+			event.preventDefault()
+			event.stopPropagation()
+			
+			$(document).trigger('show_visual_editor')
+		})
+	},
+	
 	remap_editing_hotkeys: function()
 	{
 		var visual_editor = this

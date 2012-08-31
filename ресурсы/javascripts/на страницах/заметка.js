@@ -181,7 +181,7 @@
 				{
 					_id: заметка,
 					title: get_title(),
-					content: visual_editor.editor.content.html()
+					content: Wiki_processor.parse(visual_editor.editor.content.html())
 				}
 				
 				var loading = loading_indicator.show()
@@ -243,8 +243,8 @@
 					
 					Режим.обычный()
 					
-					visual_editor.editor.load_content(неправленная_заметка.содержимое)
-					set_title(неправленная_заметка.название)
+					visual_editor.editor.load_content(Wiki_processor.decorate(неправленная_заметка.content))
+					set_title(неправленная_заметка.title)
 				})
 			})
 			

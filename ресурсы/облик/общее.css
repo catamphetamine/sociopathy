@@ -1256,12 +1256,15 @@ label.in-place_input_label
 	text-align: center;
 }
 
-.main_content
+#content
 {
-	.empty
+	.main_content
 	{
-		display: none;
-		text-align: center;
+		.empty
+		{
+			display: none;
+			text-align: center;
+		}
 	}
 }
 

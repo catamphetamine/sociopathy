@@ -164,6 +164,10 @@ var Messages = new Class
 		function show_more_messages(event)
 		{
 			event.preventDefault()
+			
+			if (!options.can_show_earlier_messages())
+				return
+			
 			loader.deactivate()
 			var indicate_loading = loader.load_more()
 			
@@ -494,9 +498,8 @@ var Messages = new Class
 	{
 		var messages = this
 		
-		this.on_load_actions.for_each(function() { this.bind(messages)() })
-		
 		var visual_editor = new Visual_editor('#compose_message > article')
+		this.visual_editor = visual_editor
 		
 		var send_message_timeout
 
@@ -518,7 +521,7 @@ var Messages = new Class
 
 		function send_message()
 		{
-			var message = visual_editor.editor.content.html().trim()
+			var message = Wiki_processor.parse(visual_editor.editor.content.html())
 			if (!message)
 				return
 				
@@ -554,11 +557,38 @@ var Messages = new Class
 		this.visual_editor = visual_editor
 		
 		if (this.options.show_editor)
+		{
 			this.show_editor()
+		}
+		else
+		{
+			$(document).on('show_visual_editor.on_demand', function()
+			{
+				if (messages.options.can_show_editor)
+					if (!messages.options.can_show_editor())
+						return
+					
+				messages.show_editor()
+				$(document).unbind('show_visual_editor.on_demand')
+			})
+		}
+		
+		this.on_load_actions.for_each(function() { this.bind(messages)() })
+	},
+
+	hide_editor: function()
+	{
+		this.visual_editor.hide_tools()
+		
+		$('body').focus()
+			
+		this.compose_message.fadeOut()
 	},
 
 	show_editor: function()
 	{
+		this.visual_editor_was_shown = true
+		
 		this.visual_editor.show_tools()
 		
 		if ($.browser.mozilla)

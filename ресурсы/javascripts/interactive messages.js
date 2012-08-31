@@ -34,6 +34,8 @@ var Interactive_messages = function(options)
 			return message
 		},
 		more_link: options.more_link,
+		can_show_earlier_messages: options.can_show_earlier_messages,
+		can_show_editor: options.can_show_editor,
 		container: options.container,
 		on_message_read: options.on_message_read,
 		on_message_bottom_appears: options.on_message_bottom_appears,
@@ -393,9 +395,12 @@ var Interactive_messages = function(options)
 					return
 					
 				connection.is_ready = true
-					
+				
 				if (!reconnected)
 				{
+					if (options.on_ready)
+						options.on_ready()
+						
 					callback()
 					
 					messages.внести_пользователя_в_список_вверху(пользователь, { куда: 'в начало' })
@@ -523,6 +528,110 @@ var Interactive_messages = function(options)
 			icon.remove()
 		})
 	}
+	
+	messages.enable_edit = function(path)
+	{
+		var can_show_earlier_messages = true
+		var can_show_editor = true
+	
+		var own_messages
+		
+		function save_changes()
+		{
+			var edited_messages = []
+			messages.options.container.find('>li[author="' + пользователь._id + '"]').each(function()
+			{
+				var message = $(this)
+				message.removeAttr('contenteditable')
+				
+				var new_content = message.find('.content').html()
+				var _id = message.attr('message_id')
+				
+				if (own_messages[_id] && own_messages[_id] != new_content)
+				{
+					edited_messages.push({ _id: _id, content: Wiki_processor.parse(new_content) })
+				}
+			})
+			
+			Режим.save_changes_to_server
+			({
+				anything_changed: function()
+				{
+					return !edited_messages.пусто()
+				},
+				
+				data:
+				{
+					messages: JSON.stringify(edited_messages)
+				},
+				
+				url: '/приложение/сеть/' + path + '/сообщения/правка'
+			})
+		}
+		
+		function connected()
+		{
+			$(document).on_page('режим.изменения_сохранены', function()
+			{
+				can_show_editor = true
+			
+				if (messages.show_visual_editor_next_time)
+					messages.show_editor()
+			})
+		
+			Режим.при_переходе({ из: 'правка' }, function(options)
+			{
+				can_show_earlier_messages = true
+				
+				if (options.saved || options.discarded)
+				{
+					can_show_editor = true
+				
+					if (messages.show_visual_editor_next_time)
+						messages.show_editor()
+				}
+				
+				messages.options.container.find('>li[author="' + пользователь._id + '"]').removeAttr('contenteditable')
+			})
+			
+			Режим.при_переходе({ в: 'правка' }, function()
+			{
+				can_show_earlier_messages = false
+				can_show_editor = false
+				
+				if (messages.visual_editor_was_shown)
+					messages.show_visual_editor_next_time = true
+				
+				messages.hide_editor()
+				
+				own_messages = {}
+				messages.options.container.find('>li[author="' + пользователь._id + '"]').each(function()
+				{
+					var message = $(this)
+					message.attr('contenteditable', true)
+					own_messages[message.attr('message_id')] = message.find('.content').html()
+				})
+			})
+			
+			Режим.activate_edit_actions({ on_save: save_changes })
+			Режим.разрешить('правка')
+		}
+		
+		this.options.connection.on_ready = connected
+		
+		messages.options.can_show_earlier_messages = function()
+		{
+			return can_show_earlier_messages
+		}
+		
+		messages.options.can_show_editor = function()
+		{
+			return can_show_editor
+		}
+	}
+	
+	if (options.edit_path)
+		messages.enable_edit(options.edit_path)
 		
 	new_message_channel(options.connection)
 

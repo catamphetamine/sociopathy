@@ -367,6 +367,9 @@ var Page = new Class
 	
 	ticking: function(action, interval)
 	{
+		if (this.ticking_actions.has(action))
+			return console.log('action already ticking')
+		
 		this.ticking_actions.push(action.ticking(interval))
 	},
 	
