@@ -5,6 +5,8 @@ options =
 
 options.in_ether_id = 'болталка'
 
+options.правка_сообщения_чего = 'болталки'
+
 options.latest_read_message = (environment, возврат) ->
 	new Цепочка(возврат)
 		.сделать ->

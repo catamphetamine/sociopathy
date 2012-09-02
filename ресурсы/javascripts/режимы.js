@@ -326,7 +326,7 @@ var Режим = (function()
 	result.activate_edit_actions = function(options)
 	{
 		var on_save = options.on_save
-		var on_cancel = options.on_cancel || function()
+		var on_discard = options.on_discard || function()
 		{	
 			//var загрузка = loading_indicator.show()
 			Режим.изменения_отменены()
@@ -340,7 +340,7 @@ var Режим = (function()
 		.does(on_save)
 		
 		cancel_changes_button = text_button.new(actions.find('.cancel'), { 'prevent double submission': true })
-		.does(on_cancel)
+		.does(on_discard)
 		
 		$(document).on('режим.переход', function(event, из, в)
 		{

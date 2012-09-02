@@ -377,6 +377,9 @@ var Messages = new Class
 			if (!compose_message.exists())
 				return 0
 				
+			if (compose_message.css('display') === 'none')
+				return 0
+				
 			return compose_message.outerHeight()
 		})
 		
@@ -514,7 +517,8 @@ var Messages = new Class
 		}
 		
 		var hint = $('<p/>').appendTo(visual_editor.editor.content)
-		visual_editor.tagged_hint(hint, 'Вводите сообщение здесь')
+		visual_editor.hint(hint, 'Вводите сообщение здесь')
+		//visual_editor.tagged_hint(hint, 'Вводите сообщение здесь')
 		visual_editor.store_content()
 		
 		var editor_initial_html = visual_editor.editor.content.html()
@@ -532,9 +536,16 @@ var Messages = new Class
 			
 			visual_editor.editor.content.html(editor_initial_html)
 			visual_editor.focus()
+			
+			messages.adjust_listing_margin()
 		}
 		
 		visual_editor.enter_pressed_in_container = function()
+		{
+			visual_editor.insert_paragraph()
+		}
+		
+		visual_editor.ctrl_enter_pressed_in_container = function()
 		{
 			if (!send_message())
 				return

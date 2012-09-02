@@ -63,6 +63,7 @@
 	page.unload = function()
 	{
 		$('#article_edit_mode_actions').remove()
+		
 		if (visual_editor)
 			visual_editor.unload()
 	}
@@ -98,11 +99,7 @@
 		
 		visual_editor.enter_pressed_in_container = function()
 		{
-			var new_paragraph = $('<p/>')
-			new_paragraph.addClass('hint')
-			new_paragraph.text('Введите текст абзаца')
-			visual_editor.editor.insert(new_paragraph)
-			visual_editor.editor.caret.move_to(new_paragraph)
+			visual_editor.insert_paragraph()
 		}
 		
 		initialize_editor()
@@ -158,12 +155,10 @@
 				if (!Режим.правка_ли())
 					return
 					
-				switch (event.which)
+				if (Клавиши.is('Enter', event))
 				{
-					case Клавиши.Enter:
-						event.preventDefault()
-						visual_editor.editor.move_caret_to(visual_editor.editor.content.find('p:first'))
-						break
+					event.preventDefault()
+					visual_editor.editor.move_caret_to(visual_editor.editor.content.find('p:first'))
 				}
 			})
 		}

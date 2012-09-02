@@ -108,7 +108,7 @@ var dialog_window = new Class
 		this.content.on('keydown', function(event) 
 		{
 			// if Enter key pressed
-			if (event.keyCode == Клавиши.Enter)
+			if (Клавиши.is('Enter', event))
 			{
 				if (self.on_enter)
 				{

@@ -57,8 +57,24 @@
 			{		
 				white-space: pre-wrap;
 				word-wrap: break-word;
+				
+				p
+				{
+					text-indent: 0;
+				}
 			}
 		}
+	}
+}
+
+.messages_framework .rich_formatting > p, #compose_message .rich_formatting > p
+{
+	text-indent: 0;
+	margin-top: 2px;
+	
+	&:last-child
+	{
+		margin-bottom: 2px;
 	}
 }
 

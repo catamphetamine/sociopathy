@@ -17,6 +17,8 @@ options =
 options.in_ether_id = 'обсуждения'
 options.in_session_id = 'обсуждения'
 
+options.правка_сообщения_чего = 'обсуждения'
+
 options.сообщения_чего = (ввод, возврат) ->
 	new Цепочка(возврат)
 		.сделать ->
@@ -36,9 +38,13 @@ options.сообщения_чего_from_string = (сообщения_чего) 
 options.messages_collection_id = 'messages'
 
 options.messages_query = (collection, environment) ->
+	query = {}
+	query.чего = 'обсуждения'
 	if environment.сообщения_чего._id.toHexString?
-		return { общение: environment.сообщения_чего._id }
-	{ общение: collection.id(environment.сообщения_чего._id) }
+		query.общение = environment.сообщения_чего._id
+	else
+		query.общение = collection.id(environment.сообщения_чего._id)
+	query
 
 options.extra_get = (data, environment, возврат) ->
 	data.название = environment.сообщения_чего.название
@@ -113,7 +119,7 @@ options.message_read = (_id, environment, возврат) ->
 options.save = (сообщение, environment, возврат) ->
 	new Цепочка(возврат)
 		.сделать ->
-			db('messages').save({ отправитель: environment.пользователь._id, сообщение: сообщение, когда: new Date(), общение: environment.сообщения_чего._id }, @._.в 'сообщение')
+			db('messages').save({ отправитель: environment.пользователь._id, сообщение: сообщение, когда: new Date(), общение: environment.сообщения_чего._id, чего: 'обсуждения' }, @._.в 'сообщение')
 	
 		.сделать ->
 			db('discussions').update({ _id: environment.сообщения_чего._id }, { $addToSet: { подписчики: environment.пользователь._id } }, @)

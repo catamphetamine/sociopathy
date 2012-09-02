@@ -14,7 +14,6 @@ var Focus = new (new Class
 		$(window).on('focus.focus', function()
 		{
 			self.focused = true
-			
 			self.focus()
 		})
 		

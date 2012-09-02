@@ -97,6 +97,22 @@ var Scroller = new Class
 		var top_is_visible = top_offset_in_window >= 0 && top_offset_in_window < window_height
 		var bottom_is_visible = top_offset_in_window + height >= 0 && top_offset_in_window + height < window_height
 		
+		/*
+		console.log(element)
+		
+		console.log('window_height')
+		console.log(window_height)
+		
+		console.log('top_offset_in_window')
+		console.log(top_offset_in_window)
+		
+		console.log('height')
+		console.log(height)
+		
+		console.log('bottom_is_visible')
+		console.log(bottom_is_visible)
+		*/
+		
 		var top_was_visible = false
 		var bottom_was_visible = false
 		

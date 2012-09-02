@@ -20,6 +20,7 @@
 				title(data.название)
 				
 				page.data.беседа._id = data._id
+				page.talk.attr('_id', data._id)
 				
 				breadcrumbs
 				([

@@ -21,6 +21,8 @@
 				
 				page.data.обсуждение._id = data._id
 				
+				page.discussion.attr('_id', data._id)
+				
 				breadcrumbs
 				([
 					{ title: 'Обсуждения', link: '/сеть/обсуждения' },

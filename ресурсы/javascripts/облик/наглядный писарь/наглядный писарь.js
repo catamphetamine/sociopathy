@@ -56,6 +56,15 @@ var Visual_editor = new Class
 		this.editor.content.find('*').unbind('.visual_editor')
 	},
 	
+	insert_paragraph: function()
+	{
+		var new_paragraph = $('<p/>')
+		new_paragraph.addClass('hint')
+		new_paragraph.text('Введите текст абзаца')
+		this.editor.insert(new_paragraph)
+		this.editor.caret.move_to(new_paragraph)
+	},
+	
 	hint: function(element, text)
 	{
 		element.text(text).addClass('hint')

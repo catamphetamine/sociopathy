@@ -137,7 +137,7 @@ var Wiki_processor = new (new Class
 			html_element = syntax.decorate(element)
 		
 		target = $(target)
-		html_element.attr('author', element.attr('author'))
+		//html_element.attr('author', element.attr('author'))
 		html_element.appendTo(target)
 		
 		//console.log(html_element)
@@ -157,7 +157,10 @@ var Wiki_processor = new (new Class
 	parse: function(xml)
 	{
 		if (typeof(xml) === 'string')
-			xml = $('<xml/>').html(xml).node()
+			xml = $('<xml/>').html(xml)
+		
+		xml.find('.hint').remove()
+		xml = xml.node()
 		
 		var processor = this
 		var output = $('<wiki/>')
@@ -252,7 +255,7 @@ var Wiki_processor = new (new Class
 			syntax.parse(element, wiki_element)
 		
 		target = $(target)
-		wiki_element.attr('author', element.attr('author'))
+		//wiki_element.attr('author', element.attr('author'))
 		wiki_element.appendTo(target)
 		
 		if (syntax.break)

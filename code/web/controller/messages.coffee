@@ -376,6 +376,8 @@ exports.messages = (options) ->
 	
 	result = {}
 	
+	initial_options = options
+	
 	result.enable_message_editing = (url, options) ->
 		options = options || {}
 		
@@ -385,6 +387,8 @@ exports.messages = (options) ->
 					@.done(JSON.parse(ввод.body.messages))
 					
 				.все_вместе (data) ->
+					@._.data = data
+					
 					if options.update?
 						options.update(data._id, data.content, @)
 					else
@@ -402,6 +406,17 @@ exports.messages = (options) ->
 						#	options.notify(message._id, { правка: yes, сообщения_чего: { _id: message.общение }, пользователь: пользователь }, @)
 					
 				.сделать ->
+					if !options.update?
+						_id = db('messages').id(@._.data._id)
+						return db('messages').findOne({ _id: _id }, @._.в 'message')
+					@.done()
+						
+				.сделать ->
+					data = { _id: @._.data._id, сообщение: @._.data.content }
+					if @._.message?
+						data.чего_id = @._.message.общение
+					data.чего = initial_options.правка_сообщения_чего
+					эфир.отправить('сообщения', 'правка', data, { кроме: пользователь._id })
 					вывод.send {}
 					
 	result.enable_unsubscription = (url) ->

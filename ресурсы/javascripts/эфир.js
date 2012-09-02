@@ -47,6 +47,8 @@ $(document).on('panel_loaded', function()
 			эфир.on(group + ':' + name, handler)
 		}
 		
+		Эфир.on = on
+		
 		var connected = false
 		var disconnected = false
 		var reconnected = false
@@ -127,6 +129,62 @@ $(document).on('panel_loaded', function()
 		{
 			звук_вызова.play()
 			info('Вас вызывает ' + пользователь.имя)
+		})
+		
+		on('сообщения', 'правка', function(data)
+		{
+			switch (data.чего)
+			{
+				case 'обсуждения':
+					var discussion = $('#discussion[_id="' + data.чего_id + '"]')
+					if (discussion.exists())
+					{
+						var message = discussion.find('> [message_id="' + data._id + '"]')
+						if (message.exists())
+						{	
+							if (!message.hasClass('new'))
+							{
+								message.addClass('new');
+								(function() { message.removeClass('new') }).delay(500)
+							}
+							message.find('.content').html(Wiki_processor.decorate(data.сообщение))
+						}
+					}
+					break
+				
+				case 'беседы':
+					var talk = $('#talk[_id="' + data.чего_id + '"]')
+					if (talk.exists())
+					{
+						var message = talk.find('> [message_id="' + data._id + '"]')
+						if (message.exists())
+						{
+							if (!message.hasClass('new'))
+							{
+								message.addClass('new');
+								(function() { message.removeClass('new') }).delay(500)
+							}
+							message.find('.content').html(Wiki_processor.decorate(data.сообщение))
+						}
+					}
+					break
+				
+				case 'болталки':
+					var message = $('#chat > [message_id="' + data._id + '"]')
+					if (message.exists())
+					{
+						if (!message.hasClass('new'))
+						{
+							message.addClass('new');
+							(function() { message.removeClass('new') }).delay(500)
+						}
+						message.find('.content').html(Wiki_processor.decorate(data.сообщение))
+					}
+					break
+				
+				default:
+					return
+			}
 		})
 		
 		on('новости', 'прочитано', function(data)

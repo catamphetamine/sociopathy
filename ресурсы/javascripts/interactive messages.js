@@ -569,6 +569,16 @@ var Interactive_messages = function(options)
 			})
 		}
 		
+		function discard_changes()
+		{
+			Object.for_each(own_messages, function(_id, content)
+			{
+				messages.options.container.find('>li[message_id="' + _id + '"] .content').html(content)
+			})
+			
+			Режим.изменения_отменены()
+		}
+		
 		function connected()
 		{
 			$(document).on_page('режим.изменения_сохранены', function()
@@ -613,7 +623,7 @@ var Interactive_messages = function(options)
 				})
 			})
 			
-			Режим.activate_edit_actions({ on_save: save_changes })
+			Режим.activate_edit_actions({ on_save: save_changes, on_discard: discard_changes })
 			Режим.разрешить('правка')
 		}
 		

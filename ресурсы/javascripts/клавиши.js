@@ -3,8 +3,8 @@ var Клавиши =
     Backspace: 8,
     Tab: 9,
     
-	Enter: 13,
-	Ввод: 13,
+	Enter: [13, 10],
+	Ввод: [13, 10],
 	
     Pause: 19,
     Escape: 27,
@@ -133,6 +133,30 @@ var Клавиши =
 		this.disabled = false
 	},
 	
+	has: function(key, event)
+	{		
+		var code
+		if (event.which)
+			code = event.which
+		else
+			code = event.keyCode
+			
+		if (this[key] instanceof Array)
+		{
+			var i = 0
+			while (i < this[key].length)
+			{
+				if (code === this[key][i])
+					return true
+				i++
+			}
+		}
+		else if (code === this[key])
+			return true
+			
+		return false
+	},
+	
 	is: function()
 	{
 		var ctrl = false
@@ -181,18 +205,14 @@ var Клавиши =
 			
 		if (keys.length !== 1)
 			throw 'Too much character keys. Only one allowed.'
-			
-		var key = keys[0]
 		
+		var key = keys[0]
+			
 		if (key.length === 1)				
 			if (shift)
 				key = key.toUpperCase()
-			
-		var code
-		if (event.which)
-			code = event.which
-		else
-			code = event.keyCode
+				
+		return this.has(key, event)
 		
 		/*
 		if (!event.charCode)
@@ -216,11 +236,6 @@ var Клавиши =
 		console.log('expected key: ' + key)
 		console.log('this[key]: ' + this[key])
 		*/
-				
-		if (code === this[key])
-			return true
-		else
-			return false
 	}
 }
 

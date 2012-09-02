@@ -105,11 +105,13 @@
 		if (page.data.пользователь_сети['есть ли книги?'])
 			links.find('.books').parent().show()
 		
+		/*
 		if (page.data.пользователь_сети['ведёт ли дневник?'])
 			links.find('.diary').parent().show()
 		
 		if (page.data.пользователь_сети['ведёт ли журнал?'])
 			links.find('.journal').parent().show()
+		*/
 		
 		links.show()
 		
@@ -411,7 +413,7 @@
 						image_file_name = null
 					}
 				})
-			})
+			}
 		})
 	}
 	

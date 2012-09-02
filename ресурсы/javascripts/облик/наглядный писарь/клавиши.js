@@ -82,13 +82,33 @@ Visual_editor.implement
 		var visual_editor = this
 		var editor = this.editor
 		
-		editor.on('keypress', function(event)
+		editor.on('keydown', function(event)
 		{
 			if (!visual_editor.can_edit())
 				return
 				
-			if (event.which !== Клавиши.Enter)
+			if (!Клавиши.is('Ctrl', 'Enter', event))
 				return
+			
+			var container = editor.caret.container()
+			
+			if (container[0] === editor.content[0])
+			{
+				event.preventDefault()
+				return visual_editor.ctrl_enter_pressed_in_container()
+			}
+		})
+			
+		editor.on('keypress', function(event)
+		{
+			if (!visual_editor.can_edit())
+				return
+			
+			if (!Клавиши.has('Enter', event))
+				return
+			
+			//if (!event.which !== Клавиши.Enter)
+			//	return
 		
 			event.preventDefault()
 			
@@ -131,7 +151,13 @@ Visual_editor.implement
 			}
 			
 			if (container[0] === editor.content[0])
-				return visual_editor.enter_pressed_in_container()
+			{
+				if (Клавиши.is('Enter', event))
+					return visual_editor.enter_pressed_in_container()
+			}
+		
+			if (Клавиши.is('Ctrl', 'Enter', event))
+				return visual_editor.ctrl_enter_pressed_in_container()
 				
 			var result = process_enter_key()
 			

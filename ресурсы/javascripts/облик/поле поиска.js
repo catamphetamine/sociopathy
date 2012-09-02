@@ -38,12 +38,10 @@ function initialize_search_bar()
 	
 	input.on('keypress', function(event)
 	{
-		switch (event.which)
+		if (Клавиши.is('Enter', event))
 		{
-			case Клавиши.Enter:
-				event.preventDefault()
-				info('Поиск ещё не сделан')
-				break
+			event.preventDefault()
+			info('Поиск ещё не сделан')
 		}
 	})
 		
