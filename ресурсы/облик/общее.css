@@ -1272,3 +1272,30 @@ label.in-place_input_label
 {
 	/* margin-bottom: -38px; */ /* compensates margin bug */
 }
+
+.rich_formatting
+{
+	[type="video"]
+	{
+		border-style: solid;
+		border-color: #7F7F7F;
+		border-width: 1px;
+
+		background-color: black;
+		
+		border-radius: 4px;
+
+		.beautiful_shadow_3(0px, 0px, 16px, 10px, 4px, 0.3);
+	}
+	
+	[type="picture"]
+	{
+		border-style: solid;
+		border-color: #7F7F7F;
+		border-width: 1px;
+		
+		border-radius: 4px;
+
+		.beautiful_shadow_3(0px, 0px, 8px, 3px, 4px, 0.18);
+	}
+}

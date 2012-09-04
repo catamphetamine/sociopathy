@@ -203,7 +203,7 @@ var button = new Class
 		}.
 		bind(this))
 
-		this.element.on('click.' + this.namespace, function() 
+		this.element.on('click.' + this.namespace, function(event) 
 		{
 			// if is locked - exit
 			if (this.is_locked())

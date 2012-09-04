@@ -42,8 +42,10 @@ var Wiki_processor = new (new Class
 		return found
 	},
 	
-	decorate: function(xml)
+	decorate: function(xml, options)
 	{
+		options = options || {}
+		
 		if (typeof(xml) === 'string')
 		{
 			Object.for_each(this.Syntax, function(tag, syntax)
@@ -55,7 +57,6 @@ var Wiki_processor = new (new Class
 				
 				if (typeof translation === 'string')
 				{
-					
 					xml = xml.replace_all('<' + tag + '>', '<' + translation + '>')
 					xml = xml.replace_all('<' + tag + ' ', '<' + translation + ' ')
 					xml = xml.replace_all('</' + tag + '>', '</' + translation + '>')
@@ -88,13 +89,13 @@ var Wiki_processor = new (new Class
 		
 		Array.for_each(xml.childNodes, function()
 		{
-			processor.decorate_node(this, output.node())
+			processor.decorate_node(this, output.node(), options)
 		})
 		
 		return output.html()
 	},
 			
-	decorate_node: function(node, target)
+	decorate_node: function(node, target, options)
 	{
 		//if (this.timer < new Date().getTime())
 		//	return
@@ -137,8 +138,15 @@ var Wiki_processor = new (new Class
 			html_element = syntax.decorate(element)
 		
 		target = $(target)
+		
+		if (options.process_element)
+			options.process_element(html_element, element)
+		
 		//html_element.attr('author', element.attr('author'))
 		html_element.appendTo(target)
+		
+		if (syntax.break_decoration)
+			return
 		
 		//console.log(html_element)
 		//console.log('process children')
@@ -148,14 +156,16 @@ var Wiki_processor = new (new Class
 		{
 			//console.log(this)
 			//console.log(html_element.node())
-			processor.decorate_node(this, html_element.node())
+			processor.decorate_node(this, html_element.node(), options)
 		})
 		
 		//console.log('finished processing children')
 	},
 	
-	parse: function(xml)
+	parse: function(xml, options)
 	{
+		options = options || {}
+		
 		if (typeof(xml) === 'string')
 			xml = $('<xml/>').html(xml)
 		
@@ -167,7 +177,7 @@ var Wiki_processor = new (new Class
 		
 		Array.for_each(xml.childNodes, function()
 		{
-			processor.parse_node(this, output.node())
+			processor.parse_node(this, output.node(), options)
 		})
 		
 		var xml = output.html()
@@ -213,7 +223,7 @@ var Wiki_processor = new (new Class
 		return xml.trim()
 	},
 			
-	parse_node: function(node, target)
+	parse_node: function(node, target, options)
 	{
 		//if (this.timer < new Date().getTime())
 		//	return
@@ -255,7 +265,10 @@ var Wiki_processor = new (new Class
 			syntax.parse(element, wiki_element)
 		
 		target = $(target)
-		//wiki_element.attr('author', element.attr('author'))
+		
+		if (options.process_element)
+			options.process_element(wiki_element, element)
+			
 		wiki_element.appendTo(target)
 		
 		if (syntax.break)
@@ -267,7 +280,7 @@ var Wiki_processor = new (new Class
 		
 		Array.for_each(node.childNodes, function()
 		{
-			processor.parse_node(this, wiki_element.node())
+			processor.parse_node(this, wiki_element.node(), element)
 		})
 	},
 	
@@ -445,6 +458,7 @@ Wiki_processor.Syntax =
 		},
 		selector: 'img[type="picture"]',
 		html_tag: 'img',
+		break_decoration: true,
 		
 		decorate: function(from, to)
 		{
@@ -480,6 +494,7 @@ Wiki_processor.Syntax =
 		},
 		selector: 'img[type="formula"]',
 		html_tag: 'img',
+		break_decoration: true,
 		
 		decorate: function(from, to)
 		{
@@ -544,7 +559,7 @@ Wiki_processor.Syntax =
 		
 		decorate: function(from)
 		{
-			return $(Youtube.Video.embed_code(from.html()))
+			return $(Youtube.Video.embed_code(from.html())).attr('type', 'video')
 		},
 		
 		break: true,
@@ -570,7 +585,7 @@ Wiki_processor.Syntax =
 		
 		decorate: function(from)
 		{
-			return $(Vimeo.Video.embed_code(from.html()))
+			return $(Vimeo.Video.embed_code(from.html())).attr('type', 'video')
 		},
 		
 		break: true,

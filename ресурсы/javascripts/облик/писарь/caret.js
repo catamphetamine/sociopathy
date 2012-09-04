@@ -334,7 +334,12 @@ Editor.Caret = new Class
 	
 	move_to_the_next_element: function(relative_element)
 	{
-		return this.move_to(Dom_tools.down_to_text_node(Dom_tools.next(relative_element)))
+		var next = Dom_tools.find_next_text_node(relative_element)
+		
+		if (next)
+			return this.move_to(next)
+		
+		return this.move_to(relative_element)
 	},
 	
 	move_to_the_end: function(element)
@@ -371,5 +376,26 @@ Editor.Caret = new Class
 			return true
 
 		return container.parents(this.editor.content_selector + ' ' + selector).exists()
+	},
+	
+	store: function()
+	{
+		this.editor.data.caret = this.get()
+		return this.editor.data.caret
+	},
+	
+	restore: function()
+	{
+		var caret = this.editor.data.caret
+		if (!caret)
+			return// console.error('Nothing to restore')
+
+		if ($.browser.mozilla)
+			this.editor.content.focus()
+		
+		this.editor.caret.set(caret)
+		
+		delete this.editor.data.caret
+		return caret
 	}
 })

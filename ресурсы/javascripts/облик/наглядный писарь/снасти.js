@@ -97,6 +97,14 @@ Visual_editor.implement
 			this.message = message
 		}
 		
+		var activate_all_toolable_elements = function()
+		{
+			Object.for_each(Tools, function(key)
+			{
+				this.activate_all()
+			})
+		}
+		
 		Tools.Subheading =
 		{
 			selector: '.subheading',
@@ -105,12 +113,6 @@ Visual_editor.implement
 			{
 				this.backup_caret()
 				
-				if (editor.selection.exists())
-				{
-					this.restore_caret()
-					throw new Error('Выделение пока не поддерживается этим инструментом')
-				}
-				
 				if (!editor.caret.container().is('p'))
 				{
 					this.restore_caret()
@@ -118,14 +120,27 @@ Visual_editor.implement
 				}
 				
 				var subheading = $('<h2/>')
-				visual_editor.hint(subheading, 'Введите текст подзаголовка')
 				
-				return editor.insert(subheading, { break_container: true })
+				if (editor.selection.exists())
+				{
+					subheading.text(editor.selection.text())
+					editor.selection.cut()
+					
+					subheading = editor.insert(subheading, { break_container: true })
+					editor.caret.move_to(subheading.next())
+					return
+				}
+				else
+				{
+					visual_editor.hint(subheading, 'Введите текст подзаголовка')
+					subheading = editor.insert(subheading, { break_container: true })
+					editor.caret.move_to(subheading)
+					return
+				}
 			},
 			
 			on_success: function(subheading)
 			{
-				editor.caret.move_to(subheading)
 			}
 		}
 
@@ -205,7 +220,7 @@ Visual_editor.implement
 					}],
 					ok: function(url)
 					{
-						url = correct_uri(encodeURI(url))
+						url = correct_uri(url)
 						
 						if (this.state.element)
 						{
@@ -215,7 +230,16 @@ Visual_editor.implement
 						
 						var link = $('<a/>')
 						link.attr('href', url)
-						visual_editor.hint(link, 'Введите текст ссылки')
+						
+						editor.selection.restore()
+						if (editor.selection.exists())
+						{
+							link.text(editor.selection.text())
+							editor.selection.cut()
+						}
+						else
+							visual_editor.hint(link, 'Введите текст ссылки')
+						
 						tool.mark_type(link)
 						
 						tool.restore_caret()
@@ -236,7 +260,9 @@ Visual_editor.implement
 			apply: function()
 			{
 				if (editor.selection.exists())
-					throw new Error('Выделение пока не поддерживается этим инструментом')
+				{
+					editor.selection.store()
+				}
 				
 				this.open_dialog_window()
 				return false
@@ -244,11 +270,13 @@ Visual_editor.implement
 			
 			on_success: function(link)
 			{
-				this.activate(link)
+				activate_all_toolable_elements()
+				//this.activate(link)
 				
 				// иначе в хроме будет курсор в начале, но как бы перед самой ссылкой
 				if ($.browser.webkit)
 					return editor.caret.move_to(link, 1)
+				
 				editor.caret.move_to(link)
 			},
 			
@@ -266,15 +294,26 @@ Visual_editor.implement
 			
 			apply: function()
 			{
-				if (editor.selection.exists())
-					throw new Error('Выделение пока не поддерживается этим инструментом')
-		
+				if (!editor.caret.container().is('p'))
+				{
+					this.restore_caret()
+					throw new Error('Выдержку можно помещать только непосредственно в абзаце')
+				}
+				
 				var citation = $('<div/>')
 				citation.addClass('citation')
 				
 				var text = $('<span/>')
 				text.addClass('text')
-				visual_editor.hint(text, 'Введите текст выдержки')
+				
+				if (editor.selection.exists())
+				{
+					text.text(editor.selection.text())
+					editor.selection.cut()
+				}
+				else		
+					visual_editor.hint(text, 'Введите текст выдержки')
+					
 				//text.text('It is said that if you know your enemies and know yourself, you will not be imperiled in a hundred battles; if you do not know your enemies but do know yourself, you will win one and lose one; if you do not know your enemies nor yourself, you will be imperiled in every single battle.'.trim_trailing_comma())
 				
 				text.appendTo(citation)
@@ -301,15 +340,21 @@ Visual_editor.implement
 			
 			apply: function()
 			{
-				if (editor.selection.exists())
-					throw new Error('Выделение пока не поддерживается этим инструментом')
-		
-				if (!editor.caret.container().is('p') && editor.caret.container()[0] !== editor.content[0])
-					throw new Error('Список можно поместить только внутри обычного текста')
-		
+				if (!editor.caret.container().is('p'))// && editor.caret.container()[0] !== editor.content[0])
+					//throw new Error('Список можно поместить только внутри обычного текста')
+					throw new Error('Список можно помещать только непосредственно в абзаце')
+				
 				var list = $('<ul/>')
 				var list_item = $('<li/>')
-				visual_editor.hint(list_item, 'Введите текст')
+				
+				if (editor.selection.exists())
+				{
+					list_item.text(editor.selection.text())
+					editor.selection.cut()
+				}
+				else
+					visual_editor.hint(list_item, 'Введите текст')
+					
 				list_item.appendTo(list)
 				
 				return editor.insert(list, { break_container: true })
@@ -357,7 +402,7 @@ Visual_editor.implement
 					}],
 					ok: function(url)
 					{
-						url = encodeURI(url.collapse_lines())
+						url = url.collapse_lines()
 						
 						if (this.state.element)
 						{
@@ -410,14 +455,15 @@ Visual_editor.implement
 			
 			on_success: function(picture)
 			{
-				this.activate(picture)
+				activate_all_toolable_elements()
+				//this.activate(picture)
 				editor.caret.move_to(picture)
 			},
 			
 			on_element_click: function()
 			{
 				var url = decodeURIComponent($(this).attr('src'))
-				this.open_dialog_window({ url: url }, { element: $(this) })
+				visual_editor.Tools.Picture.open_dialog_window({ url: url }, { element: $(this) })
 				return false
 			}
 		}
@@ -482,56 +528,11 @@ Visual_editor.implement
 					}],
 					ok: function(formula)
 					{
-						formula = encodeURIComponent(formula.collapse_lines())
-						var url = 'http://chart.apis.google.com/chart?cht=tx&chs=28&chl=' + formula
-					
-						var loading = loading_indicator.show()
-						
-						var picture = this.state.element
-						if (picture)
-						{
-							return get_image_size(url, function(size)
-							{
-								loading.hide()
-								
-								if (size.error)
-								{
-									error('Не удалось загрузить картинку. Можете попробовать ещё раз.')
-									return tool.restore_caret()
-								}
-							
-								picture.attr('src', url)
-								picture.attr('width', size.width)
-								picture.attr('height', size.height)
-							
-								tool.restore_caret()
-							})
-						}
-						
-						get_image_size(url, function(size)
-						{
-							loading.hide()
-							
-							if (size.error)
-							{
-								error('Не удалось загрузить картинку. Можете попробовать ещё раз.')
-								return tool.restore_caret()
-							}
-							
-							var picture = $('<img/>')
-							picture.attr('src', url)
-							picture.attr('width', size.width)
-							picture.attr('height', size.height)
-							
-							tool.mark_type(picture)
-							
-							tool.restore_caret()
-							tool.on_success(editor.insert(picture))
-						})
+						visual_editor.Tools.Formula.insert_formula(formula.collapse_lines(), this.state.element)
 					},
 					on_open: function()
 					{	
-						tool.backup_caret()
+						//tool.backup_caret()
 					},
 					on_cancel: function()
 					{
@@ -541,20 +542,77 @@ Visual_editor.implement
 				.window
 			},
 	
+			insert_formula: function(formula, picture)
+			{
+				var url = 'http://chart.apis.google.com/chart?cht=tx&chs=28&chl=' + formula
+			
+				var loading = loading_indicator.show()
+				
+				var tool = this
+				
+				if (picture)
+				{
+					return get_image_size(url, function(size)
+					{
+						loading.hide()
+						
+						if (size.error)
+						{
+							error('Не удалось загрузить картинку. Можете попробовать ещё раз.')
+							return tool.restore_caret()
+						}
+					
+						picture.attr('src', url)
+						picture.attr('width', size.width)
+						picture.attr('height', size.height)
+					
+						tool.restore_caret()
+					})
+				}
+				
+				get_image_size(url, function(size)
+				{
+					loading.hide()
+					
+					if (size.error)
+					{
+						error('Не удалось загрузить картинку. Можете попробовать ещё раз.')
+						return tool.restore_caret()
+					}
+					
+					var picture = $('<img/>')
+					picture.attr('src', url)
+					picture.attr('width', size.width)
+					picture.attr('height', size.height)
+					
+					tool.mark_type(picture)
+					
+					tool.restore_caret()
+					tool.on_success(editor.insert(picture))
+				})
+			},
+	
 			apply: function()
 			{
+				this.backup_caret()
+						
 				if (editor.selection.exists())
-					throw new Error('Выделение пока не поддерживается этим инструментом')
+				{
+					this.insert_formula(editor.selection.text())
+					editor.selection.cut()
+					return false
+				}
 				
-				//var formula = '\\[ f(x,y,z) = 3y^2 z \\left( 3 + \\frac{7x+5}{1 + y^2} \\right).\\]'
-
 				this.open_dialog_window()
 				return false
+					
+				//var formula = '\\[ f(x,y,z) = 3y^2 z \\left( 3 + \\frac{7x+5}{1 + y^2} \\right).\\]'
 			},
 			
 			on_success: function(picture)
 			{
-				this.activate(picture)
+				activate_all_toolable_elements()
+				//this.activate(picture)
 				editor.caret.move_to(picture)
 			},
 			
@@ -572,23 +630,33 @@ Visual_editor.implement
 			
 			apply: function()
 			{
+				var element = $('<sub/>')
+				
 				if (editor.selection.exists())
-					throw new Error('Выделение пока не поддерживается этим инструментом')
-					// на самом деле - брать выделенное и переводить его в регистр
+				{
+					element.text(editor.selection.text())
+					editor.selection.cut()
+					
+					element = editor.insert(element)
+						
+					var text = Dom_tools.append_text_next_to(element, ' ')
+					editor.caret.move_to_the_end(text)
+				}
+				else
+				{
+					visual_editor.hint(element, 'Введите текст')
+					element = editor.insert(element)
 				
-				var subscript = $('<sub/>')
-				visual_editor.hint(subscript, 'Введите текст')
-				
-				return editor.insert(subscript)
+					// иначе в хроме будет курсор в начале, но как бы перед самим элементом
+					if ($.browser.webkit)
+						return editor.caret.move_to(element, 1)
+					
+					return editor.caret.move_to(element)			
+				}
 			},
 			
 			on_success: function(subscript)
 			{
-				// иначе в хроме будет курсор в начале, но как бы перед самой ссылкой
-				if ($.browser.webkit)
-					return editor.caret.move_to(subscript, 1)
-				
-				editor.caret.move_to(subscript)
 			}
 		}
 		
@@ -598,23 +666,33 @@ Visual_editor.implement
 			
 			apply: function()
 			{
+				var element = $('<sup/>')
+				
 				if (editor.selection.exists())
-					throw new Error('Выделение пока не поддерживается этим инструментом')
-					// на самом деле - брать выделенное и переводить его в регистр
+				{
+					element.text(editor.selection.text())
+					editor.selection.cut()
+					
+					element = editor.insert(element)
+						
+					var text = Dom_tools.append_text_next_to(element, ' ')
+					editor.caret.move_to_the_end(text)
+				}
+				else
+				{
+					visual_editor.hint(element, 'Введите текст')
+					element = editor.insert(element)
 				
-				var superscript = $('<sup/>')
-				visual_editor.hint(superscript, 'Введите текст')
-				
-				return editor.insert(superscript)
+					// иначе в хроме будет курсор в начале, но как бы перед самим элементом
+					if ($.browser.webkit)
+						return editor.caret.move_to(element, 1)
+					
+					return editor.caret.move_to(element)			
+				}
 			},
 			
 			on_success: function(superscript)
 			{
-				// иначе в хроме будет курсор в начале, но как бы перед самой ссылкой
-				if ($.browser.webkit)
-					return editor.caret.move_to(superscript, 1)
-				
-				editor.caret.move_to(superscript)
 			}
 		}
 		
@@ -624,19 +702,33 @@ Visual_editor.implement
 			
 			apply: function()
 			{
-				if (editor.selection.exists())
-					throw new Error('Выделение пока не поддерживается этим инструментом')
-					// на самом деле - брать выделенное и переводить в код
-				
 				var element = $('<code/>')
-				visual_editor.hint(element, 'Введите код')
 				
-				return editor.insert(element)
+				if (editor.selection.exists())
+				{
+					element.text(editor.selection.text())
+					editor.selection.cut()
+					
+					element = editor.insert(element)
+						
+					var text = Dom_tools.append_text_next_to(element, ' ')
+					editor.caret.move_to_the_end(text)
+				}
+				else
+				{
+					visual_editor.hint(element, 'Введите код')
+					element = editor.insert(element)
+				
+					// иначе в хроме будет курсор в начале, но как бы перед самим элементом
+					if ($.browser.webkit)
+						return editor.caret.move_to(element, 1)
+					
+					return editor.caret.move_to(element)			
+				}
 			},
 			
-			on_success: function(code)
+			on_success: function(result)
 			{
-				editor.caret.move_to(code)
 			}
 		}
 		
@@ -646,19 +738,25 @@ Visual_editor.implement
 			
 			apply: function()
 			{
-				if (editor.selection.exists())
-					throw new Error('Выделение пока не поддерживается этим инструментом')
-					// на самом деле - брать выделенное и переводить в код
-				
 				var element = $('<pre/>')
-				visual_editor.hint(element, 'Введите код')
 				
-				return editor.insert(element)
+				if (editor.selection.exists())
+				{
+					element.text(editor.selection.text())
+					editor.selection.cut()
+					element = editor.insert(element)
+					editor.caret.move_to_the_next_element(element)
+				}
+				else
+				{
+					visual_editor.hint(element, 'Введите код')	
+					element = editor.insert(element)
+					return editor.caret.move_to(element)
+				}
 			},
 			
-			on_success: function(code)
+			on_success: function(result)
 			{
-				editor.caret.move_to(code)
 			}
 		}
 		
@@ -695,7 +793,7 @@ Visual_editor.implement
 					}],
 					ok: function(url)
 					{
-						url = encodeURI(url.collapse_lines())
+						url = url.collapse_lines()
 						
 						/*
 						if (this.state.element)
@@ -746,7 +844,7 @@ Visual_editor.implement
 			apply: function()
 			{
 				if (editor.selection.exists())
-					throw new Error('Выделение пока не поддерживается этим инструментом')
+					throw new Error('Снимите выделение')
 				
 				this.open_dialog_window()
 				return false
@@ -905,8 +1003,17 @@ Visual_editor.implement
 				})
 			}
 			
+			// may not work as 'live'
 			tool.activate_element = function(element)
 			{
+				/*
+				Object.for_each(visual_editor.Tools, function(key, tool)
+				{
+					tools.activate_all()
+				})
+				return
+				*/
+				
 				var tool = this
 				element.on('click.visual_editor', function(event)
 				{
@@ -1051,6 +1158,7 @@ $(function()
 		// disable all the other editors
 		page.data.visual_editors.forEach(function(visual_editor)
 		{
+			//visual_editor.editor.caret.restore()
 			if (event.target !== visual_editor.editor.content.get(0))
 				visual_editor.disable_tools()
 		})

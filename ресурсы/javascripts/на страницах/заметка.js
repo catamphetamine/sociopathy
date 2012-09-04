@@ -176,7 +176,13 @@
 				{
 					_id: заметка,
 					title: get_title(),
-					content: Wiki_processor.parse(visual_editor.editor.content.html())
+					content: Wiki_processor.parse(visual_editor.editor.content.html(),
+					{
+						process_element: function(wiki, decorated)
+						{
+							wiki.attr('author', decorated.attr('author') || пользователь._id)
+						}
+					})
 				}
 				
 				var loading = loading_indicator.show()

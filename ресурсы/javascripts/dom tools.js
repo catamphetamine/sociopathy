@@ -91,6 +91,13 @@ var Dom_tools =
 	
 	append_text_next_to: function(node, text)
 	{
+		if (typeof node === 'string')
+		{
+			var the_node = text
+			text = node
+			node = the_node
+		}
+		
 		var text_node = document.createTextNode(text)
 		this.insert_x_after_y(text_node, node)
 		return text_node
@@ -118,7 +125,10 @@ var Dom_tools =
 		if (last_node && this.is_text_node(last_node))
 			return last_node.nodeValue += text
 		
-		to.appendChild(document.createTextNode(text))
+		var node = document.createTextNode(text)
+		to.appendChild(node)
+		
+		return node
 		
 		/*
 		var text_node = Dom_tools.child_text_node(to)
@@ -140,6 +150,9 @@ var Dom_tools =
 	
 	insert_x_after_y: function (x, y)
 	{
+		x = this.normalize(x)
+		y = this.normalize(y)
+		
 		if (y.nextSibling)
 			y.parentNode.insertBefore(x, y.nextSibling)
 		else

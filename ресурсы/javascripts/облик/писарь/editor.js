@@ -5,6 +5,8 @@ var Editor = new Class
 ({
 	event_handlers: [],
 	
+	data: {},
+	
 	initialize: function(content_selector)
 	{
 		this.content_selector = content_selector

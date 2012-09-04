@@ -131,6 +131,9 @@ var Scroller = new Class
 			downwards = !upwards
 		}
 		
+		if (bottom_is_visible && top_is_visible)
+			element.trigger('fully_visible')
+		
 		if (first_time)
 		{
 			if (bottom_is_visible)

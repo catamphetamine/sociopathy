@@ -12,6 +12,16 @@ Editor.Selection = new Class
 	{
 		return this.editor.range()
 	},
+	
+	text: function()
+	{
+		return this.get().toString()
+	},
+	
+	is_textual: function()
+	{
+		//return this.get().toString()
+	},
 
 	exists: function()
 	{
@@ -36,5 +46,22 @@ Editor.Selection = new Class
 	{
 		this.editor.time_machine.snapshot()
 		return this.get().extractContents()
+	},
+	
+	store: function()
+	{
+		this.editor.data.selection = this.get().cloneRange()
+		return this.editor.data.selection
+	},
+	
+	restore: function()
+	{
+		var selection = this.editor.data.selection
+		if (!selection)
+			return// console.error('Nothing to restore')
+		
+		this.editor.apply_range(selection)
+		delete this.editor.data.selection
+		return selection
 	}
 })

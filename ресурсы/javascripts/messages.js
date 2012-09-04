@@ -335,21 +335,11 @@ var Messages = new Class
 		var read = false
 		
 		var _id = message.attr('message_id')
-		message.on('bottom_appears', (function()
+		
+		var handler = (function()
 		{
 			if (!Focus.focused)
 				return
-		
-			/*
-			if (!was_new)
-			{
-				if (_id > this.последнее_прочитанное_сообщение)
-					if (!this.read_message(_id))
-						return 
-				
-				return
-			}
-			*/
 		
 			//this.options.прокрутчик.unwatch(message)
 		
@@ -369,7 +359,10 @@ var Messages = new Class
 		
 			read = true
 		})
-		.bind(this))
+		.bind(this)
+		
+		message.on('bottom_appears', handler)
+		message.on('fully_visible', handler)
 		
 		message.data('прокрутчик.get_bottom_margin', function()
 		{
@@ -553,13 +546,15 @@ var Messages = new Class
 			messages.check_if_there_are_still_unread_messages()
 		}
 		
+		/*
 		visual_editor.enter_pressed = function(result)
 		{
 			send_message()
 			messages.check_if_there_are_still_unread_messages()
 		}
+		*/
 		
-		visual_editor.Tools.Subheading.turn_off()
+		//visual_editor.Tools.Subheading.turn_off()
 		visual_editor.initialize_tools_container()
 		
 		visual_editor.tools_element.on('more.visual_editor_tools', this.adjust_listing_margin)
