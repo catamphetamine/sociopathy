@@ -406,6 +406,9 @@ var Режим = (function()
 
 $(document).on('page_loaded', function() 
 {
+	if (!first_time_page_loading)
+		return
+	
 	Режим.при_переходе({ в: 'правка' }, function()
 	{
 		$('.tex[type="formula"]').on('click.in_place_editing', function(event)
@@ -417,7 +420,7 @@ $(document).on('page_loaded', function()
 				ok: function(formula)
 				{
 					element.attr('formula', formula).html(formula)
-					refresh_formulae({ wait_for_load: true, where: element })
+					refresh_formulae({ wait_for_load: true, what: element, formula: formula })
 				}
 			})
 			

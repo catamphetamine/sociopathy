@@ -143,7 +143,7 @@ var Messages = new Class
 			before_done_more: function() { ajaxify_internal_links(options.container) },
 			before_output: function(callback)
 			{
-				refresh_formulae(callback)
+				refresh_formulae({ where: options.container }, callback)
 			},
 			done: function()
 			{
@@ -468,7 +468,7 @@ var Messages = new Class
 			if (this.options.after_append)
 				this.options.after_append(message, data)
 				
-			refresh_formulae(callback)
+			refresh_formulae({ where: message }, callback)
 		}
 		
 		append = append.bind(this)
@@ -609,12 +609,14 @@ var Messages = new Class
 		
 		this.visual_editor.show_tools()
 		
-		if ($.browser.mozilla)
-			this.visual_editor.editor.content.focus()
-		
 		page.ticking(this.adjust_listing_margin, 1000)
 		
 		this.compose_message.fadeIn()
+		
+		if ($.browser.mozilla)
+		{
+			this.visual_editor.editor.content.focus()
+		}
 		
 		this.visual_editor.editor.caret.move_to(this.visual_editor.editor.content.find('> *:first'))
 	},

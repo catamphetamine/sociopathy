@@ -8,42 +8,42 @@ function refresh_formulae(options, callback)
 	
 	options = options || {}
 	
-	var queue = ["Typeset", MathJax.Hub]
+	var queue
 	
-	if (options.where)
-		queue.push(options.where.node())
+	if (options.what)
+	{
+		options.where = options.what
+		options.what = null
+	}
+	
+	// doesn't work
+	if (options.what)
+	{
+		var math = MathJax.Hub.getAllJax(options.what.node())[0]
+		//console.log(MathJax.Hub.getAllJax(options.what.node()))
+		queue = ["Text", math, options.formula]
+	}
+	else
+	{
+		queue = ["Typeset", MathJax.Hub]
+		
+		if (options.where)
+			queue.push(options.where.node())
+	}
+	
+	callback = callback || function() {}
+	var finished = callback
 	
 	if (options.wait_for_load)
 	{
 		var загрузка = loading_indicator.show()
 		
-		var ended = function()
+		finished = function()
 		{
 			загрузка.hide()
-			
-			if (callback)
-				callback()
+			callback()
 		}
-		
-		MathJax.Hub.Queue(queue, [ended])
-		return
 	}
 	
-	MathJax.Hub.Queue(queue, [callback])
+	MathJax.Hub.Queue(queue, finished)
 }
-
-/*
-var edit_formula_window
-
-$(function()
-{
-	edit_formula_window = Visual_editor.tool_windows.Formula
-	({
-		ok: function(formula)
-		{
-			element.attr('formula', formula).html(formula)
-			refresh_formulae({ wait_for_load: true })
-		}
-	})
-})
-*/

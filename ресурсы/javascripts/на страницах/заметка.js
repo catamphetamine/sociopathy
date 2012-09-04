@@ -70,7 +70,7 @@
 	
 	function article_loaded()
 	{
-		refresh_formulae()
+		refresh_formulae({ where: $('article') })
 		
 		$(document).trigger('page_initialized')
 		
@@ -230,7 +230,7 @@
 					Режим.обычный()
 					
 					visual_editor.editor.load_content(Wiki_processor.decorate(неправленная_заметка.content))
-					refresh_formulae()
+					refresh_formulae({ where: visual_editor.editor.get_content() })
 					set_title(неправленная_заметка.title)
 				})
 			})
@@ -250,22 +250,6 @@
 			edit_mode_actions.slide_in_from_bottom()
 			visual_editor.activate_tools_inside_content()
 			visual_editor.editor.content.attr('contenteditable', true)
-			
-			/*
-			visual_editor.editor.content.find('[type="video"]').on('mouseover.режим_правка', function(event)
-			{
-				function get_embedded_youtube_video_id(url)
-				{
-					return /http:\/\/www.youtube-nocookie.com\/embed\/([0-9a-zA-Z\-\_]+)?rel=0&wmode=transparent/i.exec(url)[0]
-				}
-	
-				event.preventDefault()
-				var url = $(this).attr('src')
-				url = Youtube.Video.url(get_embedded_youtube_video_id(url))
-				alert(url)
-				visual_editor.Tools.Video.open_dialog_window({ url: url }, { element: $(this) })
-			})
-			*/
 		})
 		
 		function acquire_edit_lock(режим)

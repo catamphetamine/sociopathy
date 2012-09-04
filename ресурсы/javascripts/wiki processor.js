@@ -185,8 +185,8 @@ var Wiki_processor = new (new Class
 //		xml = xml.replace_all('<br>', '\n')
 //		xml = xml.replace_all('<br/>', '\n')
 
-		xml = xml.replace_all('&lt;br&gt;', '')
-		xml = xml.replace_all('&lt;br/&gt;', '')
+		//xml = xml.replace_all('&lt;br&gt;', '')
+		//xml = xml.replace_all('&lt;br/&gt;', '')
 	
 		Object.for_each(this.Syntax, function(tag, syntax)
 		{
@@ -531,6 +531,12 @@ Wiki_processor.Syntax =
 		translation: 'multiline_code',
 		selector: 'pre',
 		html_tag: 'pre'
+	},
+	перевод_строки:
+	{
+		translation: 'break_line',
+		selector: 'br',
+		html_tag: 'br'
 	},
 	youtube:
 	{

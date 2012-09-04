@@ -123,11 +123,12 @@ Visual_editor.implement
 				
 				var subheading = $('<h2/>')
 				
-				if (editor.selection.exists())
+				if (editor.selection.exists() && editor.selection.is_valid())
 				{
 					subheading.text(editor.selection.text())
 					editor.selection.cut()
 					
+					this.restore_caret()
 					subheading = editor.insert(subheading, { break_container: true })
 					editor.caret.move_to(subheading.next())
 					return
@@ -135,6 +136,8 @@ Visual_editor.implement
 				else
 				{
 					visual_editor.hint(subheading, 'Введите текст подзаголовка')
+					
+					this.restore_caret()
 					subheading = editor.insert(subheading, { break_container: true })
 					editor.caret.move_to(subheading)
 					return
@@ -154,7 +157,7 @@ Visual_editor.implement
 			{
 				this.backup_caret()
 				
-				if (!editor.selection.exists())
+				if (!editor.selection.exists() && editor.selection.is_valid())
 				{
 					this.restore_caret()
 					throw new Error('Выделите текст')
@@ -177,7 +180,7 @@ Visual_editor.implement
 			{
 				this.backup_caret()
 				
-				if (!editor.selection.exists())
+				if (!editor.selection.exists() && editor.selection.is_valid())
 				{
 					this.restore_caret()
 					throw new Error('Выделите текст')
@@ -209,14 +212,14 @@ Visual_editor.implement
 						if (tool.dialog_window.state.element)
 						{
 							tool.dialog_window.state.element.attr('href', url)
-							return tool.restore_caret()
+							return editor.caret.restore()
 						}
 						
 						var link = $('<a/>')
 						link.attr('href', url)
 						
 						editor.selection.restore()
-						if (editor.selection.exists())
+						if (editor.selection.exists() && editor.selection.is_valid())
 						{
 							link.text(editor.selection.text())
 							editor.selection.cut()
@@ -226,25 +229,25 @@ Visual_editor.implement
 						
 						tool.mark_type(link)
 						
-						tool.restore_caret()
+						editor.caret.restore()
 						tool.on_success(editor.insert(link))
 					},
 					
 					open: function()
 					{
-						tool.backup_caret()
+						editor.caret.store()
 					},
 					
 					cancel: function()
 					{
-						tool.restore_caret()
+						editor.caret.restore()
 					}
 				})
 			},
 			
 			apply: function()
 			{
-				if (editor.selection.exists())
+				if (editor.selection.exists() && editor.selection.is_valid())
 					editor.selection.store()
 				
 				this.open_dialog_window()
@@ -289,7 +292,7 @@ Visual_editor.implement
 				var text = $('<span/>')
 				text.addClass('text')
 				
-				if (editor.selection.exists())
+				if (editor.selection.exists() && editor.selection.is_valid())
 				{
 					text.text(editor.selection.text())
 					editor.selection.cut()
@@ -330,7 +333,7 @@ Visual_editor.implement
 				var list = $('<ul/>')
 				var list_item = $('<li/>')
 				
-				if (editor.selection.exists())
+				if (editor.selection.exists() && editor.selection.is_valid())
 				{
 					list_item.text(editor.selection.text())
 					editor.selection.cut()
@@ -366,7 +369,7 @@ Visual_editor.implement
 						Visual_editor.tool_helpers.Picture.get_picture_size(url, function(size)
 						{
 							if (!size)
-								return tool.restore_caret()
+								return editor.caret.restore()
 						
 							if (tool.dialog_window.state.element)
 							{
@@ -376,7 +379,7 @@ Visual_editor.implement
 									width: size.width,
 									height: size.height
 								})
-								return tool.restore_caret()
+								return editor.caret.restore()
 							}
 							
 							var picture = $('<img/>')
@@ -389,26 +392,27 @@ Visual_editor.implement
 							
 							tool.mark_type(picture)
 							
-							tool.restore_caret()
+							editor.caret.restore()
+							
 							tool.on_success(editor.insert(picture))
 						})
 					},
 					
 					open: function()
 					{
-						tool.backup_caret()
+						editor.caret.store()
 					},
 					
 					cancel: function()
 					{
-						tool.restore_caret()
+						editor.caret.restore()
 					}
 				})
 			},
 			
 			apply: function()
 			{
-				if (editor.selection.exists())
+				if (editor.selection.exists() && editor.selection.is_valid())
 					throw new Error('Снимите выделение')
 				
 				this.open_dialog_window()
@@ -478,11 +482,11 @@ Visual_editor.implement
 					},
 					open: function()
 					{
-						tool.backup_caret()
+						editor.caret.store()
 					},
 					cancel: function()
 					{
-						tool.restore_caret()
+						editor.caret.restore()
 					}
 				})
 			},
@@ -497,7 +501,7 @@ Visual_editor.implement
 					
 					this.restore_caret()
 					
-					refresh_formulae({ wait_for_load: true })
+					refresh_formulae({ wait_for_load: true, what: options.element, formula: formula })
 					return this.on_success()
 				}
 				
@@ -516,7 +520,7 @@ Visual_editor.implement
 				else
 					editor.caret.move_to_the_next_element(element)
 				
-				refresh_formulae({ wait_for_load: true })
+				refresh_formulae({ wait_for_load: true, what: element, formula: formula })
 				
 				this.on_success(element)
 			},
@@ -524,8 +528,7 @@ Visual_editor.implement
 			apply: function()
 			{
 				//this.backup_caret()
-						
-				if (editor.selection.exists())
+				if (editor.selection.exists() && editor.selection.is_valid())
 				{
 					var text = editor.selection.text()
 					editor.selection.cut()
@@ -563,7 +566,7 @@ Visual_editor.implement
 			{
 				var element = $('<sub/>')
 				
-				if (editor.selection.exists())
+				if (editor.selection.exists() && editor.selection.is_valid())
 				{
 					element.text(editor.selection.text())
 					editor.selection.cut()
@@ -599,7 +602,7 @@ Visual_editor.implement
 			{
 				var element = $('<sup/>')
 				
-				if (editor.selection.exists())
+				if (editor.selection.exists() && editor.selection.is_valid())
 				{
 					element.text(editor.selection.text())
 					editor.selection.cut()
@@ -635,7 +638,7 @@ Visual_editor.implement
 			{
 				var element = $('<code/>')
 				
-				if (editor.selection.exists())
+				if (editor.selection.exists() && editor.selection.is_valid())
 				{
 					element.text(editor.selection.text())
 					editor.selection.cut()
@@ -671,7 +674,7 @@ Visual_editor.implement
 			{
 				var element = $('<pre/>')
 				
-				if (editor.selection.exists())
+				if (editor.selection.exists() && editor.selection.is_valid())
 				{
 					element.text(editor.selection.text())
 					editor.selection.cut()
@@ -730,7 +733,7 @@ Visual_editor.implement
 						if (this.state.element)
 						{
 							this.state.element.attr('src', 'http://www.youtube-nocookie.com/embed/' + Youtube.Video.id(url) + '?rel=0')
-							return tool.restore_caret()
+							return editor.caret.restore()
 						}
 						*/
 					
@@ -762,11 +765,11 @@ Visual_editor.implement
 					},
 					on_open: function()
 					{	
-						tool.backup_caret()
+						editor.caret.store()
 					},
 					on_cancel: function()
 					{
-						tool.restore_caret()
+						editor.caret.restore()
 					}
 				})
 				.window
@@ -774,7 +777,7 @@ Visual_editor.implement
 			
 			apply: function()
 			{
-				if (editor.selection.exists())
+				if (editor.selection.exists() && editor.selection.is_valid())
 					throw new Error('Снимите выделение')
 				
 				this.open_dialog_window()
@@ -836,11 +839,11 @@ Visual_editor.implement
 					},
 					on_open: function()
 					{	
-						tool.backup_caret()
+						editor.caret.store()
 					},
 					on_cancel: function()
 					{
-						tool.restore_caret()
+						editor.caret.restore()
 					}
 				})
 			},
@@ -1027,7 +1030,10 @@ Visual_editor.implement
 		
 		var main_tools_height = main_tools.height()
 	
+		var editor = this.editor
+	
 		var show_all_tools = new image_button(tools.find('.more'), { 'auto unlock': false })
+		
 		show_all_tools.does(function()
 		{
 			additional_tools.slide_in_from_top()
@@ -1061,8 +1067,11 @@ Visual_editor.implement
 })
 
 // disable on blur / enable on focus
-$(function()
+$(document).on('page_loaded', function()
 {
+	if (!first_time_page_loading)
+		return
+	
 	/*
 	// с этим кодом, если фокус уходит на visual_editor_tools, то они перестают работать
 	$(document).on('focusout', function(event)

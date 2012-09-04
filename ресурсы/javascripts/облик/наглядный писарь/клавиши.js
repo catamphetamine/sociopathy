@@ -70,6 +70,17 @@ Visual_editor.implement
 				this.editor.insert_html('</p><p ' + this.editor.get_marker_html() + '>')
 				var next_paragraph = this.editor.unmark()
 				this.editor.caret.move_to(next_paragraph)
+			},
+			'.author': function(container)
+			{
+				if (container.parent().is('.citation'))
+					this.editor.insert('\n ')
+				//	this.editor.insert($('<br/>'))
+			},
+			'.text': function(container)
+			{
+				if (container.parent().is('.citation'))
+					this.editor.insert('\n ')
 			}
 		}
 	},
@@ -96,8 +107,8 @@ Visual_editor.implement
 		
 			event.preventDefault()
 			
-			if (Клавиши.is('Shift', 'Enter', event))
-				return visual_editor.on_break()
+			//if (Клавиши.is('Shift', 'Enter', event))
+			//	return visual_editor.on_break()
 			
 			var container = editor.caret.container()
 			var container_tag = container[0].tagName.toLowerCase()
@@ -246,6 +257,20 @@ Visual_editor.implement
 		
 		editor.on('keydown', function(event)
 		{
+			if (Клавиши.is('Ctrl', 'Shift', ' ', event))
+			{
+				event.preventDefault()
+				event.stopPropagation()
+				
+				if (editor.caret.container().is('.author') && editor.caret.container().parent().is('.citation'))
+					return visual_editor.on_break()
+				
+				if (editor.caret.container().is('li'))
+					return visual_editor.on_break()
+			
+				return visual_editor.on_breaking_space(editor.caret.node().parentNode)
+			}
+		
 			if (event.ctrlKey || event.shiftKey || event.altKey || event.metaKey)
 				return
 			
@@ -311,9 +336,6 @@ Visual_editor.implement
 			if (!character_code)
 				return
 				
-			if (Клавиши.is('Ctrl', 'Shift', ' ', event))
-				return visual_editor.on_breaking_space(editor.caret.node().parentNode)
-			
 			//else if (text.ends_with(' '))
 			//	return visual_editor.on_breaking_space(editor.caret.node().parentNode)
 			

@@ -197,9 +197,17 @@
 		}
 	}
 	
+	.more_less_container
+	{
+		float: right;
+		position: relative;
+		top: -50px;
+	}
+	
 	.more, .less
 	{
-		position: absolute;
+		position: relative;
+		
 		right: 12px;
 		top: 10px;
 		

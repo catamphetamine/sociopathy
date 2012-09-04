@@ -2,6 +2,8 @@
 
 #content.help
 {
+	margin-top: 80px;
+	
 	.help_section.faq ul li .question:after
 	{
 		content: '?'

@@ -148,7 +148,7 @@ $(document).on('panel_loaded', function()
 								(function() { message.removeClass('new') }).delay(500)
 							}
 							message.find('.content').html(Wiki_processor.decorate(data.сообщение))
-							refresh_formulae()
+							refresh_formulae({ where: message })
 						}
 					}
 					break
@@ -166,7 +166,7 @@ $(document).on('panel_loaded', function()
 								(function() { message.removeClass('new') }).delay(500)
 							}
 							message.find('.content').html(Wiki_processor.decorate(data.сообщение))
-							refresh_formulae()
+							refresh_formulae({ where: message })
 						}
 					}
 					break
@@ -181,7 +181,7 @@ $(document).on('panel_loaded', function()
 							(function() { message.removeClass('new') }).delay(500)
 						}
 						message.find('.content').html(Wiki_processor.decorate(data.сообщение))
-						refresh_formulae()
+						refresh_formulae({ where: message })
 					}
 					break
 				

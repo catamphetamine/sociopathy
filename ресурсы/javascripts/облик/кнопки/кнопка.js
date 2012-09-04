@@ -205,6 +205,9 @@ var button = new Class
 
 		this.element.on('click.' + this.namespace, function(event) 
 		{
+			//event.preventDefault()
+			//event.stopPropagation()
+			
 			// if is locked - exit
 			if (this.is_locked())
 				return false

@@ -10,7 +10,6 @@ var Visual_editor = new Class
 	
 		this.editor = editor
 		
-		var visual_editor
 		/*
 		editor.rebind_events = function()
 		{
@@ -35,7 +34,9 @@ var Visual_editor = new Class
 		if (!page.data.visual_editors)
 			page.data.visual_editors = []
 			
-		page.data.visual_editors.push(this)		
+		page.data.visual_editors.push(this)
+		
+		//visual_editor.editor.on('blur', function() { console.log(visual_editor.editor.caret.get()) })
 	},
 	
 	unload: function()

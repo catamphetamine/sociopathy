@@ -132,3 +132,18 @@ body
 		}
 	}
 }
+
+.blurred
+{
+	.popup_message.error > div
+	{
+		color: #faefef !important;
+		text-shadow: none !important;
+	}
+	
+	.popup_message.warning > div
+	{
+		color: #281b00 !important;
+		text-shadow: none !important;
+	}
+}

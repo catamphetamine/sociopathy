@@ -27,6 +27,11 @@ Editor.Selection = new Class
 	{
 		return !this.get().collapsed
 	},
+	
+	is_valid: function()
+	{
+		return this.text() != ''
+	},
 
 	'delete': function()
 	{
