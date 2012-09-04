@@ -271,7 +271,7 @@ var Wiki_processor = new (new Class
 			
 		wiki_element.appendTo(target)
 		
-		if (syntax.break)
+		if (syntax.break_parsing)
 			return
 		
 		//console.log(wiki_element)
@@ -484,49 +484,28 @@ Wiki_processor.Syntax =
 	},
 	формула:
 	{
-		translation:
-		{
-			'formula':
-			{
-				ширина: 'width',
-				высота: 'height'
-			}
-		},
-		selector: 'img[type="formula"]',
-		html_tag: 'img',
+		translation: 'formula',
+		selector: '.tex[type="formula"]',
+		html_tag: 'div',
 		break_decoration: true,
+		break_parsing: true,
 		
 		decorate: function(from, to)
 		{
-			var url = 'http://chart.apis.google.com/chart?cht=tx&chs=28&chl='
+			to.addClass('tex')
+			
+			to.html(from.html())
+			
 			return to.attr
 			({
-				src: url + from.html(),
 				type: 'formula',
-				width: from.attr('width'),
-				height: from.attr('height')
+				formula: from.html()
 			})
 		},
 		
 		parse: function(from, to)
 		{
-			var url = 'http://chart.apis.google.com/chart?cht=tx&chs=28&chl='
-			//var url = 'http://chart.apis.google.com/chart?cht=tx&amp;chs=28&amp;chl='
-			
-			var src = from.attr('src')
-			
-			if (!src.starts_with(url))
-				throw 'Invalid formula image source: ' + src
-			
-			var formula = src.substring(url.length)
-			
-			to.attr
-			({
-				width: from.attr('width'),
-				height: from.attr('height')
-			})
-				
-			return to.html(formula)
+			return to.html(from.attr('formula'))
 		}
 	},
 	снизу:
@@ -562,7 +541,7 @@ Wiki_processor.Syntax =
 			return $(Youtube.Video.embed_code(from.html())).attr('type', 'video')
 		},
 		
-		break: true,
+		break_parsing: true,
 		
 		parse: function(from, to)
 		{
@@ -588,7 +567,7 @@ Wiki_processor.Syntax =
 			return $(Vimeo.Video.embed_code(from.html())).attr('type', 'video')
 		},
 		
-		break: true,
+		break_parsing: true,
 	
 		parse: function(from, to)
 		{

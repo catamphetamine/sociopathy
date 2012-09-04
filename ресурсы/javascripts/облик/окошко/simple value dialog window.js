@@ -2,7 +2,11 @@ function simple_value_dialog_window(options)
 {
 	var element = $("#simple_value_dialog").clone()
 
+	element.removeAttr('id')
 	element.attr('id', options.id)
+	
+	if (options['class'])
+		element.addClass(options['class'])
 	
 	/*
 	if (options.id)
@@ -18,16 +22,28 @@ function simple_value_dialog_window(options)
 
 	options.fields.forEach(function(field, index)
 	{
-		field.label = $('<label/>')
-		field.label.attr('for', field.id)
-		field.label.html(field.description)
-		field.label.appendTo(form)
+		if (field.description)
+		{
+			field.label = $('<label/>')
+			field.label.attr('for', field.id)
+			field.label.html(field.description)
+			field.label.appendTo(form)
+			
+			if (field['in-place label'])
+				field.label.addClass('in-place_input_label')
+		}
 		
-		if (field['in-place label'])
-			field.label.addClass('in-place_input_label')
-		
-		field.input = $('<input/>')
-		field.input.addClass('field')
+		if (field.multiline)
+		{
+			field.input = $('<textarea/>')
+			field.input.addClass('multiline')
+		}
+		else
+		{
+			field.input = $('<input/>')
+			field.input.addClass('field')
+		}
+	
 		field.input.attr('type', 'text')
 		field.input.attr('name', field.id)
 		field.input.appendTo(form)
@@ -43,8 +59,9 @@ function simple_value_dialog_window(options)
 		{
 			options.fields.forEach(function(field, index)
 			{
-				if (field.label.hasClass('in-place_input_label'))
-					field.label.css({ 'z-index': 0, opacity: 1 })
+				if (field.label)
+					if (field.label.hasClass('in-place_input_label'))
+						field.label.css({ 'z-index': 0, opacity: 1 })
 			})
 					
 			if (options.on_open)
@@ -118,9 +135,26 @@ function simple_value_dialog_window(options)
 	
 	dialog_window.register_controls(validating_form, cancel, ok)
 	
-	dialog_window.on_enter = function()
+	var submit_on_enter = true
+	options.fields.forEach(function(field, index)
 	{
-		ok.push()
+		if (field.multiline)
+			submit_on_enter = false
+	})
+	
+	if (submit_on_enter)
+	{
+		dialog_window.on_enter = function()
+		{
+			ok.push()
+		}
+	}
+	else
+	{
+		dialog_window.on_ctrl_enter = function()
+		{
+			ok.push()
+		}
 	}
 	
 	var result =

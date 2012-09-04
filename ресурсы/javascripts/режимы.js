@@ -197,21 +197,6 @@ var Режим = (function()
 		})
 	})
 	
-	$(function() 
-	{
-		$(document).on('keydown', function(event) 
-		{
-			if (Клавиши.is('Alt', 'Shift', '1', event))
-				return перейти_в_режим('обычный')
-				
-			if (Клавиши.is('Alt', 'Shift', '2', event))
-				return перейти_в_режим('правка')
-				
-			if (Клавиши.is('Alt', 'Shift', '3', event))
-				return перейти_в_режим('действия')
-		})
-	})
-	
 	var при_переходе_в_режим = function(из_какого, в_какой, действие)
 	{
 		if ($.isFunction(из_какого))
@@ -414,5 +399,93 @@ var Режим = (function()
 		})
 	}
 	
+	result.перейти_в_режим = перейти_в_режим
+	
 	return result
 })()
+
+$(document).on('page_loaded', function() 
+{
+	Режим.при_переходе({ в: 'правка' }, function()
+	{
+		$('.tex[type="formula"]').on('click.in_place_editing', function(event)
+		{
+			var element = $(this)
+			
+			var window = Visual_editor.tool_windows.Formula
+			({
+				ok: function(formula)
+				{
+					element.attr('formula', formula).html(formula)
+					refresh_formulae({ wait_for_load: true, where: element })
+				}
+			})
+			
+			window.form.field('formula').val(element.attr('formula'))
+			
+			window.open()
+		})
+		
+		$('[type="picture"]').on('click.in_place_editing', function(event)
+		{
+			var element = $(this)
+			
+			var window = Visual_editor.tool_windows.Picture
+			({
+				ok: function(url)
+				{
+					Visual_editor.tool_helpers.Picture.get_picture_size(url, function(size)
+					{
+						if (!size)
+							return
+						
+						element.attr
+						({
+							src: url,
+							width: size.width,
+							height: size.height
+						})
+					})
+				}
+			})
+			
+			window.form.field('url').val(decodeURIComponent(element.attr('src')))
+							
+			window.open()
+		})
+		
+		$('[type="hyperlink"]').on('click.in_place_editing', function(event)
+		{
+			var element = $(this)
+			
+			var window = Visual_editor.tool_windows.Link
+			({
+				ok: function(url)
+				{
+					element.attr('href', url)
+				}
+			})
+			
+			window.form.field('url').val(decodeURI(element.attr('href')))
+							
+			window.open()
+		})
+	})
+	
+	Режим.при_переходе({ из: 'правка' }, function()
+	{
+		$('.tex').unbind('.in_place_editing')
+	})
+	
+	$(document).on('keydown', function(event) 
+	{
+		if (Клавиши.is('Alt', 'Shift', '1', event))
+			return Режим.перейти_в_режим('обычный')
+			
+		if (Клавиши.is('Alt', 'Shift', '2', event))
+			return Режим.перейти_в_режим('правка')
+			
+		if (Клавиши.is('Alt', 'Shift', '3', event))
+			return Режим.перейти_в_режим('действия')
+	})
+})

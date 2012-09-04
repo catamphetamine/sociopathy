@@ -116,7 +116,7 @@ html *::selection, html *::-moz-selection, html *::-webkit-selection
 }
 */
 
-html, input
+html, input, textarea
 {
 	font-family: Whitney;
 	font-size: 32px;
@@ -223,43 +223,51 @@ div.clear
 
 /* input field */
 
+textarea.multiline
+{
+	height: 200px;
+}
+
+textarea.multiline, input.field
+{
+	padding-left: 10px;
+	padding-right: 10px;	
+
+	border-top-color: #afafaf;
+	border-left-color: #bfbfbf;
+	border-right-color: #bfbfbf;
+	border-bottom-color: #cfcfcf;
+	
+	border-width: 2px;
+	border-style: solid;
+	
+	background-color: white;
+	background-image: url('/картинки/поле ввода/фон.png');
+	background-repeat: repeat-x;
+	background-position: top;
+
+	-webkit-border-radius: 5px; 
+	-moz-border-radius: 5px; 
+	border-radius: 5px;
+	
+	-webkit-transition-property: all;
+	-moz-transition-property: all;
+	-o-transition-property: all;
+	transition-property: all;
+
+	-webkit-transition-duration: 0.5s;
+	-moz-transition-duration: 0.5s;
+	-o-transition-duration: 0.5s;
+	transition-duration: 0.5s;
+}
+
 input 
 {
 	border: none;
 	
 	&.field
 	{
-		padding-left: 10px;
-		padding-right: 10px;	
-
 		height: 50px;
-
-		border-top-color: #afafaf;
-		border-left-color: #bfbfbf;
-		border-right-color: #bfbfbf;
-		border-bottom-color: #cfcfcf;
-		
-		border-width: 2px;
-		border-style: solid;
-		
-		background-color: white;
-		background-image: url('/картинки/поле ввода/фон.png');
-		background-repeat: repeat-x;
-		background-position: top;
-
-		-webkit-border-radius: 5px; 
-		-moz-border-radius: 5px; 
-		border-radius: 5px;
-		
-		-webkit-transition-property: all;
-		-moz-transition-property: all;
-		-o-transition-property: all;
-		transition-property: all;
-
-		-webkit-transition-duration: 0.5s;
-		-moz-transition-duration: 0.5s;
-		-o-transition-duration: 0.5s;
-		transition-duration: 0.5s;
 	}
 
 	&.focusable_field:focus
@@ -745,6 +753,11 @@ body[mode="правка"] .rich_formatting a
 	{
 		/* .beautiful_shadow_5(0px, 4px, 20px, 8px, 12px, 8px, 0px, 0.1); */
 		/*.beautiful_shadow_5(0px, 0px, 4px, 4px, 4px, 4px, 0px, 1, 0, 120, 255); */
+	}
+	
+	.tex
+	{
+		display: inline-block;
 	}
 	
 	p

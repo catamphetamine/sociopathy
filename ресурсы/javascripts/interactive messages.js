@@ -7,7 +7,8 @@ var Interactive_messages = function(options)
 		data_source: options.data_source,
 		prepend_message: function(data, prepend)
 		{
-			var message = this.options.construct_message(data)
+			var message = this.render(data)
+			
 			message.find('.popup_menu_container').prependTo(message)
 			
 			var author = message.find('.author')
@@ -63,14 +64,10 @@ var Interactive_messages = function(options)
 				messages.connection.emit('пишет')
 			})
 		},
-		construct_message: function(data)
+		decorate_message: function(message, data)
 		{
-			var message = this.create_message_element(data)
-		
 			if (away_users[data.отправитель._id])
 				message.find('.author').addClass('is_away')
-				
-			return message
 		},
 		send_message: function(message)
 		{

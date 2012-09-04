@@ -22,6 +22,7 @@ var Batch_loader = new Class
 		finished: function() {},
 		done: function() {},
 		done_more: function() {},
+		before_output: function(callback) { callback() },
 		before_done: function() {},
 		before_done_more: function() {},
 		get_id: function(object) { return object._id },
@@ -168,22 +169,25 @@ var Batch_loader = new Class
 				loader.options.before_done.bind(loader)(список)
 			else
 				loader.options.before_done_more.bind(loader)(список)
-			
-			if (!loader.есть_ли_ещё)
-				loader.options.finished(список)
-			
-			loader.options.callback(null, function()
-			{
-				if (loader.options.after_all_shown)
-					loader.options.after_all_shown(elements)
-					
-				if (is_first_batch)
-					loader.options.done.bind(loader)(список)
-				else
-					loader.options.done_more.bind(loader)(список)
 				
-				if (loader.есть_ли_ещё)
-					loader.activate()
+			loader.options.before_output(function()
+			{
+				if (!loader.есть_ли_ещё)
+					loader.options.finished(список)
+				
+				loader.options.callback(null, function()
+				{
+					if (loader.options.after_all_shown)
+						loader.options.after_all_shown(elements)
+						
+					if (is_first_batch)
+						loader.options.done.bind(loader)(список)
+					else
+						loader.options.done_more.bind(loader)(список)
+					
+					if (loader.есть_ли_ещё)
+						loader.activate()
+				})
 			})
 		})
 	},

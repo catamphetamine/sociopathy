@@ -105,6 +105,8 @@ Visual_editor.implement
 			})
 		}
 		
+		visual_editor.activate_all_toolable_elements = activate_all_toolable_elements
+		
 		Tools.Subheading =
 		{
 			selector: '.subheading',
@@ -200,31 +202,13 @@ Visual_editor.implement
 			{
 				var tool = this
 				
-				Validation.наглядный_писарь.ссылка = function(value, callback)
-				{
-					if (!value)
-						return callback({ error: 'Введите адрес ссылки' })
-						
-					callback()
-				}
-				
-				this.dialog_window = simple_value_dialog_window
+				this.dialog_window = Visual_editor.tool_windows.Link
 				({
-					id: 'visual_editor_hyperlink_window',
-					title: 'Ссылка',
-					fields:
-					[{
-						id: 'url',
-						description: 'Укажите адрес ссылки',
-						validation: 'наглядный_писарь.ссылка'
-					}],
 					ok: function(url)
 					{
-						url = correct_uri(url)
-						
-						if (this.state.element)
+						if (tool.dialog_window.state.element)
 						{
-							this.state.element.attr('href', url)
+							tool.dialog_window.state.element.attr('href', url)
 							return tool.restore_caret()
 						}
 						
@@ -245,24 +229,23 @@ Visual_editor.implement
 						tool.restore_caret()
 						tool.on_success(editor.insert(link))
 					},
-					on_open: function()
-					{	
+					
+					open: function()
+					{
 						tool.backup_caret()
 					},
-					on_cancel: function()
+					
+					cancel: function()
 					{
 						tool.restore_caret()
 					}
 				})
-				.window
 			},
 			
 			apply: function()
 			{
 				if (editor.selection.exists())
-				{
 					editor.selection.store()
-				}
 				
 				this.open_dialog_window()
 				return false
@@ -376,55 +359,33 @@ Visual_editor.implement
 			{
 				var tool = this
 				
-				Validation.наглядный_писарь.картинка = function(url, callback)
-				{
-					if (!url)
-						return callback({ error: 'Введите адрес картинки' })
-						
-					image_exists(url, function(result)
-					{
-						if (result.error)
-							return callback({ error: 'Картинка не найдена' })
-						
-						callback()
-					})
-				}
-				
-				this.dialog_window = simple_value_dialog_window
+				this.dialog_window = Visual_editor.tool_windows.Picture
 				({
-					id: 'visual_editor_image_source_window',
-					title: 'Адрес картинки',
-					fields:
-					[{
-						id: 'url',
-						description: 'Укажите адрес картинки',
-						validation: 'наглядный_писарь.картинка'
-					}],
 					ok: function(url)
 					{
-						url = url.collapse_lines()
+						Visual_editor.tool_helpers.Picture.get_picture_size(url, function(size)
+						{
+							if (!size)
+								return tool.restore_caret()
 						
-						if (this.state.element)
-						{
-							this.state.element.attr('src', url)
-							return tool.restore_caret()
-						}
-					
-						var loading = loading_indicator.show()
-						get_image_size(url, function(size)
-						{
-							loading.hide()
-							
-							if (size.error)
+							if (tool.dialog_window.state.element)
 							{
-								error('Не удалось загрузить картинку. Можете попробовать ещё раз.')
+								tool.dialog_window.state.element.attr
+								({
+									src: url,
+									width: size.width,
+									height: size.height
+								})
 								return tool.restore_caret()
 							}
 							
 							var picture = $('<img/>')
-							picture.attr('src', url)
-							picture.attr('width', size.width)
-							picture.attr('height', size.height)
+							picture.attr
+							({
+								src: url,
+								width: size.width,
+								height: size.height
+							})
 							
 							tool.mark_type(picture)
 							
@@ -432,22 +393,23 @@ Visual_editor.implement
 							tool.on_success(editor.insert(picture))
 						})
 					},
-					on_open: function()
-					{	
+					
+					open: function()
+					{
 						tool.backup_caret()
 					},
-					on_cancel: function()
+					
+					cancel: function()
 					{
 						tool.restore_caret()
 					}
 				})
-				.window
 			},
 			
 			apply: function()
 			{
 				if (editor.selection.exists())
-					throw new Error('Выделение пока не поддерживается этим инструментом')
+					throw new Error('Снимите выделение')
 				
 				this.open_dialog_window()
 				return false
@@ -508,98 +470,66 @@ Visual_editor.implement
 			{
 				var tool = this
 				
-				Validation.наглядный_писарь.формула = function(value, callback)
-				{
-					if (!value)
-						return callback({ error: 'Введите код формулы в формате TeX' })
-						
-					callback()
-				}
-				
-				this.dialog_window = simple_value_dialog_window
+				this.dialog_window = Visual_editor.tool_windows.Formula
 				({
-					id: 'visual_editor_formula_window',
-					title: 'Формула',
-					fields:
-					[{
-						id: 'formula',
-						description: 'Введите формулу (в формате TeX)',
-						validation: 'наглядный_писарь.формула'
-					}],
 					ok: function(formula)
 					{
-						visual_editor.Tools.Formula.insert_formula(formula.collapse_lines(), this.state.element)
+						tool.insert_formula(formula, { element: tool.dialog_window.state.element, append_whitespace: true })
 					},
-					on_open: function()
-					{	
-						//tool.backup_caret()
+					open: function()
+					{
+						tool.backup_caret()
 					},
-					on_cancel: function()
+					cancel: function()
 					{
 						tool.restore_caret()
 					}
 				})
-				.window
 			},
 	
-			insert_formula: function(formula, picture)
+			insert_formula: function(formula, options)
 			{
-				var url = 'http://chart.apis.google.com/chart?cht=tx&chs=28&chl=' + formula
+				options = options || {}
 			
-				var loading = loading_indicator.show()
-				
-				var tool = this
-				
-				if (picture)
+				if (options.element)
 				{
-					return get_image_size(url, function(size)
-					{
-						loading.hide()
-						
-						if (size.error)
-						{
-							error('Не удалось загрузить картинку. Можете попробовать ещё раз.')
-							return tool.restore_caret()
-						}
+					options.element.attr('formula', formula).html(formula)
 					
-						picture.attr('src', url)
-						picture.attr('width', size.width)
-						picture.attr('height', size.height)
+					this.restore_caret()
 					
-						tool.restore_caret()
-					})
+					refresh_formulae({ wait_for_load: true })
+					return this.on_success()
 				}
 				
-				get_image_size(url, function(size)
+				var element = $('<div/>').addClass('tex')
+				element.attr('formula', formula).html(formula)
+				this.mark_type(element)
+				
+				this.restore_caret()
+				element = editor.insert(element)
+					
+				if (options.append_whitespace)
 				{
-					loading.hide()
-					
-					if (size.error)
-					{
-						error('Не удалось загрузить картинку. Можете попробовать ещё раз.')
-						return tool.restore_caret()
-					}
-					
-					var picture = $('<img/>')
-					picture.attr('src', url)
-					picture.attr('width', size.width)
-					picture.attr('height', size.height)
-					
-					tool.mark_type(picture)
-					
-					tool.restore_caret()
-					tool.on_success(editor.insert(picture))
-				})
+					var text = Dom_tools.append_text_next_to(element, ' ')
+					editor.caret.move_to_the_end(text)
+				}
+				else
+					editor.caret.move_to_the_next_element(element)
+				
+				refresh_formulae({ wait_for_load: true })
+				
+				this.on_success(element)
 			},
 	
 			apply: function()
 			{
-				this.backup_caret()
+				//this.backup_caret()
 						
 				if (editor.selection.exists())
 				{
-					this.insert_formula(editor.selection.text())
+					var text = editor.selection.text()
 					editor.selection.cut()
+					this.insert_formula(text)
 					return false
 				}
 				
@@ -607,18 +537,19 @@ Visual_editor.implement
 				return false
 					
 				//var formula = '\\[ f(x,y,z) = 3y^2 z \\left( 3 + \\frac{7x+5}{1 + y^2} \\right).\\]'
+				// \[ \left( \sum_{k=1}^n a_k b_k \right)^2 \leq \left( \sum_{k=1}^n a_k^2 \right) \left( \sum_{k=1}^n b_k^2 \right) \]
 			},
 			
 			on_success: function(picture)
 			{
 				activate_all_toolable_elements()
 				//this.activate(picture)
-				editor.caret.move_to(picture)
+				//editor.caret.move_to(picture)
 			},
 			
 			on_element_click: function()
 			{
-				var formula = decodeURIComponent(parseUri($(this).attr('src')).queryKey.chl)
+				var formula = $(this).attr('formula')
 				visual_editor.Tools.Formula.open_dialog_window({ formula: formula }, { element: $(this) })
 				return false
 			}
@@ -783,7 +714,7 @@ Visual_editor.implement
 				
 				this.dialog_window = simple_value_dialog_window
 				({
-					id: 'visual_editor_video_window',
+					class: 'visual_editor_video_window',
 					title: 'Видео',
 					fields:
 					[{
@@ -1171,3 +1102,150 @@ $(function()
 		})
 	})
 })
+
+Validation.наглядный_писарь.формула = function(value, callback)
+{
+	if (!value)
+		return callback({ error: 'Введите код формулы в формате TeX' })
+		
+	callback()
+}
+
+Validation.наглядный_писарь.картинка = function(url, callback)
+{
+	if (!url)
+		return callback({ error: 'Введите адрес картинки' })
+		
+	image_exists(url, function(result)
+	{
+		if (result.error)
+			return callback({ error: 'Картинка не найдена' })
+		
+		callback()
+	})
+}
+				
+Validation.наглядный_писарь.ссылка = function(value, callback)
+{
+	if (!value)
+		return callback({ error: 'Введите адрес ссылки' })
+		
+	callback()
+}
+
+Visual_editor.tool_windows =
+{
+	Formula: function(options)
+	{
+		return simple_value_dialog_window
+		({
+			class: 'visual_editor_formula_window',
+			title: 'Вставить формулу (TeX)',
+			fields:
+			[{
+				id: 'formula',
+				//description: 'Введите формулу (в формате TeX)',
+				multiline: true,
+				validation: 'наглядный_писарь.формула'
+			}],
+			ok: function(formula)
+			{
+				options.ok(formula.trim())
+			},
+			on_open: function()
+			{
+				if (options.open)
+					options.open()
+			},
+			on_cancel: function()
+			{
+				if (options.cancel)
+					options.cancel()
+			}
+		})
+		.window
+	},
+	
+	Picture: function(options)
+	{
+		return simple_value_dialog_window
+		({
+			class: 'visual_editor_image_source_window',
+			title: 'Адрес картинки',
+			fields:
+			[{
+				id: 'url',
+				description: 'Укажите адрес картинки',
+				validation: 'наглядный_писарь.картинка'
+			}],
+			ok: function(url)
+			{
+				options.ok(url.collapse_lines())
+			},
+			on_open: function()
+			{	
+				if (options.open)
+					options.open()
+			},
+			on_cancel: function()
+			{
+				if (options.cancel)
+					options.cancel()
+			}
+		})
+		.window
+	},
+	
+	Link: function(options)
+	{
+		return simple_value_dialog_window
+		({
+			class: 'visual_editor_hyperlink_window',
+			title: 'Ссылка',
+			fields:
+			[{
+				id: 'url',
+				description: 'Укажите адрес ссылки',
+				validation: 'наглядный_писарь.ссылка'
+			}],
+			ok: function(url)
+			{
+				options.ok(correct_uri(url))
+			},
+			on_open: function()
+			{	
+				if (options.open)
+					options.open()
+			},
+			on_cancel: function()
+			{
+				if (options.cancel)
+					options.cancel()
+			}
+		})
+		.window
+	}
+}
+
+Visual_editor.tool_helpers =
+{
+	Picture:
+	{
+		get_picture_size: function(url, callback)
+		{
+			var loading = loading_indicator.show()
+			get_image_size(url, function(size)
+			{
+				loading.hide()
+				
+				if (size.error)
+				{
+					error('Не удалось загрузить картинку. Можете попробовать ещё раз.')
+					return callback()
+				}
+				
+				callback(size)
+			})
+		}
+	}
+}

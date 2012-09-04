@@ -121,6 +121,30 @@ var Visual_editor = new Class
 		this.editor.caret.position(text_node, 1)
 	},
 	
+	paragraphed: function()
+	{
+		var visual_editor = this
+		
+		var default_on_breaking_space = visual_editor.on_breaking_space
+		visual_editor.on_breaking_space = function(container_tag)
+		{
+			if (container_tag.tagName.toLowerCase() === 'p')
+				return visual_editor.editor.insert(' ')
+			
+			default_on_breaking_space.bind(this)(container_tag)
+		}
+		
+		visual_editor.enter_pressed_in_container = function()
+		{
+			visual_editor.insert_paragraph()
+		}
+		
+		visual_editor.on_break = function()
+		{
+			visual_editor.new_paragraph()
+		}
+	},
+	
 	new_paragraph: function()
 	{
 		var container = this.editor.caret.node()

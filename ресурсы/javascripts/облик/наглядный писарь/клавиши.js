@@ -82,22 +82,6 @@ Visual_editor.implement
 		var visual_editor = this
 		var editor = this.editor
 		
-		editor.on('keydown', function(event)
-		{
-			if (!visual_editor.can_edit())
-				return
-				
-			if (!Клавиши.is('Ctrl', 'Enter', event))
-				return
-			
-			var container = editor.caret.container()
-			
-			if (container[0] === editor.content[0])
-			{
-				event.preventDefault()
-				return visual_editor.ctrl_enter_pressed_in_container()
-			}
-		})
 			
 		editor.on('keypress', function(event)
 		{
@@ -304,6 +288,15 @@ Visual_editor.implement
 		{
 			keypress_happened = true
 			
+			if (editor.caret.container('.tex').exists())
+			{
+				if (!Клавиши.navigating())
+				{
+					event.preventDefault()
+					return
+				}
+			}
+			
 			if (!visual_editor.can_edit())
 				return
 				
@@ -318,6 +311,12 @@ Visual_editor.implement
 			if (!character_code)
 				return
 				
+			if (Клавиши.is('Ctrl', 'Shift', ' ', event))
+				return visual_editor.on_breaking_space(editor.caret.node().parentNode)
+			
+			//else if (text.ends_with(' '))
+			//	return visual_editor.on_breaking_space(editor.caret.node().parentNode)
+			
 			if (event.altKey || event.ctrlKey)
 				return
 				
@@ -345,8 +344,8 @@ Visual_editor.implement
 				{
 					if (text.ends_with(' -'))
 						return editor.caret.collapse_recent_characters(2, ' — ')
-					else if (text.ends_with(' '))
-						return visual_editor.on_breaking_space(editor.caret.node().parentNode)
+					//else if (text.ends_with(' '))
+					//	return visual_editor.on_breaking_space(editor.caret.node().parentNode)
 				}
 			}
 			else if (character === '"')

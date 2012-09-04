@@ -241,7 +241,7 @@
 	top: -2px;
 }
 
-#visual_editor_hyperlink_window
+.visual_editor_hyperlink_window
 {
 	.icon
 	{
@@ -252,7 +252,7 @@
 	}
 }
 
-#visual_editor_image_source_window
+.visual_editor_image_source_window
 {
 	.icon
 	{
@@ -265,7 +265,7 @@
 	}
 }
 
-#visual_editor_formula_window
+.visual_editor_formula_window
 {
 	.icon
 	{
@@ -276,7 +276,7 @@
 	}
 }
 
-#visual_editor_video_window
+.visual_editor_video_window
 {
 	.icon
 	{
@@ -292,7 +292,7 @@
 	}
 }
 
-#visual_editor_insert_html_window
+.visual_editor_insert_html_window
 {
 	.icon
 	{
@@ -306,13 +306,15 @@
 	}
 }
 
-[contenteditable=true] a[type=hyperlink]
+article[contenteditable=true] [type=hyperlink],
+article[contenteditable=true] [type=picture],
+article[contenteditable=true] [type=formula],
+article[contenteditable=true] [type=video]
 {
 	cursor: pointer;
 }
 
-
-
+/*
 body[mode="правка"] .article [type="hyperlink"],
 body[mode="правка"] .article [type="picture"],
 body[mode="правка"] .article [type="formula"],
@@ -320,3 +322,4 @@ body[mode="правка"] .article [type="video"]
 {
 	cursor: pointer;
 }
+*/

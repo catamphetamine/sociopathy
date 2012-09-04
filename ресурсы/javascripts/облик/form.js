@@ -38,7 +38,7 @@ function Form(element)
 	
 	var form = this
 	
-	element.find('input').each(function()
+	element.find('input,select,textarea').each(function()
 	{
 		var input = $(this)
 		
@@ -54,26 +54,29 @@ function Form(element)
 			
 			var input = this
 			
-			if (this.label.hasClass('in-place_input_label'))
+			if (this.label.exists())
 			{
-				this.label.on('click', function(event)
+				if (this.label.hasClass('in-place_input_label'))
 				{
-					input.element.focus()
-				})
-				
-				this.element.on('keypress', function(event)
-				{
-					if (event.ctrlKey || event.metaKey || event.altKey)
-						return
-						
-					input.label.css({ opacity: 0, 'z-index': -1 })
-				})
-				
-				this.element.on('blur', function(event)
-				{
-					if (!$(this).val())
-						input.label.css({ opacity: 1, 'z-index': 0 })
-				})
+					this.label.on('click', function(event)
+					{
+						input.element.focus()
+					})
+					
+					this.element.on('keypress', function(event)
+					{
+						if (event.ctrlKey || event.metaKey || event.altKey)
+							return
+							
+						input.label.css({ opacity: 0, 'z-index': -1 })
+					})
+					
+					this.element.on('blur', function(event)
+					{
+						if (!$(this).val())
+							input.label.css({ opacity: 1, 'z-index': 0 })
+					})
+				}
 			}
 			
 			this.reset = function()
@@ -123,8 +126,9 @@ function Form(element)
 			// if this field has an error
 			this.error = function(error, input)
 			{
-				var label = form.element.find('label[for=' + input.name + ']')
-	
+				if (!this.label.exists())
+					return this.error_message(error)
+				
 				if (this.label.hasClass('in-place_input_label'))
 					return this.error_message(error)
 			

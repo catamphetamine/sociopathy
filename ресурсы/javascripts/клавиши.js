@@ -159,6 +159,7 @@ var Клавиши =
 	
 	is: function()
 	{
+		var meta = false
 		var ctrl = false
 		var alt = false
 		var shift = false
@@ -166,6 +167,12 @@ var Клавиши =
 		var args = Array.prototype.slice.call(arguments)
 		var event = args.pop()
 		var keys = args.map(function(key) { return key })
+		
+		if (keys.contains('Command'))
+		{
+			meta = true
+			keys.remove('Command')
+		}
 		
 		if (keys.contains('Ctrl'))
 		{
@@ -185,17 +192,49 @@ var Клавиши =
 			keys.remove('Shift')
 		}
 
+		if (meta)
+		{
+			if (!event.metaKey)
+				return false
+		}
+		else
+		{
+			if (event.metaKey)
+				return false
+		}
+
 		if (ctrl)
+		{
 			if (!event.ctrlKey)
 				return false
+		}
+		else
+		{
+			if (event.ctrlKey)
+				return false
+		}
 		
 		if (alt)
+		{
 			if (!event.altKey)
 				return false
+		}
+		else
+		{
+			if (event.altKey)
+				return false
+		}
 				
 		if (shift)
+		{
 			if (!event.shiftKey)
 				return false
+		}
+		else
+		{
+			if (event.shiftKey)
+				return false
+		}
 		
 		if (keys.length === 0)
 		{
@@ -236,6 +275,21 @@ var Клавиши =
 		console.log('expected key: ' + key)
 		console.log('this[key]: ' + this[key])
 		*/
+	},
+	
+	navigating: function(event)
+	{
+		if (Клавиши.is('Влево', event) ||
+			Клавиши.is('Вправо', event) ||
+			Клавиши.is('Вверх', event) ||
+			Клавиши.is('Вниз', event) ||
+			Клавиши.is('Home', event) ||
+			Клавиши.is('End', event) ||
+			Клавиши.is('Page_up', event) ||
+			Клавиши.is('Page_down', event))
+		{
+			return true
+		}
 	}
 }
 

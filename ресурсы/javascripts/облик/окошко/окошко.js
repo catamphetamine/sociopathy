@@ -115,6 +115,17 @@ var dialog_window = new Class
 					self.on_enter()
 					return false
 				}
+				return
+			}
+			
+			if (Клавиши.is('Ctrl', 'Enter', event))
+			{
+				if (self.on_ctrl_enter)
+				{
+					self.on_ctrl_enter()
+					return false
+				}
+				return
 			}
 			
 			// if Tab key pressed
@@ -155,7 +166,7 @@ var dialog_window = new Class
 				
 		this.container.fade_in(this.options.show_duration, (function()
 		{
-			dialog_window.content.find('input:first').focus()
+			dialog_window.content.find('input[type=text],textarea,select').filter(':visible:first').focus()
 			
 			// prevent tabbing out of modal dialog windows
 			//		if (this.options.modal)

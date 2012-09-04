@@ -68,7 +68,7 @@ var Messages = new Class
 		
 		this.options.prepend_message = this.options.prepend_message.bind(this)
 		this.options.after_append = this.options.after_append.bind(this)
-		this.options.construct_message = this.options.construct_message.bind(this)
+		this.options.decorate_message = this.options.decorate_message.bind(this)
 		this.options.send_message = this.options.send_message.bind(this)
 		
 		this.initialize_loaders()
@@ -141,6 +141,10 @@ var Messages = new Class
 			},
 			before_done: function() { ajaxify_internal_links(options.container) },
 			before_done_more: function() { ajaxify_internal_links(options.container) },
+			before_output: function(callback)
+			{
+				refresh_formulae(callback)
+			},
 			done: function()
 			{
 				messages.container_top_offset = messages.options.container.offset().top
@@ -277,10 +281,12 @@ var Messages = new Class
 		if (this.options.template)
 			return $.tmpl(this.options.template, data)
 		
-		return this.options.construct_message(data)
+		var message = this.create_message_element(data)
+		this.options.decorate_message(message, data)
+		return message
 	},
 	
-	append_message: function(previous, data)
+	prepare_message_for_insertion: function(previous, data)
 	{
 		var message = this.render(data)
 		
@@ -397,7 +403,7 @@ var Messages = new Class
 			if (this.messages_to_add.length > 1)
 				return
 		}
-			
+		
 		var after
 		
 		if (data.after)
@@ -411,7 +417,7 @@ var Messages = new Class
 		if (!after || !after.exists())
 			after = this.options.container.find('> li:last')
 			
-		var message = this.append_message(after, data)
+		var message = this.prepare_message_for_insertion(after, data)
 	
 		// убрать сверху лишние сообщения
 		var remove_old_messages = function()
@@ -451,7 +457,7 @@ var Messages = new Class
 		
 		var is_another_users_message = data.отправитель._id !== пользователь._id
 	
-		var append = function()
+		var append = function(callback)
 		{
 			message.appendTo(this.options.container)
 		
@@ -461,33 +467,40 @@ var Messages = new Class
 			
 			if (this.options.after_append)
 				this.options.after_append(message, data)
+				
+			refresh_formulae(callback)
 		}
 		
 		append = append.bind(this)
 					
 		if (!this.should_roll())
 		{
-			append()
-			
-			// прокрутить на величину убранных сообщений
-			if (typeof this.options.max_messages !== 'undefined')
+			append((function()
 			{
-				var delta_height = remove_old_messages()
-				$(window).scrollTop($(window).scrollTop() - delta_height)
-			}
-			
-			if (is_another_users_message)
-				this.notify_new_message_recieved(message)
-			
-			return next()
+				// прокрутить на величину убранных сообщений
+				if (typeof this.options.max_messages !== 'undefined')
+				{
+					var delta_height = remove_old_messages()
+					$(window).scrollTop($(window).scrollTop() - delta_height)
+				}
+				
+				if (is_another_users_message)
+					this.notify_new_message_recieved(message)
+				
+				return next()
+			})
+			.bind(this))
 		}
 		
-		append()
-		this.options.прокрутчик.scroll_to(this.options.container, { top_offset: this.container_top_offset, bottom: true, duration: 700 }, function()
+		append((function()
 		{
-			remove_old_messages()
-			next()
+			this.options.прокрутчик.scroll_to(this.options.container, { top_offset: this.container_top_offset, bottom: true, duration: 700 }, function()
+			{
+				remove_old_messages()
+				next()
+			})
 		})
+		.bind(this))
 	},
 
 	on_load: function()
@@ -502,12 +515,16 @@ var Messages = new Class
 		if (this.options.set_up_visual_editor)
 			this.options.set_up_visual_editor.bind(this)(visual_editor)
 		
+		/*
 		visual_editor.on_break = function()
 		{
 			var node = document.createTextNode(' ')
 			visual_editor.editor.content[0].appendChild(node)
 			visual_editor.editor.caret.move_to(node)
 		}
+		*/
+		
+		visual_editor.paragraphed()
 		
 		var hint = $('<p/>').appendTo(visual_editor.editor.content)
 		visual_editor.hint(hint, 'Вводите сообщение здесь')
@@ -531,11 +548,6 @@ var Messages = new Class
 			visual_editor.focus()
 			
 			messages.adjust_listing_margin()
-		}
-		
-		visual_editor.enter_pressed_in_container = function()
-		{
-			visual_editor.insert_paragraph()
 		}
 		
 		visual_editor.ctrl_enter_pressed_in_container = function()

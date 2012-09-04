@@ -305,7 +305,7 @@ body.osx .popup .top_bar
 				margin-top: 20px;
 			}
 			
-			input[type="text"]
+			input[type="text"], textarea[type="text"]
 			{
 				width: 500px;
 				display: block;

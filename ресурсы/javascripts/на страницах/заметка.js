@@ -70,6 +70,8 @@
 	
 	function article_loaded()
 	{
+		refresh_formulae()
+		
 		$(document).trigger('page_initialized')
 		
 		var main_header = $('article h1')
@@ -83,24 +85,7 @@
 		visual_editor.tools_element.floating_top_bar()
 		visual_editor.can_edit = function() { return Режим.правка_ли() }
 		
-		visual_editor.on_break = function()
-		{
-			visual_editor.new_paragraph()
-		}
-		
-		var default_on_breaking_space = visual_editor.on_breaking_space
-		visual_editor.on_breaking_space = function(container_tag)
-		{
-			if (container_tag.tagName.toLowerCase() === 'p')
-				return visual_editor.editor.insert(' ')
-			
-			default_on_breaking_space()
-		}
-		
-		visual_editor.enter_pressed_in_container = function()
-		{
-			visual_editor.insert_paragraph()
-		}
+		visual_editor.paragraphed()
 		
 		initialize_editor()
 		initialize_actions()
@@ -245,6 +230,7 @@
 					Режим.обычный()
 					
 					visual_editor.editor.load_content(Wiki_processor.decorate(неправленная_заметка.content))
+					refresh_formulae()
 					set_title(неправленная_заметка.title)
 				})
 			})
