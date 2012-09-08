@@ -4,7 +4,7 @@
 	
 	<section class="personal_info">
 		<!-- who is -->
-		<div class="name"><a href="/люди/${$data['адресное имя']}">${имя}</a></div>
+		<div class="name"><a href="/люди/${escape_id($data['адресное имя'])}" inactive_in_edit_mode="true">${имя}</a></div>
 		<div class="description">{{if описание}}${описание}{{else}}участник{{/if}}</div>
 		
 		<!-- avatar -->
@@ -50,7 +50,7 @@
 			<div class="offline"></div>
 			<div class="was_here non_selectable">
 				<span class="line">{{if пол === 'мужской'}} Был {{else}} Была {{/if}} в сети <span class="last_action_time"></span>.</span>
-				<a href="/люди/${$data['адресное имя']}">Перепроверить</a>
+				<a href="/люди/${escape_id($data['адресное имя'])}">Перепроверить</a>
 			</div>
 		</div>	
 	

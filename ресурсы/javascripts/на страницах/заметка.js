@@ -279,4 +279,6 @@
 			})
 		}
 	}
+	
+	page.needs_initializing = true
 })()

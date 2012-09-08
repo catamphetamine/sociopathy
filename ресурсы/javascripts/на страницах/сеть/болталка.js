@@ -61,6 +61,5 @@
 		
 	chat_loaded = function()
 	{
-		//finish_initialization()
 	}
 })()

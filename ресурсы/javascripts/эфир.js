@@ -273,5 +273,15 @@ $(document).on('panel_loaded', function()
 			
 			panel.loading.hide()
 		})
+		
+		on('пользователь', 'смена имени', function(name)
+		{
+			$('.authenticated_user > .info > .name').text(name)
+		})
+		
+		on('пользователь', 'настройки.клавиши', function(data)
+		{
+			Object.x_over_y(data.клавиши, Настройки.Клавиши)
+		})
 	})()
 })

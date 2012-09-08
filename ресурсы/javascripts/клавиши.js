@@ -164,10 +164,26 @@ var Клавиши =
 		var alt = false
 		var shift = false
 	
-		var args = Array.prototype.slice.call(arguments)
-		var event = args.pop()
-		var keys = args.map(function(key) { return key })
+		var keys
+		var event
 		
+		if (arguments[0] instanceof Array)
+		{
+			// copy
+			keys = arguments[0].map(function(key) { return key })
+			event = arguments[1]
+		}
+		else
+		{
+			var args = Array.prototype.slice.call(arguments)
+			event = args.pop()
+			// copy
+			keys = args //.map(function(key) { return key })
+		}
+		
+		//console.log(keys)
+		//console.log(event)
+			
 		if (keys.contains('Command'))
 		{
 			meta = true
@@ -191,7 +207,20 @@ var Клавиши =
 			shift = true
 			keys.remove('Shift')
 		}
+		
+		/*
+		if (ctrl)
+			console.log('ctrl')
+		
+		if (alt)
+			console.log('alt')
+				
+		if (shift)	
+			console.log('shift')
+		*/
 
+		//console.log('event.metaKey: ' + event.metaKey + ', ' + 'event.ctrlKey: ' + event.ctrlKey + ', ' + 'event.altKey: ' + event.altKey + ', ' + 'event.shiftKey: ' + event.shiftKey)
+		
 		if (meta)
 		{
 			if (!event.metaKey)
@@ -257,17 +286,6 @@ var Клавиши =
 		if (!event.charCode)
 			if (this[key] && this[key.toUpperCase()])
 				key = key.toUpperCase()
-		*/
-		
-		/*
-		if (ctrl)
-			console.log('ctrl')
-		
-		if (alt)
-			console.log('alt')
-				
-		if (shift)	
-			console.log('shift')
 		*/
 		
 		/*

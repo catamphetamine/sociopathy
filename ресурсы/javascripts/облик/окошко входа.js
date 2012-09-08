@@ -42,6 +42,13 @@ var enter_window
 			кнопка_входа
 		)
 		
+		$(document).on('keydown', function(event)
+		{
+			if (Клавиши.is(Настройки.Клавиши.Вход, event))
+				if (!пользователь)
+					enter_window.open()
+		})
+		
 		$('.enter').on('click', function(event)
 		{
 			event.preventDefault()

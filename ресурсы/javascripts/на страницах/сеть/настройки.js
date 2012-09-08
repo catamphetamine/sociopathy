@@ -29,6 +29,22 @@
 		if (настройки.почта)
 			email.text(настройки.почта)
 		
+		$('.shortcuts').find('> ul').each(function()
+		{
+			var category = $(this)
+			category.find('> li').each(function()
+			{
+				var key = $(this)
+				
+				var directory = Настройки.Клавиши
+				
+				if (category.attr('path') != "Прочее")
+					directory = directory[category.attr('path')]
+				
+				key.find('> span').text(directory[key.attr('path')].join(', ')).attr('editable', true)
+			})
+		})
+		
 		подготовить_режим_правки()
 		
 		Режим.activate_edit_actions({ on_save: save_changes })
@@ -60,8 +76,55 @@
 		return
 	}
 	
+	function новые_клавиши()
+	{
+		var новые_клавиши = {}
+				
+		var клавиша_не_опознана = false
+		
+		$('.shortcuts').find('> ul').each(function()
+		{
+			var category = $(this)
+		
+			var directory = новые_клавиши
+			if (category.attr('path') != "Прочее")
+			{
+				новые_клавиши[category.attr('path')] = {}
+				directory = directory[category.attr('path')]
+			}
+				
+			category.find('> li').each(function()
+			{
+				var key = $(this)
+				
+				var keys = key.find('> span').text().split(',')._map(function() { return this.trim() })
+				keys.for_each(function()
+				{
+					if (this != 'Command' && this != 'Ctrl' && this != 'Alt' && this != 'Shift')
+						if (typeof Клавиши[this] !== 'number')
+							клавиша_не_опознана = this
+				})
+				
+				directory[key.attr('path')] = keys
+			})
+		})
+		
+		if (клавиша_не_опознана)
+		{
+			warning('Клавиша «' + клавиша_не_опознана + '» не опознана')
+			return false
+		}
+		
+		return новые_клавиши
+	}
+	
 	function save_changes()
 	{
+		var клавиши = новые_клавиши()
+		
+		if (!клавиши)
+			return Режим.ошибка_правки()
+		
 		var почта = get_email()
 		
 		Режим.save_changes_to_server
@@ -73,7 +136,8 @@
 			
 			data:
 			{
-				почта: почта
+				почта: почта,
+				клавиши: JSON.stringify(клавиши)
 			},
 			
 			url: '/приложение/сеть/пользователь/настройки',

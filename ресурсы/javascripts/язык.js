@@ -324,3 +324,21 @@ Object.key = function(object)
 	
 	return the_key
 }
+
+Object.x_over_y = function(source, destination)
+{
+	if (!source)
+		return
+	
+	$.extend(true, destination, source)
+}
+
+Array.prototype._map = function(action)
+{
+	var array = []
+	this.for_each(function()
+	{
+		array.push(action.bind(this)())
+	})
+	return array
+}

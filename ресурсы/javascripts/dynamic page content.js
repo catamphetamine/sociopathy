@@ -252,6 +252,7 @@ var navigating = false;
 				{
 					window.onerror()
 					console.log('Page script not loaded (possible syntax error): ' + get_page_javascript_link())
+					error('Ошибка на странице')
 				}
 			})
 		}

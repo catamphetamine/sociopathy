@@ -790,55 +790,51 @@ Visual_editor.implement
 			}
 		}
 		
-		/*
-		Tools.Html =
+		Tools.Source =
 		{
-			selector: '.html',
+			selector: '.source',
 			
 			initialize: function()
 			{
 				var tool = this
 				
-				Validation.наглядный_писарь.html = function(value, callback)
+				Validation.наглядный_писарь.source = function(value, callback)
 				{
-					if (!value)
-						return callback({ error: Введите код Html (но потом всё обрежется)' })
+					if (!Wiki_processor.validate(value))
+						return callback({ error: 'Не "валидный" код xml' })
 						
-					try
-					{
-						value = $(value).outer_html()
-						if (!value)
-							throw null
-					}
-					catch (error)
-					{
-						throw new custom_error('Неправильный формат кода Html')
-					}
-				
 					if (!value)
-						throw new custom_error('Введите код Html')
-						
-					tool.dialog_window.content.find('input[name="html"]').val(value)
+						return callback({ error: 'Введите код xml' })
+										
+					callback()
 				}
 				
 				this.dialog_window = simple_value_dialog_window
 				({
-					id: 'visual_editor_insert_html_window',
-					title: 'Вставка Html',
+					class: 'visual_editor_edit_source_window',
+					title: 'Правка исходника',
+					icon: false,
+					maximized: { margin: 20 },
 					fields:
 					[{
-						id: 'html',
-						description: 'Введите код Html',
-						validation: 'наглядный_писарь.html'
+						id: 'source',
+						validation: 'наглядный_писарь.source',
+						multiline: true
 					}],
-					ok: function(html)
+					before_ok: function()
 					{
-						var element = $(html)
-						
-						tool.on_success(editor.insert(element))
+						this.xml_editor.save()
+					},
+					when_closed: function()
+					{
+						this.xml_editor.toTextArea()
+					},
+					ok: function(xml)
+					{
+						tool.on_success(editor.load_content(Wiki_processor.decorate(xml))) //this.xml_editor.getValue())))
 					},
 					on_open: function()
-					{	
+					{
 						editor.caret.store()
 					},
 					on_cancel: function()
@@ -846,23 +842,34 @@ Visual_editor.implement
 						editor.caret.restore()
 					}
 				})
+				.window
+				
+				this.dialog_window.content.find('textarea').wrap($('<div class="xml_editor"/>'))
 			},
 			
 			apply: function()
 			{
-				if (editor.selection.exists())
-					throw new Error('Выделение пока не поддерживается этим инструментом')
+				if (editor.selection.exists() && editor.selection.is_valid())
+					throw new Error('Снимите выделение')
 				
-				this.open_dialog_window()
+				this.open_dialog_window({ source: Wiki_processor.parse(editor.get_content().html()) })
+				
+				//this.dialog_window.content.appendTo('#page')
+
+				this.dialog_window.xml_editor = CodeMirror.fromTextArea(this.dialog_window.content.find('textarea').node(),
+				{
+					mode: { name: 'xml', alignCDATA: true },
+					indentWithTabs: true,
+					lineWrapping: true
+				})
 				return false
 			},
 			
 			on_success: function(element)
 			{
-				editor.caret.move_to(element)
+				editor.caret.restore()
 			}
 		}
-		*/
 		
 		// helpers
 		
@@ -1180,7 +1187,7 @@ Visual_editor.tool_windows =
 		return simple_value_dialog_window
 		({
 			class: 'visual_editor_image_source_window',
-			title: 'Адрес картинки',
+			title: 'Вставить картинку',
 			fields:
 			[{
 				id: 'url',

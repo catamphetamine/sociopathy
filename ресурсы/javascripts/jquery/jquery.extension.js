@@ -628,3 +628,20 @@ $.fn.escaped_outer_html = function()
 {
 	return $("<div/>").text(this.outer_html()).html()
 }
+
+$.validate_xml = function(xml)
+{
+	try
+	{
+		var document = $.parseXML('<xml>' + xml + '</xml>')
+		
+		if (Dom_tools.child_text_node(document.firstChild))
+			return false
+			
+		return true
+	}
+	catch (error)
+	{
+		return false
+	}
+}

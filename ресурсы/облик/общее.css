@@ -771,6 +771,11 @@ body[mode="правка"] .rich_formatting a
 	{
 		text-indent: @paragraph_indent;
 		/* text-align: justify; */
+		
+		> *
+		{
+			text-indent: 0;
+		}
 	}
 	
 	ul li
@@ -1202,6 +1207,11 @@ body[mode="правка"] .rich_formatting a
 	p
 	{
 		text-indent: @paragraph_indent;
+		
+		> *
+		{
+			text-indent: 0;
+		}
 	}
 	
 	.help_section
@@ -1237,7 +1247,19 @@ body[mode="правка"] .rich_formatting a
 	width: 100%;
 	
 	background-color: #d2d2d2;
+	box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
 	
+background: rgb(221,221,221); /* Old browsers */
+background: -moz-linear-gradient(top,  rgba(221,221,221,1) 0%, rgba(193,193,193,1) 100%); /* FF3.6+ */
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(221,221,221,1)), color-stop(100%,rgba(193,193,193,1))); /* Chrome,Safari4+ */
+background: -webkit-linear-gradient(top,  rgba(221,221,221,1) 0%,rgba(193,193,193,1) 100%); /* Chrome10+,Safari5.1+ */
+background: -o-linear-gradient(top,  rgba(221,221,221,1) 0%,rgba(193,193,193,1) 100%); /* Opera 11.10+ */
+background: -ms-linear-gradient(top,  rgba(221,221,221,1) 0%,rgba(193,193,193,1) 100%); /* IE10+ */
+background: linear-gradient(to bottom,  rgba(221,221,221,1) 0%,rgba(193,193,193,1) 100%); /* W3C */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#dddddd', endColorstr='#c1c1c1',GradientType=0 ); /* IE6-9 */
+
+
+
 	position: fixed;
 	bottom: 0;
 	left: 0;
@@ -1316,4 +1338,28 @@ label.in-place_input_label
 #page
 {
 	/* margin-bottom: -38px; */ /* compensates margin bug */
+}
+
+.xml_editor
+{
+	overflow: auto;
+	
+	.CodeMirror 
+	{		
+		font-family: @textual_font;
+		font-size: @textual_font_size;
+		line-height: @textual_line_height;
+	}
+	
+	.CodeMirror pre
+	{
+		overflow-y: hidden;
+	}
+	
+	.CodeMirror-scroll
+	{
+		height: auto;
+		overflow-y: hidden;
+		overflow-x: auto;
+	}
 }

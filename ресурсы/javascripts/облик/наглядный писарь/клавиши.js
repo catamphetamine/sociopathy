@@ -257,7 +257,7 @@ Visual_editor.implement
 		
 		editor.on('keydown', function(event)
 		{
-			if (Клавиши.is('Ctrl', 'Shift', ' ', event))
+			if (Клавиши.is(Настройки.Клавиши.Писарь.Разрывный_пробел, event))
 			{
 				event.preventDefault()
 				event.stopPropagation()
@@ -270,7 +270,7 @@ Visual_editor.implement
 			
 				return visual_editor.on_breaking_space(editor.caret.node().parentNode)
 			}
-		
+	
 			if (event.ctrlKey || event.shiftKey || event.altKey || event.metaKey)
 				return
 			

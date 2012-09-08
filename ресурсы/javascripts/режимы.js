@@ -387,7 +387,7 @@ var Режим = (function()
 		})
 		.ok(function()
 		{
-			if (options.continues !== false)
+			if (options.continues !== true)
 			{
 				загрузка.hide()
 				Режим.разрешить_переходы()
@@ -395,7 +395,7 @@ var Режим = (function()
 			}
 			
 			if (options.ok)
-				options.ok()
+				options.ok(загрузка)
 		})
 	}
 	
@@ -482,13 +482,13 @@ $(document).on('page_loaded', function()
 	
 	$(document).on('keydown', function(event) 
 	{
-		if (Клавиши.is('Alt', 'Shift', '1', event))
+		if (Клавиши.is(Настройки.Клавиши.Режимы.Обычный, event))
 			return Режим.перейти_в_режим('обычный')
 			
-		if (Клавиши.is('Alt', 'Shift', '2', event))
+		if (Клавиши.is(Настройки.Клавиши.Режимы.Правка, event))
 			return Режим.перейти_в_режим('правка')
 			
-		if (Клавиши.is('Alt', 'Shift', '3', event))
+		if (Клавиши.is(Настройки.Клавиши.Режимы.Действия, event))
 			return Режим.перейти_в_режим('действия')
 	})
 })

@@ -13,16 +13,14 @@
 
 body.osx .popup .top_bar
 {
-	height: 37px;
-	padding-top: 12px;
+	padding-top: 7px;
 }
 
 .popup .top_bar
 {
-	height: 39px;
-	padding-top: 10px;
+	padding-top: 5px;
+	padding-bottom: 4px;
 }
- 
  
 .popup_veil.shown
 {
@@ -172,7 +170,7 @@ body.osx .popup .top_bar
 		padding-left: 30px;
 		padding-right: 30px;
 		
-		font-size: 32px;
+		font-size: 28px;
 		line-height: normal;
 		
 		color: #3f3f3f;
@@ -241,7 +239,7 @@ body.osx .popup .top_bar
 		background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#E5E5E5), color-stop(36%,#D8D8D8), color-stop(58%,#CCCCCC), color-stop(100%,#A8A8A8));
 		background: -moz-linear-gradient(top, #E5E5E5 0%, #D8D8D8 36%, #CCCCCC 58%, #A8A8A8 100%);
 	
-		padding: 20px;	
+		padding: 10px;	
 	}
 	
 	.buttons:after
@@ -316,8 +314,8 @@ body.osx .popup .top_bar
 		
 	.buttons
 	{
-		padding-left: 28px;
-		padding-right: 50px;
+		padding-left: 0px;
+		padding-right: 12px;
 	}
 }
 

@@ -19,6 +19,9 @@ function simple_value_dialog_window(options)
 	element.attr('title', options.title)
 
 	var form = element.find('form').eq(0)
+	
+	if (options.icon === false)
+		element.find('> .main_content > .icon').remove()
 
 	options.fields.forEach(function(field, index)
 	{
@@ -78,7 +81,8 @@ function simple_value_dialog_window(options)
 		{
 			if (options.on_cancel)
 				options.on_cancel.bind(dialog_window)()
-		}
+		},
+		maximized: options.maximized
 	})
 		
 	if (options.ok_button_text)
@@ -101,19 +105,31 @@ function simple_value_dialog_window(options)
 		}
 	}
 	
-	var cancel = text_button.new(dialog_window.content.find('.buttons .cancel'), { 'prevent double submission': true, physics: 'fast' })
-	.does(function()
+	var old_cancel = dialog_window.cancel.bind(dialog_window)
+	dialog_window.cancel = function(callback)
 	{
-		dialog_window.cancel()
+		old_cancel(function()
+		{
+			if (options.when_closed)
+				options.when_closed.bind(dialog_window)()
+				
+			if (callback)
+				callback()
+		})
 	}
-	.bind(dialog_window))
+
+	var cancel = text_button.new(dialog_window.content.find('.buttons .cancel'), { 'prevent double submission': true, physics: 'fast' })
+	.does(dialog_window.cancel)
 	
 	var validating_form = new Form(form)
 	
 	var ok = text_button.new(dialog_window.content.find('.buttons .ok'), { 'prevent double submission': true })
 	.does(function()
 	{
-		dialog_window.close()
+		if (options.before_ok)
+			options.before_ok.bind(this)()
+			
+		dialog_window.close(options.when_closed ? options.when_closed.bind(this) : null)
 		
 		var data
 		

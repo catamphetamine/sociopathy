@@ -132,11 +132,55 @@ var dialog_window = new Class
 			//if (event.keyCode == Клавиши.Tab) 
 			//	return false
 		})
+		
+		$(window).on_page('resize.dialog_window', (function(event)
+		{
+			this.resize()
+		})
+		.bind(this))
 	},
 	
 	on: function(event, handler)
 	{
 		this.content.on(event, handler)
+	},
+	
+	maximize: function(percentage)
+	{
+		var ratio = 1
+		var margin = 0
+		
+		if (percentage)
+		{
+			if (typeof percentage === 'number')
+				ratio = percentage / 100.0
+			else
+			{
+				margin = percentage.margin
+			}
+		}
+	
+		var main_content = this.content.find('> .main_content')
+		var rest_height = this.content.find('> .pre_buttons').outerHeight(true) + this.content.find('> .buttons').outerHeight(true)
+		rest_height += this.content.parent().find('> h1').outerHeight(true)
+		var height = $(window).height() - rest_height
+		var width = $(window).width()
+	
+		main_content.css
+		({
+			'box-sizing': 'border-box',
+			'-moz-box-sizing': 'border-box'
+		})
+		
+		main_content.width(width * ratio - 2 * margin).height(height * ratio - 2 * margin)
+	},
+	
+	resize: function()
+	{
+		if (this.options.maximized)
+		{
+			this.maximize(this.options.maximized)
+		}
 	},
 	
 	// opens the dialog window
@@ -150,6 +194,8 @@ var dialog_window = new Class
 	
 		if (this.is_open)
 			return
+		
+		this.resize()
 		
 		this.container.removeClass('collapsed').addClass('shown')
 		

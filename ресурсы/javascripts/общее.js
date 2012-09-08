@@ -382,6 +382,12 @@ function ajaxify_internal_links(where)
 				
 			event.preventDefault()
 			
+			if (link.attr('inactive_in_edit_mode'))
+			{
+				if (Режим.правка_ли())
+					return
+			}
+			
 			//if ('/' + путь_страницы() === url)
 			//	return
 			

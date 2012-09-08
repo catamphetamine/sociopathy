@@ -387,9 +387,9 @@
 			url: '/приложение/сеть/человек/данные',
 			method: 'put',
 			
-			ok: function()
+			ok: function(loading)
 			{
-				$('.authenticated_user .name').text(данные.общее.имя)
+				//$('.authenticated_user .name').text(данные.общее.имя)
 				
 				var small_picture = $('.authenticated_user .real_picture')
 				small_picture.attr('src', anti_cache_postfix(small_picture.attr('src'))).show()

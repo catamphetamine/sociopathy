@@ -8,10 +8,14 @@ exports.войти = (пользователь, ввод, вывод, возвр
 					return @.return(пользователь)
 				
 			ввод.пользователь = { _id: пользователь._id }
+			пользовательское.тайный_ключ(пользователь._id, @)
+
+		.сделать (тайный_ключ) ->
+			вывод.cookie('user', тайный_ключ, { expires: Cookie_expiration_date, httpOnly: false })
 			return @.return(пользователь)
-	
+
 exports.выйти = (ввод, вывод) ->
-	ввод.session.destroy()
+	ввод.session.delete()
 	вывод.clearCookie 'user'
 	
 exports.пользователь = (ввод, возврат) ->
