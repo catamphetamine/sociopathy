@@ -1,5 +1,7 @@
 function either_way_loading(options)
 {
+	options.parameters = options.parameters || {}
+	
 	//var page = options.page
 	
 	var bottom_loader
@@ -18,231 +20,271 @@ function either_way_loading(options)
 	
 	var skip_pages = (options.страница || 1) - 1
 	
-	page.load = function()
-	{
-		//Подсказки.подсказка('Здесь вы можете посмотреть список участников нашей сети. Список подгружается по мере того, как вы прокручиваете его вниз.')
-	
+	//page.load = function()
+	//{
 		//page.content.disableTextSelect()
 		
-		var loader_markup = $.tmpl('either way loading', {})
-		
-		var real_content = page.content.children()
-		page.content.prepend(loader_markup)
-		
-		var ok_block = page.get('.main_conditional > [type=ok]')
-		
-		ok_block.find('> [type="placeholder"]').replaceWith(real_content)
-		
-		var previous_block = page.get('.previous_conditional')
-		
-		var main_conditional = initialize_conditional(page.get('.main_conditional'))
-		var previous_conditional = initialize_conditional(previous_block)
-		
-		previous_block.prependTo(ok_block)
+	var loader_markup = $.tmpl('either way loading', {})
+	
+	options.container = page.get(options.container)
+	
+	//var real_content = //page.content.children()
+	//page.content.prepend(loader_markup)
+	options.container.before(loader_markup)
+	
+	var ok_block = page.get('.main_conditional > [type=ok]')
+	
+	ok_block.find('> [type="placeholder"]').replaceWith(options.container)
+	
+	var previous_block = page.get('.previous_conditional')
+	
+	var main_conditional = initialize_conditional(page.get('.main_conditional'))
+	var previous_conditional = initialize_conditional(previous_block)
+	
+	previous_block.prependTo(ok_block)
 
-		page.get('[type="error"], [type="loading_more_error"]').text(options.error || "Во время загрузки данных произошла ошибка")
-		
-		options.container = page.get(options.container)
-		
-		// загрузчик вверху
-		
-		var previous_link = previous_block.find('.previous > a')
-		
-		var top_loader = new Batch_loader
-		({
-			url: options.data.url,
-			latest_first: options.data.latest_first,
-			batch_size: options.data.batch_size,
-			skip_pages: skip_pages + 1,
-			reverse: true,
-			parameters: { раньше: true, всего: overall_count },
-			get_data: function (data)
-			{
-				data = data[options.data.name]
-				
-				if (data.is_empty())
-					return
-				
-				data.last().страница = this.page.number - 1
-				data.last().первый = true
-				
-				return data
-			},
-			before_done_more: function()
-			{
-				ajaxify_internal_links(page.content)
-			
-				//set_page_number(this.page.number)
-				
-				if (this.есть_ли_ещё)
-					previous_link.fade_in(0.2)
-			},
-			done_more: function()
-			{
-				if (options.progress_bar)
-					update_progress_bar({ skipped: this.skipped() })
-			},
-			finished: function()
-			{
-				previous_link.hide()
-			}
-		})
-		
-		function activate_page_scrolling(data, element)
+	page.get('[type="error"], [type="loading_more_error"]').text(options.error || "Во время загрузки данных произошла ошибка")
+	
+	// common
+
+	var first_batch = true
+
+	var on_data = function(data)
+	{
+		if (first_batch)
 		{
-			if (!data.первый)
+			if (!overall_count)
+				overall_count = data.всего
+			
+			if (options.data.on_first_batch)
+				options.data.on_first_batch()
+
+			first_batch = false
+		}
+		
+		data = data[options.data.name]
+			
+		if (options.data.loaded)
+			data = options.data.loaded(data)
+			
+		return data
+	}
+	
+	var common_loader_options =
+	{
+		url: options.data.url,
+		latest_first: options.data.latest_first,
+		batch_size: options.data.batch_size,
+	}
+	
+	if (options.data.before_output_async)
+		common_loader_options.before_output_async = options.data.before_output_async
+
+	if (options.data.after_output)
+		common_loader_options.after_output = options.data.after_output
+
+	// загрузчик вверху
+	
+	var previous_link = previous_block.find('.previous > a')
+	
+	var top_loader = new Batch_loader(Object.x_over_y(common_loader_options,
+	{
+		skip_pages: skip_pages + 1,
+		reverse: true,
+		parameters: Object.x_over_y(options.parameters, { раньше: true, всего: overall_count }),
+		get_data: function (data)
+		{
+			data = on_data(data)
+			
+			if (data.is_empty())
 				return
 			
-			element.on('appears_on_bottom.scroller', function(event)
-			{
-				set_page_number(data.страница)
-				event.stopPropagation()
-			})
+			data.last().страница = this.page.number - 1
+			data.last().первый = true
 			
-			element.on('disappears_on_bottom.scroller', function(event)
-			{
-				set_page_number(data.страница - 1)
-				event.stopPropagation()
-			})
-		}
-	
-		function show_previous(event)
-		{
-			event.preventDefault()
-			
-			top_loader.deactivate()
-			var indicate_loading = top_loader.load_more()
-			
-			var latest = top_loader.latest
-			previous_link.fade_out(0.2, function()
-			{
-				if (top_loader.latest === latest)
-					indicate_loading()
-			})
-		}
-		
-		top_loader.activate = function()
-		{
-			previous_link.fade_in(0)
-			previous_link.on('click', show_previous)
-		}
-		
-		top_loader.deactivate = function() { previous_link.unbind() }
-		
-		new Data_templater
-		({
-			template_url: options.template,
-			container: options.container,
-			show: function(data)
-			{
-				var element = $.tmpl(options.template, data)
-					
-				options.container.prepend($('<li/>').append(element))
-				
-				if (!data.страница)
-					return
-			
-				if (options.с_номерами_страниц)
-				{
-					activate_page_scrolling(data, element)
-					прокрутчик.watch(element)
-				}
-			},
-			conditional: previous_conditional,
-			load_data_immediately: false
+			return data
 		},
-		top_loader)
+		before_done_more: function()
+		{
+			ajaxify_internal_links(page.content)
 		
-		if (skip_pages)
-			top_loader.activate()
-		else
-			previous_block.hide()
-		
-		// загрузчик внизу
-		
-		bottom_loader = new Batch_loader_with_infinite_scroll
-		({
-			url: options.data.url,
-			latest_first: options.data.latest_first,
-			batch_size: options.data.batch_size,
-			skip_pages: skip_pages,
-			parameters: { всего: overall_count },
-			get_data: function(data)
-			{
-				if (!overall_count)
-					overall_count = data.всего
-					
-				data = data[options.data.name]
-					
-				if (data.is_empty())
-					return
-				
-				data.first().страница = this.page.number + 1
-				data.first().первый = true
-				
-				return data
-			},
-			before_done: function()
-			{
-				ajaxify_internal_links(page.content)
+			//set_page_number(this.page.number)
 			
-				top_loader.index++
-				top_loader.latest = bottom_loader.earliest
-				previous_conditional.callback()
-			},
-			before_done_more: function()
-			{
-				ajaxify_internal_links(page.content)
-			},
-			after_output: function()
-			{
-				if (options.progress_bar)
-					update_progress_bar()
-			},
-			finished: function()
-			{
-				if (options.progress_bar)
-					update_progress_bar()
-			}
+			if (this.есть_ли_ещё)
+				previous_link.fade_in(0.2)
+		},
+		done_more: function()
+		{
+			if (options.progress_bar)
+				update_progress_bar({ skipped: this.skipped() })
+		},
+		finished: function()
+		{
+			previous_link.hide()
+		}
+	}))
+	
+	function activate_page_scrolling(data, element)
+	{
+		if (!data.первый)
+			return
+		
+		element.on('appears_on_bottom.scroller', function(event)
+		{
+			set_page_number(data.страница)
+			event.stopPropagation()
 		})
 		
-		new Data_templater
-		({
-			template_url: options.template,
-			container: options.container,
-			show: function(data)
-			{
-				var element = $.tmpl(options.template, data)
-				
-				options.container.append($('<li/>').append(element))
-				
-				if (!data.страница)
-					return
-					
-				if (options.с_номерами_страниц)
-				{
-					activate_page_scrolling(data, element)
-					прокрутчик.watch(element)
-				}
-			},
-			conditional: main_conditional
-		},
-		bottom_loader)
-		
-		if (options.progress_bar)
+		element.on('disappears_on_bottom.scroller', function(event)
 		{
-			progress_bar = $('.vertical_progress_bar')
-			progress_bar.appendTo('body')
-		}
+			set_page_number(data.страница - 1)
+			event.stopPropagation()
+		})
+	}
+
+	function show_previous(event)
+	{
+		event.preventDefault()
+		
+		top_loader.deactivate()
+		var indicate_loading = top_loader.load_more()
+		
+		var latest = top_loader.latest
+		previous_link.fade_out(0.2, function()
+		{
+			if (top_loader.latest === latest)
+				indicate_loading()
+		})
 	}
 	
-	page.unload = function()
+	top_loader.activate = function()
 	{
-		bottom_loader.deactivate()
-		
-		if (options.progress_bar)
-			progress_bar.remove()
+		previous_link.fade_in(0)
+		previous_link.on('click', show_previous)
+		previous_link.removeClass('inactive')
 	}
+	
+	top_loader.deactivate = function()
+	{
+		previous_link.unbind()
+		previous_link.addClass('inactive')
+	}
+	
+	new Data_templater
+	({
+		template_url: options.template,
+		container: options.container,
+		show: function(data)
+		{
+			var element
+			
+			if (options.data.prepend)
+				element = options.data.prepend(data)
+			else
+			{
+				element = $.tmpl(options.template, data)
+				options.container.prepend($('<li/>').append(element))
+			}
+			
+			if (!element)
+				return
+			
+			if (options.с_номерами_страниц)
+			{
+				activate_page_scrolling(data, element)
+				прокрутчик.watch(element)
+			}
+		},
+		conditional: previous_conditional,
+		load_data_immediately: false
+	},
+	top_loader)
+	
+	if (skip_pages)
+		top_loader.activate()
+	else
+		previous_block.hide()
+	
+	// загрузчик внизу
+	
+	bottom_loader = new Batch_loader_with_infinite_scroll(Object.x_over_y(common_loader_options,
+	{
+		skip_pages: skip_pages,
+		parameters: Object.x_over_y(options.parameters, { всего: overall_count }),
+		get_data: function(data)
+		{
+			data = on_data(data)
+				
+			if (data.is_empty())
+				return
+		
+			data.first().страница = this.page.number + 1
+			data.first().первый = true
+			
+			return data
+		},
+		before_done: function()
+		{
+			ajaxify_internal_links(page.content)
+		
+			top_loader.index++
+			top_loader.latest = bottom_loader.earliest
+			previous_conditional.callback()
+		},
+		before_done_more: function()
+		{
+			ajaxify_internal_links(page.content)
+		},
+		after_output: function()
+		{
+			if (options.progress_bar)
+				update_progress_bar()
+		},
+		finished: function()
+		{
+			if (options.progress_bar)
+				update_progress_bar()
+				
+			if (options.finished)
+				options.finished()
+		}
+	}))
+	
+	new Data_templater
+	({
+		template_url: options.template,
+		container: options.container,
+		show: function(data)
+		{
+			var element
+			
+			if (options.data.append)
+				element = options.data.append(data)
+			else
+			{
+				element = $.tmpl(options.template, data)
+				options.container.append($('<li/>').append(element))
+			}
+			
+			if (!element)
+				return
+				
+			if (options.с_номерами_страниц)
+			{
+				activate_page_scrolling(data, element)
+				прокрутчик.watch(element)
+			}
+		},
+		conditional: main_conditional
+	},
+	bottom_loader)
+	
+	if (options.progress_bar)
+	{
+		progress_bar = $('.vertical_progress_bar')
+		progress_bar.appendTo('body')
+	}
+	//}
 	
 	var progress
 	
@@ -263,4 +305,17 @@ function either_way_loading(options)
 		
 		progress.update(bottom_loader.уже_загружено(), update_options)
 	}
+	
+	var result =
+	{
+		unload:	 function()
+		{
+			bottom_loader.deactivate()
+			
+			if (options.progress_bar)
+				progress_bar.remove()
+		}
+	}
+	
+	return result
 }

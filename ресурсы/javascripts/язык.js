@@ -331,6 +331,8 @@ Object.x_over_y = function(source, destination)
 		return
 	
 	$.extend(destination, source)
+	
+	return destination
 }
 
 Array.prototype._map = function(action)

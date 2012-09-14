@@ -97,7 +97,8 @@ var Batch_loader = new Class
 		if (this.options.latest_first == true)
 			data.задом_наперёд = true
 			
-		data = Object.merge(this.options.parameters, data)
+		if (this.options.parameters)
+			data = Object.merge(this.options.parameters, data)
 		
 		this.options.Ajax.get(this.options.url, data)
 		.ошибка(function(ошибка)
@@ -190,7 +191,7 @@ var Batch_loader = new Class
 			if (loader.options.before_output)
 				loader.options.before_output(elements)
 			
-			loader.options.before_output_async(function()
+			loader.options.before_output_async.bind(this)(function()
 			{
 				if (!loader.есть_ли_ещё)
 					loader.options.finished(список)

@@ -12,6 +12,8 @@ var Messages = new Class
 	
 	on_load_actions: [],
 	
+	finished_loading: false,
+	
 	options:
 	{
 		max_messages: 200,
@@ -66,7 +68,7 @@ var Messages = new Class
 			messages.indicate_no_new_messages()
 		})
 		
-		this.options.prepend_message = this.options.prepend_message.bind(this)
+		this.options.output_message = this.options.output_message.bind(this)
 		this.options.after_append = this.options.after_append.bind(this)
 		this.options.decorate_message = this.options.decorate_message.bind(this)
 		this.options.send_message = this.options.send_message.bind(this)
@@ -105,173 +107,154 @@ var Messages = new Class
 				data_source_parameters = options.data_source.parameters
 		}
 		
-		var first_time_data = true
+		console.log('messages.options.container')
+		console.log(messages.options.container)
 		
-		var common_loader_parameters = 
-		{
-			url: data_source_url,
-			parameters: data_source_parameters,
-			batch_size: options.messages_batch_size,
-			get_data: function(data)
-			{
-				parse_dates(data.сообщения, 'когда')
-				
-				if (options.on_message_data)
-					data.сообщения.for_each(function()
-					{
-						options.on_message_data(this)
-					})
-					
-				return data.сообщения
-			},
-			before_done: function() { ajaxify_internal_links(options.container) },
-			before_done_more: function() { ajaxify_internal_links(options.container) },
-			before_output_async: function(callback)
-			{
-				refresh_formulae({ where: options.container }, callback)
-			},
-		}
-		
-		var loader = new Batch_loader(Object.x_over_y
+		either_way_loading
 		({
-			reverse: true,
-			done_more: function()
+			data:
 			{
-				if (this.есть_ли_ещё)
-					options.more_link.fade_in(0.1)
-			},
-			finished: function()
-			{
-				options.more_link.fade_out(0.1)
-			}
-		},
-		Object.clone(common_loader_parameters)))
-		
-		var bottom_loader = new Batch_loader_with_infinite_scroll(Object.x_over_y
-		({
-			get_data: function(data)
-			{
-				if (options.on_first_time_data)
-					if (first_time_data)
-						options.on_first_time_data(data)
-
-				if (!data.newer_messages_omitted)
-				{
-					finished_loading_messages = true
-					
-					if (получить_пропущенные_сообщения_when_finished)
-						получить_пропущенные_сообщения()
-				}
-
-				if (options.on_data)
-					options.on_data(data)
-					
-				if (first_time_data)
+				url: data_source_url,
+				parameters: data_source_parameters,
+				name: 'сообщения',
+				batch_size: 1, // options.messages_batch_size,
+				on_first_batch: function()
 				{
 					messages.options.environment = data.environment
 					
 					if (data.последнее_прочитанное_сообщение)
 						messages.последнее_прочитанное_сообщение = data.последнее_прочитанное_сообщение
-				}
-				
-				first_time_data = false
-				
-				return common_loader_parameters.get_data(data)
-			},
-			done: function()
-			{
-				messages.container_top_offset = messages.options.container.offset().top
-		
-				messages.new_messages_smooth_border.css('width', '100%')
-				
-				messages.options.on_load.bind(messages)()
-				messages.on_load()
-			},
-			finished: options.on_finished
-		},
-		Object.clone(common_loader_parameters)))
-		
-		this.bottom_loader = bottom_loader
-		
-		function show_more_messages(event)
-		{
-			event.preventDefault()
+						
+					//
+						
+					messages.container_top_offset = messages.options.container.offset().top
 			
-			if (!options.can_show_earlier_messages())
-				return
-			
-			loader.deactivate()
-			var indicate_loading = loader.load_more()
-			
-			var latest = loader.latest
-			options.more_link.fade_out(0.2, function()
-			{
-				if (loader.latest === latest)
-					indicate_loading()
-			})
-		}
-		
-		loader.activate = function() { options.more_link.on('click', show_more_messages) }
-		loader.deactivate = function() { options.more_link.unbind() }
-			
-		var conditional = $('.main_conditional')
-	
-		new Data_templater
-		({
-			conditional: conditional,
-			show: function(data, options)
-			{
-				if (messages.options.container.find('> li[message_id="' + data._id + '"]').exists())
-					return
-				
-				function prepend(message)
+					messages.new_messages_smooth_border.css('width', '100%')
+					
+					messages.options.on_load.bind(messages)()
+					messages.on_load()
+					
+					//
+						
+					if (options.on_first_time_data)
+						options.on_first_time_data()
+				},
+				loaded: function(сообщения)
 				{
-					if (messages.options.container.find('> li[message_id="' + message.attr('message_id') + '"]').exists())
+					parse_dates(сообщения, 'когда')
+					
+					if (options.on_message_data)
+						сообщения.for_each(function()
+						{
+							options.on_message_data(this)
+						})
+						
+					return сообщения
+				},
+				before_output_async: function(callback)
+				{
+					refresh_formulae({ where: this.options.container }, callback)
+				},
+				finished: function()
+				{
+					messages.finished_loading = true
+						
+					if (options.on_finished)
+						options.on_finished()
+				},
+				after_output: function(elements)
+				{
+					elements.for_each(function()
+					{
+						messages.process_message_element($(this))
+					})
+				},
+				prepend: function(data)
+				{
+					if (messages.options.container.find('> li[message_id="' + data._id + '"]').exists())
 						return
 				
-					var next_in_time = messages.options.container.find('> li.new_author:first')
-					
-					if (next_in_time.attr('author') === data.отправитель._id)
+					function prepend(message)
 					{
-						next_in_time.find('.author').children().remove()
-						next_in_time.find('.message').css('padding-top', 0)
-						
-						next_in_time.removeClass('new_author')
-						
-						message.addClass('new_author')
-						
-						if (next_in_time.hasClass('odd'))
-							message.addClass('odd')
-						else
-							message.addClass('even')
-					}
-					else
-					{
-						message.addClass('new_author')
-						
-						if (next_in_time.hasClass('odd'))
-							message.addClass('even')
-						else
-							message.addClass('odd')
-					}
-				
-					message.attr('message_id', data._id)
+						//if (messages.options.container.find('> li[message_id="' + message.attr('message_id') + '"]').exists())
+						//	return
 					
-					messages.options.container.prepend(message)
-				}
-				
-				return messages.options.prepend_message(data, prepend)
-			},
-			after_output: function(elements)
-			{
-				elements.for_each(function()
+						var next_in_time = messages.options.container.find('> li.new_author:first')
+						
+						if (next_in_time.attr('author') === data.отправитель._id)
+						{
+							next_in_time.find('.author').children().remove()
+							next_in_time.find('.message').css('padding-top', 0)
+							
+							next_in_time.removeClass('new_author')
+							
+							message.addClass('new_author')
+							
+							if (next_in_time.hasClass('odd'))
+								message.addClass('odd')
+							else
+								message.addClass('even')
+						}
+						else
+						{
+							message.addClass('new_author')
+							
+							if (next_in_time.hasClass('odd'))
+								message.addClass('even')
+							else
+								message.addClass('odd')
+						}
+					
+						message.attr('message_id', data._id)
+						
+						messages.options.container.prepend(message)
+					}
+					
+					return messages.options.output_message(data, prepend)
+				},
+				append: function(data)
 				{
-					messages.process_message_element($(this))
-				})
+					if (messages.options.container.find('> li[message_id="' + data._id + '"]').exists())
+						return
+					
+					function append(message)
+					{
+						//if (messages.options.container.find('> li[message_id="' + message.attr('message_id') + '"]').exists())
+						//	return
+					
+						var previous_in_time = messages.options.container.find('> li.new_author:last')
+						
+						if (previous_in_time.attr('author') === data.отправитель._id)
+						{
+							message.find('.author').children().remove()
+							message.find('.message').css('padding-top', 0)
+							
+							if (previous_in_time.hasClass('odd'))
+								message.addClass('odd')
+							else
+								message.addClass('even')
+						}
+						else
+						{
+							message.addClass('new_author')
+							
+							if (previous_in_time.hasClass('odd'))
+								message.addClass('even')
+							else
+								message.addClass('odd')
+						}
+					
+						message.attr('message_id', data._id)
+						
+						messages.options.container.append(message)
+					}
+					
+					return messages.options.output_message(data, append)
+				}
 			},
-			order: 'обратный'
-		},
-		loader)
+			container: messages.options.container,
+			error: 'Не удалось загрузить список сообщений'
+		})
 	},
 	
 	check_if_there_are_still_unread_messages: function()

@@ -333,7 +333,7 @@ file_system = require 'fs'
 
 	new Цепочка(возврат)
 		.сделать ->
-			if options.total?
+			if options.total? && not ввод.настройки.всего?
 				return db(options.collection).count(options.query, @.в 'всего')
 			@.done()
 			

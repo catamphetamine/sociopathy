@@ -38,7 +38,7 @@
 			{
 				Новости.прочитано({ обсуждение: page.data.обсуждение._id, сообщение: _id })
 			},
-			before_prepend: function(message)
+			before_output: function(message)
 			{
 				var author = message.find('.author')
 				if (Эфир.кто_в_сети.has(message.attr('author')))

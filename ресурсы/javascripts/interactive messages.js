@@ -2,15 +2,13 @@ var Interactive_messages = function(options)
 {
 	var away_users = {}
 	
-	var finished_loading_messages = false
-	
 	var получить_пропущенные_сообщения
 	var получить_пропущенные_сообщения_when_finished = false
 	
 	var messages = new Messages
 	({
 		data_source: options.data_source,
-		prepend_message: function(data, prepend)
+		output_message: function(data, output)
 		{
 			var message = this.render(data)
 			
@@ -25,10 +23,10 @@ var Interactive_messages = function(options)
 			if (away_users[data.отправитель._id])
 				message.find('.author').addClass('is_away')
 				
-			if (options.before_prepend)	
-				options.before_prepend(message)
+			if (options.before_output)	
+				options.before_output(message)
 				
-			prepend(message)
+			output(message)
 
 			// после preprend, т.к. стили				
 			if (data.отправитель._id !== пользователь._id)
@@ -101,8 +99,6 @@ var Interactive_messages = function(options)
 		on_first_time_data: options.on_first_time_data,
 		on_finished: function()
 		{
-			finished_loading_messages = true
-			
 			if (получить_пропущенные_сообщения_when_finished)
 				получить_пропущенные_сообщения()
 		}
@@ -440,7 +436,7 @@ var Interactive_messages = function(options)
 
 				connection.emit('кто здесь?')
 
-				if (!finished_loading_messages)
+				if (!messages.finished_loading)
 				{
 					получить_пропущенные_сообщения_when_finished = true
 					return

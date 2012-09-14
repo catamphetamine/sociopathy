@@ -1,37 +1,18 @@
-<section id="content">
-	<div id="chat_block" class="main_conditional">
-		<div type="ok" class="main_content messages_framework">
-			<div class="who_is_connected_container">
-				<div class="who_is_connected_bar">
-					<ul class="who_is_connected"></ul>
-					<div class="background"></div>
-				</div>
-			</div>
-		
-			<div class="older">
-				<div class="more_container">
-					<div type="loading_more">Загружаем ещё сообщения</div>
-					<div type="loading_more_error">Не удалось догрузить сообщения</div>
-				</div>	
-				<a href="#">Раньше</a>
-			</div>
-			
-			<ul id="chat" class="chat author_content_date"></ul>
-			
-			<div class="scroll_down_to_new_messages popup_panel_container">
-				<div class="popup_panel">
-					↓ новые сообщения
-				</div>
-			</div>
+<section id="content" class="either_way_loading messages_framework">
+	<div class="who_is_connected_container">
+		<div class="who_is_connected_bar">
+			<ul class="who_is_connected"></ul>
+			<div class="background"></div>
 		</div>
-		
-		<div type="loading">Загружаем сообщения</div>
-		<div type="error">Не удалось загрузить сообщения</div>
 	</div>
+
+	<ul id="chat" class="chat author_content_date"></ul>
 	
-	<div id="scroll_detector">Загружаем ещё</div>
-	
-	<p style="visibility: hidden">strange hack for Chrome</p>
+	<div class="scroll_down_to_new_messages popup_panel_container">
+		<div class="popup_panel">
+			↓ новые сообщения
+		</div>
+	</div>
 	
 	<div id="compose_message" style="display: none">
 		<div class="visual_editor_tools_container"></div>

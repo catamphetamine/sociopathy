@@ -16,45 +16,6 @@
 	
 	.main_content
 	{
-		/*
-		> [type=loading], > [type=loading_more]
-		{
-			display: none;
-		}
-		*/
-			
-		.previous_conditional
-		{
-			[type=loading], [type=loading_more], [type=error], [type=loading_more_error]
-			{
-				text-align: center;
-				margin-bottom: 50px;
-			}
-			
-			[type=loading_more], [type=loading_more_error]
-			{
-				margin-top: 50px;
-			}
-			
-			.previous
-			{
-				text-align: center;
-				height: 80px;
-				
-				.more_container
-				{
-					position: absolute;
-					width: 100%;
-					text-align: center;
-				}
-				
-				> a
-				{
-					position: relative;
-					top: 50px;
-				}
-			}
-		}
 	}
 }
 
