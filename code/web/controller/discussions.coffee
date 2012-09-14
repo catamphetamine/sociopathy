@@ -37,7 +37,7 @@ options.сообщения_чего_from_string = (сообщения_чего) 
 			
 options.messages_collection_id = 'messages'
 
-options.messages_query = (collection, environment) ->
+options.messages_query = (environment) ->
 	query = {}
 	query.чего = 'обсуждения'
 	if environment.сообщения_чего._id.toHexString?

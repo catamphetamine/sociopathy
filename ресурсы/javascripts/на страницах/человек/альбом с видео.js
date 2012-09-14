@@ -45,6 +45,13 @@
 		$(window).on_page('resize.videos', center_videos_list)
 		center_videos_list()
 	}
+
+	var scroll_navigation
+		
+	page.unload = function()
+	{
+		scroll_navigation.deactivate()
+	}
 	
 	function center_videos_list()
 	{
@@ -125,9 +132,7 @@
 			element: $('.progress_bar .bar .progress'),
 			maximum: all_icons.length
 		})
-		
-		var scroll_navigation
-		
+				
 		function show_video_file(image, options)
 		{
 			set_url('/люди/' + page.data.адресное_имя + '/видео/' + page.data.альбом + '/' + image.attr('video_id'))

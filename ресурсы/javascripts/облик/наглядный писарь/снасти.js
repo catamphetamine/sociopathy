@@ -1226,7 +1226,7 @@ Visual_editor.tool_windows =
 			}],
 			ok: function(url)
 			{
-				options.ok(correct_uri(url))
+				options.ok(Uri.correct(url))
 			},
 			on_open: function()
 			{	

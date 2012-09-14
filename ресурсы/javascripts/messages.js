@@ -84,7 +84,9 @@ var Messages = new Class
 	},
 	
 	unload: function()
-	{	
+	{
+		if (this.bottom_loader)
+			this.bottom_loader.deactivate()
 	},
 	
 	initialize_loaders: function()
@@ -105,17 +107,62 @@ var Messages = new Class
 		
 		var first_time_data = true
 		
-		var loader = new Batch_loader
-		({
+		var common_loader_parameters = 
+		{
 			url: data_source_url,
 			parameters: data_source_parameters,
 			batch_size: options.messages_batch_size,
 			get_data: function(data)
 			{
+				parse_dates(data.сообщения, 'когда')
+				
+				if (options.on_message_data)
+					data.сообщения.for_each(function()
+					{
+						options.on_message_data(this)
+					})
+					
+				return data.сообщения
+			},
+			before_done: function() { ajaxify_internal_links(options.container) },
+			before_done_more: function() { ajaxify_internal_links(options.container) },
+			before_output_async: function(callback)
+			{
+				refresh_formulae({ where: options.container }, callback)
+			},
+		}
+		
+		var loader = new Batch_loader(Object.x_over_y
+		({
+			reverse: true,
+			done_more: function()
+			{
+				if (this.есть_ли_ещё)
+					options.more_link.fade_in(0.1)
+			},
+			finished: function()
+			{
+				options.more_link.fade_out(0.1)
+			}
+		},
+		Object.clone(common_loader_parameters)))
+		
+		var bottom_loader = new Batch_loader_with_infinite_scroll(Object.x_over_y
+		({
+			get_data: function(data)
+			{
 				if (options.on_first_time_data)
 					if (first_time_data)
 						options.on_first_time_data(data)
+
+				if (!data.newer_messages_omitted)
+				{
+					finished_loading_messages = true
 					
+					if (получить_пропущенные_сообщения_when_finished)
+						получить_пропущенные_сообщения()
+				}
+
 				if (options.on_data)
 					options.on_data(data)
 					
@@ -129,21 +176,7 @@ var Messages = new Class
 				
 				first_time_data = false
 				
-				parse_dates(data.сообщения, 'когда')
-				
-				if (options.on_message_data)
-					data.сообщения.for_each(function()
-					{
-						options.on_message_data(this)
-					})
-					
-				return data.сообщения
-			},
-			before_done: function() { ajaxify_internal_links(options.container) },
-			before_done_more: function() { ajaxify_internal_links(options.container) },
-			before_output: function(callback)
-			{
-				refresh_formulae({ where: options.container }, callback)
+				return common_loader_parameters.get_data(data)
 			},
 			done: function()
 			{
@@ -154,16 +187,11 @@ var Messages = new Class
 				messages.options.on_load.bind(messages)()
 				messages.on_load()
 			},
-			done_more: function()
-			{
-				if (this.есть_ли_ещё)
-					options.more_link.fade_in(0.1)
-			},
-			finished: function()
-			{
-				options.more_link.fade_out(0.1)
-			}
-		})
+			finished: options.on_finished
+		},
+		Object.clone(common_loader_parameters)))
+		
+		this.bottom_loader = bottom_loader
 		
 		function show_more_messages(event)
 		{
@@ -234,7 +262,7 @@ var Messages = new Class
 				
 				return messages.options.prepend_message(data, prepend)
 			},
-			after_all_shown: function(elements)
+			after_output: function(elements)
 			{
 				elements.for_each(function()
 				{
@@ -582,6 +610,7 @@ var Messages = new Class
 		{
 			$(document).on('show_visual_editor.on_demand', function()
 			{
+				alert(1)
 				if (messages.options.can_show_editor)
 					if (!messages.options.can_show_editor())
 						return

@@ -50,6 +50,11 @@ Object.merge_recursive = (obj1, obj2) ->
 
 	return obj1
 
+#Object.x_over_y = (source, destination) ->
+#	for key, value of source
+#		destination[key] = value
+#	destination
+
 Object.выбрать = (названия, object) ->
 	if object instanceof Array
 		i = 0
@@ -113,6 +118,21 @@ Array.prototype.zip = (array) ->
 Array.prototype.put = (element) ->
 	if @indexOf(element) < 0
 		@push(element)
+
+Array.prototype.merge_into = (where, name, matcher) ->
+	if not matcher?
+		i = 0
+		while i < where.length
+			where[i][name] = this[i]
+			i++
+		return where
+	
+	for element in @
+		for destination in where
+			if matcher.bind(element)(destination)
+				destination[name] = element
+				
+	return where
 		
 Object.clone = (obj) ->
 	if not obj? or typeof obj isnt 'object'

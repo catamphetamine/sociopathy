@@ -54,7 +54,7 @@
 				{
 					position: absolute;
 					left: -80px;
-					top: -8px;
+					top: 4px;
 					
 					width: 80px;
 					height: 64px;
@@ -63,11 +63,11 @@
 					
 					> .button
 					{
-						top: -23px;
+						top: 6px;
 						left: 19px;
 					}
 					
-					> button
+					> .button
 					{
 						background-image: url('/картинки/кнопки/отписаться.png');
 						width: 43px;

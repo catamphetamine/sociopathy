@@ -226,8 +226,16 @@ var button = new Class
 		// if the element is a 'button' - convert it to a 'div'
 		if (element.is('button'))
 		{
-			var boundary_html = element.boundary_html()
-			var new_element = $(boundary_html.opening.replace(/^<button/, '<div ') + boundary_html.closing.replace(/<\/button>$/, '</div>'))
+			var new_element = $('<div/>')
+			
+			Object.for_each(element.attributes, function(key)
+			{
+				new_element.attr(key, this)
+			})
+			
+			//boundary_html.opening.replace(/^<button/, '<div ') + boundary_html.closing.replace(/<\/button>$/, '</div>'))
+			//var new_element = boundary_html.opening.replace(/^<button/, '<div ') + boundary_html.closing.replace(/<\/button>$/, '</div>'))
+			
 			new_element.css('display', 'inline-block')
 
 			if (element.find('> label').exists())
@@ -236,7 +244,8 @@ var button = new Class
 			}
 			else
 			{
-				new_element.append($('<label/>').html(element.html()))
+				if (element.html() != '')
+					new_element.append($('<label/>').html(element.html()))
 			}
 			
 			element.replaceWith(new_element)

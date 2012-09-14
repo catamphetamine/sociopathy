@@ -8,27 +8,18 @@ exports.messages = (options) ->
 		.сделать ->
 			if not options.messages_collection_id?
 				options.messages_collection_id = options.id
-					
-			messages = (query, parameters, environment, callback) ->
-				if not query?
-					return db(options.messages_collection_id)
-					
-				collection = messages()
-					
-				messages_query = {}
-				if options.messages_query?
-					messages_query = options.messages_query(collection, environment)
-		
-				query = Object.merge_recursive(query, messages_query)
+
+			collection = db(options.messages_collection_id)
+									
+			these_messages_query = (query, environment) ->			
+				if not options.messages_query?
+					return query
 				
-				if parameters.count_query?
-					return collection.count(query, callback)
-				
-				new Цепочка(callback)
+				Object.merge_recursive(Object.clone(query), options.messages_query(environment))
+
+			prepare_messages_for_output = (сообщения, environment, возврат) ->
+				new Цепочка(возврат)
 					.сделать ->
-						collection.find(query, parameters).toArray(@._.в 'сообщения')
-						
-					.сделать (сообщения) ->
 						db('people_sessions').findOne({ пользователь: environment.пользователь._id }, @)
 						
 					.сделать (session) ->
@@ -126,7 +117,7 @@ exports.messages = (options) ->
 								соединение.on 'получить пропущенные сообщения', (с_какого) ->
 									new цепь_websocket(соединение)
 										.сделать ->
-											messages({ _id: { $gte: messages().id(с_какого._id) } }, {}, environment, @.в 'сообщения')
+											collection.find(these_messages_query({ _id: { $gte: collection.id(с_какого._id) } }, environment), { sort: [['_id', 1]] }).toArray(@.в 'сообщения')
 										.сделать ->
 											пользовательское.подставить(@.$.сообщения, 'отправитель', @)
 										.сделать ->
@@ -149,8 +140,8 @@ exports.messages = (options) ->
 								
 								соединение.on 'сообщение', (сообщение) ->
 									цепь_websocket(соединение)
-										.сделать ->
-											sanitize(сообщение, @)
+										#.сделать ->
+										#	sanitize(сообщение, @)
 											
 										.сделать (сообщение) ->
 											options.save(сообщение, environment, @._.в 'сообщение')
@@ -219,7 +210,7 @@ exports.messages = (options) ->
 									цепь_websocket(соединение)
 										.сделать ->
 											if options.message_read?
-												options.message_read(messages().id(_id), environment, @)
+												options.message_read(collection.id(_id), environment, @)
 												
 											сообщения_чего = null
 											if environment.сообщения_чего?
@@ -228,152 +219,60 @@ exports.messages = (options) ->
 											эфир.отправить('новости', 'прочитано', { что: options.in_ether_id, сообщения_чего: сообщения_чего, _id: _id.toString() })
 
 								соединение.emit 'пользователь подтверждён'
-								
-			Max_batch_size = 30
-		
-			sanitize = (html, возврат) ->
-				#console.log('возврат')
-				возврат(null, html)
-				
+												
 			http.get options.data_uri, (ввод, вывод, пользователь) ->
 				#if options.data_uri.starts_with('/сеть/')
 				environment = {}
 				environment.пользователь = пользователь
 					
+				loading_options =
+					collection: options.messages_collection_id
+					query: these_messages_query({}, environment)
+							
 				цепь(вывод)
 					.сделать ->
 						if options.сообщения_чего?
-							return options.сообщения_чего(ввод, @)
+							return new Цепочка(@)
+								.сделать ->
+									options.сообщения_чего(ввод, @)
+								.сделать (сообщения_чего) ->
+									environment.сообщения_чего = сообщения_чего
+									@.done()
 						@.done()
 						
-					.сделать (сообщения_чего) ->
-						if сообщения_чего?
-							environment.сообщения_чего = сообщения_чего
-						@.done()
-							
 					.сделать ->
 						if options.latest_read_message?
-							return options.latest_read_message(environment, @.в 'последнее_прочитанное_сообщение')
+							return new Цепочка(@)
+								.сделать ->
+									options.latest_read_message(environment, @)
+								.сделать (последнее_прочитанное_сообщение) ->
+									loading_options.с = последнее_прочитанное_сообщение
+									@.done()
 						@.done()
-		
-					.сделать ->
-						начиная_с_какого_выбрать(@.$.последнее_прочитанное_сообщение, ввод, environment, @)#.в 'с_какого_выбрать')
-			
-					.сделать (с_какого_выбрать) ->
-						if not с_какого_выбрать?
-							return messages({}, { limit: ввод.настройки.сколько, sort: [['_id', -1]] }, environment, @.в 'сообщения')
-						выбрать(с_какого_выбрать, ввод.настройки.сколько, ввод, environment, @.в 'сообщения')
-							
-					.сделать ->
+						
+					.сделать ->	
+						снасти.either_way_loading(ввод, loading_options, @)
+									
+					.сделать (result) ->
+						@.$ = { сообщения: result.data, 'есть ещё?': result['есть ещё?'] }
+						
 						пользовательское.подставить(@.$.сообщения, 'отправитель', @)
-		
+												
 					.сделать ->
 						if options.extra_get?
 							return options.extra_get(@.$, environment, @)
 						@.done()
 						
 					.сделать ->
-						сообщения = @.$.сообщения
-						
-						# strange bug
-						@.$.xxx = @.$.сообщения
-						
-						return @.done() if сообщения.length == 0
-						messages({ _id: { $lt: сообщения[сообщения.length - 1]._id }}, { limit: 1 }, environment, @)
-							
-					.сделать (ещё_сообщения) ->
-						есть_ли_ещё = no
-						if ещё_сообщения? && ещё_сообщения.length > 0
-							есть_ли_ещё = yes
-							
 						@.$.environment =
 							пользователь: пользовательское.поля(['_id'], пользователь)
 							сообщения_чего: environment.сообщения_чего
-							
-						@.$['есть ещё?'] = есть_ли_ещё
-
-						# strange bug
-						@.$.сообщения = @.$.xxx
 						
 						for сообщение in @.$.сообщения
 							сообщение._id = сообщение._id.toString()
 							
 						вывод.send(@.$)
-			
-			начиная_с_какого_выбрать = (последнее_прочитанное_сообщение, ввод, environment, возврат) ->
-				if ввод.настройки.с?
-					return возврат.done({ с: db(options.id).id(ввод.настройки.с), прихватить_границу: no, откуда: 'раньше' })
-			
-				new Цепочка(возврат)
-					.сделать ->
-						if последнее_прочитанное_сообщение?
-							return @.return({ с: последнее_прочитанное_сообщение, ограничение: Max_batch_size, откуда: 'позже' })
-						@.done()
-		
-					.сделать ->
-						id = environment.пользователь._id
-						messages({ отправитель: id }, { sort: [['_id', -1]], limit: 1 }, environment, @)
 					
-					.сделать (сообщения) ->
-						сообщение = сообщения[0]
-						if сообщение?
-							return @.done({ с: сообщение._id, ограничение: Max_batch_size, откуда: 'позже' })
-						@.done()
-							
-			выбрать = (с_какого, сколько, ввод, environment, возврат) ->
-				с = с_какого.с
-				#ограничение = сколько
-				сравнение_id = null
-				
-				if not с_какого.откуда?
-					с_какого.откуда = 'раньше'
-				
-				#if с_какого.ограничение?
-				#	if ограничение > с_какого.ограничение
-				#		ограничение = с_какого.ограничение
-					
-				if с_какого.откуда == 'раньше'
-					сравнение_id = '$lte'
-				else if с_какого.откуда == 'позже'
-					сравнение_id = '$gte'
-			
-				if с_какого.прихватить_границу == no
-					if сравнение_id == '$lte'
-						сравнение_id = '$lt'
-					else if сравнение_id == '$gte'
-						сравнение_id = '$gt'
-				
-				id_criteria = {}
-				id_criteria[сравнение_id] = с
-				
-				parameters = { sort: [['_id', -1]] }
-				if сколько?
-					parameters.limit = сколько
-		
-				new Цепочка(возврат)
-					.сделать ->
-						messages({ _id: id_criteria }, Object.merge_recursive({ count_query: yes }, parameters), environment, @)
-						
-					.сделать (сколько_есть) ->
-						if с_какого.ограничение?
-							if сколько_есть > с_какого.ограничение
-								new Цепочка(возврат)
-									.сделать ->
-										messages({}, { limit: 1, sort: [['_id', -1]] }, environment, @)
-										
-									.сделать (message) ->
-										if message.пусто()
-											return @.done([])
-										последнее_сообщение = message[0]
-										return выбрать(последнее_сообщение, с_какого.ограничение, ввод, environment, возврат)
-										
-						@.done()
-					
-					.сделать ->
-						messages({ _id: id_criteria }, parameters, environment, @)
-			
-			#return @.return(connection)
-	
 	result = {}
 	
 	initial_options = options

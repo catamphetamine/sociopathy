@@ -37,26 +37,47 @@ parseUri.options =
 	}
 }
 
-function combineUri(parts)
+var Uri =
 {
-	return (parts.protocol ? parts.protocol : 'http') +
-		'://' +
-		parts.host +
-		(parts.port ? ':' + parts.port : '') +
-		parts.path
-}
-
-function correct_uri(uri)
-{
-	return combineUri(parseUri(uri))
-}
+	parse: function(uri)
+	{
+		var parsed = parseUri(uri)
+		
+		var result =
+		{
+			protocol: parsed.protocol || 'http',
+			host: parsed.host,
+			port: parsed.port,
+			path: parsed.path,
+			parameters_raw: parsed.query,
+			parameters: parsed.queryKey
+		}
+		
+		return result
+	},
+	
+	assemble: function(parts)
+	{
+		return parts.protocol +
+				'://' +
+				parts.host +
+				(parts.port ? ':' + parts.port : '') +
+				parts.path +
+				(parts.parameters_raw ? '?' + parts.parameters_raw : '')
+	},
+	
+	correct: function(uri)
+	{
+		return this.assemble(this.parse(uri))
+	}
+};
 
 // testing
 (function()
 {
 	function test(uri)
 	{
-		alert(correct_uri(uri))
+		alert(Uri.correct(uri))
 	}
 	
 	test('http://google.ru')

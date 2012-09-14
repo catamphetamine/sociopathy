@@ -3,6 +3,11 @@
 #content.help
 {
 	margin-top: 80px;
+
+	h2
+	{
+		margin-left: 50px;
+	}
 	
 	.help_section.faq ul li .question:after
 	{

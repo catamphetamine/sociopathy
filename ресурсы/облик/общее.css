@@ -1363,3 +1363,10 @@ label.in-place_input_label
 		overflow-x: auto;
 	}
 }
+
+#scroll_detector
+{
+	text-align: center;
+	color: #aeaeae;
+	content: 'Загружаем ещё';
+}

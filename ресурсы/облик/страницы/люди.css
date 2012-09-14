@@ -14,35 +14,45 @@
 	padding-top: 100px;
 	padding-bottom: 0;
 	
-	.previous_people_conditional
+	.main_content
 	{
-		[type=loading], [type=loading_more], [type=error], [type=loading_more_error]
+		/*
+		> [type=loading], > [type=loading_more]
 		{
-			text-align: center;
-			margin-bottom: 50px;
+			display: none;
 		}
-		
-		[type=loading_more], [type=loading_more_error]
-		{
-			margin-top: 50px;
-		}
-		
-		.previous_people
-		{
-			text-align: center;
-			height: 80px;
+		*/
 			
-			.more_container
+		.previous_conditional
+		{
+			[type=loading], [type=loading_more], [type=error], [type=loading_more_error]
 			{
-				position: absolute;
-				width: 100%;
 				text-align: center;
+				margin-bottom: 50px;
 			}
 			
-			> a
+			[type=loading_more], [type=loading_more_error]
 			{
-				position: relative;
-				top: 50px;
+				margin-top: 50px;
+			}
+			
+			.previous
+			{
+				text-align: center;
+				height: 80px;
+				
+				.more_container
+				{
+					position: absolute;
+					width: 100%;
+					text-align: center;
+				}
+				
+				> a
+				{
+					position: relative;
+					top: 50px;
+				}
 			}
 		}
 	}
@@ -91,14 +101,41 @@
 	
 			width: 4px;
 			
+			overflow-x: visible;
+			
 			border-bottom-left-radius: 2px;
 			border-bottom-right-radius: 2px;
 		}
 		
 		.progress
 		{
+			position: absolute;
+			
 			background-color: #4f4f4f;
-			.css_transition(height, 500ms);
+			.css_transition(all, 500ms);
+			
+			> .current_viewport
+			{
+				position: absolute;
+				width: 100%;
+				
+				.include_padding_in_width();
+				
+				.css_transition(height, 500ms);
+				
+				background-color: white;
+				
+				border-bottom-left-radius: 20px;
+				border-top-left-radius: 20px;
+				
+				border-color: #4F4F4F;
+				border-style: solid;
+				border-width: 4px;
+				
+				position: absolute;
+				left: -3px;
+				width: 12px;
+			}
 		}
 	}
 }

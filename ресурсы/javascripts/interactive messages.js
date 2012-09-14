@@ -2,6 +2,11 @@ var Interactive_messages = function(options)
 {
 	var away_users = {}
 	
+	var finished_loading_messages = false
+	
+	var получить_пропущенные_сообщения
+	var получить_пропущенные_сообщения_when_finished = false
+	
 	var messages = new Messages
 	({
 		data_source: options.data_source,
@@ -92,8 +97,15 @@ var Interactive_messages = function(options)
 		},
 		show_editor: options.show_editor,
 		on_load: options.on_load,
+		on_message_data: options.on_message_data,
 		on_first_time_data: options.on_first_time_data,
-		on_message_data: options.on_message_data
+		on_finished: function()
+		{
+			finished_loading_messages = true
+			
+			if (получить_пропущенные_сообщения_when_finished)
+				получить_пропущенные_сообщения()
+		}
 	})
 	
 	messages.options.connection = options.connection
@@ -324,6 +336,15 @@ var Interactive_messages = function(options)
 			var connection = io.connect('http://' + Options.Websocket_server + options.path, { transports: ['websocket'], 'force new connection': true })
 			connection.is_ready = false
 			
+			получить_пропущенные_сообщения = function()
+			{
+				var latest_message = messages.options.container.find('> li:last').attr('message_id')
+				if (!latest_message)
+					return error('Не удалось загрузить сообщения')
+				
+				connection.emit('получить пропущенные сообщения', { _id: latest_message })		
+			}
+			
 			connection.on('connect', function()
 			{
 				connected = true
@@ -368,6 +389,8 @@ var Interactive_messages = function(options)
 				{
 					messages.add_message(this)
 				})
+				
+				накопленные_сообщения = []
 				
 				if (сообщения.length > 1 || накопленные_сообщения.length > 0)
 				{
@@ -414,14 +437,16 @@ var Interactive_messages = function(options)
 				}
 				
 				messages.подцепился(пользователь)
-				
-				var latest_message = messages.options.container.find('> li:last').attr('message_id')
-				if (!latest_message)
-					error('Не удалось загрузить сообщения')
-				else
-					connection.emit('получить пропущенные сообщения', { _id: latest_message })
-					
+
 				connection.emit('кто здесь?')
+
+				if (!finished_loading_messages)
+				{
+					получить_пропущенные_сообщения_when_finished = true
+					return
+				}
+				
+				получить_пропущенные_сообщения()			
 			})
 			
 			connection.on('кто здесь', function(data)
@@ -444,6 +469,9 @@ var Interactive_messages = function(options)
 			
 			connection.on('сообщение', function(сообщение)
 			{
+				if (!finished_loading_messages)
+					return
+				
 				parse_date(сообщение, 'когда')
 
 				//console.log(сообщение)

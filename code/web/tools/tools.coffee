@@ -297,10 +297,108 @@ file_system = require 'fs'
 		
 		.сделать (more) ->
 			if more? && !more.пусто()
+				возврат.$['есть ещё?'] = yes
+			else
+				возврат.$['есть ещё?'] = no
+				
+			return @.done(data)
+		
+снасти.either_way_loading = (ввод, options, возврат) ->
+	options.query = options.query || {}
+	
+	настройки =  {}
+
+	if ввод.настройки.раньше == 'true'
+		настройки.направление = 'назад'
+		настройки.прихватить_границу = no
+	else
+		настройки.направление = 'вперёд'
+		настройки.прихватить_границу = no
+		
+	if ввод.настройки.задом_наперёд
+		настройки.задом_наперёд = yes
+		
+	с = ввод.настройки.с || options.с
+	сколько = ввод.настройки.сколько
+		
+	sort = null
+
+	if настройки.направление == 'вперёд'
+		sort = 1
+	else if настройки.направление == 'назад'
+		sort = -1
+		
+	if настройки.задом_наперёд?
+		sort = -sort
+
+	new Цепочка(возврат)
+		.сделать ->
+			if options.total?
+				return db(options.collection).count(options.query, @.в 'всего')
+			@.done()
+			
+		.сделать ->
+			if not с?
+				skip = ввод.настройки.пропустить || 0
+				return db(options.collection).find(options.query, { limit: сколько, sort: [['_id', sort]], skip: skip }).toArray(@)
+
+			if настройки.направление == 'вперёд'
+				@._.check_for_earlier_messages = yes
+			
+			сравнение_id = {}
+			
+			if настройки.направление == 'вперёд'
+				сравнение_id = '$lte'
+			else if настройки.направление == 'назад'
+				сравнение_id = '$gte'
+		
+			if настройки.прихватить_границу == no
+				if сравнение_id == '$lte'
+					сравнение_id = '$lt'
+				else if сравнение_id == '$gte'
+					сравнение_id = '$gt'
+					
+			id_criteria = {}
+			id_criteria[сравнение_id] = db(options.collection).id(с)
+				
+			db(options.collection).find(Object.merge_recursive({ _id: id_criteria }, options.query), { limit: сколько, sort: [['_id', sort]] }).toArray(@)
+
+		.сделать (data) ->
+			@.$.data = data
+			@.done(@.$.data)
+			
+		.сделать (data) ->
+			# check for more
+			return @.done() if data.length < сколько
+			
+			more_id_criteria  = {}
+			
+			if настройки.направление == 'назад'
+				more_id_criteria = { $gt: data[data.length - 1]._id }
+			else if настройки.направление == 'вперёд'
+				more_id_criteria = { $lt: data[data.length - 1]._id }
+				
+			db(options.collection).find(Object.merge_recursive({ _id: more_id_criteria }, options.query), { limit: 1, sort: [['_id', sort]] }).toArray(@)
+		
+		.сделать (more) ->
+			if more? && not more.пусто()
 				@.$['есть ещё?'] = yes
 			else
 				@.$['есть ещё?'] = no
+			@.done()
 				
-			return @.done(data)
+		.сделать ->
+			if @._.check_for_earlier_messages?
+				data = @.$.data
+				return new Цепочка(@)
+					.сделать ->
+						db(options.collection).find(Object.merge_recursive({ _id: { $lt: data[0]._id } }, options.query), { limit: 1, sort: [['_id', sort]] }).toArray(@)
+					.сделать (earlier) ->										
+						@.$['есть ли предыдущие?'] = !earlier.пусто()
+						@.done()
+			@.done()
+					
+		.сделать ->
+			@.done(@.$)
 	
 module.exports = снасти

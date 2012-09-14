@@ -330,7 +330,7 @@ Object.x_over_y = function(source, destination)
 	if (!source)
 		return
 	
-	$.extend(true, destination, source)
+	$.extend(destination, source)
 }
 
 Array.prototype._map = function(action)

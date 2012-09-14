@@ -22,7 +22,8 @@ var Batch_loader = new Class
 		finished: function() {},
 		done: function() {},
 		done_more: function() {},
-		before_output: function(callback) { callback() },
+		before_output_async: function(callback) { callback() },
+		after_output: function() {},
 		before_done: function() {},
 		before_done_more: function() {},
 		get_id: function(object) { return object._id },
@@ -36,10 +37,7 @@ var Batch_loader = new Class
 	
 	page: { number: 0 },
 	
-	уже_загружено: function()
-	{
-		return this.page.number * this.options.batch_size
-	},
+	counter: 0,
 	
 	initialize: function(options)
 	{
@@ -49,15 +47,16 @@ var Batch_loader = new Class
 			if (!this.options.Ajax)
 				this.options.Ajax = page.Ajax
 			
-		if (options.skip_pages)
-			this.page.number += options.skip_pages
+		if (this.options.skip_pages)
+			this.page.number += this.options.skip_pages
 	},
 
 	batch: function(возврат)
 	{
-		this.next(this.options.batch_size, возврат)
+		this.get(this.options.batch_size, возврат)
 	},
 	
+	/*
 	next: function()
 	{
 		var count = 1
@@ -78,11 +77,12 @@ var Batch_loader = new Class
 
 		this.get(count, callback)
 	},
+	*/
 	
 	get: function(count, callback)
 	{
 		var loader = this
-		
+			
 		var data = { сколько: count }
 		
 		if (this.latest)
@@ -94,6 +94,9 @@ var Batch_loader = new Class
 		if (this.options.order)
 			data.порядок = this.options.order
 		
+		if (this.options.latest_first == true)
+			data.задом_наперёд = true
+			
 		data = Object.merge(this.options.parameters, data)
 		
 		this.options.Ajax.get(this.options.url, data)
@@ -112,7 +115,11 @@ var Batch_loader = new Class
 			if (!data_list.is_empty())
 			{
 				if (!loader.options.reverse)
+				{
 					loader.page.number++
+					
+					loader.counter = (loader.page.number - 1) * loader.options.batch_size + data_list.length
+				}
 				else
 					loader.page.number--
 			}
@@ -131,19 +138,29 @@ var Batch_loader = new Class
 		return this.index <= 1
 	},
 	
+	уже_загружено: function()
+	{
+		if (this.options.reverse)
+			throw 'No counter for reversed loader'
+		
+		return this.counter
+	},
+	
+	skipped: function()
+	{
+		return (this.page.number - 1) * this.options.batch_size
+	},
+	
 	load: function()
 	{
 		var loader = this
 		
 		var is_first_batch = loader.no_data_yet()
-		
+			
 		this.batch(function(ошибка, список)
 		{
 			if (ошибка)
-			{
-				loader.options.callback(ошибка)
-				return
-			}
+				return loader.options.callback(ошибка)
 		
 			var elements = []
 			список.for_each(function()
@@ -169,16 +186,19 @@ var Batch_loader = new Class
 				loader.options.before_done.bind(loader)(список)
 			else
 				loader.options.before_done_more.bind(loader)(список)
-				
-			loader.options.before_output(function()
+		
+			if (loader.options.before_output)
+				loader.options.before_output(elements)
+			
+			loader.options.before_output_async(function()
 			{
 				if (!loader.есть_ли_ещё)
 					loader.options.finished(список)
 				
 				loader.options.callback(null, function()
 				{
-					if (loader.options.after_all_shown)
-						loader.options.after_all_shown(elements)
+					if (loader.options.after_output)
+						loader.options.after_output(elements)
 						
 					if (is_first_batch)
 						loader.options.done.bind(loader)(список)
@@ -187,6 +207,11 @@ var Batch_loader = new Class
 					
 					if (loader.есть_ли_ещё)
 						loader.activate()
+					else
+					{
+						if (loader.options.finished)
+							loader.options.finished()
+					}
 				})
 			})
 		})
@@ -194,6 +219,7 @@ var Batch_loader = new Class
 	
 	activate: function() {},
 	deactivate: function() {},
+	finished: function() {},
 	
 	load_more: function()
 	{
@@ -216,6 +242,18 @@ var Batch_loader_with_infinite_scroll = new Class
 
 	initialize: function(options)
 	{
+		options = options || {}
+		
+		var old = options.finished
+		options.finished = function()
+		{
+			this.options.scroll_detector.remove()
+			
+			if (old)
+				old()
+		}
+		.bind(this)
+							
 		this.parent(options)
 		
 		$(window).scrollTop(0)
@@ -319,8 +357,8 @@ var Data_loader = new Class
 				
 			loader.options.callback(null, function()
 			{
-				if (loader.options.after_all_shown)
-					loader.options.after_all_shown(elements)
+				if (loader.options.after_output)
+					loader.options.after_output(elements)
 				
 				loader.options.done(список)
 			})
@@ -378,13 +416,14 @@ var Data_templater = new Class
 				else
 					item = $.tmpl(options.template_url, data)
 					
-				options.postprocess_element(item).appendTo(options.container)
+				return options.postprocess_element(item).appendTo(options.container)
 			}
 		
 		if (!options.process_data)
 			options.process_data = function(data) { return data }
 		
-		loader.options.after_all_shown = options.after_all_shown
+		if (options.after_output)
+			loader.options.after_output = options.after_output
 		
 		loader.options.show = function(item)
 		{
@@ -422,7 +461,7 @@ var Data_templater = new Class
 		
 		var load_data = function()
 		{
-			if (options.load_data !== false)
+			if (options.load_data_immediately !== false)
 				loader.load()
 		}
 		

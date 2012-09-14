@@ -10,12 +10,23 @@ var Progress = new Class
 		maximum: 100,
 	},
 	
+	negative_compensation: 0,
+	skipped: 0,
+	
 	initialize: function(options)
 	{
 		this.setOptions(options)
-	
+
+		if (!this.options.maximum)
+			throw 'Overall count not set for progress'
+		
 		if (!this.options.event_namespace)
 			this.options.event_namespace = 'progress:' + random_id()
+	
+		this.viewport = this.options.element.find('> .current_viewport')
+		
+		if (this.options.skipped)
+			this.skipped = this.options.skipped
 	
 		var progress = this
 		page.when_loaded(function()
@@ -39,6 +50,11 @@ var Progress = new Class
 					progress.set_maximum_height()
 					progress.update()
 				})
+				
+				$(window).on_page('scroll.progress_bar', function()
+				{
+					progress.update_current_viewport_position()
+				})
 			}
 		})
 	},
@@ -53,16 +69,79 @@ var Progress = new Class
 		this.options.maximum_height = $(window).height()
 	},
 	
-	update: function(count)
+	update: function(count, options)
 	{
-		if (count)
+		options = options || {}
+		
+		if (typeof count !== 'undefined')
 			this.count = count
 		else
 			count = this.count
 		
+		if (count < 0)
+		{
+			if (this.negative_compensation > count)
+				this.negative_compensation = count
+		}
+		
+		if (typeof options.skipped !== 'undefined')
+			this.skipped = options.skipped
+		
+		if (count <= this.skipped)
+			this.skipped = count - 1
+		
+		if (this.skipped < 0)
+			this.skipped = 0
+		
+		this.progress_ratio = (count - this.negative_compensation) / (this.options.maximum - this.negative_compensation)
+		
+		if (this.progress_ratio > 1)
+		{
+			this.options.maximum = count
+			this.progress_ratio = 1
+			//throw 'Progress ratio can\'t be > 1'
+		}
+		
 		if (!this.options.vertical)
-			return this.options.element.width(parseInt(count * this.options.maximum_width / this.options.maximum))
+			return this.options.element.width(parseInt(this.progress_ratio * this.options.maximum_width))
 			
-		this.options.element.height(parseInt(count * this.options.maximum_height / this.options.maximum))
+		//console.log('this.height:')
+		
+		//console.log(this.progress_ratio)
+		//console.log(this.options.maximum_height)
+		
+		this.height = parseInt(this.progress_ratio * this.options.maximum_height)
+		
+		var skipped_ratio = 0
+		if (count - this.negative_compensation != 0)
+			skipped_ratio = (this.skipped - this.negative_compensation) / (count - this.negative_compensation)
+		
+		this.skipped_ratio = skipped_ratio
+		
+		this.options.element.height(this.height * (1 - skipped_ratio))
+		this.options.element.css({ top: (this.height * skipped_ratio) + 'px' })
+		
+		this.document_height = $(document).height()
+		this.viewport_height_to_document_height_ratio = this.options.maximum_height / this.document_height
+		
+		this.viewport.height(parseInt(this.height * this.viewport_height_to_document_height_ratio * (1 - skipped_ratio)))
+		
+		this.update_current_viewport_position()
+	},
+	
+	update_current_viewport_position: function()
+	{
+		//if (!this.options.vertical)
+		//	throw "Horizontal progress current viewport isn't supported"
+		
+		// if not yet initialized - exit
+		if (!this.height)
+			return
+		
+		var max_document_height = this.document_height
+		if (max_document_height < this.options.maximum_height)
+			max_document_height = this.options.maximum_height
+		
+		this.viewport.css({ top: parseInt(($(window).scrollTop() / max_document_height) * this.height * (1 - this.skipped_ratio)) + 'px' })
 	}
 })

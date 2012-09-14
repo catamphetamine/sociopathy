@@ -74,10 +74,17 @@ function initialize_conditional($this, options)
 			}
 		}
 	
-		from.fade_out(fade_out_duration, function()
+		if (from.exists())
+		{
+			from.fade_out(fade_out_duration, function()
+			{
+				to.fade_in(fade_in_duration, callback)
+			})
+		}
+		else
 		{
 			to.fade_in(fade_in_duration, callback)
-		})
+		}
 	}
 	
 	var on_ok = function(callback)
@@ -106,7 +113,7 @@ function initialize_conditional($this, options)
 		
 		if (error_counter < tries)
 			return action(callback)
-		
+				
 		if (conditional.state !== 'loading')
 		{
 			error = loading_more_error

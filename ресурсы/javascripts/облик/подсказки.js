@@ -8,6 +8,9 @@ var Подсказки = (function()
 		{
 			if (Клавиши.is('Ctrl', 'Shift', '0', event))
 			{
+				// disable hints
+				return
+				
 				включены = !включены
 				if (включены)				
 					if (подсказка)

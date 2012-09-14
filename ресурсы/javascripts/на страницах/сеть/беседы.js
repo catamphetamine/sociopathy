@@ -18,10 +18,59 @@ title('Беседы');
 			loader: new  Batch_data_loader_with_infinite_scroll
 			({
 				url: '/приложение/сеть/беседы',
-				batch_size: 10,
+				batch_size: 18,
 				scroll_detector: page.get('#scroll_detector'),
 				before_done: talks_loaded,
 				before_done_more: function() { ajaxify_internal_links(page.talks) },
+				before_output: function(elements)
+				{
+					elements.for_each(function()
+					{
+						var talk = $(this)
+						
+						if (Новости.что_нового.беседы[talk.attr('_id')])
+							talk.addClass('new')
+					})
+					
+					elements.for_each(function()
+					{
+						var talk = $(this)
+						var container = talk.find('> .leave')
+					
+						var the_button = button.physics.simple(new image_button(container.find('> .button'),
+						{
+							'auto unlock': false
+						}))
+						
+						container.on('mouseenter', function()
+						{
+							container.css('opacity', 1)
+						})
+						
+						container.on('mouseleave', function()
+						{
+							container.css('opacity', 0)
+						})
+						
+						container.css('opacity', 0)
+						
+						the_button.does(function()
+						{
+							Ajax.delete('/приложение/сеть/беседы/подписка',
+							{
+								_id: talk.attr('_id')
+							})
+							.ok(function()
+							{
+								the_button.element.fade_out(0.3)
+							})
+							.ошибка(function()
+							{
+								the_button.unlock()
+							})
+						})
+					})
+				},
 				data: function(data)
 				{
 					parse_dates(data.беседы, 'создана')
@@ -30,14 +79,20 @@ title('Беседы');
 					{
 						var беседа = this
 						
-						iterate(this.подписчики || [], function(подписчик)
+						iterate(this.участники || [], function(участник)
 						{
-							return подписчик === пользователь._id
+							return участник._id === пользователь._id
 						},
 						function()
 						{
-							беседа.подписан = true
+							беседа.участник = true
 						})
+						
+						if (this.последнее_сообщение)
+						{
+							parse_date(this.последнее_сообщение, 'когда')
+							this.последнее_сообщение.когда_примерно = неточное_время(this.последнее_сообщение.когда)
+						}
 					})
 					
 					return data.беседы
@@ -54,50 +109,6 @@ title('Беседы');
 		{
 			page.talks.remove()
 			page.get('.main_content').find('> .empty').show()
-		}
-		else
-		{
-			page.talks.find('> li').each(function()
-			{
-				var talk = $(this)
-				var container = talk.find('> .unsubscribe')
-			
-				if (Новости.что_нового.беседы[talk.attr('_id')])
-					talk.addClass('new')
-				
-				var the_button = button.physics.simple(new image_button(container.find('> button'),
-				{
-					'auto unlock': false
-				}))
-				
-				container.on('mouseenter', function()
-				{
-					container.css('opacity', 1)
-				})
-				
-				container.on('mouseleave', function()
-				{
-					container.css('opacity', 0)
-				})
-				
-				container.css('opacity', 0)
-				
-				the_button.does(function()
-				{
-					Ajax.delete('/приложение/сеть/беседы/подписка',
-					{
-						_id: talk.attr('_id')
-					})
-					.ok(function()
-					{
-						the_button.element.fade_out(0.3)
-					})
-					.ошибка(function()
-					{
-						the_button.unlock()
-					})
-				})
-			})
 		}
 		
 	//	Режим.разрешить('правка')

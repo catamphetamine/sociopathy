@@ -53,6 +53,11 @@
 	
 	var scroll_navigation = new Scroll_navigation()
 	
+	page.unload = function()
+	{
+		scroll_navigation.deactivate()
+	}
+	
 	function pictures_loaded()
 	{
 		var picture = $('.show_picture')

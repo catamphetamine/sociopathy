@@ -1,4 +1,10 @@
 <li _id="${_id}">
+	{{if подписан}}
+		<div class="unsubscribe" title="Отписаться">
+			<div class="button"></div>
+		</div>
+	{{/if}}
+	
 	{{tmpl(участники[0]) 'маленький аватар'}}
 		
 	<a class="discussion" href="/сеть/обсуждения/${escape_id(id)}">${название}</a>

@@ -13,7 +13,8 @@ var navigating = false;
 		'simple value dialog window',
 		'unsupported browser popup',
 		'наглядный писарь',
-		'нижняя панель режима правки', 'окошко входа'
+		'нижняя панель режима правки',
+		'окошко входа',
 	]
 	
 	var шаблоны =
@@ -26,8 +27,9 @@ var navigating = false;
 		'беседа в списке бесед',
 		'сообщение обсуждения',
 		'сообщение беседы',
-		 'breadcrumbs',
-		 'сообщение в болталке'
+		'breadcrumbs',
+		'сообщение в болталке',
+		'either way loading'
 	]
 	
 	подгрузить_шаблоны = function(callback)

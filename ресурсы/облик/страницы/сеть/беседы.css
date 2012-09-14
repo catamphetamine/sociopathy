@@ -31,6 +31,9 @@
 			> li
 			{
 				position: relative;
+		
+				margin-bottom: 8px;
+				
 				.css_transition(500ms, background-color);
 				
 				border-radius: 6px;
@@ -50,11 +53,11 @@
 					border-radius: 6px;
 				}
 				
-				> .unsubscribe
+				> .leave
 				{
 					position: absolute;
 					left: -80px;
-					top: -8px;
+					top: 4px;
 					
 					width: 80px;
 					height: 64px;
@@ -63,13 +66,13 @@
 					
 					> .button
 					{
-						top: -23px;
-						left: 19px;
+						left: 25px;
+						top: 12px;
 					}
 					
-					> button
+					> .button
 					{
-						background-image: url('/картинки/кнопки/отписаться.png');
+						background-image: url('/картинки/кнопки/выйти.png');
 						width: 43px;
 						height: 43px;
 					}
@@ -87,8 +90,20 @@
 					margin-bottom: 12px;
 					margin-left: 8px;
 				}
-				
-				margin-bottom: 8px;
+							
+				.when
+				{
+					position: relative;
+					top: 12px;
+					
+					margin-right: 19px;
+					margin-left: 19px;
+					
+					float: right;
+					color: #afafaf;
+					
+					font-size: 20px;			
+				}
 			}
 		}
 	}

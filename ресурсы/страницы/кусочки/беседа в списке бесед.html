@@ -1,13 +1,21 @@
 <li _id="${_id}">
-	{{if подписан}}
-		<div class="unsubscribe">
-			<button></button>
+	{{if участник}}
+		<div class="leave" title="Выйти из беседы">
+			<div class="button"></div>
 		</div>
 	{{/if}}
 	
+	<!--
 	{{each(index, участник) участники}}
 		{{tmpl(участник) 'маленький аватар'}}
 	{{/each}}
+	-->
+	
+	{{if последнее_сообщение}}
+		{{tmpl(последнее_сообщение.отправитель) 'маленький аватар'}}
+	
+		<div class="when no_word_carrying intelligent_date" date="${последнее_сообщение.когда.getTime()}">${последнее_сообщение.когда_примерно}</div>
+	{{/if}}
 		
 	<a class="discussion" href="/сеть/беседы/${escape_id(id)}">${название}</a>
 </li>

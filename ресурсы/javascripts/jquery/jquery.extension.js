@@ -645,3 +645,18 @@ $.validate_xml = function(xml)
 		return false
 	}
 }
+
+$.fn.attributes = function()
+{
+	var attributes = {}
+
+	if (!this.length)
+		return this
+
+	$.each(this[0].attributes, function(index, attr)
+	{
+		attributes[attr.name] = attr.value
+	})
+
+	return attributes
+}
