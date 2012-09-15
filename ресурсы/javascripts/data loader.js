@@ -22,7 +22,7 @@ var Batch_loader = new Class
 		finished: function() {},
 		done: function() {},
 		done_more: function() {},
-		before_output_async: function(callback) { callback() },
+		before_output_async: function(elements, callback) { callback() },
 		after_output: function() {},
 		before_done: function() {},
 		before_done_more: function() {},
@@ -86,7 +86,7 @@ var Batch_loader = new Class
 		var data = { сколько: count }
 		
 		if (this.latest)
-			data.с = this.latest
+			data.после = this.latest
 			
 		if (this.options.skip_pages)
 			data.пропустить = this.options.skip_pages * this.options.batch_size
@@ -191,7 +191,7 @@ var Batch_loader = new Class
 			if (loader.options.before_output)
 				loader.options.before_output(elements)
 			
-			loader.options.before_output_async.bind(this)(function()
+			loader.options.before_output_async.bind(loader)(elements, function()
 			{
 				if (!loader.есть_ли_ещё)
 					loader.options.finished(список)
@@ -208,11 +208,11 @@ var Batch_loader = new Class
 					
 					if (loader.есть_ли_ещё)
 						loader.activate()
-					else
-					{
-						if (loader.options.finished)
-							loader.options.finished()
-					}
+					//else
+					//{
+					//	if (loader.options.finished)
+					//		loader.options.finished()
+					//}
 				})
 			})
 		})

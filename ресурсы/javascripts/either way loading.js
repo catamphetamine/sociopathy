@@ -1,6 +1,6 @@
 function either_way_loading(options)
 {
-	options.parameters = options.parameters || {}
+	parameters = options.data.parameters || {}
 	
 	//var page = options.page
 	
@@ -57,7 +57,7 @@ function either_way_loading(options)
 				overall_count = data.всего
 			
 			if (options.data.on_first_batch)
-				options.data.on_first_batch()
+				options.data.on_first_batch(data)
 
 			first_batch = false
 		}
@@ -91,13 +91,13 @@ function either_way_loading(options)
 	{
 		skip_pages: skip_pages + 1,
 		reverse: true,
-		parameters: Object.x_over_y(options.parameters, { раньше: true, всего: overall_count }),
+		parameters: Object.x_over_y(parameters, { раньше: true, всего: overall_count }),
 		get_data: function (data)
 		{
 			data = on_data(data)
 			
 			if (data.is_empty())
-				return
+				return []
 			
 			data.last().страница = this.page.number - 1
 			data.last().первый = true
@@ -200,23 +200,26 @@ function either_way_loading(options)
 	},
 	top_loader)
 	
-	if (skip_pages)
-		top_loader.activate()
-	else
-		previous_block.hide()
+	previous_block.hide()
 	
 	// загрузчик внизу
 	
 	bottom_loader = new Batch_loader_with_infinite_scroll(Object.x_over_y(common_loader_options,
 	{
 		skip_pages: skip_pages,
-		parameters: Object.x_over_y(options.parameters, { всего: overall_count }),
+		parameters: Object.x_over_y(parameters, { всего: overall_count }),
 		get_data: function(data)
 		{
+			if (data['есть ли предыдущие?'])
+			{
+				previous_block.show()
+				top_loader.activate()
+			}
+			
 			data = on_data(data)
 				
 			if (data.is_empty())
-				return
+				return []
 		
 			data.first().страница = this.page.number + 1
 			data.first().первый = true
@@ -245,8 +248,8 @@ function either_way_loading(options)
 			if (options.progress_bar)
 				update_progress_bar()
 				
-			if (options.finished)
-				options.finished()
+			if (options.data.finished)
+				options.data.finished()
 		}
 	}))
 	

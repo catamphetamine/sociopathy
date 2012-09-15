@@ -17,7 +17,13 @@ http.get '/люди', (ввод, вывод) ->
 			for man in result.data
 				man = пользовательское.скрыть(man)
 				
-			вывод.send({ люди: result.data, 'есть ещё?': result['есть ещё?'], всего: result.всего })
+			response = 
+				люди: result.data
+				'есть ещё?': result['есть ещё?']
+				'есть ли предыдущие?': result['есть ли предыдущие?']
+				всего: result.всего
+				
+			вывод.send(response)
 
 http.get '/человек', (ввод, вывод) ->
 	цепь(вывод)

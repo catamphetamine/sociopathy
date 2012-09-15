@@ -101,7 +101,7 @@ class Цепь
 				if функция_возврата.имя_переменной == '$'
 					@$ = данные
 				else
-					@$[функция_возврата.имя_переменной] = данные
+				@$[функция_возврата.имя_переменной] = данные
 		
 			if функция_возврата.имя_переменной_для_кучи?
 				@_[функция_возврата.имя_переменной_для_кучи] = данные
@@ -163,13 +163,13 @@ class Цепь
 			функция_возврата(null, result)
 			
 		функция_возврата.return = (result) =>
+			if not @callback
+					throw 'This conveyor wasn\'t created from a callback'
 			@callback(null, result)
 		
 		функция_возврата.error = (error, options) =>
 			if not error?
 				error = 'Произошла ошибка на сервере'
-			#if @callback?
-			#	return @callback(error)
 			функция_возврата({ error: error, display_this_error: true, options: options })
 		
 		функция_возврата

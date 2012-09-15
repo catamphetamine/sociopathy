@@ -107,9 +107,6 @@ var Messages = new Class
 				data_source_parameters = options.data_source.parameters
 		}
 		
-		console.log('messages.options.container')
-		console.log(messages.options.container)
-		
 		either_way_loading
 		({
 			data:
@@ -117,8 +114,8 @@ var Messages = new Class
 				url: data_source_url,
 				parameters: data_source_parameters,
 				name: 'сообщения',
-				batch_size: 1, // options.messages_batch_size,
-				on_first_batch: function()
+				batch_size: options.messages_batch_size,
+				on_first_batch: function(data)
 				{
 					messages.options.environment = data.environment
 					
@@ -137,7 +134,7 @@ var Messages = new Class
 					//
 						
 					if (options.on_first_time_data)
-						options.on_first_time_data()
+						options.on_first_time_data(data)
 				},
 				loaded: function(сообщения)
 				{
@@ -151,9 +148,9 @@ var Messages = new Class
 						
 					return сообщения
 				},
-				before_output_async: function(callback)
+				before_output_async: function(elements, callback)
 				{
-					refresh_formulae({ where: this.options.container }, callback)
+					refresh_formulae({ where: elements }, callback)
 				},
 				finished: function()
 				{
@@ -593,7 +590,6 @@ var Messages = new Class
 		{
 			$(document).on('show_visual_editor.on_demand', function()
 			{
-				alert(1)
 				if (messages.options.can_show_editor)
 					if (!messages.options.can_show_editor())
 						return

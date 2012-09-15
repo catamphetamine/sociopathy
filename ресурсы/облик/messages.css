@@ -170,6 +170,7 @@
 	height: @top_padding + @user_icon_size + 2 * @user_icon_margin + @bottom_padding;
 
 	margin-bottom: 0px;
+	margin-top: 40px;
 			
 	> .who_is_connected_bar
 	{

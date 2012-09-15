@@ -28,7 +28,23 @@ function refresh_formulae(options, callback)
 		queue = ["Typeset", MathJax.Hub]
 		
 		if (options.where)
-			queue.push(options.where.node())
+		{
+			if (options.where instanceof jQuery && options.where.length > 1)
+			{
+				var countdown = options.where.length
+				return options.where.for_each(function()
+				{
+					refresh_formulae({ where: this }, function()
+					{
+						countdown--
+						if (countdown === 0)
+							callback()
+					})
+				})
+			}
+			
+			queue.push(options.where instanceof jQuery ? options.where.node() : options.where)
+		}
 	}
 	
 	callback = callback || function() {}

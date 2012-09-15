@@ -307,19 +307,24 @@ file_system = require 'fs'
 	options.query = options.query || {}
 	
 	настройки =  {}
+	настройки.прихватить_границу = no
 
 	if ввод.настройки.раньше == 'true'
 		настройки.направление = 'назад'
-		настройки.прихватить_границу = no
 	else
 		настройки.направление = 'вперёд'
-		настройки.прихватить_границу = no
 		
 	if ввод.настройки.задом_наперёд
 		настройки.задом_наперёд = yes
 		
-	с = ввод.настройки.с || options.с
+	с = options.с
+	после = ввод.настройки.после
 	сколько = ввод.настройки.сколько
+	
+	if с?
+		настройки.прихватить_границу = yes
+	else if после?
+		настройки.прихватить_границу = no
 		
 	sort = null
 
@@ -330,7 +335,7 @@ file_system = require 'fs'
 		
 	if настройки.задом_наперёд?
 		sort = -sort
-
+	
 	new Цепочка(возврат)
 		.сделать ->
 			if options.total? && not ввод.настройки.всего?
@@ -338,28 +343,35 @@ file_system = require 'fs'
 			@.done()
 			
 		.сделать ->
-			if not с?
+			if с? || ввод.настройки.пропустить?
+				if настройки.направление == 'вперёд'
+					@._.check_for_earlier_elements = yes
+
+			if not с? && not после?
 				skip = ввод.настройки.пропустить || 0
 				return db(options.collection).find(options.query, { limit: сколько, sort: [['_id', sort]], skip: skip }).toArray(@)
 
-			if настройки.направление == 'вперёд'
-				@._.check_for_earlier_messages = yes
+			сравнение_id = null
 			
-			сравнение_id = {}
-			
-			if настройки.направление == 'вперёд'
-				сравнение_id = '$lte'
-			else if настройки.направление == 'назад'
+			if sort == 1
 				сравнение_id = '$gte'
+			else
+				сравнение_id = '$lte'
 		
 			if настройки.прихватить_границу == no
-				if сравнение_id == '$lte'
-					сравнение_id = '$lt'
-				else if сравнение_id == '$gte'
+				if сравнение_id == '$gte'
 					сравнение_id = '$gt'
+				else if сравнение_id == '$lte'
+					сравнение_id = '$lt'
 					
 			id_criteria = {}
-			id_criteria[сравнение_id] = db(options.collection).id(с)
+			
+			boundary = с || после
+			
+			if typeof boundary == 'string'
+				boundary = db(options.collection).id(boundary)
+			
+			id_criteria[сравнение_id] = boundary
 				
 			db(options.collection).find(Object.merge_recursive({ _id: id_criteria }, options.query), { limit: сколько, sort: [['_id', sort]] }).toArray(@)
 
@@ -371,30 +383,32 @@ file_system = require 'fs'
 			# check for more
 			return @.done() if data.length < сколько
 			
-			more_id_criteria  = {}
+			сравнение_id = null
 			
-			if настройки.направление == 'назад'
-				more_id_criteria = { $gt: data[data.length - 1]._id }
-			else if настройки.направление == 'вперёд'
-				more_id_criteria = { $lt: data[data.length - 1]._id }
+			if sort == 1
+				сравнение_id = '$gt'
+			else
+				сравнение_id = '$lt'
+				
+			more_id_criteria = {}
+			more_id_criteria[сравнение_id] = data[data.length - 1]._id
 				
 			db(options.collection).find(Object.merge_recursive({ _id: more_id_criteria }, options.query), { limit: 1, sort: [['_id', sort]] }).toArray(@)
 		
 		.сделать (more) ->
-			if more? && not more.пусто()
-				@.$['есть ещё?'] = yes
-			else
-				@.$['есть ещё?'] = no
+			@.$['есть ещё?'] = more? && not more.пусто()
 			@.done()
 				
 		.сделать ->
-			if @._.check_for_earlier_messages?
-				data = @.$.data
+			destination = @.$
+			data = @.$.data
+				
+			if not data.пусто() && @._.check_for_earlier_elements?
 				return new Цепочка(@)
 					.сделать ->
 						db(options.collection).find(Object.merge_recursive({ _id: { $lt: data[0]._id } }, options.query), { limit: 1, sort: [['_id', sort]] }).toArray(@)
 					.сделать (earlier) ->										
-						@.$['есть ли предыдущие?'] = !earlier.пусто()
+						destination['есть ли предыдущие?'] = !earlier.пусто()
 						@.done()
 			@.done()
 					

@@ -465,7 +465,7 @@ var Interactive_messages = function(options)
 			
 			connection.on('сообщение', function(сообщение)
 			{
-				if (!finished_loading_messages)
+				if (!messages.finished_loading)
 					return
 				
 				parse_date(сообщение, 'когда')

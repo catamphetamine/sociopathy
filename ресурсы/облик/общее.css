@@ -1383,7 +1383,7 @@ label.in-place_input_label
 		
 		[type=loading_more], [type=loading_more_error]
 		{
-			margin-top: 50px;
+			margin-top: 20px;
 		}
 		
 		.previous
@@ -1401,7 +1401,7 @@ label.in-place_input_label
 			> a
 			{
 				position: relative;
-				top: 50px;
+				top: 20px;
 			}
 		}
 	}

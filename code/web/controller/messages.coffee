@@ -11,7 +11,7 @@ exports.messages = (options) ->
 
 			collection = db(options.messages_collection_id)
 									
-			these_messages_query = (query, environment) ->			
+			these_messages_query = (query, environment) ->
 				if not options.messages_query?
 					return query
 				
@@ -143,7 +143,7 @@ exports.messages = (options) ->
 										#.сделать ->
 										#	sanitize(сообщение, @)
 											
-										.сделать (сообщение) ->
+										.сделать ->
 											options.save(сообщение, environment, @._.в 'сообщение')
 											
 										.сделать ->
@@ -227,7 +227,6 @@ exports.messages = (options) ->
 					
 				loading_options =
 					collection: options.messages_collection_id
-					query: these_messages_query({}, environment)
 							
 				цепь(вывод)
 					.сделать ->
@@ -241,7 +240,7 @@ exports.messages = (options) ->
 						@.done()
 						
 					.сделать ->
-						if options.latest_read_message?
+						if not ввод.настройки.после? && options.latest_read_message?
 							return new Цепочка(@)
 								.сделать ->
 									options.latest_read_message(environment, @)
@@ -250,11 +249,15 @@ exports.messages = (options) ->
 									@.done()
 						@.done()
 						
-					.сделать ->	
+					.сделать ->
+						loading_options.query = these_messages_query({}, environment)
+
 						снасти.either_way_loading(ввод, loading_options, @)
 									
 					.сделать (result) ->
-						@.$ = { сообщения: result.data, 'есть ещё?': result['есть ещё?'] }
+						@.$.сообщения = result.data
+						@.$['есть ещё?'] = result['есть ещё?']
+						@.$['есть ли предыдущие?'] = result['есть ли предыдущие?']
 						
 						пользовательское.подставить(@.$.сообщения, 'отправитель', @)
 												

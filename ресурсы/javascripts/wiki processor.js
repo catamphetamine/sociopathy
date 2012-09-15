@@ -89,6 +89,9 @@ var Wiki_processor = new (new Class
 	{
 		options = options || {}
 		
+		if (!xml)
+			return ''
+		
 		if (typeof(xml) === 'string')
 		{
 			xml = this.translate(xml)
