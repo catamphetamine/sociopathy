@@ -1,5 +1,15 @@
-<a href="/люди/${$data['адресное имя']}" class="small_avatar" style="display: inline-block; border: 0">
+{{if no_link}}
+	<div class="small_avatar" style="display: inline-block; border: 0">
+{{else}}
+	<a href="{{if link}}${link}{{else}}/люди/${$data['адресное имя']}{{/if}}" class="small_avatar" style="display: inline-block; border: 0">
+{{/if}}
+
 	<div class="picture" title="${имя}">
 		<img class="real_picture"	{{if $data['загружен ли аватар?']}}{{else}} style="display: none" {{/if}} src="/загруженное/люди/${$data['адресное имя']}/картинка/маленькая.jpg${anti_cache_postfix()}"/>
 	</div>
-</a>
+	
+{{if no_link}}
+	</div>
+{{else}}
+	</a>
+{{/if}}

@@ -128,6 +128,10 @@ exports.offline = (пользователь) ->
 	return соединения.эфир
 
 exports.отправить = (group, name, data, options, возврат) ->
+	if typeof options == 'function'
+		возврат = options
+		options = {}
+			
 	options = options || {}
 	возврат = возврат || (() ->)
 	

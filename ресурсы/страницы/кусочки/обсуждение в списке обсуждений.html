@@ -1,11 +1,17 @@
 <li _id="${_id}">
-	{{if подписан}}
-		<div class="unsubscribe" title="Отписаться">
-			<div class="button"></div>
-		</div>
-	{{/if}}
-	
-	{{tmpl(участники[0]) 'маленький аватар'}}
+	<a href="/сеть/обсуждения/${escape_id(id)}">
+		{{if подписан}}
+			<div class="unsubscribe" title="Отписаться">
+				<div class="button"></div>
+			</div>
+		{{/if}}
 		
-	<a class="discussion" href="/сеть/обсуждения/${escape_id(id)}">${название}</a>
+		{{if последнее_сообщение}}
+			{{tmpl(Object.x_over_y({ no_link: true }, последнее_сообщение.отправитель)) 'маленький аватар'}}
+		
+			<div class="when no_word_carrying intelligent_date" date="${последнее_сообщение.когда.getTime()}">${последнее_сообщение.когда_примерно}</div>
+		{{/if}}
+			
+		<span class="title">${название}</span>
+	</a>
 </li>

@@ -5,6 +5,8 @@
 	
 	var messages
 	
+	var unedited_discussion_title
+
 	page.load = function()
 	{
 		messages = Interactive_messages
@@ -28,6 +30,9 @@
 					{ title: 'Обсуждения', link: '/сеть/обсуждения' },
 					{ title: data.название, link: '/сеть/обсуждения/' + page.data.обсуждение.id }
 				])
+				
+				unedited_discussion_title = data.название
+				page.get('.breadcrumbs > :last').attr('editable', true)
 			},
 			more_link: $('.messages_framework > .older > a'),
 			container: page.discussion,
@@ -53,16 +58,48 @@
 				path: '/обсуждение',
 				away_aware_elements:
 				[
-					'.discussion > li[author="{id}"] .author'
+					'#discussion > li[author="{id}"] .author'
 				]
-			}
+			},
+			save_changes: save_title,
+			discard_changes: function() { page.get('.breadcrumbs > :last').text(unedited_discussion_title) }
 		})
 		
 		messages.load()
 	}
 	
-	function discussion_loaded() //finish_initialization)
+	function discussion_loaded()
 	{
 		$(document).trigger('page_initialized')
+	}
+
+	function save_title(loading)
+	{
+		var edited_discussion_title = page.get('.breadcrumbs > :last').text()
+				
+		Режим.save_changes_to_server
+		({
+			загрузка: loading,
+			
+			anything_changed: function()
+			{
+				if (unedited_discussion_title !== edited_discussion_title)
+					return true
+			},
+			
+			data:
+			{
+				_id: page.discussion.attr('_id'),
+				название: edited_discussion_title
+			},
+			
+			url: '/приложение/сеть/обсуждения/переназвать',
+			method: 'post',
+			
+			ok: function()
+			{
+				unedited_discussion_title = edited_discussion_title
+			}
+		})
 	}
 })()

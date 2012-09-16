@@ -413,6 +413,9 @@ function update_intelligent_dates()
 	{
 		var element = $(this)
 		
+		if (!element.attr('date'))
+			return
+		
 		var date = new Number(element.attr('date'))
 		
 		var updated_at_value = element.attr('updated_at')

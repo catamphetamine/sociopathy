@@ -80,7 +80,7 @@ $(document).on('page_loaded', function()
 			ajaxify_internal_links()
 		
 			$(document).trigger('display_page')
-	
+
 			page_loaded()
 			
 			$('.non_selectable').disableTextSelect()
@@ -104,7 +104,17 @@ $(document).on('page_loaded', function()
 			   
 			panel.highlight_current_page()
 
-			after_styles()
+			if (first_time_page_loading && пользователь)
+			{
+				$(document).on('ether_is_online', function()
+				{
+					after_styles()
+				})
+			}
+			else
+			{
+				after_styles()
+			}
 		})
 		
 		$(window).on('popstate', function()

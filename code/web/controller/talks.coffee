@@ -1,7 +1,7 @@
 http.get '/сеть/беседы', (ввод, вывод, пользователь) ->
 	цепь(вывод)
 		.сделать ->
-			снасти.batch_loading(ввод, { from: 'talks', query: {} }, @.в 'беседы')
+			снасти.batch_loading(ввод, { from: 'talks', query: {}, parameters: { sort: [['обновлено', -1]] } }, @.в 'беседы')
 			
 		.сделать ->
 			пользовательское.подставить(@.$.беседы, 'участники', @)
@@ -90,23 +90,27 @@ options.notify = (_id, environment, возврат) ->
 			set_id = 'новости.беседы.' + environment.сообщения_чего._id.toString()
 			add_to_set = {}
 			add_to_set[set_id] = _id.toString()
-			db('people_sessions').update({ $and: [ { пользователь: { $ne: environment.пользователь._id } }, пользователь: { $in: беседа.подписчики } ] }, { $addToSet: add_to_set }, { multi: yes }, @)
+			db('people_sessions').update({ $and: [ { пользователь: { $ne: environment.пользователь._id } }, пользователь: { $in: беседа.участники } ] }, { $addToSet: add_to_set }, { multi: yes }, @)
 			
 		.сделать ->	
-			подписчики = @._.беседа.подписчики.map((_id) -> _id.toString())
+			участники = @._.беседа.участники.map((_id) -> _id.toString())
 			
-			for подписчик in подписчики
-				if подписчик != environment.пользователь._id.toString()
-					эфир.отправить('новости', 'беседы', { _id: environment.сообщения_чего._id.toString(), сообщение: _id.toString() }, { кому: подписчик })
+			for участник in участники
+				if участник != environment.пользователь._id.toString()
+					эфир.отправить('новости', 'беседы', { _id: environment.сообщения_чего._id.toString(), сообщение: _id.toString() }, { кому: участник })
 
 			for пользователь in эфир.пользователи()
 				if пользователь != environment.пользователь._id + ''
-					if !подписчики.has(пользователь)
+					if !участники.has(пользователь)
 						continue
 					соединение_с_беседой = эфир.соединение_с('беседы', { пользователь: environment.пользователь._id, _id: environment.сообщения_чего._id.toString() })
 					if not соединение_с_беседой
 						эфир.отправить_одному_соединению('новости', 'звуковое оповещение', { чего: 'беседы' }, { кому: пользователь })
 						
+			@.done()
+		
+		.сделать ->	
+			эфир.отправить(options.in_ether_id, 'сообщение', { где: environment.сообщения_чего._id.toString(), кем: пользовательское.поля(environment.пользователь) })
 			@.done()
 
 options.message_read = (_id, environment, возврат) ->
@@ -141,11 +145,31 @@ options.save = (сообщение, environment, возврат) ->
 			db('messages').save({ отправитель: environment.пользователь._id, сообщение: сообщение, когда: new Date(), общение: environment.сообщения_чего._id, чего: 'беседы' }, @._.в 'сообщение')
 	
 		.сделать ->
-			db('talks').update({ _id: environment.сообщения_чего._id }, { $addToSet: { подписчики: environment.пользователь._id }, $set: { обновлено: new Date() } }, @)
+			db('talks').update({ _id: environment.сообщения_чего._id }, { $set: { обновлено: new Date() }, $addToSet: { участники: environment.пользователь._id }, $set: { обновлено: new Date() } }, @)
 			
 		.сделать ->
 			@.done(@._.сообщение)
 	
 result = messages.messages(options)
 result.enable_message_editing('беседы')
-result.enable_unsubscription('беседы')
+result.enable_renaming('беседы')
+
+#result.enable_unsubscription('беседы')
+
+http.delete '/сеть/' + 'беседы' + '/участие', (ввод, вывод, пользователь) ->
+	_id = ввод.body._id
+	
+	цепь(вывод)
+		.сделать ->
+			db(options.id).update({ _id: db(options.id).id(_id) }, { $pull: { участники: пользователь._id } }, @)
+			
+		.сделать ->
+			set_id = 'новости.' + options.in_session_id + '.' + _id
+			db('people_sessions').update({ пользователь: environment.пользователь._id }, { $unset: set_id }, @)
+			
+		.сделать ->
+			новости.уведомления(пользователь, @)
+			
+		.сделать (уведомления) ->
+			эфир.отправить('новости', 'уведомления', уведомления)
+			вывод.send {}

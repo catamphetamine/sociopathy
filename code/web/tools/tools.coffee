@@ -274,10 +274,12 @@ file_system = require 'fs'
 	с = ввод.настройки.с
 	collection = db(options.from)
 	data = null
+				
+	parameters = options.parameters || {}
 	
 	new Цепочка(возврат)
 		.сделать ->
-			query_options = { limit: ввод.настройки.сколько, sort: [['_id', -1]] }
+			query_options = Object.x_over_y(parameters, { limit: ввод.настройки.сколько, sort: [['_id', -1]] })
 			query = Object.clone(options.query)
 			
 			if с?
@@ -293,7 +295,10 @@ file_system = require 'fs'
 			
 			more = Object.clone(options.query)
 			more._id = { $lt: batch.last()._id }
-			collection.find(more, { limit: 1 }).toArray(@)
+			
+			query_options = Object.x_over_y(parameters, { limit: 1, sort: [['_id', -1]] })
+			
+			collection.find(more, query_options).toArray(@)
 		
 		.сделать (more) ->
 			if more? && !more.пусто()

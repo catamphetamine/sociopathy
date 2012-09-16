@@ -576,6 +576,8 @@ var Interactive_messages = function(options)
 			
 			Режим.save_changes_to_server
 			({
+				continues: typeof options.save_changes !== 'undefined',
+				
 				anything_changed: function()
 				{
 					return !edited_messages.пусто()
@@ -586,7 +588,9 @@ var Interactive_messages = function(options)
 					messages: JSON.stringify(edited_messages)
 				},
 				
-				url: '/приложение/сеть/' + path + '/сообщения/правка'
+				url: '/приложение/сеть/' + path + '/сообщения/правка',
+				
+				ok: options.save_changes
 			})
 		}
 		
@@ -596,6 +600,9 @@ var Interactive_messages = function(options)
 			{
 				messages.options.container.find('>li[message_id="' + _id + '"] .content').html(content)
 			})
+			
+			if (options.discard_changes)
+				options.discard_changes()
 			
 			Режим.изменения_отменены()
 		}

@@ -1,14 +1,16 @@
 <div class="breadcrumbs">
 	{{each(index, path_part) path}}
-		{{if index < path.length - 1}}
-			<a href="${path_part.link}">
-		{{/if}}
-			
-		${path_part.title}
-			
-		{{if index < path.length - 1}}
-			</a>
-		{{/if}}
+		<span>
+			{{if index < path.length - 1}}
+				<a href="${path_part.link}">
+			{{/if}}
+				
+			${path_part.title}
+				
+			{{if index < path.length - 1}}
+				</a>
+			{{/if}}
+		</span>
 		
 		{{if index < path.length - 1 && path[index + 1].title}}
 			 → 

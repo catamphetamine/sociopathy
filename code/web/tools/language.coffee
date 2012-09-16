@@ -49,6 +49,11 @@ Object.merge_recursive = (obj1, obj2) ->
 			obj1[ключ] = obj2[ключ]
 
 	return obj1
+	
+Object.x_over_y = (obj1, obj2) ->
+	if not obj1?
+		return obj2
+	Object.merge_recursive(obj2, obj1)
 
 #Object.x_over_y = (source, destination) ->
 #	for key, value of source

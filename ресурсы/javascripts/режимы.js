@@ -361,6 +361,9 @@ var Режим = (function()
 		if (options.anything_changed)
 			if (!options.anything_changed())
 			{
+				if (options.continues)
+					return options.ok(options.загрузка)
+				
 				if (options.загрузка)
 				{
 					options.загрузка.hide()
@@ -387,15 +390,12 @@ var Режим = (function()
 		})
 		.ok(function()
 		{
-			if (options.continues !== true)
-			{
-				загрузка.hide()
-				Режим.разрешить_переходы()
-				Режим.изменения_сохранены()
-			}
-			
-			if (options.ok)
-				options.ok(загрузка)
+			if (options.continues)
+				return options.ok(загрузка)
+					
+			загрузка.hide()
+			Режим.разрешить_переходы()
+			Режим.изменения_сохранены()
 		})
 	}
 	

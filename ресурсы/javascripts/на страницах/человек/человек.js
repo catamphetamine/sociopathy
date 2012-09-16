@@ -397,6 +397,7 @@
 				Режим.save_changes_to_server
 				({
 					загрузка: loading,
+					
 					anything_changed: function()
 					{
 						if (image_file_name)

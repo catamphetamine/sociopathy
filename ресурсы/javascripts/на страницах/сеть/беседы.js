@@ -56,7 +56,7 @@ title('Беседы');
 						
 						the_button.does(function()
 						{
-							Ajax.delete('/приложение/сеть/беседы/подписка',
+							Ajax.delete('/приложение/сеть/беседы/участие',
 							{
 								_id: talk.attr('_id')
 							})
@@ -64,8 +64,9 @@ title('Беседы');
 							{
 								the_button.element.fade_out(0.3)
 							})
-							.ошибка(function()
+							.ошибка(function(ошибка)
 							{
+								error(ошибка)
 								the_button.unlock()
 							})
 						})

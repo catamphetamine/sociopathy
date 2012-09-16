@@ -38,14 +38,6 @@
 				
 				border-radius: 6px;
 				
-				margin-bottom: 4px;
-				margin-top: 4px;
-				
-				padding-top: 10px;
-				padding-left: 10px;
-				padding-right: 10px;
-				padding-bottom: 2px;
-				
 				&.new
 				{
 					background-color: #F0FBFF;
@@ -78,31 +70,44 @@
 					}
 				}
 				
-				> a.small_avatar
+				> a
 				{
-					display: inline-block;
-					vertical-align: bottom;
-				}
-				
-				> a.discussion
-				{
-					display: inline-block;
-					margin-bottom: 12px;
-					margin-left: 8px;
-				}
-							
-				.when
-				{
-					position: relative;
-					top: 12px;
+					display: block;
+
+					margin-bottom: 8px;
+					margin-top: 4px;
 					
-					margin-right: 19px;
-					margin-left: 19px;
+					padding-top: 10px;
+					padding-left: 10px;
+					padding-right: 10px;
+					padding-bottom: 2px;
 					
-					float: right;
-					color: #afafaf;
+					> .small_avatar
+					{
+						display: inline-block;
+						vertical-align: bottom;
+					}
 					
-					font-size: 20px;			
+					> .title
+					{
+						display: inline-block;
+						margin-bottom: 12px;
+						margin-left: 8px;
+					}
+								
+					.when
+					{
+						position: relative;
+						top: 12px;
+						
+						margin-right: 19px;
+						margin-left: 19px;
+						
+						float: right;
+						color: #afafaf;
+						
+						font-size: 20px;			
+					}
 				}
 			}
 		}

@@ -92,6 +92,9 @@ $(document).on('panel_loaded', function()
 			{
 				эфир.emit('уведомления')
 			}
+			
+			if (first_time_page_loading)
+				$(document).trigger('ether_is_online')
 		})
 		
 		on('пользователи', 'кто здесь', function(пользователи)
@@ -282,6 +285,70 @@ $(document).on('panel_loaded', function()
 		on('пользователь', 'настройки.клавиши', function(data)
 		{
 			Object.x_over_y(data.клавиши, Настройки.Клавиши)
+		})
+		
+		on('беседы', 'переназвано', function(data)
+		{
+			if (Страница.is('сеть/беседы'))
+			{
+				var talk = $('#talks').find('>[_id="' + data._id + '"]')
+				if (talk.exists())
+					talk.find('.title').text(data.как)
+			}
+			else if (Страница.is('сеть/беседа'))
+			{
+				if ($('#talk').attr('_id') === data._id)
+				{
+					page.get('.breadcrumbs > :last').text(data.как)
+					title(data.как)
+				}
+			}
+		})
+		
+		on('обсуждения', 'переназвано', function(data)
+		{
+			if (Страница.is('сеть/обсуждения'))
+			{
+				var discussion = $('#discussions').find('>[_id="' + data._id + '"]')
+				if (discussion.exists())
+					discussion.find('.title').text(data.как)
+			}
+			else if (Страница.is('сеть/обсуждение'))
+			{
+				if ($('#discussion').attr('_id') === data._id)
+				{
+					page.get('.breadcrumbs > :last').text(data.как)
+					title(data.как)
+				}
+			}
+		})
+		
+		on('беседы', 'сообщение', function(data)
+		{
+			if (Страница.is('сеть/беседы'))
+			{
+				var talk = $('#talks').find('>[_id="' + data.где + '"]')
+				if (!talk.exists())
+					return
+				
+				talk.find('> a > .when').attr('date', new Date().getTime()).text(неточное_время(new Date()))
+				talk.find('> a > .small_avatar').replaceWith($.tmpl('маленький аватар', data.кем))
+				talk.prependTo($('#talks'))
+			}
+		})
+		
+		on('обсуждения', 'сообщение', function(data)
+		{
+			if (Страница.is('сеть/обсуждения'))
+			{
+				var discussion = $('#discussions').find('>[_id="' + data.где + '"]')
+				if (!discussion.exists())
+					return
+				
+				discussion.find('> a > .when').attr('date', new Date().getTime()).text(неточное_время(new Date()))
+				discussion.find('> a > .small_avatar').replaceWith($.tmpl('маленький аватар', data.кем))
+				discussion.prependTo($('#discussions'))
+			}
 		})
 	})()
 })
