@@ -48,7 +48,7 @@ var Uri =
 			protocol: parsed.protocol || 'http',
 			host: parsed.host,
 			port: parsed.port,
-			path: parsed.path,
+			path: decodeURI(parsed.path),
 			parameters_raw: parsed.query,
 			parameters: parsed.queryKey
 		}
@@ -58,12 +58,24 @@ var Uri =
 	
 	assemble: function(parts)
 	{
-		return parts.protocol +
-				'://' +
-				parts.host +
-				(parts.port ? ':' + parts.port : '') +
-				parts.path +
-				(parts.parameters_raw ? '?' + parts.parameters_raw : '')
+		var uri = ''
+		if (parts.host)
+			uri += parts.protocol + '://' + parts.host + (parts.port ? ':' + parts.port : '')
+			
+		uri += encodeURI(parts.path)
+
+		var first_parameter = true
+		Object.for_each(parts.parameters, function(key)
+		{
+			uri += (first_parameter ? '?' : '&')
+			uri += key
+			uri += '='
+			uri += encodeURIComponent(this)
+			
+			first_parameter = false
+		})
+
+		return uri
 	},
 	
 	correct: function(uri)

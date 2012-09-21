@@ -171,7 +171,7 @@
 				}
 				
 				var loading = loading_indicator.show()
-				page.Ajax.put('/приложение/читальня/заметка', data)
+				page.Ajax.put('/приложение/сеть/читальня/заметка', data)
 				.ошибка(function(ошибка)
 				{
 					loading.hide()
@@ -204,7 +204,7 @@
 			.does(function()
 			{
 				var loading = loading_indicator.show()
-				page.Ajax.delete('/приложение/черновик',
+				page.Ajax.delete('/приложение/сеть/черновик',
 				{
 					что: "заметка",
 					_id: заметка
@@ -254,7 +254,7 @@
 		
 		function acquire_edit_lock(режим)
 		{
-			page.Ajax.post('/приложение/получить_право_на_правку_заметки', { _id: заметка })
+			page.Ajax.post('/приложение/сеть/получить_право_на_правку_заметки', { _id: заметка })
 			.ошибка(function(ошибка)
 			{
 				acquiring_edit_lock.hide()

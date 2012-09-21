@@ -26,10 +26,10 @@ function refresh_formulae(options, callback)
 	else
 	{
 		queue = ["Typeset", MathJax.Hub]
-		
-		if (options.where)
+			
+		if (options.where instanceof Array)
 		{
-			if (options.where instanceof jQuery && options.where.length > 1)
+			if (options.where.length > 0)
 			{
 				var countdown = options.where.length
 				return options.where.for_each(function()
@@ -62,4 +62,15 @@ function refresh_formulae(options, callback)
 	}
 	
 	MathJax.Hub.Queue(queue, finished)
+	
+	/*	
+	try
+	{
+		MathJax.Hub.Queue(queue, finished)
+	}
+	catch (ошибка)
+	{
+		error(ошибка)
+	}
+	*/
 }

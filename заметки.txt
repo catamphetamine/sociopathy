@@ -435,22 +435,31 @@ memcache
 
 // комментарии - так же, как и сообщения: с пушем правок и с пушем новых (выезжают вниз новые), со ссылкой "раньше" и последними прочитанными
 
-
-
 /// пушить не всё подряд, а в зависимости от того, на какой странице находится пользователь (при коннекте сообщение 'страница', и при навигации тоже)
 /// если так делать,  то образуется область неопределённости во время переключения страниц, когда новая страница уже загружена, а пуши на неё ещё не идут. можно решить предварительной переменной "следующая страница" на сервере, для которой тоже пушить всё
 
+// подсветка синтаксиса при вставке кода
+
+////в обсуждениях и беседах: 
+////если новая беседа или обсуждение - пушить и добавлять (беседа - если участником добавили)
+
+// если в беседе два человека - отправлять notification по почте (по истечению 15 min, мб, или умнее) не тому, который отправил сообщение
+
+// для аватара - делать пуш, чтобы на открытых страницах видно было изменение своего аватара
+
+// version обложки для книг и т.п.
 
 
 
 
-выводить с "последнего прочитанного" или с первого из новостей
-
-проверить выход из бесед (чтобы не показывались, и даже по точному url-у)
 
 
+при переходе между страницами - эфир не завершает connection
 
+сделать загрузку "фотографии" в профиле
+присоединять photo_version, обновлять photo_version
 
+сделать смену прочих данных вне карточки
 
 
 
@@ -467,7 +476,6 @@ memcache
 escape_id при выводе адресных имён, и всех id - пройтись по всем шаблонам, а также по хлебным крошкам
 
 
-сделать смену прочих данных вне карточки
 проверить name not in (names) (при обновлении и прописке у пользователя, при обновлении и создании книг)
 
 если адресное имя любой сущности уже занято - добавлять к нему id и перепроверять
@@ -476,8 +484,6 @@ escape_id при выводе адресных имён, и всех id - про
 
 возможность задания положения (слева, по середине, справа) и обтекания (единолично или обтекается) у картинки
 форматирование формулы: по центру отдельно, или в тексте
-
-сделать загрузку "фотографии" в профиле
 
 
 
@@ -518,6 +524,7 @@ escape_id при выводе адресных имён, и всех id - про
 экраны: "их правки", "мои правки", "слияние"
 заметки хранить в collection article_backups, индекс по _id заметки
 
+при сохранении мержа: проверять { and version === Version }
 
 
 
@@ -547,20 +554,8 @@ escape_id при выводе адресных имён, и всех id - про
 
 создание новых бесед и обсуждений.
 
-в обсуждениях и беседах: 
-если новая беседа или обсуждение - пушить и добавлять (беседа - если участником добавили)
-
 при добавлении в беседу - прописываться в поле "подписчики"
 при создании беседы - прописываться в поле "подписчики"
-
-в беседах выводить только те, участником которых пользователь является
-не позволять брать с сервера данные бесед, если пользователь - не участник
-
-// если в беседе два человека - отправлять notification по почте (по истечению 15 min, мб, или умнее) не тому, который отправил сообщение
-
-
-
-
 
 
 
@@ -580,16 +575,6 @@ session.последняя_прочитанная_новость
 
 
 
-6 день:
-
-ввести некий site_version (date,time), и добавлять его ко всем <script> и link.
-ввести avatar_version, version фотки, version обложки и т.п.
-в т.ч. dynamic page loading
-
-// для аватара - делать пуш, чтобы на открытых страницах видно было изменение своего аватара
-
-
-
 
 
 
@@ -606,4 +591,25 @@ uncomment '/ошибка'
 
 
 
+
+
+
+
+
+
+
+I'm trying to mirror data from MongoDB to a web page.
+I.e. I have a list of movies in the DB, and the same list on a web page.
+To avoid refreshing the page manually, I try to mirror the data in such a way that on a web page I always (eventually) have the exact copy of the data from the DB.
+Since refresh is not cool, I try to make it through "partial updates".
+The idea is that every update of the collection increments this collection's version.
+Then the update is pushed to the web page via a WebSocket connection, and voila - we have the exact same data on the web page as if we were looking directly into the DB.
+
+But, I didn't find a possibility to implement such versioning in MongoDB.
+If I store the collection version number in some Special Collection, then, given the fact that MongoDB doesn't support cross-collection transactions, there exists a gap between the moment we update the collection and the moment we increment its version, therefore breaking my versioned partial update system.
+That would be handy if there was some way to know that a particular collection update corresponds to some version number of this collection, i.e. that would be handy if the "update + version increase + return this version" operation was atomic.
+
+Is there such a possibility in MongoDB?
+Do you plan to implement this?
+Can you suggest me another way to keep the data in the web browser an exact representation of the data in the database?
 

@@ -39,6 +39,8 @@ var Batch_loader = new Class
 	
 	counter: 0,
 	
+	первый_раз: true,
+	
 	initialize: function(options)
 	{
 		this.setOptions(options)
@@ -99,6 +101,12 @@ var Batch_loader = new Class
 			
 		if (this.options.parameters)
 			data = Object.merge(this.options.parameters, data)
+		
+		if (this.первый_раз)
+		{
+			data.первый_раз = true
+			this.первый_раз = false
+		}
 		
 		this.options.Ajax.get(this.options.url, data)
 		.ошибка(function(ошибка)
@@ -166,7 +174,9 @@ var Batch_loader = new Class
 			var elements = []
 			список.for_each(function()
 			{
-				elements.push(loader.options.show(this))
+				var element = loader.options.show(this)
+				if (element)
+					elements.push(element)
 			})
 			
 			if (!список.is_empty())

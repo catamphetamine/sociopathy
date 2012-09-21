@@ -4,8 +4,8 @@
 	<div class="picture">
 		<!--  title="${отправитель.имя}" -->
 		<img class="real_picture"
-			{{if отправитель['загружен ли аватар?']}}
-				src="/загруженное/люди/${отправитель['адресное имя']}/картинка/маленькая.jpg${anti_cache_postfix()}"
+			{{if отправитель.avatar_version}}
+				src="/загруженное/люди/${отправитель['адресное имя']}/картинка/маленькая.jpg?version=${отправитель.avatar_version}"
 			{{else}}
 				src="/картинки/temporary/картинка с навершия.jpg"
 				style="display: none"

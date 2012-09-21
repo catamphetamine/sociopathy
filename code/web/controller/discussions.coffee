@@ -37,6 +37,20 @@ options.in_session_id = 'обсуждения'
 
 options.правка_сообщения_чего = 'обсуждения'
 
+options.создатель = (_id, возврат) ->
+	if typeof _id == 'string'
+		_id = db('discussions').id(_id)
+	
+	new Цепочка(возврат)
+		.сделать ->
+			db('messages').find({ общение: _id, чего: 'обсуждения' }, { sort: [['_id', 1]], limit: 1 }).toArray(@)
+			
+		.сделать (сообщения) ->
+			if сообщения.пусто()
+				return @.error("Не удалось проверить авторство")
+				
+			@.done(сообщения[0].отправитель)
+		
 options.сообщения_чего = (ввод, возврат) ->
 	new Цепочка(возврат)
 		.сделать ->
@@ -69,16 +83,57 @@ options.extra_get = (data, environment, возврат) ->
 	data._id = environment.сообщения_чего._id
 	возврат()
 
-options.latest_read_message = (environment, возврат) ->
+options.mark_new = (сообщения, environment, возврат) ->
+	new Цепочка(возврат)
+		.сделать ->
+			db('people_sessions').findOne({ пользователь: environment.пользователь._id }, @)
+			
+		.сделать (session) ->
+			return @.return() if not session?
+			return @.return() if not session.новости?
+			return @.return() if not session.новости.обсуждения?
+				
+			discussion = environment.сообщения_чего._id.toString()
+			return @.return() if not session.новости.обсуждения[discussion]?
+			
+			for сообщение in сообщения
+				if session.новости.обсуждения[discussion].has(сообщение._id + '')
+					сообщение.новое = yes
+			
+			@.done()
+			
+options.show_from = (environment, возврат) ->
 	new Цепочка(возврат)
 		.сделать ->
 			db('people_sessions').findOne({ пользователь: environment.пользователь._id }, @)
 			
 		.сделать (session) ->
 			return @.done() if not session?
-			return @.done() if not session.последние_прочитанные_сообщения?
-			return @.done() if not session.последние_прочитанные_сообщения.обсуждения?
-			@.done(session.последние_прочитанные_сообщения.обсуждения[environment.сообщения_чего._id])
+			
+			earliest_in_news = null
+			if session.новости?
+				if session.новости.обсуждения?
+					if session.новости.обсуждения[environment.сообщения_чего._id]?
+						earliest_in_news = session.новости.обсуждения[environment.сообщения_чего._id][0]
+				
+			latest_read = null
+			if session.последние_прочитанные_сообщения?
+				if session.последние_прочитанные_сообщения.обсуждения?
+					latest_read = session.последние_прочитанные_сообщения.обсуждения[environment.сообщения_чего._id]
+			
+			if not earliest_in_news? && not latest_read?
+				return @.done()
+			
+			if not earliest_in_news?
+				return @.done(latest_read)
+			
+			if not latest_read?
+				return @.done(earliest_in_news)
+			
+			if earliest_in_news + '' > latest_read +''
+				return @.done(latest_read)
+			else
+				return @.done(earliest_in_news)
 			
 options.notify = (_id, environment, возврат) ->
 	new Цепочка(возврат)
@@ -109,7 +164,7 @@ options.notify = (_id, environment, возврат) ->
 			@.done()
 			
 		.сделать ->	
-			эфир.отправить(options.in_ether_id, 'сообщение', { где: environment.сообщения_чего._id.toString(), кем: пользовательское.поля(environment.пользователь) })
+			#эфир.отправить(options.in_ether_id, 'сообщение', { где: environment.сообщения_чего._id.toString(), кем: пользовательское.поля(environment.пользователь) })
 			@.done()
 			
 options.message_read = (_id, environment, возврат) ->
@@ -117,21 +172,27 @@ options.message_read = (_id, environment, возврат) ->
 		.сделать ->
 			path = "последние_прочитанные_сообщения.обсуждения." + environment.сообщения_чего._id
 			
-			actions = { $set: {} }
+			actions = $set: {}
 			actions.$set[path] = _id
 			
-			query = { пользователь: environment.пользователь._id }
-			query[path] = { $lt: _id }
+			query =
+				пользователь: environment.пользователь._id
+				
+			query.$or = [{}, {}]
+			query.$or[0][path] = { $exists: no }
+			query.$or[0][path] = { $lt: _id }
 			
 			db('people_sessions').update(query, actions, @)
 			
 		.сделать ->
+			# убрать новость из множества
 			@._.set_id = 'новости.обсуждения.' + environment.сообщения_чего._id.toString()
 			pull = {}
 			pull[@._.set_id] = _id.toString()
 			db('people_sessions').update({ пользователь: environment.пользователь._id }, { $pull: pull }, @)
 
 		.сделать ->
+			# удалять пустое множество новостей
 			query = { пользователь: environment.пользователь._id }
 			query[@._.set_id] = []
 			unset = {}

@@ -311,11 +311,14 @@ function initialize_body_edit_mode_effects()
 	dummy_div.remove()
 }
 
+var history_stacked = false
+	
 function set_url(url, title, data)
 {
 	title = title || window.title
 	data = data || {}
 	window.history.replaceState(data, title, url)
+	history_stacked = true
 }
 
 function set_new_url(url, title, data)
@@ -323,6 +326,7 @@ function set_new_url(url, title, data)
 	title = title || window.title
 	data = data || {}
 	window.history.pushState(data, title, url)
+	history_stacked = true
 }
 
 // copied from enginex.conf
@@ -403,7 +407,7 @@ function ajaxify_internal_links(where)
 
 function reload_page()
 {
-	console.log(parseUri(window.location).relative)
+	//console.log(parseUri(window.location).relative)
 	navigate_to_page(parseUri(window.location).relative)
 }
 

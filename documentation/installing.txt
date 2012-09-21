@@ -1,0 +1,18 @@
+Установка на домашнем компьютере:
+
+Подключаем услугу "внешний IP"
+Ставим виртуальную машину (например, VMWare Workstation)
+Заводим в ней рабочую систему (например, Ubuntu Server)
+Заводим пользователя sociopathy
+Ставим git
+Скачиваем "репозиторий" git://github.com/kuchumovn/sociopathy.git в папку "repository" пользователя sociopathy
+Идём на http://nodejs.org/download/ и скачиваем исходники node.js
+
+curl http://nodejs.org/dist/v0.8.9/node-v0.8.9.tar.gz
+
+Устанавливаем node.js
+Устанавливаем NginX
+Устанавливаем ImageMagick
+Устанавливаем MongoDB
+На домашнем маршрутизаторе пробрасываем 80-ый порт извне на виртуальную машину
+Заходим на http://[внешний IP] и пользуемся сайтом

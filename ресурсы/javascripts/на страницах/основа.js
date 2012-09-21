@@ -106,26 +106,27 @@ $(document).on('page_loaded', function()
 
 			if (first_time_page_loading && пользователь)
 			{
-				$(document).on('ether_is_online', function()
-				{
-					after_styles()
-				})
+				//$(document).on('ether_is_online', function()
+				after_styles()
 			}
 			else
 			{
 				after_styles()
 			}
 		})
-		
+
 		$(window).on('popstate', function()
 		{
+			if (!history_stacked)
+				return
+			
 			navigate_to_page()
 		})
 	}
 	else
 	{
 		//console.log(get_page_less_style_link())
-		Less.load_style(get_page_less_style_link(), after_styles)
+		Less.load_style(add_version(get_page_less_style_link()), after_styles)
 	}
 })
 

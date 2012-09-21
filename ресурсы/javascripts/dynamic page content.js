@@ -46,7 +46,7 @@ var navigating = false;
 			
 			шаблоны.forEach(function(шаблон)
 			{
-				Ajax.get('/страницы/кусочки/' + шаблон + '.html', {}, { type: 'html' })
+				Ajax.get(add_version('/страницы/кусочки/' + шаблон + '.html'), {}, { type: 'html' })
 				.ошибка(function()
 				{
 					page_loading_error()
@@ -110,6 +110,10 @@ var navigating = false;
 				
 				пользователь = данные.пользователь
 				
+				пользователь.versioning = window.versioning.пользователь
+				
+				console.log(пользователь)
+				
 				$(document).trigger('authenticated', данные)
 				
 				if (!пользователь && Страница.эта().starts_with('сеть/'))
@@ -150,6 +154,9 @@ var navigating = false;
 	
 	navigate_to_page = function(url, options)
 	{
+		if (!url)
+			url = Uri.parse(document.location).path
+		
 		options = options || {}
 		
 		if (navigating)
@@ -224,8 +231,7 @@ var navigating = false;
 		
 			Page.element.empty()
 			
-			Less.unload_style(get_page_less_style_link(предыдущее_название_страницы))
-			//$('head').find('script[src="' + get_page_javascript_link(предыдущее_название_страницы) + '"]').remove()
+			Less.unload_style(add_version(get_page_less_style_link(предыдущее_название_страницы)))
 		}
 		
 		function вставить_содержимое_страницы(возврат)
@@ -243,20 +249,8 @@ var navigating = false;
 		
 		function вставить_стиль_и_javascript(callback)
 		{
-			$('<link/>').attr('rel', 'stylesheet/less').attr('href', '/облик/страницы/' + Страница.эта() + '.css').appendTo('head')
-		
-			$.ajax
-			({
-				url: get_page_javascript_link(),
-				dataType: "script",
-				success: function() { callback() },
-				error: function()
-				{
-					window.onerror()
-					console.log('Page script not loaded (possible syntax error): ' + get_page_javascript_link())
-					error('Ошибка на странице')
-				}
-			})
+			insert_style(get_page_less_style_link())
+			insert_script(get_page_javascript_link(), callback)
 		}
 		
 		return true
@@ -280,6 +274,8 @@ var navigating = false;
 	
 	function вставить_содержимое(url, данные, options, возврат)
 	{
+		url = add_version(url)
+		
 		options = options || {}
 		
 		var ajax = Ajax

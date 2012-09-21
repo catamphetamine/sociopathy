@@ -635,6 +635,8 @@ $.validate_xml = function(xml)
 	{
 		var document = $.parseXML('<xml>' + xml + '</xml>')
 		
+		console.log('<xml>' + xml + '</xml>')
+		
 		if (Dom_tools.child_text_node(document.firstChild))
 			return false
 			
@@ -660,3 +662,5 @@ $.fn.attributes = function()
 
 	return attributes
 }
+
+$.fn.is_jquery = $.noop

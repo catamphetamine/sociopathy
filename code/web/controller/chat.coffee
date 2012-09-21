@@ -7,15 +7,51 @@ options.in_ether_id = 'болталка'
 
 options.правка_сообщения_чего = 'болталки'
 
-options.latest_read_message = (environment, возврат) ->
+options.mark_new = (сообщения, environment, возврат) ->
+	new Цепочка(возврат)
+		.сделать ->
+			db('people_sessions').findOne({ пользователь: environment.пользователь._id }, @)
+			
+		.сделать (session) ->
+			return @.return() if not session?
+			return @.return() if not session.последние_прочитанные_сообщения?
+			return @.return() if not session.последние_прочитанные_сообщения.болталка?
+			
+			for сообщение in сообщения
+				if сообщение._id + '' > session.последние_прочитанные_сообщения.болталка + ''
+					сообщение.новое = yes
+			
+			@.done()
+
+options.show_from = (environment, возврат) ->
 	new Цепочка(возврат)
 		.сделать ->
 			db('people_sessions').findOne({ пользователь: environment.пользователь._id }, @)
 			
 		.сделать (session) ->
 			return @.done() if not session?
-			return @.done() if not session.последние_прочитанные_сообщения?
-			@.done(session.последние_прочитанные_сообщения.болталка)
+			
+			earliest_in_news = null
+			if session.новости?
+				earliest_in_news = session.новости.болталка
+				
+			latest_read = null
+			if session.последние_прочитанные_сообщения?
+				latest_read = session.последние_прочитанные_сообщения.болталка
+			
+			if not earliest_in_news? && not latest_read?
+				return @.done()
+			
+			if not earliest_in_news?
+				return @.done(latest_read)
+			
+			if not latest_read?
+				return @.done(earliest_in_news)
+			
+			if earliest_in_news + '' > latest_read +''
+				return @.done(latest_read)
+			else
+				return @.done(earliest_in_news)
 	
 options.notify = (_id, environment, возврат) ->
 	new Цепочка(возврат)
@@ -34,9 +70,19 @@ options.notify = (_id, environment, возврат) ->
 options.message_read = (_id, environment, возврат) ->
 	new Цепочка(возврат)
 		.сделать ->
-			actions = { $set: {} }
-			actions.$set["последние_прочитанные_сообщения.болталка"] = _id
-			db('people_sessions').update({ пользователь: environment.пользователь._id }, actions, @)
+			path = 'последние_прочитанные_сообщения.болталка'
+			
+			actions = $set: {}
+			actions.$set[path] = _id
+			
+			query =
+				пользователь: environment.пользователь._id
+				
+			query.$or = [{}, {}]
+			query.$or[0][path] = { $exists: no }
+			query.$or[0][path] = { $lt: _id }
+						
+			db('people_sessions').update(query, actions, @)
 			
 		.сделать ->
 			db('people_sessions').update({ пользователь: environment.пользователь._id, 'новости.болталка': _id.toString() }, { $unset: { 'новости.болталка': _id.toString() } }, @)
@@ -54,4 +100,4 @@ options.save = (сообщение, environment, возврат) ->
 			@.done(@._.сообщение)
 			
 result = messages.messages(options)
-result.enable_message_editing('болталка', { update: (_id, content, возврат) -> db('chat').update({ _id: db('chat').id(_id) }, $set: { сообщение: content }, возврат) })
+result.enable_message_editing('болталка', { update: (_id, отправитель, content, возврат) -> db('chat').update({ _id: db('chat').id(_id), отправитель: отправитель._id }, $set: { сообщение: content }, возврат) })

@@ -1383,13 +1383,13 @@ label.in-place_input_label
 		
 		[type=loading_more], [type=loading_more_error]
 		{
-			margin-top: 20px;
+			margin-top: 0px;
 		}
 		
 		.previous
 		{
 			text-align: center;
-			height: 80px;
+			height: 60px;
 			
 			.more_container
 			{
@@ -1401,7 +1401,7 @@ label.in-place_input_label
 			> a
 			{
 				position: relative;
-				top: 20px;
+				top: 0px;
 			}
 		}
 	}

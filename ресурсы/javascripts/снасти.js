@@ -684,3 +684,13 @@ var Map = function()
 		})
 	}
 }
+
+function set_version(url, version)
+{
+	var data = Uri.parse(url)
+	
+	//if (typeof data.parameters.version === 'undefined')
+	data.parameters.version = version
+	
+	return Uri.assemble(data)
+}

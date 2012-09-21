@@ -1,11 +1,11 @@
 <li _id="${_id}">
+	{{if участник}}
+		<div class="leave" title="Выйти из беседы">
+			<div class="button"></div>
+		</div>
+	{{/if}}
+	
 	<a href="/сеть/беседы/${escape_id(id)}">
-		{{if участник}}
-			<div class="leave" title="Выйти из беседы">
-				<div class="button"></div>
-			</div>
-		{{/if}}
-		
 		<!--
 		{{each(index, участник) участники}}
 			{{tmpl(участник) 'маленький аватар'}}

@@ -1,4 +1,4 @@
-Upload_server_file_path = 'c:/work/sociopathy/загруженное'
+Upload_server_file_path = 'e:/work/sociopathy/загруженное'
 
 module.exports =
 	Upload_server:
@@ -6,4 +6,4 @@ module.exports =
 		Temporary_file_path: Upload_server_file_path + '/временное'
 	ImageMagick:
 		Convert:
-			Path: 'C:/Program Files (x86)/ImageMagick-6.7.8-Q16/convert'
+			Path: 'C:/Program Files/ImageMagick-6.7.9-Q16/convert'

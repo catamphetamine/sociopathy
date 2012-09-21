@@ -26,7 +26,7 @@ global.db = (collection) ->
 # memcache
 memcache = require('memcache')
 global.memcache = new memcache.Client(Options.Memcache.Port, 'localhost')
-global.хранилище = require('mongoskin').db('localhost:' + Options.MongoDB.Port + '/' + Options.MongoDB.Database + '?auto_reconnect')
+global.хранилище = require('mongoskin').db('localhost:' + Options.MongoDB.Port + '/' + Options.MongoDB.Database + '?auto_reconnect') #=true&safe=true')
 
 global.Цепочка = require './tools/conveyor'
 global.цепь = (вывод) -> new global.Цепочка('web', вывод)
@@ -41,6 +41,8 @@ global.http = global.application_tools.http
 global.websocket = require('socket.io').listen приложение
 
 global.image_magick = require 'imagemagick'
+console.log('!!!!!!!!!!!!!! Options.ImageMagick.Convert.Path')
+console.log(Options.ImageMagick.Convert.Path)
 global.image_magick.convert.path = Options.ImageMagick.Convert.Path
 
 global.почта = require './tools/email'

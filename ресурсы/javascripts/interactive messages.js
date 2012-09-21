@@ -350,13 +350,21 @@ var Interactive_messages = function(options)
 					disconnected = false
 					reconnected = true
 				}
-				
+			})
+			
+			connection.on('поехали', function()
+			{
 				connection.emit('пользователь', $.cookie('user'))
 			})
 			
 			connection.on('пользователь подтверждён', function()
 			{
 				connection.emit('environment', messages.options.environment)
+			})
+			
+			connection.on('environment received', function()
+			{
+				connection.emit('finish')
 			})
 			
 			connection.on('disconnect', function()

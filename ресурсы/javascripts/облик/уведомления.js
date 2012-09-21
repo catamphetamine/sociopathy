@@ -163,6 +163,8 @@ var Message =
 	{
 		if (!text)
 			text = ''
+			
+		text = text + ''
 	
 		options = options || {}
 	

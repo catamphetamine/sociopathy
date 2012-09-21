@@ -185,7 +185,7 @@ function either_way_loading(options)
 				element = $.tmpl(options.template, data)
 				options.container.prepend($('<li/>').append(element))
 			}
-			
+		
 			if (!element)
 				return
 			
@@ -194,6 +194,8 @@ function either_way_loading(options)
 				activate_page_scrolling(data, element)
 				прокрутчик.watch(element)
 			}
+			
+			return element
 		},
 		conditional: previous_conditional,
 		load_data_immediately: false
@@ -277,6 +279,8 @@ function either_way_loading(options)
 				activate_page_scrolling(data, element)
 				прокрутчик.watch(element)
 			}
+			
+			return element
 		},
 		conditional: main_conditional
 	},

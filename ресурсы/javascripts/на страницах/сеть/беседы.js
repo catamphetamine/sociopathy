@@ -63,6 +63,7 @@ title('Беседы');
 							.ok(function()
 							{
 								the_button.element.fade_out(0.3)
+								talk.remove()
 							})
 							.ошибка(function(ошибка)
 							{

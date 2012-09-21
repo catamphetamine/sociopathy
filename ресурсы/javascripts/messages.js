@@ -345,7 +345,7 @@ var Messages = new Class
 	{
 		if (!message.hasClass('new'))
 			return
-		
+			
 		var read = false
 		
 		var _id = message.attr('message_id')

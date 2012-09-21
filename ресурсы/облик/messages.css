@@ -169,7 +169,7 @@
 	overflow: hidden;
 	height: @top_padding + @user_icon_size + 2 * @user_icon_margin + @bottom_padding;
 
-	margin-bottom: 0px;
+	margin-bottom: 40px;
 	margin-top: 40px;
 			
 	> .who_is_connected_bar
@@ -296,4 +296,9 @@
 body[mode="правка"] .messages_framework > .older a
 {
 	cursor: not-allowed;
+}
+
+body[mode="правка"] #page
+{
+	margin-bottom: 66px;
 }

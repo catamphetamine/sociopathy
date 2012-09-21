@@ -32,7 +32,9 @@
 				])
 				
 				unedited_discussion_title = data.название
-				page.get('.breadcrumbs > :last').attr('editable', true)
+				
+				if (пользователь._id === data.создатель)
+					page.get('.breadcrumbs > :last').attr('editable', true)
 			},
 			more_link: $('.messages_framework > .older > a'),
 			container: page.discussion,

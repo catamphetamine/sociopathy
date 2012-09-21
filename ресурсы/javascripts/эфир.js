@@ -255,17 +255,17 @@ $(document).on('panel_loaded', function()
 			
 			if (data.беседы)
 			{
-				data.беседы.for_each(function()
+				Object.for_each(data.беседы, function(_id)
 				{
-				   Новости.беседа(this)
+				   Новости.беседа(_id, this)
 				})
 			}
 			
 			if (data.обсуждения)
 			{
-				data.обсуждения.for_each(function()
+				Object.for_each(data.обсуждения, function(_id)
 				{
-				   Новости.обсуждение(this)
+				   Новости.обсуждение(_id, this)
 				})
 			}
 			
@@ -323,6 +323,7 @@ $(document).on('panel_loaded', function()
 			}
 		})
 		
+		/*
 		on('беседы', 'сообщение', function(data)
 		{
 			if (Страница.is('сеть/беседы'))
@@ -349,6 +350,13 @@ $(document).on('panel_loaded', function()
 				discussion.find('> a > .small_avatar').replaceWith($.tmpl('маленький аватар', data.кем))
 				discussion.prependTo($('#discussions'))
 			}
+		})
+		*/
+		
+		on('пользователь', 'аватар обновлён', function(data)
+		{
+			var avatar = $('.authenticated_user .small_avatar .picture img')
+			avatar.attr('src', set_version(avatar.attr('src'), data.version))
 		})
 	})()
 })
