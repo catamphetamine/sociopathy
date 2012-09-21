@@ -39,7 +39,7 @@ $(document).on('panel_loaded', function()
 		
 		Эфир.следить_за_пользователем(пользователь)
 		
-		эфир = io.connect('http://' + Options.Websocket_server + '/эфир', { transports: ['websocket'] })
+		эфир = io.connect('http://' + Configuration.Websocket_server + '/эфир', { transports: ['websocket'] })
 		эфир.is_ready = false
 		
 		var on = function(group, name, handler)
@@ -62,7 +62,10 @@ $(document).on('panel_loaded', function()
 				disconnected = false
 				reconnected = true
 			}
-			
+		})
+		
+		эфир.on('поехали', function()
+		{
 			эфир.emit('пользователь', $.cookie('user'))
 		})
 		
@@ -150,8 +153,10 @@ $(document).on('panel_loaded', function()
 								message.addClass('new');
 								(function() { message.removeClass('new') }).delay(500)
 							}
+							
 							message.find('.content').html(Wiki_processor.decorate(data.сообщение))
-							refresh_formulae({ where: message })
+							
+							postprocess_rich_content(message)
 						}
 					}
 					break
@@ -168,8 +173,10 @@ $(document).on('panel_loaded', function()
 								message.addClass('new');
 								(function() { message.removeClass('new') }).delay(500)
 							}
+							
 							message.find('.content').html(Wiki_processor.decorate(data.сообщение))
-							refresh_formulae({ where: message })
+							
+							postprocess_rich_content(message)
 						}
 					}
 					break
@@ -183,8 +190,10 @@ $(document).on('panel_loaded', function()
 							message.addClass('new');
 							(function() { message.removeClass('new') }).delay(500)
 						}
+						
 						message.find('.content').html(Wiki_processor.decorate(data.сообщение))
-						refresh_formulae({ where: message })
+						
+						postprocess_rich_content(message)
 					}
 					break
 				

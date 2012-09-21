@@ -329,7 +329,7 @@ var Interactive_messages = function(options)
 			var накопленные_сообщения = []
 			var пропущенные_сообщения_учтены = false
 			
-			var connection = io.connect('http://' + Options.Websocket_server + options.path, { transports: ['websocket'], 'force new connection': true })
+			var connection = io.connect('http://' + Configuration.Websocket_server + options.path, { transports: ['websocket'], 'force new connection': true })
 			connection.is_ready = false
 			
 			получить_пропущенные_сообщения = function()
@@ -571,7 +571,7 @@ var Interactive_messages = function(options)
 			messages.options.container.find('>li[author="' + пользователь._id + '"]').each(function()
 			{
 				var message = $(this)
-				message.removeAttr('contenteditable')
+				message.find('.content').removeAttr('contenteditable')
 				
 				var new_content = message.find('.content').html()
 				var _id = message.attr('message_id')
@@ -608,7 +608,7 @@ var Interactive_messages = function(options)
 			{
 				messages.options.container.find('>li[message_id="' + _id + '"] .content').html(content)
 			})
-			
+		
 			if (options.discard_changes)
 				options.discard_changes()
 			
@@ -637,7 +637,7 @@ var Interactive_messages = function(options)
 						messages.show_editor()
 				}
 				
-				messages.options.container.find('>li[author="' + пользователь._id + '"]').removeAttr('contenteditable')
+				messages.options.container.find('>li[author="' + пользователь._id + '"]').find('.content').removeAttr('contenteditable')
 			})
 			
 			Режим.при_переходе({ в: 'правка' }, function()
@@ -654,7 +654,7 @@ var Interactive_messages = function(options)
 				messages.options.container.find('>li[author="' + пользователь._id + '"]').each(function()
 				{
 					var message = $(this)
-					message.attr('contenteditable', true)
+					message.find('.content').attr('contenteditable', true)
 					own_messages[message.attr('message_id')] = message.find('.content').html()
 				})
 			})

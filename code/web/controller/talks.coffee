@@ -119,39 +119,19 @@ options.authorize = (environment, возврат) ->
 			
 			@.done()
 
-options.show_from = (environment, возврат) ->
-	new Цепочка(возврат)
-		.сделать ->
-			db('people_sessions').findOne({ пользователь: environment.пользователь._id }, @)
-			
-		.сделать (session) ->
-			return @.done() if not session?
-			
-			earliest_in_news = null
-			if session.новости?
-				if session.новости.беседы?
-					if session.новости.беседы[environment.сообщения_чего._id]?
-						earliest_in_news = session.новости.беседы[environment.сообщения_чего._id][0]
-				
-			latest_read = null
-			if session.последние_прочитанные_сообщения?
-				if session.последние_прочитанные_сообщения.беседы?
-					latest_read = session.последние_прочитанные_сообщения.беседы[environment.сообщения_чего._id]
-			
-			if not earliest_in_news? && not latest_read?
-				return @.done()
-			
-			if not earliest_in_news?
-				return @.done(latest_read)
-			
-			if not latest_read?
-				return @.done(earliest_in_news)
-			
-			if earliest_in_news + '' > latest_read +''
-				return @.done(latest_read)
-			else
-				return @.done(earliest_in_news)
-			
+options.earliest_in_news = (session) ->
+	if session.новости?
+		if session.новости.беседы?
+			if session.новости.беседы[environment.сообщения_чего._id]?
+				return session.новости.беседы[environment.сообщения_чего._id][0]
+	return
+
+options.latest_read = (session) ->
+	if session.последние_прочитанные_сообщения?
+		if session.последние_прочитанные_сообщения.беседы?
+			return session.последние_прочитанные_сообщения.беседы[environment.сообщения_чего._id]
+	return
+
 options.notify = (_id, environment, возврат) ->
 	new Цепочка(возврат)
 		.сделать ->

@@ -144,9 +144,6 @@ exports.messages = (options) ->
 							
 							соединение.on 'сообщение', (сообщение) ->
 								цепь_websocket(соединение)
-									#.сделать ->
-									#	sanitize(сообщение, @)
-										
 									.сделать ->
 										options.save(сообщение, environment, @._.в 'сообщение')
 										
@@ -159,6 +156,8 @@ exports.messages = (options) ->
 										@.done()
 										
 									.сделать ->
+										console.log('!!!!!!! notify')
+										console.log(@._.сообщение)
 										options.notify(@._.сообщение._id, environment, @)
 										
 									.сделать ->
@@ -202,6 +201,39 @@ exports.messages = (options) ->
 							
 					соединение.emit 'поехали'
 					
+			show_from = (environment, возврат) ->
+				new Цепочка(возврат)
+					.сделать ->
+						db('people_sessions').findOne({ пользователь: environment.пользователь._id }, @)
+						
+					.сделать (session) ->
+						return @.done() if not session?
+						
+						earliest_in_news = null
+						if options.earliest_in_news?
+							earliest_in_news = options.earliest_in_news(session)
+							
+						latest_read = null
+						if options.latest_read?
+							latest_read = options.latest_read(session)
+						
+						if not earliest_in_news? && not latest_read?
+							return @.done()
+						
+						if not earliest_in_news?
+							return @.done(latest_read)
+						
+						if not latest_read?
+							return @.done(earliest_in_news)
+						
+						test = earliest_in_news + '' > latest_read + ''
+						
+						if test
+							return @.done(latest_read)
+						else
+							return @.done(earliest_in_news)
+				
+				
 			http.get options.data_uri, (ввод, вывод, пользователь) ->
 				#if options.data_uri.starts_with('/сеть/')
 				environment = {}
@@ -227,10 +259,11 @@ exports.messages = (options) ->
 						@.done()
 						
 					.сделать ->
-						if not ввод.настройки.после? && options.show_from?
+						if not ввод.настройки.после?
 							return new Цепочка(@)
 								.сделать ->
-									options.show_from(environment, @)
+									show_from(environment, @)
+									
 								.сделать (show_from) ->
 									loading_options.с = show_from
 									@.done()
@@ -350,7 +383,7 @@ exports.messages = (options) ->
 				
 				.сделать (создатель) ->
 					if создатель + '' != пользователь._id + ''
-						return вывод.send { ошибка: "Вы не создатель этого общения" }
+						return вывод.send { ошибка: "Вы не создатель этого общения, и не можете его переименовать" }
 						
 					db(options.id).update({ _id: db(options.id).id(_id) }, { $set: { название: название } }, @)
 					

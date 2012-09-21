@@ -162,17 +162,17 @@
 				
 				var books = data.книги
 				
-				while (books.length % Options.Book_shelf_size > 0
-						|| books.length < Options.Book_shelf_size * Options.Minimum_book_shelves)
+				while (books.length % Configuration.Book_shelf_size > 0
+						|| books.length < Configuration.Book_shelf_size * Configuration.Minimum_book_shelves)
 				{
 					books.push({})
 				}
 				
 				var shelves = []
 				
-				while (books.length > Options.Book_shelf_size)
+				while (books.length > Configuration.Book_shelf_size)
 				{
-					shelves.push({ books: books.splice(0, Options.Book_shelf_size) })
+					shelves.push({ books: books.splice(0, Configuration.Book_shelf_size) })
 				}
 				
 				shelves.push({ books: books })

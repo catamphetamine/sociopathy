@@ -150,7 +150,7 @@ var Messages = new Class
 				},
 				before_output_async: function(elements, callback)
 				{
-					refresh_formulae({ where: elements }, callback)
+					postprocess_rich_content(elements, callback)
 				},
 				finished: function()
 				{
@@ -476,7 +476,7 @@ var Messages = new Class
 			if (this.options.after_append)
 				this.options.after_append(message, data)
 				
-			refresh_formulae({ where: message }, callback)
+			postprocess_rich_content(message, callback)
 		}
 		
 		append = append.bind(this)
@@ -544,6 +544,9 @@ var Messages = new Class
 		function send_message()
 		{
 			var message = Wiki_processor.parse(visual_editor.editor.content.html())
+			
+			//console.log(message)
+			
 			if (!message)
 				return
 				

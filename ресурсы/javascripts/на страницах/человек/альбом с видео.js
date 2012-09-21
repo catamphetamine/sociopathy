@@ -55,7 +55,7 @@
 	
 	function center_videos_list()
 	{
-		center_list($('#videos'), { space: page.content, item_width: Options.Video.Icon.Size.Width + 2 /* border */, item_margin: 40 })
+		center_list($('#videos'), { space: page.content, item_width: Configuration.Video.Icon.Size.Width + 2 /* border */, item_margin: 40 })
 	}
 	
 	function videos_loaded()
@@ -154,8 +154,8 @@
 		
 			var size = inscribe
 			({
-				width: Options.Video.Size.Width,
-				height: Options.Video.Size.Height,
+				width: Configuration.Video.Size.Width,
+				height: Configuration.Video.Size.Height,
 				max_width: $(window).width() - delta_width,
 				max_height: $(window).height() - delta_height - description_height,
 				//expand: true // тормозит, т.к. кадры увеличиваются на лету

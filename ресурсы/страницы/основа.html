@@ -54,11 +54,36 @@
 					'mootools-more-1.4.0.1',
 				]},
 				
+				'язык',
+				'date',
+				
+				'uri',
+				
+				'страница',
+				'снасти',
+				
+				'dom tools',
+				'клавиши',
+				'прокрутка',
+				
+				'общее',
+				
+				'проверка обозревателя',
+				
+				'движение',
+				
+				'dynamic page content',
+				
+				{'на страницах':
+				[
+					'основа'
+				]},
+				
 				{облик:
 				[
-					'scroll navigation',
 					'form',
 					'conditional',
+					'scroll navigation',
 					
 					{окошко:
 					[
@@ -121,14 +146,7 @@
 					'окошко входа'
 				]},
 				
-				'язык',
-				'date',
-				
 				'здесь или не здесь',
-				
-				'движение',
-				
-				'uri',
 				
 				'youtube',
 				'vimeo',
@@ -138,14 +156,6 @@
 				'socket.io',
 				
 				'focus',
-				
-				'dom tools',
-				'клавиши',
-				'прокрутка',
-				'снасти',
-				'общее',
-				
-				'страница',
 				
 				'messages',
 				'interactive messages',
@@ -158,19 +168,10 @@
 				'эфир',
 				'новости',
 				
-				'проверка обозревателя',
-				
 				//'tinycon',
 				'window notification',
 				
-				'режимы',
-				
-				'dynamic page content',
-				
-				{'на страницах':
-				[
-					'основа'
-				]}
+				'режимы'
 			]
 			
 			function insert_script(path, callback)
@@ -190,9 +191,13 @@
 					success: function() { if (callback) callback() },
 					error: function()
 					{
-						window.onerror()
+						if (window.onerror)
+							window.onerror()
+						else
+							alert('Ошибка на странице')
+							
 						console.log('Page script not loaded (possible syntax error): ' + path)
-						alert('Ошибка на странице')
+						//throw 'Ошибка на странице'
 					}
 				})
 			}
@@ -211,6 +216,7 @@
 					if (all_scripts.length !== 0)
 						return insert_scripts()
 					
+					$(document).trigger('scripts_loaded')
 					return
 				}
 				
@@ -271,7 +277,9 @@
 				
 				'личная карточка',
 				
-				'поле поиска'
+				'поле поиска',
+				
+				'audio player'
 			]
 			
 			function insert_style(path)
@@ -320,15 +328,21 @@
 		<script src="/javascripts/codemirror/lib/codemirror.js"></script>
 		<script src="/javascripts/codemirror/mode/xml/xml.js"></script>
 
+		<!-- Audio player -->
+		<link rel="stylesheet" href="/javascripts/jouele/jouele.css">
+		<link id="jouele-swf-object" href="/javascripts/jouele/jplayer.swf">
+		<script src="/javascripts/jouele/jquery.jplayer.min.js"></script>
+		<script src="/javascripts/jouele/jouele.js"></script>
+
 		<script>
 			$.ajax
 			({
-				url: '/приложение/versions'
+				url: '/приложение/versioning'
 			})
 			.success(function(data)
 			{
 				Version = data.site_version
-				window.versioning = data
+				//window.versioning = data
 				
 				insert_styles(styles, '/облик')
 				insert_scripts()
@@ -384,6 +398,13 @@
 				opacity: 0;
 				visibility: hidden;
 			}
+			
+			/*
+			.audio_player
+			{
+				opacity: 0;
+			}
+			*/
 		</style>
 		 
 		<link id="site_icon" rel="shortcut icon" href="/картинки/значки/основной.png">

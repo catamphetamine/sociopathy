@@ -70,7 +70,7 @@
 	
 	function article_loaded()
 	{
-		refresh_formulae({ where: $('article') })
+		postprocess_rich_content($('article'))
 		
 		$(document).trigger('page_initialized')
 		
@@ -190,7 +190,7 @@
 						save_button.unlock()
 					})
 					Режим.обычный()
-					info('Правки сохранены')
+					//info('Правки сохранены')
 					
 					неправленная_заметка =
 					{
@@ -230,7 +230,9 @@
 					Режим.обычный()
 					
 					visual_editor.editor.load_content(Wiki_processor.decorate(неправленная_заметка.content))
-					refresh_formulae({ where: visual_editor.editor.get_content() })
+					
+					postprocess_rich_content(visual_editor.editor.get_content())
+					
 					set_title(неправленная_заметка.title)
 				})
 			})

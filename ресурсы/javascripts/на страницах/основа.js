@@ -7,8 +7,9 @@ var content
 
 var page
 
-var host = parseUri().host
-var Options =
+var host = Uri.parse().host
+
+var Configuration =
 {
 	Upload_server_port: 8091,
 	Websocket_server: host + ':8080',
@@ -36,7 +37,7 @@ if (путь_страницы() === 'сеть' || путь_страницы().st
 	if (!$.cookie('user'))
 		window.location = '/'
 
-$(function()
+$(document).on('scripts_loaded', function()
 {
 	loading_page()
 

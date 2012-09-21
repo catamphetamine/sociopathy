@@ -32,7 +32,8 @@
 				
 				unedited_talk_title = data.название
 				
-				if (пользователь._id === data.создатель)
+				page.data.создатель_ли = пользователь._id === data.создатель
+				if (page.data.создатель_ли)
 					page.get('.breadcrumbs > :last').attr('editable', true)
 			},
 			more_link: $('.messages_framework > .older > a'),
@@ -84,6 +85,9 @@
 			
 			anything_changed: function()
 			{
+				if (!page.data.создатель_ли)
+					return false
+				
 				if (unedited_talk_title !== edited_talk_title)
 					return true
 			},

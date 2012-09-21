@@ -268,8 +268,8 @@ Visual_editor.implement
 			
 			on_element_click: function()
 			{
-				var url = decodeURIComponent($(this).attr('href'))
-				visual_editor.Tools.Link.open_dialog_window({ url: url }, { element: $(this) })
+				var url = decodeURI($(this).attr('href'))
+				Tools.Link.open_dialog_window({ url: url }, { element: $(this) })
 				return false
 			}
 		}
@@ -429,7 +429,7 @@ Visual_editor.implement
 			on_element_click: function()
 			{
 				var url = decodeURIComponent($(this).attr('src'))
-				visual_editor.Tools.Picture.open_dialog_window({ url: url }, { element: $(this) })
+				Tools.Picture.open_dialog_window({ url: url }, { element: $(this) })
 				return false
 			}
 		}
@@ -553,7 +553,7 @@ Visual_editor.implement
 			on_element_click: function()
 			{
 				var formula = $(this).attr('formula')
-				visual_editor.Tools.Formula.open_dialog_window({ formula: formula }, { element: $(this) })
+				Tools.Formula.open_dialog_window({ formula: formula }, { element: $(this) })
 				return false
 			}
 		}
@@ -790,6 +790,113 @@ Visual_editor.implement
 			}
 		}
 		
+		Tools.Audio =
+		{
+			button: new image_button(tools.find('.audio > *')),
+			
+			type_attribute: 'audio',
+			activation_element: function(element) { return element.audio_player('title_element') },
+			
+			initialize: function()
+			{
+				var tool = this
+				
+				this.dialog_window = Visual_editor.tool_windows.Audio
+				({
+					class: 'visual_editor_audio_window',
+					title: 'Аудиозапись',
+					fields:
+					[{
+						id: 'url',
+						description: 'Ссылка на аудиозапись',
+						validation: 'наглядный_писарь.аудиозапись.ссылка'
+					},
+					{
+						id: 'title',
+						description: 'Название',
+						validation: 'наглядный_писарь.аудиозапись.название'
+					}],
+					ok: function(data)
+					{
+						if (tool.dialog_window.state.element)
+						{
+							var audio = tool.dialog_window.state.element
+							
+							Visual_editor.tool_helpers.Audio.refresh_player(audio, data)
+							
+							activate_all_toolable_elements()
+				
+							return editor.caret.restore()
+						}
+						
+						var audio = $('<div/>').addClass('audio_player')
+						
+						var file = audio.audio_player('link', { url: data.url, title: data.title })
+						file.appendTo(audio)
+										
+						tool.mark_type(audio)
+					
+						editor.caret.restore()
+						tool.on_success(editor.insert(audio, { break_container: true }))
+					},
+					open: function()
+					{
+						editor.caret.store()
+					},
+					cancel: function()
+					{
+						editor.caret.restore()
+					}
+				})
+			},
+			
+			apply: function()
+			{
+				if (!editor.caret.container().is('p'))
+				{
+					this.restore_caret()
+					throw new Error('Аудиозапись можно помещать только непосредственно в абзаце')
+				}
+				
+				if (editor.selection.exists() && editor.selection.is_valid())
+					throw new Error('Снимите выделение')
+				
+				this.open_dialog_window()
+				return false
+			},
+			
+			on_success: function(element)
+			{
+				element.audio_player()
+				
+				activate_all_toolable_elements()
+						
+				editor.caret.move_to(element)
+			},
+			
+			on_element_click: function(event)
+			{
+				var clicked = $(event.target)
+				
+				if (clicked.audio_player('is_control'))
+				{
+					return
+				}
+				
+				event.preventDefault()
+				event.stopPropagation()
+				
+				var player = clicked.find_parent('.audio_player')
+				
+				var url = player.audio_player('url')
+				var title = player.audio_player('title')
+				
+				var url = decodeURI(url)
+				Tools.Audio.open_dialog_window({ url: url, title: title }, { element: player })
+				return false
+			}
+		}
+		
 		Tools.Source =
 		{
 			selector: '.source',
@@ -928,8 +1035,15 @@ Visual_editor.implement
 			
 			tool.activate_all = function()
 			{
-				if (this.type_attribute)
-					this.activate('[type="' + this.type_attribute + '"]')
+				if (!this.type_attribute)
+					return
+				
+				var element = editor.content.find('[type="' + this.type_attribute + '"]')
+				
+				if (this.activation_element)
+					element = this.activation_element(element)
+					
+				this.activate(element)
 			}
 			
 			tool.activate = function(selector)
@@ -940,7 +1054,7 @@ Visual_editor.implement
 				var tool = this
 				editor.on_event(selector, 'click.visual_editor', function(event)
 				{
-					return tool.on_element_click.bind(this)()
+					return tool.on_element_click.bind(this)(event)
 				})
 			}
 			
@@ -958,7 +1072,7 @@ Visual_editor.implement
 				var tool = this
 				element.on('click.visual_editor', function(event)
 				{
-					return tool.on_element_click.bind(this)()
+					return tool.on_element_click.bind(this)(event)
 				})
 			}
 			
@@ -977,7 +1091,7 @@ Visual_editor.implement
 					})
 				}
 				
-				this.dialog_window.open(state)
+				tool.dialog_window.open(state)
 			}
 			
 			tool.backup_caret = function()
@@ -1149,6 +1263,25 @@ Validation.наглядный_писарь.ссылка = function(value, callba
 	callback()
 }
 
+Validation.наглядный_писарь.аудиозапись =
+{
+	ссылка: function(value, callback)
+	{
+		if (!value)
+			return callback({ error: 'Вставьте ссылку на аудиозапись' })
+		
+		callback()
+	},
+	
+	название: function(value, callback)
+	{
+		if (!value)
+			return callback({ error: 'Введите название аудиозаписи' })
+		
+		callback()
+	}
+}
+
 Visual_editor.tool_windows =
 {
 	Formula: function(options)
@@ -1240,6 +1373,42 @@ Visual_editor.tool_windows =
 			}
 		})
 		.window
+	},
+	
+	Audio: function(options)
+	{
+		return simple_value_dialog_window
+		({
+			class: 'visual_editor_audio_window',
+			title: 'Аудиозапись',
+			fields:
+			[{
+				id: 'url',
+				description: 'Ссылка на аудиозапись',
+				validation: 'наглядный_писарь.аудиозапись.ссылка'
+			},
+			{
+				id: 'title',
+				description: 'Название',
+				validation: 'наглядный_писарь.аудиозапись.название'
+			}],
+			ok: function(data)
+			{
+				data.url = Uri.correct(data.url.collapse_lines())
+				options.ok(data)
+			},
+			on_open: function()
+			{	
+				if (options.open)
+					options.open()
+			},
+			on_cancel: function()
+			{
+				if (options.cancel)
+					options.cancel()
+			}
+		})
+		.window
 	}
 }
 
@@ -1262,6 +1431,18 @@ Visual_editor.tool_helpers =
 				
 				callback(size)
 			})
+		}
+	},
+	Audio:
+	{
+		refresh_player: function(where, data)
+		{
+			where.empty()
+			
+			var file = where.audio_player('link', { url: data.url, title: data.title })
+			file.appendTo(where)
+			
+			where.audio_player()
 		}
 	}
 }

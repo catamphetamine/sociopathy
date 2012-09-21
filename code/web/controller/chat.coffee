@@ -23,36 +23,16 @@ options.mark_new = (сообщения, environment, возврат) ->
 			
 			@.done()
 
-options.show_from = (environment, возврат) ->
-	new Цепочка(возврат)
-		.сделать ->
-			db('people_sessions').findOne({ пользователь: environment.пользователь._id }, @)
-			
-		.сделать (session) ->
-			return @.done() if not session?
-			
-			earliest_in_news = null
-			if session.новости?
-				earliest_in_news = session.новости.болталка
-				
-			latest_read = null
-			if session.последние_прочитанные_сообщения?
-				latest_read = session.последние_прочитанные_сообщения.болталка
-			
-			if not earliest_in_news? && not latest_read?
-				return @.done()
-			
-			if not earliest_in_news?
-				return @.done(latest_read)
-			
-			if not latest_read?
-				return @.done(earliest_in_news)
-			
-			if earliest_in_news + '' > latest_read +''
-				return @.done(latest_read)
-			else
-				return @.done(earliest_in_news)
-	
+options.earliest_in_news = (session) ->
+	if session.новости?
+		return session.новости.болталка
+	return
+
+options.latest_read = (session) ->
+	if session.последние_прочитанные_сообщения?
+		return session.последние_прочитанные_сообщения.болталка
+	return
+
 options.notify = (_id, environment, возврат) ->
 	new Цепочка(возврат)
 		.сделать ->

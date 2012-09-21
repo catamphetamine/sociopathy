@@ -350,6 +350,9 @@ function ajaxify_internal_links(where)
 		var link = $(this)
 		var url = link.attr('href')
 		
+		if (!url)
+			return
+		
 		if (!url.starts_with('/'))
 			return
 			
@@ -475,4 +478,40 @@ window.onerror = function()
 function escape_id(id)
 {
 	return id.replace_all('?', '%3F').replace_all('/', '%2F')
+}
+
+function postprocess_rich_content(content, callback)
+{
+	if (content instanceof Array)
+	{
+		if (!content[0].is('.rich_formatting'))
+		{
+			content = content._map(function() { return this.find('.rich_formatting') })
+		}
+		
+		content.for_each(function()
+		{
+			this.find('> .audio_player').each(function()
+			{
+				$(this).audio_player()
+			})
+		})
+		
+		return refresh_formulae({ where: content }, callback)
+	}
+	
+	if (!content.is('.rich_formatting'))
+		content = content.find('.rich_formatting')
+			
+	content.find('> .audio_player').each(function()
+	{
+		$(this).audio_player()
+	})
+	
+	refresh_formulae({ where: content }, callback)
+}
+
+function error(error)
+{
+	console.log(error)
 }

@@ -292,7 +292,7 @@ Visual_editor.implement
 			}
 		})
 		
-		var keypress_happened = false
+		//var keypress_happened = false
 		
 		editor.on('keyup', function(event)
 		{
@@ -301,17 +301,18 @@ Visual_editor.implement
 				
 			// if you start loading the page, and then alt+tab,
 			// and then alt+tab after it's loaded, no keypress event fires
+			/*
 			if (!keypress_happened)
 			{
 				visual_editor.restore_content()
 				visual_editor.focus()
 				//return event.preventDefault()
-			}
+			}*/
 		})
 		
 		editor.on('keypress', (function(event)
 		{
-			keypress_happened = true
+			//keypress_happened = true
 			
 			if (editor.caret.container('.tex').exists())
 			{

@@ -1,6 +1,4 @@
 module.exports =
-	Version: '1.0.0.2-alpha'
-
 	Web_server:
 		Port: 8080
 	Upload_server:

@@ -101,39 +101,19 @@ options.mark_new = (сообщения, environment, возврат) ->
 					сообщение.новое = yes
 			
 			@.done()
-			
-options.show_from = (environment, возврат) ->
-	new Цепочка(возврат)
-		.сделать ->
-			db('people_sessions').findOne({ пользователь: environment.пользователь._id }, @)
-			
-		.сделать (session) ->
-			return @.done() if not session?
-			
-			earliest_in_news = null
-			if session.новости?
-				if session.новости.обсуждения?
-					if session.новости.обсуждения[environment.сообщения_чего._id]?
-						earliest_in_news = session.новости.обсуждения[environment.сообщения_чего._id][0]
-				
-			latest_read = null
-			if session.последние_прочитанные_сообщения?
-				if session.последние_прочитанные_сообщения.обсуждения?
-					latest_read = session.последние_прочитанные_сообщения.обсуждения[environment.сообщения_чего._id]
-			
-			if not earliest_in_news? && not latest_read?
-				return @.done()
-			
-			if not earliest_in_news?
-				return @.done(latest_read)
-			
-			if not latest_read?
-				return @.done(earliest_in_news)
-			
-			if earliest_in_news + '' > latest_read +''
-				return @.done(latest_read)
-			else
-				return @.done(earliest_in_news)
+
+options.earliest_in_news = (session) ->
+	if session.новости?
+		if session.новости.обсуждения?
+			if session.новости.обсуждения[environment.сообщения_чего._id]?
+				return session.новости.обсуждения[environment.сообщения_чего._id][0]
+	return
+
+options.latest_read = (session) ->
+	if session.последние_прочитанные_сообщения?
+		if session.последние_прочитанные_сообщения.обсуждения?
+			return session.последние_прочитанные_сообщения.обсуждения[environment.сообщения_чего._id]
+	return
 			
 options.notify = (_id, environment, возврат) ->
 	new Цепочка(возврат)
@@ -163,7 +143,7 @@ options.notify = (_id, environment, возврат) ->
 						
 			@.done()
 			
-		.сделать ->	
+		.сделать ->
 			#эфир.отправить(options.in_ether_id, 'сообщение', { где: environment.сообщения_чего._id.toString(), кем: пользовательское.поля(environment.пользователь) })
 			@.done()
 			

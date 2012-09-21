@@ -663,4 +663,33 @@ $.fn.attributes = function()
 	return attributes
 }
 
-$.fn.is_jquery = $.noop
+$.fn.audio_player = function(action, options)
+{
+	switch (action)
+	{
+		case 'url':
+			return this.find('.jouele-download').attr('href')
+		
+		case 'title':
+			return this.find('.jouele-name').text()
+		
+		case 'title_element':
+			return this.find('.jouele-name')
+		
+		case 'is_control':
+			return this.find_parent('.jouele-play-control').exists()
+		
+		case 'link':
+			return $('<a/>').addClass('jouele').attr('href', options.url).text(options.title)
+		
+		default:
+			if (!this.hasClass('audio_player'))
+			{
+				console.log('Not an audio player:')
+				console.log(this)
+				throw 'Not an audio player'
+			}
+			
+			this.jouele()
+	}
+}

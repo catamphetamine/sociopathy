@@ -294,7 +294,7 @@ var Режим = (function()
 	result.изменения_отменены = function()
 	{
 		$(document).trigger('режим.изменения_отменены')
-		
+			
 		перейти_в_режим('обычный', { discarded: true })
 		actions.slide_out_downwards(300, function()
 		{
@@ -415,6 +415,9 @@ $(document).on('page_loaded', function()
 		{
 			var element = $(this)
 			
+			if (!element.find_parent('[contenteditable=true]').exists())
+				return
+			
 			var window = Visual_editor.tool_windows.Formula
 			({
 				ok: function(formula)
@@ -432,6 +435,9 @@ $(document).on('page_loaded', function()
 		$('[type="picture"]').on('click.in_place_editing', function(event)
 		{
 			var element = $(this)
+			
+			if (!element.find_parent('[contenteditable=true]').exists())
+				return
 			
 			var window = Visual_editor.tool_windows.Picture
 			({
@@ -461,6 +467,9 @@ $(document).on('page_loaded', function()
 		{
 			var element = $(this)
 			
+			if (!element.find_parent('[contenteditable=true]').exists())
+				return
+			
 			var window = Visual_editor.tool_windows.Link
 			({
 				ok: function(url)
@@ -472,6 +481,44 @@ $(document).on('page_loaded', function()
 			window.form.field('url').val(decodeURI(element.attr('href')))
 							
 			window.open()
+		})
+		
+		function audio_click_handler(clicked, event)
+		{
+			if (!clicked.find_parent('[contenteditable=true]').exists())
+				return
+			
+			if (clicked.audio_player('is_control'))
+			{
+				return
+			}
+			
+			event.preventDefault()
+			event.stopPropagation()
+			
+			var element = clicked.find_parent('.audio_player')
+			
+			var window = Visual_editor.tool_windows.Audio
+			({
+				ok: function(data)
+				{
+					Visual_editor.tool_helpers.Audio.refresh_player(element, data)
+					element.audio_player('title_element').on('click.in_place_editing', function(event)
+					{
+						audio_click_handler($(this), event)
+					})
+				}
+			})
+			
+			window.form.field('url').val(decodeURI(element.audio_player('url')))
+			window.form.field('title').val(element.audio_player('title'))
+			
+			window.open()
+		}
+		
+		$('[type="audio"]').audio_player('title_element').on('click.in_place_editing', function(event)
+		{
+			audio_click_handler($(this), event)
 		})
 	})
 	

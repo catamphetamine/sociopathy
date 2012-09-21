@@ -256,7 +256,7 @@
 	
 	function update_online_status()
 	{
-		var остылость = (new Date().getTime() - когда_был_здесь.getTime()) / (Options.User_is_online_for * 1000)
+		var остылость = (new Date().getTime() - когда_был_здесь.getTime()) / (Configuration.User_is_online_for * 1000)
 		
 		if (offline)
 			остылость = 1
@@ -430,7 +430,7 @@
 		{
 			//url: '/загрузка/человек/сменить картинку',
 			//url: '/приложение/человек/сменить картинку',
-			url: 'http://' + host + ':' + Options.Upload_server_port + '/сеть/человек/картинка',
+			url: 'http://' + host + ':' + Configuration.Upload_server_port + '/сеть/человек/картинка',
 			parameter: { name: 'user', value: $.cookie('user') },
 			success: function(data)
 			{

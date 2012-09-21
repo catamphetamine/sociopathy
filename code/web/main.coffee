@@ -20,6 +20,8 @@ global.Options = require "./configuration.coffee"
 Object.merge_recursive(global.Options, require "./../../configuration/#{launch_options.server}/configuration.coffee")
 require "./../../configuration/#{launch_options.server}/configuration.private.coffee"
 
+global.Options.Version = require "./version.coffee"
+
 global.db = (collection) ->
 	хранилище.collection(collection)
 	
@@ -41,8 +43,6 @@ global.http = global.application_tools.http
 global.websocket = require('socket.io').listen приложение
 
 global.image_magick = require 'imagemagick'
-console.log('!!!!!!!!!!!!!! Options.ImageMagick.Convert.Path')
-console.log(Options.ImageMagick.Convert.Path)
 global.image_magick.convert.path = Options.ImageMagick.Convert.Path
 
 global.почта = require './tools/email'

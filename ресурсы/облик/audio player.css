@@ -1,0 +1,79 @@
+.audio_player
+{
+	width: 800px;
+	/* max-width: */
+	
+	padding: 20px;
+
+	> .jouele
+	{
+		&, *
+		{
+			line-height: 26px;
+			font-size: 20px;
+			font-family: Bliss Pro;
+			font-style: italic;
+		}
+		
+		> .jouele-info-area
+		{
+			cursor: pointer;
+			
+			> .jouele-download
+			{
+				display: none !important;
+			
+				width: 48px;
+				height: 48px;
+				
+				background-position: 0 0;
+				background-image: url('/картинки/audio player/download.png');
+			}
+			
+			> .jouele-name 
+			{
+				margin-left: 32px;
+				margin-right: 0px;
+				margin-bottom: 4px;
+			}
+			
+			.jouele-total-time
+			{
+				margin-right: 0;
+			}
+			
+			.jouele-play-control
+			{
+				margin-top: 4px;
+				margin-left: -4px;
+				
+				.jouele-play
+				{
+					width: 24px;
+					height: 24px;
+					
+					background-position: 0 0;
+					background-image: url('/картинки/audio player/play.png');
+				}
+				
+				.jouele-pause
+				{
+					width: 24px;
+					height: 24px;
+					
+					background-position: 0 0;
+					background-image: url('/картинки/audio player/pause.png');
+				}
+			
+				.jouele-unavailable
+				{
+					width: 24px;
+					height: 24px;
+					
+					background-position: 0 0;
+					background-image: url('/картинки/audio player/loading.png');
+				}
+			}
+		}
+	}
+}

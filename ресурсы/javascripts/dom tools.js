@@ -414,5 +414,19 @@ var Dom_tools =
 			node = node.parentNode
 		}
 		return node
+	},
+	
+	is_descendant_of: function(child, parent)
+	{
+		var node = child.parentNode
+		while (node != null)
+		{
+			if (node === parent)
+				return true
+			
+			node = node.parentNode
+		}
+		
+		return false
 	}
 }

@@ -194,6 +194,17 @@
 				width: 40px;
 				height: 40px;
 			}
+			
+			&.audio > *
+			{
+				position: relative;
+				margin-top: -12px;
+				top: 11px;
+				
+				background-image: url('/картинки/на страницах/заметка/аудиозапись.png');
+				width: 40px;
+				height: 40px;
+			}
 		}
 	}
 	
@@ -297,6 +308,38 @@
 	.main_content form input[type="text"]
 	{
 		width: 550px;
+	}
+}
+
+.visual_editor_audio_window
+{
+	.icon
+	{
+		width: 128px;
+		height: 128px;
+
+		margin-left: 5px;
+		padding-right: 50px;
+
+		background-image: url('/картинки/писарь/снасти/аудио.png');
+	}
+	
+	.main_content form input[type="text"]
+	{
+		width: 550px;
+	}
+	
+	form
+	{
+		> label
+		{
+			margin-top: 46px;
+		}
+		
+		> label[for="url"]
+		{
+			margin-top: 0;
+		}
 	}
 }
 

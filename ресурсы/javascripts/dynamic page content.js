@@ -110,9 +110,7 @@ var navigating = false;
 				
 				пользователь = данные.пользователь
 				
-				пользователь.versioning = window.versioning.пользователь
-				
-				console.log(пользователь)
+				//пользователь.versioning = window.versioning.пользователь
 				
 				$(document).trigger('authenticated', данные)
 				

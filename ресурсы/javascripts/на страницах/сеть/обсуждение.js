@@ -33,7 +33,8 @@
 				
 				unedited_discussion_title = data.название
 				
-				if (пользователь._id === data.создатель)
+				page.data.создатель_ли = пользователь._id === data.создатель
+				if (page.data.создатель_ли)
 					page.get('.breadcrumbs > :last').attr('editable', true)
 			},
 			more_link: $('.messages_framework > .older > a'),
@@ -85,6 +86,9 @@
 			
 			anything_changed: function()
 			{
+				if (!page.data.создатель_ли)
+					return false
+				
 				if (unedited_discussion_title !== edited_discussion_title)
 					return true
 			},

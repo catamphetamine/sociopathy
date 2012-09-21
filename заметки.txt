@@ -449,6 +449,10 @@ memcache
 
 // version обложки для книг и т.п.
 
+// volume control для jouele, и mute / unmute (как в flowplayer)
+
+// jouele в firefox зависает, при отмене правки сообщений
+// http://cs5069.userapi.com/u23765867/audio/d94c0d9d034b.mp3
 
 
 
@@ -460,6 +464,18 @@ memcache
 присоединять photo_version, обновлять photo_version
 
 сделать смену прочих данных вне карточки
+
+
+
+
+вставка не audio и не list и не citation - оборачивается в p, если родитель - контейнер
+
+
+
+
+keypress_happened -> editor_content_changed
+
+
 
 
 

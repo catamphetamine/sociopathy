@@ -694,3 +694,23 @@ function set_version(url, version)
 	
 	return Uri.assemble(data)
 }
+
+function download(url)
+{
+	var iframe = document.getElementById("hiddenDownloader")
+	
+	if (iframe === null)
+	{
+		iframe = document.createElement('iframe')
+		iframe.id = "hiddenDownloader"
+		
+		iframe.width = 0
+		iframe.height = 0
+		iframe.style.visibility = 'hidden'
+		iframe.style.display = 'none'
+		
+		document.body.appendChild(iframe)
+	}
+	
+	iframe.src = url
+}

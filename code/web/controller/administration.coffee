@@ -1,20 +1,22 @@
-http.get '/versions', (ввод, вывод) ->
+http.get '/versioning', (ввод, вывод) ->
 	data =
 		site_version: Options.Version
 	
-	if ввод.пользователь?
-		цепь(вывод)
-			.сделать ->
-				db('people').findOne({ _id: ввод.пользователь._id }, @)
-				
-			.сделать (пользователь) ->
-				data.пользователь =
-					avatar: пользователь.avatar_version
-					photo: пользователь.photo_version
-					
-				вывод.send(data)
-	else			
-		вывод.send(data)
+	вывод.send(data)
+	
+	#if ввод.пользователь?
+	#	цепь(вывод)
+	#		.сделать ->
+	#			db('people').findOne({ _id: ввод.пользователь._id }, @)
+	#			
+	#		.сделать (пользователь) ->
+	#			data.пользователь =
+	#				avatar: пользователь.avatar_version
+	#				photo: пользователь.photo_version
+	#				
+	#			вывод.send(data)
+	#else			
+	#	вывод.send(data)
 
 проверить_управляющего = (ввод, возврат) ->
 	new Цепочка(возврат)
