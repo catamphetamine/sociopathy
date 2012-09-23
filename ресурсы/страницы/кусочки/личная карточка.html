@@ -10,7 +10,7 @@
 		<!-- avatar -->
 		<div class="picture">
 			<div>
-				<img {{if !$data.avatar_version}} style="display: none" {{/if}} class="real_picture" {{if $data.avatar_version}} src="/загруженное/люди/${$data['адресное имя']}/картинка/большая.jpg?version=${avatar_version}" {{/if}}/>
+				<img {{if !$data.avatar_version}} style="display: none" {{/if}} class="real_picture" {{if $data.avatar_version}} src="/загруженное/люди/${escape_id($data['адресное имя'])}/картинка/большая.jpg?version=${avatar_version}" {{/if}}/>
 				{{if Страница.эта() === 'человек/человек' }}
 					<div class="uploading uploading_picture"><span>Загружается</span></div>
 				{{/if}}

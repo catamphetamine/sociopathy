@@ -1,6 +1,9 @@
 http.get '/versioning', (ввод, вывод) ->
 	data =
 		site_version: Options.Version
+		development: Options.Development
+
+	console.log(Options)
 	
 	вывод.send(data)
 	

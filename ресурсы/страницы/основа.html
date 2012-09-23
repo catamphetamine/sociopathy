@@ -344,6 +344,9 @@
 				Version = data.site_version
 				//window.versioning = data
 				
+				if (data.development)
+					window.development_mode = true
+				
 				insert_styles(styles, '/облик')
 				insert_scripts()
 			})

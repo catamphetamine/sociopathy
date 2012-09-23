@@ -96,6 +96,11 @@ $(document).on('page_loaded', function()
 	{
 		$.getScript('/javascripts/less.js', function()
 		{
+			if (window.development_mode)
+				less.env = 'development'
+				
+			//alert('styles_loaded')
+			
 			if (пользователь)
 				$('#logo').remove()
 		
@@ -105,10 +110,12 @@ $(document).on('page_loaded', function()
 			   
 			panel.highlight_current_page()
 
-			if (first_time_page_loading && пользователь)
+			if (пользователь)
 			{
 				//$(document).on('ether_is_online', function()
+				//{
 				after_styles()
+				//})
 			}
 			else
 			{

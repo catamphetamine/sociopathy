@@ -24,7 +24,7 @@
 			},
 			more_link: $('.messages_framework > .older > a'),
 			container: chat,
-			show_editor: true,
+			//show_editor: true,
 			edit_path: 'болталка',
 			on_load: chat_loaded,
 			on_message_bottom_appears: function(_id)

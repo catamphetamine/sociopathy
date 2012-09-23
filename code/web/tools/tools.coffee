@@ -419,6 +419,25 @@ file_system = require 'fs'
 					
 		.сделать ->
 			@.done(@.$)
+			
+снасти.escape_id = (id) ->
+	'/\?%*:|"<>.'.split('').forEach((symbol) -> id = id.replace_all(symbol, ''))
+	id
+	
+снасти.generate_id = (base, options) ->
+	options = options || {}
+	now = new Date()
+	if not options.randomize?
+		title = снасти.escape_id(base)
+		return title + ', ' + now.toString('dd.MM.yyyy в HH:mm')
+	else
+		return base + '☀☁ ☄★☆☭☮☯☢☤☣'.random()
+	
+#console.log(снасти.escape_id('abc/\?%def*:|"<>. spacebar'))
+
+#id = снасти.generate_id('abc/\?%def*:|"<>. spacebar')
+#console.log(id)
+#console.log(снасти.generate_id(id, { randomize: yes }))
 	
 module.exports = снасти
 

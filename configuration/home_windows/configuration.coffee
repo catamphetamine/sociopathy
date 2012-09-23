@@ -7,3 +7,4 @@ module.exports =
 	ImageMagick:
 		Convert:
 			Path: 'C:/Program Files/ImageMagick-6.7.9-Q16/convert'
+	Development: yes

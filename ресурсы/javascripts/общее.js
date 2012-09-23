@@ -479,9 +479,11 @@ window.onerror = function(ошибка, url, line)
 	}
 }
 
+// no longer relevant. now escaping on the server side
 function escape_id(id)
 {
-	return id.replace_all('?', '%3F').replace_all('/', '%2F')
+	return id
+	//return id.replace_all('?', '%3F').replace_all('/', '%2F')
 }
 
 function postprocess_rich_content(content, callback)

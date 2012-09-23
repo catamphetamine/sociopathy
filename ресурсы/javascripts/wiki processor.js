@@ -263,7 +263,12 @@ var Wiki_processor = new (new Class
 		
 		var element
 		if (!Dom_tools.is_text_node(node))
+		{
 			element = $(node)
+			
+			if (element.is('br') && element.parent().is('p'))
+				return
+		}
 	
 		var syntax
 		if (element)

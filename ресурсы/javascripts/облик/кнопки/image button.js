@@ -22,9 +22,29 @@ var image_button = new Class
 		this.options['image format'] = 'png'
 
 		var element = button.get_element(id_or_element)
-
+		
 		this.options.width = element.width()
 		this.options.height = element.height()
+		
+		var ok = false
+		
+		if (this.options.width && this.options.height)
+			ok = true
+		
+		if (options)
+			if (options.width && options.height)
+				ok = true
+		
+		if (!ok)
+		{
+			while (element.parent().exists())
+			{
+				console.log(element)
+				element = element.parent()
+			}
+			
+			throw 'Width and height are not initialized for this image button'
+		}
 
 		this.options.skin = element.css('background-image') //element.attr('skin')
 		
@@ -85,7 +105,7 @@ var image_button = new Class
 	
 	build_frame: function(options)
 	{
-		var $frame = $('<span></span>')
+		var $frame = $('<div></div>')
 		this.$element.append($frame)
 
 		$frame.css

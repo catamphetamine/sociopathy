@@ -133,14 +133,13 @@ var Клавиши =
 		this.disabled = false
 	},
 	
-	has: function(key, event)
-	{		
-		var code
-		if (event.which)
-			code = event.which
-		else
-			code = event.keyCode
-			
+	has: function(key, code)
+	{
+		if (typeof code !== 'number')
+		{
+			code = code.which || code.keyCode
+		}
+		
 		if (this[key] instanceof Array)
 		{
 			var i = 0
@@ -166,19 +165,40 @@ var Клавиши =
 	
 		var keys
 		var event
+		var code
 		
 		if (arguments[0] instanceof Array)
 		{
 			// copy
 			keys = arguments[0].map(function(key) { return key })
-			event = arguments[1]
+			var event_or_code = arguments[1]
+			
+			if (typeof event_or_code === 'number')
+				code = event_or_code
+			else
+				event = event_or_code
 		}
 		else
 		{
 			var args = Array.prototype.slice.call(arguments)
-			event = args.pop()
+			
+			var event_or_code = args.pop()
+			
+			if (typeof event_or_code === 'number')
+				code = event_or_code
+			else
+				event = event_or_code
+			
 			// copy
 			keys = args //.map(function(key) { return key })
+		}
+		
+		if (event)
+		{
+			if (event.which)
+				code = event.which
+			else
+				code = event.keyCode
 		}
 		
 		//console.log(keys)
@@ -221,12 +241,15 @@ var Клавиши =
 
 		//console.log('event.metaKey: ' + event.metaKey + ', ' + 'event.ctrlKey: ' + event.ctrlKey + ', ' + 'event.altKey: ' + event.altKey + ', ' + 'event.shiftKey: ' + event.shiftKey)
 		
+		if (!event && (meta || ctrl || alt || shift))
+			throw 'Event wasn\'t provided for this functionality'
+		
 		if (meta)
 		{
 			if (!event.metaKey)
 				return false
 		}
-		else
+		else if (event)
 		{
 			if (event.metaKey)
 				return false
@@ -237,7 +260,7 @@ var Клавиши =
 			if (!event.ctrlKey)
 				return false
 		}
-		else
+		else if (event)
 		{
 			if (event.ctrlKey)
 				return false
@@ -248,7 +271,7 @@ var Клавиши =
 			if (!event.altKey)
 				return false
 		}
-		else
+		else if (event)
 		{
 			if (event.altKey)
 				return false
@@ -259,7 +282,7 @@ var Клавиши =
 			if (!event.shiftKey)
 				return false
 		}
-		else
+		else if (event)
 		{
 			if (event.shiftKey)
 				return false
@@ -280,7 +303,7 @@ var Клавиши =
 			if (shift)
 				key = key.toUpperCase()
 				
-		return this.has(key, event)
+		return this.has(key, code)
 		
 		/*
 		if (!event.charCode)

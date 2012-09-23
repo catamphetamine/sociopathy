@@ -148,6 +148,11 @@ a.image
 		margin-left: 14px;
 		margin-right: -2px;
 	}
+	
+	li[name="управление"]
+	{
+		display: inline-block;
+	}
 }
 
 #panel_menu > li > .loading

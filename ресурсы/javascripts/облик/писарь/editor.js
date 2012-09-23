@@ -193,12 +193,31 @@ var Editor = new Class
 		return false
 	},
 	
+	doesnt_need_to_be_wrapped: function(what)
+	{
+		if (what.is('h2'))
+			return true
+		
+		if (what.is('div.citation'))
+			return true
+		
+		if (what.is('ul'))
+			return true
+		
+		if (what.is('div.audio_player'))
+			return true
+		
+		return false
+	},
+	
 	insert: function(what, options)
 	{
 		options = options || {}
-		
+
 		var caret_position = this.caret.caret_position()
 		var container = caret_position.container
+		
+		var unwrapped = (container.node() === this.content.node())
 		
 		if (container.hasClass('hint'))
 		{
@@ -213,14 +232,19 @@ var Editor = new Class
 		
 		if (typeof(what) === 'string')
 		{
-			//if (what.contains('<'))
-			//	throw 'Insert html with .insert_html() function'
-			
 			if (this.time_machine.can_snapshot_typing())
 				this.time_machine.snapshot()
 			
 			this.insert_text(what, options)
 			this.content_changed()
+				
+			//if (unwrapped)
+			if ($.browser.webkit)
+			{
+				if (!Dom_tools.is_text_node(container.node().firstChild))
+					if ($(container.node().firstChild).is('br'))
+						$(container.node().firstChild).remove()
+			}
 			
 			if (!this.continuous_typing)
 				this.continuous_typing = true
@@ -232,8 +256,7 @@ var Editor = new Class
 		{
 			this.time_machine.snapshot()
 			
-			var container = caret_position.container
-			var container_tag = container[0].tagName.toLowerCase()
+			var container_tag = container.node().tagName.toLowerCase()
 			
 			this.mark(what)
 			
@@ -241,25 +264,51 @@ var Editor = new Class
 			{
 				var node = caret_position.node
 				var parent_container = node.parentNode
-				Dom_tools.replace(parent_container, what[0])
+				Dom_tools.replace(parent_container, what.node())
+				
+				this.sanitize()
+				
 				return this.unmark()
 			}
 			else if (options.replace)
 			{
 				var node = caret_position.node
-				Dom_tools.replace(node, what[0])
+				Dom_tools.replace(node, what.node())
+				
+				this.sanitize()
+				
 				return this.unmark()
 			}
 			
 			var html
-			if (options.break_container && container[0] !== this.content[0])
+			if (options.break_container && container.node() !== this.content.node())
 				html = '</' + container_tag + '>' + what.outer_html() + '<' + container_tag + '>'
 			else
 				html = what.outer_html()
-				
+			
  			this.insert_html(html)
+				
 			this.checkpoint()
-			return this.unmark()
+			var element = this.unmark()
+			
+			if ($.browser.webkit)
+			{
+				if (element.parent().node() === this.content.node())
+				{
+					if (!this.doesnt_need_to_be_wrapped(element))
+					{
+						container = $('<p/>').appendTo(this.content)
+						element.appendTo(container)
+						//this.caret.move_to(element)
+						
+						this.content.find('> br').remove()
+					}
+				}
+			}
+				
+			this.sanitize()
+			
+			return element
 		}
 		
 		throw 'Unexpected argument type'
@@ -454,6 +503,26 @@ var Editor = new Class
 	deselect: function()
 	{
 		Editor.deselect()
+	},
+	
+	sanitize: function()
+	{
+		this.content.find('> br').remove()
+		
+		this.content.find('> p br:first-child, > p br:last-child').remove()
+		
+		this.content.find('> div').each(function()
+		{
+			var div = $(this)
+			var children = div.children()
+			
+			if (children.length === 0)
+				return div.remove()
+			
+			if (children.length === 1)
+				if ($(children[0]).is('br'))
+					return div.remove()
+		})
 	}
 })
 

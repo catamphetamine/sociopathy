@@ -397,5 +397,13 @@ Editor.Caret = new Class
 		
 		delete this.editor.data.caret
 		return caret
+	},
+	
+	root: function()
+	{
+		if (this.node() === this.editor.content.node())
+			return true
+		
+		return this.container().node() === this.editor.content.node()
 	}
 })

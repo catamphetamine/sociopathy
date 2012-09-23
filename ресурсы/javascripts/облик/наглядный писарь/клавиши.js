@@ -93,7 +93,6 @@ Visual_editor.implement
 		var visual_editor = this
 		var editor = this.editor
 		
-			
 		editor.on('keypress', function(event)
 		{
 			if (!visual_editor.can_edit())
@@ -101,14 +100,8 @@ Visual_editor.implement
 			
 			if (!Клавиши.has('Enter', event))
 				return
-			
-			//if (!event.which !== Клавиши.Enter)
-			//	return
 		
 			event.preventDefault()
-			
-			//if (Клавиши.is('Shift', 'Enter', event))
-			//	return visual_editor.on_break()
 			
 			var container = editor.caret.container()
 			var container_tag = container[0].tagName.toLowerCase()
@@ -292,34 +285,17 @@ Visual_editor.implement
 			}
 		})
 		
-		//var keypress_happened = false
-		
-		editor.on('keyup', function(event)
-		{
-			if (event.ctrlKey || event.shiftKey || event.altKey || event.metaKey)
-				return
-				
-			// if you start loading the page, and then alt+tab,
-			// and then alt+tab after it's loaded, no keypress event fires
-			/*
-			if (!keypress_happened)
-			{
-				visual_editor.restore_content()
-				visual_editor.focus()
-				//return event.preventDefault()
-			}*/
-		})
-		
 		editor.on('keypress', (function(event)
 		{
-			//keypress_happened = true
-			
 			if (editor.caret.container('.tex').exists())
 			{
 				if (!Клавиши.navigating())
 				{
-					event.preventDefault()
-					return
+					if (event)
+					{
+						event.preventDefault()
+						return
+					}
 				}
 			}
 			
@@ -332,22 +308,16 @@ Visual_editor.implement
 				return editor.checkpoint()
 			}
 			
-			var character_code = event.charCode // || event.which
+			var character_code =  event.charCode
 			
 			if (!character_code)
 				return
-				
-			//else if (text.ends_with(' '))
-			//	return visual_editor.on_breaking_space(editor.caret.node().parentNode)
 			
 			if (event.altKey || event.ctrlKey)
 				return
-				
-			//if (Клавиши.is('Shift', 'Space', event))
-			//	return
-		
+	
 			event.preventDefault()
-			
+		
 			if (editor.selection.exists())
 				editor.selection.cut()
 					
@@ -367,8 +337,6 @@ Visual_editor.implement
 				{
 					if (text.ends_with(' -'))
 						return editor.caret.collapse_recent_characters(2, ' — ')
-					//else if (text.ends_with(' '))
-					//	return visual_editor.on_breaking_space(editor.caret.node().parentNode)
 				}
 			}
 			else if (character === '"')
@@ -389,6 +357,13 @@ Visual_editor.implement
 			editor.insert(character, options)
 		})
 		.bind(this))
+		
+		// if you start loading the page, and then alt+tab,
+		// and then alt+tab after it's loaded, no keypress event fires
+		$(document).on('focused', function()
+		{
+			editor.focus()
+		})
 	}
 })
 

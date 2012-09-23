@@ -456,20 +456,7 @@ memcache
 
 // фотку в профиле и беседы - не просто hide/remove, а fadeOut, slide out, remove
 
-
-
-
-
-
-
-
-
-вставка не audio и не list и не citation - оборачивается в p, если родитель - контейнер
-
-
-
-
-keypress_happened -> editor_content_changed
+// прятать писарь по какой-нибудь правой кнопке мыши на снастях
 
 
 
@@ -479,25 +466,31 @@ keypress_happened -> editor_content_changed
 
 
 
-
-
-
-если всё удалить - удалится и абзац. нужно принудительно вставлять абзац: если пишется символ, и он в пустоте - оборачивать его в абзац, и курсор ставить
-	
-escape_id при выводе адресных имён, и всех id - пройтись по всем шаблонам, а также по хлебным крошкам
 
 
 проверить name not in (names) (при обновлении и прописке у пользователя, при обновлении и создании книг)
 
+
 если адресное имя любой сущности уже занято - добавлять к нему id и перепроверять
 это при создании любой сущности (в т.ч. пользователя, беседы, обсуждения, книги, раздела, заметки + журнал, дневник)
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 возможность задания положения (слева, по середине, справа) и обтекания (единолично или обтекается) у картинки
 форматирование формулы: по центру отдельно, или в тексте
 
 
-генерилка id: имя, имя + дата + в + время + '№' + random_symbol
 
 
 
@@ -515,6 +508,7 @@ escape_id при выводе адресных имён, и всех id - про
 
 
 
+
 1 день:
 
 в читальне сделать перенос разделов и заметок
@@ -524,6 +518,35 @@ escape_id при выводе адресных имён, и всех id - про
 в заметке:
 проставлять author при Wiki_processor.parse() - только для заметок в читальне (мб убрать это из wiki parser - attr('author'))
 при изменении элемента (с помощью tool или просто в тексте) = менять автора на себя
+
+
+
+
+
+
+
+
+
+
+
+2 день:
+
+// для всех правок - черновики (самосохраняющиеся)
+
+черновик создаётся сразу после нажатия кнопки правки
+
+самосохранять каждые 10 секунд, если есть изменения.
+при загрузке страницы, если есть черновик - показывать вверху, что "есть черновик", и ссылку "перейти к черновику" (переходить в правку и применять его).
+при сохранении - удалять черновик в корзину.
+
+черновики при нажатии "отмена" - удаляются в корзину
+
+черновик самосохраняется только если стало больше символов, чем было на предыдущем сохранении.
+можно сохранить вручную черновик (в середине кнопка)
+она становится неактивной, когда черновик сохраняется, и пишет "черновик сохранён".
+при изменении - опять активна (keypress, cut, copy, paste).
+
+
 
 
 
@@ -553,29 +576,10 @@ escape_id при выводе адресных имён, и всех id - про
 
 
 
+
+
+
 3 день:
-
-для всех правок - черновики (самосохраняющиеся)
-
-черновик создаётся сразу после нажатия кнопки правки
-
-самосохранять каждые 10 секунд, если есть изменения.
-при загрузке страницы, если есть черновик - показывать вверху, что "есть черновик", и ссылку "перейти к черновику" (переходить в правку и применять его).
-при сохранении - удалять черновик в корзину.
-
-черновики при нажатии "отмена" - удаляются в корзину
-
-черновик самосохраняется только если стало больше символов, чем было на предыдущем сохранении.
-можно сохранить вручную черновик (в середине кнопка)
-она становится неактивной, когда черновик сохраняется, и пишет "черновик сохранён".
-при изменении - опять активна (keypress, cut, copy, paste).
-
-
-
-
-
-
-4 день:
 
 сделать новости
 
@@ -592,38 +596,10 @@ session.последняя_прочитанная_новость
 
 
 
+снасти.escape_id - escape id на сервере для всех id и адресных имён (при создании)
 
 uncomment '/ошибка'
 
+не Development в конфигах.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-I'm trying to mirror data from MongoDB to a web page.
-I.e. I have a list of movies in the DB, and the same list on a web page.
-To avoid refreshing the page manually, I try to mirror the data in such a way that on a web page I always (eventually) have the exact copy of the data from the DB.
-Since refresh is not cool, I try to make it through "partial updates".
-The idea is that every update of the collection increments this collection's version.
-Then the update is pushed to the web page via a WebSocket connection, and voila - we have the exact same data on the web page as if we were looking directly into the DB.
-
-But, I didn't find a possibility to implement such versioning in MongoDB.
-If I store the collection version number in some Special Collection, then, given the fact that MongoDB doesn't support cross-collection transactions, there exists a gap between the moment we update the collection and the moment we increment its version, therefore breaking my versioned partial update system.
-That would be handy if there was some way to know that a particular collection update corresponds to some version number of this collection, i.e. that would be handy if the "update + version increase + return this version" operation was atomic.
-
-Is there such a possibility in MongoDB?
-Do you plan to implement this?
-Can you suggest me another way to keep the data in the web browser an exact representation of the data in the database?
-
+//свой smtp сервер, и от него слать письма.

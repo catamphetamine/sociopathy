@@ -161,6 +161,9 @@ Object.clone = (obj) ->
 	
 	return newInstance
 
+String.prototype.random = () ->
+	@split('')[Math.floor(Math.random() * @length)]
+
 Array.toString = (array) ->
 	string = '['
 	

@@ -2,6 +2,8 @@ domain = require 'domain'
 
 require 'coffee-script'
 
+require './tools/date'
+
 global.redis = require 'redis'
 	
 global.mode = 'development'
@@ -62,8 +64,6 @@ global.messages = require './controller/messages'
 global.session = require './session'
 
 #global.почта.письмо(кому: 'Николай Кучумов <kuchumovn@gmail.com>', тема: 'Test', сообщение: 'Проверка {{связи}}', данные: { связи: 'связи' })
-
-require './tools/date'
 
 require './upload_server'
 
