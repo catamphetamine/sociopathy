@@ -1,5 +1,5 @@
 class Цепь
-	debug: no
+	#debug: yes
 
 	constructor: (вид) ->
 		@$ = {}
@@ -16,17 +16,22 @@ class Цепь
 			ошибка = снасти.ошибка(ошибка)
 			console.error ошибка
 			
+		options = {}
+			
 		if вид?
 			if typeof вид == 'function'
 				@callback = вид
 				@обработчик_ошибок_по_умолчанию = (ошибка) =>
 					@callback(ошибка)
+				options = arguments[1] || {}
 			else
 				switch вид
 					when 'web'
 						вывод = arguments[1]
-						if not вывод?
-							console.error 'no web output'
+						options = arguments[2] || {}
+												
+						if not вывод? || Object.пусто(вывод)
+							console.error 'no web output: arguments = ' + Array.toString(arguments)
 							[].where_am_i()
 							throw 'no web output'
 							
@@ -42,7 +47,7 @@ class Цепь
 							
 							if ошибка.options?
 								данные_ошибки.уровень = ошибка.options.уровень
-								
+							
 							if ошибка.display_this_error?
 								console.error(ошибка.error)
 								вывод.send(данные_ошибки)
@@ -54,39 +59,59 @@ class Цепь
 								
 					when 'websocket'
 						соединение = arguments[1]
+						options = arguments[2] || {}
 						@обработчик_ошибок_по_умолчанию = (ошибка) ->
 							ошибка = снасти.ошибка(ошибка)
 							console.error ошибка
 							соединение.emit 'ошибка', ошибка: yes
+					else
+						options = arguments[1] || {}
 						
-		process.nextTick =>
-			if @обработчик_ошибок_по_умолчанию?
-				@ошибка @обработчик_ошибок_по_умолчанию
-			@дальше()
+		if options.debug?
+			@debug = yes
+			console.log('#@################')
+			
+		if options.upload?
+			#
+		else
+			process.nextTick =>
+				@go()
 	
+	go: ->
+		if @обработчик_ошибок_по_умолчанию?
+			@ошибка @обработчик_ошибок_по_умолчанию
+		@дальше()
+	
+	on_error: (ошибка, номер_действия) ->
+		#if @debug
+		console.log "Произошла ошибка: #{ошибка}"
+		
+		ловушка = null	
+		if номер_действия?
+			ловушка = @найти_ловушку(номер_действия)
+		
+		if ловушка?
+			result = ловушка.алгоритм(ошибка)
+			if result != no
+				@остановлена = yes
+				return
+		else
+			#console.error "Error:"
+			#console.error ошибка
+			@обработчик_ошибок_по_умолчанию(ошибка)
+
 	возврат: (откуда, из_какого_поддействия) =>
 		функция_возврата = (ошибка) =>
 			if @debug
 				console.log '==================='
 				
 			if (@остановлена)
-				console.error 'The conveyor is shut down'
-				return
+				return console.error 'The conveyor was shut down due to an error'
 			
 			if ошибка?
 				if @debug
-					console.log "Произошла ошибка: #{ошибка}"
-					
-				ловушка = @найти_ловушку откуда
-				
-				if ловушка?
-					result = ловушка.алгоритм ошибка
-					if result != no
-						@остановлена = yes
-						return
-				else
-					console.error "Error:"
-					return console.error ошибка
+					console.log "Действие #{действие.номер} не было выполнено из-за ошибки."
+				return @on_error(ошибка, откуда)
 		
 			переменные = [].slice.call arguments, 1
 			данные = переменные[0]
@@ -225,8 +250,7 @@ class Цепь
 		try
 			действие()
 		catch ошибка
-			@остановлена = yes
-			@обработчик_ошибок_по_умолчанию(ошибка)
+			@on_error(ошибка)
 	
 	дальше: (переменные) ->
 		действие = @следующее_действие()

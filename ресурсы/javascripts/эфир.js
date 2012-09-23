@@ -79,12 +79,8 @@ $(document).on('panel_loaded', function()
 			panel.loading.show()
 		})
 		
-		var страница = page
 		эфир.on('готов', function()
 		{
-			if (страница.void)
-				return
-				
 			эфир.is_ready = true
 				
 			if (!reconnected)

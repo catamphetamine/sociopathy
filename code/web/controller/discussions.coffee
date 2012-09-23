@@ -41,7 +41,7 @@ options.создатель = (_id, возврат) ->
 	if typeof _id == 'string'
 		_id = db('discussions').id(_id)
 	
-	new Цепочка(возврат)
+	цепь(возврат)
 		.сделать ->
 			db('messages').find({ общение: _id, чего: 'обсуждения' }, { sort: [['_id', 1]], limit: 1 }).toArray(@)
 			
@@ -52,7 +52,7 @@ options.создатель = (_id, возврат) ->
 			@.done(сообщения[0].отправитель)
 		
 options.сообщения_чего = (ввод, возврат) ->
-	new Цепочка(возврат)
+	цепь(возврат)
 		.сделать ->
 			if ввод.настройки._id?
 				return db('discussions').findOne({ _id: ввод.настройки._id }, @)
@@ -84,7 +84,7 @@ options.extra_get = (data, environment, возврат) ->
 	возврат()
 
 options.mark_new = (сообщения, environment, возврат) ->
-	new Цепочка(возврат)
+	цепь(возврат)
 		.сделать ->
 			db('people_sessions').findOne({ пользователь: environment.пользователь._id }, @)
 			
@@ -116,7 +116,7 @@ options.latest_read = (session) ->
 	return
 			
 options.notify = (_id, environment, возврат) ->
-	new Цепочка(возврат)
+	цепь(возврат)
 		.сделать ->
 			db('discussions').findOne({ _id: environment.сообщения_чего._id }, @._.в 'обсуждение')
 			
@@ -148,7 +148,7 @@ options.notify = (_id, environment, возврат) ->
 			@.done()
 			
 options.message_read = (_id, environment, возврат) ->
-	new Цепочка(возврат)
+	цепь(возврат)
 		.сделать ->
 			path = "последние_прочитанные_сообщения.обсуждения." + environment.сообщения_чего._id
 			
@@ -180,7 +180,7 @@ options.message_read = (_id, environment, возврат) ->
 			db('people_sessions').update(query, { $unset: unset }, @)
 			
 options.save = (сообщение, environment, возврат) ->
-	new Цепочка(возврат)
+	цепь(возврат)
 		.сделать ->
 			db('messages').save({ отправитель: environment.пользователь._id, сообщение: сообщение, когда: new Date(), общение: environment.сообщения_чего._id, чего: 'обсуждения' }, @._.в 'сообщение')
 	

@@ -5,6 +5,8 @@
 	var the_picture
 	var avatar
 	var content
+
+	page.query('.photo', 'photo')
 	
 	Режим.пообещать('правка')
 	Подсказки.подсказка('Здесь вы можете посмотреть данные об этом члене нашей сети. Если это ваша личная карточка, вы сможете изменить данные в ней, переключившись в режим правки.')
@@ -50,7 +52,12 @@
 			parameters: { адресное_имя: page.data.адресное_имя },
 			get_data: function (data)
 			{
-				parse_date(data, 'когда был здесь')
+				if (data['когда был здесь'])
+					parse_date(data, 'когда был здесь')
+					
+				if (data['время рождения'])
+					parse_date(data, 'время рождения')
+				
 				page.data.пользователь_сети = data
 				data.with_online_status = true
 				return data
@@ -148,7 +155,7 @@
 		show_photo()
 		show_online_status()
 		show_minor_info()
-		show_links()
+		//show_links()
 		
 		initialize_editables()
 		initialize_edit_mode_effects()
@@ -204,13 +211,16 @@
 	
 	function show_photo()
 	{
-		if (!page.data.пользователь_сети['загружена ли фотография?'])
+		if (!page.data.пользователь_сети.photo_version)
+		{
+			page.photo.hide()
 			return
+		}
 	
 		var image = $('<img/>')
-		image.attr('src', '/загруженное/люди/' + page.data.пользователь_сети.имя + '/фотография.jpg')
+		image.attr('src', '/загруженное/люди/' + page.data.пользователь_сети['адресное имя'] + '/фотография.jpg' + '?version=' + page.data.пользователь_сети.photo_version)
 	
-		page.get('> .photo').append(image)
+		page.photo.empty().append(image)
 	}
 	
 	function show_online_status()
@@ -280,6 +290,9 @@
 		
 		$(document).on_page('режим.правка', function()
 		{
+			if (page.photo.hidden())
+				page.photo.show()
+				
 			//the_picture.animate({ 'boxShadow': '0 0 20px ' + highlight_color })
 		})
 	
@@ -292,6 +305,7 @@
 		})
 	}
 	
+	/*
 	function show_links()
 	{
 		var links_block = page.get('.miscellaneous .links')
@@ -306,6 +320,7 @@
 			list.append($('<li/>').append($('<a/>').attr('href', link).text(human_readable_url(link))))
 		})
 	}
+	*/
 	
 	function human_readable_url(url)
 	{
@@ -324,26 +339,60 @@
 		}
 	}
 	
+	var add_minor_info
+	
 	function show_minor_info()
 	{
-		дополнительные_данные =
-		[
-			'время рождения',
-			'характер',
-			'убеждения',
-			'семейное положение'
-		]
+		/*
+		var add_minor_info_window = simple_value_dialog_window
+		({
+			class: 'add_minor_info_window',
+			title: 'Добавить',
+			fields:
+			[{
+				id: 'title',
+				description: 'Ссылка на аудиозапись',
+				validation: 'наглядный_писарь.аудиозапись.ссылка'
+			},
+			{
+				id: 'value',
+				description: 'Название',
+				validation: 'наглядный_писарь.аудиозапись.название'
+			}],
+			ok: function(data)
+			{
+				data.url = Uri.correct(data.url.collapse_lines())
+				options.ok(data)
+			},
+			on_open: function()
+			{	
+				if (options.open)
+					options.open()
+			},
+			on_cancel: function()
+			{
+				if (options.cancel)
+					options.cancel()
+			}
+		})
+		.window
+		*/
+		
+		text_button.new($('.minor_info .add .button')).does(function()
+		{
+			add_minor_info('Название', 'Описание', { dummy: true })
+		})
 		
 		var container = $('.minor_info')
 		var left = container.find('> .left')
 		var right = container.find('> .right')
 		
 		var odd = true
-		дополнительные_данные.forEach(function(поле)
+						
+		add_minor_info = function(поле, значение, options)
 		{
-			if (typeof page.data.пользователь_сети[поле] === 'undefined')
-				return
-				
+			options = options || {}
+			
 			var info = $('<div/>')
 			info.addClass('info')
 			
@@ -352,26 +401,48 @@
 			title.appendTo(info)
 			
 			var value = $('<dd/>')
-			value.text(page.data.пользователь_сети[поле])
+			
+			if (значение)
+				value.text(значение + '')
+				
 			value.appendTo(info)
+			
+			if (options.dummy)
+			{
+				title.editable()
+				value.editable()
+			}
 			
 			info.appendTo(odd ? left : right)
 			
 			odd = !odd
+		}
+		
+		$(document).on_page('режим.правка', function(event)
+		{
+			$('.minor_info .info').each(function()
+			{
+				$(this).find('dt, dd').editable()
+			})
+		})
+			
+		$(document).on_page('режим.переход', function(event, из, в)
+		{
+			if (из === 'правка')
+			{
+				$('.minor_info .info').each(function()
+				{
+					$(this).find('dt, dd').not_editable()
+				})
+			}
 		})
 	}
 	
 	var image_file_name
+	var photo_file_name
+	
 	function save_changes()
 	{
-		/*
-		if (!image_file_name)
-		{
-			warning('Вы ничего не меняли')
-			return this.allow_to_redo()
-		}
-		*/
-	
 		var данные = page.Data_store.collect()
 		
 		Режим.save_changes_to_server
@@ -382,20 +453,17 @@
 				return true
 			},
 			
-			data: данные.общее,
+			data: Object.x_over_y(данные.общее, { о_себе: данные.о_себе }),
 			
 			url: '/приложение/сеть/человек/данные',
 			method: 'put',
 			
 			ok: function(loading)
 			{
-				//$('.authenticated_user .name').text(данные.общее.имя)
-				
-				var small_picture = $('.authenticated_user .real_picture')
-				small_picture.attr('src', anti_cache_postfix(small_picture.attr('src'))).show()
-	
 				Режим.save_changes_to_server
 				({
+					continues: true,
+			
 					загрузка: loading,
 					
 					anything_changed: function()
@@ -409,9 +477,33 @@
 					url: '/приложение/сеть/человек/картинка',
 					method: 'put',
 					
-					ok: function()
+					ok: function(loading)
 					{
 						image_file_name = null
+						
+						var small_picture = $('.authenticated_user .real_picture')
+						small_picture.attr('src', anti_cache_postfix(small_picture.attr('src'))).show()
+			
+						Режим.save_changes_to_server
+						({
+							загрузка: loading,
+							
+							anything_changed: function()
+							{
+								if (photo_file_name)
+									return true
+							},
+							
+							data: данные.фотография,
+							
+							url: '/приложение/сеть/человек/фотография',
+							method: 'put',
+							
+							ok: function()
+							{
+								photo_file_name = null
+							}
+						})
 					}
 				})
 			}
@@ -426,7 +518,7 @@
 		if (пользователь._id !== page.data.пользователь_сети._id)
 			return
 		
-		var uploader = new Uploader($('.upload_new_picture'),
+		var avatar_uploader = new Uploader($('.upload_new_picture'),
 		{
 			//url: '/загрузка/человек/сменить картинку',
 			//url: '/приложение/человек/сменить картинку',
@@ -440,12 +532,36 @@
 				image_file_name = data.имя
 				the_picture.attr('src', data.адрес).show()
 				
-				id_card.find('.uploading_picture').hide()
+				id_card.find('.uploading_picture').hide() //fade_out(0.2)
 			},
 			error: function()
 			{
 				error("Не удалось загрузить картинку")
-				id_card.find('.uploading_picture').hide()
+				id_card.find('.uploading_picture').fade_out(0.2)
+			},
+			Ajax: page.Ajax
+		})
+	
+		var photo_uploader = new Uploader($('.upload_new_photo'),
+		{
+			url: 'http://' + host + ':' + Configuration.Upload_server_port + '/сеть/человек/фотография',
+			parameter: { name: 'user', value: $.cookie('user') },
+			success: function(data)
+			{
+				if (data.ошибка)
+					return error(data.ошибка)
+				
+				get_image_size(data.адрес, function(size)
+				{
+					photo_file_name = data.имя
+					page.photo.find('> img').attr('src', data.адрес).width(size.width).height(size.height)
+					page.photo.find('.uploading').hide() //fade_out(0.2)		 
+				})
+			},
+			error: function()
+			{
+				error("Не удалось загрузить фотографию")
+				page.photo.find('.uploading').fade_out(0.2)
 			},
 			Ajax: page.Ajax
 		})
@@ -453,6 +569,8 @@
 		$(document).on_page('режим.правка', function(event)
 		{
 			//info('Вы можете сменить картинку (120 на 120), нажав на неё.')
+	
+			// avatar
 	
 			var file_chooser = $('.upload_new_picture')
 			
@@ -472,8 +590,36 @@
 				if (file.type !== "image/jpeg" && file.type !== "image/png")
 					return warning('Можно загружать только картинки форматов Jpeg и Png')
 				
-				id_card.find('.uploading_picture').show()
-				uploader.send()
+				id_card.find('.uploading_picture').fade_in(0.2)
+				avatar_uploader.send()
+			})
+			
+			// photo
+			
+			var photo_file_chooser = $('.upload_new_photo')
+			
+			page.photo.find('> img').on('click.режим_правка', function(event)
+			{
+				event.preventDefault()
+				photo_file_chooser.click()
+			})
+			
+			photo_file_chooser.on('change.режим_правка', function()
+			{
+				var file = photo_file_chooser[0].files[0]
+				
+				if (file.size > 5000000)
+					return warning('Эта фотография слишком много весит')
+	
+				if (file.type !== "image/jpeg" && file.type !== "image/png")
+					return warning('Можно загружать только фотографии форматов Jpeg и Png')
+				
+				page.photo.find('.uploading')
+					.width(page.photo.find('> img').width())
+					.height(page.photo.find('> img').height())
+					.fade_in(0.2)
+					
+				photo_uploader.send()
 			})
 		})
 	}
@@ -490,7 +636,9 @@
 		var result =
 		{
 			общее: {},
-			картинка: {}
+			о_себе: {},
+			картинка: {},
+			фотография: {}
 		}
 		
 		Object.each(editable_info, function(selector, key)
@@ -498,7 +646,22 @@
 			result.общее[key] = id_card.find(selector).text()
 		})
 		
+		$('.minor_info .info').each(function()
+		{
+			var key = $(this).find('dt').text().trim()
+			var value = $(this).find('dd').text().trim()
+			
+			if (!key && !value)
+				return
+			
+			if (key === 'Название' && value === 'Описание')
+				return
+			
+			result.о_себе[key] = value
+		})
+		
 		result.картинка.имя = image_file_name
+		result.фотография.имя = photo_file_name
 		
 		return result
 	}
@@ -508,6 +671,11 @@
 		Object.each(data.общее, function(value, key)
 		{
 			id_card.find(editable_info[key]).attr('editable', true).text(value)
+		})
+		
+		Object.for_each(data.о_себе, function(поле, значение)
+		{
+			add_minor_info(поле, значение)
 		})
 	}
 	
@@ -521,7 +689,9 @@
 				описание: page.data.пользователь_сети.описание,
 				откуда: page.data.пользователь_сети.откуда,
 			},
-			картинка: {}
+			о_себе: page.data.пользователь_сети['о себе'] || {},
+			картинка: {},
+			фотография: {}
 		}
 		
 		return result

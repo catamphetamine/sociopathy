@@ -55,7 +55,8 @@
 	
 	page.unload = function()
 	{
-		scroll_navigation.deactivate()
+		if (scroll_navigation)
+			scroll_navigation.deactivate()
 	}
 	
 	function pictures_loaded()

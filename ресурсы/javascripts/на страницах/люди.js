@@ -13,7 +13,13 @@
 				url: '/приложение/люди',
 				name: 'люди',
 				latest_first: true,
-				batch_size: 18
+				batch_size: 18,
+				
+				loaded: function(people)
+				{
+					parse_dates(people, 'время рождения')
+					return people
+				}
 			},
 			container: '#id_cards',
 			template: '/страницы/кусочки/личная карточка.html',

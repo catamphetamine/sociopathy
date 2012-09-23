@@ -35,6 +35,11 @@ var text_button = new Class
 	{
 		var element = button.get_element(selector_or_element)
 		
+		element.css
+		({
+			'display': 'inline-block'
+		})
+		
 		this.parent(element, $.extend({}, this.default_options, options))		
 	},
 	

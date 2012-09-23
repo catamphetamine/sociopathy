@@ -5,8 +5,8 @@ http_client = require('http')
 
 лекала = require 'jqtpl'
 
-Цепочка = require './conveyor'
-цепь = -> new Цепочка()
+Цепь = require './conveyor'
+цепь = -> new Цепь()
 
 основа_готова = no
 страницы = {}

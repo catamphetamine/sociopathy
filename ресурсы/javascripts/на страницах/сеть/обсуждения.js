@@ -58,7 +58,7 @@ title('Обсуждения');
 						
 						the_button.does(function()
 						{
-							Ajax.delete('/приложение/сеть/обсуждения/подписка',
+							page.Ajax.delete('/приложение/сеть/обсуждения/подписка',
 							{
 								_id: discussion.attr('_id')
 							})

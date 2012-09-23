@@ -18,7 +18,7 @@ file_system = require 'fs'
 	настройки
 
 снасти.отдать_страницу = (название, данные_для_страницы, ввод, вывод, возврат) ->
-	new Цепочка(возврат)
+	цепь(возврат)
 		.сделать ->
 			if global.memcache_available
 				try
@@ -277,7 +277,7 @@ file_system = require 'fs'
 				
 	parameters = options.parameters || {}
 	
-	new Цепочка(возврат)
+	цепь(возврат)
 		.сделать ->
 			query_options = Object.x_over_y(parameters, { limit: ввод.настройки.сколько, sort: [['_id', -1]] })
 			query = Object.clone(options.query)
@@ -341,7 +341,7 @@ file_system = require 'fs'
 	if настройки.задом_наперёд?
 		sort = -sort
 	
-	new Цепочка(возврат)
+	цепь(возврат)
 		.сделать ->
 			if options.total? && not ввод.настройки.всего?
 				return db(options.collection).count(options.query, @.в 'всего')
@@ -409,7 +409,7 @@ file_system = require 'fs'
 			data = @.$.data
 				
 			if not data.пусто() && @._.check_for_earlier_elements?
-				return new Цепочка(@)
+				return цепь(@)
 					.сделать ->
 						db(options.collection).find(Object.merge_recursive({ _id: { $lt: data[0]._id } }, options.query), { limit: 1, sort: [['_id', sort]] }).toArray(@)
 					.сделать (earlier) ->										
@@ -421,3 +421,6 @@ file_system = require 'fs'
 			@.done(@.$)
 	
 module.exports = снасти
+
+global.show_error = (ошибка) ->
+	throw { error: ошибка, display_this_error: yes }

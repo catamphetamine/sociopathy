@@ -20,6 +20,8 @@ module.exports =
 				Size: 120
 			Chat:
 				Size: 48
+		Photo:
+			Size: 1024
 	Mail:
 		Box: 'sobranie.net@gmail.com'
 		Smtp:

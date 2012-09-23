@@ -693,3 +693,21 @@ $.fn.audio_player = function(action, options)
 			this.jouele()
 	}
 }
+
+$.fn.hidden = function()
+{
+	if (this.css('display') === 'none')
+		return true
+	
+	return false
+}
+
+$.fn.editable = function()
+{
+	this.attr('contenteditable', true)
+}
+
+$.fn.not_editable = function()
+{
+	this.removeAttr('contenteditable')
+}

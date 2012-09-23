@@ -393,7 +393,7 @@ function parse_dates(where, property)
 {
 	where.for_each(function()
 	{
-		this[property] = new Date(this[property])
+		parse_date(this, property)
 	})
 }
 
@@ -401,7 +401,7 @@ function parse_date(where, property)
 {
 	if (!where[property])
 		return
-		
+	
 	where[property] = new Date(where[property])
 }
 
@@ -713,4 +713,38 @@ function download(url)
 	}
 	
 	iframe.src = url
+}
+
+function возраст(birth_date)
+{
+	var now = new Date()
+	
+	var years = now.getFullYear() - birth_date.getFullYear() - 1
+	
+	if (now.getMonth() >= birth_date.getMonth())
+		if (now.getDay() >= birth_date.getDay())
+			years++
+			
+	function years_noun()
+	{
+		switch (last_digit(years))
+		{
+			case 0:
+				return 'лет'
+			case 1:
+				return 'год'
+			case 2:
+			case 3:
+			case 4:
+				return 'года'
+			case 5:
+			case 6:
+			case 7:
+			case 8:
+			case 9:
+				return 'лет'
+		}
+	}
+	
+	return years + ' ' + years_noun()
 }

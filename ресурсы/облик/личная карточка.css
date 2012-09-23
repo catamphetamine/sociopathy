@@ -149,11 +149,7 @@
 	
 	.info
 	{
-		position: absolute;
-		left: 180px;
-	
 		margin-top: 82px;
-		margin-left: 100px;
 
 		.type
 		{
@@ -176,7 +172,7 @@
 			width: 100%;
 			text-align: right;
 			
-			margin-top: -4px;
+			margin-top: -3px;
 			
 			font-size: 20px;
 			color: #e81f95;
@@ -204,6 +200,17 @@
 		background-position: top right;
 		background-repeat: no-repeat;
 		background-color: transparent;	
+	}
+
+	.age
+	{
+		float: right;
+		margin-bottom: 16px;
+	
+		font-size: 16px;
+		color: #7d7b7b;
+		
+		cursor: default;
 	}
 
 	.gender[gender="мужской"]

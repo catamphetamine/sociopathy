@@ -50,7 +50,8 @@
 		
 	page.unload = function()
 	{
-		scroll_navigation.deactivate()
+		if (scroll_navigation)
+			scroll_navigation.deactivate()
 	}
 	
 	function center_videos_list()

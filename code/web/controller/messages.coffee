@@ -1,7 +1,7 @@
 exports.messages = (options) ->
 	connected = redis.createClient()
 			
-	new Цепочка()
+	цепь()
 		.сделать ->
 			connected.del(options.id + ':connected', @)
 			
@@ -53,7 +53,7 @@ exports.messages = (options) ->
 							соединение.disconnect()
 					
 						if пользователь?
-							цепь_websocket(соединение)
+							цепь(соединение)
 								.сделать ->
 									connected.hdel(connected_data_source(), пользователь._id, @)
 									
@@ -72,7 +72,7 @@ exports.messages = (options) ->
 							выход()
 					
 					соединение.on 'пользователь', (тайный_ключ) ->
-						цепь_websocket(соединение)
+						цепь(соединение)
 							.сделать ->
 								пользовательское.опознать(тайный_ключ, @.в 'пользователь')
 							
@@ -99,7 +99,7 @@ exports.messages = (options) ->
 					соединение.on 'finish', ->
 						finish = () ->
 							соединение.on 'кто здесь?', ->
-								new цепь_websocket(соединение)
+								цепь(соединение)
 									.сделать ->
 										connected.hgetall(connected_data_source(), @)
 										
@@ -112,7 +112,7 @@ exports.messages = (options) ->
 										соединение.emit 'кто здесь', who_is_connected_info
 							
 							соединение.on 'получить пропущенные сообщения', (с_какого) ->
-								new цепь_websocket(соединение)
+								цепь(соединение)
 									.сделать ->
 										collection.find(these_messages_query({ _id: { $gte: collection.id(с_какого._id) } }, environment), { sort: [['_id', 1]] }).toArray(@.в 'сообщения')
 									
@@ -134,7 +134,7 @@ exports.messages = (options) ->
 								broadcast('не смотрит', пользовательское.поля(пользователь))
 							
 							соединение.on 'вызов', (_id) ->
-								цепь_websocket(соединение)
+								цепь(соединение)
 									.сделать ->
 										if not эфир.отправить('общее', 'вызов', пользовательское.поля(пользователь), { кому: _id })
 											return соединение.emit('ошибка', 'Вызываемый пользователь недоступен')
@@ -143,7 +143,7 @@ exports.messages = (options) ->
 								broadcast('пишет', пользовательское.поля([], пользователь))
 							
 							соединение.on 'сообщение', (сообщение) ->
-								цепь_websocket(соединение)
+								цепь(соединение)
 									.сделать ->
 										options.save(сообщение, environment, @._.в 'сообщение')
 										
@@ -156,8 +156,6 @@ exports.messages = (options) ->
 										@.done()
 										
 									.сделать ->
-										console.log('!!!!!!! notify')
-										console.log(@._.сообщение)
 										options.notify(@._.сообщение._id, environment, @)
 										
 									.сделать ->
@@ -171,7 +169,7 @@ exports.messages = (options) ->
 										broadcast('сообщение', данные_сообщения)
 																						
 							соединение.on 'прочитано', (_id) ->
-								цепь_websocket(соединение)
+								цепь(соединение)
 									.сделать ->
 										if options.message_read?
 											options.message_read(collection.id(_id), environment, @)
@@ -182,7 +180,7 @@ exports.messages = (options) ->
 											
 										эфир.отправить('новости', 'прочитано', { что: options.in_ether_id, сообщения_чего: сообщения_чего, _id: _id.toString() })
 
-							цепь_websocket(соединение)
+							цепь(соединение)
 								.сделать ->
 									connected.hset(connected_data_source(), пользователь._id.toString(), JSON.stringify(пользовательское.поля(пользователь)), @)
 								
@@ -191,7 +189,7 @@ exports.messages = (options) ->
 									соединение.emit 'готов'
 									
 						if options.authorize?
-							цепь_websocket(connection)
+							цепь(соединение)
 								.сделать ->
 									options.authorize(environment, @)
 								.сделать ->
@@ -202,7 +200,7 @@ exports.messages = (options) ->
 					соединение.emit 'поехали'
 					
 			show_from = (environment, возврат) ->
-				new Цепочка(возврат)
+				цепь(возврат)
 					.сделать ->
 						db('people_sessions').findOne({ пользователь: environment.пользователь._id }, @)
 						
@@ -245,7 +243,7 @@ exports.messages = (options) ->
 				цепь(вывод)
 					.сделать ->
 						if options.сообщения_чего?
-							return new Цепочка(@)
+							return цепь(@)
 								.сделать ->
 									options.сообщения_чего(ввод, @)
 								.сделать (сообщения_чего) ->
@@ -260,7 +258,7 @@ exports.messages = (options) ->
 						
 					.сделать ->
 						if not ввод.настройки.после?
-							return new Цепочка(@)
+							return цепь(@)
 								.сделать ->
 									show_from(environment, @)
 									
@@ -329,7 +327,7 @@ exports.messages = (options) ->
 						_id = db('messages').id(data._id)
 						db('messages').update({ _id: _id, отправитель: пользователь._id }, { $set: { сообщение: data.content } }, @)
 					
-					#new Цепочка(@)
+					#цепь(@)
 						#.сделать ->		
 						#	db('messages').update({ _id: _id }, { $set: { сообщение: data.content } }, @)
 					

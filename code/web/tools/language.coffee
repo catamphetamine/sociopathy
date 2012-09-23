@@ -160,3 +160,21 @@ Object.clone = (obj) ->
 		newInstance[key] = Object.clone obj[key]
 	
 	return newInstance
+
+Array.toString = (array) ->
+	string = '['
+	
+	i = 0
+	while (i < array.length)
+		if typeof array[i] == 'object'
+			string += JSON.stringify(array[i])
+		else
+			string += array[i]
+			
+		if (i < array.length - 1)
+			string += ', '
+		i++
+		
+	string += ']'
+	
+	return string

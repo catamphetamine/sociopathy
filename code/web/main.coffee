@@ -28,11 +28,21 @@ global.db = (collection) ->
 # memcache
 memcache = require('memcache')
 global.memcache = new memcache.Client(Options.Memcache.Port, 'localhost')
-global.хранилище = require('mongoskin').db('localhost:' + Options.MongoDB.Port + '/' + Options.MongoDB.Database + '?auto_reconnect') #=true&safe=true')
+global.хранилище = require('mongoskin').db('localhost:' + Options.MongoDB.Port + '/' + Options.MongoDB.Database + '?auto_reconnect=true&safe=true')
 
-global.Цепочка = require './tools/conveyor'
-global.цепь = (вывод) -> new global.Цепочка('web', вывод)
-global.цепь_websocket = (соединение) -> new global.Цепочка('websocket', соединение)
+global.Цепь = require './tools/conveyor'
+global.цепь = (object, options) ->
+	if not object? || typeof object == 'function'
+		return new global.Цепь(object, options)
+
+	if object.shouldKeepAlive?
+		return new global.Цепь('web', object, options)
+		
+	if object.namespace? && object.namespace.sockets?
+		return new global.Цепь('websocket', object, options)
+	
+	console.log object
+	throw 'Unknown object for conveyor: ' + object
 
 global.снасти = require './tools/tools'
 global.пользовательское = require './tools/user_tools'
@@ -86,7 +96,7 @@ global.memcache.on 'error', (error) ->
 
 global.memcache.connect()
 	
-new Цепочка()	
+цепь()	
 	.сделать ->
 		web_server_domain = domain.create()
 		

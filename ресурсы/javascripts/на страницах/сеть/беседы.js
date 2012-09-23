@@ -56,7 +56,7 @@ title('Беседы');
 						
 						the_button.does(function()
 						{
-							Ajax.delete('/приложение/сеть/беседы/участие',
+							page.Ajax.delete('/приложение/сеть/беседы/участие',
 							{
 								_id: talk.attr('_id')
 							})

@@ -24,7 +24,7 @@ online = redis.createClient()
 	
 			still_online = false
 			for id, listener of listeners
-				if listener.пользователь == _id
+				if listener.пользователь == id
 					still_online = true
 					
 			finish_disconnection = () ->
@@ -35,7 +35,7 @@ online = redis.createClient()
 			return finish_disconnection() if still_online
 				
 			if пользователь?
-				цепь_websocket(соединение)
+				цепь(соединение)
 					.сделать ->
 						online.hdel('ether:online', пользователь._id, @)
 						
@@ -56,7 +56,7 @@ online = redis.createClient()
 				выход()
 		
 		соединение.on 'пользователь', (тайный_ключ) ->
-			цепь_websocket(соединение)
+			цепь(соединение)
 				.сделать ->
 					пользовательское.опознать(тайный_ключ, @.в 'пользователь')
 				
@@ -102,7 +102,7 @@ online = redis.createClient()
 					#соединение.emit('online', Object.выбрать(['_id'], пользователь))
 					
 					соединение.on 'уведомления', () ->
-						цепь_websocket(соединение)
+						цепь(соединение)
 							.сделать ->
 								новости.уведомления(соединение.пользователь, @)
 								
@@ -141,7 +141,7 @@ exports.отправить = (group, name, data, options, возврат) ->
 	options = options || {}
 	возврат = возврат || (() ->)
 	
-	new Цепочка(возврат)
+	цепь(возврат)
 		.сделать ->
 			connections = соединения.эфир
 			
@@ -193,7 +193,7 @@ exports.пользователи = () ->
 exports.отправить_одному_соединению = (group, name, data, options, возврат) ->
 	возврат = возврат || (() ->)
 	
-	new Цепочка(возврат)
+	цепь(возврат)
 		.сделать ->
 			connections = соединения.эфир
 				
@@ -224,7 +224,7 @@ exports.отправить_одному_соединению = (group, name, dat
 				return @.done(yes)
             
 exports.в_сети_ли = (_id, возврат) ->
-	new Цепочка(возврат)
+	цепь(возврат)
 		.сделать ->
 			online.hget('ether:online', _id + '', @)
 			

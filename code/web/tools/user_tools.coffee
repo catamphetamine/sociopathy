@@ -1,7 +1,7 @@
 Cookie_expiration_date = new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 365 * 50)
 
 exports.войти = (пользователь, ввод, вывод, возврат) ->
-	new Цепочка(возврат)
+	цепь(возврат)
 		.сделать ->
 			if ввод.пользователь?
 				if ввод.пользователь._id == пользователь._id
@@ -54,7 +54,7 @@ exports.не_он = (_id, ввод, вывод) ->
 	return no
 	
 exports.опознать = (тайный_ключ, возврат) ->
-	new Цепочка(возврат)
+	цепь(возврат)
 		.сделать ->
 			db('people_private_keys').findOne({ 'тайный ключ': тайный_ключ }, @)
 			
@@ -70,7 +70,7 @@ exports.тайный_ключ = (_id, возврат) ->
 	if typeof _id == 'string'
 		_id = db('people').id(_id)
 		
-	new Цепочка(возврат)
+	цепь(возврат)
 		.сделать ->
 			db('people_private_keys').findOne({ пользователь: _id }, @)
 			
@@ -78,14 +78,14 @@ exports.тайный_ключ = (_id, возврат) ->
 			@.done(тайный_ключ['тайный ключ'])
 
 exports.get_session_data = (тайный_ключ, возврат) ->
-	new Цепочка(возврат)
+	цепь(возврат)
 		.сделать ->
 			redis_session_store.get(тайный_ключ, @)
 		.сделать (session_data) ->
 			возврат(null, session_data)
 
 exports.set_session_data = (тайный_ключ, ключ, значение, возврат) ->
-	new Цепочка(возврат)
+	цепь(возврат)
 		.сделать ->
 			redis_session_store.get(тайный_ключ, @)
 		.сделать (session_data) ->
@@ -133,7 +133,7 @@ exports.взять = (_id, настройки, возврат) ->
 		example = { _id: db('people').id(_id) }
 		single = true
 		
-	new Цепочка(возврат)
+	цепь(возврат)
 		.сделать ->
 			if single
 				db('people').findOne(example, @)
@@ -150,10 +150,11 @@ exports.взять = (_id, настройки, возврат) ->
 				else
 					for человек in result
 						пользовательское.скрыть(человек)
+						
 			@.done(result)
 			
 exports.подставить = (куда, переменная, возврат) ->
-	new Цепочка(возврат)
+	цепь(возврат)
 		.сделать ->
 			_ids = []
 			
@@ -210,7 +211,7 @@ exports.в_сети_ли = (_id, возврат) ->
 	if typeof _id == 'string'
 		_id = db('people').id(_id)
 		
-	new Цепочка(возврат)
+	цепь(возврат)
 		.сделать ->
 			db('people_sessions').findOne({ пользователь: _id }, @)
 		.сделать (session) ->

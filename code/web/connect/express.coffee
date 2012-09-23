@@ -14,7 +14,7 @@ access_logger = (ввод, вывод, следующий) ->
 	db('people_sessions').update({ пользователь: ввод.пользователь._id }, { $set: { 'когда был здесь': когда_был_здесь }}) #, online: yes
 	
 	check_online_status = () ->
-		new Цепочка()
+		цепь()
 			.сделать ->
 				db('people_sessions').findOne({ пользователь: ввод.пользователь._id }, @)
 				
@@ -26,7 +26,7 @@ access_logger = (ввод, вывод, следующий) ->
 						#db('people_sessions').update({ пользователь: ввод.пользователь._id }, { $set: { online: no } })
 					ввод.session.delete('online_timeout')
 	
-	new Цепочка()
+	цепь()
 		.сделать ->
 			ввод.session.get('online_timeout', @)
 			

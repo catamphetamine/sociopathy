@@ -16,7 +16,7 @@ exports.письмо = (настройки) ->
 		username: Options.Mail.Smtp.Username
 		password: Options.Mail.Smtp.Password
 	
-	new Цепочка()
+	цепь()
 		.сделать ->
 			mailer.send(options, @)
 		#.сделать ->

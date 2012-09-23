@@ -116,22 +116,6 @@
 	{
 		text-align: center;
 		
-		> .photo
-		{
-			img
-			{
-				margin-top: 80px;
-			
-				border-width: 1px;
-				border-style: solid;
-				border-color: #afafaf;
-				
-				border-radius: 10px;
-				
-				.beautiful_shadow_3(0, 0, 4px, 6px, 10px, 0.1);
-			}
-		}
-		
 		> .miscellaneous
 		{
 			text-align: left;
@@ -159,6 +143,15 @@
 				vertical-align: top;
 				
 				margin: 0;
+				
+				> .add
+				{
+					display: none;
+					
+					text-align: center;
+					
+					margin-bottom: 40px;
+				}
 				
 				.info
 				{
@@ -242,22 +235,44 @@ body[mode="правка"]
 
 .business_card .uploading_picture
 {
-	display: none;
-
-	position: absolute;  
-	top: 0;
-	left: 0;
-
 	width: 120px;
-	height: 70px;
+	height: 120px;
 	
-	background-color: #7f7f7f;
-	color: #ffffff;
+	> span
+	{
+		font-size: 18px;
+		margin-top: -9px;
+		letter-spacing: 0;
+	}
+}
+
+.photo
+{
+	position: relative;
+	display: inline-block;
 	
-	text-align: center;
-	padding-top: 50px;
+	margin-top: 80px;
 	
-	font-size: 18px;
+	> img, > .uploading
+	{
+		border-width: 1px;
+		border-style: solid;
+		
+		border-radius: 10px;
+	}
+	
+	> img
+	{
+		border-color: #afafaf;
+		
+		.beautiful_shadow_3(0, 0, 4px, 6px, 10px, 0.1);
+	}
+}
+				
+.upload_new_photo
+{
+	position: absolute;
+	visibility: hidden;
 }
 
 body[mode="правка"] #content

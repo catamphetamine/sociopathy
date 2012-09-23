@@ -8,7 +8,7 @@ options.in_ether_id = 'болталка'
 options.правка_сообщения_чего = 'болталки'
 
 options.mark_new = (сообщения, environment, возврат) ->
-	new Цепочка(возврат)
+	цепь(возврат)
 		.сделать ->
 			db('people_sessions').findOne({ пользователь: environment.пользователь._id }, @)
 			
@@ -34,7 +34,7 @@ options.latest_read = (session) ->
 	return
 
 options.notify = (_id, environment, возврат) ->
-	new Цепочка(возврат)
+	цепь(возврат)
 		.сделать ->
 			db('people_sessions').update({ пользователь: { $ne: environment.пользователь._id } }, { $set: { 'новости.болталка': _id.toString() } }, { multi: yes }, @)
 			
@@ -48,7 +48,7 @@ options.notify = (_id, environment, возврат) ->
 			@.done()
 
 options.message_read = (_id, environment, возврат) ->
-	new Цепочка(возврат)
+	цепь(возврат)
 		.сделать ->
 			path = 'последние_прочитанные_сообщения.болталка'
 			
@@ -68,7 +68,7 @@ options.message_read = (_id, environment, возврат) ->
 			db('people_sessions').update({ пользователь: environment.пользователь._id, 'новости.болталка': _id.toString() }, { $unset: { 'новости.болталка': _id.toString() } }, @)
 			
 options.save = (сообщение, environment, возврат) ->
-	new Цепочка(возврат)
+	цепь(возврат)
 		.сделать ->
 			db('chat').save({ отправитель: environment.пользователь._id, сообщение: сообщение, когда: new Date() }, @._.в 'сообщение')
 		

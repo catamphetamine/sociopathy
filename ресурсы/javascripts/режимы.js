@@ -392,7 +392,9 @@ var Режим = (function()
 		{
 			if (options.continues)
 				return options.ok(загрузка)
-					
+			else
+				options.ok()
+			
 			загрузка.hide()
 			Режим.разрешить_переходы()
 			Режим.изменения_сохранены()

@@ -32,7 +32,7 @@ exports.get = (id, key, возврат) ->
 		возврат = key
 		key = null
 		
-	new Цепочка(возврат)
+	цепь(возврат)
 		.сделать ->
 			client.get(prefix + id, @)
 		.сделать (data) ->
@@ -46,7 +46,7 @@ exports.get = (id, key, возврат) ->
 exports.set = (id, extra_data, возврат) ->
 	multi = client.multi()
 
-	new Цепочка(возврат)
+	цепь(возврат)
 		.сделать ->
 			multi.get(prefix + id, @)
 			

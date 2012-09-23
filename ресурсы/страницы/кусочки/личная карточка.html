@@ -12,7 +12,7 @@
 			<div>
 				<img {{if !$data.avatar_version}} style="display: none" {{/if}} class="real_picture" {{if $data.avatar_version}} src="/загруженное/люди/${$data['адресное имя']}/картинка/большая.jpg?version=${avatar_version}" {{/if}}/>
 				{{if Страница.эта() === 'человек/человек' }}
-					<div class="uploading_picture">Загружается</div>
+					<div class="uploading uploading_picture"><span>Загружается</span></div>
 				{{/if}}
 			</div>
 		</div>
@@ -28,6 +28,12 @@
 		<!-- gender -->
 		<div class="gender" gender="${пол}"></div>
 		
+		{{if $data['время рождения']}}
+			<div class="clear"></div>
+		
+			<div class="age">${возраст($data['время рождения'])}</div>
+		{{/if}}
+		
 		<div class="clear"></div>
 		
 		<!-- origin -->
@@ -38,9 +44,10 @@
 		
 		<div class="spacer"></div>
 		
-		<!-- interests -->
+		<!-- interests
 		<div class="type">увлечения</div>
 		<div class="value">...</div>
+		 -->
 	</section>
 	
 	<section class="miscellaneous" {{if with_online_status}}{{else}} style="display: none" {{/if}}>

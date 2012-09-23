@@ -457,15 +457,19 @@ function anti_cache_postfix(url)
 	return url.before('?') + anti_cache_postfix()
 }
 
-window.onerror = function()
+window.onerror = function(ошибка, url, line)
 {
+	// игнорировать ошибки разрыва соединения с WebSocket в FireFox
+	if (ошибка.contains('InvalidStateError: An attempt was made to use an object that is not, or is no longer, usable'))
+		throw ошибка
+	
 	navigating = false
 	
 	if (first_time_page_loading)
 	{
 		//if (путь_страницы() !== 'ошибка')
 		//	window.location = '/ошибка' + '?' + 'url=' + encodeURI(window.location)
-		error('Ошибка на сайте', { sticky: true })
+		error('Ошибка на странице', { sticky: true })
 	}
 	else
 	{
