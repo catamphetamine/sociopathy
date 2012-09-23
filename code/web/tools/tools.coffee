@@ -432,7 +432,35 @@ file_system = require 'fs'
 		return title + ', ' + now.toString('dd.MM.yyyy в HH:mm')
 	else
 		return base + '☀☁ ☄★☆☭☮☯☢☤☣'.random()
+
+снасти.generate_unique_id = (base, проверка, options, возврат) ->
+	if not возврат?
+		возврат = options
+		options = {}
 	
+	id = снасти.generate_id(base, options)
+	цепь(возврат)
+		.сделать ->
+			проверка(id, @)
+			
+		.сделать (unique) ->
+			if unique
+				return @.return(id)
+			
+			снасти.generate_unique_id(id, проверка, { randomize: yes }, возврат)
+
+#снасти.generate_unique_id('abc/\?%def*:|"<>. spacebar', ((id, callback) -> callback(null, id.length > 40)), ((error, id) -> console.log(id)))
+
+# check = (id, возврат) ->
+#	цепь(возврат)
+#		.сделать ->
+#			db('').findOne({ id: id }, @)
+#			
+#		.сделать (found) ->
+#			@.done(not found?)
+#
+# снасти.generate_unique_id(title, check, @)
+
 #console.log(снасти.escape_id('abc/\?%def*:|"<>. spacebar'))
 
 #id = снасти.generate_id('abc/\?%def*:|"<>. spacebar')
