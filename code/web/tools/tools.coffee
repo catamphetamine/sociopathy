@@ -438,7 +438,12 @@ file_system = require 'fs'
 		возврат = options
 		options = {}
 	
-	id = снасти.generate_id(base, options)
+	id = null
+	if not options.base_is_reserved?
+		id = снасти.escape_id(base)
+	else
+		id = снасти.generate_id(base, options)
+		
 	цепь(возврат)
 		.сделать ->
 			проверка(id, @)
@@ -447,9 +452,14 @@ file_system = require 'fs'
 			if unique
 				return @.return(id)
 			
-			снасти.generate_unique_id(id, проверка, { randomize: yes }, возврат)
+			next_options = { base_is_reserved: yes }
+			
+			if options.base_is_reserved?
+				next_options.randomize = yes
+			
+			снасти.generate_unique_id(id, проверка, next_options, возврат)
 
-#снасти.generate_unique_id('abc/\?%def*:|"<>. spacebar', ((id, callback) -> callback(null, id.length > 40)), ((error, id) -> console.log(id)))
+#снасти.generate_unique_id('abc/\?%def*:|"<>. spacebar', ((id, callback) -> console.log('trying id = ' + id); callback(null, id.length > 40)), ((error, id) -> console.log(id)))
 
 # check = (id, возврат) ->
 #	цепь(возврат)
