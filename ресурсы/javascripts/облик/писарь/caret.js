@@ -342,6 +342,11 @@ Editor.Caret = new Class
 		return this.move_to(relative_element)
 	},
 	
+	move_to_the_end_of: function(element)
+	{
+		return this.move_to_the_end(element)
+	},
+	
 	move_to_the_end: function(element)
 	{
 		element = Dom_tools.normalize(element)

@@ -764,7 +764,7 @@ body[mode="правка"] .rich_formatting a
 	
 	.tex
 	{
-		display: inline-block;
+		/* display: inline-block; */
 	}
 	
 	p

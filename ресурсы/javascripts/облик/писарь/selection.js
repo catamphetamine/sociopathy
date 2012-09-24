@@ -13,6 +13,27 @@ Editor.Selection = new Class
 		return this.editor.range()
 	},
 	
+	container: function()
+	{
+		return this.get().commonAncestorContainer
+	},
+	
+	root: function()
+	{
+		if (this.container() === this.editor.content.node())
+			return true
+		
+		return false
+	},
+	
+	paragraph: function()
+	{
+		if ($(this.container().parentNode).is('p'))
+			return true
+		
+		return false
+	},
+	
 	text: function()
 	{
 		return this.get().toString()

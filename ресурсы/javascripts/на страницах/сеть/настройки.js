@@ -5,13 +5,13 @@
 	Режим.пообещать('правка')
 	Подсказки.подсказка('Здесь вы можете посмотреть и изменить свои настройки. Пока это только личный почтовый ящик.')
 		
-	var email
+	page.query('.email', 'email')
+	
 	var No_email_text
 	
 	page.load = function()
 	{
-		email = $('#content').find('.email')
-		No_email_text = email.text()
+		No_email_text = page.email.text()
 	
 		var conditional = initialize_conditional($('.main_conditional'), { immediate: true })
 		
@@ -19,31 +19,14 @@
 		({
 			url: '/приложение/сеть/пользователь/настройки',
 			callback: conditional.callback,
-			show: show_settings,
+			done: settings_loaded,
 		})
 		.load()
 	}
 	
-	function show_settings(настройки)
+	function settings_loaded(настройки)
 	{
-		if (настройки.почта)
-			email.text(настройки.почта)
-		
-		$('.shortcuts').find('> ul').each(function()
-		{
-			var category = $(this)
-			category.find('> li').each(function()
-			{
-				var key = $(this)
-				
-				var directory = Настройки.Клавиши
-				
-				if (category.attr('path') != "Прочее")
-					directory = directory[category.attr('path')]
-				
-				key.find('> span').text(directory[key.attr('path')].join(', ')).attr('editable', true)
-			})
-		})
+		page.data.настройки = настройки[0]
 		
 		подготовить_режим_правки()
 		
@@ -70,13 +53,13 @@
 	
 	function get_email()
 	{
-		var mail = email.text()
+		var mail = page.email.text()
 		if (mail !== No_email_text)
 			return mail
 		return
 	}
 	
-	function новые_клавиши()
+	function считать_клавиши()
 	{
 		var новые_клавиши = {}
 				
@@ -120,12 +103,7 @@
 	
 	function save_changes()
 	{
-		var клавиши = новые_клавиши()
-		
-		if (!клавиши)
-			return Режим.ошибка_правки()
-		
-		var почта = get_email()
+		var данные = page.Data_store.collect()
 		
 		Режим.save_changes_to_server
 		({
@@ -136,19 +114,64 @@
 			
 			data:
 			{
-				почта: почта,
-				клавиши: JSON.stringify(клавиши)
+				почта: данные.почта,
+				клавиши: JSON.stringify(данные.клавиши)
 			},
 			
 			url: '/приложение/сеть/пользователь/настройки',
 			
 			ok: function()
 			{
-				//if (почта && почта !== page.data.старая_почта)
+				//if (данные.почта && данные.почта !== page.data.старая_почта)
 				//	info('На ваш новый почтовый ящик (возможно) было отправлено письмо (а возможно и не было отправлено)')
 			}
 		})
 	}
+	
+	page.Data_store.collect = function()
+	{
+		var result = {}
+		
+		result.почта = get_email()
+		result.клавиши = считать_клавиши()
+		
+		return result
+	}
+	
+	page.Data_store.populate = function(data)
+	{
+		if (data.почта)
+			page.email.text(data.почта)
+		
+		$('.shortcuts').find('> ul').each(function()
+		{
+			var category = $(this)
+			category.find('> li').each(function()
+			{
+				var key = $(this)
+				
+				var directory = data.клавиши
+				
+				if (category.attr('path') != "Прочее")
+					directory = directory[category.attr('path')]
+				
+				key.find('> span').text(directory[key.attr('path')].join(', ')).attr('editable', true)
+			})
+		})
+	}
+	
+	page.Data_store.deduce = function()
+	{
+		var result =
+		{
+			почта: page.data.настройки.почта,
+			клавиши: Настройки.Клавиши
+		}
+		
+		return result
+	}
+
+	page.Data_store.что = 'настройки пользователя'
 	
 	page.needs_initializing = true
 })()

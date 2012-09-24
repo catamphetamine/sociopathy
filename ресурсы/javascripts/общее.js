@@ -457,26 +457,94 @@ function anti_cache_postfix(url)
 	return url.before('?') + anti_cache_postfix()
 }
 
-window.onerror = function(ошибка, url, line)
+function dont_show_error(ошибка)
 {
-	// игнорировать ошибки разрыва соединения с WebSocket в FireFox
-	if (ошибка.contains('InvalidStateError: An attempt was made to use an object that is not, or is no longer, usable'))
-		throw ошибка
+	return '[don\'t show this error] ' + ошибка
+}
+
+function show_error(выпавшая_ошибка, url, line)
+{
+	if ((выпавшая_ошибка + '').indexOf('[don\'t show this error] ') >= 0)
+		return
 	
+	var non_critical = false
+	var inform_user = true
+	var verbose = false
+	var ошибка = выпавшая_ошибка + ''
+	
+	//console.log('выпавшая_ошибка')
+	//console.log(выпавшая_ошибка)
+	
+	if (typeof выпавшая_ошибка === 'object')
+	{
+		if (выпавшая_ошибка.ошибка)
+		{
+			non_critical = выпавшая_ошибка.non_critical
+			
+			if (typeof выпавшая_ошибка.inform_user !== 'undefined')
+				inform_user = выпавшая_ошибка.inform_user
+			
+			verbose = выпавшая_ошибка.verbose
+			ошибка = выпавшая_ошибка.ошибка
+		}
+		else
+			throw выпавшая_ошибка
+		//console.log(выпавшая_ошибка.ошибка)
+	}
+	
+	console.error('**** Error in ' + url + ' at line ' + line + ': ' + ошибка)
+	
+	if (non_critical)
+		return
+	
+	// если шли на какую-то (возможно другую) страницу - говорим, что уже не идём
 	navigating = false
-	
+
 	if (first_time_page_loading)
 	{
 		//if (путь_страницы() !== 'ошибка')
 		//	window.location = '/ошибка' + '?' + 'url=' + encodeURI(window.location)
-		error('Ошибка на странице', { sticky: true })
 	}
 	else
 	{
 		page_loaded()
-		//$("#page").empty().html('<div class="error">Ошибка на странице</div>')
-		error('Ошибка на странице', { sticky: true })
 	}
+	
+	if (error && inform_user)
+	{
+		if (!verbose)
+			error('Ошибка на странице', { sticky: true })
+		else
+			error(ошибка, { sticky: true })
+	}
+}
+
+function get_error_message(ошибка)
+{
+	if (typeof ошибка === 'string')
+		return ошибка
+	
+	if (typeof ошибка === 'object')
+		return ошибка.ошибка
+	
+	return ошибка + ''
+}
+
+/*
+function error(error)
+{
+	console.log(error)
+}
+*/
+
+window.onerror = function(ошибка, url, line)
+{
+	// игнорировать ошибки разрыва соединения с WebSocket в FireFox
+	// "contains" may cause error, if it isn't loaded
+	if (ошибка && typeof ошибка === 'string' && ошибка.indexOf('InvalidStateError: An attempt was made to use an object that is not, or is no longer, usable') >= 0)
+		ошибка = { ошибка: ошибка, non_critical: true }
+
+	show_error(ошибка, url, line)
 }
 
 // no longer relevant. now escaping on the server side
@@ -515,9 +583,4 @@ function postprocess_rich_content(content, callback)
 	})
 	
 	refresh_formulae({ where: content }, callback)
-}
-
-function error(error)
-{
-	console.log(error)
 }

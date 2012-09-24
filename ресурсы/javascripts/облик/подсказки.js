@@ -6,15 +6,19 @@ var Подсказки = (function()
 	{
 		$(document).keydown(function(event) 
 		{
-			if (Клавиши.is('Ctrl', 'Shift', '0', event))
+			if (Клавиши.is(Настройки.Клавиши.Подсказки, event))
 			{
 				// disable hints
-				return
+				//return
 				
 				включены = !включены
-				if (включены)				
+				if (включены)
+				{
 					if (подсказка)
 						info(подсказка)
+					else
+						info('Пока нет подсказок')
+				}
 			}
 		})
 	})				

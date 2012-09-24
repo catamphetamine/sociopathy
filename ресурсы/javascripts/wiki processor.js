@@ -82,7 +82,19 @@ var Wiki_processor = new (new Class
 	validate: function(xml)
 	{
 		xml = this.translate(xml)
-		return $.validate_xml(xml)
+		
+		var result = $.validate_xml(xml)
+		
+		if (!result.cause)
+			return result
+		
+		switch (result.cause)
+		{
+			case 'text node in root':
+				throw { ошибка: 'Нарушено форматирование текста', verbose: true }
+		}
+		
+		throw 'Не "валидный" код xml'
 	},
 	
 	decorate: function(xml, options)
@@ -181,6 +193,24 @@ var Wiki_processor = new (new Class
 		//console.log('finished processing children')
 	},
 	
+	parse_and_validate: function(xml, options)
+	{
+		var wiki = this.parse(xml, options)
+		
+		try
+		{
+			this.validate(wiki)
+			return wiki
+		}
+		catch (ошибка)
+		{
+			show_error(ошибка)
+			//console.log(ошибка)
+			//throw get_error_message(ошибка) //{ error: 'Invalid xml: ' + wiki }
+			throw dont_show_error(ошибка)
+		}
+	},
+	
 	parse: function(xml, options)
 	{
 		options = options || {}
@@ -200,12 +230,6 @@ var Wiki_processor = new (new Class
 		})
 		
 		var xml = output.html()
-		
-		if (!this.validate(xml))
-		{
-			error('Не "валидный" xml')
-			throw 'Invalid xml: ' + xml
-		}
 		
 //		xml = xml.replace_all('<br>', '\n')
 //		xml = xml.replace_all('<br/>', '\n')
@@ -524,7 +548,7 @@ Wiki_processor.Syntax =
 	{
 		translation: 'formula',
 		selector: '.tex[type="formula"]',
-		html_tag: 'span',
+		html_tag: 'div',
 		break_decoration: true,
 		break_parsing: true,
 		

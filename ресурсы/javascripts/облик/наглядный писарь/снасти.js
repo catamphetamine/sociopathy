@@ -126,6 +126,14 @@ Visual_editor.implement
 				
 				if (editor.selection.exists() && editor.selection.is_valid())
 				{
+					/*
+					if (!editor.selection.paragraph())
+					{
+						this.restore_caret()
+						throw new Error('Подзаголовок можно помещать только на верхнем уровне или непосредственно в абзаце')
+					}
+					*/
+					
 					subheading.text(editor.selection.text())
 					editor.selection.cut()
 					
@@ -515,12 +523,16 @@ Visual_editor.implement
 				this.mark_type(element)
 				
 				this.restore_caret()
-				element = editor.insert(element)
+				
+				element = editor.insert(element, { break_container: true })
 					
 				if (options.append_whitespace)
 				{
-					var text = Dom_tools.append_text_next_to(element, ' ')
-					editor.caret.move_to_the_end(text)
+					var paragraph = visual_editor.create_paragraph()
+					//var text = Dom_tools.append_text_next_to(element, ' ')
+					//editor.caret.move_to_the_end(editor.container)
+					paragraph.appendTo(editor.content)
+					editor.caret.move_to(paragraph)
 				}
 				else
 					editor.caret.move_to_the_next_element(element)
@@ -532,7 +544,15 @@ Visual_editor.implement
 	
 			apply: function()
 			{
-				//this.backup_caret()
+				this.backup_caret()
+					
+				if (!editor.caret.root() && !editor.caret.container().is('p'))
+				{	
+					this.restore_caret()
+					
+					throw new Error('Формулу можно помещать только на верхнем уровне или непосредственно в абзаце')
+				}
+				
 				if (editor.selection.exists() && editor.selection.is_valid())
 				{
 					var text = editor.selection.text()
@@ -648,7 +668,7 @@ Visual_editor.implement
 					element.text(editor.selection.text())
 					editor.selection.cut()
 					
-					element = editor.insert(element)
+					element = editor.insert(element, { break_container: true })
 						
 					var text = Dom_tools.append_text_next_to(element, ' ')
 					editor.caret.move_to_the_end(text)
@@ -656,7 +676,7 @@ Visual_editor.implement
 				else
 				{
 					visual_editor.hint(element, 'Введите код')
-					element = editor.insert(element)
+					element = editor.insert(element, { break_container: true })
 				
 					// иначе в хроме будет курсор в начале, но как бы перед самим элементом
 					if ($.browser.webkit)
@@ -677,6 +697,15 @@ Visual_editor.implement
 			
 			apply: function()
 			{
+				this.backup_caret()
+					
+				if (!editor.caret.root() && !editor.caret.container().is('p'))
+				{	
+					this.restore_caret()
+					
+					throw new Error('Многострочный код можно помещать только на верхнем уровне или непосредственно в абзаце')
+				}
+				
 				var element = $('<pre/>')
 				
 				if (editor.selection.exists() && editor.selection.is_valid())
@@ -912,8 +941,14 @@ Visual_editor.implement
 				
 				Validation.наглядный_писарь.source = function(value, callback)
 				{
-					if (!Wiki_processor.validate(value))
-						return callback({ error: 'Не "валидный" код xml' })
+					try
+					{
+						Wiki_processor.validate(value)
+					}
+					catch (error)
+					{
+						return callback({ error: get_error_message(error) })
+					}
 						
 					if (!value)
 						return callback({ error: 'Введите код xml' })

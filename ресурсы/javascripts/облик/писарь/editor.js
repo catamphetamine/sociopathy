@@ -193,18 +193,32 @@ var Editor = new Class
 		return false
 	},
 	
+	can_be_empty: function(div)
+	{
+		if (div.is('.tex'))
+			return true
+		
+		if (div.is('.audio_player'))
+			return true
+		
+		return false
+	},
+	
 	doesnt_need_to_be_wrapped: function(what)
 	{
 		if (what.is('h2'))
 			return true
 		
-		if (what.is('div.citation'))
+		if (what.is('.citation'))
 			return true
 		
 		if (what.is('ul'))
 			return true
 		
-		if (what.is('div.audio_player'))
+		if (what.is('.audio_player'))
+			return true
+		
+		if (what.is('.tex'))
 			return true
 		
 		return false
@@ -331,6 +345,15 @@ var Editor = new Class
 			caret_offset = 0
 		
 		var container = caret_position.node
+		
+		if (container === this.content.node())
+		{
+			container = $('<p/>').appendTo(this.content)
+			container.text(inserted_text)
+			this.caret.move_to_the_end_of(container)
+			return
+			//container = container.node()
+		}
 		
 		if (!Dom_tools.is_text_node(container))
 		{
@@ -509,7 +532,15 @@ var Editor = new Class
 	{
 		this.content.find('> br').remove()
 		
-		this.content.find('> p br:first-child, > p br:last-child').remove()
+		this.content.find('> p > br:first-child, > p > br:last-child').remove()
+		
+		this.content.find('> p').each(function()
+		{
+			if ($(this).children().length === 0)
+				$(this).remove()
+		})
+		
+		var editor = this
 		
 		this.content.find('> div').each(function()
 		{
@@ -517,8 +548,9 @@ var Editor = new Class
 			var children = div.children()
 			
 			if (children.length === 0)
-				return div.remove()
-			
+				if (!editor.can_be_empty(div))
+					return div.remove()
+				
 			if (children.length === 1)
 				if ($(children[0]).is('br'))
 					return div.remove()

@@ -578,7 +578,7 @@ var Interactive_messages = function(options)
 				
 				if (own_messages[_id] && own_messages[_id] != new_content)
 				{
-					edited_messages.push({ _id: _id, content: Wiki_processor.parse(new_content) })
+					edited_messages.push({ _id: _id, content: Wiki_processor.parse_and_validate(new_content) })
 				}
 			})
 			

@@ -284,6 +284,9 @@
 			
 			function insert_style(path)
 			{
+				if (path.indexOf('/') !== 0)
+					path = '/облик/' + path
+				
 				var has_extension = false
 				if (path.lastIndexOf('.less') === path.length - '.less'.length)
 					has_extension = true

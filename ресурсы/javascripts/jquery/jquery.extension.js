@@ -635,16 +635,16 @@ $.validate_xml = function(xml)
 	{
 		var document = $.parseXML('<xml>' + xml + '</xml>')
 		
-		console.log('<xml>' + xml + '</xml>')
+		//console.log('<xml>' + xml + '</xml>')
 		
 		if (Dom_tools.child_text_node(document.firstChild))
-			return false
+			return { cause: 'text node in root' }
 			
-		return true
+		return document
 	}
 	catch (error)
 	{
-		return false
+		return { cause: error }
 	}
 }
 

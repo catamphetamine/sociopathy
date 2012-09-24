@@ -543,7 +543,7 @@ var Messages = new Class
 
 		function send_message()
 		{
-			var message = Wiki_processor.parse(visual_editor.editor.content.html())
+			var message = Wiki_processor.parse_and_validate(visual_editor.editor.content.html())
 			
 			//console.log(message)
 			

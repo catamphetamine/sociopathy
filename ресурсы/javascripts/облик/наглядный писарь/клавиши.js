@@ -289,7 +289,7 @@ Visual_editor.implement
 		{
 			if (editor.caret.container('.tex').exists())
 			{
-				if (!Клавиши.navigating())
+				if (!Клавиши.navigating(event))
 				{
 					if (event)
 					{
