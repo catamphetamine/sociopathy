@@ -139,7 +139,10 @@ Editor.Caret = new Class
 		}
 		
 		if ($.browser.webkit)
-			return this.create(element, offset)
+		{
+			// просто на offset - не встаёт
+			return this.create(element, offset + 1)
+		}
 
 		var caret = this.get()
 		if (caret)
@@ -332,14 +335,18 @@ Editor.Caret = new Class
 		this.offset(this.offset() + 1)
 	},
 	
-	move_to_the_next_element: function(relative_element)
+	move_to_the_next_element: function(relative_element, till)
 	{
-		var next = Dom_tools.find_next_text_node(relative_element)
+		var next = Dom_tools.find_next_text_node(relative_element, till)
 		
 		if (next)
-			return this.move_to(next)
+		{
+			this.move_to(next)
+			return next
+		}
 		
-		return this.move_to(relative_element)
+		//this.move_to(relative_element)
+		return false
 	},
 	
 	move_to_the_end_of: function(element)

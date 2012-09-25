@@ -42,20 +42,16 @@ Visual_editor.implement
 			{
 				if (this.editor.caret.is_in_the_beginning_of_container())
 				{
-					var new_paragraph = $('<p/>')
+					var new_paragraph = this.create_paragraph()
 					container.before(new_paragraph)
-					new_paragraph.addClass('hint')
-					new_paragraph.text('Введите текст абзаца')
 					this.editor.caret.move_to(new_paragraph)
 					return
 				}
 				
 				if (this.editor.caret.is_in_the_end_of_container())
 				{
-					var new_paragraph = $('<p/>')
+					var new_paragraph = this.create_paragraph()
 					container.after(new_paragraph)
-					new_paragraph.addClass('hint')
-					new_paragraph.text('Введите текст абзаца')
 					this.editor.caret.move_to(new_paragraph)
 					return
 				}
@@ -132,6 +128,8 @@ Visual_editor.implement
 					{
 						action.bind(visual_editor)(container)
 						captured = true
+						
+						visual_editor.editor.sanitize()
 					}
 				})
 				

@@ -161,7 +161,7 @@
 				{
 					_id: заметка,
 					title: get_title(),
-					content: Wiki_processor.parse_and_validate(visual_editor.editor.content.html(),
+					content: Wiki_processor.parse_and_validate(visual_editor.editor.html(),
 					{
 						process_element: function(wiki, decorated)
 						{

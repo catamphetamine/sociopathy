@@ -195,8 +195,8 @@ var Editor = new Class
 	
 	can_be_empty: function(div)
 	{
-		if (div.is('.tex'))
-			return true
+		//if (div.is('.tex'))
+		//	return true
 		
 		if (div.is('.audio_player'))
 			return true
@@ -218,8 +218,11 @@ var Editor = new Class
 		if (what.is('.audio_player'))
 			return true
 		
-		if (what.is('.tex'))
+		if (what.is('iframe'))
 			return true
+		
+		//if (what.is('.tex'))
+		//	return true
 		
 		return false
 	},
@@ -536,8 +539,18 @@ var Editor = new Class
 		
 		this.content.find('> p').each(function()
 		{
-			if ($(this).children().length === 0)
-				$(this).remove()
+			//console.log($(this).outer_html())
+			//console.log(this.childNodes.length)
+			
+			if (this.childNodes.length === 0)
+				return $(this).remove()
+			
+			if (this.childNodes.length === 1)
+			{
+				if (Dom_tools.is_text_node(this.firstChild))
+					if (this.firstChild.nodeValue.trim() == '')
+						return $(this).remove()
+			}
 		})
 		
 		var editor = this
@@ -555,6 +568,12 @@ var Editor = new Class
 				if ($(children[0]).is('br'))
 					return div.remove()
 		})
+	},
+	
+	html: function()
+	{
+		this.sanitize()
+		return this.content.html()
 	}
 })
 

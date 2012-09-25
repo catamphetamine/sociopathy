@@ -510,32 +510,54 @@ Visual_editor.implement
 			
 				if (options.element)
 				{
-					options.element.attr('formula', formula).html(formula)
+					options.element.attr('formula', formula).html('\\(' + formula + '\\)')
 					
 					this.restore_caret()
+					//editor.caret.move_to_the_next_element(options.element)
 					
 					refresh_formulae({ wait_for_load: true, what: options.element, formula: formula })
 					return this.on_success()
 				}
 				
-				var element = $('<div/>').addClass('tex')
-				element.attr('formula', formula).html(formula)
+				//var element = $('<div/>').addClass('tex')
+				var element = $('<span/>').addClass('tex')
+				element.attr('formula', formula).html('\\(' + formula + '\\)')
 				this.mark_type(element)
 				
 				this.restore_caret()
 				
-				element = editor.insert(element, { break_container: true })
+				//var container = editor.caret.container()
+				
+				//element = editor.insert(element, { break_container: true })
+				element = editor.insert(element)
 					
+				var add_whitespace = function()
+				{
+					var text = Dom_tools.append_text_next_to(element, ' ')
+					editor.caret.move_to(text)
+				}
+				
 				if (options.append_whitespace)
 				{
-					var paragraph = visual_editor.create_paragraph()
-					//var text = Dom_tools.append_text_next_to(element, ' ')
-					//editor.caret.move_to_the_end(editor.container)
-					paragraph.appendTo(editor.content)
-					editor.caret.move_to(paragraph)
+					add_whitespace()
+				}
+				else
+				{
+					if (!editor.caret.move_to_the_next_element(element, editor.caret.container()))
+						add_whitespace()
+				}
+				
+				/*
+				if (options.append_whitespace)
+				{
+					// for a div formula
+					//var paragraph = visual_editor.create_paragraph()
+					//paragraph.appendTo(editor.content)
+					//editor.caret.move_to(paragraph)
 				}
 				else
 					editor.caret.move_to_the_next_element(element)
+				*/
 				
 				refresh_formulae({ wait_for_load: true, what: element, formula: formula })
 				
@@ -546,11 +568,12 @@ Visual_editor.implement
 			{
 				this.backup_caret()
 					
-				if (!editor.caret.root() && !editor.caret.container().is('p'))
+				//if (!editor.caret.root() && !editor.caret.container().is('p'))
+				if (!editor.caret.container().is('p'))
 				{	
 					this.restore_caret()
 					
-					throw new Error('Формулу можно помещать только на верхнем уровне или непосредственно в абзаце')
+					throw new Error('Формулу можно помещать только непосредственно в абзаце')
 				}
 				
 				if (editor.selection.exists() && editor.selection.is_valid())
@@ -763,14 +786,6 @@ Visual_editor.implement
 					{
 						url = url.collapse_lines()
 						
-						/*
-						if (this.state.element)
-						{
-							this.state.element.attr('src', 'http://www.youtube-nocookie.com/embed/' + Youtube.Video.id(url) + '?rel=0')
-							return editor.caret.restore()
-						}
-						*/
-					
 						var video
 					
 						if (Youtube.Video.id(url))
@@ -784,18 +799,17 @@ Visual_editor.implement
 						else
 							return error ('Хостинг видео не поддерживается: ' + value)
 					
-						/*
-						var video = $('<iframe/>')
-						video.attr('src', 'http://www.youtube-nocookie.com/embed/' + Youtube.Video.id(url) + '?rel=0&wmode=transparent')
-						video.attr('width', 560)
-						video.attr('height', 315)
-						video.attr('frameborder', 0)
-						video.attr('allowfullscreen', 'true')
-						*/
-						
 						tool.mark_type(video)
-					
-						tool.on_success(editor.insert(video))
+						
+						tool.restore_caret()
+						
+						video = editor.insert(video, { break_container: true })
+									
+						var paragraph = visual_editor.create_paragraph()
+						paragraph.appendTo(editor.content)
+						editor.caret.move_to(paragraph)
+				
+						tool.on_success(video)
 					},
 					on_open: function()
 					{	
@@ -811,6 +825,15 @@ Visual_editor.implement
 			
 			apply: function()
 			{
+				this.backup_caret()
+					
+				if (!editor.caret.root() && !editor.caret.container().is('p'))
+				{	
+					this.restore_caret()
+							
+					throw new Error('Видео можно помещать только на верхнем уровне или непосредственно в абзаце')
+				}
+				
 				if (editor.selection.exists() && editor.selection.is_valid())
 					throw new Error('Снимите выделение')
 				
@@ -820,7 +843,6 @@ Visual_editor.implement
 			
 			on_success: function(element)
 			{
-				editor.caret.move_to(element)
 			}
 		}
 		

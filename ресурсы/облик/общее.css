@@ -765,6 +765,13 @@ body[mode="правка"] .rich_formatting a
 	.tex
 	{
 		/* display: inline-block; */
+		
+		margin-bottom: 30px;
+	}
+	
+	iframe[type="video"]
+	{
+		margin-bottom: 30px;
 	}
 	
 	p

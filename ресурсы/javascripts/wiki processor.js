@@ -548,7 +548,8 @@ Wiki_processor.Syntax =
 	{
 		translation: 'formula',
 		selector: '.tex[type="formula"]',
-		html_tag: 'div',
+		//html_tag: 'div',
+		html_tag: 'span',
 		break_decoration: true,
 		break_parsing: true,
 		
@@ -556,7 +557,7 @@ Wiki_processor.Syntax =
 		{
 			to.addClass('tex')
 			
-			to.html(from.html())
+			to.html('\\(' + from.html() + '\\)')
 			
 			return to.attr
 			({

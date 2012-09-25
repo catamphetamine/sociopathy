@@ -69,6 +69,8 @@ var Visual_editor = new Class
 		var new_paragraph = this.create_paragraph()
 		this.editor.insert(new_paragraph)
 		this.editor.caret.move_to(new_paragraph)
+		
+		this.editor.sanitize()
 	},
 	
 	hint: function(element, text)
@@ -155,9 +157,7 @@ var Visual_editor = new Class
 	{
 		var container = this.editor.caret.node()
 
-		var new_paragraph = $('<p/>')
-		new_paragraph.addClass('hint')
-		new_paragraph.text('Введите текст абзаца')
+		var new_paragraph = this.create_paragraph()
 		
 		var current_paragraph = Dom_tools.find_parent_by_tag(container, 'p')
 		if (!current_paragraph)

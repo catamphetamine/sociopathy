@@ -539,11 +539,11 @@ var Messages = new Class
 		//visual_editor.tagged_hint(hint, 'Вводите сообщение здесь')
 		visual_editor.store_content()
 		
-		var editor_initial_html = visual_editor.editor.content.html()
+		var editor_initial_html = visual_editor.editor.html()
 
 		function send_message()
 		{
-			var message = Wiki_processor.parse_and_validate(visual_editor.editor.content.html())
+			var message = Wiki_processor.parse_and_validate(visual_editor.editor.html())
 			
 			//console.log(message)
 			
