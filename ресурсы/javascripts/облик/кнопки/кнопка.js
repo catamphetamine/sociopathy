@@ -701,11 +701,11 @@ button.physics =
 	{
 		the_button.setOptions
 		({
-			'ready frame fade in duration': 0.5,
-			'ready frame fade out duration': 0.5,
+			'ready frame fade in duration': 0.2,
+			'ready frame fade out duration': 0.2,
 			
-			'pushed frame fade in duration': 0.1,
-			'pushed frame fade out duration': 0.5,
+			'pushed frame fade in duration': 0.2,
+			'pushed frame fade out duration': 0.2,
 
 			'pushed frame fade in easing': 'swing',
 			'pushed frame fade out easing': 'swing'

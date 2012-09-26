@@ -41,9 +41,7 @@ function Form(element)
 	element.find('input,select,textarea').each(function()
 	{
 		var input = $(this)
-		
-		if (!input.attr('validation'))
-			return
+		var the_input = input
 			
 		form.inputs.push(new (function(element, form)
 		{
@@ -92,6 +90,9 @@ function Form(element)
 			
 			this.validate = function(ok_callback, error_callback)
 			{
+				if (!the_input.attr('validation'))
+					return ok_callback()
+				
 				eval('var validation = Validation.' + this.element.attr('validation'))
 				validation(this.element.val(), function(result)
 				{
@@ -173,6 +174,18 @@ function Form(element)
 		{
 			if (this.inputs[i].name === name)
 				return this.inputs[i].element
+				
+			i++
+		}
+	}
+	
+	this.field_setter = function(name)
+	{
+		var i = 0
+		while (i < this.inputs.length)
+		{
+			if (this.inputs[i].name === name)
+				return this.inputs[i].setter
 				
 			i++
 		}

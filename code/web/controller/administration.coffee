@@ -3,8 +3,6 @@ http.get '/versioning', (ввод, вывод) ->
 		site_version: Options.Version
 		development: Options.Development
 
-	console.log(Options)
-	
 	вывод.send(data)
 	
 	#if ввод.пользователь?

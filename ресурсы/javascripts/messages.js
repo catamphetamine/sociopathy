@@ -545,7 +545,8 @@ var Messages = new Class
 		{
 			var message = Wiki_processor.parse_and_validate(visual_editor.editor.html())
 			
-			//console.log(message)
+			console.log('message:')
+			console.log(message)
 			
 			if (!message)
 				return

@@ -537,15 +537,16 @@ function error(error)
 }
 */
 
-window.onerror = function(ошибка, url, line)
-{
-	// игнорировать ошибки разрыва соединения с WebSocket в FireFox
-	// "contains" may cause error, if it isn't loaded
-	if (ошибка && typeof ошибка === 'string' && ошибка.indexOf('InvalidStateError: An attempt was made to use an object that is not, or is no longer, usable') >= 0)
-		ошибка = { ошибка: ошибка, non_critical: true }
-
-	show_error(ошибка, url, line)
-}
+//if (!window.development_mode)
+	window.onerror = function(ошибка, url, line)
+	{
+		// игнорировать ошибки разрыва соединения с WebSocket в FireFox
+		// "contains" may cause error, if it isn't loaded
+		if (ошибка && typeof ошибка === 'string' && ошибка.indexOf('InvalidStateError: An attempt was made to use an object that is not, or is no longer, usable') >= 0)
+			ошибка = { ошибка: ошибка, non_critical: true }
+	
+		show_error(ошибка, url, line)
+	}
 
 // no longer relevant. now escaping on the server side
 function escape_id(id)

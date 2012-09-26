@@ -18,22 +18,17 @@ var Editor = new Class
 		this.selection = new Editor.Selection(this)
 		this.time_machine = new Editor.Time_machine(this)
 
-		this.on('paste', (function()
+		this.on('paste', (function(event)
 		{
-			var container = this.caret.container()
-			if (container.hasClass('hint'))
-			{
-				container.removeClass('hint')
-				container.text('')
-				this.caret.move_to(container)
-			}
-			else if (container.hasClass('tagged_hint'))
-			{
-				container.removeClass('tagged_hint')
-				var parent = container.parent()
-				this.caret.move_to(parent)
-				container.remove()
-			}
+			event.preventDefault()
+			event.stopPropagation()
+			
+			var text = event.originalEvent.clipboardData.getData('text/plain')
+			
+			if (this.selection.exists() && this.selection.is_valid())
+				this.selection.cut()
+				
+			this.insert(text)
 		})
 		.bind(this))
 	},
@@ -221,9 +216,10 @@ var Editor = new Class
 		if (what.is('iframe'))
 			return true
 		
-		//if (what.is('.tex'))
-		//	return true
-		
+		if (what.is('.tex'))
+			if (!what.is('.tex[inline="true"]'))
+				return true
+			
 		return false
 	},
 	
@@ -234,7 +230,7 @@ var Editor = new Class
 		var caret_position = this.caret.caret_position()
 		var container = caret_position.container
 		
-		var unwrapped = (container.node() === this.content.node())
+		//var unwrapped = (container.node() === this.content.node())
 		
 		if (container.hasClass('hint'))
 		{
@@ -254,8 +250,7 @@ var Editor = new Class
 			
 			this.insert_text(what, options)
 			this.content_changed()
-				
-			//if (unwrapped)
+			
 			if ($.browser.webkit)
 			{
 				if (!Dom_tools.is_text_node(container.node().firstChild))
@@ -354,6 +349,7 @@ var Editor = new Class
 			container = $('<p/>').appendTo(this.content)
 			container.text(inserted_text)
 			this.caret.move_to_the_end_of(container)
+			//this.caret.move_to(container, 1)
 			return
 			//container = container.node()
 		}

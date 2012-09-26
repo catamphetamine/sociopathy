@@ -250,10 +250,10 @@ textarea.multiline, input.field
 	-moz-border-radius: 5px; 
 	border-radius: 5px;
 	
-	-webkit-transition-property: all;
-	-moz-transition-property: all;
-	-o-transition-property: all;
-	transition-property: all;
+	-webkit-transition-property: border;
+	-moz-transition-property: border;
+	-o-transition-property: border;
+	transition-property: border;
 
 	-webkit-transition-duration: 0.5s;
 	-moz-transition-duration: 0.5s;
@@ -679,19 +679,6 @@ pre, code
 	}
 }
 
-.simple_value_dialog
-{
-	.cancel
-	{
-		float: left;
-	}
-	
-	.ok
-	{
-		float: right;
-	}
-}
-
 body[mode="правка"] .rich_formatting a
 {
 	.hyperlink();
@@ -718,6 +705,11 @@ body[mode="правка"] .rich_formatting a
 	{
 		margin-top: 30px;
 		margin-bottom: 58px;
+	}
+	
+	p
+	{
+		clear: both;
 	}
 	
 	.citation

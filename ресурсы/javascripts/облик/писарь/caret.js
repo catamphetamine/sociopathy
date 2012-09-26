@@ -29,13 +29,13 @@ Editor.Caret = new Class
 	has_container: function(filter)
 	{
 		var container = this.container(filter)
-		return container.length !== 0
+		return container
 	},
 	
 	container: function(filter)
 	{
 		var container = this.node()
-		return $(container).find_parent(filter)
+		return $(container).find_parent(filter, this.editor.content)
 	},
 	
 	node: function()
@@ -121,8 +121,16 @@ Editor.Caret = new Class
 		return result
 	},
 
-	move_to: function(the_element, offset)
+	move_to: function(the_element, offset, options)
 	{
+		if (typeof offset === 'object')
+		{
+			options = offset
+			offset = 0
+		}
+		
+		options = options || {}
+		
 		the_element = Dom_tools.normalize(the_element)
 		var element = the_element
 	
@@ -138,10 +146,17 @@ Editor.Caret = new Class
 			the_element.parentNode.appendChild(element)
 		}
 		
+		if (options.to_the_end)
+			offset = element.nodeValue.length
+		
+		if ($.browser.webkit)
+			if (!options.to_the_end)
+				offset = offset + 1
+		
 		if ($.browser.webkit)
 		{
 			// просто на offset - не встаёт
-			return this.create(element, offset + 1)
+			return this.create(element, offset)
 		}
 
 		var caret = this.get()
@@ -339,7 +354,7 @@ Editor.Caret = new Class
 	{
 		var next = Dom_tools.find_next_text_node(relative_element, till)
 		
-		if (next)
+		if (next && next.parentNode !== this.editor.content.node())
 		{
 			this.move_to(next)
 			return next
@@ -361,7 +376,11 @@ Editor.Caret = new Class
 		if (Dom_tools.is_text_node(element))
 			return this.position(element, element.nodeValue.length)
 			
-		this.position(element, element.childNodes.length)
+		if (!element.childNodes.length)
+			return
+			
+		//this.position(element, element.childNodes.length)
+		this.move_to(element.childNodes[element.childNodes.length - 1], { to_the_end: true })
 	},
 	
 	text: function()

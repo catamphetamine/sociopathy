@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Image Chooser
  * 
  * This script creates eye-candy image chooser with smooth animated hover and click effects.
@@ -17,9 +17,10 @@ var image_chooser = function(selector_or_element, options)
 {
 	// get the element
 	var $element = button.get_element(selector_or_element)
+	this.$element = $element
 	
 	// the set of choosable images
-	var choises = $("span[value]", $element)
+	var choices = $("> [value]", $element)
 	
 	// the target (hidden input value container)
 	this.target = $(options.target)
@@ -27,49 +28,69 @@ var image_chooser = function(selector_or_element, options)
 	// back reference
 	var self = this
 	
-	this.choise_options = []
+	this.choice_options = []
 	
 	// initialize each choosable image
-	choises.each(function(index) 
+	choices.each(function(index) 
 	{
 		var $this = $(this)
 		
 		// initialize choosable image
-		var choise_option = new choosable_image
+		var choice_option = new choosable_image
 		(
-			// choise
+			// choice
 			$this,
 			// options
 			options
 		)
 		
 		// set back reference
-		choise_option.chooser = self
+		choice_option.chooser = self
 		
-		self.choise_options.push(choise_option)
+		self.choice_options.push(choice_option)
 	})
 	
-	this.choose = function(choise)
+	this.choose = function(choice)
 	{
-		// set the current choise
-		this.choise = choise
+		// set the current choice
+		this.choice = choice
 		
 		// set the target value
-		this.target.val(this.choise.$element.attr("value"))
+		this.target.val(this.choice.$element.attr("value"))
 		
-		if (options.on_choise)
-			options.on_choise()
+		if (options.on_choice)
+			options.on_choice()
+	}
+	
+	this.disable = function()
+	{
+		this.$element.addClass('disabled')
+		
+		this.choice_options.for_each(function()
+		{
+			this.disable()
+		})
+	}
+	
+	this.enable = function()
+	{
+		this.$element.removeClass('disabled')
+		
+		this.choice_options.for_each(function()
+		{
+			this.enable()
+		})
 	}
 
 	this.reset = function()
 	{
 		// if anything is selected - unselect it
-		if (this.choise)
-			this.choise = null
+		if (this.choice)
+			this.choice = null
 			
-		this.choise_options.forEach(function(choise)
+		this.choice_options.forEach(function(choice)
 		{
-			choise.reset()
+			choice.reset()
 		})
 
 		// reset the target value			
@@ -86,16 +107,16 @@ var choosable_image = new Class
 		options.action = function()
 		{
 			// if some option is currently chosen
-			if (this.chooser.choise)
+			if (this.chooser.choice)
 			{
 				// if this option is currently chosen - exit
-				if (this.chooser.choise === this)
+				if (this.chooser.choice === this)
 					return
 				// else - reset the previously selected option
 				else
 				{
-					//this.chooser.choise.let_unlock()
-					//this.chooser.choise.fade_out('pushed')
+					//this.chooser.choice.let_unlock()
+					//this.chooser.choice.fade_out('pushed')
 					//this.fade_in('pushed')
 				}
 			}
@@ -113,16 +134,16 @@ var choosable_image = new Class
 	
 	on_push: function()
 	{
-		if (this.chooser.choise)
-			if (this.chooser.choise !== this)
-				this.chooser.choise.fade_out('pushed')
+		if (this.chooser.choice)
+			if (this.chooser.choice !== this)
+				this.chooser.choice.fade_out('pushed')
 				
 		this.parent()
 	},
 	
 	on_roll_over: function()
 	{
-		if (this.chooser.choise === this)
+		if (this.chooser.choice === this)
 			return
 
 		this.parent()
@@ -132,9 +153,9 @@ var choosable_image = new Class
 	{
 	/*
 		// if some option is currently chosen
-		if (this.chooser.choise != null)
+		if (this.chooser.choice != null)
 			// if this option is currently chosen - exit
-			if (this.chooser.choise === this)
+			if (this.chooser.choice === this)
 				return
 	*/
 	

@@ -362,8 +362,9 @@ var Режим = (function()
 			if (!options.anything_changed())
 			{
 				if (options.continues)
-					return options.ok(options.загрузка)
-				
+					if (options.ok)
+						return options.ok(options.загрузка)
+					
 				if (options.загрузка)
 				{
 					options.загрузка.hide()
@@ -390,10 +391,13 @@ var Режим = (function()
 		})
 		.ok(function()
 		{
-			if (options.continues)
-				return options.ok(загрузка)
-			else
-				options.ok()
+			if (options.ok)
+			{
+				if (options.continues)
+					return options.ok(загрузка)
+				else
+					options.ok()
+			}
 			
 			загрузка.hide()
 			Режим.разрешить_переходы()
@@ -422,14 +426,35 @@ $(document).on('page_loaded', function()
 			
 			var window = Visual_editor.tool_windows.Formula
 			({
-				ok: function(formula)
+				ok: function(data)
 				{
-					element.attr('formula', formula).html(formula)
-					refresh_formulae({ wait_for_load: true, what: element, formula: formula })
+					var formula_html
+					if (data.display === 'inline')
+					{
+						formula_html = delimit_formula(data.formula, 'inline')
+					}
+					else
+					{
+						formula_html = delimit_formula(data.formula, 'block')
+					}
+					
+					element.attr('formula', data.formula).html(formula_html)
+					element.css('display', data.display)
+					
+					refresh_formulae({ wait_for_load: true, what: element, formula: formula_html })
+				},
+				open: function()
+				{
+					var display = this.content.find('.display').hide()
+					var input = display.prev('input').hide()
+					var label = input.prev('label').hide()
+					
+					input.val(element.css('display'))
 				}
 			})
 			
 			window.form.field('formula').val(element.attr('formula'))
+			//window.form.field_setter('display').bind(window)(element.css('display'))
 			
 			window.open()
 		})
@@ -443,8 +468,10 @@ $(document).on('page_loaded', function()
 			
 			var window = Visual_editor.tool_windows.Picture
 			({
-				ok: function(url)
+				ok: function(data)
 				{
+					var url = data.url
+					
 					Visual_editor.tool_helpers.Picture.get_picture_size(url, function(size)
 					{
 						if (!size)
@@ -456,11 +483,14 @@ $(document).on('page_loaded', function()
 							width: size.width,
 							height: size.height
 						})
+							
+						element.css('float', data.float)
 					})
 				}
 			})
 			
 			window.form.field('url').val(decodeURIComponent(element.attr('src')))
+			window.form.field_setter('float').bind(window)(element.css('float'))
 							
 			window.open()
 		})

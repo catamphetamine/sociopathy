@@ -41,18 +41,26 @@ function simple_value_dialog_window(options)
 			field.input = $('<textarea/>')
 			field.input.addClass('multiline')
 		}
+		else if (field.choice)
+		{
+			field.input = $('<input/>')
+			field.input.attr('type', 'hidden')
+		}
 		else
 		{
 			field.input = $('<input/>')
+			field.input.attr('type', 'text')
 			field.input.addClass('field')
 		}
 	
-		field.input.attr('type', 'text')
 		field.input.attr('name', field.id)
 		field.input.appendTo(form)
 
 		if (field.validation)
 			field.input.attr('validation', field.validation)
+			
+		if (field.postprocess)
+			field.postprocess(field.input, form)
 	})
 	
 	var dialog_window = element.dialog_window
@@ -60,6 +68,8 @@ function simple_value_dialog_window(options)
 		'close on escape': true,
 		'on open': function()
 		{
+			$('body').addClass('no_scrollbar')
+			
 			options.fields.forEach(function(field, index)
 			{
 				if (field.label)
@@ -72,6 +82,8 @@ function simple_value_dialog_window(options)
 		},
 		'on close': function()
 		{
+			$('body').removeClass('no_scrollbar')
+			
 			options.fields.forEach(function(field, index)
 			{
 				field.input.val('')
@@ -122,6 +134,15 @@ function simple_value_dialog_window(options)
 	.does(dialog_window.cancel)
 	
 	var validating_form = new Form(form)
+	
+	var index = 0
+	options.fields.for_each(function()
+	{
+		if (this.setter)
+			validating_form.inputs[index].setter = this.setter
+			
+		index++
+	})
 	
 	var ok = text_button.new(dialog_window.content.find('.buttons .ok'), { 'prevent double submission': true })
 	.does(function()

@@ -86,12 +86,19 @@ var Wiki_processor = new (new Class
 		var result = $.validate_xml(xml)
 		
 		if (!result.cause)
+		{
+			var document = $(result)
+			
+			if (document.find('paragraph paragraph').exists())
+				throw { ошибка: 'Нарушено форматирование текста: абзац внутри абзаца', verbose: true }
+			
 			return result
+		}
 		
 		switch (result.cause)
 		{
 			case 'text node in root':
-				throw { ошибка: 'Нарушено форматирование текста', verbose: true }
+				throw { ошибка: 'Нарушено форматирование текста: текст вне абзаца', verbose: true }
 		}
 		
 		throw 'Не "валидный" код xml'
@@ -411,10 +418,72 @@ Wiki_processor.Syntax =
 	},
 	абзац:
 	{
-		translation: 'paragraph',
+		translation:
+		{
+			paragraph:
+			{
+				выравнивание: 'alignment'
+			}
+		},
 		selector: 'p',
 		html_tag: 'p',
-		content_required: true
+		content_required: true,
+		
+		decorate: function(from, to)
+		{
+			var alignment
+			switch (from.attr('alignment'))
+			{
+				case 'влево':
+					alignment = 'left'
+					break
+				
+				case 'по середине':
+					alignment = 'center'
+					break
+				
+				case 'вправо':
+					alignment = 'right'
+					break
+				
+				case 'по ширине':
+					alignment = 'justify'
+					break
+			}
+			
+			if (alignment)
+				to.css('text-align', alignment)
+			
+			return to
+		},
+		
+		parse: function(from, to)
+		{
+			var выравнивание
+			switch (from.css('text-align'))
+			{
+				case 'left':
+					выравнивание = 'влево'
+					break
+				
+				case 'center':
+					выравнивание = 'по середине'
+					break
+				
+				case 'right':
+					выравнивание = 'вправо'
+					break
+				
+				case 'justify':
+					выравнивание = 'по ширине'
+					break
+			}
+			
+			if (выравнивание)
+				to.attr('alignment', выравнивание)
+			
+			return to
+		}
 	},
 	выдержка:
 	{
@@ -515,7 +584,8 @@ Wiki_processor.Syntax =
 			'picture':
 			{
 				ширина: 'width',
-				высота: 'height'
+				высота: 'height',
+				положение: 'float'
 			}
 		},
 		selector: 'img[type="picture"]',
@@ -524,6 +594,8 @@ Wiki_processor.Syntax =
 		
 		decorate: function(from, to)
 		{
+			to.css('float', from.attr('float') || 'none')
+			
 			return to.attr
 			({
 				src: from.html(),
@@ -541,12 +613,20 @@ Wiki_processor.Syntax =
 				height: from.attr('height')
 			})
 			
+			to.attr('float', from.css('float'))
+			
 			return to.html(from.attr('src'))
 		}
 	},
 	формула:
 	{
-		translation: 'formula',
+		translation:
+		{
+			'formula':
+			{
+				положение: 'display'
+			}
+		},
 		selector: '.tex[type="formula"]',
 		//html_tag: 'div',
 		html_tag: 'span',
@@ -557,7 +637,16 @@ Wiki_processor.Syntax =
 		{
 			to.addClass('tex')
 			
-			to.html('\\(' + from.html() + '\\)')
+			if (from.attr('display') === 'в строке')
+			{
+				to.html(delimit_formula(from.html(), 'inline'))
+				to.css('display', 'inline')
+			}
+			else
+			{
+				to.html(delimit_formula(from.html(), 'block'))
+				to.css('display', 'block')
+			}
 			
 			return to.attr
 			({
@@ -568,7 +657,14 @@ Wiki_processor.Syntax =
 		
 		parse: function(from, to)
 		{
-			return to.html(from.attr('formula'))
+			to.html(from.attr('formula'))
+			
+			if (from.css('display') === 'inline')
+				to.attr('display', 'в строке')
+			else
+				to.attr('display', 'вне строки')
+			
+			return to
 		}
 	},
 	снизу:

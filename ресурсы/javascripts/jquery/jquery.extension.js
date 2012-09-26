@@ -397,9 +397,18 @@ $.fn.boundary_html = function()
 	*/
 }
 
-$.fn.find_parent = function(filter)
+$.fn.find_parent = function(filter, boundary)
 {
-	return this.parents(filter).filter(':first')
+	var parent = this.parents(filter).filter(':first')
+	if (!parent.exists())
+		return false
+	
+	if (parent.find(boundary).exists())
+		return false
+	
+	//parent.node() === boundary.node() || 
+	
+	return parent
 }
 
 $.fn.search_upwards = function(filter)

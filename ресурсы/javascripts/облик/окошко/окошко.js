@@ -186,11 +186,11 @@ var dialog_window = new Class
 	// opens the dialog window
 	open: function(state) 
 	{
-		if (this.options['on open'])
-			this.options['on open'].bind(this.content)()
-			
 		if (state)
 			this.state = state
+			
+		if (this.options['on open'])
+			this.options['on open'].bind(this.content)()
 	
 		if (this.is_open)
 			return

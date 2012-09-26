@@ -285,7 +285,7 @@ Visual_editor.implement
 		
 		editor.on('keypress', (function(event)
 		{
-			if (editor.caret.container('.tex').exists())
+			if (editor.caret.container('.tex'))
 			{
 				if (!Клавиши.navigating(event))
 				{

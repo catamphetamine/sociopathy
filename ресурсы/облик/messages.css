@@ -113,12 +113,12 @@
 	
 	.visual_editor_tools .more
 	{
-		background-image: url('/картинки/на страницах/заметка/скрыть разширенное.png');
+		background-image: url('/картинки/писарь/снасти/кнопки/скрыть разширенное.png');
 	}
 	
 	.visual_editor_tools .less
 	{
-		background-image: url('/картинки/на страницах/заметка/показать всё.png');
+		background-image: url('/картинки/писарь/снасти/кнопки/показать всё.png');
 	}
 }
 

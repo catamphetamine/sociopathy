@@ -108,6 +108,110 @@ Visual_editor.implement
 		
 		visual_editor.activate_all_toolable_elements = activate_all_toolable_elements
 		
+		Tools.Text_align_left =
+		{
+			button: new image_button(tools.find('.text_align_left > *')),
+			
+			apply: function()
+			{
+				this.backup_caret()
+				
+				if (editor.selection.exists() && editor.selection.is_valid())
+				{
+					throw new Error('Снимите выделение: этот инструмент применяется ко всему абзацу сразу')
+				}
+				
+				var paragraph = editor.caret.container('p')
+				
+				if (!paragraph)
+				{
+					throw new Error('Встаньте внутрь абзаца, чтобы воспользоваться этим инструментом')
+				}
+				
+				paragraph.css('text-align', 'left')
+				
+				this.restore_caret()
+			}
+		}
+		
+		Tools.Text_align_center =
+		{
+			button: new image_button(tools.find('.text_align_center > *')),
+			
+			apply: function()
+			{
+				this.backup_caret()
+				
+				if (editor.selection.exists() && editor.selection.is_valid())
+				{
+					throw new Error('Снимите выделение: этот инструмент применяется ко всему абзацу сразу')
+				}
+				
+				var paragraph = editor.caret.container('p')
+				
+				if (!paragraph)
+				{
+					throw new Error('Встаньте внутрь абзаца, чтобы воспользоваться этим инструментом')
+				}
+				
+				paragraph.css('text-align', 'center')
+				
+				this.restore_caret()
+			}
+		}
+		
+		Tools.Text_align_right =
+		{
+			button: new image_button(tools.find('.text_align_right > *')),
+			
+			apply: function()
+			{
+				this.backup_caret()
+				
+				if (editor.selection.exists() && editor.selection.is_valid())
+				{
+					throw new Error('Снимите выделение: этот инструмент применяется ко всему абзацу сразу')
+				}
+				
+				var paragraph = editor.caret.container('p')
+				
+				if (!paragraph)
+				{
+					throw new Error('Встаньте внутрь абзаца, чтобы воспользоваться этим инструментом')
+				}
+				
+				paragraph.css('text-align', 'right')
+				
+				this.restore_caret()
+			}
+		}
+		
+		Tools.Text_align_justify =
+		{
+			button: new image_button(tools.find('.text_align_justify > *')),
+			
+			apply: function()
+			{
+				this.backup_caret()
+				
+				if (editor.selection.exists() && editor.selection.is_valid())
+				{
+					throw new Error('Снимите выделение: этот инструмент применяется ко всему абзацу сразу')
+				}
+				
+				var paragraph = editor.caret.container('p')
+				
+				if (!paragraph)
+				{
+					throw new Error('Встаньте внутрь абзаца, чтобы воспользоваться этим инструментом')
+				}
+				
+				paragraph.css('text-align', 'justify')
+				
+				this.restore_caret()
+			}
+		}
+		
 		Tools.Subheading =
 		{
 			selector: '.subheading',
@@ -239,7 +343,10 @@ Visual_editor.implement
 						tool.mark_type(link)
 						
 						editor.caret.restore()
-						tool.on_success(editor.insert(link))
+						
+						var element = editor.insert(link)
+						
+						tool.on_success(element)
 					},
 					
 					open: function()
@@ -377,8 +484,10 @@ Visual_editor.implement
 				
 				this.dialog_window = Visual_editor.tool_windows.Picture
 				({
-					ok: function(url)
+					ok: function(data)
 					{
+						var url = data.url
+						
 						Visual_editor.tool_helpers.Picture.get_picture_size(url, function(size)
 						{
 							if (!size)
@@ -392,6 +501,9 @@ Visual_editor.implement
 									width: size.width,
 									height: size.height
 								})
+							
+								tool.dialog_window.state.element.css('float', data.float)
+							
 								return editor.caret.restore()
 							}
 							
@@ -402,6 +514,8 @@ Visual_editor.implement
 								width: size.width,
 								height: size.height
 							})
+							
+							picture.css('float', data.float)
 							
 							tool.mark_type(picture)
 							
@@ -428,6 +542,8 @@ Visual_editor.implement
 				if (editor.selection.exists() && editor.selection.is_valid())
 					throw new Error('Снимите выделение')
 				
+				this.dialog_window.content.find('.float > [value="none"]').click()
+			
 				this.open_dialog_window()
 				return false
 			},
@@ -442,7 +558,7 @@ Visual_editor.implement
 			on_element_click: function()
 			{
 				var url = decodeURIComponent($(this).attr('src'))
-				Tools.Picture.open_dialog_window({ url: url }, { element: $(this) })
+				Tools.Picture.open_dialog_window({ url: url, float: $(this).css('float') }, { element: $(this) })
 				return false
 			}
 		}
@@ -489,12 +605,27 @@ Visual_editor.implement
 				
 				this.dialog_window = Visual_editor.tool_windows.Formula
 				({
-					ok: function(formula)
+					ok: function(data)
 					{
-						tool.insert_formula(formula, { element: tool.dialog_window.state.element, append_whitespace: true })
+						tool.insert_formula(data, { element: tool.dialog_window.state.element, append_whitespace: true })
 					},
 					open: function()
 					{
+						if (this.state && this.state.element)
+						{
+							var display = this.content.find('.display').hide()
+							var input = display.prev('input').hide()
+							var label = input.prev('label').hide()
+							
+							input.val(this.state.element.css('display'))
+						}
+						else
+						{
+							var display = this.content.find('.display').show()
+							var input = display.prev('input').show()
+							var label = input.prev('label').show()
+						}
+						
 						editor.caret.store()
 					},
 					cancel: function()
@@ -504,32 +635,44 @@ Visual_editor.implement
 				})
 			},
 	
-			insert_formula: function(formula, options)
+			insert_formula: function(data, options)
 			{
+				var formula = data.formula
+				var inline = data.display === 'inline'
+				
 				options = options || {}
 			
+				var html
+						
+				if (inline)
+					html = delimit_formula(formula, 'inline')
+				else
+					html = delimit_formula(formula, 'block')
+					
 				if (options.element)
 				{
-					options.element.attr('formula', formula).html('\\(' + formula + '\\)')
-					
-					this.restore_caret()
-					//editor.caret.move_to_the_next_element(options.element)
+					options.element.attr('formula', formula).html(html)
+										
+					if (!editor.caret.move_to_the_next_element(options.element, editor.caret.container()))
+						this.restore_caret()
 					
 					refresh_formulae({ wait_for_load: true, what: options.element, formula: formula })
 					return this.on_success()
 				}
 				
-				//var element = $('<div/>').addClass('tex')
 				var element = $('<span/>').addClass('tex')
-				element.attr('formula', formula).html('\\(' + formula + '\\)')
+				
+				element.attr('formula', formula).html(html)
+				element.css('display', data.display)
+				
 				this.mark_type(element)
 				
 				this.restore_caret()
 				
-				//var container = editor.caret.container()
-				
-				//element = editor.insert(element, { break_container: true })
-				element = editor.insert(element)
+				if (inline)
+					element = editor.insert(element)
+				else
+					element = editor.insert(element, { break_container: true })
 					
 				var add_whitespace = function()
 				{
@@ -537,29 +680,30 @@ Visual_editor.implement
 					editor.caret.move_to(text)
 				}
 				
-				if (options.append_whitespace)
+				if (inline)
 				{
-					add_whitespace()
-				}
-				else
-				{
-					if (!editor.caret.move_to_the_next_element(element, editor.caret.container()))
+					if (options.append_whitespace)
+					{
 						add_whitespace()
-				}
-				
-				/*
-				if (options.append_whitespace)
-				{
-					// for a div formula
-					//var paragraph = visual_editor.create_paragraph()
-					//paragraph.appendTo(editor.content)
-					//editor.caret.move_to(paragraph)
+					}
+					else
+					{
+						if (!editor.caret.move_to_the_next_element(element, editor.content.node()))
+							add_whitespace()
+					}
 				}
 				else
-					editor.caret.move_to_the_next_element(element)
-				*/
+				{
+					if (!editor.caret.move_to_the_next_element(element, editor.content.node()))
+					{
+						// for a div formula
+						var paragraph = visual_editor.create_paragraph()
+						paragraph.appendTo(editor.content)
+						editor.caret.move_to(paragraph)
+					}
+				}
 				
-				refresh_formulae({ wait_for_load: true, what: element, formula: formula })
+				refresh_formulae({ wait_for_load: true, what: element, formula: html })
 				
 				this.on_success(element)
 			},
@@ -568,8 +712,7 @@ Visual_editor.implement
 			{
 				this.backup_caret()
 					
-				//if (!editor.caret.root() && !editor.caret.container().is('p'))
-				if (!editor.caret.container().is('p'))
+				if (!editor.caret.root() && !editor.caret.container().is('p'))
 				{	
 					this.restore_caret()
 					
@@ -583,6 +726,8 @@ Visual_editor.implement
 					this.insert_formula(text)
 					return false
 				}
+				
+				this.dialog_window.content.find('.display > [value="inline"]').click()
 				
 				this.open_dialog_window()
 				return false
@@ -601,7 +746,8 @@ Visual_editor.implement
 			on_element_click: function()
 			{
 				var formula = $(this).attr('formula')
-				Tools.Formula.open_dialog_window({ formula: formula }, { element: $(this) })
+				var display = $(this).css('display')
+				Tools.Formula.open_dialog_window({ formula: formula, display: display }, { element: $(this) })
 				return false
 			}
 		}
@@ -805,9 +951,12 @@ Visual_editor.implement
 						
 						video = editor.insert(video, { break_container: true })
 									
-						var paragraph = visual_editor.create_paragraph()
-						paragraph.appendTo(editor.content)
-						editor.caret.move_to(paragraph)
+						if (!editor.caret.move_to_the_next_element(video, editor.content.node()))
+						{
+							var paragraph = visual_editor.create_paragraph()
+							paragraph.appendTo(editor.content)
+							editor.caret.move_to(paragraph)
+						}
 				
 						tool.on_success(video)
 					},
@@ -1149,7 +1298,10 @@ Visual_editor.implement
 				{	
 					Object.each(values, function(value, name)
 					{
-						tool.dialog_window.form.field(name).val(value)
+						if (tool.dialog_window.form.field_setter(name))
+							tool.dialog_window.form.field_setter(name).bind(tool.dialog_window)(value)
+						else
+							tool.dialog_window.form.field(name).val(value)
 					})
 				}
 				
@@ -1358,15 +1510,39 @@ Visual_editor.tool_windows =
 				//description: 'Введите формулу (в формате TeX)',
 				multiline: true,
 				validation: 'наглядный_писарь.формула'
-			}],
-			ok: function(formula)
+			},
 			{
-				options.ok(formula.trim())
+				id: 'display',
+				description: 'Положение в тексте',
+				choice: true,
+				postprocess: function(input)
+				{
+					var chooser = $('<div/>').addClass('display')
+					
+					this.chooser = chooser
+					
+					var inline = $('<div/>').attr('value', 'inline').appendTo(chooser)
+					var block = $('<div/>').attr('value', 'block').appendTo(chooser)
+					
+					chooser.disableTextSelect()
+					input.after(chooser)
+					
+					new image_chooser(chooser, { target: input })
+				},
+				setter: function(value)
+				{
+					this.content.find('.display > [value="' + value + '"]').click()
+				}
+			}],
+			ok: function(data)
+			{
+				data.formula = data.formula.trim()
+				options.ok(data)
 			},
 			on_open: function()
 			{
 				if (options.open)
-					options.open()
+					options.open.bind(this)()
 			},
 			on_cancel: function()
 			{
@@ -1386,17 +1562,40 @@ Visual_editor.tool_windows =
 			fields:
 			[{
 				id: 'url',
-				description: 'Укажите адрес картинки',
+				description: 'Адрес картинки',
 				validation: 'наглядный_писарь.картинка'
-			}],
-			ok: function(url)
+			},
 			{
-				options.ok(url.collapse_lines())
+				id: 'float',
+				description: 'Положение в тексте',
+				choice: true,
+				postprocess: function(input)
+				{
+					var chooser = $('<div/>').addClass('float')
+					
+					var left = $('<div/>').attr('value', 'left').appendTo(chooser)
+					var none = $('<div/>').attr('value', 'none').appendTo(chooser)
+					var right = $('<div/>').attr('value', 'right').appendTo(chooser)
+					
+					chooser.disableTextSelect()
+					input.after(chooser)
+					
+					new image_chooser(chooser, { target: input })
+				},
+				setter: function(value)
+				{
+					this.content.find('.float > [value="' + value + '"]').click()
+				}
+			}],
+			ok: function(data)
+			{
+				data.url = data.url.collapse_lines()
+				options.ok(data)
 			},
 			on_open: function()
-			{	
+			{
 				if (options.open)
-					options.open()
+					options.open.bind(this)()
 			},
 			on_cancel: function()
 			{

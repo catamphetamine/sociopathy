@@ -53,6 +53,47 @@
 	{
 		li
 		{
+			&.text_align_left, &.text_align_center, &.text_align_right, &.text_align_justify
+			{
+				margin-left: 5px;
+				margin-right: 5px;
+				
+				&.text_align_justify
+				{
+					margin-right: 15px;
+				}
+				
+				 > *
+				 {
+					position: relative;
+					margin-top: -12px;
+					top: 13px;
+					
+					width: 40px;
+					height: 40px;
+				 }
+			}
+			
+			&.text_align_left > *
+			{
+				background-image: url('/картинки/писарь/снасти/кнопки/выравнивание содержимого влево.png');
+			}
+			
+			&.text_align_center > *
+			{
+				background-image: url('/картинки/писарь/снасти/кнопки/выравнивание содержимого по середине.png');
+			}
+			
+			&.text_align_right > *
+			{
+				background-image: url('/картинки/писарь/снасти/кнопки/выравнивание содержимого вправо.png');
+			}
+			
+			&.text_align_justify > *
+			{
+				background-image: url('/картинки/писарь/снасти/кнопки/выравнивание содержимого по ширине.png');
+			}
+			
 			&.heading
 			{
 				font-family: @headings_font;
@@ -110,7 +151,7 @@
 				margin-top: -12px;
 				top: 11px;
 				
-				background-image: url('/картинки/на страницах/заметка/список.png');
+				background-image: url('/картинки/писарь/снасти/кнопки/список.png');
 				width: 40px;
 				height: 40px;
 			}
@@ -121,7 +162,7 @@
 				margin-top: -12px;
 				top: 11px;
 				
-				background-image: url('/картинки/на страницах/заметка/картинка.png');
+				background-image: url('/картинки/писарь/снасти/кнопки/картинка.png');
 				width: 40px;
 				height: 40px;
 			}
@@ -141,7 +182,7 @@
 	
 			&.undo > *
 			{
-				background-image: url('/картинки/на страницах/заметка/undo.png');
+				background-image: url('/картинки/писарь/снасти/кнопки/undo.png');
 			}
 			
 			&.undo > *.disabled, &.redo > *.disabled
@@ -151,7 +192,7 @@
 	
 			&.redo > *
 			{
-				background-image: url('/картинки/на страницах/заметка/redo.png');
+				background-image: url('/картинки/писарь/снасти/кнопки/redo.png');
 			}
 			
 			&.undo
@@ -190,7 +231,7 @@
 				margin-top: -12px;
 				top: 11px;
 				
-				background-image: url('/картинки/на страницах/заметка/видео.png');
+				background-image: url('/картинки/писарь/снасти/кнопки/видео.png');
 				width: 40px;
 				height: 40px;
 			}
@@ -201,7 +242,7 @@
 				margin-top: -12px;
 				top: 11px;
 				
-				background-image: url('/картинки/на страницах/заметка/аудиозапись.png');
+				background-image: url('/картинки/писарь/снасти/кнопки/аудиозапись.png');
 				width: 40px;
 				height: 40px;
 			}
@@ -232,13 +273,13 @@
 	
 	.more
 	{
-		background-image: url('/картинки/на страницах/заметка/показать всё.png');
+		background-image: url('/картинки/писарь/снасти/кнопки/показать всё.png');
 	}
 
 	.less
 	{
 		display: none;
-		background-image: url('/картинки/на страницах/заметка/скрыть разширенное.png');
+		background-image: url('/картинки/писарь/снасти/кнопки/скрыть разширенное.png');
 	}
 }
 
@@ -273,6 +314,11 @@
 
 .visual_editor_image_source_window
 {
+	input[name="url"]
+	{
+		width: 570px;
+	}
+	
 	.icon
 	{
 		width: 128px;
@@ -281,6 +327,41 @@
 		background-image: url('/картинки/писарь/снасти/картинка.png');
 		
 		padding-right: 46px;
+	}
+	
+	.float
+	{
+		> [value="left"], > [value="none"], > [value="right"]
+		{
+			display: inline-block;
+			
+			width: 180px;
+			height: 120px;
+			
+			margin-left: 20px;
+			margin-right: 20px;
+			
+			margin-top: 20px;
+		}
+		
+		> [value="left"]
+		{
+			margin-left: 0;
+			
+			background-image: url('/картинки/писарь/снасти/обтекание картинки текстом/картинка слева.png');
+		}
+		
+		> [value="none"]
+		{
+			background-image: url('/картинки/писарь/снасти/обтекание картинки текстом/картинка как обычно.png');
+		}
+		
+		> [value="right"]
+		{
+			margin-left: 0;
+			
+			background-image: url('/картинки/писарь/снасти/обтекание картинки текстом/картинка справа.png');
+		}
 	}
 }
 
@@ -292,6 +373,42 @@
 		height: 128px;
 
 		background-image: url('/картинки/писарь/снасти/формула.png');
+	}
+	
+	textarea[name="formula"]
+	{
+		height: 110px;
+		width: 430px;
+	}
+	
+	.display
+	{
+		> [value="inline"], > [value="block"]
+		{
+			display: inline-block;
+			
+			width: 220px;
+			height: 100px;
+			
+			margin-left: 20px;
+			margin-right: 20px;
+			
+			margin-top: 20px;
+		}
+		
+		> [value="inline"]
+		{
+			margin-left: 0;
+			
+			background-image: url('/картинки/писарь/снасти/обтекание формулы текстом/формула в строке.png');
+		}
+		
+		> [value="block"]
+		{
+			margin-left: 0;
+			
+			background-image: url('/картинки/писарь/снасти/обтекание формулы текстом/формула вне строки.png');
+		}
 	}
 }
 
@@ -383,17 +500,8 @@
 article[contenteditable=true] [type=hyperlink],
 article[contenteditable=true] [type=picture],
 article[contenteditable=true] [type=formula],
+article[contenteditable=true] [type=audio],
 article[contenteditable=true] [type=video]
 {
 	cursor: pointer;
 }
-
-/*
-body[mode="правка"] .article [type="hyperlink"],
-body[mode="правка"] .article [type="picture"],
-body[mode="правка"] .article [type="formula"],
-body[mode="правка"] .article [type="video"]
-{
-	cursor: pointer;
-}
-*/

@@ -80,4 +80,4 @@ options.save = (сообщение, environment, возврат) ->
 			@.done(@._.сообщение)
 			
 result = messages.messages(options)
-result.enable_message_editing('болталка', { update: (_id, отправитель, content, возврат) -> db('chat').update({ _id: db('chat').id(_id), отправитель: отправитель._id }, $set: { сообщение: content }, возврат) })
+result.enable_message_editing('болталка', { update: (_id, отправитель, content, возврат) -> db('chat').update({ _id: db('chat').id(_id), отправитель: отправитель }, $set: { сообщение: content }, возврат) })

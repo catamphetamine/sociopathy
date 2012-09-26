@@ -40,6 +40,8 @@ var text_button = new Class
 			'display': 'inline-block'
 		})
 		
+		button.physics.classic(this)
+		
 		this.parent(element, $.extend({}, this.default_options, options))		
 	},
 	

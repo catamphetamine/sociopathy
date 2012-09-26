@@ -153,7 +153,7 @@
 			"#join_dialog .gender .chooser",
 			{
 				target: "#join_dialog .gender input[type=hidden]",
-				on_choise: function()
+				on_choice: function()
 				{
 					join_form_slider.next()
 				}
