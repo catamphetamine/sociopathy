@@ -229,17 +229,19 @@ $(document).on('panel_loaded', function()
 		
 		on('новости', 'болталка', function(data)
 		{
+			console.log("on('новости', 'болталка'")
+			console.log(data)
 			Новости.болталка(data._id)
 		})
 		
 		on('новости', 'беседы', function(data)
 		{
-			Новости.беседа(data._id, data.сообщение)
+			Новости.беседа(data._id, data.сообщения || data.сообщение)
 		})
 		
 		on('новости', 'обсуждения', function(data)
 		{
-			Новости.обсуждение(data._id, data.сообщение)
+			Новости.обсуждение(data._id, data.сообщения || data.сообщение)
 		})
 		
 		on('новости', 'новости', function(data)
@@ -362,6 +364,11 @@ $(document).on('panel_loaded', function()
 		{
 			var avatar = $('.authenticated_user .small_avatar .picture img')
 			avatar.attr('src', set_version(avatar.attr('src'), data.version))
+		})
+		
+		on('пользователь', 'не_показывать_подсказку', function(data)
+		{
+			пользователь.session.не_показывать_подсказки.push(data.подсказка)
 		})
 	})()
 })

@@ -13,10 +13,12 @@
 	var join_dialog_next_button
 	var join_dialog_done_button
 	
+	var join_button
+	
 	// activate join button
 	function initialize_join_button()
 	{
-		button.physics.classic(new image_button
+		join_button = button.physics.classic(new image_button
 		(
 			"#join_button", 
 			{
@@ -66,7 +68,7 @@
 			Подсказки.подсказка('Разскажите нам, откуда вы. Например: "Москва", "Где-то на границе с Монголией", "Кольский полуостров".')
 		})
 		
-		join_form_slider.on('slide_No_4', function()
+		join_form_slider.on('slide_No_5', function()
 		{
 			Подсказки.подсказка('По этому паролю вы будете входить в нашу сеть. Например: "белый слон жуёт морковь", "кто не спрятался - я не виноват", "у меня везде один пароль".')
 		})
@@ -111,6 +113,9 @@
 				откуда:
 				{
 				},
+				почта:
+				{
+				},
 				пароль:
 				{
 				}
@@ -122,10 +127,28 @@
 	{
 		имя: function(имя, callback)
 		{
+			имя = имя.trim()
+			
 			if (!имя)
 				return callback({ error: 'Вам нужно представиться' })
 				
-			callback()
+			var form = this
+				
+			page.Ajax.get('/приложение/человек/по имени',
+			{
+				имя: имя
+			})
+			.ok(function()
+			{
+				callback({ error: 'Это имя уже занято' })
+			})
+			.ошибка(function(error, options)
+			{
+				if (options.data.не_найден)
+					return callback()
+				
+				callback({ error: error })
+			})
 		},
 		
 		пол: function(пол, callback)
@@ -134,6 +157,42 @@
 				return callback({ error: 'Вам нужно указать свой пол' })
 				
 			callback()
+		},
+		
+		откуда: function(откуда, callback)
+		{
+			откуда = откуда.trim()
+			
+			if (!откуда)
+				return callback({ error: 'Даже Neverland сойдёт' })
+			
+			callback()
+		},
+		
+		почта: function(почта, callback)
+		{
+			почта = почта.trim()
+			
+			if (!почта)
+				return callback({ error: 'Ваша почта нам пригодится' })
+			
+			var form = this
+				
+			page.Ajax.get('/приложение/человек/по почте',
+			{
+				почта: почта
+			})
+			.ok(function(data)
+			{
+				callback({ error: 'Это почта пользователя ' + data.имя, bubble: true })
+			})
+			.ошибка(function(error, options)
+			{
+				if (options.data.не_найден)
+					return callback()
+				
+				callback({ error: error })
+			})
 		},
 		
 		пароль: function(пароль, callback)
@@ -177,7 +236,10 @@
 		if (получить_настройку_запроса('приглашение'))
 		{
 			conditional = initialize_conditional($('.join_button_block').show())
-			check_invite(conditional.callback)
+			check_invite(function() { conditional.callback(null, function()
+			{
+				(function() { join_button.push() }).delay(1000)
+			})})
 		}	
 	}
 	
@@ -228,11 +290,13 @@
 		})
 		.ok(function(данные) 
 		{ 
-			прописан = true
-			Подсказки.подсказка('Сейчас страница будет перезагружена.')
+			//прописан = true
+			//Подсказки.подсказка('Сейчас страница будет перезагружена.')
 	
-			loading.hide()
-			join_dialog.close()
+			//loading.hide()
+			//join_dialog.close()
+			
+			войти({ имя: data.имя, пароль: data.пароль, go_to: '/' })
 		})
 	}
 })()

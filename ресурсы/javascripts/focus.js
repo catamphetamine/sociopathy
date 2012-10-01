@@ -4,6 +4,11 @@ var Focus = new (new Class
 	
 	focus: function()
 	{
+		if (this.focused)
+			return
+		
+		this.focused = true
+	
 		$(document).trigger('focused')
 	},
 	
@@ -13,7 +18,6 @@ var Focus = new (new Class
 		
 		$(window).on('focus.focus', function()
 		{
-			self.focused = true
 			self.focus()
 		})
 		
@@ -24,12 +28,12 @@ var Focus = new (new Class
 		
 		$(window).on('keypress.focus', function()
 		{
-			self.focused = true
+			self.focus()
 		})
 		
 		$(window).on('click.focus', function()
 		{
-			self.focused = true
+			self.focus()
 		})
 	}
 }))()

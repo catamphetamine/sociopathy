@@ -132,8 +132,11 @@ function slider(options)
 	{
 		// if we are in the end - push the done button
 		if (this.index == this.count)
+		{
 			this.options.buttons.done.push()
-	
+			return callback()
+		}
+				
 		// go to the next slide	
 		this.go_to(this.index + 1, callback)
 	}
@@ -260,16 +263,14 @@ function slider(options)
 		if (!button)
 			return
 		
-		// executes the call back function
-		var execute_callback = function() { if (callback) callback() }
-		
 		// if no need to animate
 		if (this.no_animation)
 		{
 			// show the button immediately
 			button.hide()
 			
-			execute_callback()
+			if (callback)
+				callback()
 			
 			// exit
 			return

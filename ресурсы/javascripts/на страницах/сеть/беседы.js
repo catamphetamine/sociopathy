@@ -1,4 +1,6 @@
 title('Беседы');
+
+Подсказка('создание беседы', 'Вы можете завести новую беседу нажатием клавиш <a href=\'/сеть/настройки\'>«Действия → Создать»</a>');
 	
 (function()
 {
@@ -63,7 +65,10 @@ title('Беседы');
 							.ok(function()
 							{
 								the_button.element.fade_out(0.3)
-								talk.remove()
+								
+								talk.find('> .left').show()
+								talk.find('> a').remove()
+								talk.find('> .leave').hide()
 							})
 							.ошибка(function(ошибка)
 							{
@@ -118,4 +123,15 @@ title('Беседы');
 	}
 	
 	page.needs_initializing = true
+	
+	$(document).on_page('keydown.actions', function(event)
+	{
+		if (Клавиши.is(Настройки.Клавиши.Действия.Создать, event))
+		{
+			event.preventDefault()
+			return go_to('/сеть/общение/беседа')
+		}
+	})
+	
+	Подсказки.подсказка('Для создания новой беседы нажмите клавиши ' + Клавиши.комбинация(Настройки.Клавиши.Действия.Создать))
 })()

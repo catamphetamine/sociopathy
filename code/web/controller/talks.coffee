@@ -62,7 +62,9 @@ options.сообщения_чего = (ввод, возврат) ->
 			db('talks').findOne({ id: ввод.настройки.id }, @)
 			
 		.сделать (сообщения_чего) ->
-			@.done(Object.выбрать(['_id', 'название'], сообщения_чего))
+			result = Object.выбрать(['_id', 'название'], сообщения_чего)
+			result.участники = сообщения_чего.участники.map((x) -> x.toString())
+			@.done(result)
 			
 options.сообщения_чего_from_string = (сообщения_чего) ->
 	if сообщения_чего._id.toHexString?
@@ -83,6 +85,7 @@ options.messages_query = (environment) ->
 
 options.extra_get = (data, environment, возврат) ->
 	data.название = environment.сообщения_чего.название
+	data.участники = environment.сообщения_чего.участники
 	data._id = environment.сообщения_чего._id
 	возврат()
 
@@ -119,14 +122,14 @@ options.authorize = (environment, возврат) ->
 			
 			@.done()
 
-options.earliest_in_news = (session) ->
+options.earliest_in_news = (session, environment) ->
 	if session.новости?
 		if session.новости.беседы?
 			if session.новости.беседы[environment.сообщения_чего._id]?
 				return session.новости.беседы[environment.сообщения_чего._id][0]
 	return
 
-options.latest_read = (session) ->
+options.latest_read = (session, environment) ->
 	if session.последние_прочитанные_сообщения?
 		if session.последние_прочитанные_сообщения.беседы?
 			return session.последние_прочитанные_сообщения.беседы[environment.сообщения_чего._id]
@@ -154,7 +157,7 @@ options.notify = (_id, environment, возврат) ->
 				if пользователь != environment.пользователь._id + ''
 					if !участники.has(пользователь)
 						continue
-					соединение_с_беседой = эфир.соединение_с('беседы', { пользователь: environment.пользователь._id, _id: environment.сообщения_чего._id.toString() })
+					соединение_с_беседой = эфир.соединение_с('беседы', { пользователь: пользователь, _id: environment.сообщения_чего._id.toString() })
 					if not соединение_с_беседой
 						эфир.отправить_одному_соединению('новости', 'звуковое оповещение', { чего: 'беседы' }, { кому: пользователь })
 						
@@ -211,6 +214,13 @@ result = messages.messages(options)
 result.enable_message_editing('беседы')
 result.enable_renaming('беседы')
 
+append = (data, environment) ->
+	data.участники = [environment.пользователь._id]
+	data.создана = data.создано
+	delete data.создано
+
+result.enable_creation('беседа', append)
+
 #result.enable_unsubscription('беседы')
 
 http.delete '/сеть/' + 'беседы' + '/участие', (ввод, вывод, пользователь) ->
@@ -229,4 +239,67 @@ http.delete '/сеть/' + 'беседы' + '/участие', (ввод, выв
 			
 		.сделать (уведомления) ->
 			эфир.отправить('новости', 'уведомления', уведомления)
+			вывод.send {}
+		
+добавить_в_беседу = (_id, добавляемый, пользователь, возврат) ->
+	цепь(возврат)
+		.сделать ->
+			db(options.id).findOne({ _id: _id }, @)
+			
+		.сделать (беседа) ->
+			нет_прав = yes
+		
+			if беседа.участники?
+				for участник in беседа.участники
+					if участник + '' == добавляемый + ''
+						return вывод.send({ уже_участвует: yes })
+					if участник + '' == пользователь._id + ''
+						нет_прав = no
+						
+			if нет_прав
+				return вывод.send(ошибка: "Вы не участник этой беседы, и поэтому \n не можете добавлять в неё людей")
+
+			db(options.id).update({ _id: _id }, { $addToSet: { участники: добавляемый } }, @)
+			
+		.сделать ->
+			db('people_sessions').findOne({ пользователь: добавляемый }, @)
+			
+		.сделать (session) ->
+			query = { чего: 'беседы', общение: _id }
+			
+			latest_read = options.latest_read(session, { сообщения_чего: { _id: _id } })
+			if latest_read?
+				query._id = { $gt: latest_read }
+				
+			db('messages').find(query).toArray(@)
+			
+		.сделать (unread_messages) ->
+			unread_message_ids = unread_messages.map((message) -> message._id.toString())
+			
+			эфир.отправить('новости', 'беседы', { _id: _id.toString(), сообщения: unread_message_ids }, { кому: добавляемый })
+			
+			set_id = 'новости.' + options.in_session_id + '.' + _id
+			
+			set_operation = {}
+			set_operation[set_id] = { $each: unread_message_ids }
+			
+			db('people_sessions').update({ пользователь: добавляемый }, { $addToSet: set_operation }, @)
+			
+options.creation_extra = (_id, пользователь, ввод, возврат) ->
+	кому = ввод.body.кому
+	
+	if not кому?
+		return возврат()
+	
+	добавить_в_беседу(_id, db('people').id(кому), пользователь, возврат)
+	
+http.put  '/сеть/' + 'беседы' + '/участие', (ввод, вывод, пользователь) ->
+	_id = db(options.id).id(ввод.body.беседа)
+	добавляемый = db('people').id(ввод.body.пользователь)
+	
+	цепь(вывод)
+		.сделать ->
+			добавить_в_беседу(_id, добавляемый, пользователь, @)
+			
+		.сделать ->
 			вывод.send {}

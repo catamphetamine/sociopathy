@@ -71,7 +71,10 @@ function form_slider(options)
 	 */
 	this.initialize = function()
 	{
+		this.options = options
+		
 		this.slider = new slider(options)
+		
 		this.parse_fields(options)
 		
 		var self = this
@@ -157,10 +160,18 @@ function form_slider(options)
 	// go to the next slide
 	this.next = function(ok, error)
 	{
+		ok = ok || function()
+		{
+			$(this.options.selector + ' .slide:eq(' + (this.slider.index - 1) + ') input:first').focus()
+		}
+		.bind(this)
+		
 		// get the field for this slide
 		// (currently there can be only one field per slide)
 		var field = this.get_current_field()
 
+		var self = this
+		
 		// if there is any validation - validate this field value
 		if (field)
 		{
@@ -168,7 +179,7 @@ function form_slider(options)
 				field.form.validate(function()
 				{
 					// go to the next slide
-					this.slider.next(ok)
+					self.slider.next(ok)
 					return true
 				},
 				error)

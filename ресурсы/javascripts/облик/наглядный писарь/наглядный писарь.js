@@ -7,7 +7,9 @@ var Visual_editor = new Class
 	{
 		if (typeof(editor) === 'string')
 			editor = new Editor(editor)
-	
+		//else if (editor instanceof jQuery)
+		//	editor = new Editor(editor)
+			
 		this.editor = editor
 		
 		/*
@@ -31,6 +33,8 @@ var Visual_editor = new Class
 		
 		this.add_global_hotkey()
 		
+		this.paragraphed()
+		
 		if (!page.data.visual_editors)
 			page.data.visual_editors = []
 			
@@ -49,6 +53,77 @@ var Visual_editor = new Class
 		Object.each(this.Tools, function(tool)
 		{
 			tool.activate_all()
+		})
+	},
+	
+	keep_cursor_on_screen: function()
+	{
+		var visual_editor = this
+		
+		this.editor.on('content_changed.editor', function()
+		{
+			var current_paragraph = visual_editor.editor.caret.container('p')
+			if (!current_paragraph)
+				return
+			
+			var top_bar_height = 0
+			if ($('.visual_editor_tools').hasClass('sticky'))
+				top_bar_height = $('.visual_editor_tools').height()
+				
+			var bottom_bar_height = 0
+			if ($('.edit_mode_actions').displayed())
+				 bottom_bar_height = $('.edit_mode_actions').height()
+			
+			var paragraph_top_coordinate = current_paragraph.offset().top
+			
+			var paragraph_bottom_coordinate = paragraph_top_coordinate +
+					//parseInt(current_paragraph.css('margin-top')) +
+					//parseInt(current_paragraph.css('padding-top')) +
+					current_paragraph.height()
+
+			var window_top_coordinate = $(window).scrollTop()
+			var window_bottom_coordinate = window_top_coordinate + $(window).height()
+			
+			var paragraph_bottom_needs_to_be_visible = paragraph_bottom_coordinate - (window_bottom_coordinate - bottom_bar_height)
+			var paragraph_top_needs_to_be_visible = (window_top_coordinate + top_bar_height) - paragraph_top_coordinate
+			
+			// if bottom is visible - return
+			if (paragraph_bottom_needs_to_be_visible <= 0 && paragraph_top_needs_to_be_visible <= 0)
+				return
+					
+			var left_to_scroll = $(document).height() - window_bottom_coordinate
+			
+			/*
+			console.log('current_paragraph')
+			console.log(current_paragraph)
+			console.log('paragraph_bottom_coordinate')
+			console.log(paragraph_bottom_coordinate)
+			console.log('window_bottom_coordinate')
+			console.log(window_bottom_coordinate)
+			
+			console.log('paragraph_bottom_needs_to_be_visible')
+			console.log(paragraph_bottom_needs_to_be_visible)
+			console.log('paragraph_top_needs_to_be_visible')
+			console.log(paragraph_top_needs_to_be_visible)
+			console.log('left_to_scroll')
+			console.log(left_to_scroll)
+			*/
+			
+			if (left_to_scroll > 0)
+			{
+				if (paragraph_bottom_needs_to_be_visible)
+				{
+					return $(window).scrollTop($(window).scrollTop() + paragraph_bottom_needs_to_be_visible)
+				}
+				
+				if (!paragraph_top_needs_to_be_visible)
+					return
+				
+				//console.log(paragraph_top_needs_to_be_visible + paragraph_bottom_needs_to_be_visible)
+				
+				if (paragraph_top_needs_to_be_visible <= -paragraph_bottom_needs_to_be_visible)
+					$(window).scrollTop($(window).scrollTop() - paragraph_top_needs_to_be_visible)
+			}
 		})
 	},
 	

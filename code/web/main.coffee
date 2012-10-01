@@ -80,6 +80,7 @@ require './controller/circles'
 require './controller/talks'
 require './controller/discussions'
 global.эфир = require './controller/ether'
+require './controller/drafts'
 
 #global.memcache_available = false
 global.memcache.on 'connect', () ->

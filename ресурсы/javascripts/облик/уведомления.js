@@ -116,7 +116,7 @@ var Message =
 					$element.hide()
 					Message.bubble_after($element)
 					self.remove($element)
-
+					
 					//Message.state_machine.next()
 				} 
 			})
@@ -190,12 +190,13 @@ var Message =
 		
 		var message_itself = $('<div class="popup_panel"/>').html(text)
 		
-		if (options.process)
-			options.process(message_itself)
-		
 		var message = $('<div class="popup_panel_container"/>')
 		message.addClass('popup_message')
 		message.addClass(type)
+		
+		if (options.postprocess)
+			options.postprocess.bind(message_itself)(message)
+			
 		message.append(message_itself)
 
 		var closing = false

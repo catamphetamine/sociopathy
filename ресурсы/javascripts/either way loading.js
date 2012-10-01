@@ -288,7 +288,7 @@ function either_way_loading(options)
 	
 	if (options.progress_bar)
 	{
-		progress_bar = $('.vertical_progress_bar')
+		progress_bar = $('.vertical_progress_bar').show()
 		progress_bar.appendTo('body')
 	}
 	//}

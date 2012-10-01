@@ -352,19 +352,21 @@ var Messages = new Class
 		
 		var handler = (function()
 		{
-			if (!Focus.focused)
-				return
-		
-			//this.options.прокрутчик.unwatch(message)
-		
-			if (this.options.on_message_bottom_appears)
-				this.options.on_message_bottom_appears(_id)
-				
 			if (read)
 				return
 			
-			if (!this.read_message(_id))
-				return 
+			if (!Focus.focused)
+				return
+			
+			this.options.прокрутчик.unwatch(message)
+		
+			if (!this.can_read_messages())
+				return this.when_can_read_messages(handler)
+			
+			if (this.options.on_message_bottom_appears)
+				this.options.on_message_bottom_appears(_id)
+			
+			this.read_message(_id)
 					
 			if (this.options.on_message_read)
 				this.options.on_message_read(_id)
@@ -515,6 +517,8 @@ var Messages = new Class
 	{
 		var messages = this
 		
+		Режим.enable_in_place_editing_windows(this.options.container)
+		
 		var visual_editor = new Visual_editor('#compose_message > article')
 		this.visual_editor = visual_editor
 		
@@ -523,20 +527,8 @@ var Messages = new Class
 		if (this.options.set_up_visual_editor)
 			this.options.set_up_visual_editor.bind(this)(visual_editor)
 		
-		/*
-		visual_editor.on_break = function()
-		{
-			var node = document.createTextNode(' ')
-			visual_editor.editor.content[0].appendChild(node)
-			visual_editor.editor.caret.move_to(node)
-		}
-		*/
-		
-		visual_editor.paragraphed()
-		
 		var hint = $('<p/>').appendTo(visual_editor.editor.content)
 		visual_editor.hint(hint, 'Вводите сообщение здесь')
-		//visual_editor.tagged_hint(hint, 'Вводите сообщение здесь')
 		visual_editor.store_content()
 		
 		var editor_initial_html = visual_editor.editor.html()
@@ -545,8 +537,8 @@ var Messages = new Class
 		{
 			var message = Wiki_processor.parse_and_validate(visual_editor.editor.html())
 			
-			console.log('message:')
-			console.log(message)
+			//console.log('message:')
+			//console.log(message)
 			
 			if (!message)
 				return

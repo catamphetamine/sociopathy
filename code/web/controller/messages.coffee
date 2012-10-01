@@ -33,12 +33,15 @@ exports.messages = (options) ->
 			
 					broadcast = (id, content) ->
 						if not environment.сообщения_чего?
-							return соединение.broadcast.emit(id, content)
+							if соединение?
+								return соединение.broadcast.emit(id, content)
 							
 						connected_clients = соединение.manager.rooms[options.uri + '/' + environment.сообщения_чего._id + '']
 						if connected_clients?
 							for connection_id in connected_clients
-								соединения[connection_id].emit(id, content)
+								if соединения[connection_id]?
+									if соединения[connection_id] != соединение
+										соединения[connection_id].emit(id, content)
 						#websocket.sockets.in(environment.сообщения_чего._id + '').emit()
 			
 					disconnected = false
@@ -209,11 +212,11 @@ exports.messages = (options) ->
 						
 						earliest_in_news = null
 						if options.earliest_in_news?
-							earliest_in_news = options.earliest_in_news(session)
+							earliest_in_news = options.earliest_in_news(session, environment)
 							
 						latest_read = null
 						if options.latest_read?
-							latest_read = options.latest_read(session)
+							latest_read = options.latest_read(session, environment)
 						
 						if not earliest_in_news? && not latest_read?
 							return @.done()
@@ -230,7 +233,6 @@ exports.messages = (options) ->
 							return @.done(latest_read)
 						else
 							return @.done(earliest_in_news)
-				
 				
 			http.get options.data_uri, (ввод, вывод, пользователь) ->
 				#if options.data_uri.starts_with('/сеть/')
@@ -388,5 +390,46 @@ exports.messages = (options) ->
 				.сделать ->
 					эфир.отправить(options.in_ether_id, 'переназвано', { _id: _id, как: название })
 					вывод.send {}
+				
+	result.enable_creation = (url, append) ->
+		http.put '/сеть/' + url, (ввод, вывод, пользователь) ->
+			название = ввод.body.название.trim()
+			сообщение = ввод.body.сообщение
+			
+			environment =
+				пользователь: пользователь
+				
+			цепь(вывод)
+				.сделать ->
+					проверка = (id, возврат) ->
+						цепь(возврат)
+							.сделать ->
+								db(options.id).findOne({ id: id }, @)
+								
+							.сделать (found) ->
+								@.done(not found?)
+								
+					снасти.generate_unique_id(название, проверка, @.в 'id')
+					
+				.сделать (id) ->
+					values = { название: название, id: id, создано: new Date() }
+					
+					if append?
+						append(values, environment)
+					
+					db(options.id).save(values, @._.в 'общение')
+					
+				.сделать (общение) ->
+					environment.сообщения_чего = { _id: общение._id }
+					
+					options.save(сообщение, environment, @)
+				
+				.сделать ->
+					if options.creation_extra?
+						return options.creation_extra(@._.общение._id, пользователь, ввод, @)
+					@.done()
+					
+				.сделать ->
+					return вывод.send { id: @.$.id }
 					
 	result

@@ -7,6 +7,7 @@ var Scroller = new Class
 	initialize: function()
 	{
 		$(window).on('scroll', this.process_scroll.bind(this))
+		$(document).on('focused', this.process_scroll.bind(this))
 		//$(window).on('resize', this.reset.bind(this))
 	},
 	
@@ -116,6 +117,8 @@ var Scroller = new Class
 		var top_was_visible = false
 		var bottom_was_visible = false
 		
+		var event_options = { first_time: first_time }
+		
 		if (!first_time)
 		{
 			top_was_visible = previous_top_offset_in_window >= 0 && previous_top_offset_in_window < window_height
@@ -182,9 +185,9 @@ var Scroller = new Class
 			if (previous_top_offset_in_window >= window_height && top_offset_in_window < 0 && upwards)
 			{
 				if (bottom_is_visible)
-					element.trigger('disappears_on_top')
+					element.trigger('disappears_on_top', event_options)
 				else
-					element.trigger('disappears_on_top')
+					element.trigger('disappears_on_top', event_options)
 			}
 		}
 		else
@@ -194,7 +197,7 @@ var Scroller = new Class
 				if (downwards)
 					element.trigger('disappears_on_bottom')
 				else
-					element.trigger('disappears_on_top')
+					element.trigger('disappears_on_top', event_options)
 			}
 		}
 	},

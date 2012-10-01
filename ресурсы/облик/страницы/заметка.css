@@ -2,21 +2,6 @@
 
 @article_side_padding: 80px;
 
-.visual_editor_tools_container
-{
-	margin-top: 40px;
-
-	min-height: 2 * @visual_editor_tools_panel_height;
-	/* max-height: 2 * @visual_editor_tools_panel_height; */
-	
-	overflow: hidden;
-	
-	.visual_editor_tools
-	{
-		position: absolute;
-	}
-}
-
 #content.article
 {
 	margin-top: 60px;

@@ -3,7 +3,8 @@
 		<div class="content multiline_text rich_formatting">{{html Wiki_processor.decorate(сообщение)}}</div>
 	</div>
 
-	<div class="author no_word_carrying {{if is_online(отправитель._id)}}online{{/if}}">
+	<!-- {{if is_online(отправитель._id)}}online{{/if}} -->
+	<div class="author no_word_carrying">
 		<a href="/люди/${отправитель['адресное имя']}">
 			<span class="name" title="${отправитель.имя}">
 				${отправитель.имя}

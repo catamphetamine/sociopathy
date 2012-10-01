@@ -5,18 +5,6 @@ file_system = require 'fs'
 
 снасти = {}
 
-снасти.получить_настройки = (ввод) ->
-	настройки = адрес.parse(ввод.url, true).query
-	
-	for ключ, значение of настройки
-		if (typeof значение is 'string')
-			if "#{parseInt(значение)}" == значение
-				настройки[ключ] = parseInt(значение)
-			else if "#{parseFloat(значение)}" == значение
-				настройки[ключ] = parseFloat(значение)
-
-	настройки
-
 снасти.отдать_страницу = (название, данные_для_страницы, ввод, вывод, возврат) ->
 	цепь(возврат)
 		.сделать ->
@@ -129,11 +117,15 @@ file_system = require 'fs'
 	настройки = адрес.parse(ввод.url, true).query
 	
 	for ключ, значение of настройки
-		if (typeof значение is 'string')
-			if "#{parseInt(значение)}" == значение
-				настройки[ключ] = parseInt(значение)
-			else if "#{parseFloat(значение)}" == значение
-				настройки[ключ] = parseFloat(значение)
+		if (typeof значение != 'string')
+			настройки[ключ] = значение + ''
+	
+	#for ключ, значение of настройки
+	#	if (typeof значение is 'string')
+	#		if "#{parseInt(значение)}" == значение
+	#			настройки[ключ] = parseInt(значение)
+	#		else if "#{parseFloat(значение)}" == значение
+	#			настройки[ключ] = parseFloat(значение)
 	
 	return настройки
 	
@@ -271,7 +263,7 @@ file_system = require 'fs'
 	id
 	
 снасти.batch_loading = (ввод, options, возврат) ->
-	с = ввод.настройки.с
+	после = ввод.настройки.после
 	collection = db(options.from)
 	data = null
 				
@@ -282,9 +274,9 @@ file_system = require 'fs'
 			query_options = Object.x_over_y(parameters, { limit: ввод.настройки.сколько, sort: [['_id', -1]] })
 			query = Object.clone(options.query)
 			
-			if с?
-				с =  collection.id(с)
-				query._id = { $lt: с }
+			if после?
+				после =  collection.id(после)
+				query._id = { $lt: после }
 			
 			collection.find(query, query_options).toArray(@)
 			
@@ -421,7 +413,7 @@ file_system = require 'fs'
 			@.done(@.$)
 			
 снасти.escape_id = (id) ->
-	'/\?%*:|"<>.'.split('').forEach((symbol) -> id = id.replace_all(symbol, ''))
+	'/\?@#&%*:|"<>.'.split('').forEach((symbol) -> id = id.replace_all(symbol, ''))
 	id
 	
 снасти.generate_id = (base, options) ->

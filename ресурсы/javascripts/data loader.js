@@ -100,7 +100,7 @@ var Batch_loader = new Class
 			data.задом_наперёд = true
 			
 		if (this.options.parameters)
-			data = Object.merge(this.options.parameters, data)
+			data = Object.x_over_y(this.options.parameters, data)
 		
 		if (this.первый_раз)
 		{

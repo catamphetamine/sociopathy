@@ -182,7 +182,7 @@
 					
 				path = has_extension ? path : path + '.js'
 				
-				//console.log(path)
+				console.log('loading script: ' + path)
 					
 				$.ajax
 				({
@@ -449,6 +449,8 @@
 						var menu_items = menu.children()
 						menu.empty().append(menu_items)
 					</script>
+		
+					<a class="enter" href='#'>Войти</a>
 		
 					<!-- logo -->
 					<a id="logo" href="/"><img id="panel_logo" src="/картинки/навершие/logo.png"/></a>

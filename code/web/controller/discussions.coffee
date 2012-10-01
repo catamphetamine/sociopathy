@@ -13,6 +13,8 @@ http.get '/сеть/обсуждения', (ввод, вывод, пользов
 			db('messages').find({ общение: обсуждение._id, чего: 'обсуждения' }, { sort: [['_id', -1]], limit: 1 }).toArray(@)
 			
 		.сделать (последние_сообщения) ->
+			console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+			console.log(последние_сообщения)
 			сообщения = []
 			for array in последние_сообщения
 				if not array.пусто()
@@ -22,6 +24,8 @@ http.get '/сеть/обсуждения', (ввод, вывод, пользов
 			пользовательское.подставить(последние_сообщения, 'отправитель', @)
 			
 		.сделать (последние_сообщения) ->
+			console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+			console.log(последние_сообщения)
 			последние_сообщения.merge_into(@.$.обсуждения, 'последнее_сообщение', (обсуждение) -> @.общение + '' == обсуждение._id + '')
 			
 		#.сделать ->
@@ -102,14 +106,14 @@ options.mark_new = (сообщения, environment, возврат) ->
 			
 			@.done()
 
-options.earliest_in_news = (session) ->
+options.earliest_in_news = (session, environment) ->
 	if session.новости?
 		if session.новости.обсуждения?
 			if session.новости.обсуждения[environment.сообщения_чего._id]?
 				return session.новости.обсуждения[environment.сообщения_чего._id][0]
 	return
 
-options.latest_read = (session) ->
+options.latest_read = (session, environment) ->
 	if session.последние_прочитанные_сообщения?
 		if session.последние_прочитанные_сообщения.обсуждения?
 			return session.последние_прочитанные_сообщения.обсуждения[environment.сообщения_чего._id]
@@ -137,7 +141,7 @@ options.notify = (_id, environment, возврат) ->
 				if пользователь != environment.пользователь._id + ''
 					if !подписчики.has(пользователь)
 						continue
-					соединение_с_обсуждением = эфир.соединение_с('обсуждения', { пользователь: environment.пользователь._id, _id: environment.сообщения_чего._id.toString() })
+					соединение_с_обсуждением = эфир.соединение_с('обсуждения', { пользователь: пользователь, _id: environment.сообщения_чего._id.toString() })
 					if not соединение_с_обсуждением
 						эфир.отправить_одному_соединению('новости', 'звуковое оповещение', { чего: 'обсуждения' }, { кому: пользователь })
 						
@@ -194,3 +198,4 @@ result = messages.messages(options)
 result.enable_message_editing('обсуждения')
 result.enable_renaming('обсуждения')
 result.enable_unsubscription('обсуждения')
+result.enable_creation('обсуждение')

@@ -9,7 +9,7 @@ var Подсказки = (function()
 			if (Клавиши.is(Настройки.Клавиши.Подсказки, event))
 			{
 				// disable hints
-				//return
+				return
 				
 				включены = !включены
 				if (включены)
@@ -62,3 +62,27 @@ var Подсказки = (function()
 	
 	return result
 })()
+
+function Подсказка(id, текст)
+{
+	if (!пользователь)
+		return
+	
+	if (пользователь.session.не_показывать_подсказки.has(id))
+		return
+	
+	info(текст, { postprocess: function(container)
+	{
+		var dismiss = $('<a/>').css('float', 'right').attr('href', '#').text('Больше не напоминать об этом').click(function(event)
+		{
+			event.preventDefault()
+			Ajax.delete('/приложение/сеть/подсказка', { подсказка: id }).ok(function() { container.trigger('contextmenu') })
+		})
+		
+		$('<br/>').appendTo(this)
+		$('<br/>').appendTo(this)
+		dismiss.appendTo(this)
+		$('<div style="clear: both"/>').appendTo(this)
+	},
+	sticky: false })
+}

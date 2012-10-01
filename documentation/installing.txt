@@ -3,16 +3,60 @@
 Подключаем услугу "внешний IP"
 Ставим виртуальную машину (например, VMWare Workstation)
 Заводим в ней рабочую систему (например, Ubuntu Server)
+
 Заводим пользователя sociopathy
+
+sudo adduser sociopathy
+addgroup admin
+nano /etc/sudoers
+%admin ALL=(ALL) ALL
+sudo adduser sociopathy admin
+
+Входим под ним
+
 Ставим git
 Скачиваем "репозиторий" git://github.com/kuchumovn/sociopathy.git в папку "repository" пользователя sociopathy
+
+git clone git://github.com/kuchumovn/sociopathy.git repository
+
 Идём на http://nodejs.org/download/ и скачиваем исходники node.js
-
-curl http://nodejs.org/dist/v0.8.9/node-v0.8.9.tar.gz
-
 Устанавливаем node.js
+
+mkdir ~/sociopathy
+cd ~/sociopathy
+wget http://nodejs.org/dist/v0.8.9/node-v0.8.9.tar.gz
+tar xvf node-v0.8.9.tar.gz
+rm node-v0.8.9.tar.gz
+mv node-v0.8.9 node
+cd node
+./configure
+sudo make
+sudo make install
+cd ..
+
+может быть ещё: npm install socket.io
+
 Устанавливаем NginX
+
+sudo -s
+nginx=stable # use nginx=development for latest development version
+add-apt-repository ppa:nginx/$nginx
+apt-get update 
+apt-get install nginx
+
 Устанавливаем ImageMagick
+
+sudo apt-get install imagemagick
+
 Устанавливаем MongoDB
+
+sudo apt-key adv --keyserver keyserver.ubuntu.com --recv 7F0CEB10
+sudo echo "deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen" >> /etc/apt/sources.list
+sudo apt-get update
+sudo apt-get install mongodb-10gen
+
+настраиваем NginX
+создаём свой config
+
 На домашнем маршрутизаторе пробрасываем 80-ый порт извне на виртуальную машину
 Заходим на http://[внешний IP] и пользуемся сайтом

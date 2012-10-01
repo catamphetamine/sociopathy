@@ -1,5 +1,7 @@
 var enter_window
 
+var войти
+
 (function()
 {
 	var кнопка_отмены
@@ -80,7 +82,7 @@ var enter_window
 		//window.onhashchange = проверить_адрес_на_вход
 	})
 
-	function войти(data)
+	войти = function(data)
 	{
 		var loading = loading_indicator.show()
 		page.Ajax.post('/приложение/вход', data)
@@ -97,6 +99,9 @@ var enter_window
 			loading_page({ full: true })
 			enter_window.close()
 			
+			if (data.go_to)
+				return window.location = data.go_to
+				
 			window.location.reload()
 		})
 	}

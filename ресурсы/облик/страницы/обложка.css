@@ -129,6 +129,30 @@
 		}
 	}
 
+	.mail
+	{
+		.icon
+		{
+			float: left;
+			
+			width: 128px;
+			height: 128px;
+
+			background-image: url('/картинки/на страницах/welcome/dialog/join/mail.png');
+			background-repeat: no-repeat;
+			
+			padding-right: 34px;
+		}
+		
+		form
+		{
+			display: inline-block;
+			vertical-align: top;
+			
+			padding-top: 5px;
+		}
+	}
+
 	.password
 	{
 		.icon
@@ -156,6 +180,11 @@
 	.buttons
 	{
 		padding-right: 30px;
+		
+		.right
+		{
+			float: right;
+		}
 	}
 }
 

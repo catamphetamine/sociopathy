@@ -7,6 +7,8 @@ function Form(element)
 	
 	this.validate = function(ok, error, index)
 	{
+		error = error || $.noop
+		
 		var i = 0
 		if (index)
 			i = index
@@ -42,6 +44,8 @@ function Form(element)
 	{
 		var input = $(this)
 		var the_input = input
+		
+		var the_form = form
 			
 		form.inputs.push(new (function(element, form)
 		{
@@ -61,12 +65,22 @@ function Form(element)
 						input.element.focus()
 					})
 					
+					function hide_label()
+					{
+						input.label.css({ opacity: 0, 'z-index': -1 })
+					}
+					
 					this.element.on('keypress', function(event)
 					{
 						if (event.ctrlKey || event.metaKey || event.altKey)
 							return
 							
-						input.label.css({ opacity: 0, 'z-index': -1 })
+						hide_label()
+					})
+					
+					this.element.on('paste', function(event)
+					{
+						hide_label()
 					})
 					
 					this.element.on('blur', function(event)
@@ -86,28 +100,32 @@ function Form(element)
 				this.element.val('')
 			}
 			
-			var form = this
+			var form_element = this
 			
 			this.validate = function(ok_callback, error_callback)
 			{
 				if (!the_input.attr('validation'))
 					return ok_callback()
 				
-				eval('var validation = Validation.' + this.element.attr('validation'))
-				validation(this.element.val(), function(result)
+				eval('var validation = Validation.' + element.attr('validation'))
+				validation.bind(the_form)(element.val(), function(result)
 				{
 					if (result && result.error)
 					{
-						form.element.focus()
+						form_element.element.focus()
 					
-						form.error(result.error, input)
+						form_element.error(result.error, input, result)
 						
 						error.is_form_validation = true
+						
 						return error_callback(result.error)
 					}
 					
+					if (result)
+						element.val(result)
+					
 					// mark field as valid
-					form.valid()
+					form_element.valid()
 					ok_callback()
 				})
 			}
@@ -125,16 +143,25 @@ function Form(element)
 			}
 			
 			// if this field has an error
-			this.error = function(error, input)
+			this.error = function(message, input, options)
 			{
+				options = options || {}
+				
+				if (options.bubble)
+				{
+					this.valid()
+					
+					return error(message)
+				}
+				
 				if (!this.label.exists())
-					return this.error_message(error)
+					return this.error_message(message)
 				
 				if (this.label.hasClass('in-place_input_label'))
-					return this.error_message(error)
+					return this.error_message(message)
 			
 				// prepare the error label
-				this.label.attr("error", new String(error).escape_html())
+				this.label.attr("error", new String(message).escape_html())
 			
 				// if the error label hasn't been created - create it
 				if (!this.error_label)

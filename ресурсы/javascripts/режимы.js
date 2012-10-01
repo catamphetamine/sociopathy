@@ -94,9 +94,9 @@ var Режим = (function()
 		{
 			var options =
 			{
-				process: function(element)
+				postprocess: function()
 				{
-					element.find('.enter').on('click', function(event)
+					this.find('.enter').on('click', function(event)
 					{
 						event.preventDefault()
 						
@@ -406,18 +406,15 @@ var Режим = (function()
 	}
 	
 	result.перейти_в_режим = перейти_в_режим
-	
+
 	return result
 })()
 
-$(document).on('page_loaded', function() 
+Режим.enable_in_place_editing_windows = function(container)
 {
-	if (!first_time_page_loading)
-		return
-	
 	Режим.при_переходе({ в: 'правка' }, function()
 	{
-		$('.tex[type="formula"]').on('click.in_place_editing', function(event)
+		container.find('[type="formula"]').on('click.in_place_editing', function(event)
 		{
 			var element = $(this)
 			
@@ -459,7 +456,7 @@ $(document).on('page_loaded', function()
 			window.open()
 		})
 		
-		$('[type="picture"]').on('click.in_place_editing', function(event)
+		container.find('[type="picture"]').on('click.in_place_editing', function(event)
 		{
 			var element = $(this)
 			
@@ -495,7 +492,7 @@ $(document).on('page_loaded', function()
 			window.open()
 		})
 		
-		$('[type="hyperlink"]').on('click.in_place_editing', function(event)
+		container.find('[type="hyperlink"]').on('click.in_place_editing', function(event)
 		{
 			var element = $(this)
 			
@@ -548,7 +545,7 @@ $(document).on('page_loaded', function()
 			window.open()
 		}
 		
-		$('[type="audio"]').audio_player('title_element').on('click.in_place_editing', function(event)
+		container.find('[type="audio"]').audio_player('title_element').on('click.in_place_editing', function(event)
 		{
 			audio_click_handler($(this), event)
 		})
@@ -556,8 +553,17 @@ $(document).on('page_loaded', function()
 	
 	Режим.при_переходе({ из: 'правка' }, function()
 	{
-		$('.tex').unbind('.in_place_editing')
+		container.find('[type="formula"]').unbind('.in_place_editing')
+		container.find('[type="picture"]').unbind('.in_place_editing')
+		container.find('[type="hyperlink"]').unbind('.in_place_editing')
+		container.find('[type="audio"]').unbind('.in_place_editing')
 	})
+}
+
+$(document).on('page_loaded', function() 
+{
+	if (!first_time_page_loading)
+		return
 	
 	$(document).on('keydown', function(event) 
 	{

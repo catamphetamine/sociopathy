@@ -398,10 +398,7 @@ function ajaxify_internal_links(where)
 			//if ('/' + путь_страницы() === url)
 			//	return
 			
-			navigate_to_page(url,
-			{
-				before: function() { set_new_url(url) }
-			})
+			go_to(url)
 		})
 		
 		link.data('ajaxified', true)
@@ -410,7 +407,6 @@ function ajaxify_internal_links(where)
 
 function reload_page()
 {
-	//console.log(parseUri(window.location).relative)
 	navigate_to_page(parseUri(window.location).relative)
 }
 
@@ -471,6 +467,7 @@ function show_error(выпавшая_ошибка, url, line)
 	var inform_user = true
 	var verbose = false
 	var ошибка = выпавшая_ошибка + ''
+	var explanation
 	
 	//console.log('выпавшая_ошибка')
 	//console.log(выпавшая_ошибка)
@@ -486,6 +483,7 @@ function show_error(выпавшая_ошибка, url, line)
 			
 			verbose = выпавшая_ошибка.verbose
 			ошибка = выпавшая_ошибка.ошибка
+			explanation = выпавшая_ошибка.explanation
 		}
 		else
 			throw выпавшая_ошибка
@@ -515,7 +513,10 @@ function show_error(выпавшая_ошибка, url, line)
 		if (!verbose)
 			error('Ошибка на странице', { sticky: true })
 		else
+		{
 			error(ошибка, { sticky: true })
+			warning(explanation, { sticky: true })
+		}
 	}
 }
 
@@ -542,8 +543,13 @@ function error(error)
 	{
 		// игнорировать ошибки разрыва соединения с WebSocket в FireFox
 		// "contains" may cause error, if it isn't loaded
-		if (ошибка && typeof ошибка === 'string' && ошибка.indexOf('InvalidStateError: An attempt was made to use an object that is not, or is no longer, usable') >= 0)
-			ошибка = { ошибка: ошибка, non_critical: true }
+		if (ошибка && typeof ошибка === 'string')
+		{
+			if (ошибка.indexOf('InvalidStateError: An attempt was made to use an object that is not, or is no longer, usable') >= 0)
+				ошибка = { ошибка: ошибка, non_critical: true }
+			else if (ошибка.indexOf('INVALID_STATE_ERR: DOM Exception 11') >= 0)
+				ошибка = { ошибка: ошибка, non_critical: true } //return
+		}
 	
 		show_error(ошибка, url, line)
 	}

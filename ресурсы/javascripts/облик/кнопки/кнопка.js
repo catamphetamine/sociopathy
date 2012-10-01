@@ -159,6 +159,9 @@ var button = new Class
 
 		this.element = this.preprocess(button.get_element(selector_or_element))
 	
+		if (!this.element.displayed())
+			this.options.shown = false
+		
 		// get the element
 		this.$element = this.element
 		
@@ -338,13 +341,27 @@ var button = new Class
 		var ok = function()
 		{
 			// execute action after delay
-			(function() { button.options.action() }).delay(delay)
+			(function()
+			{
+				try
+				{
+					button.options.action()
+				}
+				catch (error)
+				{
+					console.log(error)
+					button.allow_to_redo()
+				}
+			}).delay(delay)
 		}
 		
 		if (this.form)
 		{
+			if (this.before_validation)
+				this.before_validation()
+			
 			this.form.validate(ok, function()
-			{	
+			{
 				button.allow_to_redo()
 			})
 		}
@@ -509,9 +526,8 @@ var button = new Class
 		if (this.is_shown)
 			return
 			
-		this.$element.show()
-//		this.frames.idle.show()
-		this.frames.idle.css({ opacity: this.get_maximum_opacity(this.frames.idle), visibility: 'visible' })
+		this.element.show()
+		this.element.css({ opacity: 1, visibility: 'visible' })
 		this.is_shown = true
 	},
 	
@@ -536,7 +552,9 @@ var button = new Class
 		var self = this
 
 		var lock = this.lock()
-		this.fade_in('idle', function() 
+		
+		this.element.css('opacity', 0)
+		this.element.fade_in(0.4, function() 
 		{ 
 			self.is_shown = true
 			
@@ -567,7 +585,7 @@ var button = new Class
 			
 			var action = function() 
 			{
-				self.frames.idle.hide()
+				//self.frames.idle.hide()
 				self.is_shown = false
 			
 				if (callback) 
@@ -576,7 +594,7 @@ var button = new Class
 				lock.unlock()				
 			}
 				
-			self.fade_out('idle', action)
+			self.element.fade_out(0.3, action)
 		}
 		
 		fade_out_after_pushed()
@@ -648,9 +666,12 @@ var button = new Class
 		return this
 	},
 	
-	submits: function(form)
+	submits: function(form, before_validation)
 	{
 		this.form = form
+		
+		this.before_validation = before_validation
+		
 		return this
 	},
 	

@@ -449,6 +449,11 @@ $.fn.child_or_self = function(element)
 	return false
 }
 
+$.fn.displayed = function()
+{
+	return $(this).css('display') !== 'none'
+}
+
 $.fn.is_visible_on_screen = function(options)
 {
 	options = options || {}
@@ -646,8 +651,10 @@ $.validate_xml = function(xml)
 		
 		//console.log('<xml>' + xml + '</xml>')
 		
-		if (Dom_tools.child_text_node(document.firstChild))
-			return { cause: 'text node in root' }
+		var text_node = Dom_tools.child_text_node(document.firstChild)
+		
+		if (text_node)
+			return { cause: 'text node in root', explanation: text_node.nodeValue }
 			
 		return document
 	}
@@ -686,7 +693,7 @@ $.fn.audio_player = function(action, options)
 			return this.find('.jouele-name')
 		
 		case 'is_control':
-			return this.find_parent('.jouele-play-control').exists()
+			return this.find_parent('.jouele-play-control')
 		
 		case 'link':
 			return $('<a/>').addClass('jouele').attr('href', options.url).text(options.title)

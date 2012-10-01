@@ -1,3 +1,5 @@
+Подсказка('изменение настроек', 'Вы можете изменить настройки, перейдя в <a href=\'/помощь/режимы#Режим правки\'>«режим правки»</a>');
+
 (function()
 {
 	title('Настройки')
@@ -76,7 +78,7 @@
 				directory = directory[category.attr('path')]
 			}
 				
-			category.find('> li').each(function()
+			category.find('> li[path]').each(function()
 			{
 				var key = $(this)
 				
@@ -146,7 +148,7 @@
 		$('.shortcuts').find('> ul').each(function()
 		{
 			var category = $(this)
-			category.find('> li').each(function()
+			category.find('> li[path]').each(function()
 			{
 				var key = $(this)
 				

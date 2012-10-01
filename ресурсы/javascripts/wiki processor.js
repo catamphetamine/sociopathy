@@ -81,7 +81,7 @@ var Wiki_processor = new (new Class
 	
 	validate: function(xml)
 	{
-		xml = this.translate(xml)
+		xml = this.translate(xml.trim())
 		
 		var result = $.validate_xml(xml)
 		
@@ -89,8 +89,9 @@ var Wiki_processor = new (new Class
 		{
 			var document = $(result)
 			
-			if (document.find('paragraph paragraph').exists())
-				throw { ошибка: 'Нарушено форматирование текста: абзац внутри абзаца', verbose: true }
+			var inner_paragraph = document.find('paragraph paragraph')
+			if (inner_paragraph.exists())
+				throw { ошибка: 'Нарушено форматирование текста: абзац внутри абзаца', explanation: inner_paragraph.outer_html() , verbose: true }
 			
 			return result
 		}
@@ -98,7 +99,8 @@ var Wiki_processor = new (new Class
 		switch (result.cause)
 		{
 			case 'text node in root':
-				throw { ошибка: 'Нарушено форматирование текста: текст вне абзаца', verbose: true }
+				console.log(result.explanation)
+				throw { ошибка: 'Нарушено форматирование текста: текст вне абзаца', explanation: result.explanation, verbose: true }
 		}
 		
 		throw 'Не "валидный" код xml'
@@ -594,7 +596,23 @@ Wiki_processor.Syntax =
 		
 		decorate: function(from, to)
 		{
-			to.css('float', from.attr('float') || 'none')
+			var float
+			switch (from.attr('float'))
+			{
+				case 'слева':
+					float = 'left'
+					break
+				
+				case 'в строке':
+					float = 'none'
+					break
+				
+				case 'справа':
+					float = 'right'
+					break
+			}
+			
+			to.css('float', float)
 			
 			return to.attr
 			({
@@ -613,7 +631,23 @@ Wiki_processor.Syntax =
 				height: from.attr('height')
 			})
 			
-			to.attr('float', from.css('float'))
+			var положение
+			switch (from.css('float'))
+			{
+				case 'left':
+					положение = 'слева'
+					break
+				
+				case 'none':
+					положение = 'в строке'
+					break
+				
+				case 'right':
+					положение = 'справа'
+					break
+			}
+			
+			to.attr('float', положение)
 			
 			return to.html(from.attr('src'))
 		}
@@ -726,20 +760,25 @@ Wiki_processor.Syntax =
 	},
 	youtube:
 	{
-		selector: 'iframe[src^="http://www.youtube.com/embed/"]',
+		selector: '.video_player[hosting="youtube"]',
 		
 		decorate: function(from)
 		{
-			return $(Youtube.Video.embed_code(from.html())).attr('type', 'video')
+			var video_player = $('<div/>').addClass('video_player').attr('hosting', 'youtube')
+			video_player.html($(Youtube.Video.embed_code(from.html())).attr('type', 'video'))
+			return video_player
 		},
 		
 		break_parsing: true,
+		break_decoration: true,
 		
 		parse: function(from, to)
 		{
 			var url = 'http://www.youtube.com/embed/'
 			
-			var src = from.attr('src')
+			var iframe = from.find('> iframe')
+			
+			var src = iframe.attr('src')
 			if (!src.starts_with(url))
 				throw 'Invalid youtube video source: ' + src
 			
@@ -752,20 +791,25 @@ Wiki_processor.Syntax =
 	},
 	vimeo:
 	{
-		selector: 'iframe[src^="http://player.vimeo.com/video/"]',
+		selector: '.video_player[hosting="vimeo"]',
 		
 		decorate: function(from)
 		{
-			return $(Vimeo.Video.embed_code(from.html())).attr('type', 'video')
+			var video_player = $('<div/>').addClass('video_player').attr('hosting', 'vimeo')
+			video_player.html($(Vimeo.Video.embed_code(from.html())).attr('type', 'video'))
+			return video_player
 		},
 		
 		break_parsing: true,
+		break_decoration: true,
 	
 		parse: function(from, to)
 		{
 			var url = 'http://player.vimeo.com/video/'
 			
-			var src = from.attr('src')
+			var iframe = from.find('> iframe')
+			
+			var src = iframe.attr('src')
 			if (!src.starts_with(url))
 				throw 'Invalid vimeo video source: ' + src
 			

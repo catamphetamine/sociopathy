@@ -1,5 +1,7 @@
 title('Обсуждения');
 	
+Подсказка('создание обсуждения', 'Вы можете начать новое обсуждение нажатием клавиш <a href=\'/сеть/настройки\'>«Действия → Создать»</a>');
+	
 (function()
 {	
 	page.query('#discussions', 'discussions')
@@ -39,6 +41,9 @@ title('Обсуждения');
 						var discussion = $(this)
 						var container = discussion.find('> .unsubscribe')
 					
+						if (!container.exists())
+							return
+						
 						var the_button = button.physics.simple(new image_button(container.find('> .button'),
 						{
 							'auto unlock': false
@@ -119,4 +124,15 @@ title('Обсуждения');
 	}
 	
 	page.needs_initializing = true
+	
+	$(document).on_page('keydown.actions', function(event)
+	{
+		if (Клавиши.is(Настройки.Клавиши.Действия.Создать, event))
+		{
+			event.preventDefault()
+			return go_to('/сеть/общение/обсуждение')
+		}
+	})
+	
+	Подсказки.подсказка('Для создания нового обсуждения нажмите клавиши ' + Клавиши.комбинация(Настройки.Клавиши.Действия.Создать))
 })()

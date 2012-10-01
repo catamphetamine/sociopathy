@@ -147,9 +147,6 @@ function simple_value_dialog_window(options)
 	var ok = text_button.new(dialog_window.content.find('.buttons .ok'), { 'prevent double submission': true })
 	.does(function()
 	{
-		if (options.before_ok)
-			options.before_ok.bind(this)()
-			
 		dialog_window.close(options.when_closed ? options.when_closed.bind(this) : null)
 		
 		var data
@@ -168,7 +165,7 @@ function simple_value_dialog_window(options)
 		options.ok.bind(this)(data)
 	}
 	.bind(dialog_window))
-	.submits(validating_form)
+	.submits(validating_form, options.before_ok ? options.before_ok.bind(dialog_window) : null)
 	
 	dialog_window.register_controls(validating_form, cancel, ok)
 	

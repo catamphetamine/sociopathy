@@ -1,0 +1,31 @@
+#content
+{
+	margin-top: 100px;
+	
+	> form
+	{
+		width: 100%;
+		
+		box-sizing: border-box;
+		
+		padding-left: 80px;
+		padding-right: 80px;
+
+		> label
+		{
+			display: block;
+			margin-bottom: 10px;
+		}
+		
+		> .title
+		{
+			width: 100%
+		}
+		
+		margin-bottom: 100px;
+	}
+	
+	> .compose_message
+	{
+	}
+}

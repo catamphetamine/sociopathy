@@ -8,6 +8,7 @@ var content
 var page
 
 var host = Uri.parse().host
+var port = Uri.parse().port
 
 var Configuration =
 {
@@ -76,6 +77,20 @@ $(document).on('page_loaded', function()
 {
 	var after_styles = function()
 	{
+		if (!пользователь)
+		{
+			if (путь_страницы() === '')
+			{
+				$('#panel .enter').show()
+				$('#logo').hide()
+			}
+			else
+			{
+				$('#panel .enter').hide()
+				$('#logo').show()
+			}
+		}
+		
 		page.full_load(function()
 		{
 			ajaxify_internal_links()
@@ -102,7 +117,10 @@ $(document).on('page_loaded', function()
 			//alert('styles_loaded')
 			
 			if (пользователь)
+			{
 				$('#logo').remove()
+				$('#panel .enter').remove()
+			}
 		
 			panel = new Panel()
 			
@@ -112,10 +130,10 @@ $(document).on('page_loaded', function()
 
 			if (пользователь)
 			{
-				//$(document).on('ether_is_online', function()
-				//{
-				after_styles()
-				//})
+				$(document).on('ether_is_online', function()
+				{
+					after_styles()
+				})
 			}
 			else
 			{
@@ -151,11 +169,13 @@ var Пользовательские_настройки_по_умолчанию 
 		Действия:
 		{
 			Создать: ['Ctrl', 'Alt', 'N'],
+			Добавить: ['Ctrl', 'Alt', 'A'],
 			Удалить: ['Ctrl', 'Alt', 'Backspace']
 		},
 		Писарь:
 		{
-			Разрывный_пробел: ['Ctrl', 'Shift', 'Пробел']
+			Разрывный_пробел: ['Ctrl', 'Shift', 'Пробел'],
+			Показать: ['Пробел']
 		},
 		Вход: ['Ctrl', 'Alt', 'L'],
 		Подсказки: ['Alt', 'Shift', '0']
@@ -164,14 +184,26 @@ var Пользовательские_настройки_по_умолчанию 
 
 var Настройки = Пользовательские_настройки_по_умолчанию
 
+function apply_shortcut_synonyms()
+{
+	//Настройки.Клавиши.Действия.Добавить = Настройки.Клавиши.Действия.Создать
+}
+	
+apply_shortcut_synonyms()
+	
 function применить_пользовательские_настройки(настройки)
 {
 	Настройки = {}
 	Object.x_over_y(Пользовательские_настройки_по_умолчанию, Настройки)
 	Object.x_over_y(настройки, Настройки)
+	
+	apply_shortcut_synonyms()
 }
 
 $(document).on('authenticated', function(event, данные)
 {
 	применить_пользовательские_настройки(данные.session.настройки)
+	
+	пользователь.session = {}
+	пользователь.session.не_показывать_подсказки = данные.session.не_показывать_подсказки || []
 })

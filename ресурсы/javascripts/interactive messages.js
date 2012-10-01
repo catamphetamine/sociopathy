@@ -182,13 +182,27 @@ var Interactive_messages = function(options)
 		return last_message.attr('message_id')
 	}
 	
-	messages.read_message = function(_id)
+	messages.can_read_messages = function()
 	{
 		if (!this.connection || !this.connection.is_ready)
 			return false
 		
-		this.connection.emit('прочитано', _id)
 		return true
+	}
+	
+	messages.when_can_read_messages_actions = []
+	
+	messages.when_can_read_messages = function(action)
+	{
+		if (this.can_read_messages())
+			return action()
+		
+		this.when_can_read_messages_actions.push(action)
+	}
+	
+	messages.read_message = function(_id)
+	{
+		this.connection.emit('прочитано', _id)
 	}
 	.bind(messages)
 	
@@ -420,6 +434,8 @@ var Interactive_messages = function(options)
 					
 				connection.is_ready = true
 				
+				messages.when_can_read_messages_actions.for_each(function() { this() })
+				
 				if (!reconnected)
 				{
 					if (options.on_ready)
@@ -492,6 +508,11 @@ var Interactive_messages = function(options)
 				if (сообщение.отправитель._id !== пользователь._id)
 					messages.new_messages_notification()
 			
+				/*
+				console.log('got message')
+				console.log(сообщение)
+				*/
+				
 				messages.add_message(сообщение)
 			})
 			
@@ -532,7 +553,17 @@ var Interactive_messages = function(options)
 		var container = $('<li user="' + user._id + '"></li>')
 		container.addClass('online')
 		
-		$.tmpl('chat user icon', { отправитель: user }).appendTo(container)
+		var icon = $.tmpl('chat user icon', { отправитель: user })
+		
+		if (user._id !== пользователь._id)
+		{
+			var link = $('<a/>').attr('href', '/люди/' + user['адресное имя'])
+			link.attr('title', user.имя).append(icon).appendTo(container)
+		}
+		else
+		{
+			icon.appendTo(container)
+		}
 		
 		if (options)
 			if (options.куда === 'в начало')

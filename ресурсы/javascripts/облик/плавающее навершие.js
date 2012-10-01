@@ -24,10 +24,15 @@
 		var $this = this
 		var container = this.parent()
 		
-		container.on('disappears_on_top.scroller', function(event)
+		container.on('disappears_on_top.scroller', function(event, options)
 		{
+			if (options && options.first_time)
+				return
+			
 			event.stopPropagation()
 			$this.addClass('sticky')
+			
+			$this.trigger('floats')
 			
 //			if ($this.css('position') !== 'fixed')
 //				alert('You should set "position: fixed" for the floating top bar (for ".your_bar.sticky" style class) in your Css')
@@ -37,6 +42,8 @@
 		{
 			event.stopPropagation()
 			$this.css({ top: 0 }).removeClass('sticky')
+			
+			$this.trigger('unfloats')
 		})
 		
 		прокрутчик.watch(container, 0)

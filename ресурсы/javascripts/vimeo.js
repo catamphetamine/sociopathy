@@ -65,7 +65,7 @@ var Vimeo =
 			if (!height)
 				height = 281
 			
-			var source = 'http://player.vimeo.com/video/' + id + '?'
+			var source = 'http://player.vimeo.com/video/' + id + '?' + 'wmode=opaque' + '&'
 			if (options.play)
 				source += 'autoplay=true' + '&'
 		

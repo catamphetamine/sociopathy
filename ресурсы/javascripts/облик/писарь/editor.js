@@ -171,7 +171,7 @@ var Editor = new Class
 	content_changed: function(options)
 	{
 		this.content_changed_on = now().getTime()
-		this.content.trigger('content_changed.editor', options || {})		
+		this.content.trigger('content_changed', options || {})		
 	},
 	
 	checkpoint: function()
@@ -213,7 +213,7 @@ var Editor = new Class
 		if (what.is('.audio_player'))
 			return true
 		
-		if (what.is('iframe'))
+		if (what.is('.video_player'))
 			return true
 		
 		if (what.is('.tex'))
@@ -249,7 +249,6 @@ var Editor = new Class
 				this.time_machine.snapshot()
 			
 			this.insert_text(what, options)
-			this.content_changed()
 			
 			if ($.browser.webkit)
 			{
@@ -257,6 +256,8 @@ var Editor = new Class
 					if ($(container.node().firstChild).is('br'))
 						$(container.node().firstChild).remove()
 			}
+			
+			this.content_changed()
 			
 			if (!this.continuous_typing)
 				this.continuous_typing = true

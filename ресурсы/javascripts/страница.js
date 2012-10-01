@@ -120,6 +120,25 @@ var Страница =
 					}
 				})
 			},
+			'сеть/общение': function(rest)
+			{
+				match_url(rest,
+				{
+					'*': function(value, rest)
+					{
+						название_страницы = 'сеть/общение'
+						new_page.data.общение = value
+						
+						match_url(rest,
+						{
+							'*': function(value, rest)
+							{
+								new_page.data.кому = value
+							}
+						})
+					}
+				})
+			},
 			'читальня': function(rest)
 			{
 				match_url(rest,

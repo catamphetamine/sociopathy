@@ -1,3 +1,7 @@
+Подсказка('написание сообщения', 'Для того, чтобы написать сообщение, нажмите клавишу <a href=\'/сеть/настройки\'>«Писарь → Показать»</a>');
+Подсказка('правка сообщений', 'Вы можете править свои сообщения, перейдя в <a href=\'/помощь/режимы#Режим правки\'>«режим правки»</a>');
+Подсказка('добавление в беседу', 'Вы можете добавлять людей в беседу нажатием клавиш <a href=\'/сеть/настройки\'>«Действия → Добавить»</a>');
+
 (function()
 {
 	page.query('#talk', 'talk')
@@ -34,7 +38,84 @@
 				
 				page.data.создатель_ли = пользователь._id === data.создатель
 				if (page.data.создатель_ли)
+				{
 					page.get('.breadcrumbs > :last').attr('editable', true)
+				}
+		
+				data.участники.for_each(function(участник)
+				{
+					page.data.участник_ли = пользователь._id === участник
+				})
+				
+				if (page.data.участник_ли)
+				{
+					Validation.беседа = {}
+					Validation.беседа.добавить_пользователя = function(value, callback)
+					{
+						value = value.trim()
+						
+						if (!value)
+							return callback({ error: 'Укажите имя пользователя' })
+							
+						var form = this
+							
+						page.Ajax.get('/приложение/человек/по имени',
+						{
+							имя: value
+						})
+						.ok(function(data)
+						{
+							form.user = data
+							callback()
+						})
+						.ошибка(function(error)
+						{
+							callback({ error: error })
+						})
+					}
+					
+					var add_user_to_talk_window = simple_value_dialog_window
+					({
+						class: 'add_user_to_talk_window',
+						title: 'Добавить пользователя в беседу',
+						fields:
+						[{
+							id: 'name',
+							description: 'Кого добавим',
+							validation: 'беседа.добавить_пользователя'
+						}],
+						ok: function(name)
+						{
+							var user = add_user_to_talk_window.form.user
+							
+							page.Ajax.put('/приложение/сеть/беседы/участие',
+							{
+								беседа: page.data.беседа._id,
+								пользователь: user._id
+							})
+							.ok(function(data)
+							{
+								if (data.уже_участвует)
+									return info(user.имя + ' уже участвует в этой беседе')
+								
+								info(user.имя + ' добавлен' + (user.пол === 'женский' ? 'а' : '') + ' в эту беседу')
+							})
+							.ошибка(function(ошибка)
+							{
+								error(ошибка)
+							})
+						}
+					})
+					.window
+					
+					$(document).on_page('keydown.add_user_to_the_talk', function(event)
+					{
+						if (!Клавиши.is(Настройки.Клавиши.Действия.Добавить, event))
+							return
+						
+						add_user_to_talk_window.open()
+					})
+				}
 			},
 			more_link: $('.messages_framework > .older > a'),
 			container: page.talk,
@@ -68,6 +149,11 @@
 		})
 		
 		messages.load()
+	}
+	
+	page.unload = function()
+	{
+		messages.unload()
 	}
 		
 	function talk_loaded()

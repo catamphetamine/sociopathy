@@ -37,9 +37,11 @@ var image_button = new Class
 		
 		if (!ok)
 		{
+			console.log(element)
+				
 			while (element.parent().exists())
 			{
-				console.log(element)
+				console.log(element.parent())
 				element = element.parent()
 			}
 			

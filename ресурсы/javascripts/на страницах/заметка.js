@@ -1,3 +1,5 @@
+Подсказка('правка заметки', 'Вы можете править заметку, перейдя в <a href=\'/помощь/режимы#Режим правки\'>«режим правки»</a>');
+
 (function()
 {
 	var право_на_правку_получено = false
@@ -83,9 +85,20 @@
 		
 		visual_editor.initialize_tools_container()
 		visual_editor.tools_element.floating_top_bar()
+		
+		visual_editor.tools_element.on('floats.floating_top_bar', function()
+		{
+			$(this).parent().css('position', 'static')
+		})
+		
+		visual_editor.tools_element.on('unfloats.floating_top_bar', function()
+		{
+			$(this).parent().css('position', 'relative')
+		})
+		
 		visual_editor.can_edit = function() { return Режим.правка_ли() }
 		
-		visual_editor.paragraphed()
+		visual_editor.keep_cursor_on_screen()
 		
 		initialize_editor()
 		initialize_actions()
@@ -125,7 +138,9 @@
 				if ($.browser.mozilla)
 					visual_editor.editor.content.focus()
 				
+				console.log(visual_editor.editor.content.find('> p:first'))
 				visual_editor.editor.caret.move_to(visual_editor.editor.content.find('> *:first'))
+				//visual_editor.editor.focus()
 			})
 			
 			$(document).on_page('режим.переход', function(event, из, в)
@@ -197,6 +212,10 @@
 						title: data.title,
 						content: data.content
 					}
+					
+					set_title(data.title)
+					visual_editor.editor.set_content(Wiki_parser.decorate(data.content))
+					console.log(Wiki_parser.decorate(data.content))
 				})
 			})
 			

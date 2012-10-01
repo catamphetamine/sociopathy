@@ -932,14 +932,18 @@ Visual_editor.implement
 					{
 						url = url.collapse_lines()
 						
+						var video_player = $('<div/>').addClass('video_player')
+						
 						var video
 					
 						if (Youtube.Video.id(url))
 						{
+							video_player.attr('hosting', 'youtube')
 							video = $(Youtube.Video.embed_code(Youtube.Video.id(url)))
 						}
 						else if (Vimeo.Video.id(url))
 						{
+							video_player.attr('hosting', 'vimeo')
 							video = $(Vimeo.Video.embed_code(Vimeo.Video.id(url)))
 						}
 						else
@@ -949,7 +953,9 @@ Visual_editor.implement
 						
 						tool.restore_caret()
 						
-						video = editor.insert(video, { break_container: true })
+						video_player.append(video)
+					
+						video_player = editor.insert(video_player, { break_container: true })
 									
 						if (!editor.caret.move_to_the_next_element(video, editor.content.node()))
 						{
@@ -958,7 +964,7 @@ Visual_editor.implement
 							editor.caret.move_to(paragraph)
 						}
 				
-						tool.on_success(video)
+						tool.on_success()
 					},
 					on_open: function()
 					{	
@@ -990,7 +996,7 @@ Visual_editor.implement
 				return false
 			},
 			
-			on_success: function(element)
+			on_success: function()
 			{
 			}
 		}
@@ -1042,7 +1048,17 @@ Visual_editor.implement
 						tool.mark_type(audio)
 					
 						editor.caret.restore()
-						tool.on_success(editor.insert(audio, { break_container: true }))
+						
+						audio = editor.insert(audio, { break_container: true })
+						
+						if (!editor.caret.move_to_the_next_element(audio, editor.content.node()))
+						{
+							var paragraph = visual_editor.create_paragraph()
+							paragraph.appendTo(editor.content)
+							editor.caret.move_to(paragraph)
+						}
+						
+						tool.on_success(audio)
 					},
 					open: function()
 					{
@@ -1075,8 +1091,6 @@ Visual_editor.implement
 				element.audio_player()
 				
 				activate_all_toolable_elements()
-						
-				editor.caret.move_to(element)
 			},
 			
 			on_element_click: function(event)
@@ -1118,7 +1132,10 @@ Visual_editor.implement
 					}
 					catch (error)
 					{
-						return callback({ error: get_error_message(error) })
+						callback({ error: get_error_message(error) })
+						if (error.explanation)
+							warning(error.explanation)
+						return
 					}
 						
 					if (!value)
@@ -1149,7 +1166,9 @@ Visual_editor.implement
 					},
 					ok: function(xml)
 					{
-						tool.on_success(editor.load_content(Wiki_processor.decorate(xml))) //this.xml_editor.getValue())))
+						editor.load_content(Wiki_processor.decorate(xml))
+						postprocess_rich_content(editor.content)
+						tool.on_success() //this.xml_editor.getValue())))
 					},
 					on_open: function()
 					{
@@ -1183,7 +1202,7 @@ Visual_editor.implement
 				return false
 			},
 			
-			on_success: function(element)
+			on_success: function()
 			{
 				editor.caret.restore()
 			}
@@ -1326,6 +1345,10 @@ Visual_editor.implement
 				element.on('click', function(event)
 				{
 					event.preventDefault()
+					
+					if ($(this).hasClass('disabled'))
+						return
+					
 					action()
 				})
 			}

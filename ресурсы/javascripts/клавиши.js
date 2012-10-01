@@ -331,6 +331,11 @@ var Клавиши =
 		{
 			return true
 		}
+	},
+	
+	комбинация: function(keys)
+	{
+		return keys.map(function(key) { return '«' + key + '»' }).join(' + ')
 	}
 }
 

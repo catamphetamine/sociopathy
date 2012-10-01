@@ -45,7 +45,7 @@ var Youtube =
 			if (!height)
 				height = 315
 			
-			var source = 'http://www.youtube.com/embed/' + id + '?'
+			var source = 'http://www.youtube.com/embed/' + id + '?' + 'wmode=opaque' + '&'
 			
 			if (options.play)
 				source += 'autoplay=1' + '&'

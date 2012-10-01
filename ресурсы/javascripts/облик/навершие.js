@@ -63,6 +63,7 @@ var page_buttons =
 	
 	{ page: 'сеть/круги', button: 'круги' },
 	{ page: 'сеть/настройки', button: 'настройки' },
+	{ page: 'сеть/черновики', button: 'черновики' },
 	{ page: 'сеть/мусорка', button: 'мусорка' },
 	
 	{ page: 'управление', button: 'управление' }
@@ -288,20 +289,12 @@ var Panel = new Class
 		
 		var previously_highlighted_menu_item = panel.highlighted_menu_item
 		
+		var page_button = get_page_button()
+		
 		function highlight_current_page_button(page_button)
 		{
 			if (previously_highlighted_menu_item && page_button === previously_highlighted_menu_item)
 				return
-			
-			panel.toggle_buttons
-			({
-				type: page_button,
-				fade_in_duration: 0,
-				fade_out_duration: 0,
-				show: { button: { current: true } }
-			})
-			
-			panel.highlighted_menu_item = page_button
 			
 			if (previously_highlighted_menu_item)
 			{
@@ -313,14 +306,24 @@ var Panel = new Class
 					hide: { button: { current: true } }
 				})
 			}
+			
+			if (!page_button)
+				return
+			
+			panel.toggle_buttons
+			({
+				type: page_button,
+				fade_in_duration: 0,
+				fade_out_duration: 0,
+				show: { button: { current: true } }
+			})
+			
+			panel.highlighted_menu_item = page_button
 				
 			return true
 		}
-	
-		var page_button = get_page_button()
 		
-		if (page_button)
-			highlight_current_page_button(page_button)
+		highlight_current_page_button(page_button)
 	},
 
 	toggle_buttons: function(options)
@@ -374,6 +377,9 @@ var Panel = new Class
 			
 		var activate = function(these_options)
 		{
+			//if (get_hidden_button().node() === get_shown_button().node())
+			//	return
+			
 			options = Object.merge(options, these_options)
 				
 			get_shown_button().css('z-index', 0)
@@ -403,6 +409,9 @@ var Panel = new Class
 		
 		var deactivate = function(these_options)
 		{
+			if (get_hidden_button().node() === get_shown_button().node())
+				return
+			
 			options = Object.merge(options, these_options)
 		
 			get_shown_button().css('z-index', -1)

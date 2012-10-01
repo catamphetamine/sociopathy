@@ -57,8 +57,12 @@
 					
 				if (data['время рождения'])
 					parse_date(data, 'время рождения')
-				
+
 				page.data.пользователь_сети = data
+				
+				if (page.data.пользователь_сети._id === пользователь._id)
+					Подсказка('правка личных данных', 'Вы можете сменить аватар, фотографию, имя, и прочие личные данные, перейдя в <a href=\'/помощь/режимы#Режим правки\'>«режим правки»</a>');
+				
 				data.with_online_status = true
 				return data
 			},
@@ -163,10 +167,15 @@
 		Режим.activate_edit_actions({ on_save: save_changes })
 		Режим.разрешить('правка')
 		
+		/*
 		actions.find('.start_conversation').click(function(event)
 		{
 			event.preventDefault()
 		})
+		*/
+		
+		var link = actions.find('.start_conversation > a').attr('href')
+		actions.find('.start_conversation > a').attr('href', link.replace('_id', page.data.пользователь_сети._id))
 		
 		actions.find('.contact_by_email').click(function(event)
 		{

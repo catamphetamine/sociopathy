@@ -87,7 +87,7 @@ var Ajax =
 					if (сообщение == true)
 						сообщение = Default_ajax_error_message
 						
-					return on_error(сообщение, data.уровень)
+					return on_error(сообщение, { уровень: data.уровень, data: data })
 				}
 				
 				on_ok(data)
@@ -101,13 +101,15 @@ var Ajax =
 			if (result.expired())
 				return
 				
-			on_error = function(сообщение, уровень)
+			on_error = function(сообщение, options)
 			{
+				var уровень = options.уровень
+				
 				if (сообщение === 'Internal Server Error')
 					сообщение = Default_ajax_error_message
 				
 				if ($.isFunction(ошибка))
-					ошибка(сообщение, уровень)
+					ошибка(сообщение, options)
 				else if (сообщение && typeof сообщение === 'string')
 					error(сообщение)
 				else if (typeof ошибка === 'string')
@@ -747,4 +749,15 @@ function возраст(birth_date)
 	}
 	
 	return years + ' ' + years_noun()
+}
+
+function go_to(url)
+{
+	if (url.starts_with('/'))
+		return navigate_to_page(url,
+		{
+			before: function() { set_new_url(url) }
+		})
+	
+	window.location = url
 }

@@ -170,9 +170,9 @@ Visual_editor.implement
 		
 		var visual_editor = this
 		
-		$(document).on('keypress', function(event)
+		$(document).on('keydown', function(event)
 		{
-			if (!Клавиши.is(' ', event))
+			if (!Клавиши.is(Настройки.Клавиши.Писарь.Показать, event))
 				return
 			
 			if (!event.target)
@@ -285,7 +285,8 @@ Visual_editor.implement
 		
 		editor.on('keypress', (function(event)
 		{
-			if (editor.caret.container('.tex'))
+			// disable editing keys and audio_playes
+			if (editor.caret.container('.tex') || editor.caret.container('.audio_player'))
 			{
 				if (!Клавиши.navigating(event))
 				{
@@ -318,7 +319,7 @@ Visual_editor.implement
 		
 			if (editor.selection.exists())
 				editor.selection.cut()
-					
+			
 			var options = {}
 			
 			if (editor.content[0].firstChild)
@@ -360,7 +361,8 @@ Visual_editor.implement
 		// and then alt+tab after it's loaded, no keypress event fires
 		$(document).on('focused', function()
 		{
-			editor.focus()
+			//if (!editor.was_content_changed())
+			//	editor.focus()
 		})
 	}
 })
