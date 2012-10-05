@@ -155,7 +155,8 @@ var Messages = new Class
 				},
 				before_output_async: function(elements, callback)
 				{
-					postprocess_rich_content(elements, callback)
+					if (elements)
+						postprocess_rich_content(elements, callback)
 				},
 				finished: function()
 				{
