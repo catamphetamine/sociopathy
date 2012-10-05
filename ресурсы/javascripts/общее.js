@@ -586,6 +586,9 @@ function postprocess_rich_content(content, callback)
 {
 	if (content instanceof Array)
 	{
+		if (content.пусто())
+			return callback()
+		
 		if (!content[0].is('.rich_formatting'))
 		{
 			content = content._map(function() { return this.find('.rich_formatting') })

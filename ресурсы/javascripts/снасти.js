@@ -46,7 +46,7 @@ var Ajax =
 		{
 			url: url, 
 			type: method,
-			cache: false,
+			//cache: false,
 			data: data, 
 			dataType: options.type,
 			timeout: 15000
