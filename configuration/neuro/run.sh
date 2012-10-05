@@ -4,7 +4,7 @@
 # sudo launchctl load -w /Library/LaunchDaemons/org.macports.nginx.plist
 
 /home/sociopathy/redis/src/redis-server /home/sociopathy/repository/configuration/neuro/redis.conf &
-nginx &
+#nginx &
 mongod --dbpath /home/sociopathy/database &
 #memcached &
 node "/home/sociopathy/repository/node-js-development-mode.js" --main-file /home/sociopathy/repository/code/web/main.coffee --coffee-script "~/node_modules/coffee-script/bin/coffee" --watch "['/home/sociopathy/repository/code/**/*.js', '/home/sociopathy/repository/code/**/*.coffee']" --options "{ \"server\": \"neuro\" }"

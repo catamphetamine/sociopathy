@@ -80,7 +80,19 @@ make
 
 sudo nano /etc/nginx/nginx.conf
 ищем там строчку: include /etc/nginx/sites-enabled/*;
-дописываем под ней: include /home/sociopathy/repository/configuration/[название папки с вашими настройками]/enginex.conf
+обе эти include стираем
+пишем вместо них: include /home/sociopathy/repository/configuration/[название папки с вашими настройками]/enginex.conf;
+
+проверяем NginX:
+
+sudo nginx
+
+если работает, можете добавить NginX в автозагрузку.
+(например так: http://www.discoded.com/2012/05/22/autostart-nginx-under-ubuntu-linux/)
+
+NginX будет писать ошибки сюда:
+
+/var/log/nginx/error.log
 
 создаём свой запускальщик наподобие: если на винде, то запустить.bat, если на линуксе, то run.sh
 запускаем запускальщик
