@@ -1,6 +1,5 @@
 Установка на домашнем компьютере:
 
-Подключаем услугу "внешний IP"
 Ставим виртуальную машину (например, VMWare Workstation)
 Заводим в ней рабочую систему (например, Ubuntu Server)
 
@@ -21,6 +20,7 @@ git clone git://github.com/kuchumovn/sociopathy.git repository
 
 Идём на http://nodejs.org/download/ и скачиваем исходники node.js
 Устанавливаем node.js
+(наверное, лучше из репозитория joyent, чем прямо из исходников, как я описал здесь)
 
 mkdir ~/sociopathy
 cd ~/sociopathy
@@ -55,8 +55,43 @@ sudo echo "deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10ge
 sudo apt-get update
 sudo apt-get install mongodb-10gen
 
-настраиваем NginX
-создаём свой config
+Это будет папка с базой данных, её нужно ежедневно бекапить
 
-На домашнем маршрутизаторе пробрасываем 80-ый порт извне на виртуальную машину
-Заходим на http://[внешний IP] и пользуемся сайтом
+mkdir /home/sociopathy/database
+
+Устанавливаем Redis
+
+wget http://redis.googlecode.com/files/redis-2.4.17.tar.gz
+tar xzf redis-2.4.17.tar.gz
+rm redis-2.4.17.tar.gz
+mv redis-2.4.17 redis
+cd redis
+make
+
+создаём свою папку с настройками в папке configuration (наподобие home_windows)
+там в файле enginex.conf меняем пути "root" на свои (2 штуки)
+в configuration.coffee - тоже
+в configuration.private.coffee - тоже
+
+настраиваем NginX, чтобы он использовал enginex.conf
+
+sudo nano /etc/nginx/nginx.conf
+ищем там строчку: include /etc/nginx/sites-enabled/*;
+дописываем под ней: include /home/sociopathy/repository/configuration/[название папки с вашими настройками]/enginex.conf
+
+создаём свой запускальщик наподобие: если на винде, то запустить.bat, если на линуксе, то run.sh
+запускаем запускальщик
+
+* Если что-то не запустится - смотрите логи ошибок всего используемого здесь ПО (nginx, базы данных, прочее)
+
+Заходим на http://[IP]:8081/управление
+Жмём "Создать хранилище"
+Идём на главную и входим: Дождь со Снегом / 123
+Опять идём в управление
+Жмём "Заполнить хранилище"
+Теперь можно полазить по сайту
+
+//Подключаем услугу "внешний IP"
+//На домашнем маршрутизаторе пробрасываем 80-ый порт извне на виртуальную машину
+//Переводим nginx с 8081-ого на 80-ый порт
+//Заходим на http://[внешний IP] и пользуемся сайтом
