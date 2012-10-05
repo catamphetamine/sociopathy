@@ -192,6 +192,7 @@
 				$.ajax
 				({
 					url: add_version(path),
+					cache: true,
 					dataType: "script",
 					success: function() { if (callback) callback() },
 					error: function()
