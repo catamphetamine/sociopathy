@@ -3,7 +3,7 @@
 # sudo port install nginx
 # sudo launchctl load -w /Library/LaunchDaemons/org.macports.nginx.plist
 
-/home/sociopathy/redis/src/redis-server ../redis.conf &
+/home/sociopathy/redis/src/redis-server /home/sociopathy/repository/configuration/neuro/redis.conf &
 nginx &
 mongod --dbpath /home/sociopathy/database &
 #memcached &

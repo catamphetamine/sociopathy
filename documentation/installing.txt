@@ -36,6 +36,9 @@ cd ..
 
 может быть ещё: npm install socket.io
 
+cd ~
+npm install coffee-script
+
 Устанавливаем NginX
 
 sudo -s
