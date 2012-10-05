@@ -612,3 +612,8 @@ function postprocess_rich_content(content, callback)
 	
 	refresh_formulae({ where: content }, callback)
 }
+
+function есть_ли_полномочия(какие)
+{
+	return пользователь && пользователь.полномочия && пользователь.полномочия.contains(какие)
+}

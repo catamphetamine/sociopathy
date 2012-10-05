@@ -355,6 +355,12 @@ var Panel = new Class
 			else if (current)
 				postfix = ' (выбрано)'
 			
+			if (!this.buttons[type + postfix])
+			{
+				console.log('button not found')
+				return
+			}
+			
 			return this.buttons[type + postfix].element
 		}
 		.bind(this)
@@ -364,9 +370,14 @@ var Panel = new Class
 		
 		var get_buttons_to_hide = function()
 		{
+			var hidden = get_hidden_button()
+			
+			if (!hidden)
+				return []
+			
 			var hide_buttons = []
 			
-			get_hidden_button().parent().children().each(function()
+			hidden.parent().children().each(function()
 			{
 				if (this !== get_shown_button().node())
 					hide_buttons.push($(this))
@@ -382,7 +393,10 @@ var Panel = new Class
 			
 			options = Object.merge(options, these_options)
 				
-			get_shown_button().css('z-index', 0)
+			var shown = get_shown_button()
+			
+			if (shown)
+				shown.css('z-index', 0)
 			
 			if (options.immediate)
 			{
@@ -391,11 +405,13 @@ var Panel = new Class
 					this.hide()
 				})
 				
-				get_shown_button().show().css('opacity', 1)
+				if (shown)
+					shown.show().css('opacity', 1)
 			}
 			else
 			{
-				get_shown_button().fade_in(options.fade_in_duration)
+				if (shown)
+					shown.fade_in(options.fade_in_duration)
 				
 				get_buttons_to_hide().for_each(function()
 				{
