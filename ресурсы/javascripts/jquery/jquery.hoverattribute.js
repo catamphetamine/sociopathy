@@ -79,7 +79,7 @@
 				'top'			: '0',
 				'overflow'		: 'hidden',
 				'width'			: 'auto',
-				'white-space' 	: 'nowrap'
+				//'white-space' 	: 'nowrap'
 			};
 
 			self.visible_style = 

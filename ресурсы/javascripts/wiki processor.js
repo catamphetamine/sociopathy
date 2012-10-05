@@ -737,6 +737,14 @@ Wiki_processor.Syntax =
 	},
 	audio:
 	{
+		translation:
+		{
+			'audio':
+			{
+				название: 'title'
+			}
+		},
+		
 		selector: 'div.audio_player',
 		html_tag: 'div',
 		

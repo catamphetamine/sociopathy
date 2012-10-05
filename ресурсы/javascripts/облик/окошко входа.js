@@ -123,23 +123,4 @@ var войти
 			window.location = '/'
 		})
 	}
-	
-	Validation.вход =
-	{
-		имя: function(имя, callback)
-		{
-			if (имя.length == 0)
-				return callback({ error: 'Введите ваше имя' })
-				
-			callback()
-		},
-		
-		пароль: function(пароль, callback)
-		{
-			if (пароль.length == 0)
-				return callback({ error: 'Введите ваш пароль' })
-				
-			callback()
-		}
-	}
 })()

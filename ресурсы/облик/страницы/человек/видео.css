@@ -20,6 +20,11 @@
 		
 		margin: 60px;
 	
+		> *
+		{
+			float: left;
+		}
+	
 		.album
 		{
 			position: relative;

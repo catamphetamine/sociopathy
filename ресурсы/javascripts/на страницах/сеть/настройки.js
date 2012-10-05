@@ -1,11 +1,8 @@
-Подсказка('изменение настроек', 'Вы можете изменить настройки, перейдя в <a href=\'/помощь/режимы#Режим правки\'>«режим правки»</a>');
-
 (function()
 {
 	title('Настройки')
 	
 	Режим.пообещать('правка')
-	Подсказки.подсказка('Здесь вы можете посмотреть и изменить свои настройки. Пока это только личный почтовый ящик.')
 		
 	page.query('.email', 'email')
 	
@@ -13,6 +10,8 @@
 	
 	page.load = function()
 	{
+		Подсказка('изменение настроек', 'Вы можете изменить настройки, перейдя в <a href=\'/помощь/режимы#Режим правки\'>«режим правки»</a>');
+
 		No_email_text = page.email.text()
 	
 		var conditional = initialize_conditional($('.main_conditional'), { immediate: true })
@@ -32,10 +31,9 @@
 		
 		подготовить_режим_правки()
 		
-		Режим.activate_edit_actions({ on_save: save_changes })
 		Режим.разрешить('правка')
 		
-		$(document).trigger('page_initialized')
+		page.initialized()
 	}
 	
 	function подготовить_режим_правки()
@@ -103,10 +101,8 @@
 		return новые_клавиши
 	}
 	
-	function save_changes()
+	page.save = function(данные)
 	{
-		var данные = page.Data_store.collect()
-		
 		Режим.save_changes_to_server
 		({
 			anything_changed: function()
@@ -130,7 +126,7 @@
 		})
 	}
 	
-	page.Data_store.collect = function()
+	page.Data_store.collect_edited = function()
 	{
 		var result = {}
 		
@@ -140,11 +136,11 @@
 		return result
 	}
 	
-	page.Data_store.populate = function(data)
+	page.Data_store.populate_view = function(data)
 	{
 		if (data.почта)
 			page.email.text(data.почта)
-		
+			
 		$('.shortcuts').find('> ul').each(function()
 		{
 			var category = $(this)
@@ -174,6 +170,4 @@
 	}
 
 	page.Data_store.что = 'настройки пользователя'
-	
-	page.needs_initializing = true
 })()

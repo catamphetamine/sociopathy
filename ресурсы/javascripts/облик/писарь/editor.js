@@ -103,6 +103,11 @@ var Editor = new Class
 		this.apply_content_style()
 	},
 	
+	set_content: function(html)
+	{
+		this.load_content(html)
+	},
+	
 	refresh_content: function()
 	{
 		this.content = this.get_content()
@@ -490,32 +495,27 @@ var Editor = new Class
 	
 	range: function()
 	{
-		if (this.get_selection().rangeCount === 0)
-			return
-			
-		return this.get_selection().getRangeAt(0)
+		return Editor.range()
 	},
 	
 	create_range: function()
 	{
-		return document.createRange()
+		return Editor.create_range()
 	},
 	
 	collapse: function(range)
 	{
-		range.collapse(true)
+		Editor.collapse_range(range)
 	},
 	
 	get_selection: function()
 	{
-		return window.getSelection()
+		return Editor.get_selection()
 	},
 	
 	apply_range: function(range)
 	{
-		var selection = this.get_selection()
-		selection.removeAllRanges()
-		selection.addRange(range)
+		Editor.apply_range(range)
 	},
 	
 	paste: function(what)
@@ -577,4 +577,52 @@ var Editor = new Class
 Editor.deselect = function()
 {
 	window.getSelection().removeAllRanges()
+}
+
+Editor.create_range = function()
+{
+	return document.createRange()
+}
+
+Editor.collapse_range = function(range)
+{
+	range.collapse(true)
+}
+
+Editor.get_selection = function()
+{
+	return window.getSelection()
+}
+
+Editor.apply_range = function(range)
+{
+	var selection = Editor.get_selection()
+	selection.removeAllRanges()
+	selection.addRange(range)
+}
+
+Editor.move_caret_to_the_end_of_text = function(text_node)
+{
+	Editor.move_caret_to(text_node, text_node.nodeValue.length - 1)
+}
+
+Editor.move_caret_to = function(node, position)
+{
+	var range = Editor.create_range()
+	range.setStart(node, position)
+	Editor.collapse_range(range)
+	Editor.apply_range(range)
+}
+
+Editor.range = function()
+{
+	if (this.get_selection().rangeCount === 0)
+		return
+		
+	return this.get_selection().getRangeAt(0)
+}
+
+Editor.get_caret_position = function()
+{
+	return Editor.range().startOffset
 }

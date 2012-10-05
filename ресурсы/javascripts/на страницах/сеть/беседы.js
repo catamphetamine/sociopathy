@@ -1,22 +1,30 @@
 title('Беседы');
 
-Подсказка('создание беседы', 'Вы можете завести новую беседу нажатием клавиш <a href=\'/сеть/настройки\'>«Действия → Создать»</a>');
-	
 (function()
 {
 	page.query('#talks', 'talks')
 	
+	Режим.разрешить('действия')
+	
 	page.load = function()
 	{
+		Подсказка('создание беседы', 'Вы можете завести новую беседу, перейдя в <a href=\'/помощь/режимы#Режим действий\'>«режим действий»</a>, или нажав клавиши <a href=\'/сеть/настройки\'>«Действия → Создать»</a>');
+	
 		breadcrumbs
 		([
 			{ title: 'Беседы', link: '/сеть/беседы' }
 		])
+		
+		text_button.new(page.get('.new_talk.button')).does(function()
+		{
+			go_to('/сеть/общение/беседа')
+		})
 					
 		new Data_templater
 		({
 			template: 'беседа в списке бесед',
 			to: page.talks,
+			conditional: initialize_conditional($('.main_conditional'), { immediate: true }),
 			loader: new  Batch_data_loader_with_infinite_scroll
 			({
 				url: '/приложение/сеть/беседы',
@@ -78,6 +86,7 @@ title('Беседы');
 						})
 					})
 				},
+				done: page.initialized,
 				data: function(data)
 				{
 					parse_dates(data.беседы, 'создана')
@@ -110,8 +119,6 @@ title('Беседы');
 	
 	function talks_loaded()
 	{
-		$(document).trigger('page_initialized')
-		
 		if (page.talks.is_empty())
 		{
 			page.talks.remove()
@@ -122,8 +129,6 @@ title('Беседы');
 	//	Режим.разрешить('действия')
 	}
 	
-	page.needs_initializing = true
-	
 	$(document).on_page('keydown.actions', function(event)
 	{
 		if (Клавиши.is(Настройки.Клавиши.Действия.Создать, event))
@@ -132,6 +137,4 @@ title('Беседы');
 			return go_to('/сеть/общение/беседа')
 		}
 	})
-	
-	Подсказки.подсказка('Для создания новой беседы нажмите клавиши ' + Клавиши.комбинация(Настройки.Клавиши.Действия.Создать))
 })()

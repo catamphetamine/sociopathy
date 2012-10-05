@@ -53,6 +53,14 @@
 	box-shadow: @value;
 }
 
+.no_shadow ()
+{
+	-webkit-box-shadow: none;
+	-moz-box-shadow: none;
+	-o-box-shadow: none;
+	box-shadow: none;
+}
+
 .beautiful_shadow_5 (@left: 0px, @top: 0px, @first_radius, @second_radius, @third_radius, @fourth_radius, @fifth_radius, @opacity: 0.1, @red: 0, @green: 0, @blue: 0)
 {
 	@value: @left @top @first_radius rgba(@red, @green, @blue, @opacity), @left @top @second_radius rgba(@red, @green, @blue, @opacity), @left @top @third_radius rgba(@red, @green, @blue, @opacity), @left @top @fourth_radius rgba(@red, @green, @blue, @opacity), @left @top @fifth_radius rgba(@red, @green, @blue, @opacity);

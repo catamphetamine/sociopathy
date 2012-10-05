@@ -97,7 +97,10 @@ function page_loaded()
 		first_time_page_loading = false
 		
 	if (!page.needs_initializing)
+	{
+		page.initialized()
 		hide_page_loading_screen()
+	}
 }
 
 function page_initialized()
@@ -312,19 +315,29 @@ function initialize_body_edit_mode_effects()
 }
 
 var history_stacked = false
-	
+
+// просто заменить текущий url на этот
 function set_url(url, title, data)
 {
 	title = title || window.title
+	
 	data = data || {}
+	data.scrolled = $(window).scrollTop()
+	
 	window.history.replaceState(data, title, url)
 	history_stacked = true
 }
 
+// как бы перейти на новый url
 function set_new_url(url, title, data)
 {
 	title = title || window.title
+	
 	data = data || {}
+	data.scrolled = $(window).scrollTop()
+	
+	window.history.replaceState(data, window.title, window.location)
+	
 	window.history.pushState(data, title, url)
 	history_stacked = true
 }
@@ -382,7 +395,7 @@ function ajaxify_internal_links(where)
 		if (!is_a_page)
 			return
 			
-		link.click(function(event)
+		link.on('click', function(event)
 		{
 			if (event.button || event.ctrlKey || event.metaKey)
 				return
@@ -398,7 +411,7 @@ function ajaxify_internal_links(where)
 			//if ('/' + путь_страницы() === url)
 			//	return
 			
-			go_to(url)
+			go_to(link.attr('href'))
 		})
 		
 		link.data('ajaxified', true)
@@ -429,7 +442,13 @@ var ошибка_на_экране = function(ошибка)
 	if (!ошибка.текст)
 		return $('<span/>').text(ошибка)
 		
-	return $('<span/>').addClass(класс_ошибки_по_уровню(ошибка.уровень)).text(ошибка.текст)
+	var error = $('<span/>')
+	
+	if (ошибка.уровень)
+		error.addClass(класс_ошибки_по_уровню(ошибка.уровень))
+		
+	error.text(ошибка.текст)
+	return error
 }
 
 function random_id()
@@ -541,6 +560,8 @@ function error(error)
 //if (!window.development_mode)
 	window.onerror = function(ошибка, url, line)
 	{
+		//console.log('Error:')
+		
 		// игнорировать ошибки разрыва соединения с WebSocket в FireFox
 		// "contains" may cause error, if it isn't loaded
 		if (ошибка && typeof ошибка === 'string')

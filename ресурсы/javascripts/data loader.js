@@ -427,7 +427,7 @@ var Data_templater = new Class
 				else
 					item = $.tmpl(options.template_url, data)
 					
-				return options.postprocess_element(item).appendTo(options.container)
+				return options.postprocess_element(item, data).appendTo(options.container)
 			}
 		
 		if (!options.process_data)

@@ -907,17 +907,6 @@ Visual_editor.implement
 			{
 				var tool = this
 				
-				Validation.наглядный_писарь.видео = function(value, callback)
-				{
-					if (!value)
-						return callback({ error: 'Вставьте ссылку на видео' })
-						
-					if (!Youtube.Video.id(value) && !Vimeo.Video.id(value))
-						return callback({ error: 'Не получается вставить это видео' })
-						
-					callback()
-				}
-				
 				this.dialog_window = simple_value_dialog_window
 				({
 					class: 'visual_editor_video_window',
@@ -1123,26 +1112,6 @@ Visual_editor.implement
 			initialize: function()
 			{
 				var tool = this
-				
-				Validation.наглядный_писарь.source = function(value, callback)
-				{
-					try
-					{
-						Wiki_processor.validate(value)
-					}
-					catch (error)
-					{
-						callback({ error: get_error_message(error) })
-						if (error.explanation)
-							warning(error.explanation)
-						return
-					}
-						
-					if (!value)
-						return callback({ error: 'Введите код xml' })
-										
-					callback()
-				}
 				
 				this.dialog_window = simple_value_dialog_window
 				({
@@ -1469,55 +1438,6 @@ $(document).on('page_loaded', function()
 		})
 	})
 })
-
-Validation.наглядный_писарь.формула = function(value, callback)
-{
-	if (!value)
-		return callback({ error: 'Введите код формулы в формате TeX' })
-		
-	callback()
-}
-
-Validation.наглядный_писарь.картинка = function(url, callback)
-{
-	if (!url)
-		return callback({ error: 'Введите адрес картинки' })
-		
-	image_exists(url, function(result)
-	{
-		if (result.error)
-			return callback({ error: 'Картинка не найдена' })
-		
-		callback()
-	})
-}
-				
-Validation.наглядный_писарь.ссылка = function(value, callback)
-{
-	if (!value)
-		return callback({ error: 'Введите адрес ссылки' })
-		
-	callback()
-}
-
-Validation.наглядный_писарь.аудиозапись =
-{
-	ссылка: function(value, callback)
-	{
-		if (!value)
-			return callback({ error: 'Вставьте ссылку на аудиозапись' })
-		
-		callback()
-	},
-	
-	название: function(value, callback)
-	{
-		if (!value)
-			return callback({ error: 'Введите название аудиозаписи' })
-		
-		callback()
-	}
-}
 
 Visual_editor.tool_windows =
 {

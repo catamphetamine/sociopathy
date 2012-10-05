@@ -53,6 +53,21 @@ var Uri =
 			parameters: parsed.queryKey
 		}
 		
+		Object.for_each(result.parameters, function(key, value)
+		{
+			if (typeof result[key] === 'undefined')
+				result[key] = value
+		})
+		
+		result.to_relative_url = function()
+		{
+			this.protocol = ''
+			this.host = ''
+			this.port = ''
+			
+			return Uri.assemble(this)
+		}
+		
 		return result
 	},
 	
@@ -60,9 +75,9 @@ var Uri =
 	{
 		var uri = ''
 		if (parts.host)
-			uri += parts.protocol + '://' + parts.host + (parts.port ? ':' + parts.port : '')
+			uri += (parts.protocol ? parts.protocol  + '://' : '') + parts.host + (parts.port ? ':' + parts.port : '')
 			
-		uri += encodeURI(parts.path)
+		uri += parts.path //encodeURI(parts.path)
 
 		var first_parameter = true
 		Object.for_each(parts.parameters, function(key)

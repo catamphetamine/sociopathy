@@ -48,6 +48,7 @@ global.цепь = (object, options) ->
 
 global.снасти = require './tools/tools'
 global.пользовательское = require './tools/user_tools'
+global.читальня = require './tools/library_tools'
 
 global.application_tools = require('./connect/express')()
 global.http = global.application_tools.http
@@ -81,6 +82,7 @@ require './controller/talks'
 require './controller/discussions'
 global.эфир = require './controller/ether'
 require './controller/drafts'
+require './controller/system'
 
 #global.memcache_available = false
 global.memcache.on 'connect', () ->

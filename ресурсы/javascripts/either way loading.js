@@ -48,6 +48,7 @@ function either_way_loading(options)
 	// common
 
 	var first_batch = true
+	var first_output = true
 
 	var on_data = function(data)
 	{
@@ -80,8 +81,11 @@ function either_way_loading(options)
 	if (options.data.before_output_async)
 		common_loader_options.before_output_async = options.data.before_output_async
 
-	if (options.data.after_output)
-		common_loader_options.after_output = options.data.after_output
+	var after_output = function(elements)
+	{
+		if (options.data.after_output)
+			options.data.after_output(elements)
+	}
 
 	// загрузчик вверху
 	
@@ -118,6 +122,7 @@ function either_way_loading(options)
 			if (options.progress_bar)
 				update_progress_bar({ skipped: this.skipped() })
 		},
+		after_output: after_output,
 		finished: function()
 		{
 			previous_link.hide()
@@ -240,8 +245,18 @@ function either_way_loading(options)
 		{
 			ajaxify_internal_links(page.content)
 		},
-		after_output: function()
+		after_output: function(elements)
 		{
+			after_output(elements)
+			
+			if (first_output)
+			{
+				first_output = false
+				
+				if (options.data.on_first_output)
+					options.data.on_first_output()
+			}
+			
 			if (options.progress_bar)
 				update_progress_bar()
 		},

@@ -197,6 +197,9 @@ var Message =
 		if (options.postprocess)
 			options.postprocess.bind(message_itself)(message)
 			
+		if (options.ajaxify)
+			ajaxify_internal_links(message_itself)
+			
 		message.append(message_itself)
 
 		var closing = false

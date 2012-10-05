@@ -29,7 +29,7 @@ function simple_value_dialog_window(options)
 		{
 			field.label = $('<label/>')
 			field.label.attr('for', field.id)
-			field.label.html(field.description)
+			field.label.text(field.description)
 			field.label.appendTo(form)
 			
 			if (field['in-place label'])

@@ -136,6 +136,11 @@ var Messages = new Class
 					if (options.on_first_time_data)
 						options.on_first_time_data(data)
 				},
+				on_first_output: function()
+				{
+					if (options.on_first_output)
+						options.on_first_output()
+				},
 				loaded: function(сообщения)
 				{
 					parse_dates(сообщения, 'когда')
@@ -576,6 +581,12 @@ var Messages = new Class
 		visual_editor.tools_element.on('more.visual_editor_tools', this.adjust_listing_margin)
 		visual_editor.tools_element.on('less.visual_editor_tools', this.adjust_listing_margin)
 		
+		page.when_unloaded(function()
+		{
+			if (visual_editor)
+				visual_editor.unload()
+		})
+	
 		this.visual_editor = visual_editor
 		
 		if (this.options.show_editor)

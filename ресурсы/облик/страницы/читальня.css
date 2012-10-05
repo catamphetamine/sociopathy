@@ -14,6 +14,24 @@
 			display: none;
 			margin-top: 100px;
 		}
+		
+		> .add
+		{
+			text-align: center;
+			margin-top: 40px;
+		}
+		
+		> .move
+		{
+			text-align: center;
+			margin-top: 40px;
+		}
+		
+		> .new_article
+		{
+			text-align: center;
+			margin-top: 40px;
+		}
 	}
 }
 
@@ -51,32 +69,53 @@
 			width: 250px;
 			height: 250px;
 			
+			box-sizing: border-box;
+			
+			border-width: 1px;
+			border-style: solid;
+			border-color: #3f3f3f;
+			
 			/* = Category_side_spacing */
 			margin: 40px;
 			
-			background-color: #efefef;
-			
+			background: rgb(232,232,232); /* Old browsers */
+			background: -moz-linear-gradient(top,  rgba(232,232,232,1) 0%, rgba(198,198,198,1) 100%); /* FF3.6+ */
+			background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(232,232,232,1)), color-stop(100%,rgba(198,198,198,1))); /* Chrome,Safari4+ */
+			background: -webkit-linear-gradient(top,  rgba(232,232,232,1) 0%,rgba(198,198,198,1) 100%); /* Chrome10+,Safari5.1+ */
+			background: -o-linear-gradient(top,  rgba(232,232,232,1) 0%,rgba(198,198,198,1) 100%); /* Opera 11.10+ */
+			background: -ms-linear-gradient(top,  rgba(232,232,232,1) 0%,rgba(198,198,198,1) 100%); /* IE10+ */
+			background: linear-gradient(to bottom,  rgba(232,232,232,1) 0%,rgba(198,198,198,1) 100%); /* W3C */
+			filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e8e8e8', endColorstr='#c6c6c6',GradientType=0 ); /* IE6-9 */
+
 			.beautiful_shadow_5(0px, 3px, 20px, 12px, 2px, 8px, 4px, 0.2);
 			
-			a:hover span
+			> *
+			{
+				float: left;
+			}
+			
+			.title
+			{
+				border-radius: 10px;
+			}
+			
+			.title:hover span
+			{
+				background-color: #ffdeed;
+				color: black;
+			}
+			
+			.title:active span
 			{
 				background-color: #ffd0e6;
 				color: black;
 			}
 			
-			a:active span
-			{
-				background-color: #ffabd3;
-				color: black;
-			}
-			
-			a
+			.title
 			{
 				overflow: hidden;
 				
 				text-align: center;
-				
-				display: block;
 				
 				background-color: transparent;
 				background-position: center top;
@@ -85,14 +124,15 @@
 				width: 250px;
 				height: 250px;
 				
-				vertical-align: bottom;
 				border-bottom: none;
 				
 				span
 				{
 					display: inline-block;
 					
-					margin-top: 100px;
+					white-space: pre-wrap;
+					
+					margin-top: 20px;
 					margin-bottom: 20px;
 					margin-left: 10px;
 					margin-right: 10px;
@@ -118,10 +158,12 @@
 				}
 			}
 			
+			/*
 			a.smaller span
 			{
 				font-size: 24px;
 			}
+			*/
 
 			.frame
 			{
@@ -149,4 +191,42 @@
 {
 	margin-left: 80px;
 	margin-bottom: 20px;
+}
+
+body[mode="правка"] #categories > li
+{
+	.no_shadow();
+	
+	border-color: #9f9f9f;
+		
+	.title > span
+	{
+		cursor: text !important;
+	}
+
+	.title:hover > span
+	{
+		background-color: #ffffff;
+	}
+	
+	.title:active > span
+	{
+		background-color: #ffffff;
+	}
+	
+	&.ui-draggable-dragging
+	{
+		cursor: url('/картинки/cursor/grab.png') 0 0, auto;
+	}
+}
+
+.move_category_window
+{
+	form
+	{
+		input[name="where"]
+		{
+			width: 660px !important;
+		}
+	}
 }

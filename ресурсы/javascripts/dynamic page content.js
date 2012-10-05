@@ -14,13 +14,14 @@ var navigating = false;
 		'unsupported browser popup',
 		'наглядный писарь',
 		'нижняя панель режима правки',
-		'окошко входа',
+		'окошко входа'
 	]
 	
 	var шаблоны =
 	[
 		'маленький аватар',
 		'user icon',
+		'linked user icon',
 		'chat user icon',
 		'содержимое мусорки',
 		'обсуждение в списке обсуждений',
@@ -29,7 +30,10 @@ var navigating = false;
 		'сообщение беседы',
 		'breadcrumbs',
 		'сообщение в болталке',
-		'either way loading'
+		'either way loading',
+		'раздел читальни',
+		'раздел читальни (правка)',
+		'заметка раздела читальни'
 	]
 	
 	подгрузить_шаблоны = function(callback)
@@ -152,6 +156,12 @@ var navigating = false;
 	
 	navigate_to_page = function(url, options)
 	{
+		if (typeof url === 'object')
+		{
+			options = url
+			url = null
+		}
+		
 		if (!url)
 			url = Uri.parse(document.location).path
 		
@@ -184,11 +194,22 @@ var navigating = false;
 			//new_page.data.данные_для_страницы.название_страницы = Страница.эта()
 			//page.data.название_страницы = new_page.data.данные_для_страницы.название_страницы
 		
-			var finish = function()
+			var finish = function(options)
 			{
+				options = options || {}
+				
 				page.content = $('#content')
 				$('*').unbind('.page')
+				
+				if (options.state)
+				{
+					page.data.scroll_to = options.state.scrolled
+				}
+				
 				$(document).trigger('page_loaded')
+				
+				if (options.initialized)
+					page.initialized()
 			}
 		
 			if (ошибка)
@@ -196,7 +217,7 @@ var navigating = false;
 				var error = $('<div/>').addClass('error')
 				error.append(ошибка_на_экране(ошибка))
 				Page.element.empty().append(error)
-				return finish()
+				return finish({ initialized: true })
 			}
 		
 			вставить_содержимое_страницы(finish)
@@ -311,7 +332,7 @@ var navigating = false;
 	
 	раздел_или_заметка = function(путь, возврат)
 	{
-		new_page.Ajax.get('/приложение/раздел или заметка?', { путь: путь })
+		new_page.Ajax.get('/приложение/раздел или заметка', { путь: путь })
 		.ошибка(function(ошибка, options)
 		{
 			возврат({ текст: ошибка, уровень: options.уровень })

@@ -3,25 +3,6 @@
 	Режим.пообещать('правка')
 	Режим.пообещать('действия')
 	
-	Validation.книги =
-	{
-		название: function(название, callback)
-		{
-			if (название.length === 0)
-				return callback({ error: 'Укажите название книги' })
-				
-			callback()
-		},
-		
-		сочинитель: function(сочинитель, callback)
-		{
-			if (сочинитель.length === 0)
-				return callback({ error: 'Укажите сочинителя книги' })
-				
-			callback()
-		}
-	}
-	
 	var add_book_window
 	
 	page.load = function()
@@ -219,6 +200,6 @@
 		Режим.разрешить('правка')
 		Режим.разрешить('действия')
 		
-		$(document).trigger('page_initialized')
+		page.initialized()
 	}
 })()

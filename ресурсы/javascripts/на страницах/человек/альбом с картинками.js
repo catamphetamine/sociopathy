@@ -24,6 +24,7 @@
 			url: '/приложение/человек/картинки/альбом',
 			parameters: { 'адресное имя': page.data.адресное_имя, альбом: page.data.альбом },
 			before_done: pictures_loaded,
+			done: page.initialized,
 			get_data: function(data)
 			{
 				if (data.альбом.описание)
@@ -290,7 +291,5 @@
 	
 		Режим.разрешить('правка')
 		Режим.разрешить('действия')
-		
-		$(document).trigger('page_initialized')
 	}
 })()

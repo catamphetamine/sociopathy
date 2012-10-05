@@ -628,7 +628,7 @@ function get_function(variable)
 
 $.fn.is_empty = function()
 {
-	return this.children().length === 0
+	return !this.children().exists()
 }
 
 /*
@@ -696,7 +696,9 @@ $.fn.audio_player = function(action, options)
 			return this.find_parent('.jouele-play-control')
 		
 		case 'link':
-			return $('<a/>').addClass('jouele').attr('href', options.url).text(options.title)
+			var link = $('<a/>')
+			link.addClass('jouele').attr('href', options.url).text(options.title)
+			return link
 		
 		default:
 			if (!this.hasClass('audio_player'))
@@ -726,4 +728,24 @@ $.fn.editable = function()
 $.fn.not_editable = function()
 {
 	this.removeAttr('contenteditable')
+}
+
+$.fn.background_url = function()
+{
+	var image = this.css('background-image')
+	if (image === 'none')
+		return
+	
+	if (!image.starts_with('url('))
+		return
+	
+	image = image.substring('url('.length, image.length - ')'.length)
+	
+	if (image.starts_with('"'))
+		return image.substring('"'.length, image.length - '"'.length)
+	
+	if (image.starts_with('\''))
+		return image.substring('\''.length, image.length - '\''.length)
+	
+	return image
 }

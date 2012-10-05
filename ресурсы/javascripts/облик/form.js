@@ -1,5 +1,3 @@
-var Validation = {}
-
 function Form(element)
 {
 	this.element = element

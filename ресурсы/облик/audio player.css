@@ -19,6 +19,12 @@
 		{
 			cursor: pointer;
 			
+			> .jouele-play-control
+			{
+				width: 24px;
+				height: 24px;
+			}
+			
 			> .jouele-download
 			{
 				display: none !important;

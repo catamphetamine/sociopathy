@@ -95,6 +95,7 @@ var Interactive_messages = function(options)
 		},
 		show_editor: options.show_editor,
 		on_load: options.on_load,
+		on_first_output: options.on_first_output,
 		on_message_data: options.on_message_data,
 		on_first_time_data: options.on_first_time_data,
 		on_finished: function()
@@ -435,6 +436,7 @@ var Interactive_messages = function(options)
 				connection.is_ready = true
 				
 				messages.when_can_read_messages_actions.for_each(function() { this() })
+				messages.when_can_read_messages_actions = []
 				
 				if (!reconnected)
 				{
@@ -648,7 +650,7 @@ var Interactive_messages = function(options)
 		
 		function connected()
 		{
-			$(document).on_page('режим.изменения_сохранены', function()
+			$(document).on_page('режим_изменения_сохранены', function()
 			{
 				can_show_editor = true
 			

@@ -95,7 +95,7 @@ exports.set_session_data = (тайный_ключ, ключ, значение, �
 			redis_session_store.set(тайный_ключ, session_data, возврат)
 			
 exports.приглашение = ->
-	new Date().getTime().toString() + ':' + Math.random()
+	снасти.цифры_в_символы(new Date().getTime().toString() + (Math.random()+ '').replace('.', '').substring(0, 5))
 	
 exports.создать = (человек, возврат) ->
 	db('people').save(человек, возврат)

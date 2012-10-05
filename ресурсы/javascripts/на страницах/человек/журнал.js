@@ -20,6 +20,7 @@
 				batch_size: 10,
 				scroll_detector: page.get('#scroll_detector'),
 				before_done: journal_loaded,
+				done: page.initialized,
 				before_done_more: function() { ajaxify_internal_links(page.journal) },
 				get_data: function(data)
 				{	
@@ -38,8 +39,6 @@
 	
 	function journal_loaded()
 	{
-		$(document).trigger('page_initialized')
-		
 		if (page.journal.is_empty())
 		{
 			page.journal.remove()
@@ -49,6 +48,4 @@
 	//	Режим.разрешить('правка')
 	//	Режим.разрешить('действия')
 	}
-	
-	page.needs_initializing = true
 })()

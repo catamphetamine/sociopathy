@@ -1503,3 +1503,19 @@ label.in-place_input_label
 		position: absolute;
 	}
 }
+
+.centerer
+{
+	text-align: center;
+	
+	display: table;
+	
+	height: 100%;
+	width: 100%;
+	
+	> .centerer_inner
+	{
+		display: table-cell;
+		vertical-align: middle;
+	}
+}

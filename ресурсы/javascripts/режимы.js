@@ -85,7 +85,7 @@ var Режим = (function()
 			if (обещания[в])
 				info('Переход в режим «' + описание_режима.заголовок + '» будет доступен после загрузки страницы')
 			else
-				info('Переход в режим «' + описание_режима.заголовок + '» здесь и сейчас не разрешён')
+				info('Переход в режим «' + описание_режима.заголовок + '» в данном случае не разрешён')
 				
 			return false
 		}
@@ -139,13 +139,13 @@ var Режим = (function()
 			$('[mode=' + режим + ']').each(function()
 			{
 				if (this.tagName.toLowerCase() !== 'body')
-					$(this).hide()
+					$(this).fade_out(0)
 			})
 			
 		$('[mode=' + mode + ']').each(function(element)
 			{
 				if (this.tagName.toLowerCase() !== 'body')
-					$(this).show()
+					$(this).fade_in(0.1)
 			})
 		
 		var описание_режима = найти_описание_режима(mode)
@@ -187,15 +187,6 @@ var Режим = (function()
 		
 		return найденное
 	}
-	
-	$(function()
-	{
-		режимы.forEach(function(описание_режима)
-		{
-			if (описание_режима.название !==  режим)
-				$('[mode=' + описание_режима.название + ']').hide()
-		})
-	})
 	
 	var при_переходе_в_режим = function(из_какого, в_какой, действие)
 	{
@@ -266,6 +257,15 @@ var Режим = (function()
 		}
 	})
 	
+	result.initialize_page = function()
+	{
+		режимы.forEach(function(описание_режима)
+		{
+			if (описание_режима.название !==  режим)
+				$('[mode=' + описание_режима.название + ']').fade_out(0)
+		})
+	}
+	
 	result.заморозить_переходы = function()
 	{
 		переходы_разрешены = false
@@ -282,7 +282,7 @@ var Режим = (function()
 	
 	result.изменения_сохранены = function()
 	{
-		$(document).trigger('режим.изменения_сохранены')
+		$(document).trigger('режим_изменения_сохранены')
 		
 		перейти_в_режим('обычный', { saved: true })
 		actions.slide_out_downwards(300, function()
@@ -293,7 +293,7 @@ var Режим = (function()
 	
 	result.изменения_отменены = function()
 	{
-		$(document).trigger('режим.изменения_отменены')
+		$(document).trigger('режим_изменения_отменены')
 			
 		перейти_в_режим('обычный', { discarded: true })
 		actions.slide_out_downwards(300, function()
@@ -314,7 +314,6 @@ var Режим = (function()
 		var on_discard = options.on_discard || function()
 		{	
 			//var загрузка = loading_indicator.show()
-			Режим.изменения_отменены()
 			reload_page()
 		}
 	
@@ -325,7 +324,11 @@ var Режим = (function()
 		.does(on_save)
 		
 		cancel_changes_button = text_button.new(actions.find('.cancel'), { 'prevent double submission': true })
-		.does(on_discard)
+		.does(function()
+		{
+			on_discard()
+			Режим.изменения_отменены()
+		})
 		
 		$(document).on('режим.переход', function(event, из, в)
 		{
@@ -337,6 +340,12 @@ var Режим = (function()
 	result.разрешить = function(название)
 	{
 		разрешённые_режимы[название] = true
+	}
+	
+	result.запретить = function(название)
+	{
+		разрешённые_режимы[название] = false
+		обещания[название] = false
 	}
 	
 	result.перейти = function(в)
@@ -359,7 +368,8 @@ var Режим = (function()
 	result.save_changes_to_server = function(options)
 	{
 		if (options.anything_changed)
-			if (!options.anything_changed())
+		{
+			if (!options.anything_changed.bind(options.data)())
 			{
 				if (options.continues)
 					if (options.ok)
@@ -371,11 +381,48 @@ var Режим = (function()
 					Режим.разрешить_переходы()
 				}
 				
+				info('Вы не внесли никаких правок')
+				
 				return Режим.изменения_сохранены()
 			}
+		}
+
+		if (options.validate)
+		{
+			try
+			{
+				options.validate.bind(options.data)()
+			}
+			catch (ошибка)
+			{
+				if (options.загрузка)
+				{
+					options.загрузка.hide()
+					Режим.разрешить_переходы()
+				}
+				
+				Режим.ошибка_правки()
+					
+				if (typeof ошибка === 'object')
+				{
+					if (ошибка.level === 'warning')
+						return warning(ошибка.error)
+					
+					return error(ошибка.error)
+				}
+				
+				return error(ошибка)
+			}
+		}			
 			
 		Режим.заморозить_переходы()
 		var загрузка = options.загрузка || loading_indicator.show()
+			
+		Object.for_each(options.data, function(key, value)
+		{
+			if (typeof value === 'object' || value instanceof Array)
+				options.data[key] = JSON.stringify(value)
+		})
 			
 		page.Ajax[options.method || 'post'](options.url, options.data)
 		.ошибка(function(ошибка)
@@ -389,14 +436,26 @@ var Режим = (function()
 			if (options.error)
 				options.error()
 		})
-		.ok(function()
+		.ok(function(data)
 		{
 			if (options.ok)
 			{
+				var result
+				
 				if (options.continues)
-					return options.ok(загрузка)
+					result = options.ok(загрузка, data)
 				else
-					options.ok()
+					result = options.ok(data)
+				
+				if (result === false)
+				{
+					загрузка.hide()
+					Режим.разрешить_переходы()
+					return Режим.ошибка_правки()
+				}
+				
+				if (options.continues)
+					return
 			}
 			
 			загрузка.hide()

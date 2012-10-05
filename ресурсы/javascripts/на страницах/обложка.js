@@ -3,6 +3,8 @@
 	/**
 	 * Welcome page initialization
 	 */
+
+	page.needs_initializing = false
 	
 	var join_dialog
 	var gender_chooser
@@ -84,7 +86,7 @@
 		.does(function() { join_dialog.close() })
 		
 		join_dialog_next_button = text_button.new('#join_dialog .buttons .next')
-		.does(function() { join_form_slider.next(function() { $('#join_dialog .slider .slide:eq(' + (join_form_slider.slider.index - 1) + ') input:first').focus() }) })
+		.does(function() { join_form_slider.next() })
 		
 		join_dialog_done_button = text_button.new('#join_dialog .buttons .done', { 'prevent double submission': true })
 		.does(function() { join_form_slider.done() })
@@ -121,87 +123,6 @@
 				}
 			}
 		})
-	}
-	
-	Validation.прописка =
-	{
-		имя: function(имя, callback)
-		{
-			имя = имя.trim()
-			
-			if (!имя)
-				return callback({ error: 'Вам нужно представиться' })
-				
-			var form = this
-				
-			page.Ajax.get('/приложение/человек/по имени',
-			{
-				имя: имя
-			})
-			.ok(function()
-			{
-				callback({ error: 'Это имя уже занято' })
-			})
-			.ошибка(function(error, options)
-			{
-				if (options.data.не_найден)
-					return callback()
-				
-				callback({ error: error })
-			})
-		},
-		
-		пол: function(пол, callback)
-		{
-			if (!пол)
-				return callback({ error: 'Вам нужно указать свой пол' })
-				
-			callback()
-		},
-		
-		откуда: function(откуда, callback)
-		{
-			откуда = откуда.trim()
-			
-			if (!откуда)
-				return callback({ error: 'Даже Neverland сойдёт' })
-			
-			callback()
-		},
-		
-		почта: function(почта, callback)
-		{
-			почта = почта.trim()
-			
-			if (!почта)
-				return callback({ error: 'Ваша почта нам пригодится' })
-			
-			var form = this
-				
-			page.Ajax.get('/приложение/человек/по почте',
-			{
-				почта: почта
-			})
-			.ok(function(data)
-			{
-				callback({ error: 'Это почта пользователя ' + data.имя, bubble: true })
-			})
-			.ошибка(function(error, options)
-			{
-				if (options.data.не_найден)
-					return callback()
-				
-				callback({ error: error })
-			})
-		},
-		
-		пароль: function(пароль, callback)
-		{
-			if (!пароль)
-				return callback({ error: 'Пароль будет нужен для входа' })
-				
-			callback()
-		}
 	}
 	
 	// create gender chooser

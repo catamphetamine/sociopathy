@@ -1,0 +1,56 @@
+@import "/облик/вспомогательный.less";
+
+#content
+{
+	margin-top: 100px;
+	
+	> form
+	{
+		width: 100%;
+		
+		box-sizing: border-box;
+		
+		padding-left: 80px;
+		padding-right: 80px;
+
+		> label
+		{
+			display: block;
+			margin-bottom: 10px;
+		}
+		
+		> .title
+		{
+			width: 100%
+		}
+		
+		margin-bottom: 100px;
+	}
+	
+	> .compose_message
+	{
+	}
+	
+	.save
+	{
+		width: 100%;
+		
+		margin-top: 80px;
+		
+		background-color: #d2d2d2;
+		background: -webkit-gradient(linear, center top, center bottom, from(#eaeaea), to(#cfcfcf));
+		background-image: -moz-linear-gradient(top, #eaeaea, #cfcfcf);
+		
+		border-top-width: 1px;
+		border-top-style: solid;
+		border-top-color: #cfcfcf;
+	
+		.shadow(0px, 0px, 4px, 0.20);
+		
+		overflow: hidden;
+		padding-top: 6px;
+		padding-bottom: 6px;
+		
+		text-align: center;
+	}
+}

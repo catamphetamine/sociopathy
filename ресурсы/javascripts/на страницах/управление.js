@@ -1,5 +1,9 @@
 (function()
 {
+	title('Управление')
+	
+	page.needs_initializing = false
+	
 	page.load = function()
 	{
 		//if (!доступна_ли_страница_управления())
@@ -39,7 +43,8 @@
 				.ошибка('Не удалось выдать приглашение')
 				.ok(function(data)
 				{
-					info(host + ':' + port + '/?приглашение=' + data.ключ, { sticky: true })
+					var link = host + ':' + port + '/?приглашение=' + data.ключ
+					info('<a href=\'http://' + link + '\'>' + link + '</a>', { sticky: true })
 				})
 			})
 		}

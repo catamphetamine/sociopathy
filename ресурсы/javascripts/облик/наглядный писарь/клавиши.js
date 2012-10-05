@@ -144,7 +144,8 @@ Visual_editor.implement
 		
 			if (Клавиши.is('Ctrl', 'Enter', event))
 			{
-				return visual_editor.ctrl_enter_pressed_in_container()
+				if (visual_editor.ctrl_enter_pressed_in_container)
+					return visual_editor.ctrl_enter_pressed_in_container()
 			}
 				
 			var result = process_enter_key()

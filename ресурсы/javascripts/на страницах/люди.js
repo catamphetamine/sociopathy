@@ -19,7 +19,8 @@
 				{
 					parse_dates(people, 'время рождения')
 					return people
-				}
+				},
+				on_first_output: page.initialized
 			},
 			container: '#id_cards',
 			template: '/страницы/кусочки/личная карточка.html',

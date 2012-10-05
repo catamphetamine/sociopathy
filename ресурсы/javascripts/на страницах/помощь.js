@@ -1,6 +1,8 @@
 (function()
 {
 	title('Помощь')
+
+	page.needs_initializing = false
 	
 	page.load = function()
 	{

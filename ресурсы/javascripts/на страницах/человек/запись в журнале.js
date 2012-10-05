@@ -16,6 +16,7 @@
 				url: '/приложение/человек/журнал/запись',
 				parameters: { запись: page.data.запись },
 				before_done: entry_loaded,
+				done: page.initialized,
 				get_data: function(data)
 				{
 					title(data.запись.название + '. ' + 'Журнал. ' + page.data.пользователь_сети['адресное имя'])
@@ -36,11 +37,8 @@
 	
 	function entry_loaded()
 	{
-		$(document).trigger('page_initialized')
 		
 	//	Режим.разрешить('правка')
 	//	Режим.разрешить('действия')
 	}
-	
-	page.needs_initializing = true
 })()

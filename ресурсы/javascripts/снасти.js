@@ -81,6 +81,9 @@ var Ajax =
 				if (result.expired())
 					return
 			
+				if (!data)
+					return console.log('No output for Ajax request')
+			
 				if (data.ошибка)
 				{
 					var сообщение = data.ошибка
@@ -103,8 +106,6 @@ var Ajax =
 				
 			on_error = function(сообщение, options)
 			{
-				var уровень = options.уровень
-				
 				if (сообщение === 'Internal Server Error')
 					сообщение = Default_ajax_error_message
 				
@@ -697,6 +698,11 @@ function set_version(url, version)
 	return Uri.assemble(data)
 }
 
+function get_version(url)
+{
+	return Uri.parse(url).parameters.version
+}
+
 function download(url)
 {
 	var iframe = document.getElementById("hiddenDownloader")
@@ -760,4 +766,29 @@ function go_to(url)
 		})
 	
 	window.location = url
+}
+
+function refresh_page()
+{
+	go_to(Uri.parse(window.location).to_relative_url())
+}
+
+function load_template(url, name, callback)
+{
+	options.Ajax.get(url, {}, { type: 'html' })
+	.ошибка(function()
+	{
+		throw 'Не удалось загрузить шаблон'
+	})
+	.ok(function(template) 
+	{
+		$.template(name, template)
+		callback()
+	})
+}
+
+function page_error(text)
+{
+	var error_block = $('<div/>').addClass('error').text(text)
+	$('#page').empty().append(error_block)
 }

@@ -37,3 +37,30 @@
 {
 	/* margin-top: 30px; */
 }
+
+.delete_article, .move_article
+{
+	text-align: center;
+}
+
+.move_article
+{
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+.delete_article
+{
+	margin-bottom: 30px;
+}
+
+.move_article_window
+{
+	form
+	{
+		input[name="where"]
+		{
+			width: 660px !important;
+		}
+	}
+}

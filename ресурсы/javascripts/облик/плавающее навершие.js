@@ -30,7 +30,7 @@
 				return
 			
 			event.stopPropagation()
-			$this.addClass('sticky')
+			$this.addClass('sticky').addClass('fixed_on_the_top')
 			
 			$this.trigger('floats')
 			
@@ -41,7 +41,7 @@
 		container.on('fully_appears_on_top.scroller', function(event)
 		{
 			event.stopPropagation()
-			$this.css({ top: 0 }).removeClass('sticky')
+			$this.css({ top: 0 }).removeClass('sticky').removeClass('fixed_on_the_top')
 			
 			$this.trigger('unfloats')
 		})

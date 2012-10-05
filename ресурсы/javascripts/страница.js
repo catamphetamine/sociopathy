@@ -139,6 +139,17 @@ var Страница =
 					}
 				})
 			},
+			'сеть/читальня/заметка': function(rest)
+			{
+				match_url(rest,
+				{
+					'*': function(value, rest)
+					{
+						название_страницы = 'сеть/читальня/заметка'
+						new_page.data.раздел = value
+					}
+				})
+			},
 			'читальня': function(rest)
 			{
 				match_url(rest,
@@ -202,6 +213,7 @@ var Page = new Class
 	ajaxes: [],
 	
 	when_loaded_actions: [],
+	when_unloaded_actions: [],
 	
 	ticking_actions: [],
 	
@@ -218,6 +230,11 @@ var Page = new Class
 			return action()
 			
 		this.when_loaded_actions.push(action)
+	},
+	
+	when_unloaded: function(action)
+	{
+		this.when_unloaded_actions.push(action)
 	},
 	
 	initialize: function(options)
@@ -258,19 +275,105 @@ var Page = new Class
 		
 		this.Data_store =
 		{
-			populate: $.noop,
-			collect: $.noop,
-			load: function(возврат)
+			query: {},
+			
+			populate_view: $.noop,
+			populate_draft: $.noop,
+			
+			remove_draft: $.noop,
+			remove_view: $.noop,
+
+			reset: $.noop,
+			
+			collect_unmodified: function() { return {} },
+			collect_edited: function() { return {} },
+			
+			draft_persistence: false,
+			
+			initialize: function(возврат)
 			{
-				var data_store = this
+				if (!page.save)
+					return возврат()
 				
-				this.load_draft(function(черновик)
+				var data_store = this
+							
+				this.unmodified_data = this.deduce()
+				this.edited_data = {}
+			
+				this.populate_view(this.unmodified_data)
+				
+				Режим.при_переходе({ в: 'правка' }, function()
 				{
-					if (черновик)
-						return возврат(черновик)
-						
-					return возврат(data_store.deduce())
+					data_store.watch_for_changes = true
+					
+					//data_store.unmodified_data = data_store.collect_unmodified()
+					data_store.remove_view()
+					data_store.populate_draft(data_store.unmodified_data)
 				})
+							
+				Режим.при_переходе({ из: 'правка' }, function()
+				{
+					if (data_store.watch_for_changes)
+						data_store.edited_data = data_store.collect_edited()
+					else
+						data_store.edited_data = data_store.unmodified_data
+						
+					data_store.remove_draft()
+					data_store.populate_view(data_store.edited_data)
+				})
+				
+				Режим.activate_edit_actions({ on_save: function()
+				{
+					if (Режим.правка_ли())
+						data_store.edited_data = data_store.collect_edited()
+					
+					data_store.watch_for_changes = false
+					page.save(data_store.edited_data, function()
+					{
+						if (!Режим.правка_ли())
+						{
+							data_store.remove_view()
+							data_store.populate_view(data_store.edited_data)
+						}
+					})
+				},
+				on_discard: function()
+				{
+					data_store.watch_for_changes = false
+					
+					if (!Режим.правка_ли())
+					{
+						data_store.remove_draft()
+						data_store.populate_view(data_store.unmodified_data)
+					}
+						
+					data_store.reset()
+					
+					if (page.discard)
+						page.discard()
+				}})
+				
+				$(document).on_page('режим_изменения_сохранены', function()
+				{
+					data_store.unmodified_data = data_store.edited_data
+					
+					data_store.edited_data = {}
+				})
+				
+				if (this.draft_persistence)
+					this.load_draft(function(черновик)
+					{
+						if (черновик)
+						{
+							data_store.edited_data = черновик
+							//data_store.populate_draft(черновик)
+							Режим.правка()
+						}
+							
+						return возврат()
+					})
+				else
+					return возврат()
 			},
 			deduce: function()
 			{
@@ -280,7 +383,10 @@ var Page = new Class
 			{
 				var data_store = this
 				
-				page.Ajax.get('/приложение/сеть/черновик', { что: data_store.что })
+				if (!this.что)
+					return возврат()
+				
+				page.Ajax.get('/приложение/сеть/черновик', Object.x_over_y(data_store.query, { что: this.что }))
 				.ok(function(data)
 				{
 					возврат(data.черновик)
@@ -288,6 +394,24 @@ var Page = new Class
 				.ошибка(function()
 				{
 					error('Не удалось проверить черновик')
+					возврат()
+				})
+			},
+			save_draft: function(возврат)
+			{
+				var data_store = this
+				
+				if (!this.что)
+					return возврат()
+				
+				page.Ajax.put('/приложение/сеть/черновик', Object.x_over_y(data_store.query, { что: this.что }))
+				.ok(function(data)
+				{
+					возврат()
+				})
+				.ошибка(function()
+				{
+					error('Не удалось сохранить черновик')
 					возврат()
 				})
 			}
@@ -302,6 +426,37 @@ var Page = new Class
 	query: function(selector, variable)
 	{
 		this.queries.push({ variable: variable, selector: selector })
+	},
+	
+	hotkey: function(name, режим, action)
+	{
+		if (typeof режим === 'function')
+		{
+			action = режим
+			режим = null
+		}
+		
+		eval('var hotkey = Настройки.Клавиши.' + name)
+		
+		$(document).on_page('keydown', function(event)
+		{
+			if (Клавиши.is(hotkey, event))
+			{
+				if (режим)
+					if (!Режим[режим + '_ли']())
+						return
+				
+				event.preventDefault()
+				action()
+			}
+		})
+	},
+	
+	needs_initializing: true,
+	
+	initialized: function()
+	{
+		$(document).trigger('page_initialized')
 	},
 	
 	full_load: function(возврат)
@@ -319,6 +474,8 @@ var Page = new Class
 		
 		this.load()
 		
+		Режим.initialize_page()
+		
 		this.when_loaded_actions.forEach(function(action)
 		{
 			action()
@@ -327,6 +484,7 @@ var Page = new Class
 		this.when_loaded_actions.empty()
 		
 		this.status = 'loaded'
+		
 		возврат()
 	},
 	
@@ -366,6 +524,13 @@ var Page = new Class
 		})
 		
 		this.tracked = {}
+		
+		this.when_unloaded_actions.forEach(function(action)
+		{
+			action()
+		})
+		
+		this.when_unloaded_actions.empty()
 	},
 	
 	on: function(element, event, action)
@@ -378,7 +543,8 @@ var Page = new Class
 		}
 		
 		if (!event.contains('.'))
-			throw 'You must specify a namespace for page event: ' + event
+			event += '.' + (Math.random() + '').substring(2)
+			//throw 'You must specify a namespace for page event: ' + event
 			
 		this.event_handlers.push({ element: element, event: event })
 		element.on(event, action)

@@ -44,3 +44,10 @@
 		display: none;
 	}
 }
+
+.add_to_talk
+{
+	float: right;
+	display: none;
+	margin-right: 30px;
+}

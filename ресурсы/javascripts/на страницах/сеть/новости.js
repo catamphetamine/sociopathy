@@ -19,6 +19,7 @@
 				batch_size: 10,
 				scroll_detector: page.get('#scroll_detector'),
 				before_done: news_loaded,
+				done: page.initialized,
 				before_done_more: function() { ajaxify_internal_links(page.news) },
 				get_data: function(data)
 				{
@@ -33,12 +34,8 @@
 	{
 		Youtube.load_pictures(page.news)
 		Vimeo.load_pictures(page.news)
-
-		$(document).trigger('page_initialized')
 		
 	//	Режим.разрешить('правка')
 	//	Режим.разрешить('действия')
 	}
-	
-	page.needs_initializing = true
 })()

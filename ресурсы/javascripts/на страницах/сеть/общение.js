@@ -14,6 +14,17 @@
 	
 	page.load = function()
 	{
+		switch (page.data.общение)
+		{
+			case 'беседа':
+				title('Завести беседу')
+				break
+			
+			case 'обсуждение':
+				title('Начать обсуждение')
+				break
+		}
+		
 		var visual_editor = new Visual_editor('#content > .compose_message > article')
 		
 		var hint = $('<p/>').appendTo(visual_editor.editor.content)
@@ -46,4 +57,6 @@
 		
 		page.get('form .title').focus()
 	}
+	
+	page.needs_initializing = false
 })()

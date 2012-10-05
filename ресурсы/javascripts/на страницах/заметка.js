@@ -1,23 +1,27 @@
-Подсказка('правка заметки', 'Вы можете править заметку, перейдя в <a href=\'/помощь/режимы#Режим правки\'>«режим правки»</a>');
-
 (function()
 {
-	var право_на_правку_получено = false
-	
 	Режим.пообещать('правка')
-	
-	var acquiring_edit_lock
+	Режим.пообещать('действия')
 	
 	var заметка = page.data.заметка
 	var неправленная_заметка
 		
 	var visual_editor
 	
+	function get_title()
+	{
+		return visual_editor.editor.content.parent().find('> h1').text().trim()
+	}
+	
+	function set_title(title)
+	{
+		return visual_editor.editor.content.parent().find('> h1').text(title)
+	}
+	
 	page.load = function()
 	{
-		Подсказки.подсказка('Вы можете внести свои правки в эту заметку. Для этого потребуется перейти в <a href=\'/помощь/режимы\'>режим правки</a>.')
-		Подсказки.ещё_подсказка('Во время правки, для того, чтобы вернуться в режим набора обычного текста, нажмите Shift + Пробел.')
-		
+		Подсказка('правка заметки', 'Вы можете переименовать и править заметку, перейдя в <a href=\'/помощь/режимы#Режим правки\'>«режим правки»</a>. Вы можете перенести или удалить эту заметку, перейдя в <a href=\'/помощь/режимы#Режим действий\'>«режим действий»</a>');
+
 		function get_breadcrumbs()
 		{
 			var link = '/читальня'
@@ -39,7 +43,7 @@
 		new Data_templater
 		({
 			template_url: '/страницы/кусочки/заметка читальни.html',
-			container: page.get('.main_content'),
+			to: page.get('.main_content'),
 			conditional: conditional
 		},
 		new  Data_loader
@@ -52,34 +56,29 @@
 			   
 				неправленная_заметка =
 				{
-					title: data.заметка.название,
-					content: data.заметка.содержимое
+					название: data.заметка.название,
+					содержимое: data.заметка.содержимое
 				}
+				
+				page.data.версия = data.заметка.версия
 
 				return data.заметка
 			},
-			before_done: article_loaded
+			before_done: article_loaded,
+			done: page.initialized
 		}))
 	}
 	
 	page.unload = function()
 	{
-		$('#article_edit_mode_actions').remove()
-		
 		if (visual_editor)
 			visual_editor.unload()
 	}
 	
-	function article_loaded()
+	function initialize_editor()
 	{
-		postprocess_rich_content($('article'))
-		
-		$(document).trigger('page_initialized')
-		
-		var main_header = $('article h1')
-		
 		visual_editor = new Visual_editor('.main_content > article > section')
-		
+	
 		// изначально в режиме просмотра - отключить снасти
 		visual_editor.unbind()
 		
@@ -100,206 +99,221 @@
 		
 		visual_editor.keep_cursor_on_screen()
 		
-		initialize_editor()
-		initialize_actions()
-	
-		function get_title()
+		Режим.при_переходе({ в: 'правка' }, function()
 		{
-			return visual_editor.editor.content.parent().find('> h1').text()
-		}
+			visual_editor.activate_tools_inside_content()
+			visual_editor.editor.content.editable()
+			
+			visual_editor.show_tools()
+			
+			if ($.browser.mozilla)
+				visual_editor.editor.content.focus()
+			
+			visual_editor.editor.caret.move_to(visual_editor.editor.content.find('> *:first'))
+		})
 		
-		function set_title(title)
+		Режим.при_переходе({ из: 'правка' }, function()
 		{
-			return visual_editor.editor.content.parent().find('> h1').text(title)
-		}
+			visual_editor.hide_tools()
+			visual_editor.unbind()
+			visual_editor.editor.content.not_editable()
+		})
 		
-		Режим.добавить_проверку_перехода(function(из, в)
+		// при нажатии Ввода на основном заголовке - перейти к первому абзацу
+		$('article h1').on('keypress', function(event)
 		{
-			if (в === 'правка' || в === 'действия')
+			if (!Режим.правка_ли())
+				return
+				
+			if (Клавиши.is('Enter', event))
 			{
-				if (право_на_правку_получено)
-					return		
-					
-				Режим.заморозить_переходы()
-				acquiring_edit_lock = loading_indicator.show()
-				acquire_edit_lock(в)
-				return false
+				event.preventDefault()
+				visual_editor.editor.move_caret_to(visual_editor.editor.content.find('p:first'))
 			}
 		})
+	}
+	
+	function article_loaded()
+	{
+		postprocess_rich_content($('article'))
+		
+		initialize_editor()
 		
 		Режим.разрешить('правка')
-			
-		function initialize_editor()
-		{
-			$(document).on_page('режим.правка', function(event)
-			{
-				visual_editor.show_tools()
-				
-				if ($.browser.mozilla)
-					visual_editor.editor.content.focus()
-				
-				console.log(visual_editor.editor.content.find('> p:first'))
-				visual_editor.editor.caret.move_to(visual_editor.editor.content.find('> *:first'))
-				//visual_editor.editor.focus()
-			})
-			
-			$(document).on_page('режим.переход', function(event, из, в)
-			{
-				if (из === 'правка')
-					visual_editor.hide_tools()
-			})
-			
-			// при нажатии Ввода на основном заголовке - перейти к первому абзацу
-			main_header.on('keypress', function(event)
-			{
-				if (!Режим.правка_ли())
-					return
-					
-				if (Клавиши.is('Enter', event))
-				{
-					event.preventDefault()
-					visual_editor.editor.move_caret_to(visual_editor.editor.content.find('p:first'))
-				}
-			})
-		}
 		
-		var edit_mode_actions
-		function initialize_actions()
+		function delete_article()
 		{
-			edit_mode_actions = $('#article_edit_mode_actions')
-			edit_mode_actions.appendTo($('body')).move_out_downwards().disableTextSelect()
-		
-			save_button = text_button.new(edit_mode_actions.find('.done'), { 'prevent double submission': true })
-			.does(function()
+			if (!confirm('Удалить эту заметку в корзину?\nСейчас пока не сделано восстановление из корзины, поэтому мы спрашиваем.'))
+				return
+
+			page.Ajax.delete('/приложение/сеть/читальня/заметка',
 			{
-				var data =
-				{
-					_id: заметка,
-					title: get_title(),
-					content: Wiki_processor.parse_and_validate(visual_editor.editor.html(),
-					{
-						process_element: function(wiki, decorated)
-						{
-							wiki.attr('author', decorated.attr('author') || пользователь._id)
-						}
-					})
-				}
-				
-				var loading = loading_indicator.show()
-				page.Ajax.put('/приложение/сеть/читальня/заметка', data)
-				.ошибка(function(ошибка)
-				{
-					loading.hide()
-					право_на_правку_получено = false
-					
-					error(ошибка)
-					save_button.unlock()
-				})
-				.ok(function()
-				{
-					loading.hide()
-					право_на_правку_получено = false
-					
-					edit_mode_actions.slide_out_downwards(300, function()
-					{
-						save_button.unlock()
-					})
-					Режим.обычный()
-					//info('Правки сохранены')
-					
-					неправленная_заметка =
-					{
-						title: data.title,
-						content: data.content
-					}
-					
-					set_title(data.title)
-					visual_editor.editor.set_content(Wiki_parser.decorate(data.content))
-					console.log(Wiki_parser.decorate(data.content))
-				})
-			})
-			
-			cancel_button = text_button.new(edit_mode_actions.find('.cancel'), { 'prevent double submission': true })
-			.does(function()
-			{
-				var loading = loading_indicator.show()
-				page.Ajax.delete('/приложение/сеть/черновик',
-				{
-					что: "заметка",
-					_id: заметка
-				})
-				.ошибка(function(ошибка)
-				{
-					loading.hide()
-					право_на_правку_получено = false
-					
-					error(ошибка)
-					save_button.unlock()
-				})
-				.ok(function(data)
-				{
-					loading.hide()
-					право_на_правку_получено = false
-					
-					edit_mode_actions.slide_out_downwards(300, function()
-					{
-						cancel_button.unlock()
-					})
-					
-					Режим.обычный()
-					
-					visual_editor.editor.load_content(Wiki_processor.decorate(неправленная_заметка.content))
-					
-					postprocess_rich_content(visual_editor.editor.get_content())
-					
-					set_title(неправленная_заметка.title)
-				})
-			})
-			
-			$(document).on_page('режим.переход', function(event, из, в)
-			{
-				if (из === 'правка')
-				{
-					visual_editor.unbind()
-					visual_editor.editor.content.removeAttr('contenteditable')
-				}
-			})
-		}
-		
-		$(document).on_page('режим.правка', function(event)
-		{
-			edit_mode_actions.slide_in_from_bottom()
-			visual_editor.activate_tools_inside_content()
-			visual_editor.editor.content.attr('contenteditable', true)
-		})
-		
-		function acquire_edit_lock(режим)
-		{
-			page.Ajax.post('/приложение/сеть/получить_право_на_правку_заметки', { _id: заметка })
-			.ошибка(function(ошибка)
-			{
-				acquiring_edit_lock.hide()
-				Режим.разрешить_переходы()
-				error(ошибка)
+				_id: page.data.заметка
 			})
 			.ok(function(data)
 			{
-				acquiring_edit_lock.hide()
-				
-				var кто_правит = data['кто правит']
-				if (кто_правит)
-				{
-					Режим.разрешить_переходы()
-					//return warning('<a href=\'/люди/' + кто_правит['адресное имя'] + '\'>' + кто_правит.имя + '</a> уже правит эту заметку. Можете написать ' + (кто_правит.пол === 'мужской' ? 'ему' : 'ей') + ', чтобы ' + (кто_правит.пол === 'мужской' ? 'он сохранил' : 'она сохранила') + ' внесённые правки (либо ' + (кто_правит.пол === 'мужской' ? 'удалил' : 'удалила') + ' черновик), \n и тогда эта заметка снова станет доступной для правки.')
-					return warning('<a href=\'/люди/' + кто_правит['адресное имя'] + '\'>' + /* дыра */ кто_правит.имя + '</a> уже правит эту заметку. Можете написать ' + (кто_правит.пол === 'мужской' ? 'ему' : 'ей') + ', чтобы ' + (кто_правит.пол === 'мужской' ? 'он сохранил (или отменил)' : 'она сохранила (или отменила)') + ' внесённые правки, \n и тогда эта заметка снова станет доступной для правки.')
-				}
-				
-				право_на_правку_получено = true
-				Режим.разрешить_переходы()
-				Режим.перейти(режим)
+				go_to('/читальня/' + data.путь_к_разделу)
 			})
 		}
+		
+		text_button.new(page.get('.delete_article > .button')).does(delete_article)
+		page.hotkey('Действия.Удалить', 'действия', delete_article)
+		
+		var move_article_window = simple_value_dialog_window
+		({
+			class: 'move_article_window',
+			title: 'Перенести эту заметку',
+			ok_button_text: 'Перенести',
+			fields:
+			[{
+				id: 'where',
+				description: 'Скопируйте сюда ссылку на раздел, \nв который вы хотите переместить эту заметку',
+				validation: 'читальня.ссылка_на_раздел_для_заметки'
+			}],
+			ok: function(where)
+			{
+				var раздел = move_article_window.form.раздел
+				
+				var data =
+				{
+					заметка: page.data.заметка
+				}
+				
+				if (раздел)
+					data.куда = раздел
+				
+				page.Ajax.post('/приложение/сеть/читальня/заметка/перенести', data)
+				.ok(function(data)
+				{
+					info('Заметка перенесена')
+					go_to('/читальня/' + data.путь)
+				})
+				.ошибка(function(ошибка)
+				{
+					error(ошибка)
+				})
+			}
+		})
+		.window
+		
+		text_button.new(page.get('.move_article > .button')).does(function()
+		{
+			move_article_window.open()
+		})
+		
+		Режим.разрешить('действия')
 	}
 	
-	page.needs_initializing = true
+	page.Data_store.collect_edited = function()
+	{
+		var data =
+		{
+			название: get_title(),
+			содержимое: Wiki_processor.parse_and_validate(visual_editor.editor.html(),
+			{
+				/*process_element: function(wiki, decorated)
+				{
+					wiki.attr('author', decorated.attr('author') || пользователь._id)
+				}*/
+			})
+		}
+		
+		return data
+	}
+	
+	page.Data_store.collect_unmodified = page.Data_store.collect_edited
+	
+	page.Data_store.deduce = function()
+	{
+		return неправленная_заметка
+	}
+	
+	page.save = function(data)
+	{
+		Режим.save_changes_to_server
+		({
+			anything_changed: function()
+			{
+				if (page.Data_store.unmodified_data.название != page.Data_store.edited_data.название)
+					return true
+				
+				if (page.Data_store.unmodified_data.содержимое != page.Data_store.edited_data.содержимое)
+					return true
+				
+				return false
+			},
+			
+			validate: function()
+			{
+			},
+			
+			data:
+			{
+				_id: заметка,
+				название: page.Data_store.edited_data.название,
+				содержимое: page.Data_store.edited_data.содержимое,
+				версия: page.data.версия
+			},
+			
+			url: '/приложение/сеть/читальня/заметка',
+			
+			ok: function(data)
+			{
+				if (data.старая_версия)
+				{
+					info('Кто-то успел внести правки в эту заметку, пока вы её правили. В данное время ещё не написана система автоматического слияния правок, \nпоэтому мы предлагаем вам внести свои правки заново в <a href=\'' + Uri.parse(window.location).to_relative_url() + '\'>самую свежую версию этой заметки</a>. Для перенесения ваших правок, мы советуем вам воспользоваться инструментом «Исходный код» \n(который находится на панели инструментов, во второй строке)', { ajaxify: true })
+					return false
+				}
+			
+				page.data.версия = data.версия
+			
+				if (data.путь)
+					return go_to('/читальня/' + data.путь)
+			
+				неправленная_заметка =
+				{
+					название: data.название,
+					содержимое: data.содержимое
+				}
+				
+				set_title(data.название)
+				visual_editor.editor.set_content(Wiki_processor.decorate(data.содержимое))
+			}
+		})
+	}
+	
+	page.discard = function()
+	{
+		return reload_page()
+	
+		// for later use
+	
+		var loading = loading_indicator.show()
+		
+		alert('Предоставьте _id')
+		
+		page.Ajax.delete('/приложение/сеть/черновик',
+		{
+			что: "заметка",
+			_id: null
+		})
+		.ошибка(function(ошибка)
+		{
+			loading.hide()
+			
+			error(ошибка)
+		})
+		.ok(function(data)
+		{
+			loading.hide()
+			
+			Режим.обычный()
+			
+			visual_editor.editor.load_content(Wiki_processor.decorate(неправленная_заметка.content))
+			
+			postprocess_rich_content(visual_editor.editor.get_content())
+			
+			set_title(неправленная_заметка.title)
+		})
+	}
 })()

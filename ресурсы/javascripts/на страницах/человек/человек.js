@@ -9,8 +9,7 @@
 	page.query('.photo', 'photo')
 	
 	Режим.пообещать('правка')
-	Подсказки.подсказка('Здесь вы можете посмотреть данные об этом члене нашей сети. Если это ваша личная карточка, вы сможете изменить данные в ней, переключившись в режим правки.')
-	
+
 	page.load = function()
 	{	
 		id_card = $('#id_card')
@@ -37,7 +36,7 @@
 		var conditional = initialize_conditional($('.main_conditional'), { immediate: true })
 		conditional.on_error(function()
 		{
-			$(document).trigger('page_initialized')
+			page.initialized()
 		})
 		
 		new Data_templater
@@ -164,7 +163,7 @@
 		initialize_editables()
 		initialize_edit_mode_effects()
 		
-		Режим.activate_edit_actions({ on_save: save_changes })
+		//Режим.activate_edit_actions({ on_save: save_changes })
 		Режим.разрешить('правка')
 		
 		/*
@@ -175,7 +174,7 @@
 		*/
 		
 		var link = actions.find('.start_conversation > a').attr('href')
-		actions.find('.start_conversation > a').attr('href', link.replace('_id', page.data.пользователь_сети._id))
+		actions.find('.start_conversation > a').attr('href', link.replace_all('{_id}', page.data.пользователь_сети._id))
 		
 		actions.find('.contact_by_email').click(function(event)
 		{
@@ -215,7 +214,7 @@
 	
 	function id_card_loaded()
 	{
-		$(document).trigger('page_initialized')
+		page.initialized()
 	}
 	
 	function show_photo()
@@ -352,45 +351,14 @@
 	
 	function show_minor_info()
 	{
-		/*
-		var add_minor_info_window = simple_value_dialog_window
-		({
-			class: 'add_minor_info_window',
-			title: 'Добавить',
-			fields:
-			[{
-				id: 'title',
-				description: 'Ссылка на аудиозапись',
-				validation: 'наглядный_писарь.аудиозапись.ссылка'
-			},
-			{
-				id: 'value',
-				description: 'Название',
-				validation: 'наглядный_писарь.аудиозапись.название'
-			}],
-			ok: function(data)
-			{
-				data.url = Uri.correct(data.url.collapse_lines())
-				options.ok(data)
-			},
-			on_open: function()
-			{	
-				if (options.open)
-					options.open()
-			},
-			on_cancel: function()
-			{
-				if (options.cancel)
-					options.cancel()
-			}
-		})
-		.window
-		*/
-		
-		text_button.new($('.minor_info .add .button')).does(function()
+		var action = function()
 		{
-			add_minor_info('Название', 'Описание', { dummy: true })
-		})
+			var info = add_minor_info('Название', 'Описание', { dummy: true })
+			info.find('dt').focus()
+		}
+		
+		text_button.new($('.minor_info .add .button')).does(action)
+		page.hotkey('Действия.Добавить', 'правка', action)
 		
 		var container = $('.minor_info')
 		var left = container.find('> .left')
@@ -409,12 +377,24 @@
 			title.text(поле)
 			title.appendTo(info)
 			
+			title.on('keypress', function()
+			{
+				if (title.text() === 'Название')
+					title.text('')
+			})
+			
 			var value = $('<dd/>')
 			
 			if (значение)
 				value.text(значение + '')
 				
 			value.appendTo(info)
+			
+			value.on('keypress', function()
+			{
+				if (value.text() === 'Описание')
+					value.text('')
+			})
 			
 			if (options.dummy)
 			{
@@ -425,6 +405,8 @@
 			info.appendTo(odd ? left : right)
 			
 			odd = !odd
+			
+			return info
 		}
 		
 		$(document).on_page('режим.правка', function(event)
@@ -450,10 +432,8 @@
 	var image_file_name
 	var photo_file_name
 	
-	function save_changes()
+	page.save = function(данные)
 	{
-		var данные = page.Data_store.collect()
-		
 		Режим.save_changes_to_server
 		({
 			continues: true,
@@ -640,7 +620,7 @@
 		откуда: '.info .origin .value'
 	}
 	
-	page.Data_store.collect = function()
+	page.Data_store.collect_edited = function()
 	{
 		var result =
 		{
@@ -675,7 +655,7 @@
 		return result
 	}
 	
-	page.Data_store.populate = function(data)
+	page.Data_store.populate_view = function(data)
 	{
 		Object.each(data.общее, function(value, key)
 		{
@@ -707,6 +687,4 @@
 	}
 
 	page.Data_store.что = 'страница пользователя'
-	
-	page.needs_initializing = true
 })()

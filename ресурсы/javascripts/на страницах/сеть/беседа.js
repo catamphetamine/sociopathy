@@ -1,11 +1,9 @@
-Подсказка('написание сообщения', 'Для того, чтобы написать сообщение, нажмите клавишу <a href=\'/сеть/настройки\'>«Писарь → Показать»</a>');
-Подсказка('правка сообщений', 'Вы можете править свои сообщения, перейдя в <a href=\'/помощь/режимы#Режим правки\'>«режим правки»</a>');
-Подсказка('добавление в беседу', 'Вы можете добавлять людей в беседу нажатием клавиш <a href=\'/сеть/настройки\'>«Действия → Добавить»</a>');
-
 (function()
 {
 	page.query('#talk', 'talk')
+	
 	Режим.пообещать('правка')
+	Режим.пообещать('действия')
 	
 	var messages
 	
@@ -13,6 +11,11 @@
 	
 	page.load = function()
 	{
+		Подсказка('написание сообщения', 'Для того, чтобы написать сообщение, нажмите клавишу <a href=\'/сеть/настройки\'>«Писарь → Показать»</a>');
+		Подсказка('правка сообщений', 'Вы можете править свои сообщения, перейдя в <a href=\'/помощь/режимы#Режим правки\'>«режим правки»</a>');
+		Подсказка('добавление в беседу', 'Вы можете добавлять людей в беседу, перейдя в <a href=\'/помощь/режимы#Режим действий\'>«режим действий»</a>, или нажав клавиши <a href=\'/сеть/настройки\'>«Действия → Добавить»</a>');
+		Подсказка('переименование общения', 'Вы можете переименовать этот разговор, перейдя в <a href=\'/помощь/режимы#Режим правки\'>«режим правки»</a>');
+
 		messages = Interactive_messages
 		({
 			data_source:
@@ -44,40 +47,17 @@
 		
 				data.участники.for_each(function(участник)
 				{
-					page.data.участник_ли = пользователь._id === участник
+					if (пользователь._id === участник)
+						page.data.участник_ли = true
 				})
 				
 				if (page.data.участник_ли)
 				{
-					Validation.беседа = {}
-					Validation.беседа.добавить_пользователя = function(value, callback)
-					{
-						value = value.trim()
-						
-						if (!value)
-							return callback({ error: 'Укажите имя пользователя' })
-							
-						var form = this
-							
-						page.Ajax.get('/приложение/человек/по имени',
-						{
-							имя: value
-						})
-						.ok(function(data)
-						{
-							form.user = data
-							callback()
-						})
-						.ошибка(function(error)
-						{
-							callback({ error: error })
-						})
-					}
-					
 					var add_user_to_talk_window = simple_value_dialog_window
 					({
 						class: 'add_user_to_talk_window',
 						title: 'Добавить пользователя в беседу',
+						ok_button_text: 'Добавить',
 						fields:
 						[{
 							id: 'name',
@@ -108,13 +88,21 @@
 					})
 					.window
 					
-					$(document).on_page('keydown.add_user_to_the_talk', function(event)
+					text_button.new(page.get('.add_to_talk.button')).does(function()
 					{
-						if (!Клавиши.is(Настройки.Клавиши.Действия.Добавить, event))
-							return
-						
 						add_user_to_talk_window.open()
 					})
+		
+					Режим.разрешить('действия')
+					
+					page.hotkey('Действия.Добавить', function()
+					{
+						add_user_to_talk_window.open()
+					})
+				}
+				else
+				{
+					Режим.запретить('действия')
 				}
 			},
 			more_link: $('.messages_framework > .older > a'),
@@ -122,6 +110,7 @@
 			//show_editor: true,
 			edit_path: 'беседы',
 			on_load: talk_loaded,
+			on_first_output: page.initialized,
 			on_message_bottom_appears: function(_id)
 			{
 				Новости.прочитано({ беседа: page.data.беседа._id, сообщение: _id })
@@ -158,7 +147,6 @@
 		
 	function talk_loaded()
 	{
-		$(document).trigger('page_initialized')
 	}
 
 	function save_title(loading)

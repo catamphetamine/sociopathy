@@ -1,19 +1,24 @@
 title('Обсуждения');
 	
-Подсказка('создание обсуждения', 'Вы можете начать новое обсуждение нажатием клавиш <a href=\'/сеть/настройки\'>«Действия → Создать»</a>');
-	
 (function()
 {	
 	page.query('#discussions', 'discussions')
 	
+	Режим.разрешить('действия')
+	
 	page.load = function()
 	{
-		Подсказки.подсказка('Здесь вы можете обсуждать что-нибудь с другими членами сети.')
-
+		Подсказка('создание обсуждения', 'Вы можете начать новое обсуждение, перейдя в <a href=\'/помощь/режимы#Режим действий\'>«режим действий»</a>, или нажав клавиши <a href=\'/сеть/настройки\'>«Действия → Создать»</a>');
+	
 		breadcrumbs
 		([
 			{ title: 'Обсуждения', link: '/сеть/обсуждение' }
 		])
+		
+		text_button.new(page.get('.new_discussion.button')).does(function()
+		{
+			go_to('/сеть/общение/обсуждение')
+		})
 		
 		new Data_templater
 		({
@@ -25,6 +30,7 @@ title('Обсуждения');
 				batch_size: 10,
 				scroll_detector: page.get('#scroll_detector'),
 				before_done: discussions_loaded,
+				done: page.initialized,
 				before_done_more: function() { ajaxify_internal_links(page.discussions) },
 				before_output: function(elements)
 				{
@@ -111,8 +117,6 @@ title('Обсуждения');
 	
 	function discussions_loaded()
 	{
-		$(document).trigger('page_initialized')
-		
 		if (page.discussions.is_empty())
 		{
 			page.discussions.remove()
@@ -123,8 +127,6 @@ title('Обсуждения');
 	//	Режим.разрешить('действия')
 	}
 	
-	page.needs_initializing = true
-	
 	$(document).on_page('keydown.actions', function(event)
 	{
 		if (Клавиши.is(Настройки.Клавиши.Действия.Создать, event))
@@ -133,6 +135,4 @@ title('Обсуждения');
 			return go_to('/сеть/общение/обсуждение')
 		}
 	})
-	
-	Подсказки.подсказка('Для создания нового обсуждения нажмите клавиши ' + Клавиши.комбинация(Настройки.Клавиши.Действия.Создать))
 })()

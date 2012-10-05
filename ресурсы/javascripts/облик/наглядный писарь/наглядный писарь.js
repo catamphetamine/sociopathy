@@ -67,12 +67,32 @@ var Visual_editor = new Class
 				return
 			
 			var top_bar_height = 0
-			if ($('.visual_editor_tools').hasClass('sticky'))
-				top_bar_height = $('.visual_editor_tools').height()
+			$('.fixed_on_the_top').each(function()
+			{
+				var $this = $(this)
+				
+				if (!$this.displayed())
+					return
+				
+				var height = $this.height()
+				
+				if (top_bar_height < height)
+					top_bar_height = height
+			})
 				
 			var bottom_bar_height = 0
-			if ($('.edit_mode_actions').displayed())
-				 bottom_bar_height = $('.edit_mode_actions').height()
+			$('.fixed_on_the_bottom').each(function()
+			{
+				var $this = $(this)
+				
+				if (!$this.displayed())
+					return
+				
+				var height = $this.height()
+				
+				if (bottom_bar_height < height)
+					bottom_bar_height = height
+			})
 			
 			var paragraph_top_coordinate = current_paragraph.offset().top
 			
@@ -83,7 +103,7 @@ var Visual_editor = new Class
 
 			var window_top_coordinate = $(window).scrollTop()
 			var window_bottom_coordinate = window_top_coordinate + $(window).height()
-			
+
 			var paragraph_bottom_needs_to_be_visible = paragraph_bottom_coordinate - (window_bottom_coordinate - bottom_bar_height)
 			var paragraph_top_needs_to_be_visible = (window_top_coordinate + top_bar_height) - paragraph_top_coordinate
 			
@@ -92,6 +112,7 @@ var Visual_editor = new Class
 				return
 					
 			var left_to_scroll = $(document).height() - window_bottom_coordinate
+			var how_much_can_scroll_top = window_top_coordinate
 			
 			/*
 			console.log('current_paragraph')
@@ -109,21 +130,16 @@ var Visual_editor = new Class
 			console.log(left_to_scroll)
 			*/
 			
-			if (left_to_scroll > 0)
+			if (left_to_scroll > 0 && paragraph_bottom_needs_to_be_visible)
 			{
-				if (paragraph_bottom_needs_to_be_visible)
-				{
-					return $(window).scrollTop($(window).scrollTop() + paragraph_bottom_needs_to_be_visible)
-				}
-				
-				if (!paragraph_top_needs_to_be_visible)
-					return
-				
-				//console.log(paragraph_top_needs_to_be_visible + paragraph_bottom_needs_to_be_visible)
-				
-				if (paragraph_top_needs_to_be_visible <= -paragraph_bottom_needs_to_be_visible)
-					$(window).scrollTop($(window).scrollTop() - paragraph_top_needs_to_be_visible)
+				return $(window).scrollTop($(window).scrollTop() + paragraph_bottom_needs_to_be_visible)
 			}
+				
+			//console.log(paragraph_top_needs_to_be_visible + paragraph_bottom_needs_to_be_visible)
+			
+			if (paragraph_top_needs_to_be_visible <= -paragraph_bottom_needs_to_be_visible)
+				if (how_much_can_scroll_top > 0)
+					$(window).scrollTop($(window).scrollTop() - paragraph_top_needs_to_be_visible)
 		})
 	},
 	
@@ -243,5 +259,3 @@ var Visual_editor = new Class
 		this.editor.caret.move_to(new_paragraph)
 	}
 })
-
-Validation.наглядный_писарь = {}

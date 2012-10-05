@@ -28,6 +28,7 @@
 			url: '/приложение/человек/картинки/альбомы',
 			parameters: { 'адресное имя': page.data.адресное_имя },
 			before_done: albums_loaded,
+			done: page.initialized,
 			get_data: function(data)
 			{	
 				breadcrumbs
@@ -53,7 +54,5 @@
 	{
 		Режим.разрешить('правка')
 		Режим.разрешить('действия')
-		
-		$(document).trigger('page_initialized')
 	}
 })()

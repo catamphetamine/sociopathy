@@ -11,6 +11,11 @@
 {
 	.main_content
 	{
+		.center
+		{
+			text-align: center;
+		}
+		
 		.empty
 		{
 			display: none;
@@ -21,22 +26,21 @@
 		.trash
 		{
 			display: none;
+			
+			width: 100%;
 		
 			padding: 5px;
 			margin: 0;
 			border-radius: 5px;
 			
-			border: 1px solid #EBEBEB;
-			
 			padding: 0;
-			border: 0;
 			outline: 0;
 			font-size: 100%;
 			vertical-align: baseline;
 	
-			border-collapse: separate;
+			border-collapse: collapse;
 			border-spacing: 0;
-	
+			
 			tr
 			{
 				&:hover td
@@ -76,6 +80,8 @@
 					padding-bottom: 10px;
 					padding-left: 16px;
 					padding-right: 16px;
+					
+					border: 1px solid #EBEBEB;
 				}
 			}
 		}

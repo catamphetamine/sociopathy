@@ -117,8 +117,9 @@ file_system = require 'fs'
 	настройки = адрес.parse(ввод.url, true).query
 	
 	for ключ, значение of настройки
-		if (typeof значение != 'string')
-			настройки[ключ] = значение + ''
+		if значение?
+			if (typeof значение != 'string')
+				настройки[ключ] = значение + ''
 	
 	#for ключ, значение of настройки
 	#	if (typeof значение is 'string')
@@ -416,6 +417,18 @@ file_system = require 'fs'
 	'/\?@#&%*:|"<>.'.split('').forEach((symbol) -> id = id.replace_all(symbol, ''))
 	id
 	
+Digit_symbols = '☀★☄☆☭☮☯☢☤☣☁'
+
+снасти.цифру_в_символ = (цифра) ->
+	Digit_symbols[цифра]
+  
+снасти.цифры_в_символы = (строка) ->
+	преобразователь = (символ) ->
+		if not isNaN(parseInt(символ))
+			return снасти.цифру_в_символ(символ)
+		символ
+	строка.split('').map(преобразователь).join('')
+	
 снасти.generate_id = (base, options) ->
 	options = options || {}
 	now = new Date()
@@ -423,7 +436,7 @@ file_system = require 'fs'
 		title = снасти.escape_id(base)
 		return title + ', ' + now.toString('dd.MM.yyyy в HH:mm')
 	else
-		return base + '☀☁ ☄★☆☭☮☯☢☤☣'.random()
+		return base + Digit_symbols.random()
 
 снасти.generate_unique_id = (base, проверка, options, возврат) ->
 	if not возврат?

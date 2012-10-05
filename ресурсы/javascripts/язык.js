@@ -181,10 +181,20 @@ Function.prototype.ticking = function(period, bind, arguments)
 
 Array.prototype.remove = function(element)
 {
+	var array = this
+	
+	function test(i)
+	{
+		if (typeof element === 'function')
+			return element(array[i])
+		else
+			return array[i] === element
+	}
+	
 	var i = 0
 	while (i < this.length)
 	{
-		if (this[i] === element)
+		if (test(i))
 		{
 			this.splice(i, 1)
 			continue

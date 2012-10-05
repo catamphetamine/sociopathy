@@ -63,14 +63,10 @@ $(document).on('page_initialized', function()
 	activate_anchors()
 	ajaxify_internal_links(Page.element)
 	
-	if (page.Data_store.что)
-		page.Data_store.load(function(data)
-		{
-			page.Data_store.populate(data)
-			page_initialized()
-		})
-	else
+	page.Data_store.initialize(function(data)
+	{
 		page_initialized()
+	})
 })
 
 $(document).on('page_loaded', function()
@@ -96,12 +92,18 @@ $(document).on('page_loaded', function()
 			ajaxify_internal_links()
 		
 			$(document).trigger('display_page')
-
-			page_loaded()
 			
 			$('.non_selectable').disableTextSelect()
 			
-			go_to_anchor()
+			$(document).on_page('page_initialized', function()
+			{
+				if (page.data.scroll_to)
+					$(window).scrollTop(page.data.scroll_to)
+				else
+					go_to_anchor()
+			})
+
+			page_loaded()
 			
 			navigating = false
 		})
@@ -141,12 +143,12 @@ $(document).on('page_loaded', function()
 			}
 		})
 
-		$(window).on('popstate', function()
+		$(window).on('popstate', function(event)
 		{
 			if (!history_stacked)
 				return
-			
-			navigate_to_page()
+					
+			navigate_to_page({ state: event.originalEvent.state })
 		})
 	}
 	else
@@ -195,14 +197,15 @@ function применить_пользовательские_настройки(
 {
 	Настройки = {}
 	Object.x_over_y(Пользовательские_настройки_по_умолчанию, Настройки)
-	Object.x_over_y(настройки, Настройки)
+	Object.x_over_y(настройки.клавиши, Настройки.Клавиши)
 	
 	apply_shortcut_synonyms()
 }
 
 $(document).on('authenticated', function(event, данные)
 {
-	применить_пользовательские_настройки(данные.session.настройки)
+	if (данные.session.настройки)
+		применить_пользовательские_настройки(данные.session.настройки)
 	
 	пользователь.session = {}
 	пользователь.session.не_показывать_подсказки = данные.session.не_показывать_подсказки || []
