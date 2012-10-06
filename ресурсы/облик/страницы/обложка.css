@@ -181,6 +181,11 @@
 	{
 		padding-right: 30px;
 		
+		.left
+		{
+			float: right;
+		}
+		
 		.right
 		{
 			float: right;
