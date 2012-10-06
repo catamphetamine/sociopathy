@@ -628,7 +628,7 @@ function get_function(variable)
 
 $.fn.is_empty = function()
 {
-	return !this.children().exists()
+	return this.text().trim() == ''
 }
 
 /*

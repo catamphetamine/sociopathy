@@ -1,5 +1,5 @@
 <div class="centerer">
-	<a href="/читальня/${путь}" class="${style_classes} title centerer_inner" {{if background_version}}style="background-image: url('/загруженное/читальня/раздел/${путь}/обложка.jpg?version=${background_version}')"{{/if}}>
+	<a href="{{if путь}}/читальня/${путь}{{else}}#{{/if}}" class="${style_classes} title centerer_inner" {{if background_version}}style="background-image: url('/загруженное/читальня/раздел/${путь}/обложка.jpg?version=${background_version}')"{{/if}}>
 		<span>${название}</span>
 	</a>
 </div>

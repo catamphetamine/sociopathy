@@ -668,8 +668,26 @@
 		})
 	}
 	
+	/*
+	page.Data_store.remove_view = function()
+	{
+		var container = $('.minor_info')
+		container.find('> .left').empty()
+		container.find('> .right').empty()
+	}
+	
+	page.Data_store.remove_draft = page.Data_store.remove_view
+	*/
+	
 	page.Data_store.deduce = function()
 	{
+		var о_себе = {}
+		
+		if (page.data.пользователь_сети['о себе'])
+		{
+			о_себе = page.data.пользователь_сети['о себе']
+		}
+		
 		var result =
 		{
 			общее:
@@ -678,7 +696,7 @@
 				описание: page.data.пользователь_сети.описание,
 				откуда: page.data.пользователь_сети.откуда,
 			},
-			о_себе: page.data.пользователь_сети['о себе'] ? JSON.parse(page.data.пользователь_сети['о себе']) : {},
+			о_себе: о_себе,
 			картинка: {},
 			фотография: {}
 		}

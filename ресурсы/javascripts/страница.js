@@ -307,8 +307,12 @@ var Page = new Class
 					data_store.watch_for_changes = true
 					
 					//data_store.unmodified_data = data_store.collect_unmodified()
-					data_store.remove_view()
-					data_store.populate_draft(data_store.unmodified_data)
+					
+					if (data_store.refresh_when_switching)
+					{
+						data_store.remove_view()
+						data_store.populate_draft(data_store.unmodified_data)
+					}
 				})
 							
 				Режим.при_переходе({ из: 'правка' }, function()
@@ -317,9 +321,12 @@ var Page = new Class
 						data_store.edited_data = data_store.collect_edited()
 					else
 						data_store.edited_data = data_store.unmodified_data
-						
-					data_store.remove_draft()
-					data_store.populate_view(data_store.edited_data)
+					
+					if (data_store.refresh_when_switching)
+					{
+						data_store.remove_draft()
+						data_store.populate_view(data_store.edited_data)
+					}
 				})
 				
 				Режим.activate_edit_actions({ on_save: function()

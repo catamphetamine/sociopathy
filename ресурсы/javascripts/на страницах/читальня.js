@@ -204,13 +204,16 @@
 	//page.Data_store.query = { заметка:  }
 	
 	//page.Data_store.is_used = true
-	
+
 	var populate = function(template)
 	{
 		return function(data)
 		{
-			var новые = (data.разделы.новые || []).clone()
+			var новые = []
 			
+			if (data.разделы.новые)
+				новые = data.разделы.новые.clone()
+				
 			page.categories.find('> li').each(function()
 			{
 				var _id = $(this).attr('_id')
@@ -495,4 +498,6 @@
 			}
 		})
 	}
+	
+	page.Data_store.refresh_when_switching = true
 })()

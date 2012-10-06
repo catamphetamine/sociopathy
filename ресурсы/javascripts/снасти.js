@@ -46,11 +46,13 @@ var Ajax =
 		{
 			url: url, 
 			type: method,
-			//cache: false,
 			data: data, 
 			dataType: options.type,
 			timeout: 15000
 		}
+		
+		if (window.development_mode)
+			jQuery_options.cache = false
 		
 		if (options.jQuery)
 			$.extend(jQuery_options, options.jQuery)

@@ -189,10 +189,9 @@
 				
 				console.log('loading script: ' + path)
 					
-				$.ajax
-				({
+				var options =
+				{
 					url: add_version(path),
-					cache: true,
 					dataType: "script",
 					success: function() { if (callback) callback() },
 					error: function()
@@ -205,7 +204,12 @@
 						console.log('Page script not loaded (possible syntax error): ' + path)
 						//throw 'Ошибка на странице'
 					}
-				})
+				}
+					
+				if (!window.development_mode)
+					options.cache = true
+					
+				$.ajax(options)
 			}
 			
 			var all_scripts = scripts
