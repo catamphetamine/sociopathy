@@ -19,7 +19,18 @@ title('Обсуждения');
 		{
 			go_to('/сеть/общение/обсуждение')
 		})
-		
+
+		$(document).on_page('message_read', function(event, что)
+		{
+			if (!что.обсуждение)
+				return
+			
+			var общение = page.get('.author_content_date > li[_id="' + что.обсуждение + '"]')
+				
+			if (общение.exists())
+				общение.removeClass('new')
+		})
+				
 		new Data_templater
 		({
 			template: 'обсуждение в списке обсуждений',

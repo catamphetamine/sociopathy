@@ -41,7 +41,6 @@ var Interactive_messages = function(options)
 		can_show_earlier_messages: options.can_show_earlier_messages,
 		can_show_editor: options.can_show_editor,
 		container: options.container,
-		on_message_read: options.on_message_read,
 		on_message_bottom_appears: options.on_message_bottom_appears,
 		set_up_visual_editor: function(visual_editor)
 		{
@@ -347,6 +346,8 @@ var Interactive_messages = function(options)
 			var connection = io.connect('http://' + Configuration.Websocket_server + options.path, { transports: ['websocket'], 'force new connection': true })
 			connection.is_ready = false
 			
+			var pending_messages = []
+				
 			получить_пропущенные_сообщения = function()
 			{
 				var latest_message = messages.options.container.find('> li:last').attr('message_id')
@@ -354,6 +355,34 @@ var Interactive_messages = function(options)
 					return error('Не удалось загрузить сообщения')
 				
 				connection.emit('получить пропущенные сообщения', { _id: latest_message })		
+			}
+			
+			function try_to_append_message(сообщение)
+			{
+				var previous_message = messages.options.container.find('> li[_id="' + сообщение.предыдущее + '"]')
+				if (previous_message.exists())
+				{
+					if (сообщение.новое)
+						messages.new_messages_notification()
+				
+					return messages.add_message(сообщение)
+				}
+			}
+				
+			function try_to_append_pending_messages()
+			{
+				var appended
+				pending_messages.for_each(function()
+				{
+					if (try_to_append_message(this))
+					{
+						pending_messages.remove(this)
+						appended = true
+					}
+				})
+				
+				if (appended)
+					try_to_append_pending_messages()
 			}
 			
 			connection.on('connect', function()
@@ -406,8 +435,11 @@ var Interactive_messages = function(options)
 				
 				накопленные_сообщения.for_each(function()
 				{
-					messages.add_message(this)
+					if (!try_to_append_message(this))
+						pending_messages.push(this)
 				})
+				
+				try_to_append_pending_messages()
 				
 				накопленные_сообщения = []
 				
@@ -507,15 +539,10 @@ var Interactive_messages = function(options)
 					return
 				}
 				
-				if (сообщение.отправитель._id !== пользователь._id)
-					messages.new_messages_notification()
-			
-				/*
-				console.log('got message')
-				console.log(сообщение)
-				*/
+				if (!try_to_append_message(сообщение))
+					pending_messages.push(сообщение)
 				
-				messages.add_message(сообщение)
+				try_to_append_pending_messages()
 			})
 			
 			connection.on('смотрит', function(пользователь)

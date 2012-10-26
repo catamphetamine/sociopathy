@@ -461,7 +461,7 @@ $.fn.on_page = function(event, action)
 	if (!page)
 		throw 'Page hasn\'t been initialized yet'
 		
-	page.on(this, event, action)
+	return page.on(this, event, action)
 }
 
 function anti_cache_postfix(url)

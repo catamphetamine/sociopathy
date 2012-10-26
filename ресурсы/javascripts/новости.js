@@ -51,133 +51,66 @@ var Новости = new (new Class
 		panel.no_more_new_chat_messages()
 	},
 	
-	болталка: function(новое_сообщение)
+	общение: function(options, последнее_сообщение)
 	{
-		if (Страница.эта() === 'сеть/болталка')
+		if (!последнее_сообщение)
+			return
+		
+		if (Страница.эта() === options.url)
 		{
-			var message = page.get('#chat > li[message_id="' + новое_сообщение + '"]')
+			var message = page.get('.author_content_date > li[message_id="' + последнее_сообщение + '"]')
+			
 			if (message.exists() && !message.hasClass('new'))
-				return //alert('not new')
+				return
 		}
-		
-		var indicate = false
-		if (!this.что_нового.болталка)
-			indicate = true
-			
-		this.что_нового.болталка = новое_сообщение
-		
-		if (indicate)
-		{
-			panel.new_chat_messages()
-		}
-			
-		//panel.new_chat_messages({ immediate: true })
-	},
-    
-	обсуждение: function(обсуждение, новые_сообщения)
-	{
-		if (!новые_сообщения)
-			return
-		
-		/*
-		if (Страница.эта() === 'сеть/обсуждения')
-		{
-			var discussion = page.get('#discussions > li[_id="' + обсуждение + '"]')
-				
-			if (discussion.exists())
-				discussion.addClass('new')
-		}
-		if (Страница.эта() === 'сеть/обсуждение')
-		{
-			var сообщения = Array.clone(новые_сообщения)
-			новые_сообщения = []
-			
-			сообщения.for_each(function()
-			{
-				var message = page.get('#discussion > li[message_id="' + this + '"]')
-				
-				if (message.exists() && !message.hasClass('new'))
-					return //alert('not new')
-				
-				новые_сообщения.push(this)
-			})
-		}
-		*/
-		
-		if (!(новые_сообщения instanceof Array))
-			новые_сообщения = [новые_сообщения]
-			
-		if (новые_сообщения.пусто())
-			return
-			
-		if (!this.что_нового.обсуждения[обсуждение])
-			this.что_нового.обсуждения[обсуждение] = []
 			
 		var indicate = false
-		if (this.что_нового.обсуждения[обсуждение].пусто())
+		if (!Object.path(this.что_нового, options.path))
 			indicate = true
 			
-		this.что_нового.обсуждения[обсуждение].combine(новые_сообщения)
-		
+		Object.set(this.что_нового, options.path, последнее_сообщение)
+			
 		if (indicate)
 		{
-			panel.new_discussion_messages()
+			options.indication()
 			
-			this.появились_новости()
+			if (options.important)
+				this.появились_новости()
 		}
 	},
-    
-	беседа: function(беседа, новые_сообщения)
+	
+	болталка: function(последнее_сообщение)
 	{
-		if (!новые_сообщения)
-			return
-		
-		/*
-		if (Страница.эта() === 'сеть/беседы')
-		{
-			var talk = page.get('#talks > li[_id="' + беседа + '"]')
-				
-			if (talk.exists())
-				talk.addClass('new')
-		}
-		else if (Страница.эта() === 'сеть/беседа')
-		{
-			var сообщения = Array.clone(новые_сообщения)
-			новые_сообщения = []
-			
-			сообщения.for_each(function()
-			{
-				var message = page.get('#talk > li[message_id="' + this + '"]')
-				
-				if (message.exists() && !message.hasClass('new'))
-					return //alert('not new')
-				
-				новые_сообщения.push(this)
-			})
-		}
-		*/
-		
-		if (!(новые_сообщения instanceof Array))
-			новые_сообщения = [новые_сообщения]
-			
-		if (новые_сообщения.пусто())
-			return
-		
-		if (!this.что_нового.беседы[беседа])
-			this.что_нового.беседы[беседа] = []
-			
-		var indicate = false
-		if (this.что_нового.беседы[беседа].пусто())
-			indicate = true
-			
-		this.что_нового.беседы[беседа].combine(новые_сообщения)
-		
-		if (indicate)
-		{
-			panel.new_talk_messages()
-			
-			this.появились_новости()
-		}
+		this.общение
+		({
+			url: 'сеть/болталка',
+			path: 'болталка'
+			indication: panel.new_chat_messages,
+			important: false
+		},
+		последнее_сообщение)
+	},
+    
+	обсуждение: function(обсуждение, последнее_сообщение)
+	{
+		this.общение
+		({
+			url: 'сеть/обсуждение',
+			path: 'обсуждения.' + обсуждение
+			indication: panel.new_discussion_messages
+		},
+		последнее_сообщение)
+	},
+    
+	беседа: function(беседа, последнее_сообщение)
+	{
+		this.общение
+		({
+			url: 'сеть/беседа',
+			path: 'беседы.' + беседа
+			indication: panel.new_talk_messages
+		},
+		последнее_сообщение)
 	},
     
 	новости: function(новости)
@@ -206,47 +139,34 @@ var Новости = new (new Class
 		}
 		else if (что.обсуждение)
 		{
+			$(document).trigger('message_read', что)
+		
 			if (!this.что_нового.обсуждения[что.обсуждение])
 				return
 			
-			this.что_нового.обсуждения[что.обсуждение].remove(что.сообщение)
-			if (this.что_нового.обсуждения[что.обсуждение].пусто())
+			if (this.что_нового.обсуждения[что.обсуждение] === что.сообщение)
 			{
 				delete this.что_нового.обсуждения[что.обсуждение]
 				panel.no_more_new_discussion_messages()
-				
-				if (Страница.эта() === 'сеть/обсуждения')
-				{
-					var discussion = page.get('#discussions > li[_id="' + что.обсуждение + '"]')
-						
-					if (discussion.exists())
-						discussion.removeClass('new')
-				}
 			}
 		}
 		else if (что.беседа)
 		{
+			$(document).trigger('message_read', что)
+			
 			if (!this.что_нового.беседы[что.беседа])
 				return
 			
-			this.что_нового.беседы[что.беседа].remove(что.сообщение)
-			
-			if (this.что_нового.беседы[что.беседа].пусто())
+			if (this.что_нового.беседы[что.беседа] === что.сообщение)
 			{
 				delete this.что_нового.беседы[что.беседа]
 				panel.no_more_new_talk_messages()
-					
-				if (Страница.эта() === 'сеть/беседы')
-				{
-					var talk = page.get('#talks > li[_id="' + что.беседа + '"]')
-						
-					if (talk.exists())
-						talk.removeClass('new')
-				}
 			}
 		}
 		else if (что.болталка)
 		{
+			$(document).trigger('message_read', что)
+			
 			if (this.что_нового.болталка)
 				if (this.что_нового.болталка <= что.болталка)
 				{
@@ -258,15 +178,7 @@ var Новости = new (new Class
 		if (this.что_нового.новости.пусто()
 			&& Object.пусто(this.что_нового.обсуждения)
 			&& Object.пусто(this.что_нового.беседы))
-		{
-			/*
-			if (this.задержанное_уведомление_о_новостях)
-			{
-				clearTimeout(this.задержанное_уведомление_о_новостях)
-				this.задержанное_уведомление_о_новостях = null
-			}
-			*/
-			
+		{	
 			window_notification.nothing_new()
 			this.есть_новости = false
 		}

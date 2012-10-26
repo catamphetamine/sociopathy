@@ -354,3 +354,37 @@ Array.prototype._map = function(action)
 	})
 	return array
 }
+
+Object.path = function(object, path)
+{
+	path.split('.').forEach(function(key)
+	{
+		if (!object)
+			return
+		
+		object = object[key]
+	})
+	
+	return object
+}
+
+Object.set = function(object, path, value)
+{
+	var keys = path.split('.')
+	var last_key = keys.pop()
+	
+	keys.forEach(function(key)
+	{
+		if (!object)
+			return
+		
+		object = object[key]
+	})
+	
+	if (!object)
+		return
+	
+	object[key] = value
+		
+	return object
+}

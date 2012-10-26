@@ -200,6 +200,11 @@ var Message =
 		if (options.ajaxify)
 			ajaxify_internal_links(message_itself)
 			
+		message_itself.find('a').on('contextmenu', function(event)
+		{
+			event.stopImmediatePropagation()
+		})
+			
 		message.append(message_itself)
 
 		var closing = false

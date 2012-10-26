@@ -1,4 +1,181 @@
 exports.messages = (options) ->
+
+	if options.общение_во_множественном_числе?
+		options.messages_collection = 'messages'
+		options.path = (environment) -> options.общение_во_множественном_числе + '.' + environment.сообщения_чего._id
+		options.path_query = (value, environment) ->
+			query = {}
+			query[options.общение_во_множественном_числе] = {}
+			query[options.общение_во_множественном_числе][environment.сообщения_чего._id] = value
+			query
+	else
+		options.messages_collection = options.id
+		options.path = (environment) -> options.общение
+		options.path_query = (value, environment) ->
+			query = {}
+			query[options.общение] = value
+			query
+		
+	options.uri = '/' + options.общение
+	options.data_uri = '/сеть/' + options.общение + '/сообщения'
+
+	save = options.save
+	options.save = (сообщение, environment, возврат) ->
+		data =
+			отправитель: environment.пользователь._id
+			сообщение: сообщение
+			когда: new Date()
+			
+		if options.общение_во_множественном_числе?
+			data.общение = environment.сообщения_чего._id
+			data.чего = options.общение
+				
+		цепь(возврат)
+			.сделать ->
+				db(options.messages_collection).save(data, @._.в 'сообщение')
+				
+			.сделать ->
+				if options.общение_во_множественном_числе?
+					return db(options.collection).update({ _id: environment.сообщения_чего._id }, { $set: { обновлено: data.когда } }, @)
+				@.done()
+
+			.сделать ->
+				if save?
+					return save(@._.сообщение, environment, @)
+				@.done()
+				
+			.сделать ->
+				@.done(@._.сообщение)
+				
+	options.сообщения_чего_from_string = (сообщения_чего) ->
+		if сообщения_чего._id.toHexString?
+			return сообщения_чего
+		сообщения_чего._id = db(options.collection).id(сообщения_чего._id)
+		return сообщения_чего
+
+	options.notify = (_id, environment, возврат) ->
+		цепь(возврат)
+			.сделать ->
+				if options.общение_во_множественном_числе?
+					return db(options.collection).findOne({ _id: environment.сообщения_чего._id }, @)
+				@.done()
+				
+			.сделать (общение) ->
+				query = { последние_сообщения: options.path_query({ $lt: _id }, environment) }
+				
+				users = []
+				if options.notified_users?
+					users = options.notified_users(общение)
+					query.пользователь = { $in: users }
+				
+				setter = {}
+				setter['последние_сообщения.' + options.path(environment)] = _id
+				
+				db('people_sessions').update(query, { $set: setter }, { multi: yes })
+				
+				@.done(users.map((_id) -> _id.toString()))
+				
+			.сделать (users) ->
+				if not users.пусто()
+					for user in users
+						if user != environment.пользователь._id.toString()
+							эфир.отправить('новости', options.общение, { _id: environment.сообщения_чего._id.toString(), сообщение: _id.toString() }, { кому: user })
+				else	
+					эфир.отправить('новости', options.общение, { _id: _id.toString() }, { кроме: environment.пользователь._id })
+
+				for пользователь in эфир.пользователи()
+					if пользователь != environment.пользователь._id + ''
+						if !users.пусто() && !users.has(пользователь)
+							continue
+						
+						criteria = { пользователь: пользователь }
+						if environment.сообщения_чего?
+							criteria._id = environment.сообщения_чего._id.toString()
+							
+						соединение_с_общением = эфир.соединение_с(options.общение, criteria)
+						if not соединение_с_общением
+							эфир.отправить_одному_соединению('новости', 'звуковое оповещение', { чего: options.общение }, { кому: пользователь })
+							
+				@.done()
+
+	options.mark_new = (сообщения, environment, возврат) ->
+		цепь(возврат)
+			.сделать ->
+				db('people_sessions').findOne({ пользователь: environment.пользователь._id }, @)
+				
+			.сделать (session) ->
+				path = 'последние_прочитанные_сообщения.' + options.path(environment)
+				latest_read = Object.path(session, path)
+				
+				if not latest_read?
+					for сообщение in сообщения
+						сообщение.новое = yes
+					return @.return()
+					
+				for сообщение in сообщения
+					if сообщение._id + '' > latest_read + ''
+						сообщение.новое = yes
+				
+				@.done()
+					
+	сообщения_чего = options.сообщения_чего
+				
+	options.сообщения_чего = (ввод, возврат) ->
+		цепь(возврат)
+			.сделать ->
+				if ввод.настройки._id?
+					return db(options.collection).findOne({ _id: ввод.настройки._id }, @)
+				
+				db(options.collection).findOne({ id: ввод.настройки.id }, @)
+				
+			.сделать (сообщения_чего) ->
+				result = Object.выбрать(['_id', 'название'], сообщения_чего)
+				if сообщения_чего?
+					сообщения_чего(result, сообщения_чего)
+				@.done(result)
+				
+	extra_get = options.extra_get
+	
+	options.extra_get = (data, environment, возврат) ->
+		data.название = environment.сообщения_чего.название
+		data._id = environment.сообщения_чего._id
+		if extra_get?
+			extra_get(data, environment)
+		возврат()
+		
+	options.создатель = (_id, возврат) ->
+		if typeof _id == 'string'
+			_id = db(options.id).id(_id)
+		
+		цепь(возврат)
+			.сделать ->
+				db('messages').find({ общение: _id, чего: options.общение }, { sort: [['_id', 1]], limit: 1 }).toArray(@)
+				
+			.сделать (сообщения) ->
+				if сообщения.пусто()
+					return @.error("Не удалось проверить авторство")
+					
+				@.done(сообщения[0].отправитель)
+
+	options.latest_read = (session, environment) ->
+		return Object.path(session, 'последние_прочитанные_сообщения.' + options.path(environment))
+
+	options.message_read = (_id, environment, возврат) ->
+		path = 'последние_прочитанные_сообщения.' + options.path(environment)
+				
+		цепь(возврат)
+			.сделать ->
+				query = { пользователь: environment.пользователь._id }
+				
+				query.$or = []
+				query.$or.push({ последние_прочитанные_сообщения: options.path_query({ $lt: _id }, environment) })
+				query.$or.push({ последние_прочитанные_сообщения: options.path_query({ $exists: 0 }, environment) })
+					
+				actions = $set: {}
+				actions.$set[path] = _id
+							
+				db('people_sessions').update(query, actions, @)
+
 	connected = redis.createClient()
 			
 	цепь()
@@ -6,10 +183,7 @@ exports.messages = (options) ->
 			connected.del(options.id + ':connected', @)
 			
 		.сделать ->
-			if not options.messages_collection_id?
-				options.messages_collection_id = options.id
-
-			collection = db(options.messages_collection_id)
+			collection = db(options.messages_collection)
 									
 			these_messages_query = (query, environment) ->
 				if not options.messages_query?
@@ -23,7 +197,7 @@ exports.messages = (options) ->
 				.of(options.uri)
 				.on 'connection', (соединение) ->
 					соединения[соединение.id] = соединение
-					эфир.соединения[options.in_ether_id][соединение.id] = соединение
+					эфир.соединения[options.общение][соединение.id] = соединение
 					environment = {}
 			
 					connected_data_source = ->
@@ -49,7 +223,7 @@ exports.messages = (options) ->
 					
 					выход = ->
 						delete соединения[соединение.id]
-						delete эфир.соединения[options.in_ether_id][соединение.id]
+						delete эфир.соединения[options.общение][соединение.id]
 					
 						finish_disconnection = () ->
 							disconnected = true
@@ -162,11 +336,18 @@ exports.messages = (options) ->
 										options.notify(@._.сообщение._id, environment, @)
 										
 									.сделать ->
+										db(options.messages_collection).find(these_messages_query({ _id: { $lt: @._.сообщение._id } }, environment), { limit: 1, sort: [['_id', -1]] }).toArray(@)
+										
+									.сделать (предыдущие_сообщения) ->
+										if предыдущие_сообщения.пусто()
+											throw 'Previous message not found'
+											
 										данные_сообщения =
 											_id: @._.сообщение._id.toString()
 											отправитель: пользовательское.поля(пользователь)
 											сообщение: @._.сообщение.сообщение
 											когда: @._.сообщение.когда
+											предыдущее: предыдущие_сообщения[0]._id.toString()
 										
 										соединение.emit('сообщение', данные_сообщения)
 										broadcast('сообщение', данные_сообщения)
@@ -174,14 +355,13 @@ exports.messages = (options) ->
 							соединение.on 'прочитано', (_id) ->
 								цепь(соединение)
 									.сделать ->
-										if options.message_read?
-											options.message_read(collection.id(_id), environment, @)
+										options.message_read(collection.id(_id), environment)
 											
 										сообщения_чего = null
 										if environment.сообщения_чего?
 											сообщения_чего = environment.сообщения_чего._id.toString()
 											
-										эфир.отправить('новости', 'прочитано', { что: options.in_ether_id, сообщения_чего: сообщения_чего, _id: _id.toString() })
+										эфир.отправить('новости', 'прочитано', { что: options.общение, сообщения_чего: сообщения_чего, _id: _id.toString() })
 
 							цепь(соединение)
 								.сделать ->
@@ -209,38 +389,14 @@ exports.messages = (options) ->
 						
 					.сделать (session) ->
 						return @.done() if not session?
-						
-						earliest_in_news = null
-						if options.earliest_in_news?
-							earliest_in_news = options.earliest_in_news(session, environment)
-							
-						latest_read = null
-						if options.latest_read?
-							latest_read = options.latest_read(session, environment)
-						
-						if not earliest_in_news? && not latest_read?
-							return @.done()
-						
-						if not earliest_in_news?
-							return @.done(latest_read)
-						
-						if not latest_read?
-							return @.done(earliest_in_news)
-						
-						test = earliest_in_news + '' > latest_read + ''
-						
-						if test
-							return @.done(latest_read)
-						else
-							return @.done(earliest_in_news)
-				
+						return @.done(options.latest_read(session, environment))
+					
 			http.get options.data_uri, (ввод, вывод, пользователь) ->
-				#if options.data_uri.starts_with('/сеть/')
 				environment = {}
 				environment.пользователь = пользователь
 					
 				loading_options =
-					collection: options.messages_collection_id
+					collection: options.messages_collection
 							
 				цепь(вывод)
 					.сделать ->
@@ -329,16 +485,6 @@ exports.messages = (options) ->
 						_id = db('messages').id(data._id)
 						db('messages').update({ _id: _id, отправитель: пользователь._id }, { $set: { сообщение: data.content } }, @)
 					
-					#цепь(@)
-						#.сделать ->		
-						#	db('messages').update({ _id: _id }, { $set: { сообщение: data.content } }, @)
-					
-						#.сделать ->		
-						#	db('messages').findOne({ _id: _id }, @)
-							
-						#.сделать (message) ->	
-						#	options.notify(message._id, { правка: yes, сообщения_чего: { _id: message.общение }, пользователь: пользователь }, @)
-					
 				.сделать ->
 					if !options.update?
 						_id = db('messages').id(@._.data._id)
@@ -362,7 +508,7 @@ exports.messages = (options) ->
 					db(options.id).update({ _id: db(options.id).id(_id) }, { $pull: { подписчики: пользователь._id } }, @)
 					
 				.сделать ->
-					set_id = 'новости.' + options.in_session_id + '.' + _id
+					set_id = 'последние_сообщения.' + options.path({ сообщения_чего: { _id: _id } })
 					db('people_sessions').update({ пользователь: environment.пользователь._id }, { $unset: set_id }, @)
 					
 				.сделать ->
@@ -388,7 +534,7 @@ exports.messages = (options) ->
 					db(options.id).update({ _id: db(options.id).id(_id) }, { $set: { название: название } }, @)
 					
 				.сделать ->
-					эфир.отправить(options.in_ether_id, 'переназвано', { _id: _id, как: название })
+					эфир.отправить(options.общение, 'переназвано', { _id: _id, как: название })
 					вывод.send {}
 				
 	result.enable_creation = (url, append) ->

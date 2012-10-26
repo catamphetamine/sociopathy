@@ -145,7 +145,8 @@ var Dom_tools =
 		if (Dom_tools.is_text_node(node))
 			return node.nodeValue
 		
-		return $(node).outer_html()
+		return $(node).text()
+		//return $(node).outer_html()
 	},
 	
 	insert_x_after_y: function (x, y)

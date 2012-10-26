@@ -20,13 +20,7 @@
 	// activate join button
 	function initialize_join_button()
 	{
-		join_button = button.physics.classic(new image_button
-		(
-			"#join_button", 
-			{
-				action: function() { join_dialog.open() }
-			}
-		))
+		join_button = button.physics.classic(new image_button("#join_button").does(function() { join_dialog.open() }))
 	}
 	
 	var прописан = false
@@ -140,6 +134,18 @@
 			}
 		)
 	}
+		
+	function activate_registration()
+	{
+		initialize_join_button()
+
+		initialize_join_dialog_buttons()
+		initialize_gender_chooser()
+		initialize_join_form_slider()
+		initialize_join_dialog()
+		
+		Подсказки.подсказка('Теперь вы можете прописаться, нажав на кнопку "Присоединиться" внизу страницы.')
+	}
 	
 	var conditional
 	page.load = function()
@@ -154,14 +160,32 @@
 		}
 		*/
 		
-		if (получить_настройку_запроса('приглашение'))
+		if (пользователь)
+			return
+		
+		if (Configuration.Invites)
 		{
-			conditional = initialize_conditional($('.join_button_block').show())
-			check_invite(function() { conditional.callback(null, function()
+			if (получить_настройку_запроса('приглашение'))
 			{
-				(function() { join_button.push() }).delay(1000)
-			})})
-		}	
+				conditional = initialize_conditional($('.join_button_block').show())
+				
+				check_invite(function(error)
+				{
+					if (error)
+						return conditional.callback(error)
+					
+					conditional.callback(null, function()
+					{
+						(function() { join_button.push() }).delay(1000)
+					})
+				})
+			}
+		}
+		else
+		{
+			$('.join_button_block').show()
+			activate_registration()
+		}
 	}
 	
 	function check_invite(callback)
@@ -183,14 +207,7 @@
 			if (!данные.приглашение)
 				return callback('no invite')
 				
-			initialize_join_button()
-	
-			initialize_join_dialog_buttons()
-			initialize_gender_chooser()
-			initialize_join_form_slider()
-			initialize_join_dialog()
-			
-			Подсказки.подсказка('Теперь вы можете прописаться, нажав на кнопку "Присоединиться" внизу страницы.')
+			activate_registration()
 			callback()
 		})
 	}

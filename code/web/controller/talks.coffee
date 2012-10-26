@@ -29,48 +29,15 @@ http.get '/сеть/беседы', (ввод, вывод, пользовател
 			
 options =
 	id: 'talks'
-	uri: '/беседа'
-	data_uri: '/сеть/беседа/сообщения'
+	общение: 'беседа'
+	общение_во_множественном_числе: 'беседы'
 	
-options.in_ether_id = 'беседы'
-options.in_session_id = 'беседы'
-
 options.правка_сообщения_чего = 'беседы'
-
-options.создатель = (_id, возврат) ->
-	if typeof _id == 'string'
-		_id = db('talks').id(_id)
-	
-	цепь(возврат)
-		.сделать ->
-			db('messages').find({ общение: _id, чего: 'беседы' }, { sort: [['_id', 1]], limit: 1 }).toArray(@)
-			
-		.сделать (сообщения) ->
-			if сообщения.пусто()
-				return @.error("Не удалось проверить авторство")
-				
-			@.done(сообщения[0].отправитель)
 		
 options.messages_query = { чего: 'беседы' }
 
-options.сообщения_чего = (ввод, возврат) ->
-	цепь(возврат)
-		.сделать ->
-			if ввод.настройки._id?
-				return db('talks').findOne({ _id: ввод.настройки._id }, @)
-			
-			db('talks').findOne({ id: ввод.настройки.id }, @)
-			
-		.сделать (сообщения_чего) ->
-			result = Object.выбрать(['_id', 'название'], сообщения_чего)
-			result.участники = сообщения_чего.участники.map((x) -> x.toString())
-			@.done(result)
-			
-options.сообщения_чего_from_string = (сообщения_чего) ->
-	if сообщения_чего._id.toHexString?
-		return сообщения_чего
-	сообщения_чего._id = db('talks').id(сообщения_чего._id)
-	return сообщения_чего
+options.сообщения_чего = (result, сообщения_чего) ->
+	result.участники = сообщения_чего.участники.map((x) -> x.toString())
 			
 options.messages_collection_id = 'messages'
 
@@ -83,30 +50,8 @@ options.messages_query = (environment) ->
 		query.общение = collection.id(environment.сообщения_чего._id)
 	query
 
-options.extra_get = (data, environment, возврат) ->
-	data.название = environment.сообщения_чего.название
+options.extra_get = (data, environment) ->
 	data.участники = environment.сообщения_чего.участники
-	data._id = environment.сообщения_чего._id
-	возврат()
-
-options.mark_new = (сообщения, environment, возврат) ->
-	цепь(возврат)
-		.сделать ->
-			db('people_sessions').findOne({ пользователь: environment.пользователь._id }, @)
-			
-		.сделать (session) ->
-			return @.return() if not session?
-			return @.return() if not session.новости?
-			return @.return() if not session.новости.беседы?
-				
-			talk = environment.сообщения_чего._id.toString()
-			return @.return() if not session.новости.беседы[talk]?
-			
-			for сообщение in сообщения
-				if session.новости.беседы[talk].has(сообщение._id + '')
-					сообщение.новое = yes
-			
-			@.done()
 
 options.authorize = (environment, возврат) ->
 	цепь(возврат)
@@ -122,94 +67,8 @@ options.authorize = (environment, возврат) ->
 			
 			@.done()
 
-options.earliest_in_news = (session, environment) ->
-	if session.новости?
-		if session.новости.беседы?
-			if session.новости.беседы[environment.сообщения_чего._id]?
-				return session.новости.беседы[environment.сообщения_чего._id][0]
-	return
-
-options.latest_read = (session, environment) ->
-	if session.последние_прочитанные_сообщения?
-		if session.последние_прочитанные_сообщения.беседы?
-			return session.последние_прочитанные_сообщения.беседы[environment.сообщения_чего._id]
-	return
-
-options.notify = (_id, environment, возврат) ->
-	цепь(возврат)
-		.сделать ->
-			db('talks').findOne({ _id: environment.сообщения_чего._id }, @._.в 'беседа')
-			
-		.сделать (беседа) ->
-			set_id = 'новости.беседы.' + environment.сообщения_чего._id.toString()
-			add_to_set = {}
-			add_to_set[set_id] = _id.toString()
-			db('people_sessions').update({ $and: [ { пользователь: { $ne: environment.пользователь._id } }, пользователь: { $in: беседа.участники } ] }, { $addToSet: add_to_set }, { multi: yes }, @)
-			
-		.сделать ->	
-			участники = @._.беседа.участники.map((_id) -> _id.toString())
-			
-			for участник in участники
-				if участник != environment.пользователь._id.toString()
-					эфир.отправить('новости', 'беседы', { _id: environment.сообщения_чего._id.toString(), сообщение: _id.toString() }, { кому: участник })
-
-			for пользователь in эфир.пользователи()
-				if пользователь != environment.пользователь._id + ''
-					if !участники.has(пользователь)
-						continue
-					соединение_с_беседой = эфир.соединение_с('беседы', { пользователь: пользователь, _id: environment.сообщения_чего._id.toString() })
-					if not соединение_с_беседой
-						эфир.отправить_одному_соединению('новости', 'звуковое оповещение', { чего: 'беседы' }, { кому: пользователь })
-						
-			@.done()
-		
-		.сделать ->	
-			#эфир.отправить(options.in_ether_id, 'сообщение', { где: environment.сообщения_чего._id.toString(), кем: пользовательское.поля(environment.пользователь) })
-			@.done()
-
-options.message_read = (_id, environment, возврат) ->
-	цепь(возврат)
-		.сделать ->
-			path = "последние_прочитанные_сообщения.беседы." + environment.сообщения_чего._id
-			
-			actions = $set: {}
-			actions.$set[path] = _id
-			
-			query =
-				пользователь: environment.пользователь._id
-				
-			query.$or = [{}, {}]
-			query.$or[0][path] = { $exists: no }
-			query.$or[0][path] = { $lt: _id }
-			
-			db('people_sessions').update(query, actions, @)
-			
-		.сделать ->
-			# убрать новость из множества
-			@._.set_id = 'новости.беседы.' + environment.сообщения_чего._id.toString()
-			pull = {}
-			pull[@._.set_id] = _id.toString()
-			db('people_sessions').update({ пользователь: environment.пользователь._id }, { $pull: pull }, @)
-
-		.сделать ->
-			# удалять пустое множество новостей
-			query = { пользователь: environment.пользователь._id }
-			query[@._.set_id] = []
-			unset = {}
-			unset[@._.set_id] = yes
-			db('people_sessions').update(query, { $unset: unset }, @)
-
-options.save = (сообщение, environment, возврат) ->
-	цепь(возврат)
-		.сделать ->
-			db('messages').save({ отправитель: environment.пользователь._id, сообщение: сообщение, когда: new Date(), общение: environment.сообщения_чего._id, чего: 'беседы' }, @._.в 'сообщение')
-	
-		.сделать ->
-			db('talks').update({ _id: environment.сообщения_чего._id }, { $set: { обновлено: new Date() } }, @)
-			
-		.сделать ->
-			@.done(@._.сообщение)
-	
+options.notified_users = (беседа) -> беседа.участники
+					
 result = messages.messages(options)
 result.enable_message_editing('беседы')
 result.enable_renaming('беседы')
@@ -231,7 +90,7 @@ http.delete '/сеть/' + 'беседы' + '/участие', (ввод, выв
 			db(options.id).update({ _id: db(options.id).id(_id) }, { $pull: { участники: пользователь._id } }, @)
 			
 		.сделать ->
-			set_id = 'новости.' + options.in_session_id + '.' + _id
+			set_id = 'последние_сообщения.' + options.path({ сообщения_чего: { _id: _id } })
 			db('people_sessions').update({ пользователь: пользователь._id }, { $unset: set_id }, @)
 			
 		.сделать ->

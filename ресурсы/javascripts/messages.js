@@ -123,8 +123,6 @@ var Messages = new Class
 						messages.последнее_прочитанное_сообщение = data.последнее_прочитанное_сообщение
 						
 					//
-						
-					messages.container_top_offset = messages.options.container.offset().top
 			
 					messages.new_messages_smooth_border.css('width', '100%')
 					
@@ -137,7 +135,9 @@ var Messages = new Class
 						options.on_first_time_data(data)
 				},
 				on_first_output: function()
-				{
+				{	
+					messages.container_top_offset = messages.options.container.offset().top
+					
 					if (options.on_first_output)
 						options.on_first_output()
 				},
@@ -372,10 +372,10 @@ var Messages = new Class
 				this.options.on_message_bottom_appears(_id)
 			
 			this.read_message(_id)
-					
-			if (this.options.on_message_read)
-				this.options.on_message_read(_id)
-		
+			
+			//if (this.options.on_message_read)
+			//	this.options.on_message_read(_id)
+	
 			message.removeClass('new')
 		
 			read = true
@@ -488,9 +488,9 @@ var Messages = new Class
 		
 		append = append.bind(this)
 					
-		if (!this.should_roll())
+		append((function()
 		{
-			append((function()
+			if (!this.should_roll(message))
 			{
 				// прокрутить на величину убранных сообщений
 				if (typeof this.options.max_messages !== 'undefined')
@@ -503,12 +503,8 @@ var Messages = new Class
 					this.notify_new_message_recieved(message)
 				
 				return next()
-			})
-			.bind(this))
-		}
-		
-		append((function()
-		{
+			}
+			
 			this.options.прокрутчик.scroll_to(this.options.container, { top_offset: this.container_top_offset, bottom: true, duration: 700 }, function()
 			{
 				remove_old_messages()
@@ -636,15 +632,25 @@ var Messages = new Class
 		this.visual_editor.editor.caret.move_to(this.visual_editor.editor.content.find('> *:first'))
 	},
 	
-	should_roll: function()
+	should_roll: function(message)
 	{
 		// если список сообщений кончается ниже верхней границы области ввода сообщения - не прокручивать
 		// поправка на пиксель для firefox
 		var amendment = 0
 		if ($.browser.mozilla)
 			amendment = 1
-			
-		if (this.container_top_offset + this.options.container.outerHeight() - amendment > $(window).scrollTop() + $(window).height() - this.compose_message.height())
+		
+		var compose_message_height = 0
+		if (this.compose_message.displayed())
+			this.compose_message.height()
+		
+		if (this.container_top_offset + this.options.container.outerHeight() - amendment > $(window).scrollTop() + $(window).height() - compose_message_height)
+			return false
+		
+		// если непрочитанные при этом уедут за верх - не прокручивать
+		var first_unread = this.options.container.find('> .new:first')
+		var free_space_on_top = this.container_top_offset + first_unread.offset().top - $(window).scrollTop()
+		if (free_space_on_top < message.outerHeight())
 			return false
 		
 		return true

@@ -555,6 +555,11 @@ var Page = new Class
 			
 		this.event_handlers.push({ element: element, event: event })
 		element.on(event, action)
+		
+		return function()
+		{
+			element.unbind(event)
+		}
 	},
 	
 	ticking: function(action, interval)

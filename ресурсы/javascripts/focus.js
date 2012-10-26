@@ -16,13 +16,17 @@ var Focus = new (new Class
 	{
 		var self = this
 		
-		$(window).on('focus.focus', function()
+		$(window).on('focus.focus', function() // 'focus.focus', 'page_is_visible.focus'
 		{
+			//console.log('focused')
+
 			self.focus()
 		})
 		
-		$(window).on('blur.focus', function()
+		$(window).on('blur.focus', function() // 'blur.focus', 'page_is_hidden.focus'
 		{
+			//console.log('unfocused')
+			
 			self.focused = false
 		})
 		

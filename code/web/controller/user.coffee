@@ -73,13 +73,23 @@ http.post '/выход', (ввод, вывод) ->
 http.put '/прописать', (ввод, вывод) ->
 	цепь(вывод)
 		.сделать ->
-			query =
-				ключ: ввод.body.приглашение,
-				использовано:  { $exists : no } 
-					
-			update = { $set: { использовано: yes } }
+			if not Options.Invites
+				return @.done()
 			
-			db('invites').findAndModify(query, [], update, {}, @)
+			цепь(@)
+				.сделать ->
+					query =
+						ключ: ввод.body.приглашение,
+						использовано:  { $exists : no } 
+							
+					update = { $set: { использовано: yes } }
+					
+					db('invites').findAndModify(query, [], update, {}, @)
+
+				.сделать (invite) ->
+					if not invite?
+						throw 'No invite given'
+					return @.done()
 			
 		.сделать ->
 			@._.человек = ввод.body

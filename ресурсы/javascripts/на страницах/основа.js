@@ -10,8 +10,8 @@ var page
 var host = Uri.parse().host
 var port = Uri.parse().port
 
-var Configuration =
-{
+Configuration = Object.x_over_y
+({
 	Upload_server_port: 8091,
 	Websocket_server: host + ':8080',
 	User_is_online_for: 8 * 60,
@@ -32,7 +32,8 @@ var Configuration =
 			Height: 315
 		}
 	}
-}
+},
+Configuration)
 
 if (путь_страницы() === 'сеть' || путь_страницы().starts_with('сеть/'))
 	if (!$.cookie('user'))

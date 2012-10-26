@@ -19,7 +19,18 @@ title('Беседы');
 		{
 			go_to('/сеть/общение/беседа')
 		})
-					
+
+		$(document).on_page('message_read', function(event, что)
+		{
+			if (!что.беседа)
+				return
+			
+			var общение = page.get('.author_content_date > li[_id="' + что.беседа + '"]')
+				
+			if (общение.exists())
+				общение.removeClass('new')
+		})
+		
 		new Data_templater
 		({
 			template: 'беседа в списке бесед',

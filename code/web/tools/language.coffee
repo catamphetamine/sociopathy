@@ -181,3 +181,10 @@ Array.toString = (array) ->
 	string += ']'
 	
 	return string
+
+Object.path = (object, path) ->
+	for key in path.split('.')
+		if not object?
+			return
+		object = object[key]
+	object

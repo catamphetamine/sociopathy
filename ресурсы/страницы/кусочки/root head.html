@@ -1,0 +1,86 @@
+<title>Собрание</title>
+
+<!-- TeX for Editor -->
+<script type="text/x-mathjax-config">
+		MathJax.Hub.Config
+		({
+			tex2jax:
+			{
+				processClass: 'tex'
+			}
+		})
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+<!-- XML editor -->
+<link rel="stylesheet" href="/javascripts/codemirror/lib/codemirror.css"/>
+<script src="/javascripts/codemirror/lib/codemirror.js"></script>
+<script src="/javascripts/codemirror/mode/xml/xml.js"></script>
+
+<!-- Audio player -->
+<link rel="stylesheet" href="/javascripts/jouele/jouele.css"/>
+<link id="jouele-swf-object" href="/javascripts/jouele/jplayer.swf"/>
+<script src="/javascripts/jouele/jquery.jplayer.min.js"></script>
+<script src="/javascripts/jouele/jouele.js"></script>
+
+<!-- не убирается в файл, так как less обрабатывает стили при загрузке страницы, поэтому был бы виден мусор -->
+<style>
+	#loading_screen
+	{
+		position: fixed;
+		top: 0;
+		left: 0;
+		
+		z-index: 2;
+		
+		width: 100%;
+		height: 100%;
+		
+		background-color: #ffffff;
+		
+		cursor: wait;
+		
+		text-align: center;
+		
+		font-family: Arial, sans-serif, Myriad Pro;
+		font-size: 30px;
+	}
+	
+	#loading_screen, #loading_screen .content .error.nothing_serious
+	{
+		color: #bfbfbf;
+	}
+	
+	#loading_screen[status=error]
+	{
+		cursor: default;
+	}
+	
+	#loading_screen .content .error
+	{
+		display: inline-block;
+		color: #9c4646;
+	}
+	
+	#loading_screen .content .loading
+	{
+		display: inline-block;
+		opacity: 0;
+		visibility: hidden;
+	}
+	
+	.margin_bug_fixer
+	{
+		color: transparent;
+	}
+	
+	/*
+	.audio_player
+	{
+		opacity: 0;
+	}
+	*/
+</style>
+
+<link id="site_icon" rel="shortcut icon" href="/картинки/значки/основной.png"/>
+<!--<link rel="shortcut icon" href="/картинки/мигающий значок.gif"/>-->

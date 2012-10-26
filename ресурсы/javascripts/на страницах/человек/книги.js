@@ -1,7 +1,7 @@
 (function()
 {
 	Режим.пообещать('правка')
-	Режим.пообещать('действия')
+	//Режим.пообещать('действия')
 	
 	var add_book_window
 	
@@ -9,6 +9,7 @@
 	{
 		title('Книги. ' + page.data.адресное_имя)
 	
+		/*
 		add_book_window = simple_value_dialog_window
 		({
 			id: 'add_book_window',
@@ -68,6 +69,7 @@
 		})
 		
 		add_book.element.invisible().hide()
+		*/
 		
 		Режим.добавить_проверку_перехода(function(из, в)
 		{
@@ -86,32 +88,6 @@
 				}
 			}
 		})
-	
-		$(document).on_page('режим.переход', function(event, из, в)
-		{
-			if (в === 'правка')
-			{
-				add_book.element.fade_in(0.2)
-				
-				$('.book_place .book').each(function()
-				{
-					var book = $(this)
-					book.on('click.режим_правка', function(event)
-					{
-						event.preventDefault()
-						info("открыть окошко правки книги")
-					})
-				})
-				
-				return
-			}
-			
-			if (из === 'правка')
-			{
-				add_book.element.fade_out(0.2)
-				return
-			}
-		})
 		
 		var conditional = initialize_conditional($('.main_conditional'), { immediate: true })
 
@@ -119,12 +95,6 @@
 		({
 			template_url: '/страницы/кусочки/книжный шкаф.html',
 			container: $('.bookshelf_container'),
-			/*
-			postprocess_element: function(item)
-			{
-				return $('<li/>').append(item)
-			},
-			*/
 			conditional: conditional
 		},
 		new  Data_loader
@@ -198,7 +168,7 @@
 		$('.bookshelf_container .book_place').animate({ opacity: 1 }, 500)
 			
 		Режим.разрешить('правка')
-		Режим.разрешить('действия')
+		//Режим.разрешить('действия')
 		
 		page.initialized()
 	}

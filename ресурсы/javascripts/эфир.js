@@ -69,6 +69,12 @@ $(document).on('panel_loaded', function()
 			эфир.emit('пользователь', $.cookie('user'))
 		})
 		
+		эфир.on('version', function(data)
+		{
+			if (Version != data)
+				warning('Сайт обновился. Обновите страницу', { sticky: true })
+		})
+		
 		эфир.on('disconnect', function()
 		{
 			connected = false
@@ -210,10 +216,10 @@ $(document).on('panel_loaded', function()
 					case 'болталка':
 						return { болталка: data._id }
 					
-					case 'беседы':
+					case 'беседа':
 						return { беседа: data.сообщения_чего, сообщение: data._id }
 					
-					case 'обсуждения':
+					case 'обсуждение':
 						return { обсуждение: data.сообщения_чего, сообщение: data._id }
 				}
 			}
@@ -229,8 +235,6 @@ $(document).on('panel_loaded', function()
 		
 		on('новости', 'болталка', function(data)
 		{
-			console.log("on('новости', 'болталка'")
-			console.log(data)
 			Новости.болталка(data._id)
 		})
 		
@@ -294,7 +298,7 @@ $(document).on('panel_loaded', function()
 			Object.x_over_y(data.клавиши, Настройки.Клавиши)
 		})
 		
-		on('беседы', 'переназвано', function(data)
+		on('беседа', 'переназвано', function(data)
 		{
 			if (Страница.is('сеть/беседы'))
 			{
@@ -312,7 +316,7 @@ $(document).on('panel_loaded', function()
 			}
 		})
 		
-		on('обсуждения', 'переназвано', function(data)
+		on('обсуждение', 'переназвано', function(data)
 		{
 			if (Страница.is('сеть/обсуждения'))
 			{

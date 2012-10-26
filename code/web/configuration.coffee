@@ -28,3 +28,4 @@ module.exports =
 			Username: 'Собрание <sobranie.net@gmail.com>'
 			Host: 'smtp.gmail.com'
 			Port: 465 # 587 #
+	Invites: yes

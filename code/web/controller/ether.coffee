@@ -1,8 +1,8 @@
 соединения =
 	эфир: {}
 	болталка: {}
-	беседы: {}
-	обсуждения: {}
+	беседа: {}
+	обсуждение: {}
 	новости: {}
 	
 listeners = {}
@@ -112,26 +112,11 @@ online = redis.createClient()
 					соединение.emit 'готов'
 					
 		соединение.emit 'поехали'
+		соединение.emit 'version', Options.Version
 							
 exports.offline = (пользователь) ->
 	for id, listener of listeners
 		listener.offline(пользователь)
-
-карта_соединений_по_виду_сообщения = (group, name) ->
-	if group? && name?
-		if group == 'новости' && name == 'новости'
-			return соединения.новости
-			
-		if group == 'новости' && name == 'беседы'
-			return соединения.беседы
-			
-		if group == 'новости' && name == 'обсуждения'
-			return соединения.обсуждения
-			
-		if group == 'новости' && name == 'болталка'
-			return соединения.болталка
-			
-	return соединения.эфир
 
 exports.отправить = (group, name, data, options, возврат) ->
 	if typeof options == 'function'

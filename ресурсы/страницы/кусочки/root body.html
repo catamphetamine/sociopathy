@@ -1,0 +1,46 @@
+<div id="loading_screen">
+	<div class="content">
+		<img class="loading" src="/картинки/страница загружается.png"/>
+		<span class="error" style="display: none">Возможно что-то сломалось</span>
+	</div>
+</div>
+		
+<aside>
+	<nav>
+		<!-- top menu panel -->
+		<div id="panel">
+			<!-- the menu -->
+			<ul id="panel_menu">
+				<li name="читальня" link="/читальня">Читальня</li>
+				<li name="читальня (выбрано)" link="/читальня" hidden="true">Читальня</li>
+				
+				<li name="люди" link="/люди">Люди</li>
+				<li name="люди (выбрано)" link="/люди" hidden="true">Люди</li>
+				
+				<li name="помощь" link="/помощь">Помощь</li>
+				<li name="помощь (выбрано)" link="/помощь" hidden="true">Помощь</li>
+			</ul>
+			
+			<!-- убираем пробелы между элементами -->
+			<script>
+				var menu = $('#panel_menu')
+				var menu_items = menu.children()
+				menu.empty().append(menu_items)
+			</script>
+
+			<a class="enter" href='#'>Войти</a>
+
+			<!-- logo -->
+			<a id="logo" href="/"><img id="panel_logo" src="/картинки/навершие/logo.png"/></a>
+		</div>
+	</nav>
+</aside>
+
+<div id="page"></div>
+
+<div class="margin_bug_fixer">.</div>
+		
+<footer></footer>
+
+<!-- stretches the gradient background to the height of the entire page -->
+<!--<div id="background_stretcher" class="non_selectable"></div>-->
