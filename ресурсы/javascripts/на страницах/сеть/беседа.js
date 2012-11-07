@@ -137,6 +137,15 @@
 			discard_changes: function() { page.get('.breadcrumbs > :last').text(unedited_talk_title) }
 		})
 		
+		$(document).on_page('talk_renamed', function(event, data)
+		{
+			if ($('#talk').attr('_id') === data._id)
+			{
+				page.get('.breadcrumbs > :last').text(data.как)
+				title(data.как)
+			}
+		})
+		
 		messages.load()
 	}
 	

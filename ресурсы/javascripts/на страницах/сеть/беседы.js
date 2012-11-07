@@ -31,6 +31,13 @@ title('Беседы');
 				общение.removeClass('new')
 		})
 		
+		$(document).on_page('talk_renamed', function(event, data)
+		{
+			var talk = $('#talks').find('>[_id="' + data._id + '"]')
+			if (talk.exists())
+				talk.find('.title').text(data.как)
+		})
+	
 		new Data_templater
 		({
 			template: 'беседа в списке бесед',

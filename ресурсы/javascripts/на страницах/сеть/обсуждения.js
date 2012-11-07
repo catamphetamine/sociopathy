@@ -30,6 +30,13 @@ title('Обсуждения');
 			if (общение.exists())
 				общение.removeClass('new')
 		})
+		
+		$(document).on_page('discussion_renamed', function(event, data)
+		{
+			var discussion = $('#discussions').find('>[_id="' + data._id + '"]')
+			if (discussion.exists())
+				discussion.find('.title').text(data.как)
+		})
 				
 		new Data_templater
 		({

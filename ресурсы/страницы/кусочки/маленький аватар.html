@@ -5,7 +5,7 @@
 {{/if}}
 
 	<div class="picture" title="${имя}">
-		<img class="real_picture"	{{if $data.avatar_version}}{{else}} style="display: none" {{/if}} src="/загруженное/люди/${escape_id($data['адресное имя'])}/картинка/маленькая.jpg?version=${avatar_version}}"/>
+		<img class="real_picture" {{if avatar_version}} src="/загруженное/люди/${escape_id($data['адресное имя'])}/картинка/маленькая.jpg?version=${avatar_version}" {{else}} style="display: none" {{/if}}/>
 	</div>
 	
 {{if no_link}}

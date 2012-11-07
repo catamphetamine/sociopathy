@@ -60,7 +60,10 @@ global.image_magick.convert.path = Options.ImageMagick.Convert.Path
 
 global.почта = require './tools/email'
 
-global.messages = require './controller/messages'
+require './messages initialization'
+require './messages socket'
+require './messages tools'
+global.messages = require './messages'
 
 global.session = require './session'
 
@@ -69,7 +72,6 @@ global.session = require './session'
 require './upload_server'
 
 require './controller/administration'
-require './controller/chat'
 require './controller/library'
 require './controller/people'
 require './controller/user'
@@ -78,8 +80,11 @@ require './controller/journal'
 require './controller/books'
 global.новости = require './controller/news'
 require './controller/circles'
+
+require './controller/chat'
 require './controller/talks'
 require './controller/discussions'
+
 global.эфир = require './controller/ether'
 require './controller/drafts'
 require './controller/system'

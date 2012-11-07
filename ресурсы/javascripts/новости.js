@@ -10,6 +10,7 @@ var Новости = new (new Class
 		болталка: null
 	},
 	
+	// если не открыто окно обсуждения
 	звуки:
 	{
 		беседы: new Audio("/звуки/пук.ogg"),
@@ -84,7 +85,7 @@ var Новости = new (new Class
 		this.общение
 		({
 			url: 'сеть/болталка',
-			path: 'болталка'
+			path: 'болталка',
 			indication: panel.new_chat_messages,
 			important: false
 		},
@@ -96,7 +97,7 @@ var Новости = new (new Class
 		this.общение
 		({
 			url: 'сеть/обсуждение',
-			path: 'обсуждения.' + обсуждение
+			path: 'обсуждения.' + обсуждение,
 			indication: panel.new_discussion_messages
 		},
 		последнее_сообщение)
@@ -107,7 +108,7 @@ var Новости = new (new Class
 		this.общение
 		({
 			url: 'сеть/беседа',
-			path: 'беседы.' + беседа
+			path: 'беседы.' + беседа,
 			indication: panel.new_talk_messages
 		},
 		последнее_сообщение)

@@ -74,6 +74,15 @@
 			discard_changes: function() { page.get('.breadcrumbs > :last').text(unedited_discussion_title) }
 		})
 		
+		$(document).on_page('discussion_renamed', function(event, data)
+		{
+			if ($('#discussion').attr('_id') === data._id)
+			{
+				page.get('.breadcrumbs > :last').text(data.как)
+				title(data.как)
+			}
+		})
+			
 		messages.load()
 	}
 	

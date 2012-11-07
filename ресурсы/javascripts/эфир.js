@@ -143,7 +143,7 @@ $(document).on('panel_loaded', function()
 		{
 			switch (data.чего)
 			{
-				case 'обсуждения':
+				case 'обсуждение':
 					var discussion = $('#discussion[_id="' + data.чего_id + '"]')
 					if (discussion.exists())
 					{
@@ -163,7 +163,7 @@ $(document).on('panel_loaded', function()
 					}
 					break
 				
-				case 'беседы':
+				case 'беседа':
 					var talk = $('#talk[_id="' + data.чего_id + '"]')
 					if (talk.exists())
 					{
@@ -183,7 +183,7 @@ $(document).on('panel_loaded', function()
 					}
 					break
 				
-				case 'болталки':
+				case 'болталка':
 					var message = $('#chat > [message_id="' + data._id + '"]')
 					if (message.exists())
 					{
@@ -255,8 +255,6 @@ $(document).on('panel_loaded', function()
 		
 		on('новости', 'уведомления', function(data)
 		{
-			//console.log(data)
-			
 			Новости.сброс()
 			
 			if (data.новости && !data.новости.пусто())
@@ -282,7 +280,7 @@ $(document).on('panel_loaded', function()
 			
 			if (data.болталка)
 			{
-			   Новости.болталка(data.болталка)
+				Новости.болталка(data.болталка)
 			}
 			
 			panel.loading.hide()
@@ -300,38 +298,12 @@ $(document).on('panel_loaded', function()
 		
 		on('беседа', 'переназвано', function(data)
 		{
-			if (Страница.is('сеть/беседы'))
-			{
-				var talk = $('#talks').find('>[_id="' + data._id + '"]')
-				if (talk.exists())
-					talk.find('.title').text(data.как)
-			}
-			else if (Страница.is('сеть/беседа'))
-			{
-				if ($('#talk').attr('_id') === data._id)
-				{
-					page.get('.breadcrumbs > :last').text(data.как)
-					title(data.как)
-				}
-			}
+			$(document).trigger('talk_renamed', data)
 		})
 		
 		on('обсуждение', 'переназвано', function(data)
 		{
-			if (Страница.is('сеть/обсуждения'))
-			{
-				var discussion = $('#discussions').find('>[_id="' + data._id + '"]')
-				if (discussion.exists())
-					discussion.find('.title').text(data.как)
-			}
-			else if (Страница.is('сеть/обсуждение'))
-			{
-				if ($('#discussion').attr('_id') === data._id)
-				{
-					page.get('.breadcrumbs > :last').text(data.как)
-					title(data.как)
-				}
-			}
+			$(document).trigger('discussion_renamed', data)
 		})
 		
 		/*

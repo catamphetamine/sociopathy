@@ -384,7 +384,7 @@ Object.set = function(object, path, value)
 	if (!object)
 		return
 	
-	object[key] = value
+	object[last_key] = value
 		
 	return object
 }

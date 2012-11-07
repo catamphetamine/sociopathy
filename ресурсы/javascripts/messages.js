@@ -330,20 +330,20 @@ var Messages = new Class
 		return message
 	},
 	
-	has_message: function(data)
+	has_message: function(_id)
 	{
 		var has = false
 		
 		this.messages_to_add.for_each(function()
 		{
-			if (this._id === data._id)
+			if (this._id === _id)
 				has = true
 		})
 		
 		if (has)
 			return true
 		
-		return this.options.container.find('> li[message_id="' + data._id + '"]').exists()
+		return this.options.container.find('> li[message_id="' + _id + '"]').exists()
 	},
 	
 	process_message_element: function(message)
@@ -360,6 +360,9 @@ var Messages = new Class
 			if (read)
 				return
 			
+			if (!message.hasClass('new'))
+				return
+		
 			if (!Focus.focused)
 				return
 			
@@ -377,6 +380,7 @@ var Messages = new Class
 			//	this.options.on_message_read(_id)
 	
 			message.removeClass('new')
+			message.prev().removeClass('new')
 		
 			read = true
 		})
@@ -411,7 +415,7 @@ var Messages = new Class
 		}
 		else
 		{		
-			if (this.has_message(data))
+			if (this.has_message(data._id))
 				return
 			
 			this.messages_to_add.push(data)
@@ -649,9 +653,12 @@ var Messages = new Class
 		
 		// если непрочитанные при этом уедут за верх - не прокручивать
 		var first_unread = this.options.container.find('> .new:first')
-		var free_space_on_top = this.container_top_offset + first_unread.offset().top - $(window).scrollTop()
-		if (free_space_on_top < message.outerHeight())
-			return false
+		if (first_unread.exists())
+		{
+			var free_space_on_top = this.container_top_offset + first_unread.offset().top - $(window).scrollTop()
+			if (free_space_on_top < message.outerHeight())
+				return false
+		}
 		
 		return true
 	},

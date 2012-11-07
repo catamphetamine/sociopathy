@@ -491,6 +491,8 @@
 							ok: function()
 							{
 								photo_file_name = null
+								
+								//page.refresh()
 							}
 						})
 					}

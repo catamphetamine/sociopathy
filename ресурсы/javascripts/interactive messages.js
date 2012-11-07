@@ -359,13 +359,13 @@ var Interactive_messages = function(options)
 			
 			function try_to_append_message(сообщение)
 			{
-				var previous_message = messages.options.container.find('> li[_id="' + сообщение.предыдущее + '"]')
-				if (previous_message.exists())
+				if (messages.has_message(сообщение.предыдущее))
 				{
 					if (сообщение.новое)
 						messages.new_messages_notification()
 				
-					return messages.add_message(сообщение)
+					messages.add_message(сообщение)
+					return true
 				}
 			}
 				

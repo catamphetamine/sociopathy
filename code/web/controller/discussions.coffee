@@ -32,25 +32,13 @@ options =
 	общение: 'обсуждение'
 	общение_во_множественном_числе: 'обсуждения'
 
-options.правка_сообщения_чего = 'обсуждения'						
-
-options.messages_query = (environment) ->
-	query = {}
-	query.чего = 'обсуждения'
-	if environment.сообщения_чего._id.toHexString?
-		query.общение = environment.сообщения_чего._id
-	else
-		query.общение = collection.id(environment.сообщения_чего._id)
-	query
-
-options.notified_users = (обсуждение) -> обсуждение.подписчики
-	
 options.save = (environment, возврат) ->
 	цепь(возврат)
 		.сделать ->
 			db(options.collection).update({ _id: environment.сообщения_чего._id }, { $addToSet: { подписчики: environment.пользователь._id } }, @)
 
 result = messages.messages(options)
+
 result.enable_message_editing('обсуждения')
 result.enable_renaming('обсуждения')
 result.enable_unsubscription('обсуждения')

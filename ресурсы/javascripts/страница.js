@@ -425,6 +425,11 @@ var Page = new Class
 		}
 	},
 	
+	refresh: function()
+	{
+		refresh_page()
+	},
+	
 	get: function(selector)
 	{
 		return this.content.find(selector)

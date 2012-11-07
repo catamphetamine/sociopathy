@@ -6,6 +6,6 @@ module.exports =
 		Temporary_file_path: Upload_server_file_path + '/временное'
 	ImageMagick:
 		Convert:
-			Path: 'C:\Program Files\ImageMagick-6.8.0-Q16/convert'
+			Path: 'c:/Program Files/ImageMagick-6.8.0-Q16/convert'
 	Development: yes
 	Invites: no
