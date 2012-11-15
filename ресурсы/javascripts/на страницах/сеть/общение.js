@@ -26,7 +26,12 @@
 		}
 		
 		var visual_editor = new Visual_editor('#content > .compose_message > article')
-		
+
+		Клавиши.on(page.get('form .title'), 'Enter', function()
+		{
+			visual_editor.focus()
+		})
+				
 		var hint = $('<p/>').appendTo(visual_editor.editor.content)
 		visual_editor.hint(hint, 'Вводите сообщение здесь')
 	

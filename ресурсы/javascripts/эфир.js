@@ -238,12 +238,12 @@ $(document).on('panel_loaded', function()
 			Новости.болталка(data._id)
 		})
 		
-		on('новости', 'беседы', function(data)
+		on('новости', 'беседа', function(data)
 		{
 			Новости.беседа(data._id, data.сообщения || data.сообщение)
 		})
 		
-		on('новости', 'обсуждения', function(data)
+		on('новости', 'обсуждение', function(data)
 		{
 			Новости.обсуждение(data._id, data.сообщения || data.сообщение)
 		})

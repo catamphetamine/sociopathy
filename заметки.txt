@@ -665,23 +665,19 @@ and.push(options.earliest_unread_path_query({}, { $exists: 0 }, environment))
 
 
 
-при прочтении сообщения на клиенте - прочитывать и все, которые до него (чтобы не было висяков)
 
 
 
-.сделать (общение) ->
-					setter = {}
-					setter[options.earliest_unread_path(environment)] = _id
-					
-					and = []
-					
-					and.push({ пользователь: { $ne: environment.пользователь._id } })
-					and.push({ пользователь: { $in: options.notified_users(общение) } })
-					
-					and.push(options.earliest_unread_path_query({}, { $exists: 0 }, environment))
-					and.push(options.earliest_unread_path_query({}, { $exists: 0 }, environment))
-					
-					query = { $and: and }
-					
-					db('people_sessions').update(query, { $set: setter }, { multi: yes }, @)
-				
+
+
+добавить пользователя в беседу - автокомплит с иконками
+
+
+
+выйти и отписаться - в режим действий (и не прятать)
+
+
+
+
+
+

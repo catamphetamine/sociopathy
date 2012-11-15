@@ -186,6 +186,7 @@ var Visual_editor = new Class
 	
 	focus: function()
 	{
+		this.editor.focus()
 		this.editor.caret.move_to(this.editor.content[0].firstChild)
 	},
 

@@ -133,6 +133,18 @@ var Клавиши =
 		this.disabled = false
 	},
 	
+	on: function(element, keys, action)
+	{
+		element.on('keypress', function(event)
+		{
+			if (Клавиши.is(keys, event))
+			{
+				event.preventDefault()
+				action()
+			}
+		})
+	},
+	
 	has: function(key, code)
 	{
 		if (typeof code !== 'number')

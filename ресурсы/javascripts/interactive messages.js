@@ -77,6 +77,7 @@ var Interactive_messages = function(options)
 				return false
 		
 			this.connection.emit('сообщение', message)
+			return true
 		},
 		after_append: function(message, data)
 		{

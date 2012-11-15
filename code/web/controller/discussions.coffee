@@ -32,7 +32,7 @@ options =
 	общение: 'обсуждение'
 	общение_во_множественном_числе: 'обсуждения'
 
-options.save = (environment, возврат) ->
+options.save = (сообщение, environment, возврат) ->
 	цепь(возврат)
 		.сделать ->
 			db(options.collection).update({ _id: environment.сообщения_чего._id }, { $addToSet: { подписчики: environment.пользователь._id } }, @)

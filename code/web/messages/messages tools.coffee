@@ -98,13 +98,16 @@ global.messages_tools = (options) ->
 					if append?
 						append(values, environment)
 					
-					db(options.id).save(values, @._.в 'общение')
+					db(options.collection).save(values, @._.в 'общение')
 					
 				.сделать (общение) ->
 					environment.сообщения_чего = { _id: общение._id }
 					
 					options.save(сообщение, environment, @)
 				
+				.сделать (сообщение) ->
+					options.message_read(сообщение._id, environment, @)
+										
 				.сделать ->
 					if options.creation_extra?
 						return options.creation_extra(@._.общение._id, пользователь, ввод, @)

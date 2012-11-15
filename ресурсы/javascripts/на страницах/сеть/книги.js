@@ -1,4 +1,4 @@
-
+title('Книги')
 
 /*
 $(document).on_page('режим.переход', function(event, из, в)
@@ -27,3 +27,5 @@ $(document).on_page('режим.переход', function(event, из, в)
 	}
 })
 */
+
+page.needs_initializing = false

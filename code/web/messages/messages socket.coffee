@@ -8,12 +8,6 @@ global.prepare_messages_socket = (options) ->
 		.сделать ->
 			collection = db(options.messages_collection)
 									
-			these_messages_query = (query, environment) ->
-				if not options.messages_query?
-					return query
-				
-				Object.merge_recursive(Object.clone(query), options.messages_query(environment))
-
 			соединения = {}
 			
 			connection = websocket
@@ -114,7 +108,7 @@ global.prepare_messages_socket = (options) ->
 							соединение.on 'получить пропущенные сообщения', (с_какого) ->
 								цепь(соединение)
 									.сделать ->
-										collection.find(these_messages_query({ _id: { $gte: collection.id(с_какого._id) } }, environment), { sort: [['_id', 1]] }).toArray(@.в 'сообщения')
+										collection.find(options.these_messages_query({ _id: { $gte: collection.id(с_какого._id) } }, environment), { sort: [['_id', 1]] }).toArray(@.в 'сообщения')
 									
 									.сделать ->
 										пользовательское.подставить(@.$.сообщения, 'отправитель', @)
@@ -159,7 +153,7 @@ global.prepare_messages_socket = (options) ->
 										options.notify(@._.сообщение._id, environment, @)
 										
 									.сделать ->
-										db(options.messages_collection).find(these_messages_query({ _id: { $lt: @._.сообщение._id } }, environment), { limit: 1, sort: [['_id', -1]] }).toArray(@)
+										db(options.messages_collection).find(options.these_messages_query({ _id: { $lt: @._.сообщение._id } }, environment), { limit: 1, sort: [['_id', -1]] }).toArray(@)
 										
 									.сделать (предыдущие_сообщения) ->
 										if предыдущие_сообщения.пусто()
@@ -204,85 +198,3 @@ global.prepare_messages_socket = (options) ->
 							finish()
 							
 					соединение.emit 'поехали'
-					
-			show_from = (environment, возврат) ->
-				цепь(возврат)
-					.сделать ->
-						db('people_sessions').findOne({ пользователь: environment.пользователь._id }, @)
-						
-					.сделать (session) ->
-						return @.done() if not session?
-						return @.done(options.latest_read(session, environment))
-					
-			http.get options.data_uri, (ввод, вывод, пользователь) ->
-				environment = {}
-				environment.пользователь = пользователь
-					
-				loading_options =
-					collection: options.messages_collection
-							
-				цепь(вывод)
-					.сделать ->
-						if options.сообщения_чего?
-							return цепь(@)
-								.сделать ->
-									options.сообщения_чего(ввод, @)
-								.сделать (сообщения_чего) ->
-									environment.сообщения_чего = сообщения_чего
-									@.done()
-						@.done()
-						
-					.сделать ->
-						if options.authorize?
-							return options.authorize(environment, @)
-						@.done()
-						
-					.сделать ->
-						if not ввод.настройки.после?
-							return цепь(@)
-								.сделать ->
-									show_from(environment, @)
-									
-								.сделать (show_from) ->
-									loading_options.с = show_from
-									@.done()
-						@.done()
-						
-					.сделать ->
-						loading_options.query = these_messages_query({}, environment)
-
-						снасти.either_way_loading(ввод, loading_options, @)
-									
-					.сделать (result) ->
-						@.$.сообщения = result.data
-						@.$['есть ещё?'] = result['есть ещё?']
-						@.$['есть ли предыдущие?'] = result['есть ли предыдущие?']
-						
-						пользовательское.подставить(@.$.сообщения, 'отправитель', @)
-												
-					.сделать ->
-						if options.extra_get?
-							return options.extra_get(@.$, environment, @)
-						@.done()
-						
-					.сделать ->
-						if ввод.настройки.первый_раз?
-							if options.создатель?
-								if environment.сообщения_чего?
-									return options.создатель(environment.сообщения_чего._id, @.в 'создатель')
-						@.done()
-
-					.сделать ->
-						if options.mark_new?
-							return options.mark_new(@.$.сообщения, environment, @)
-						@.done()
-					
-					.сделать ->
-						@.$.environment =
-							пользователь: пользовательское.поля(['_id'], пользователь)
-							сообщения_чего: environment.сообщения_чего
-						
-						for сообщение in @.$.сообщения
-							сообщение._id = сообщение._id.toString()
-							
-						вывод.send(@.$)
