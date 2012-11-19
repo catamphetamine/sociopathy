@@ -137,6 +137,32 @@ global.prepare_messages_socket = (options) ->
 								broadcast('пишет', пользовательское.поля([], пользователь))
 							
 							соединение.on 'сообщение', (сообщение) ->
+								synchronous () ->
+									сообщение = options.save._()(сообщение, environment)
+									
+									options.message_read._()(сообщение._id, environment)
+									
+									if options.subscribe?
+										options.subscribe._()(environment)
+									
+									options.notify(сообщение._id, environment)
+										
+									предыдущие_сообщения = db(options.messages_collection)._.find(options.these_messages_query({ _id: { $lt: сообщение._id } }, environment), { limit: 1, sort: [['_id', -1]] })
+										
+									if предыдущие_сообщения.пусто()
+										throw 'Previous message not found'
+											
+									данные_сообщения =
+										_id: сообщение._id.toString()
+										отправитель: пользовательское.поля(пользователь)
+										сообщение: сообщение.сообщение
+										когда: сообщение.когда
+										предыдущее: предыдущие_сообщения[0]._id.toString()
+									
+									соединение.emit('сообщение', данные_сообщения)
+									broadcast('сообщение', данные_сообщения)
+										
+								return
 								цепь(соединение)
 									.сделать ->
 										options.save(сообщение, environment, @._.в 'сообщение')

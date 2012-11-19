@@ -1,3 +1,8 @@
+require './messages core'
+require './messages socket'
+require './messages extra'
+require './messages api'
+
 exports.messages = (options) ->
 	prepare_messages(options)
 

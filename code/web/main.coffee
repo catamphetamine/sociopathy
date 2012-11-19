@@ -24,9 +24,6 @@ require "./../../configuration/#{launch_options.server}/configuration.private.co
 
 global.Options.Version = require "./version.coffee"
 
-global.db = (collection) ->
-	хранилище.collection(collection)
-	
 # memcache
 memcache = require('memcache')
 global.memcache = new memcache.Client(Options.Memcache.Port, 'localhost')
@@ -60,10 +57,6 @@ global.image_magick.convert.path = Options.ImageMagick.Convert.Path
 
 global.почта = require './tools/email'
 
-require './messages/messages initialization'
-require './messages/messages socket'
-require './messages/messages tools'
-require './messages/messages api'
 global.messages = require './messages/messages'
 
 global.session = require './session'

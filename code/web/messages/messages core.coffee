@@ -26,6 +26,42 @@ global.prepare_messages = (options) ->
 			if общение.подписчики?
 				return общение.подписчики
 			return []
+		
+		http.get '/сеть/' + options.общение_во_множественном_числе, (ввод, вывод, пользователь) ->
+			цепь(вывод, { manual: yes })
+				.сделать ->
+					if not options.общения_query?
+						options.общения_query = () -> {}
+					
+					снасти.batch_loading(ввод, { from: options.collection, query: options.общения_query(пользователь), parameters: { sort: [['обновлено', -1]] } }, @.в options.общение_во_множественном_числе)
+					
+				.сделать ->
+					пользовательское.подставить._()(@.$[options.общение_во_множественном_числе], 'участники')
+					
+					if options.bulk_get_extra?
+						options.bulk_get_extra(@.$[options.общение_во_множественном_числе])
+				
+					@.done(@.$[options.общение_во_множественном_числе])
+					
+				.все_вместе (общение) ->
+					db(options.messages_collection).find({ общение: общение._id, чего: options.общение }, { sort: [['_id', -1]], limit: 1 }).toArray(@)
+					
+				.сделать (последние_сообщения) ->
+					сообщения = []
+					for array in последние_сообщения
+						if not array.пусто()
+							сообщения.push(array[0])
+					
+					последние_сообщения = сообщения
+					пользовательское.подставить(последние_сообщения, 'отправитель', @)
+					
+				.сделать (последние_сообщения) ->
+					последние_сообщения.merge_into(@.$[options.общение_во_множественном_числе], 'последнее_сообщение', (общение) -> @.общение + '' == общение._id + '')
+					
+				#.сделать ->
+					вывод.send @.$
+					
+				.go()
 	else
 		options.messages_collection = options.id
 		options.path = (environment) -> options.общение
@@ -44,7 +80,7 @@ global.prepare_messages = (options) ->
 			data.общение = environment.сообщения_чего._id
 			data.чего = options.общение
 				
-		цепь(возврат)
+		цепь(возврат, { manual: yes })
 			.сделать ->
 				db(options.messages_collection).save(data, @._.в 'сообщение')
 				
@@ -55,11 +91,11 @@ global.prepare_messages = (options) ->
 
 			.сделать ->
 				if save?
-					return save(@._.сообщение, environment, @)
-				@.done()
+					save(@._.сообщение, environment)
 				
-			.сделать ->
 				@.done(@._.сообщение)
+				
+			.go()
 	
 	if options.общение_во_множественном_числе?
 		options.сообщения_чего_from_string = (сообщения_чего) ->
@@ -86,9 +122,9 @@ global.prepare_messages = (options) ->
 			options.notified_users = (общение) -> общение.участники
 				
 			options.authorize = (environment, возврат) ->
-				цепь(возврат)
+				цепь(возврат, { manual: yes })
 					.сделать ->
-						db(options.collection).findOne({ _id: environment.сообщения_чего._id }, @)
+						хранилище.collection(options.collection).findOne({ _id: environment.сообщения_чего._id }, @)
 						
 					.сделать (общение) ->
 						if not общение.участники?
@@ -98,6 +134,8 @@ global.prepare_messages = (options) ->
 							throw { error: 'Вы не участвуете в этом общении', display_this_error: yes }
 						
 						@.done()
+					
+					.go()
 						
 			options.добавить_в_общение = (_id, добавляемый, пользователь, возврат) ->
 				цепь(возврат)
@@ -110,12 +148,12 @@ global.prepare_messages = (options) ->
 						if общение.участники?
 							for участник in общение.участники
 								if участник + '' == добавляемый + ''
-									return вывод.send({ уже_участвует: yes })
+									return @.return({ уже_участвует: yes })
 								if участник + '' == пользователь._id + ''
 									нет_прав = no
 									
 						if нет_прав
-							return вывод.send(ошибка: "Вы не участник этого общения, и поэтому \n не можете добавлять в неё людей")
+							throw "Вы не участник этого общения, и поэтому \n не можете добавлять в неё людей"
 			
 						db(options.collection).update({ _id: _id }, { $addToSet: { участники: добавляемый } }, @)
 						
@@ -167,7 +205,6 @@ global.prepare_messages = (options) ->
 						сообщения_чего_extra(result, сообщения_чего)
 					@.done(result)
 					
-					
 		extra_get = (data, environment, возврат) ->
 			if options.private?
 				data.участники = environment.сообщения_чего.участники
@@ -189,7 +226,7 @@ global.prepare_messages = (options) ->
 
 	options.message_read = (_id, environment, возврат) ->
 				
-		цепь(возврат)
+		цепь(возврат, { manual: yes })
 			.сделать ->
 				path = 'последние_прочитанные_сообщения.' + options.path(environment)
 		
@@ -213,54 +250,50 @@ global.prepare_messages = (options) ->
 				
 				db('people_sessions').update(query, actions, @)
 				
+			.go()
+				
 	options.notify = (_id, environment, возврат) ->
-		цепь(возврат)
+		цепь(возврат, { manual: yes })
 			.сделать ->
 				if options.общение_во_множественном_числе?
-					цепь(@)
-						.сделать ->
-							db(options.collection).findOne({ _id: environment.сообщения_чего._id }, @)
-							
-						.сделать (общение) ->	
-							query = {}
-							
-							query.$or = []
-										   
-							subquery = {}
-							subquery['последние_сообщения.' + options.path(environment)] = { $exists: 0 }
-							query.$or.push(subquery)
-							
-							subquery = {}
-							subquery['последние_сообщения.' + options.path(environment)] = { $lt: _id }
-							query.$or.push(subquery)
-							
-							users = []
-							if options.notified_users?
-								users = options.notified_users(общение)
-								query.пользователь = { $in: users }
-							
-							setter = {}
-							setter['последние_сообщения.' + options.path(environment)] = _id
-							
-							db('people_sessions').update(query, { $set: setter }, { multi: yes })
-							
-							@.done(users.map((_id) -> _id.toString()))
+					общение = db(options.collection)._.find_one({ _id: environment.сообщения_чего._id })
+					
+					query = {}
+					
+					query.$or = []
+								   
+					subquery = {}
+					subquery['последние_сообщения.' + options.path(environment)] = { $exists: 0 }
+					query.$or.push(subquery)
+					
+					subquery = {}
+					subquery['последние_сообщения.' + options.path(environment)] = { $lt: _id }
+					query.$or.push(subquery)
+					
+					users = []
+					if options.notified_users?
+						users = options.notified_users(общение)
+						query.пользователь = { $in: users }
+					
+					setter = {}
+					setter['последние_сообщения.' + options.path(environment)] = _id
+					
+					db('people_sessions').update(query, { $set: setter }, { multi: yes })
+					
+					@.done(users.map((_id) -> _id.toString()))
 				else
-					цепь(@)
-						.сделать ->
-							if not options.info_collection?
-								options.info_collection = options.collection + '_info'
-							
-							query = {}
-							
-							query.$or = []
-							query.$or.push({ последнее_сообщение: { $exists: 0 } })
-							query.$or.push({ последнее_сообщение: { $lt: _id } })
-							
-							db(options.info_collection).update(query, { $set: { последнее_сообщение: _id } }, @)
-							
-						.сделать ->
-							@.done([])
+					if not options.info_collection?
+						options.info_collection = options.collection + '_info'
+					
+					query = {}
+					
+					query.$or = []
+					query.$or.push({ последнее_сообщение: { $exists: 0 } })
+					query.$or.push({ последнее_сообщение: { $lt: _id } })
+					
+					db(options.info_collection)._.update(query, { $set: { последнее_сообщение: _id } })
+					
+					@.done([])
 				
 			.сделать (users) ->
 				if not users.пусто()
@@ -284,6 +317,8 @@ global.prepare_messages = (options) ->
 							эфир.отправить_одному_соединению('новости', 'звуковое оповещение', { чего: options.общение }, { кому: пользователь })
 							
 				@.done()
+				
+			.go()
 
 	options.mark_new = (сообщения, environment, возврат) ->
 		цепь(возврат)

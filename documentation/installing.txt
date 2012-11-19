@@ -39,6 +39,8 @@ cd ..
 cd ~
 npm install coffee-script
 
+npm install sync
+
 Устанавливаем NginX
 
 sudo -s

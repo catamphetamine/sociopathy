@@ -3,6 +3,31 @@ http = require 'http'
 connect_utilities = require('connect').utils
 file_system = require 'fs'
 
+global.synchronous = require 'sync'
+
+Function.prototype._ = (binding) ->
+	return () =>
+		parameters = Array.prototype.slice.call(arguments)
+		parameters.unshift(binding)		
+		@sync.apply(@, parameters)
+	
+global.db = (collection) ->
+	mongo = хранилище.collection(collection)
+	
+	api = {}
+	
+	api.find_one = mongo.findOne._(mongo)
+	
+	api.find = (query, options) ->
+		object = mongo.find(query, options)
+		object.toArray._(object)()
+
+	api.update = mongo.update._(mongo)
+	api.save = mongo.save._(mongo)
+	
+	mongo._ = api
+	mongo
+
 снасти = {}
 
 снасти.отдать_страницу = (название, данные_для_страницы, ввод, вывод, возврат) ->
@@ -270,7 +295,7 @@ file_system = require 'fs'
 				
 	parameters = options.parameters || {}
 	
-	цепь(возврат)
+	цепь(возврат, { manual: yes })
 		.сделать ->
 			query_options = Object.x_over_y(parameters, { limit: ввод.настройки.сколько, sort: [['_id', -1]] })
 			query = Object.clone(options.query)
@@ -278,28 +303,28 @@ file_system = require 'fs'
 			if после?
 				после =  collection.id(после)
 				query._id = { $lt: после }
-			
-			collection.find(query, query_options).toArray(@)
-			
-		.сделать (batch) ->
+					
+			batch = collection._.find(query, query_options)
+					
 			data = batch
 			if batch.length < ввод.настройки.сколько
-				return @.done()
+				return @.done(data)
 			
 			more = Object.clone(options.query)
 			more._id = { $lt: batch.last()._id }
 			
 			query_options = Object.x_over_y(parameters, { limit: 1, sort: [['_id', -1]] })
 			
-			collection.find(more, query_options).toArray(@)
-		
-		.сделать (more) ->
+			more = collection._.find(more, query_options)
+			
 			if more? && !more.пусто()
 				возврат.$['есть ещё?'] = yes
 			else
 				возврат.$['есть ещё?'] = no
 				
 			return @.done(data)
+		
+		.go()
 		
 снасти.either_way_loading = (ввод, options, возврат) ->
 	options.query = options.query || {}
