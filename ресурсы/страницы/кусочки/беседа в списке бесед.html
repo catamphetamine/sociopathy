@@ -1,19 +1,19 @@
 <li _id="${_id}">
 	{{if участник}}
-		<div class="leave" title="Выйти из беседы">
+		<div mode="действия" class="leave" title="Выйти из беседы">
 			<div class="button"></div>
 		</div>
 	{{/if}}
 	
 	<a href="/сеть/беседы/${escape_id(id)}">
-		<!--
-		{{each(index, участник) участники}}
-			{{tmpl(участник) 'маленький аватар'}}
+		{{each(index, собеседник) собеседники}}
+			{{tmpl(Object.x_over_y({ no_link: true }, собеседник)) 'маленький аватар'}}
 		{{/each}}
-		-->
 		
 		{{if последнее_сообщение}}
+			<!--
 			{{tmpl(Object.x_over_y({ no_link: true }, последнее_сообщение.отправитель)) 'маленький аватар'}}
+			-->
 		
 			<div class="when no_word_carrying intelligent_date" date="${последнее_сообщение.когда.getTime()}">${последнее_сообщение.когда_примерно}</div>
 		{{/if}}

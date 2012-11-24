@@ -794,3 +794,79 @@ function page_error(text)
 	var error_block = $('<div/>').addClass('error').text(text)
 	$('#page').empty().append(error_block)
 }
+
+// copied from enginex.conf
+var Page_url_patterns =
+[
+	/^\/$/,
+	/^\/люди(\/(.*))?$/,
+	/^\/читальня(\/(.*))?$/,
+	/^\/помощь(\/(.*))?$/,
+	/^\/управление(\/(.*))?$/,
+	/^\/сеть\/((.*))?$/,
+]
+
+function ajaxify_internal_links(where)
+{
+	if (!where)
+		where = $('body')
+		
+	where.find('a').each(function()
+	{
+		var link = $(this)
+		var url = link.attr('href')
+		
+		if (!url)
+			return
+		
+		if (!url.starts_with('/'))
+			return
+			
+		if (link.data('ajaxified'))
+			return
+			
+		if (link.data('static'))
+			return
+			
+		if (link.attr('dummy'))
+			return
+		
+		var is_a_page = false
+		
+		var i = 0
+		while (i < Page_url_patterns.length)
+		{
+			if (url.match(Page_url_patterns[i]))
+			{
+				is_a_page = true
+				break
+			}
+			
+			i++
+		}
+			
+		if (!is_a_page)
+			return
+			
+		link.on('click', function(event)
+		{
+			if (event.button || event.ctrlKey || event.metaKey)
+				return
+				
+			event.preventDefault()
+			
+			if (link.attr('inactive_in_edit_mode'))
+			{
+				if (Режим.правка_ли())
+					return
+			}
+			
+			//if ('/' + путь_страницы() === url)
+			//	return
+			
+			go_to(link.attr('href'))
+		})
+		
+		link.data('ajaxified', true)
+	})
+}

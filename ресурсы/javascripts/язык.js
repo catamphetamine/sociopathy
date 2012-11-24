@@ -338,7 +338,7 @@ Object.key = function(object)
 Object.x_over_y = function(source, destination)
 {
 	if (!source)
-		return
+		return destination
 	
 	$.extend(destination, source)
 	

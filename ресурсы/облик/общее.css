@@ -1400,6 +1400,8 @@ label.in-place_input_label
 	text-align: center;
 	color: #aeaeae;
 	content: 'Загружаем ещё';
+	margin-top: 20px;
+	margin-bottom: 20px;
 }
 
 .either_way_loading
@@ -1517,5 +1519,63 @@ label.in-place_input_label
 	{
 		display: table-cell;
 		vertical-align: middle;
+	}
+}
+
+body
+{
+	> .message_container
+	{
+		.new_message_in_talk, .new_message_in_discussion
+		{
+			.popup_panel
+			{
+				max-height: 50px;
+				
+				> .text
+				{
+					display: inline-block;
+					
+					margin-left: 14px;
+					
+					vertical-align: top;
+					margin-top: 10px;
+					
+					max-width: 360px;
+					
+					white-space: nowrap;
+					overflow: hidden;
+					text-overflow: ellipsis;
+				}
+			}
+		}
+		
+		.new_message_in_talk
+		{
+			.popup_panel
+			{
+				color: #281b00;
+				text-shadow: 1px 1px 0px #f3e69f;
+				
+				border-color: #918658;
+				
+				background-color: #f7dc72;
+				.top_to_bottom_gradient(#f7dc72, #d6b52f);
+			}
+		}
+		
+		.new_message_in_discussion
+		{
+			.popup_panel
+			{
+				color: #281b00;
+				text-shadow: 1px 1px 0px #f3e69f;
+				
+				border-color: #918658;
+				
+				background-color: #f7dc72;
+				.top_to_bottom_gradient(#f7dc72, #d6b52f);
+			}
+		}
 	}
 }

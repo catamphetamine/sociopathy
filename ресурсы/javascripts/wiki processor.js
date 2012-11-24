@@ -106,6 +106,124 @@ var Wiki_processor = new (new Class
 		throw 'Не "валидный" код xml'
 	},
 	
+	simplify: function(xml, options)
+	{
+		options = options || {}
+		
+		if (!xml)
+			return ''
+		
+		if (typeof(xml) === 'string')
+		{
+			xml = this.translate(xml)
+			
+			//console.log('Simplifying: ' + xml)
+			
+			xml = $('<wiki/>').html(xml).node()
+		}
+		
+		var processor = this
+		var output = $('<xml/>')
+		
+		Array.for_each(xml.childNodes, function()
+		{
+			processor.simplify_node(this, output.node(), options)
+		})
+		
+		return output.html().trim()
+	},
+			
+	simplify_node: function(node, target, options)
+	{
+		var processor = this
+		
+		//console.log('simplify_node')
+		//console.log(node)
+		
+		//console.log('target')
+		//console.log(target)
+		
+		var element
+		if (!Dom_tools.is_text_node(node))
+			element = $(node)
+	
+		var syntax
+		if (element)
+			syntax = processor.get_syntax_by_translation(node.tagName.toLowerCase())
+			
+		//console.log('element')
+		//console.log(element)
+		
+		/*
+		if (Dom_tools.is_text_node(node))
+			console.log(node)
+		else
+			console.log(element.outer_html())
+		*/
+			
+		//console.log('syntax')
+		//console.log(syntax)
+		
+		if (!syntax)
+			return Dom_tools.append_text(Dom_tools.to_text(node), target)
+	
+		//console.log('syntax found')
+		
+		var is_root_node = node.parentNode.parentNode === null
+		
+		//console.log('is root node?')
+		//console.log(is_root_node)
+		
+		var simplified
+		if (syntax.simplified)
+		{
+			simplified = syntax.simplify(element, { is_last: target.lastChild === node })
+		}
+		else if (is_root_node)
+		{
+			simplified = ''
+		}
+		else
+			simplified = element.text()
+		
+		if (is_root_node)
+		{
+			if (target.firstChild !== node)
+				simplified = '\n\n' + simplified
+		}
+		
+		//console.log('simplified')
+		//console.log(simplified)
+		
+		//target = $(target)
+		
+		//if (options.process_element)
+		//	options.process_element(html_element, element)
+		
+		//html_element.attr('author', element.attr('author'))
+		var simplified_node = document.createTextNode(simplified)
+		target.appendChild(simplified_node)
+		
+		//if (syntax.activate)
+		//	syntax.activate(html_element)
+		
+		if (syntax.break_simplification)
+			return
+		
+		//console.log(html_element)
+		//console.log('process children')
+		//console.log(node.childNodes)
+		
+		Array.for_each(node.childNodes, function()
+		{
+			//console.log(this)
+			//console.log(html_element.node())
+			processor.simplify_node(this, simplified_node, options)
+		})
+		
+		//console.log('finished processing children')
+	},
+	
 	decorate: function(xml, options)
 	{
 		options = options || {}
@@ -492,7 +610,7 @@ Wiki_processor.Syntax =
 		translation: 'citation',
 		selector: 'div.citation',
 		html_tag: 'div',
-		
+	
 		decorate: function(from, to)
 		{
 			return to.addClass('citation')
@@ -514,6 +632,11 @@ Wiki_processor.Syntax =
 		translation: 'author',
 		selector: 'div.citation > div.author',
 		html_tag: 'div',
+	
+		simplify: function(from)
+		{
+			return ' (' + from.text() + ')'
+		},
 		
 		decorate: function(from, to)
 		{
@@ -551,7 +674,17 @@ Wiki_processor.Syntax =
 	{
 		translation: 'item',
 		selector: 'li',
-		html_tag: 'li'
+		html_tag: 'li',
+	
+		simplify: function(from, info)
+		{
+			var text = from.text()
+			
+			if (!info.is_last)
+				text += ', '
+				
+			return text
+		}
 	},
 	ссылка:
 	{
@@ -592,6 +725,14 @@ Wiki_processor.Syntax =
 		},
 		selector: 'img[type="picture"]',
 		html_tag: 'img',
+		
+		break_simplification: true,
+		
+		simplify: function(from)
+		{
+			return '(картинка)'
+		},
+		
 		break_decoration: true,
 		
 		decorate: function(from, to)
@@ -664,6 +805,14 @@ Wiki_processor.Syntax =
 		selector: '.tex[type="formula"]',
 		//html_tag: 'div',
 		html_tag: 'span',
+		
+		break_simplification: true,
+		
+		simplify: function(from)
+		{
+			return '(формула)'
+		},
+		
 		break_decoration: true,
 		break_parsing: true,
 		
@@ -748,6 +897,13 @@ Wiki_processor.Syntax =
 		selector: 'div.audio_player',
 		html_tag: 'div',
 		
+		break_simplification: true,
+		
+		simplify: function(from, info)
+		{
+			return '(аудиозапись)'
+		},
+		
 		decorate: function(from, to)
 		{
 			var url = from.text()
@@ -775,6 +931,13 @@ Wiki_processor.Syntax =
 			var video_player = $('<div/>').addClass('video_player').attr('hosting', 'youtube')
 			video_player.html($(Youtube.Video.embed_code(from.html())).attr('type', 'video'))
 			return video_player
+		},
+		
+		break_simplification: true,
+		
+		simplify: function(from, info)
+		{
+			return '(видеозапись)'
 		},
 		
 		break_parsing: true,
@@ -806,6 +969,13 @@ Wiki_processor.Syntax =
 			var video_player = $('<div/>').addClass('video_player').attr('hosting', 'vimeo')
 			video_player.html($(Vimeo.Video.embed_code(from.html())).attr('type', 'video'))
 			return video_player
+		},
+		
+		break_simplification: true,
+		
+		simplify: function(from, info)
+		{
+			return '(видеозапись)'
 		},
 		
 		break_parsing: true,

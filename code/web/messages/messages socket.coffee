@@ -74,6 +74,9 @@ global.prepare_messages_socket = (options) ->
 								if not user?
 									return send(ошибка: 'Пользователь не найден: ' + тайный_ключ)
 									
+								console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+								console.log(user)
+									
 								пользователь = user
 								environment.пользователь = пользователь
 								соединение.пользователь = { _id: пользователь._id }
@@ -145,7 +148,7 @@ global.prepare_messages_socket = (options) ->
 									if options.subscribe?
 										options.subscribe._()(environment)
 									
-									options.notify(сообщение._id, environment)
+									options.notify(сообщение, environment)
 										
 									предыдущие_сообщения = db(options.messages_collection)._.find(options.these_messages_query({ _id: { $lt: сообщение._id } }, environment), { limit: 1, sort: [['_id', -1]] })
 										
@@ -176,7 +179,7 @@ global.prepare_messages_socket = (options) ->
 										@.done()
 										
 									.сделать ->
-										options.notify(@._.сообщение._id, environment, @)
+										options.notify(@._.сообщение, environment, @)
 										
 									.сделать ->
 										db(options.messages_collection).find(options.these_messages_query({ _id: { $lt: @._.сообщение._id } }, environment), { limit: 1, sort: [['_id', -1]] }).toArray(@)

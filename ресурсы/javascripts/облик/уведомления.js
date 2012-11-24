@@ -193,19 +193,19 @@ var Message =
 		var message = $('<div class="popup_panel_container"/>')
 		message.addClass('popup_message')
 		message.addClass(type)
+			
+		message.append(message_itself)
 		
 		if (options.postprocess)
 			options.postprocess.bind(message_itself)(message)
 			
 		if (options.ajaxify)
-			ajaxify_internal_links(message_itself)
+			ajaxify_internal_links(message)
 			
 		message_itself.find('a').on('contextmenu', function(event)
 		{
 			event.stopImmediatePropagation()
 		})
-			
-		message.append(message_itself)
 
 		var closing = false
 		message.on('contextmenu', function(event)

@@ -17,60 +17,62 @@ class Цепь
 			console.error ошибка
 			
 		options = {}
+		
+		if not вид?
+			вид = (() ->)
 			
-		if вид?
-			if typeof вид == 'function'
-				@callback = вид
-				@обработчик_ошибок_по_умолчанию = (ошибка) =>
-					@callback(ошибка)
-				options = arguments[1] || {}
-			else
-				switch вид
-					when 'web'
-						вывод = arguments[1]
-						options = arguments[2] || {}
-												
-						if not вывод? || Object.пусто(вывод)
-							console.error 'no web output: arguments = ' + Array.toString(arguments)
-							[].where_am_i()
-							throw 'no web output'
-							
-						@обработчик_ошибок_по_умолчанию = (ошибка) ->
-							console.error '* Error'
-							
-							данные_ошибки = {}
-							
-							if ошибка.error?
-								данные_ошибки.ошибка = ошибка.error
-							else
-								данные_ошибки.ошибка = ошибка
-							
-							if ошибка.options?
-								данные_ошибки.уровень = ошибка.options.уровень
-							
-							if ошибка.display_this_error?
-								console.error(ошибка.error)
-								вывод.send(данные_ошибки)
-							else
-								ошибка = снасти.ошибка(ошибка)
-								console.error(ошибка)
-								данные_ошибки.ошибка = yes
-								вывод.send(данные_ошибки)
-								
-					when 'websocket'
-						соединение = arguments[1]
-						options = arguments[2] || {}
-						@обработчик_ошибок_по_умолчанию = (ошибка) ->
+		if typeof вид == 'function'
+			@callback = вид
+			@обработчик_ошибок_по_умолчанию = (ошибка) =>
+				@callback(ошибка)
+			options = arguments[1] || {}
+		else
+			switch вид
+				when 'web'
+					вывод = arguments[1]
+					options = arguments[2] || {}
+											
+					if not вывод? || Object.пусто(вывод)
+						console.error 'no web output: arguments = ' + Array.toString(arguments)
+						[].where_am_i()
+						throw 'no web output'
+						
+					@обработчик_ошибок_по_умолчанию = (ошибка) ->
+						console.error '* Error'
+						
+						данные_ошибки = {}
+						
+						if ошибка.error?
+							данные_ошибки.ошибка = ошибка.error
+						else
+							данные_ошибки.ошибка = ошибка
+						
+						if ошибка.options?
+							данные_ошибки.уровень = ошибка.options.уровень
+						
+						if ошибка.display_this_error?
+							console.error(ошибка.error)
+							вывод.send(данные_ошибки)
+						else
 							ошибка = снасти.ошибка(ошибка)
-							console.error ошибка
-							соединение.emit 'ошибка', ошибка: yes
-					else
-						options = arguments[1] || {}
+							console.error(ошибка)
+							данные_ошибки.ошибка = yes
+							вывод.send(данные_ошибки)
+							
+				when 'websocket'
+					соединение = arguments[1]
+					options = arguments[2] || {}
+					@обработчик_ошибок_по_умолчанию = (ошибка) ->
+						ошибка = снасти.ошибка(ошибка)
+						console.error ошибка
+						соединение.emit 'ошибка', ошибка: yes
+				else
+					options = arguments[1] || {}
 						
 		if options.debug?
 			@debug = yes
 			
-		if options.upload?
+		if options.upload? || options.manual?
 			#
 		else
 			process.nextTick =>
@@ -99,6 +101,7 @@ class Цепь
 		else
 			#console.error "Error:"
 			#console.error ошибка
+			console.log "Details: #{ошибка}"
 			@обработчик_ошибок_по_умолчанию(ошибка)
 
 	возврат: (откуда, из_какого_поддействия) =>

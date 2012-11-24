@@ -252,7 +252,9 @@ global.prepare_messages = (options) ->
 				
 			.go()
 				
-	options.notify = (_id, environment, возврат) ->
+	options.notify = (сообщение, environment, возврат) ->
+		_id = сообщение._id
+		
 		цепь(возврат, { manual: yes })
 			.сделать ->
 				if options.общение_во_множественном_числе?
@@ -296,12 +298,22 @@ global.prepare_messages = (options) ->
 					@.done([])
 				
 			.сделать (users) ->
+				data =
+					сообщение: _id.toString()
+					text: сообщение.сообщение
+
+				if environment.сообщения_чего?
+					data._id = environment.сообщения_чего._id.toString()
+					общение = db(options.collection)._.find_one({ _id: environment.сообщения_чего._id })
+					data.id = общение.id
+					data.отправитель = environment.пользователь
+				
 				if not users.пусто()
 					for user in users
 						if user != environment.пользователь._id.toString()
-							эфир.отправить('новости', options.общение, { _id: environment.сообщения_чего._id.toString(), сообщение: _id.toString() }, { кому: user })
+							эфир.отправить('новости', options.общение, data, { кому: user })
 				else
-					эфир.отправить('новости', options.общение, { _id: _id.toString() }, { кроме: environment.пользователь._id })
+					эфир.отправить('новости', options.общение, data, { кроме: environment.пользователь._id })
 
 				for пользователь in эфир.пользователи()
 					if пользователь != environment.пользователь._id + ''

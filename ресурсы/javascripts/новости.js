@@ -57,14 +57,14 @@ var Новости = new (new Class
 		if (!последнее_сообщение)
 			return
 		
-		if (Страница.эта() === options.url)
+		if (Страница.эта() === options.page)
 		{
 			var message = page.get('.author_content_date > li[message_id="' + последнее_сообщение + '"]')
 			
 			if (message.exists() && !message.hasClass('new'))
 				return
 		}
-			
+		
 		var indicate = false
 		if (!Object.path(this.что_нового, options.path))
 			indicate = true
@@ -75,8 +75,41 @@ var Новости = new (new Class
 		{
 			options.indication()
 			
-			if (options.important)
-				this.появились_новости()
+			if (options.important !== false)
+				this.появились_новости()			
+		}
+		
+		if (options.important !== false)
+		{
+			if (options.text)
+			{
+				var text = Wiki_processor.simplify(options.text)
+				
+				Message.message('new_message_in_' + options.english, text,
+				{
+					postprocess: function(container)
+					{
+						var link = $('<a/>').attr('href', '/' + options.url + '/' + options.id)
+						link.css('display', 'block')
+						link.on('click', function()
+						{
+							link.trigger('contextmenu')
+						})
+						
+						var text_container = $('<div/>').addClass('text')
+						this.wrapInner(text_container)
+						
+						var avatar = $.tmpl('маленький аватар', Object.x_over_y(options.отправитель, { no_link: true }))
+						avatar.prependTo(this)
+						
+						link.append(this)
+						
+						link.appendTo(container)
+					},
+					ajaxify: true,
+					sticky: true
+				})
+			}
 		}
 	},
 	
@@ -84,7 +117,7 @@ var Новости = new (new Class
 	{
 		this.общение
 		({
-			url: 'сеть/болталка',
+			page: 'сеть/болталка',
 			path: 'болталка',
 			indication: panel.new_chat_messages,
 			important: false
@@ -92,25 +125,31 @@ var Новости = new (new Class
 		последнее_сообщение)
 	},
     
-	обсуждение: function(обсуждение, последнее_сообщение)
+	обсуждение: function(обсуждение, последнее_сообщение, options)
 	{
 		this.общение
-		({
-			url: 'сеть/обсуждение',
+		(Object.x_over_y(options,
+		{
+			page: 'сеть/обсуждение',
+			url: 'сеть/обсуждения',
 			path: 'обсуждения.' + обсуждение,
-			indication: panel.new_discussion_messages
-		},
+			indication: panel.new_discussion_messages,
+			english: 'discussion'
+		}),
 		последнее_сообщение)
 	},
     
-	беседа: function(беседа, последнее_сообщение)
+	беседа: function(беседа, последнее_сообщение, options)
 	{
 		this.общение
-		({
-			url: 'сеть/беседа',
+		(Object.x_over_y(options,
+		{
+			page: 'сеть/беседа',
+			url: 'сеть/беседы',
 			path: 'беседы.' + беседа,
-			indication: panel.new_talk_messages
-		},
+			indication: panel.new_talk_messages,
+			english: 'talk'
+		}),
 		последнее_сообщение)
 	},
     

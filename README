@@ -9,7 +9,7 @@ Sociopathy
 Используемые технологии:
    Html 5
    Css 3 (Less)
-   Javascript (jQuery, Mootools, Node.js (+ Express), WebSocket)
+   Javascript (jQuery, Mootools, Node.js (+ Express, node-fibers), WebSocket)
    MongoDB
    NginX
    Redis

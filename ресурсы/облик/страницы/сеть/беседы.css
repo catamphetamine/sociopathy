@@ -103,6 +103,8 @@
 					{
 						display: inline-block;
 						vertical-align: bottom;
+						
+						margin-right: 5px;
 					}
 					
 					> .title

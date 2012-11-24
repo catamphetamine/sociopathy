@@ -73,17 +73,7 @@ title('Обсуждения');
 							'auto unlock': false
 						}))
 						
-						container.on('mouseenter', function()
-						{
-							container.css('opacity', 1)
-						})
-						
-						container.on('mouseleave', function()
-						{
-							container.css('opacity', 0)
-						})
-						
-						container.css('opacity', 0)
+						container.hide()
 						
 						the_button.does(function()
 						{

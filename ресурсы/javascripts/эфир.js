@@ -235,17 +235,17 @@ $(document).on('panel_loaded', function()
 		
 		on('новости', 'болталка', function(data)
 		{
-			Новости.болталка(data._id)
+			Новости.болталка(data.сообщение)
 		})
 		
 		on('новости', 'беседа', function(data)
 		{
-			Новости.беседа(data._id, data.сообщения || data.сообщение)
+			Новости.беседа(data._id, data.сообщение, { id: data.id, отправитель: data.отправитель, text: data.text })
 		})
 		
 		on('новости', 'обсуждение', function(data)
 		{
-			Новости.обсуждение(data._id, data.сообщения || data.сообщение)
+			Новости.обсуждение(data._id, data.сообщение, { id: data.id, отправитель: data.отправитель, text: data.text })
 		})
 		
 		on('новости', 'новости', function(data)

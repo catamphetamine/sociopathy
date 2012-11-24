@@ -749,3 +749,13 @@ $.fn.background_url = function()
 	
 	return image
 }
+
+$.fn.wrap_with = function(element)
+{
+	this.wrap(element)
+}
+
+$.fn.wrap_over = function(element)
+{
+	element.wrap(this)
+}
