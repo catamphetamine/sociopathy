@@ -1554,13 +1554,15 @@ body
 		{
 			.popup_panel
 			{
-				color: #281b00;
-				text-shadow: 1px 1px 0px #f3e69f;
+				color: #dadada;
 				
-				border-color: #918658;
+				text-shadow: none;
 				
-				background-color: #f7dc72;
-				.top_to_bottom_gradient(#f7dc72, #d6b52f);
+				border-color: #7f7f7f;
+				border-width: 1px;
+				
+				background-color: #000000;
+				.top_to_bottom_gradient(#3F3F3F, #000000);
 			}
 		}
 		
@@ -1568,13 +1570,12 @@ body
 		{
 			.popup_panel
 			{
-				color: #281b00;
-				text-shadow: 1px 1px 0px #f3e69f;
+				color: #3F3F3F;
 				
-				border-color: #918658;
+				text-shadow: none;
 				
-				background-color: #f7dc72;
-				.top_to_bottom_gradient(#f7dc72, #d6b52f);
+				background-color: #ffffff;
+				.top_to_bottom_gradient(#ffffff, #dfdfdf);
 			}
 		}
 	}
