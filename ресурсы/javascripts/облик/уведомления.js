@@ -193,14 +193,28 @@ var Message =
 		var message = $('<div class="popup_panel_container"/>')
 		message.addClass('popup_message')
 		message.addClass(type)
+		
+		if (options.ссылка)
+		{
+			var link = $('<a/>').attr('href', options.ссылка)
+			link.css('display', 'block')
+			link.on('click', function()
+			{
+				link.trigger('contextmenu')
+			})
 			
-		message.append(message_itself)
+			message_itself.appendTo(link)
+			link.appendTo(message)
+		}
+		else
+		{
+			message.append(message_itself)
+		}
 		
 		if (options.postprocess)
 			options.postprocess.bind(message_itself)(message)
 			
-		if (options.ajaxify)
-			ajaxify_internal_links(message)
+		ajaxify_internal_links(message)
 			
 		message_itself.find('a').on('contextmenu', function(event)
 		{

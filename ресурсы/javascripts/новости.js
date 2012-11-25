@@ -89,25 +89,14 @@ var Новости = new (new Class
 				{
 					postprocess: function(container)
 					{
-						var link = $('<a/>').attr('href', '/' + options.url + '/' + options.id)
-						link.css('display', 'block')
-						link.on('click', function()
-						{
-							link.trigger('contextmenu')
-						})
-						
 						var text_container = $('<div/>').addClass('text')
 						this.wrapInner(text_container)
 						
 						var avatar = $.tmpl('маленький аватар', Object.x_over_y(options.отправитель, { no_link: true }))
 						avatar.prependTo(this)
-						
-						link.append(this)
-						
-						link.appendTo(container)
 					},
-					ajaxify: true,
-					sticky: true
+					ссылка: '/' + options.url + '/' + options.id,
+					время: 1.5
 				})
 			}
 		}
