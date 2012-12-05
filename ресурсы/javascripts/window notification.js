@@ -1,3 +1,18 @@
+function set_site_icon(name, extension)
+{
+	if (extension)
+		extension = '.' + extension
+	else
+		extension = '.png'
+		
+	$('link[rel$=icon]').remove()
+	//$('link[rel$=icon]').replaceWith('')
+		
+	$('<link type="image/x-icon" rel="shortcut icon"/>')
+		.attr('href', this.путь + name + extension)
+		.appendTo('head')
+}
+
 /*
 // icon animation through tinycon.js
 Tinycon.setOptions
@@ -12,7 +27,7 @@ var site_icon = new (new Class
 ({
 	initialize: function()
 	{
-		this.element = $('#site_icon')	
+		this.element = $('link[rel$=icon]')
 	},
 
 	путь: '/картинки/значки/',
@@ -27,7 +42,7 @@ var site_icon = new (new Class
 	
 	create: function()
 	{
-		return $('<link id="site_icon" type="image/x-icon" rel="shortcut icon"/>')
+		return $('<link type="image/x-icon" rel="shortcut icon"/>')
 	},
 	
 	animating: false,
@@ -47,7 +62,7 @@ var site_icon = new (new Class
 		{
 			favicon:
 			{
-				get: function() { return $('#site_icon') },
+				get: function() { return $('link[rel$=icon]') },
 				source: site_icon.путь + 'внимание 1' + '.png',
 				create: site_icon.create
 			},
@@ -84,20 +99,17 @@ var site_icon = new (new Class
 // icon animation
 var Image_sequence_icon = new Class
 ({
+	Binds: ['set'],
+	
 	initialize: function()
 	{
-		this.element = $('#site_icon')	
 	},
 
 	путь: '/картинки/значки/',
 	
-	set: function(name)
-	{
-		this.element.remove()
-		this.element = $('<link id="site_icon" type="image/x-icon" rel="shortcut icon"/>')
-		this.element.attr('href', this.путь + name + '.png')
-		this.element.appendTo('head')
-	},
+	time: 1,
+	
+	set: set_site_icon,
 	
 	animating: false,
 	
@@ -125,7 +137,7 @@ var Image_sequence_icon = new Class
 		var change_icon = function()
 		{
 			site_icon.set(next_icon())
-			site_icon.animation_timeout = change_icon.delay(1000)
+			site_icon.animation_timeout = change_icon.delay(site_icon.time * 1000)
 		}
 		
 		change_icon()
@@ -146,9 +158,11 @@ var Image_sequence_icon = new Class
 // Window title animation, since icon animation crashes Chrome
 var Text_and_icon = new Class
 ({
+	Binds: ['set'],
+	
+	
 	initialize: function()
 	{
-		this.element = $('#site_icon')	
 	},
 
 	путь: '/картинки/значки/',
@@ -159,13 +173,7 @@ var Text_and_icon = new Class
 
 	delay: 3000,
 	
-	set: function(name)
-	{
-		this.element.remove()
-		this.element = $('<link id="site_icon" type="image/x-icon" rel="shortcut icon"/>')
-		this.element.attr('href', this.путь + name + '.png')
-		this.element.appendTo('head')
-	},
+	set: set_site_icon,
 	
 	prepend_asterisk: function()
 	{
@@ -245,9 +253,11 @@ var Text_and_icon = new Class
 
 var Minimalistic_window_notification = new Class
 ({
+	Binds: ['set'],
+	
+	
 	initialize: function()
 	{
-		this.element = $('#site_icon')	
 	},
 
 	путь: '/картинки/значки/',
@@ -260,13 +270,7 @@ var Minimalistic_window_notification = new Class
 	
 	prepends_asterisk: false,
 	
-	set: function(name)
-	{
-		this.element.remove()
-		this.element = $('<link id="site_icon" type="image/x-icon" rel="shortcut icon"/>')
-		this.element.attr('href', this.путь + name + '.png')
-		this.element.appendTo('head')
-	},
+	set: set_site_icon,
 	
 	prepend_asterisk: function()
 	{
@@ -318,7 +322,7 @@ var Minimalistic_window_notification = new Class
 			
 		this.notifying = true
 		
-		this.set('внимание 1')
+		this.set('красный')
 		
 		if (this.prepends_asterisk)
 			this.prepend_asterisk()
@@ -347,7 +351,9 @@ var Minimalistic_window_notification = new Class
 })
 
 var window_notification = new Minimalistic_window_notification()
-//var site_icon = new Text_and_icon()
-//var site_icon = new Image_sequence_icon()
+//var window_notification = new Text_and_icon()
+
+// crashes in Chrome
+//var window_notification = new Image_sequence_icon()
 
 //site_icon.something_new()

@@ -646,16 +646,22 @@ var Messages = new Class
 		
 		var compose_message_height = 0
 		if (this.compose_message.displayed())
-			this.compose_message.height()
+			compose_message_height = this.compose_message.height()
 		
-		if (this.container_top_offset + this.options.container.outerHeight() - amendment > $(window).scrollTop() + $(window).height() - compose_message_height)
+		// если нижний край сообщений ушёл за пределы окна (до добавления сообщения) - не прокручивать
+		if (this.container_top_offset + (this.options.container.outerHeight() - message.outerHeight()) - amendment > $(window).scrollTop() + $(window).height() - compose_message_height)
 			return false
 		
 		// если непрочитанные при этом уедут за верх - не прокручивать
 		var first_unread = this.options.container.find('> .new:first')
 		if (first_unread.exists())
 		{
-			var free_space_on_top = this.container_top_offset + first_unread.offset().top - $(window).scrollTop()
+			var free_space_on_top = first_unread.offset().top - $(window).scrollTop()
+			
+			var bar = $('.who_is_connected_bar.sticky')
+			if (bar.exists())
+				free_space_on_top -= bar.height()
+				
 			if (free_space_on_top < message.outerHeight())
 				return false
 		}
@@ -678,9 +684,10 @@ var Messages = new Class
 	
 	new_messages_notification: function()
 	{
-		if (this.options.new_message_sound)
-			this.options.new_message_sound.play()
-				
+		if (!Focus.focused)
+			if (this.options.new_message_sound)
+				this.options.new_message_sound.play()
+					
 		window_notification.something_new()
 	},
 	
