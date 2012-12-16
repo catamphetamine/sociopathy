@@ -219,3 +219,45 @@
 	box-sizing: border-box;
 	-moz-box-sizing: border-box;
 }
+
+.animation(@name, @duration)
+{
+		-webkit-animation: @name @duration infinite alternate;
+		-moz-animation: @name @duration infinite alternate;  
+		-ms-animation: @name @duration infinite alternate;  
+		-o-animation: @name @duration infinite alternate;  
+		animation: @name @duration infinite alternate;
+}
+
+.define_animation(@name, @property, @from, @to)
+{
+		@-webkit-keyframes @name
+		{
+				from { @property: @from; }
+				to { @property: @to; }
+		}
+		
+		@-moz-keyframes @name
+		{
+				from { @property: @from; }
+				to { @property: @to; }
+		}
+		
+		@-ms-keyframes @name
+		{
+				from { @property: @from; }
+				to { @property: @to; }
+		}
+		
+		@-o-keyframes @name
+		{
+				from { @property: @from; }
+				to { @property: @to; }
+		}
+		
+		@keyframes @name
+		{
+				from { @property: @from; }
+				to { @property: @to; }
+		}
+}

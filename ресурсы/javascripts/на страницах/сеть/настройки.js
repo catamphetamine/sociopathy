@@ -212,7 +212,7 @@
 					 
 					event.preventDefault()
 					event.stopImmediatePropagation()
-						
+					
 					var Key_combination_finder = function()
 					{
 						this.find = function(what, where, path)
@@ -271,7 +271,24 @@
 					 
 					var found = (new Key_combination_finder()).find(what, data.клавиши)
 					
-					if (found)
+					function calculate_path(from, path)
+					{
+						var path_part = from.parent().attr('path')
+						
+						if (!path_part)
+							return path
+						
+						if (!path)
+							path = path_part
+						else
+							path = path_part + '.' + path
+							
+						return calculate_path(from.parent(), path)
+					}
+					
+					var self_path = calculate_path(path)
+					
+					if (found && found !== self_path)
 					{
 						return warning('Сочетание клавиш ' + Клавиши.сочетание(what) + ' уже используется для действия «' + found + '»')
 					}

@@ -80,6 +80,22 @@ var Клавиши =
     '-': 109,
     '+': 107,
 	
+	F1: 112,
+	F2: 113,
+	F3: 114,
+	F4: 115,
+	
+	F5: 116,
+	F6: 117,
+	F7: 118,
+	F8: 119,
+	
+	F9: 120,
+	F10: 121,
+	F11: 122,
+	F12: 123,
+	
+	/*
 	a: 97,
 	b: 98,
 	c: 99,
@@ -106,6 +122,7 @@ var Клавиши =
 	x: 120,
 	y: 121,
 	z: 122,
+	*/
 	
 	';': 186,
     '=': 187,
@@ -478,6 +495,26 @@ var Клавиши =
 	убрать_по_нажатию: function(id)
 	{
 		delete this.при_нажатии[id]
+	},
+	
+	поймано: function(что, event)
+	{
+		if (!event)
+		{
+			event = что
+			
+			event.preventDefault()
+			event.stopImmediatePropagation()
+			
+			return
+		}
+		
+		if (Клавиши.is(что, event))
+		{
+			event.preventDefault()
+			event.stopImmediatePropagation()
+			return true
+		}
 	}
 }
 

@@ -139,9 +139,8 @@ title('Беседы');
 	
 	$(document).on_page('keydown.actions', function(event)
 	{
-		if (Клавиши.is(Настройки.Клавиши.Действия.Создать, event))
+		if (Клавиши.поймано(Настройки.Клавиши.Действия.Создать, event))
 		{
-			event.preventDefault()
 			return go_to('/сеть/общение/беседа')
 		}
 	})

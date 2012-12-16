@@ -176,7 +176,7 @@ Visual_editor.implement
 		
 		$(document).on('keydown', function(event)
 		{
-			if (!Клавиши.is(Настройки.Клавиши.Писарь.Показать, event))
+			if (!Клавиши.поймано(Настройки.Клавиши.Писарь.Показать, event))
 				return
 			
 			if (!event.target)
@@ -252,11 +252,8 @@ Visual_editor.implement
 		
 		editor.on('keydown', function(event)
 		{
-			if (Клавиши.is(Настройки.Клавиши.Писарь.Разрывный_пробел, event))
+			if (Клавиши.поймано(Настройки.Клавиши.Писарь.Разрывный_пробел, event))
 			{
-				event.preventDefault()
-				event.stopPropagation()
-				
 				if (editor.caret.container().is('.author') && editor.caret.container().parent().is('.citation'))
 					return visual_editor.on_break()
 				

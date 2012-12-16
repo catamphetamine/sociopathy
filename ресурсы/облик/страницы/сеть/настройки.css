@@ -103,6 +103,20 @@ body[mode="правка"] #content
 			{
 				color: black;
 			}
+		
+			@-webkit-keyframes glow
+			{
+					from { color: inherit; }
+					to { color: #afafaf; }
+			}
+		
+			@keyframes glow
+			{
+					from { color: inherit; }
+					to { color: #afafaf; }
+			}
+			
+			.animation(glow, 0.7s);
 		}
 	}
 }

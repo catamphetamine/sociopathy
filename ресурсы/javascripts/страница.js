@@ -465,7 +465,7 @@ var Page = new Class
 					if (!Режим[режим + '_ли']())
 						return
 				
-				event.preventDefault()
+				Клавиши.поймано(event)
 				action()
 			}
 		})
