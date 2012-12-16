@@ -87,4 +87,22 @@
 body[mode="правка"] #content
 {
 	margin-bottom: 140px;
+	
+	.shortcut_path
+	{
+		cursor: pointer;
+		
+		&:hover
+		{
+			.hyperlink;
+		}
+		
+		&.press_any_key_combination
+		{
+			&:hover
+			{
+				color: black;
+			}
+		}
+	}
 }

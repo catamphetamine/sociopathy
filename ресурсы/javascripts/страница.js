@@ -217,6 +217,8 @@ var Page = new Class
 	
 	ticking_actions: [],
 	
+	по_нажатию_ids: [],
+	
 	void: false,
 	
 	queries: [],
@@ -280,8 +282,12 @@ var Page = new Class
 			populate_view: $.noop,
 			populate_draft: $.noop,
 			
-			remove_draft: $.noop,
-			remove_view: $.noop,
+			remove_draft: function()
+			{
+				this.reset_view()
+			},
+			
+			reset_view: $.noop,
 
 			reset: $.noop,
 			
@@ -298,8 +304,9 @@ var Page = new Class
 				var data_store = this
 							
 				this.unmodified_data = this.deduce()
-				this.edited_data = {}
+				this.edited_data = this.unmodified_data
 			
+				this.reset_view()
 				this.populate_view(this.unmodified_data)
 				
 				Режим.при_переходе({ в: 'правка' }, function()
@@ -310,8 +317,8 @@ var Page = new Class
 					
 					if (data_store.refresh_when_switching)
 					{
-						data_store.remove_view()
-						data_store.populate_draft(data_store.unmodified_data)
+						data_store.reset_view()
+						data_store.populate_draft(data_store.edited_data)
 					}
 				})
 							
@@ -339,7 +346,7 @@ var Page = new Class
 					{
 						if (!Режим.правка_ли())
 						{
-							data_store.remove_view()
+							data_store.reset_view()
 							data_store.populate_view(data_store.edited_data)
 						}
 					})
@@ -523,6 +530,11 @@ var Page = new Class
 			this.stop()
 		})
 		
+		this.по_нажатию_ids.for_each(function()
+		{
+			Клавиши.убрать_по_нажатию(this)
+		})
+		
 		Object.for_each(this.tracked, function(key, value)
 		{
 			if (!this.tracked_collectors[key])
@@ -603,5 +615,18 @@ var Page = new Class
 	
 	пользователь_вышел: function(пользователь)
 	{
+	},
+	
+	по_нажатию: function(действие)
+	{
+		var id = Клавиши.по_нажатию(действие)
+		this.по_нажатию_ids.push(id)
+		return id
+	},
+	
+	убрать_по_нажатию: function(id)
+	{
+		this.по_нажатию_ids.remove(id)
+		Клавиши.убрать_по_нажатию(id)
 	}
 })

@@ -148,13 +148,12 @@ $(document).on('page_loaded', function()
 		{
 			if (!history_stacked)
 				return
-					
+			
 			navigate_to_page({ state: event.originalEvent.state })
 		})
 	}
 	else
 	{
-		//console.log(get_page_less_style_link())
 		Less.load_style(add_version(get_page_less_style_link()), after_styles)
 	}
 })

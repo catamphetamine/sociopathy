@@ -141,17 +141,20 @@ Visual_editor.implement
 				if (Клавиши.is('Enter', event))
 					return visual_editor.enter_pressed_in_container()
 			}
-		
-			if (Клавиши.is('Ctrl', 'Enter', event))
-			{
-				if (visual_editor.ctrl_enter_pressed_in_container)
-					return visual_editor.ctrl_enter_pressed_in_container()
-			}
 				
 			var result = process_enter_key()
 			
 			if (!result.captured)
 				visual_editor.enter_pressed(result)
+		})
+		
+		editor.on('keydown', function(event)
+		{
+			if (Клавиши.is('Ctrl', 'Enter', event))
+			{
+				if (visual_editor.ctrl_enter_pressed_in_container)
+					return visual_editor.ctrl_enter_pressed_in_container()
+			}
 		})
 	},
 	

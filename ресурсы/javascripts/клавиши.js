@@ -3,8 +3,8 @@ var Клавиши =
     Backspace: 8,
     Tab: 9,
     
-	Enter: [13, 10],
-	Ввод: [13, 10],
+	Enter: 13,
+	Ввод: 13,
 	
     Pause: 19,
     Escape: 27,
@@ -35,8 +35,6 @@ var Клавиши =
 	
 	Delete: 46,
 	Удалить: 46,
-	
-    Help: 47,
 	
 	'0': 48,
 	'1': 49,
@@ -76,7 +74,11 @@ var Клавиши =
 	Y: 89,
 	Z: 90,
 	
-    Numeric_plus: 107,
+	hyphen: 189,
+	дефис: 189,
+	
+    '-': 109,
+    '+': 107,
 	
 	a: 97,
 	b: 98,
@@ -105,6 +107,18 @@ var Клавиши =
 	y: 121,
 	z: 122,
 	
+	';': 186,
+    '=': 187,
+	',': 188,
+	'-': 189,
+	'.': 190,
+	'/': 191,
+	'`': 192,
+	
+	'[': 221,
+	']': 223,
+	
+	/*
     F1: 112,
     F2: 113,
     F3: 114,
@@ -117,11 +131,7 @@ var Клавиши =
     F10: 121,
     F11: 122,
     F12: 123,
-	
-    '+': 187,
-    '-': 189,
-	
-    '.': 190,
+    */
 
 	disable: function()
 	{
@@ -135,7 +145,7 @@ var Клавиши =
 	
 	on: function(element, keys, action)
 	{
-		element.on('keypress', function(event)
+		element.on('keydown', function(event)
 		{
 			if (Клавиши.is(keys, event))
 			{
@@ -330,6 +340,80 @@ var Клавиши =
 		*/
 	},
 	
+	what: function(event)
+	{
+		var keys = []
+		
+		//console.log(code)
+		//console.log(event)
+			
+		if (event.metaKey)
+		{
+			keys.push('Command')
+		}
+			
+		if (event.ctrlKey)
+		{
+			keys.push('Ctrl')
+		}
+			
+		if (event.altKey)
+		{
+			keys.push('Alt')
+		}
+			
+		if (event.shiftKey)
+		{
+			keys.push('Shift')
+		}
+		
+		var code
+		
+		if (event.which)
+			code = event.which
+		else
+			code = event.keyCode
+		
+		var the_key
+		
+		Object.for_each(this, function(key, value)
+		{
+			if (value instanceof Array)
+			{
+				var i = 0
+				while (i < value.length)
+				{
+					if (code === value[i])
+						return the_key = key
+					i++
+				}
+			}
+			else if (typeof value === 'number')
+			{
+				if (value === code)
+					the_key = key
+			}
+		})
+		
+		switch (code)
+		{
+			case 16:
+			case 17:
+			case 18:
+				return
+		}
+		
+		if (!event.keyCode)
+			return
+		
+		if (!the_key)
+			throw 'Key code not recognized: ' + code
+		
+		keys.push(the_key)
+		
+		return keys
+	},
+	
 	navigating: function(event)
 	{
 		if (Клавиши.is('Влево', event) ||
@@ -345,16 +429,71 @@ var Клавиши =
 		}
 	},
 	
-	комбинация: function(keys)
+	сочетание: function(keys)
 	{
-		return keys.map(function(key) { return '«' + key + '»' }).join(' + ')
+		return keys.map(function(key) { return '«' + key + '»' }).join(', ')
+	},
+	
+	по_порядку: function(keys)
+	{
+		keys = Array.clone(keys)
+		
+		var по_порядку = []
+		
+		var meta_keys = ['Command', 'Ctrl', 'Alt', 'Shift']
+		
+		meta_keys.forEach(function(meta_key)
+		{
+			if (keys.contains(meta_key))
+			{
+				по_порядку.push(meta_key)
+				keys.remove(meta_key)
+			}
+		})
+		
+		по_порядку.append(keys.sort())
+		
+		return по_порядку
+	},
+	
+	при_нажатии: {},
+	
+	по_нажатию: function(действие)
+	{
+		function generate_id(target)
+		{
+			var id = Math.random().toString()
+			
+			if (typeof target[id] === 'undefined')
+				return id
+			
+			return generate_id(target)
+		}
+		
+		var id = generate_id(this.при_нажатии)
+		this.при_нажатии[id] = { действие: действие }
+		return id
+	},
+	
+	убрать_по_нажатию: function(id)
+	{
+		delete this.при_нажатии[id]
 	}
 }
 
-$(document).on('keypress', function(event)
+$(document).on('keydown', function(event)
 {
 	if (Клавиши.disabled)
+	{
 		event.preventDefault()
+		return
+	}
+	
+	Object.for_each(Клавиши.при_нажатии, function(id, при_нажатии)
+	{
+		//if (Клавиши.is(при_нажатии.сочетание, event))
+		при_нажатии.действие(event)
+	})
 })
 
 // testing:

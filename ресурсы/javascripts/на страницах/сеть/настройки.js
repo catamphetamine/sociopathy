@@ -5,6 +5,7 @@
 	Режим.пообещать('правка')
 		
 	page.query('.email', 'email')
+	page.query('.shortcuts', 'shortcuts')
 	
 	var No_email_text
 	
@@ -81,22 +82,10 @@
 				var key = $(this)
 				
 				var keys = key.find('> span').text().split(',')._map(function() { return this.trim() })
-				keys.for_each(function()
-				{
-					if (this != 'Command' && this != 'Ctrl' && this != 'Alt' && this != 'Shift')
-						if (typeof Клавиши[this] !== 'number')
-							клавиша_не_опознана = this
-				})
 				
 				directory[key.attr('path')] = keys
 			})
 		})
-		
-		if (клавиша_не_опознана)
-		{
-			warning('Клавиша «' + клавиша_не_опознана + '» не опознана')
-			return false
-		}
 		
 		return новые_клавиши
 	}
@@ -141,7 +130,7 @@
 		if (data.почта)
 			page.email.text(data.почта)
 			
-		$('.shortcuts').find('> ul').each(function()
+		page.shortcuts.find('> ul').each(function()
 		{
 			var category = $(this)
 			category.find('> li[path]').each(function()
@@ -153,8 +142,151 @@
 				if (category.attr('path') != "Прочее")
 					directory = directory[category.attr('path')]
 				
-				key.find('> span').text(directory[key.attr('path')].join(', ')).attr('editable', true)
+				var path = $('<span/>')
+				path.addClass('shortcut_path').text(directory[key.attr('path')].join(', ')) //.attr('editable', true)
+				path.appendTo(key)
 			})
+		})
+	}
+	
+	/*
+	$(document).on('keypress.press_any_key_combination', function(event)
+	{
+		 console.log(Клавиши.what(event))
+	})
+	*/
+	
+	page.Data_store.refresh_when_switching = true
+	
+	page.Data_store.populate_draft = function(data)
+	{
+		page.Data_store.populate_view(data)
+		
+		page.shortcuts.find('.shortcut_path').each(function()
+		{
+			var path = $(this)
+			
+			var old_path
+			
+			path.click(function()
+			{
+				if (path.hasClass('press_any_key_combination'))
+				{
+					return finished(old_path)
+				}
+				
+				if (page.data.по_нажатию_id)
+					return
+				
+				old_path = path.text()
+				
+				path.text('Нажмите клавиши')
+				path.addClass('press_any_key_combination')
+				
+				function finished(the_path)
+				{
+					path.text(the_path)
+					path.removeClass('press_any_key_combination')
+					
+					page.убрать_по_нажатию(page.data.по_нажатию_id)
+					delete page.data.по_нажатию_id
+				}
+				
+				page.data.по_нажатию_id = page.по_нажатию(function(event)
+				{
+					 //event.preventDefault()
+					 
+					if (Клавиши.is('Escape', event))
+					{
+						event.preventDefault()
+						event.stopImmediatePropagation()
+						return finished(old_path)
+					}
+					 
+					var what = Клавиши.what(event)
+					
+					what = Клавиши.по_порядку(what)
+					
+					if (what.пусто())
+						return
+					 
+					event.preventDefault()
+					event.stopImmediatePropagation()
+						
+					var Key_combination_finder = function()
+					{
+						this.find = function(what, where, path)
+						{
+							var finder = this
+							
+							if (where instanceof Array)
+							{
+								var keys = Клавиши.по_порядку(Array.clone(where))
+								
+								if (keys.length !== what.length)
+									return
+								
+								var i = 0
+								while (i < keys.length)
+								{
+									if (keys[i] !== what[i])
+										return
+									
+									i++
+								}
+								
+								return true
+							}
+							else if (typeof where === 'object')
+							{
+								var found
+							
+								Object.for_each(where, function(section, keys)
+								{
+									if (keys instanceof Array || typeof keys === 'object')
+									{
+										var old_path = finder.path
+										
+										if (finder.path)
+											finder.path += '.' + section
+										else
+											finder.path = section
+										
+										var result = finder.find(what, keys)
+										
+										if (result)
+										{
+											if (!finder.found)
+												finder.found = finder.path
+										}
+										
+										finder.path = old_path
+									}
+								})
+								
+								return this.found
+							}
+						}
+					}
+					 
+					var found = (new Key_combination_finder()).find(what, data.клавиши)
+					
+					if (found)
+					{
+						return warning('Сочетание клавиш ' + Клавиши.сочетание(what) + ' уже используется для действия «' + found + '»')
+					}
+					
+					finished(what.join(', '))
+				})
+			})
+		})
+	}
+	
+	page.Data_store.reset_view = function()
+	{
+		page.shortcuts.find('> ul > li').each(function()
+		{
+			$(this).find(':not(label:first)').remove()
 		})
 	}
 	

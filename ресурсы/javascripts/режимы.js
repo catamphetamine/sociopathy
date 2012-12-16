@@ -164,7 +164,7 @@ var Режим = (function()
 			{
 				$(this)
 					.attr('contenteditable', true)
-					.on_page('keypress.режим_правка', function(event)
+					.on_page('keydown.режим_правка', function(event)
 					{
 						if (Клавиши.is('Enter', event))
 							return false

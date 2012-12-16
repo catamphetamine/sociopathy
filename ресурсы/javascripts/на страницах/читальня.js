@@ -289,12 +289,7 @@
 		})
 	}
 	
-	page.Data_store.remove_draft = function()
-	{
-		page.categories.find('> li').empty()
-	}
-	
-	page.Data_store.remove_view = function()
+	page.Data_store.reset_view = function()
 	{
 		page.categories.find('> li').empty()
 	}

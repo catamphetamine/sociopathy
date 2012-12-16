@@ -670,17 +670,6 @@
 		})
 	}
 	
-	/*
-	page.Data_store.remove_view = function()
-	{
-		var container = $('.minor_info')
-		container.find('> .left').empty()
-		container.find('> .right').empty()
-	}
-	
-	page.Data_store.remove_draft = page.Data_store.remove_view
-	*/
-	
 	page.Data_store.deduce = function()
 	{
 		var о_себе = {}
