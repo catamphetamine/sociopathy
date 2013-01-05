@@ -107,13 +107,13 @@ body[mode="правка"] #content
 			@-webkit-keyframes glow
 			{
 					from { color: inherit; }
-					to { color: #afafaf; }
+					to { color: #7f7f7f; }
 			}
 		
 			@keyframes glow
 			{
 					from { color: inherit; }
-					to { color: #afafaf; }
+					to { color: #7f7f7f; }
 			}
 			
 			.animation(glow, 0.7s);

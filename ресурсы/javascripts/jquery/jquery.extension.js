@@ -759,3 +759,12 @@ $.fn.wrap_over = function(element)
 {
 	element.wrap(this)
 }
+
+$.xml = function(xml)
+{
+	var result = $($($.parseXML('<xml>' + xml + '</xml>')).find('xml')[0])
+	if (result.children().length > 1)
+		return result
+	
+	return $(result.children()[0])
+}

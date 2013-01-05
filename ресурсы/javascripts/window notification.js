@@ -267,6 +267,7 @@ var Minimalistic_window_notification = new Class
 	attention_symbol: '✽ ',
 
 	delay: 3000,
+	delayed: [],
 	
 	prepends_asterisk: false,
 	
@@ -310,13 +311,16 @@ var Minimalistic_window_notification = new Class
 		
 		if (!options.immediate)
 		{
-			this.delayed = function()
+			var delayed = function()
 			{
-				this.delayed = null
+				this.delayed.remove(delayed)
 				this.something_new({ immediate: true })
 			}
 			.bind(this)
 			.delay(this.delay)
+			
+			this.delayed.push(delayed)
+			
 			return
 		}
 			
@@ -330,10 +334,14 @@ var Minimalistic_window_notification = new Class
 	
 	nothing_new: function()
 	{
-		if (this.delayed)
+		if (!this.delayed.пусто())
 		{
-			clearTimeout(this.delayed)
-			this.delayed = null
+			this.delayed.for_each(function()
+			{
+				clearTimeout(this)
+			})
+			
+			this.delayed = []
 			return
 		}
 		

@@ -1,3 +1,19 @@
+http.get '/книги', (ввод, вывод) ->
+	options =
+		collection: 'books'
+		query: {},
+		total: yes
+				
+	result = снасти.either_way_loading.synchronized(ввод, options)
+			
+	ответ = 
+		книги: result.data
+		'есть ещё?': result['есть ещё?']
+		'есть ли предыдущие?': result['есть ли предыдущие?']
+		всего: result.всего
+		
+	вывод.send(ответ)
+
 http.get '/человек/книги', (ввод, вывод) ->
 	цепь(вывод)
 		.сделать ->

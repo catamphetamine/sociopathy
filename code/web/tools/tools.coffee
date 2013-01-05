@@ -5,10 +5,15 @@ file_system = require 'fs'
 
 global.synchronous = require 'sync'
 
-Function.prototype._ = (binding) ->
+Function.prototype.synchronized = () ->
+	parameters = Array.prototype.slice.call(arguments)
+	@synchronize(@).apply(@, parameters)
+	
+Function.prototype.synchronize = (binding) ->
 	return () =>
 		parameters = Array.prototype.slice.call(arguments)
-		parameters.unshift(binding)		
+		# add binding as a first argument
+		parameters.unshift(binding)
 		@sync.apply(@, parameters)
 	
 global.db = (collection) ->
@@ -16,14 +21,14 @@ global.db = (collection) ->
 	
 	api = {}
 	
-	api.find_one = mongo.findOne._(mongo)
+	api.find_one = mongo.findOne.synchronize(mongo)
 	
 	api.find = (query, options) ->
 		object = mongo.find(query, options)
-		object.toArray._(object)()
+		object.toArray.synchronize(object)()
 
-	api.update = mongo.update._(mongo)
-	api.save = mongo.save._(mongo)
+	api.update = mongo.update.synchronize(mongo)
+	api.save = mongo.save.synchronize(mongo)
 	
 	mongo._ = api
 	mongo

@@ -36,7 +36,7 @@ global.prepare_messages = (options) ->
 					снасти.batch_loading(ввод, { from: options.collection, query: options.общения_query(пользователь), parameters: { sort: [['обновлено', -1]] } }, @.в options.общение_во_множественном_числе)
 					
 				.сделать ->
-					пользовательское.подставить._()(@.$[options.общение_во_множественном_числе], 'участники')
+					пользовательское.подставить.synchronized(@.$[options.общение_во_множественном_числе], 'участники')
 					
 					if options.bulk_get_extra?
 						options.bulk_get_extra(@.$[options.общение_во_множественном_числе])

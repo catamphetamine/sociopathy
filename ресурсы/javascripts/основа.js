@@ -1,9 +1,19 @@
+var head = document.getElementsByTagName('head')[0]
+var body = document.getElementsByTagName('body')[0]
+
 // insert scripts
+
+var initial_scripts =
+[
+	'jquery/jquery',
+//	'jquery/jquery.tmpl'
+]
 
 var scripts =
 [
 	{jquery:
 	[
+		'jquery.tmpl',
 		'jquery.disable.text.select',
 		'jquery.extension',
 		'jquery.cookie',
@@ -48,10 +58,14 @@ var scripts =
 	
 	'dynamic page content',
 	
+	'надоснова',
+	
+	/*
 	{'на страницах':
 	[
-		'основа'
+		'загрузка страницы'
 	]},
+	*/
 	
 	{облик:
 	[
@@ -166,6 +180,7 @@ function insert_scripts(scripts, path)
 		if (all_scripts.length !== 0)
 			return insert_scripts()
 		
+		// к этому времени jQuery уже подгружен
 		$(document).trigger('scripts_loaded')
 		return
 	}
@@ -247,7 +262,11 @@ function insert_style(path)
 		
 	path = has_extension ? path : path + '.css'
 		
-	$('<link/>').attr('rel', 'stylesheet/less').attr('href', add_version(path)).appendTo('head')
+	var link = document.createElement('link')
+	link.rel = 'stylesheet/less'
+	link.href = add_version(path)
+	
+	head.appendChild(link)
 }
 
 function insert_styles(styles, path)
@@ -265,58 +284,91 @@ function insert_styles(styles, path)
 	})
 }
 
-$('body').addClass('loading')
+body.classList.add('loading')
 
-$.xml = function(xml)
+function append_all_children(from, to)
 {
-	var result = $($($.parseXML('<xml>' + xml + '</xml>')).find('xml')[0])
-	if (result.children().length > 1)
-		return result
-	
-	return $(result.children()[0])
+	while (from.childNodes.length > 0)
+	{
+		to.appendChild(from.firstChild)
+	}
 }
 
-insert_styles(styles, '/облик')
-		
-$.ajax
-({
-	url: add_version('/страницы/кусочки/root head.html'),
-	dataType: 'text',
-	success: function(html)
-	{
-		$('head').append(html)
-	},
-	error: function()
-	{
-		if (window.onerror)
-			window.onerror()
-		else
-			alert('Ошибка на странице')
+function extra_markup(what, where, callback)
+{
+	$.ajax
+	({
+		url: add_version('/страницы/кусочки/' + what + '.html'),
+		dataType: 'text',
+		success: function(html)
+		{
+			where.append(html)
 			
-		console.error('Root.html not loaded')
-	}
-})
+			callback()
+		},
+		error: function()
+		{
+			if (window.onerror)
+				window.onerror()
+			else
+				alert('Ошибка на странице')
 	
-if (!window.development_mode)
-	options.cache = true
-	
-$.ajax
-({
-	url: add_version('/страницы/кусочки/root body.html'),
-	dataType: 'text',
-	success: function(html)
-	{
-		$('body').append(html)
+			console.error('Extra markup not loaded')
+		}
+	})
 		
-		insert_scripts()
-	},
-	error: function()
-	{
-		if (window.onerror)
-			window.onerror()
-		else
-			alert('Ошибка на странице')
+	/*
+	// doesn't execute javascripts in html
+	ajax
+	({
+		url: add_version('/страницы/кусочки/основа (extra markup).html'),
+		dataType: 'html',
+		success: function(xml)
+		{
+			// <html>
+			xml = xml.firstChild
 			
-		console.error('Root.html not loaded')
-	}
+			var head_content = xml.getElementsByTagName('head')[0]
+			var body_content = xml.getElementsByTagName('body')[0]
+			
+			append_all_children(head_content, head)
+			append_all_children(body_content, body)
+			
+			callback()
+		},
+		error: function()
+		{
+			if (window.onerror)
+				window.onerror()
+			else
+				alert('Ошибка на странице')
+				
+			console.error('основа (extra markup).html not loaded')
+		}
+	})
+	*/
+}
+
+//if (!window.development_mode)
+//	options.cache = true
+
+function insert_initial_scripts(callback)
+{
+	if (initial_scripts.length === 0)
+		return callback()
+	
+	var script = initial_scripts.shift()
+	insert_script('/javascripts/' + script, function() { insert_initial_scripts(callback) })
+}
+
+insert_initial_scripts(function()
+{
+	extra_markup('основа (head)', $('head'), function()
+	{
+		extra_markup('основа (body)', $('body'), function()
+		{
+			insert_styles(styles, '/облик')
+			insert_scripts()
+		})
+	})
 })

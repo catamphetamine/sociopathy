@@ -11,9 +11,89 @@
 		
 		<meta charset="utf-8" />
 	
+		<!--
 		<script src="/javascripts/jquery/jquery.js"></script>
 		<script src="/javascripts/jquery/jquery.tmpl.js"></script>
+		-->
 
+		<script>
+			function ajax(options)
+			{
+				var request = new XMLHttpRequest()
+				request.open('GET', options.url, true)
+				
+				request.onreadystatechange = function()
+				{
+					if (request.readyState != 4)
+						return
+				
+					clearTimeout(timeout) // очистить таймаут при наступлении readyState 4
+					
+					if (request.status == 200)
+					{
+						var data
+									
+						switch (options.dataType)
+						{
+							case 'text':
+								data = request.responseText
+								break
+							
+							case 'html':
+							case 'xml':
+								data = request.responseXML
+								break
+							
+							//case 'script':
+							//	data = request.responseText
+								
+								/*
+								var script = document.createElement('script')
+								script.type = 'text/javascript'
+								script.src = options.url
+								
+								var head = document.getElementsByTagName('head')[0]
+								head.append(script)
+								*/
+								
+//								break
+								
+							default:
+								data = JSON.parse(request.responseText)
+						}
+						
+						/*
+						console.log('request.responseText')
+						console.log(request.responseText)
+						console.log('data')
+						console.log(data)
+						*/
+						
+						options.success(data)
+					}
+					else
+					{
+						options.error(request.statusText) // вызвать обработчик ошибки с текстом ответа
+					}
+				}
+					
+				if (options.dataType === 'html')
+					request.responseType = 'document'
+				else if (options.dataType === 'xml')
+					request.overrideMimeType('text/xml')
+					
+				request.send()
+					
+				// Таймаут 10 секунд
+				var timeout = setTimeout(function()
+				{
+					request.abort()
+					options.error('Timeout')
+				},
+				10 * 1000)
+			}
+		</script>
+		
 		<script>
 			var Configuration = {}
 			
@@ -36,6 +116,30 @@
 				}
 			}
 			
+			function load_script(url, callback)
+			{
+				var head	= document.getElementsByTagName("head")[0]
+				var script	= document.createElement("script")
+				var done 	= false // Handle Script loading
+				
+				script.src	= url
+				script.onload = script.onreadystatechange = function()
+				{
+					// Attach handlers for all browsers
+					if ( !done && (!this.readyState || this.readyState === "loaded" || this.readyState === "complete") )
+					{
+						done = true
+						
+						if (callback)
+							callback()
+							
+						script.onload = script.onreadystatechange = null // Handle memory leak in IE
+					}
+				}
+		 
+				head.appendChild(script)
+			}
+			
 			function insert_script(path, callback)
 			{
 				var has_extension = false
@@ -46,58 +150,37 @@
 				
 				console.log('loading script: ' + path)
 				
-				var options =
-				{
-					url: add_version(path),
-					dataType: "script",
-					success: function() { if (callback) callback() },
-					error: function()
-					{
-						if (window.onerror)
-							window.onerror()
-						else
-							alert('Ошибка на странице')
-							
-						console.error('Page script not loaded (possible syntax error): ' + path)
-						//throw 'Ошибка на странице'
-					}
-				}
-					
-				if (!window.development_mode)
-					options.cache = true
-					
-				$.ajax(options)
+				load_script(add_version(path), callback)
 			}
-
-			$(function()
-			{
-				$.ajax
-				({
-					url: '/приложение/versioning'
-				})
-				.success(function(data)
-				{
-					Version = data.site_version
-					//window.versioning = data
-					
-					if (data.development)
-						window.development_mode = true
-						
-					Configuration.Invites = data.invites
-					
-					insert_script('/javascripts/root')
-				})
-				.error(function()
-				{
-					if (page_loading_error)
-						page_loading_error()
-					else
-						console.error('Ошибка при получении версии сайта')
-				})
-			})
 		</script>
 	</head>
 
 	<body>
 	</body>
+	
+	<script>
+		ajax
+		({
+			url: '/приложение/versioning',
+			success: function(data)
+			{
+				Version = data.site_version
+				//window.versioning = data
+				
+				if (data.development)
+					window.development_mode = true
+					
+				Configuration.Invites = data.invites
+				
+				insert_script('/javascripts/основа')
+			},
+			error: function()
+			{
+				if (window.page_loading_error)
+					page_loading_error()
+				else
+					console.error('Ошибка при получении версии сайта')
+			}
+		})
+	</script>
 </html>

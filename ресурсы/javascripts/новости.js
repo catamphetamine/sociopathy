@@ -19,6 +19,8 @@ var Новости = new (new Class
 	
 	появились_новости: function()
 	{
+		console.log('появились_новости')
+		
 		//if (!this.есть_новости)
 		//	this.задержанное_уведомление_о_новостях = site_icon.something_new.delay(this.задержка_уведомления_о_новостях)
 		
@@ -38,7 +40,7 @@ var Новости = new (new Class
 	
 	сброс: function()
 	{
-		что_нового =
+		this.что_нового =
 		{
 			новости: [],
 			беседы: {},
@@ -57,6 +59,8 @@ var Новости = new (new Class
 		if (!последнее_сообщение)
 			return
 		
+		последнее_сообщение = последнее_сообщение + ''
+		
 		if (Страница.эта() === options.page)
 		{
 			var message = page.get('.author_content_date > li[message_id="' + последнее_сообщение + '"]')
@@ -64,7 +68,7 @@ var Новости = new (new Class
 			if (message.exists() && !message.hasClass('new'))
 				return
 		}
-		
+			
 		var indicate = false
 		if (!Object.path(this.что_нового, options.path))
 			indicate = true

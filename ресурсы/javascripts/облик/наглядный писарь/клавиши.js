@@ -327,7 +327,7 @@ Visual_editor.implement
 				if (editor.content[0].firstChild.tagName)
 					if (editor.content[0].firstChild.tagName.toLowerCase() === 'br')
 						editor.content[0].removeChild(editor.content[0].firstChild)
-			
+				
 			var character = String.fromCharCode(character_code)
 
 			if (character === ' ')

@@ -3,3 +3,61 @@
 	margin-top: 80px;
 	padding-bottom: 50px;
 }
+
+#add_book_window
+{
+	.buttons
+	{
+		label.add, label.apply
+		{
+			display: none;
+		}
+	}
+	
+	form
+	{
+		margin-top: 16px;
+		
+		label[for="сочинитель"]
+		{
+			margin-top: 30px;
+		}
+	}
+	
+	.icon
+	{
+		margin-right: 10px;
+	
+		width: 120px;
+		height: 170px;
+		
+		> table
+		{
+			width: 100%;
+			height: 100%;
+			
+			td
+			{
+				text-align: center;
+				
+				> *
+				{
+					vertical-align: middle;
+				}
+			}
+		}
+		
+		img
+		{
+			cursor: pointer;
+		}
+		
+		.no_icon
+		{
+			width: 100px;
+			height: 150px;
+			
+			box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+		}
+	}
+}

@@ -532,15 +532,38 @@ var Messages = new Class
 		if (this.options.set_up_visual_editor)
 			this.options.set_up_visual_editor.bind(this)(visual_editor)
 		
-		var hint = $('<p/>').appendTo(visual_editor.editor.content)
-		visual_editor.hint(hint, 'Вводите сообщение здесь')
-		visual_editor.store_content()
+		// глючит новая версия этого обозревателя
+		var Firefox_hack_character = '⋆'
+			
+		function reset_editor_content(options)
+		{
+			options = options || {}
+			
+			visual_editor.editor.content.empty()
+			
+			var hint = $('<p/>').appendTo(visual_editor.editor.content)
+				
+			if (options.not_initial && $.browser.mozilla && Firefox_hack_character)
+			{
+				visual_editor.hint(hint, Firefox_hack_character)
+			}
+			else
+			{
+				visual_editor.hint(hint, 'Вводите сообщение здесь')
+			}
+		}
 		
-		var editor_initial_html = visual_editor.editor.html()
+		reset_editor_content()
 
 		function send_message()
 		{
-			var message = Wiki_processor.parse_and_validate(visual_editor.editor.html())
+			var html = visual_editor.editor.html()
+			
+			if ($.browser.mozilla && Firefox_hack_character)
+				if (html.ends_with(Firefox_hack_character + '</p>'))
+					html = html.replace(Firefox_hack_character + '</p>', '</p>')
+			
+			var message = Wiki_processor.parse_and_validate(html)
 			
 			//console.log('message:')
 			//console.log(message)
@@ -553,7 +576,7 @@ var Messages = new Class
 				return warning('Потеряно соединение с сервером')
 			}
 			
-			visual_editor.editor.content.html(editor_initial_html)
+			reset_editor_content({ not_initial: true })
 			visual_editor.focus()
 			
 			messages.adjust_listing_margin()

@@ -9,6 +9,11 @@
 	{
 		title('Книги. ' + page.data.адресное_имя)
 	
+		text_button.new(page.get('.add_book')).does(function()
+		{
+			go_to('/сеть/книги')
+		})
+		
 		/*
 		add_book_window = simple_value_dialog_window
 		({

@@ -141,12 +141,12 @@ global.prepare_messages_socket = (options) ->
 							
 							соединение.on 'сообщение', (сообщение) ->
 								synchronous () ->
-									сообщение = options.save._()(сообщение, environment)
+									сообщение = options.save.synchronized(сообщение, environment)
 									
-									options.message_read._()(сообщение._id, environment)
+									options.message_read.synchronized(сообщение._id, environment)
 									
 									if options.subscribe?
-										options.subscribe._()(environment)
+										options.subscribe.synchronized(environment)
 									
 									options.notify(сообщение, environment)
 										
@@ -164,39 +164,6 @@ global.prepare_messages_socket = (options) ->
 									
 									соединение.emit('сообщение', данные_сообщения)
 									broadcast('сообщение', данные_сообщения)
-										
-								return
-								цепь(соединение)
-									.сделать ->
-										options.save(сообщение, environment, @._.в 'сообщение')
-										
-									.сделать ->
-										options.message_read(@._.сообщение._id, environment, @)
-										
-									.сделать ->
-										if options.subscribe?
-											return options.subscribe(environment, @)
-										@.done()
-										
-									.сделать ->
-										options.notify(@._.сообщение, environment, @)
-										
-									.сделать ->
-										db(options.messages_collection).find(options.these_messages_query({ _id: { $lt: @._.сообщение._id } }, environment), { limit: 1, sort: [['_id', -1]] }).toArray(@)
-										
-									.сделать (предыдущие_сообщения) ->
-										if предыдущие_сообщения.пусто()
-											throw 'Previous message not found'
-											
-										данные_сообщения =
-											_id: @._.сообщение._id.toString()
-											отправитель: пользовательское.поля(пользователь)
-											сообщение: @._.сообщение.сообщение
-											когда: @._.сообщение.когда
-											предыдущее: предыдущие_сообщения[0]._id.toString()
-										
-										соединение.emit('сообщение', данные_сообщения)
-										broadcast('сообщение', данные_сообщения)
 																						
 							соединение.on 'прочитано', (_id) ->
 								цепь(соединение)
