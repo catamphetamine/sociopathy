@@ -100,6 +100,7 @@ var Interactive_messages = function(options)
 		on_first_time_data: options.on_first_time_data,
 		on_finished: function()
 		{
+			// все пропущенные сообщения - в конце, поэтому on_finished
 			if (получить_пропущенные_сообщения_when_finished)
 				получить_пропущенные_сообщения()
 		}
@@ -495,6 +496,7 @@ var Interactive_messages = function(options)
 
 				connection.emit('кто здесь?')
 
+				// все пропущенные сообщения - в конце, поэтому получать их только когда finished
 				if (!messages.finished_loading)
 				{
 					получить_пропущенные_сообщения_when_finished = true
@@ -565,10 +567,15 @@ var Interactive_messages = function(options)
 			
 			connection.on('ошибка', function(ошибка)
 			{
+				var options = { sticky: true }
+				
 				if (ошибка.ошибка === true)
-					return error('Ошибка связи с сервером')
+					return error('Ошибка связи с сервером', options)
 		
-				error(ошибка)
+				if (ошибка.ошибка === 'Слишком много сообщений пропущено')
+					return error('Не удалось догрузить сообщения. Обновите страницу.', { sticky: true })
+		
+				error(ошибка.ошибка, options)
 			})
 			
 			messages.connection = connection

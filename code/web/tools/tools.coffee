@@ -23,6 +23,8 @@ global.db = (collection) ->
 	
 	api.find_one = mongo.findOne.synchronize(mongo)
 	
+	api.count = mongo.count.synchronize(mongo)
+	
 	api.find = (query, options) ->
 		object = mongo.find(query, options)
 		object.toArray.synchronize(object)()
@@ -516,3 +518,14 @@ module.exports = снасти
 
 global.show_error = (ошибка) ->
 	throw { error: ошибка, display_this_error: yes }
+
+global.web_socket = (соединение) ->
+	соединение.old_on = соединение.on
+	
+	соединение.on = (message_type, action) ->
+		@old_on message_type, (message) =>
+			цепь(@)
+				.сделать ->
+					synchronous ->
+						action(message)
+				.go()

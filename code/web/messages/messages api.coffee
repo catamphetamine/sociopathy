@@ -55,15 +55,11 @@ global.messages_api = (options) ->
 				пользовательское.подставить(@.$.сообщения, 'отправитель', @)
 										
 			.сделать ->
-				console.log('extra get')
 				if options.extra_get?
-					console.log('options.extra get')
 					return options.extra_get(@.$, environment, @)
 				@.done()
 				
 			.сделать ->
-				console.log(options.extra_get)
-				console.log('extra got')
 				if ввод.настройки.первый_раз?
 					if options.создатель?
 						if environment.сообщения_чего?

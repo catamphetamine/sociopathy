@@ -13,6 +13,8 @@ global.prepare_messages_socket = (options) ->
 			connection = websocket
 				.of(options.uri)
 				.on 'connection', (соединение) ->
+					web_socket(соединение)
+					
 					соединения[соединение.id] = соединение
 					эфир.соединения[options.общение][соединение.id] = соединение
 					environment = {}
@@ -74,9 +76,6 @@ global.prepare_messages_socket = (options) ->
 								if not user?
 									return send(ошибка: 'Пользователь не найден: ' + тайный_ключ)
 									
-								console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
-								console.log(user)
-									
 								пользователь = user
 								environment.пользователь = пользователь
 								соединение.пользователь = { _id: пользователь._id }
@@ -109,20 +108,23 @@ global.prepare_messages_socket = (options) ->
 										соединение.emit 'кто здесь', who_is_connected_info
 							
 							соединение.on 'получить пропущенные сообщения', (с_какого) ->
-								цепь(соединение)
-									.сделать ->
-										collection.find(options.these_messages_query({ _id: { $gte: collection.id(с_какого._id) } }, environment), { sort: [['_id', 1]] }).toArray(@.в 'сообщения')
-									
-									.сделать ->
-										пользовательское.подставить(@.$.сообщения, 'отправитель', @)
-									
-									#.сделать ->
-									#	if options.mark_new?
-									#		return options.mark_new(@.$.сообщения, environment, @)
-									#	@.done()
-									
-									.сделать ->
-										соединение.emit('пропущенные сообщения', @.$.сообщения)
+								Max_lost_messages = 100
+								
+								query = options.these_messages_query({ _id: { $gte: collection.id(с_какого._id) } }, environment)
+								
+								if collection._.count(query) > Max_lost_messages
+									throw 'Слишком много сообщений пропущено'
+								 
+								сообщения = collection._.find(query, { sort: [['_id', 1]] })
+							
+								пользовательское.подставить.synchronized(сообщения, 'отправитель')
+								
+								#.сделать ->
+								#	if options.mark_new?
+								#		return options.mark_new(@.$.сообщения, environment, @)
+								#	@.done()
+								
+								соединение.emit('пропущенные сообщения', сообщения)
 									
 							соединение.on 'смотрит', () ->
 								broadcast('смотрит', пользовательское.поля(пользователь))

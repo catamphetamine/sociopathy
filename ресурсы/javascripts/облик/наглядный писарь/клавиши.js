@@ -176,12 +176,6 @@ Visual_editor.implement
 		
 		$(document).on('keydown', function(event)
 		{
-			if (!Клавиши.поймано(Настройки.Клавиши.Писарь.Показать, event))
-				return
-			
-			if (!event.target)
-				return
-			
 			if (event.target instanceof HTMLInputElement
 				|| event.target instanceof HTMLTextAreaElement)
 				return
@@ -189,10 +183,17 @@ Visual_editor.implement
 			if (is_node_editable(event.target))
 				return
 			
+			if (!event.target)
+				return
+			
+			if (!Клавиши.поймано(Настройки.Клавиши.Писарь.Показать, event))
+				return
+			
 			event.preventDefault()
 			event.stopPropagation()
 			
 			$(document).trigger('show_visual_editor')
+			//visual_editor.shown = true
 		})
 	},
 	

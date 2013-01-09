@@ -21,20 +21,20 @@
 			data_source:
 			{
 				url: '/приложение/сеть/беседа/сообщения',
-				parameters: { _id: page.data.беседа._id, id: page.data.беседа.id }
+				parameters: { _id: page.data.общение._id, id: page.data.общение.id }
 			},
 			on_first_time_data: function(data)
 			{
 				//console.log(data)
 				title(data.название)
 				
-				page.data.беседа._id = data._id
+				page.data.общение._id = data._id
 				page.talk.attr('_id', data._id)
 				
 				breadcrumbs
 				([
 					{ title: 'Беседы', link: '/сеть/беседы' },
-					{ title: data.название, link: '/сеть/беседы/' + page.data.беседа.id }
+					{ title: data.название, link: '/сеть/беседы/' + page.data.общение.id }
 				])
 				
 				unedited_talk_title = data.название
@@ -70,7 +70,7 @@
 							
 							page.Ajax.put('/приложение/сеть/беседы/участие',
 							{
-								беседа: page.data.беседа._id,
+								беседа: page.data.общение._id,
 								пользователь: user._id
 							})
 							.ok(function(data)
@@ -113,7 +113,7 @@
 			on_first_output: page.initialized,
 			on_message_bottom_appears: function(_id)
 			{
-				Новости.прочитано({ беседа: page.data.беседа._id, сообщение: _id })
+				Новости.прочитано({ беседа: page.data.общение._id, сообщение: _id })
 			},
 			before_output: function(message)
 			{

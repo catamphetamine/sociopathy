@@ -19,21 +19,21 @@
 			data_source:
 			{
 				url: '/приложение/сеть/обсуждение/сообщения',
-				parameters: { _id: page.data.обсуждение._id, id: page.data.обсуждение.id }
+				parameters: { _id: page.data.общение._id, id: page.data.общение.id }
 			},
 			on_first_time_data: function(data)
 			{
 				//console.log(data)
 				title(data.название)
 				
-				page.data.обсуждение._id = data._id
+				page.data.общение._id = data._id
 				
 				page.discussion.attr('_id', data._id)
 				
 				breadcrumbs
 				([
 					{ title: 'Обсуждения', link: '/сеть/обсуждения' },
-					{ title: data.название, link: '/сеть/обсуждения/' + page.data.обсуждение.id }
+					{ title: data.название, link: '/сеть/обсуждения/' + page.data.общение.id }
 				])
 				
 				unedited_discussion_title = data.название
@@ -50,7 +50,7 @@
 			on_first_output: page.initialized,
 			on_message_bottom_appears: function(_id)
 			{
-				Новости.прочитано({ обсуждение: page.data.обсуждение._id, сообщение: _id })
+				Новости.прочитано({ обсуждение: page.data.общение._id, сообщение: _id })
 			},
 			before_output: function(message)
 			{

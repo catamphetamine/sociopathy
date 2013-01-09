@@ -19,8 +19,6 @@ var Новости = new (new Class
 	
 	появились_новости: function()
 	{
-		console.log('появились_новости')
-		
 		//if (!this.есть_новости)
 		//	this.задержанное_уведомление_о_новостях = site_icon.something_new.delay(this.задержка_уведомления_о_новостях)
 		
@@ -61,8 +59,28 @@ var Новости = new (new Class
 		
 		последнее_сообщение = последнее_сообщение + ''
 		
+		var show_bubble = false
+		
+		if (options.important !== false)
+		{
+			if (options.text)
+			{
+				show_bubble = true
+			}
+		}
+		
 		if (Страница.эта() === options.page)
 		{
+			// если уже загружена первая партия сообщений,
+			// то получен _id общения: page.data.общение._id
+			if (page.data.общение._id && options.общение)
+			{
+				if (page.data.общение._id === options.общение)
+				{
+					show_bubble = false
+				}
+			}
+			
 			var message = page.get('.author_content_date > li[message_id="' + последнее_сообщение + '"]')
 			
 			if (message.exists() && !message.hasClass('new'))
@@ -83,26 +101,23 @@ var Новости = new (new Class
 				this.появились_новости()			
 		}
 		
-		if (options.important !== false)
+		if (show_bubble)
 		{
-			if (options.text)
+			var text = Wiki_processor.simplify(options.text)
+			
+			Message.message('new_message_in_' + options.english, text,
 			{
-				var text = Wiki_processor.simplify(options.text)
-				
-				Message.message('new_message_in_' + options.english, text,
+				postprocess: function(container)
 				{
-					postprocess: function(container)
-					{
-						var text_container = $('<div/>').addClass('text')
-						this.wrapInner(text_container)
-						
-						var avatar = $.tmpl('маленький аватар', Object.x_over_y(options.отправитель, { no_link: true }))
-						avatar.prependTo(this)
-					},
-					ссылка: '/' + options.url + '/' + options.id,
-					время: 1.5
-				})
-			}
+					var text_container = $('<div/>').addClass('text')
+					this.wrapInner(text_container)
+					
+					var avatar = $.tmpl('маленький аватар', Object.x_over_y(options.отправитель, { no_link: true }))
+					avatar.prependTo(this)
+				},
+				ссылка: '/' + options.url + '/' + options.id,
+				время: 1.5
+			})
 		}
 	},
 	
@@ -125,6 +140,7 @@ var Новости = new (new Class
 		{
 			page: 'сеть/обсуждение',
 			url: 'сеть/обсуждения',
+			общение: обсуждение,
 			path: 'обсуждения.' + обсуждение,
 			indication: panel.new_discussion_messages,
 			english: 'discussion'
@@ -139,6 +155,7 @@ var Новости = new (new Class
 		{
 			page: 'сеть/беседа',
 			url: 'сеть/беседы',
+			общение: беседа,
 			path: 'беседы.' + беседа,
 			indication: panel.new_talk_messages,
 			english: 'talk'

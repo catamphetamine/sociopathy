@@ -105,7 +105,7 @@ var Страница =
 					'*': function(value, rest)
 					{
 						название_страницы = 'сеть/беседа'
-						new_page.data.беседа = { id: value }
+						new_page.data.общение = { id: value }
 					}
 				})
 			},
@@ -116,7 +116,7 @@ var Страница =
 					'*': function(value, rest)
 					{
 						название_страницы = 'сеть/обсуждение'
-						new_page.data.обсуждение = { id: value }
+						new_page.data.общение = { id: value }
 					}
 				})
 			},
