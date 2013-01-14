@@ -11,7 +11,7 @@ http.get '/люди', (ввод, вывод) ->
 				query: {},
 				total: yes
 				
-			снасти.either_way_loading(ввод, options, @)
+			either_way_loading(ввод, options, @)
 			
 		.сделать (result) ->
 			for man in result.data

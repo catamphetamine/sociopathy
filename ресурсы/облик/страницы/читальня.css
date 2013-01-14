@@ -75,7 +75,7 @@
 			border-style: solid;
 			border-color: #3f3f3f;
 			
-			/* = Category_side_spacing */
+			/* margin править также в читальня.js */
 			margin: 40px;
 			
 			background: rgb(232,232,232); /* Old browsers */

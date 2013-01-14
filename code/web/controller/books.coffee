@@ -1,11 +1,11 @@
-http.get '/книги', (ввод, вывод) ->
+http.get '/сеть/книги', (ввод, вывод) ->
 	options =
 		collection: 'books'
 		query: {},
 		total: yes
-				
-	result = снасти.either_way_loading.synchronized(ввод, options)
-			
+	
+	result = either_way_loading.synchronized(ввод, options)
+	
 	ответ = 
 		книги: result.data
 		'есть ещё?': result['есть ещё?']
@@ -26,7 +26,7 @@ http.get '/человек/книги', (ввод, вывод) ->
 		.сделать (книги) ->
 			if not книги
 				return вывод.send(книги: [])
-			@.done(книги.книги)
+			@.done(книги.книги.reverse())
 			
 		.все_вместе (книга) ->
 			db('books').findOne({ _id: книга }, @)

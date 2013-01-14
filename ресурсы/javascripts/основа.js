@@ -246,7 +246,9 @@ var styles =
 	
 	'simple value dialog window',
 	
-	'audio player'
+	'audio player',
+	
+	'either way loading'
 ]
 
 function insert_style(path)

@@ -393,3 +393,8 @@ String.prototype.capitalize = function()
 {
     return this.charAt(0).toUpperCase() + this.slice(1)
 }
+
+String.prototype.escape_quotes = function()
+{
+	return this.replace_all('"', '\\"')
+}

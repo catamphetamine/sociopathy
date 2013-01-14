@@ -122,9 +122,14 @@ var Progress = new Class
 		this.options.element.css({ top: (this.height * skipped_ratio) + 'px' })
 		
 		this.document_height = $(document).height()
-		this.viewport_height_to_document_height_ratio = this.options.maximum_height / this.document_height
+		this.window_height_to_document_height_ratio = this.options.maximum_height / this.document_height
 		
-		this.viewport.height(parseInt(this.height * this.viewport_height_to_document_height_ratio * (1 - skipped_ratio)))
+		if (this.window_height_to_document_height_ratio > 1)
+			this.window_height_to_document_height_ratio = 1
+		
+		var displayed_progress_height = this.height * (1 - skipped_ratio)
+		
+		this.viewport.css({ height: parseInt(displayed_progress_height * this.window_height_to_document_height_ratio) + 'px' })
 		
 		this.update_current_viewport_position()
 	},

@@ -45,7 +45,7 @@ global.messages_api = (options) ->
 			.сделать ->
 				loading_options.query = options.these_messages_query({}, environment)
 	
-				снасти.either_way_loading(ввод, loading_options, @)
+				either_way_loading(ввод, loading_options, @)
 							
 			.сделать (result) ->
 				@.$.сообщения = result.data

@@ -150,6 +150,28 @@ var Страница =
 					}
 				})
 			},
+			'сеть/книги': function(rest)
+			{
+				match_url(rest,
+				{
+					'*': function(value, rest)
+					{
+						var int_value = parseInt(value)
+						if (int_value == value && int_value > 0)
+						{
+							new_page.data.номер_страницы = int_value
+							название_страницы = 'сеть/книги'
+							return
+						}
+						
+						название_страницы = 'сеть/книги'
+						return
+						
+						//new_page.data.книга = { id: value }
+						//название_страницы = 'сеть/книга'
+					}
+				})
+			},
 			'читальня': function(rest)
 			{
 				match_url(rest,

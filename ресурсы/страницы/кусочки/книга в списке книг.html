@@ -1,0 +1,85 @@
+<div class="centerer">
+	<div class="cover">
+		{{if обложка}}
+			{{if обложка.большая}}
+				${( $data.есть_большая_обложка = true ), ''}
+			{{/if}}
+		{{/if}}
+		
+		<!-- блок начала ссылки -->
+		{{if формат}}
+			<a target="_blank" href="/загруженное/книги/${id}.${формат}" class="book_link" title="${сочинитель.escape_quotes()} «${название.escape_quotes()}»">
+		{{else}}
+			{{if ссылка}}
+				<a target="_blank" href="${ссылка.escape_quotes()}" class="book_link" title="${сочинитель.escape_quotes()} «${название.escape_quotes()}»">
+			{{/if}}	
+		{{/if}}
+
+		{{if есть_большая_обложка}}
+			<div class="cover_image" style="background-image: url('/загруженное/книги/обложки/большие/${id}.${обложка.формат}?version=${обложка.version}');
+					width: ${обложка.большая.ширина}px;
+					height: ${обложка.большая.высота}px;
+					margin-left: -${parseInt(обложка.большая.ширина / 2)}px;">
+			</div>
+		{{else}}
+			<div class="cover_image" style="background-image: url('/картинки/на страницах/сеть/книги/нет обложки.jpg');
+					width: 213px;
+					height: 320px;
+					margin-left: -${parseInt(213 / 2)}px;">
+			</div>
+		{{/if}}
+		
+		<!-- блок конца ссылки -->
+		{{if формат}}
+			</a>
+		{{else}}
+			{{if ссылка}}
+				</a>
+			{{/if}}	
+		{{/if}}
+	</div>
+ 
+	<div class="author">
+		<!-- блок начала ссылки -->
+		{{if формат}}
+			<a target="_blank" href="/загруженное/книги/${id}.${формат}" class="book_link" title="${сочинитель.escape_quotes()} «${название.escape_quotes()}»">
+		{{else}}
+			{{if ссылка}}
+				<a target="_blank" href="${ссылка.escape_quotes()}" class="book_link" title="${сочинитель.escape_quotes()} «${название.escape_quotes()}»">
+			{{/if}}	
+		{{/if}}
+		
+		${сочинитель}
+		
+		<!-- блок конца ссылки -->
+		{{if формат}}
+			</a>
+		{{else}}
+			{{if ссылка}}
+				</a>
+			{{/if}}	
+		{{/if}}
+	</div>
+ 
+	<div class="title">
+		<!-- блок начала ссылки -->
+		{{if формат}}
+			<a target="_blank" href="/загруженное/книги/${id}.${формат}" class="book_link" title="${сочинитель.escape_quotes()} «${название.escape_quotes()}»">
+		{{else}}
+			{{if ссылка}}
+				<a target="_blank" href="${ссылка.escape_quotes()}" class="book_link" title="${сочинитель.escape_quotes()} «${название.escape_quotes()}»">
+			{{/if}}	
+		{{/if}}
+		
+		«<span>${название}</span>»
+		
+		<!-- блок конца ссылки -->
+		{{if формат}}
+			</a>
+		{{else}}
+			{{if ссылка}}
+				</a>
+			{{/if}}	
+		{{/if}}
+	</div>
+</div>

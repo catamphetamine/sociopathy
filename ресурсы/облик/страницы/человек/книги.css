@@ -311,5 +311,5 @@
 
 body[mode="правка"] .book
 {
-	cursor: pointer !important;
+	/* cursor: pointer !important; */
 }

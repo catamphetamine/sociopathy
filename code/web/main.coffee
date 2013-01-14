@@ -44,8 +44,10 @@ global.цепь = (object, options) ->
 	throw 'Unknown object for conveyor: ' + object
 
 global.снасти = require './tools/tools'
-global.пользовательское = require './tools/user_tools'
-global.читальня = require './tools/library_tools'
+global.пользовательское = require './tools/user tools'
+global.читальня = require './tools/library tools'
+
+global.either_way_loading = require './tools/either way loading'
 
 global.application_tools = require('./connect/express')()
 global.http = global.application_tools.http
@@ -63,7 +65,7 @@ global.session = require './session'
 
 #global.почта.письмо(кому: 'Николай Кучумов <kuchumovn@gmail.com>', тема: 'Test', сообщение: 'Проверка {{связи}}', данные: { связи: 'связи' })
 
-require './upload_server'
+require './upload server'
 
 require './controller/administration'
 require './controller/library'
