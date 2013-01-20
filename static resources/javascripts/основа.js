@@ -5,8 +5,11 @@ var body = document.getElementsByTagName('body')[0]
 
 var initial_scripts =
 [
-	'jquery/jquery',
-//	'jquery/jquery.tmpl'
+	{ path: 'jquery/jquery' },
+	{ path: 'mootools/mootools-core-1.4.5-full-nocompat' },
+	{ path: 'язык' },
+	{ path: 'jquery/jquery.extension' },
+	{ path: 'языки', await: true }
 ]
 
 var scripts =
@@ -15,7 +18,7 @@ var scripts =
 	[
 		'jquery.tmpl',
 		'jquery.disable.text.select',
-		'jquery.extension',
+		//'jquery.extension',
 		'jquery.cookie',
 		'jquery.color',
 		'jquery.animate-shadow',
@@ -34,11 +37,11 @@ var scripts =
 	
 	{mootools:
 	[
-		'mootools-core-1.4.5-full-nocompat',
+		//'mootools-core-1.4.5-full-nocompat',
 		'mootools-more-1.4.0.1',
 	]},
 	
-	'язык',
+	//'язык',
 	'date',
 	
 	'uri',
@@ -311,9 +314,9 @@ function extra_markup(what, where, callback)
 		error: function()
 		{
 			if (window.onerror)
-				window.onerror()
+				window.onerror('Ошибка при загрузке страницы')
 			else
-				alert('Ошибка на странице')
+				alert('Ошибка при загрузке страницы')
 	
 			console.error('Extra markup not loaded')
 		}
@@ -354,23 +357,66 @@ function extra_markup(what, where, callback)
 //if (!window.development_mode)
 //	options.cache = true
 
+var initial_scripts_in_progress =
+{
+	list: [],
+	
+	done: false,
+	
+	add: function(path)
+	{
+		this.list.push(path)
+	},
+	
+	finished: function(path)
+	{
+		if (this.list.indexOf(path) >= 0)
+			this.list.splice(this.list.indexOf(path), 1)
+		
+		if (this.list.length === 0)
+			this.ready()
+	},
+	
+	shall_we: function()
+	{
+		if (this.done)
+			return
+		
+		if (this.list.length === 0)
+			this.ready()
+	},
+	
+	ready: function()
+	{
+		done = true
+		
+		extra_markup('основа (head)', $('head'), function()
+		{
+			extra_markup('основа (body)', $('body'), function()
+			{
+				insert_styles(styles, '/облик')
+				insert_scripts()
+			})
+		})
+	}
+}
+
+initial_scripts.forEach(function(script)
+{
+	if (script.await)
+		initial_scripts_in_progress.add(script.path)
+})
+
 function insert_initial_scripts(callback)
 {
 	if (initial_scripts.length === 0)
-		return callback()
+		return callback
 	
 	var script = initial_scripts.shift()
-	insert_script('/javascripts/' + script, function() { insert_initial_scripts(callback) })
+	insert_script('/javascripts/' + script.path, function() { insert_initial_scripts(callback) })
 }
 
 insert_initial_scripts(function()
 {
-	extra_markup('основа (head)', $('head'), function()
-	{
-		extra_markup('основа (body)', $('body'), function()
-		{
-			insert_styles(styles, '/облик')
-			insert_scripts()
-		})
-	})
+	initial_scripts_in_progress.shall_we()
 })

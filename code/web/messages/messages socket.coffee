@@ -117,7 +117,7 @@ global.prepare_messages_socket = (options) ->
 								 
 								сообщения = collection._.find(query, { sort: [['_id', 1]] })
 							
-								пользовательское.подставить.synchronized(сообщения, 'отправитель')
+								пользовательское.подставить.await(сообщения, 'отправитель')
 								
 								#.сделать ->
 								#	if options.mark_new?
@@ -143,12 +143,12 @@ global.prepare_messages_socket = (options) ->
 							
 							соединение.on 'сообщение', (сообщение) ->
 								synchronous () ->
-									сообщение = options.save.synchronized(сообщение, environment)
+									сообщение = options.save.await(сообщение, environment)
 									
-									options.message_read.synchronized(сообщение._id, environment)
+									options.message_read.await(сообщение._id, environment)
 									
 									if options.subscribe?
-										options.subscribe.synchronized(environment)
+										options.subscribe.await(environment)
 									
 									options.notify(сообщение, environment)
 										

@@ -308,7 +308,7 @@ function error(text, options) { Message.error(text, options) }
 
 // testing
 /*
-$(document).on('page_loaded', function()
+$(document).once_on('display_page', function()
 {
 	setTimeout(function()
 	{

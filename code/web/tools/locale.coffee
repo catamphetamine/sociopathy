@@ -1,70 +1,79 @@
 class Locale
-  @default: new Locale process.env.LANG or "en_US"
+	@default: new Locale process.env.LANG or "en_US"
 
-  constructor: (value) ->
-    return unless match = value?.match /[a-z]+/gi
+	constructor: (value) ->
+		return unless match = value?.match /[a-z]+/gi
 
-    [language, country] = match
+		[language, country] = match
+	
+		@language = do language.toLowerCase
+		@country  = do country.toUpperCase if country
+		
+	serialize = ->
+		value = [@language]
+		value.push @country if @country
 
-    @language = do language.toLowerCase
-    @country  = do country.toUpperCase if country
+		value.join "_"
 
-  serialize = ->
-    value = [@language]
-    value.push @country if @country
-
-    value.join "_"
-
-  toString: serialize
-  toJSON: serialize
+	toString: serialize
+	toJSON: serialize
 
 class Locales
-  length: 0
-  _index: null
+	length: 0
+	_index: null
+	
+	sort: Array::sort
+	push: Array::push
+	
+	constructor: (accept_languages) ->
+		return unless accept_languages
 
-  sort: Array::sort
-  push: Array::push
+		for item in (String accept_languages).split ','
+			[locale, weight] = item.split ';'
+			
+			locale = new Locale do locale.trim
+			locale.score = if weight then +weight[2..] or 0 else 1
+			
+			@push locale
+	
+			@sort (a, b) -> a.score < b.score
 
-  constructor: (accept_languages) ->
-    return unless accept_languages
+	index: ->
+		unless @_index
+			@_index = {}
+			@_index[locale] = yes for locale in @
 
-    for item in (String accept_languages).split ','
-      [locale, weight] = item.split ';'
+		@_index
 
-      locale = new Locale do locale.trim
-      locale.score = if weight then +weight[2..] or 0 else 1
+	languages: ->
+		unless @_languages
+			@_languages = []
+			for locale in @
+				if not @_languages.has(locale.language)
+					@_languages.push(locale.language) 
 
-      @push locale
+		@_languages
 
-    @sort (a, b) -> a.score < b.score
+	best: (locales) ->
+		locale = Locale.default
 
-  index: ->
-    unless @_index
-      @_index = {}
-      @_index[locale] = yes for locale in @
+		unless locales
+			return @[0] or locale
+	
+		index = do locales.index
+	
+		for item in @
+			return item if index[item]
+	
+		locale
 
-    @_index
+	serialize = ->
+		[@...]
 
-  best: (locales) ->
-    locale = Locale.default
-
-    unless locales
-      return @[0] or locale
-
-    index = do locales.index
-
-    for item in @
-      return item if index[item]
-
-    locale
-
-  serialize = ->
-    [@...]
-
-  toJSON: serialize
+	toJSON: serialize
   
-  toString: ->
-    String do @toJSON
+	toString: ->
+		String do @toJSON
 
 api =
 	list: (request) ->

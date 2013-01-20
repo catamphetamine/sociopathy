@@ -6,14 +6,18 @@
 		
 	page.query('.email', 'email')
 	page.query('.shortcuts', 'shortcuts')
+	page.query('.language', 'language')
+	page.query('.language .id', 'language_id')
 	
 	var No_email_text
+	var No_language_text
 	
 	page.load = function()
 	{
 		Подсказка('изменение настроек', 'Вы можете изменить настройки, перейдя в <a href=\'/помощь/режимы#Режим правки\'>«режим правки»</a>');
 
 		No_email_text = page.email.text()
+		No_language_text = page.language.find('.name').text()
 	
 		var conditional = initialize_conditional($('.main_conditional'), { immediate: true })
 		
@@ -60,6 +64,12 @@
 		return
 	}
 	
+	function whats_the_language()
+	{
+		if (page.language_id.text())
+			return page.language_id.text()
+	}
+	
 	function считать_клавиши()
 	{
 		var новые_клавиши = {}
@@ -102,13 +112,17 @@
 			data:
 			{
 				почта: данные.почта,
-				клавиши: JSON.stringify(данные.клавиши)
+				клавиши: JSON.stringify(данные.клавиши),
+				язык: данные.язык
 			},
 			
 			url: '/приложение/сеть/пользователь/настройки',
 			
 			ok: function()
-			{
+			{		
+				if (данные.язык !== Язык)
+					info('Для того, чтобы изменения языка \n вступили в силу, обновите страницу')
+				
 				//if (данные.почта && данные.почта !== page.data.старая_почта)
 				//	info('На ваш новый почтовый ящик (возможно) было отправлено письмо (а возможно и не было отправлено)')
 			}
@@ -121,6 +135,7 @@
 		
 		result.почта = get_email()
 		result.клавиши = считать_клавиши()
+		result.язык = whats_the_language()
 		
 		return result
 	}
@@ -129,6 +144,17 @@
 	{
 		if (data.почта)
 			page.email.text(data.почта)
+			
+		if (data.язык)
+		{
+			page.language.find('.name').text(get_language(data.язык).name)
+			page.language_id.text(data.язык)
+		}
+		else
+		{
+			page.language.find('.name').text(No_language_text)
+			page.language_id.empty()
+		}
 			
 		page.shortcuts.find('> ul').each(function()
 		{
@@ -161,6 +187,46 @@
 	page.Data_store.populate_draft = function(data)
 	{
 		page.Data_store.populate_view(data)
+		
+		// language
+		
+		page.language.find('.name').remove()
+		
+		var select = $('<select/>')
+		
+		var none = $('<option/>')
+		
+		if (!data.язык)
+			none.attr('selected', true)
+			
+		none.appendTo(select)
+		
+		Configuration.Locale.Supported_languages.for_each(function()
+		{
+			var option = $('<option/>').attr('value', this.id).text(this.name)
+			
+			if (data.язык === this.id)
+				option.attr('selected', true)
+				
+			option.appendTo(select)
+		})
+		
+		select.on('change', function(event)
+		{
+			if (!select.val())
+			{
+				page.language.find('.name').text(No_language_text)
+				page.language_id.empty()
+				return
+			}
+			
+			page.language.find('.name').text(get_language(select.val()).name)
+			page.language_id.text(select.val())
+		})
+		
+		select.appendTo(page.language)
+		
+		// shortcuts
 		
 		page.shortcuts.find('.shortcut_path').each(function()
 		{
@@ -299,6 +365,19 @@
 		})
 	}
 	
+	page.Data_store.remove_draft = function()
+	{
+		page.language.find('select').remove()
+		
+		// reset language name
+		var text = No_language_text
+		if (whats_the_language())
+			text = get_language(whats_the_language()).name
+		page.language.append($('<div/>').addClass('name').text(text))
+		
+		page.Data_store.reset_view()
+	}
+	
 	page.Data_store.reset_view = function()
 	{
 		page.shortcuts.find('> ul > li').each(function()
@@ -312,7 +391,8 @@
 		var result =
 		{
 			почта: page.data.настройки.почта,
-			клавиши: Настройки.Клавиши
+			клавиши: Настройки.Клавиши,
+			язык: page.data.настройки.язык
 		}
 		
 		return result

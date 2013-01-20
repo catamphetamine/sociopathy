@@ -7,7 +7,7 @@
 		<meta name="copyright" content="2010-2012 Николай Кучумов"/>
 		<meta name="description" content="Собрание - общественная сеть"/>
 		
-		<title>Собрание</title>
+		<title></title>
 		
 		<meta charset="utf-8" />
 	
@@ -174,12 +174,18 @@
 				
 				Configuration.Locale =
 				{
-					Язык: data.язык,
-					Страна: data.страна
+					Default_language: 'en',
+					Supported_languages:
+					[
+						{ id: 'ru', name: 'Русский' },
+						{ id: 'en', name: 'English' }
+					],
+					
+					Предпочитаемый_язык: data.язык,
+					Предпочитаемые_языки: data.языки,
+					
+					Страна: data.страна || 'US'
 				}
-				
-				if (Configuration.Locale.Язык !== 'ru')
-					info('Seems that your native language isn\'t Russian. This social network currently supports only russian language')
 				
 				insert_script('/javascripts/основа')
 			},

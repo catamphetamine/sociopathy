@@ -5,7 +5,7 @@ file_system = require 'fs'
 
 global.synchronous = require 'sync'
 
-Function.prototype.synchronized = () ->
+Function.prototype.await = () ->
 	parameters = Array.prototype.slice.call(arguments)
 	@synchronize(@).apply(@, parameters)
 	

@@ -1,5 +1,7 @@
 (function()
 {
+	title('Собрание')
+	
 	/**
 	 * Welcome page initialization
 	 */

@@ -181,7 +181,8 @@ var Пользовательские_настройки_по_умолчанию 
 		},
 		Вход: ['Ctrl', 'Alt', 'L'],
 		Подсказки: ['Alt', 'Shift', '0']
-	}
+	},
+	Язык: Язык
 }
 
 var Настройки = Пользовательские_настройки_по_умолчанию
@@ -196,17 +197,45 @@ apply_shortcut_synonyms()
 function применить_пользовательские_настройки(настройки)
 {
 	Настройки = {}
+	
 	Object.x_over_y(Пользовательские_настройки_по_умолчанию, Настройки)
 	Object.x_over_y(настройки.клавиши, Настройки.Клавиши)
+
+	if (настройки.язык)
+		Настройки.Язык = настройки.язык
 	
 	apply_shortcut_synonyms()
 }
 
-$(document).on('authenticated', function(event, данные)
+//$(document).on('authenticated', function(event, данные)
+function user_authenticated(данные, callback)
 {
 	if (данные.session.настройки)
 		применить_пользовательские_настройки(данные.session.настройки)
 	
 	пользователь.session = {}
 	пользователь.session.не_показывать_подсказки = данные.session.не_показывать_подсказки || []
-})
+	
+	// сменить язык на выбранный
+	if (Настройки.Язык !== Язык)
+	{
+		load_translation(Настройки.Язык,
+		function()
+		{
+			// success
+			callback()
+		},
+		function()
+		{
+			// error
+			
+			// should never happen
+			
+			//warning(text('user language is not supported', { 'preferred language': Настройки.Язык, 'current language': Язык }))
+			
+			callback()
+		})
+	}
+	else
+		callback()
+}

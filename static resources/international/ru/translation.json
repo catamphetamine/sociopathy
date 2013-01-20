@@ -1,0 +1,3 @@
+{
+	"user language is not supported": "Выбранный вами язык ({preferred language}) пока не поддерживается. Вы можете изменить его в [link to user settings]своих настройках[/link]. Язык по умолчанию — {current language}"
+}

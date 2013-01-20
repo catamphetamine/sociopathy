@@ -1,0 +1,2 @@
+You can translate this social network to any language.
+See the "static resources/international" folder for examples.

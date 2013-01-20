@@ -116,7 +116,7 @@ html *::selection, html *::-moz-selection, html *::-webkit-selection
 }
 */
 
-html, input, textarea
+html, input, textarea, select
 {
 	font-family: Whitney;
 	font-size: 32px;

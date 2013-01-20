@@ -768,3 +768,19 @@ $.xml = function(xml)
 	
 	return $(result.children()[0])
 }
+
+$.fn.once_on = function(event, action)
+{
+	var namespace = Math.random() + '@' + new Date().getTime()
+	
+	var element = this
+	
+	if (event.indexOf('.') >= 0)
+		throw 'Namespace not allowed'
+	
+	this.on(event + '.' + namespace, function()
+	{
+		element.unbind('.' + namespace)
+		action()
+	})
+}

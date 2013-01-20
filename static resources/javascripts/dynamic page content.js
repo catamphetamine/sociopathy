@@ -101,12 +101,14 @@ var navigating = false;
 			Ajax.get('/приложение/пользовательские_данные_для_страницы')
 			.ошибка(function(ошибка)
 			{
-				// если кука user - кривая, то она уже сама удалилась на сервере,
-				// и просто перезагрузить страницу, чтобы войти в качестве гостя
-				if (ошибка === 'Пользователь не найден')
-					return window.location = '/'
-				
 				page_loading_error()
+					
+				// если кука user - кривая, то она уже сама удалилась на сервере
+				if (ошибка === 'Пользователь не найден')
+				{
+					error('Пользователь не опознан')
+					go_to('/')
+				}
 			})
 			.ok(function(данные) 
 			{
@@ -116,12 +118,11 @@ var navigating = false;
 				
 				//пользователь.versioning = window.versioning.пользователь
 				
-				$(document).trigger('authenticated', данные)
-				
 				if (!пользователь && Страница.эта().starts_with('сеть/'))
 					window.location = '/прописка'
-	
-				возврат()
+						
+				//$(document).trigger('authenticated', данные)
+				user_authenticated(данные, возврат)
 			})
 		}
 		
