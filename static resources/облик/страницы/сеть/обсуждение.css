@@ -1,0 +1,38 @@
+@import "/облик/вспомогательный.less";
+@import "/облик/author_content_date.less";
+
+#content
+{
+	margin-top: 60px;
+	
+	.main_content
+	{
+		> .empty
+		{
+			margin-top: 100px;
+		}
+		
+		.more_container
+		{
+			margin-top: 30px;
+		}
+		
+		#discussion.author_content_date
+		{
+			> li.odd
+			{
+				background-color: #f5ffee;
+				
+				&.new
+				{
+					background-color: #e3fee2;
+				}
+			}
+		}
+		
+		.who_is_connected_container
+		{
+			margin-bottom: 40px;
+		}
+	}
+}

@@ -1,0 +1,6 @@
+<a class="album" href='/люди/${page.data.адресное_имя}/картинки/${id}'>
+	<div class="cover" style="background-image: url('/картинки/на страницах/человек/картинки/обложка нового альбома.jpg')">
+		<img {{if обложка}}{{else}} style="display: none" {{/if}} src="/загруженное/люди/${page.data.адресное_имя}/картинки/${id}/обложка.jpg"/>
+	</div>
+	<div class="title">${название}</div>
+</a>

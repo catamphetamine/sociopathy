@@ -1,0 +1,23 @@
+@import "/облик/вспомогательный.less";
+
+#content
+{
+	p
+	{
+		text-indent: @paragraph_indent;
+		
+		> *
+		{
+			text-indent: 0;
+		}
+	}
+	
+	margin-bottom: 100px;
+	padding-left: 40px;
+	
+	h1
+	{
+		margin-top: 90px;
+		margin-bottom: 60px;
+	}
+}

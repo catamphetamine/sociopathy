@@ -1,0 +1,19 @@
+<li _id="${_id}">
+	<div class="content_wrapper">
+		<div class="content multiline_text rich_formatting">
+			{{html сообщение}}
+		</div>
+	</div>
+
+	<div class="author no_word_carrying">
+		<a href="/люди/${отправитель['адресное имя']}">
+			<span class="name" title="${отправитель.имя}">
+				${отправитель.имя}
+			</span>
+			
+			{{tmpl(отправитель) "user icon"}}
+		</a>
+	</div>	
+		
+	<div class="when no_word_carrying intelligent_date" date="${когда.getTime()}">${неточное_время(когда)}</div>
+</li>

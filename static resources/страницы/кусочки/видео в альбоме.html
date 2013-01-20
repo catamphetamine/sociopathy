@@ -1,0 +1,15 @@
+{{if источник == 'vimeo.com' }}
+	<img video_id="${id}" class="vimeo_video_picture video" vimeo_video_id="${внешний_id}"/>
+{{else}}
+	{{if источник == 'youtube.com' }}
+		<img video_id="${id}" class="youtube_video_picture video" youtube_video_id="${внешний_id}"/>
+	{{else}}
+		<div class="video">
+			Неизвестный источник видео
+		</div>
+	{{/if}}
+{{/if}}
+
+{{if описание }}
+	<p style="display: none">${описание}</p>
+{{/if}}

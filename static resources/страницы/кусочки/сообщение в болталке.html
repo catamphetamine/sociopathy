@@ -1,0 +1,17 @@
+<li author="${отправитель._id}">
+	<div class="content_wrapper">
+		<div class="content multiline_text rich_formatting">{{html Wiki_processor.decorate(сообщение)}}</div>
+	</div>
+
+	<!-- {{if is_online(отправитель._id)}}online{{/if}} -->
+	<div class="author no_word_carrying">
+		<a href="/люди/${отправитель['адресное имя']}">
+			<span class="name" title="${отправитель.имя}">
+				${отправитель.имя}
+			</span>
+			{{tmpl "chat user icon"}}
+		</a>
+	</div>
+	
+	<div class="when no_word_carrying intelligent_date" date="${когда.getTime()}" title="${когда.toString('dd.MM.yyyy в HH:mm:ss')}">${когда_примерно}</div>
+</li>

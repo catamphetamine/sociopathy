@@ -1,0 +1,149 @@
+@import "/облик/вспомогательный.less";
+
+.popup_message
+{
+	display: inline-block;
+	text-align: left;
+			
+	margin-top: 20px;
+	margin-right: 20px;
+	
+	border-width: 0;
+	padding: 0;
+	
+	.popup_panel
+	{
+		border-width: 0;
+	}
+	
+	/* opacity: 0.85; */
+	
+	/*
+	border-style: solid;
+	border-width: 2px;
+
+	border-radius: 10px;
+	*/
+	
+	/* .beautiful_shadow_5(3px, 5px, 5px, 7px, 10px, 14px, 20px, 0.12); */
+	/* в хроме тормозит */
+	/* можно заменить border-image'ем */
+	/* .shadow(3px, 5px, 15px, 0.25); */
+
+	cursor: default;
+
+	.close
+	{
+		position: relative;
+		float: right;
+
+		left: 10px;
+		top: 4px;
+		
+		margin-left: 4px;
+			
+		width: 30px;
+		height: 30px;
+		
+		background-image: url('/картинки/уведомления/закрыть.png');
+		
+		cursor: pointer;
+	}	
+}
+
+/*
+	> .messages_container
+	{
+		position: fixed;
+		right: 0;
+		top: 0;
+		
+		z-index: 2;
+		
+		text-align: right;
+		width: 100%;
+			
+		> .message_container
+		{
+			position: relative;
+*/
+
+body
+{
+	> .message_container
+	{
+		position: fixed;
+		right: 0;
+		top: 0;
+	
+		.info
+		{
+			> div
+			{
+				/* .message(); */
+				
+				color: #303030;
+				text-shadow: 1px 1px 0px #ffffff;
+				
+				border-color: #7f7f7f;
+				
+				background-color: #eef2f4;
+				.top_to_bottom_gradient(#eef2f4, #d6dde0);
+			}
+		}
+	
+		.error
+		{
+			padding: 2px;
+			border-width: 1px;
+				
+			> div
+			{
+				color: #faefef;
+				text-shadow: 1px 1px 0px #000000;
+				
+				border-width: 1px;
+				border-color: #400500;
+				
+				background-color: #a42e2e;
+				.top_to_bottom_gradient(#a42e2e, #742b2b);
+				
+				.close
+				{
+					background-image: url('/картинки/уведомления/закрыть ошибку.png');	
+				}
+			}
+		}
+	
+		.warning
+		{
+			> div
+			{
+				/* .message(); */
+				
+				color: #281b00;
+				text-shadow: 1px 1px 0px #f3e69f;
+				
+				border-color: #918658;
+				
+				background-color: #f7dc72;
+				.top_to_bottom_gradient(#f7dc72, #d6b52f);
+			}
+		}
+	}
+}
+
+.blurred
+{
+	.popup_message.error > div
+	{
+		color: #faefef !important;
+		text-shadow: none !important;
+	}
+	
+	.popup_message.warning > div
+	{
+		color: #281b00 !important;
+		text-shadow: none !important;
+	}
+}

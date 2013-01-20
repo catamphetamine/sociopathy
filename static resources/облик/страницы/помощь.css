@@ -1,0 +1,43 @@
+@import "/облик/вспомогательный.less";
+
+#content.help
+{
+	margin-top: 80px;
+
+	h2
+	{
+		margin-left: 50px;
+	}
+	
+	.help_section.faq ul li .question:after
+	{
+		content: '?'
+	}
+	
+	.help_section.todo, .help_section.faq
+	{
+		ul
+		{
+			list-style: none;
+			padding: 0;
+			
+			li
+			{
+				.question
+				{
+					cursor: pointer;
+					color: @link_color;
+				}
+				
+				.answer
+				{
+					display: none;
+					position: relative;
+					margin-left: 40px;
+					margin-bottom: 40px;
+					margin-top: 10px;
+				}
+			}
+		}
+	}
+}

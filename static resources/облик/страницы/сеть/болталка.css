@@ -1,0 +1,53 @@
+@import "/облик/вспомогательный.less";
+@import "/облик/author_content_date.less";
+
+#content
+{
+	.main_content
+	{
+		margin-top: 20px;
+	}
+}
+
+@inter_column_padding: @AuthorContentDate_inter_column_padding;
+@author_column_left_padding: @AuthorContentDate_author_column_left_padding;
+@author_column_right_padding: @AuthorContentDate_author_column_right_padding;
+@author_column_width: @AuthorContentDate_author_column_width;
+@message_bottom_padding: @AuthorContentDate_message_bottom_padding;
+@author_icon_margin_left: @AuthorContentDate_author_icon_margin_left;
+@time_column_padding: @AuthorContentDate_time_column_padding;
+@time_column_width: @AuthorContentDate_time_column_width;
+
+ul.chat
+{
+	/* margin: 0, т.к. в яваскрипте это подразумевается (на этом работает прокрутка) */
+
+	> li.odd
+	{
+		background-color: white;
+	}
+	
+	> li.even
+	{
+		background-color: #f6f6f6;
+	
+		&.new
+		{
+			background-color: #ececec;
+		}
+	}
+}
+
+.main_conditional
+{
+	[type=loading], [type=error]
+	{
+		margin-top: 172px;
+	}
+}
+
+body
+{
+	overflow-x: hidden;
+	overflow-y: scroll;
+}
