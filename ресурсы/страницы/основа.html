@@ -172,6 +172,15 @@
 					
 				Configuration.Invites = data.invites
 				
+				Configuration.Locale =
+				{
+					Язык: data.язык,
+					Страна: data.страна
+				}
+				
+				if (Configuration.Locale.Язык !== 'ru')
+					info('Seems that your native language isn\'t Russian. This social network currently supports only russian language')
+				
 				insert_script('/javascripts/основа')
 			},
 			error: function()

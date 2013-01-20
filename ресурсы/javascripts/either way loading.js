@@ -330,7 +330,7 @@ function either_way_loading(options)
 	
 	var result =
 	{
-		unload:	 function()
+		destroy: function()
 		{
 			bottom_loader.deactivate()
 			

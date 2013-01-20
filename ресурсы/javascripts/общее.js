@@ -486,6 +486,9 @@ function error(error)
 	{
 		//console.log('Error:')
 		
+		//if (ошибка.contains('MathJax is not defined'))
+		//	return warning('Формулы временно не работают')
+		
 		// игнорировать ошибки разрыва соединения с WebSocket в FireFox
 		// "contains" may cause error, if it isn't loaded
 		if (ошибка && typeof ошибка === 'string')

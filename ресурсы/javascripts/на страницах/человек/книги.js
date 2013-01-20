@@ -4,7 +4,7 @@
 	//Режим.пообещать('действия')
 	
 	var add_book_window
-	
+
 	page.load = function()
 	{
 		title('Книги. ' + page.data.адресное_имя)
@@ -92,6 +92,12 @@
 					info('Это не ваши личные данные, и вы не можете их править.')
 					return false
 				}
+				
+				//page.get('.bookshelf').find('.book').attr('draggable', true)
+			}
+			else if (из === 'правка')
+			{
+				//page.get('.bookshelf').find('.book').removeAttr('draggable')
 			}
 		})
 		
@@ -166,8 +172,8 @@
 			({
 				activator: book_place.find('.book'),
 				popup: info,
-				fade_in_duration: 0.1,
-				fade_out_duration: 0.1
+				fade_in_duration: 0.0,
+				fade_out_duration: 0.0
 			})
 		})
 		

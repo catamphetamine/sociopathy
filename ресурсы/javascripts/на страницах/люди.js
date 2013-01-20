@@ -2,9 +2,11 @@
 {
 	title('Люди')
 	
+	var loader
+	
 	page.load = function()
 	{
-		either_way_loading
+		loader = either_way_loading
 		({
 			путь: '/люди',
 			с_номерами_страниц: true,
@@ -29,5 +31,10 @@
 			error: 'Не удалось загрузить список людей',
 			progress_bar: true
 		})
+	}
+	
+	page.unload = function()
+	{
+		loader.destroy()
 	}
 })()

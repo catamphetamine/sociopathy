@@ -3,6 +3,11 @@ http.get '/versioning', (ввод, вывод) ->
 		site_version: Options.Version
 		development: Options.Development
 		invites: Options.Invites
+		
+	locale = require('./../tools/locale').list(ввод).best()
+	
+	data.язык = locale.language
+	data.страна = locale.country
 
 	вывод.send(data)
 	

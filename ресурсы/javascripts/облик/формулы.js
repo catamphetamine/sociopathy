@@ -1,5 +1,11 @@
 function refresh_formulae(options, callback)
 {
+	if (!window.MathJax)
+	{
+		warning('Формулы временно не работают')
+		return callback()
+	}
+		
 	if (typeof options === 'function')
 	{
 		callback = options

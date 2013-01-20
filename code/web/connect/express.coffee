@@ -60,7 +60,7 @@ remember_me = (ввод, вывод, следующий) ->
 			
 		.сделать ->
 			следующий()
-	
+
 module.exports = (приложение) ->
 	if not приложение?
 		приложение = express.createServer()
@@ -74,6 +74,7 @@ module.exports = (приложение) ->
 			приложение.use получатель_настроек
 			приложение.use remember_me
 			приложение.use access_logger
+			#приложение.use require('./../tools/locale').middleware
 			приложение.use приложение.router
 	
 		приложение.configure 'development', ->
