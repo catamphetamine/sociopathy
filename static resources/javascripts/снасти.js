@@ -495,7 +495,7 @@ function image_exists(url, callback)
 
 //get_image_size('http://www.google.com/images/errors/logo_sm.gif, function(size) { alert(size.width + ' x ' + size.height) })
 
-function iterate(array, condition, action)
+function iterate_removing(array, condition, action)
 {
 	var count = array.length
 	

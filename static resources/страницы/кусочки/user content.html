@@ -71,7 +71,7 @@
 	<div class="authenticated_user non_selectable">
 		<div class="info">
 			<a href="/люди/${escape_id(пользователь['адресное имя'])}" class="name">${пользователь.имя}</a>
-			<a href="#" class="logout">Выйти</a>
+			<a href="#" class="logout">${text('top panel.log out')}</a>
 		</div>
 		
 		{{tmpl(пользователь) 'маленький аватар'}}

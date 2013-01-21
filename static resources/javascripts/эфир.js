@@ -243,6 +243,11 @@ $(document).on('panel_loaded', function()
 			Новости.беседа(data._id, data.сообщение, { id: data.id, отправитель: data.отправитель, text: data.text })
 		})
 		
+		on('новости', 'беседа.добавление', function(data)
+		{
+			info('Вас добавили в беседу <a href=\'/сеть/беседы/' + data.id + '\'>«' + data.название + '»</a>')
+		})
+		
 		on('новости', 'обсуждение', function(data)
 		{
 			Новости.обсуждение(data._id, data.сообщение, { id: data.id, отправитель: data.отправитель, text: data.text })

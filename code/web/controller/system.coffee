@@ -1,14 +1,7 @@
 http.get '/сеть/мусорка', (ввод, вывод, пользователь) ->
-	цепь(вывод)
-		.сделать ->
-			снасти.batch_loading(ввод, { from: 'system_trash', query: {}, parameters: { sort: [['_id', -1]] } }, @.в 'trash')
-			
-		.сделать ->
-			console.log(@.$.trash)
-			пользовательское.подставить(@.$.trash, 'кто_выбросил', @)
-			
-		.сделать ->
-			вывод.send(@.$)
+	trash = снасти.batch_loading.await(ввод, { from: 'system_trash', query: {}, parameters: { sort: [['_id', -1]] } })
+	пользовательское.подставить.await(trash, 'кто_выбросил')
+	вывод.send(trash: trash)
 			
 global.system_trash = (что, data, пользователь, возврат) ->
 	данные = { что: что, когда_выброшено: new Date(), кто_выбросил: пользователь._id }

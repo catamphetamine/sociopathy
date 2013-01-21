@@ -33,7 +33,7 @@
 				
 				breadcrumbs
 				([
-					{ title: 'Беседы', link: '/сеть/беседы' },
+					{ title: text('pages.talks.title'), link: '/сеть/беседы' },
 					{ title: data.название, link: '/сеть/беседы/' + page.data.общение.id }
 				])
 				
@@ -45,9 +45,9 @@
 					page.get('.breadcrumbs > :last').attr('editable', true)
 				}
 		
-				data.участники.for_each(function(участник)
+				data.участники.for_each(function()
 				{
-					if (пользователь._id === участник)
+					if (пользователь._id === this + '')
 						page.data.участник_ли = true
 				})
 				

@@ -1,3 +1,124 @@
 {
-	"user language is not supported": "Your preferred language ({preferred language}) is not currently supported. You can change it in [link to user settings]your settings[/link]. Defaulting to {current language}"
+	"user language is not supported": "Your preferred language ({preferred language}) is not currently supported. You can change it in [link to user settings]your settings[/link]. Defaulting to {current language}",
+	
+	"pages":
+	{
+		"main":
+		{
+			"title": "Sociopathy"
+		},
+		"library":
+		{
+			"title": "Library"
+		},
+		"people":
+		{
+			"title": "People"
+		},
+		"help":
+		{
+			"title": "Help"
+		},
+		"chat":
+		{
+			"title": "Chat"
+		},
+		"discussions":
+		{
+			"title": "Discussions"
+		},
+		"talks":
+		{
+			"title": "Talks"
+		},
+		"books":
+		{
+			"title": "Books"
+		},
+		"circles":
+		{
+			"title": "Circles"
+		},
+		"settings":
+		{
+			"title": "Settings",
+			
+			"email_not_specified": "email not specified",
+			
+			"language": "Language",
+			"language_not_specified": "detect automatically",
+			
+			"modes":
+			{
+				"title": "Modes"
+			},
+			
+			"actions":
+			{
+				"title": "Actions",
+				
+				"create": "Create",
+				"add": "Add",
+				"delete": "Delete"
+			},
+			
+			"editor":
+			{
+				"title": "Editor",
+				
+				"breaking space": "Breaking space",
+				"show": "Show"
+			},
+			
+			"other":
+			{
+				"title": "Other",
+				
+				"log in": "Log in"
+			}
+		},
+		"trash":
+		{
+			"title": "Trash"
+		},
+		"administration":
+		{
+			"title": "Administration",
+			
+			"load dummy data into the database": "Load dummy data into the database",
+			"create an invite": "Выдать приглашение",
+			"execute database altering script": "Execute database altering script from «administration.coffee» (for development purposes only)"
+		},
+		"registration":
+		{
+			"title": "Register"
+		}
+	},
+	
+	"top panel":
+	{
+		"log in": "Log in",
+		"log out": "Log out"
+	},
+	
+	"modes":
+	{
+		"view": "View",
+		"edit": "Edit",
+		"action": "Actions",
+		
+		"unavailable_before_page_loads": "You'll be able to enter the «{mode}» mode after the page loads",
+		"unavailable": "The «{mode}» mode is unavailable right here right now",
+		"switching_is_frozen": "Switching modes is disabled right now",
+		"log_in_to_edit": "You can't edit anything here right now because you are not logged in. If you are a registered member you should <a href='#' class='enter'>log in</a>. Otherwise you should [link to registration]register[/link].",
+		
+		"edit mode":
+		{
+			"action panel":
+			{
+				"save": "Save changes",
+				"cancel": "Cancel"
+			}
+		}
+	}
 }

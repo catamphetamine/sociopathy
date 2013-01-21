@@ -32,7 +32,7 @@
 				
 				breadcrumbs
 				([
-					{ title: 'Обсуждения', link: '/сеть/обсуждения' },
+					{ title: text('pages.discussions.title'), link: '/сеть/обсуждения' },
 					{ title: data.название, link: '/сеть/обсуждения/' + page.data.общение.id }
 				])
 				

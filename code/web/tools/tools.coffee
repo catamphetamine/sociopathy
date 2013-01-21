@@ -412,7 +412,7 @@ global.web_socket = (соединение) ->
 	
 	соединение.on = (message_type, action) ->
 		@old_on message_type, (message) =>
-			цепь(@)
+			цепь(@, { manual: yes })
 				.сделать ->
 					synchronous ->
 						action(message)

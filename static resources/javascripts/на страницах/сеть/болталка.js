@@ -1,6 +1,7 @@
+title(text('pages.chat.title'));
+
 (function()
-{
-	title('Болталка')
+{	
 	Режим.пообещать('правка')
 	
 	var messages

@@ -2,43 +2,43 @@
 	<div class="main_conditional">
 		<div type="ok">
 			<div class="email_block">
-				<div class="email_icon"></div> <span editable="true" class="email">почтовый ящик не указан</span>
+				<div class="email_icon"></div> <span editable="true" class="email">${text('pages.settings.email_not_specified')}</span>
 			</div>
 	
 			<div>
 				<div class="language_block">
-					<div class="label">Язык: </div>
+					<div class="label">${text('pages.settings.language')}: </div>
 					<div class="language">
 						<div class="id"></div>
-						<div class="name">по умолчанию</div>
+						<div class="name">${text('pages.settings.language_not_specified')}</div>
 					</div>
 				</div>
 			</div>
 			
 			<div class="shortcuts">
-				Режимы
+				${text('pages.settings.modes.title')}
 				<ul path="Режимы">
-					<li path="Обычный"><label>Обычный</label></li>
-					<li path="Правка"><label>Правка</label></li>
-					<li path="Действия"><label>Действия</label></li>
+					<li path="Обычный"><label>${text('modes.view')}</label></li>
+					<li path="Правка"><label>${text('modes.edit')}</label></li>
+					<li path="Действия"><label>${text('modes.action')}</label></li>
 				</ul>
 				
-				Действия
+				${text('pages.settings.actions.title')}
 				<ul path="Действия">
-					<li path="Создать"><label>Создать</label></li>
-					<li path="Добавить"><label>Добавить</label></li>
-					<li path="Удалить"><label>Удалить</label></li>
+					<li path="Создать"><label>${text('pages.settings.actions.create')}</label></li>
+					<li path="Добавить"><label>${text('pages.settings.actions.add')}</label></li>
+					<li path="Удалить"><label>${text('pages.settings.actions.delete')}</label></li>
 				</ul>
 				
-				Писарь
+				${text('pages.settings.editor.title')}
 				<ul path="Писарь">
-					<li path="Разрывный_пробел"><label>Разрывный пробел</label></li>
-					<li path="Показать"><label>Показать</label></li>
+					<li path="Разрывный_пробел"><label>${text('pages.settings.editor.breaking space')}</label></li>
+					<li path="Показать"><label>${text('pages.settings.editor.show')}</label></li>
 				</ul>
 				
-				Прочее
+				${text('pages.settings.other.title')}
 				<ul path="Прочее">
-					<li path="Вход"><label>Вход</label></li>
+					<li path="Вход"><label>${text('pages.settings.other.log in')}</label></li>
 				</ul>
 			</div>
 		</div>

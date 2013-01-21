@@ -73,12 +73,18 @@ class Цепь
 			@debug = yes
 			
 		if options.upload? || options.manual?
-			#
+			@safe = yes
 		else
 			process.nextTick =>
-				@go()
+				@go(safe: yes)
 	
-	go: ->
+	go: (options) ->
+		options = options || {}
+		
+		if not options.safe?
+			if not @safe?
+				throw "Conveyor's .go() called without the { manual: yes } option"
+		
 		if @обработчик_ошибок_по_умолчанию?
 			@ошибка @обработчик_ошибок_по_умолчанию
 		@дальше()

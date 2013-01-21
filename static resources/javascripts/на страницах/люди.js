@@ -1,7 +1,7 @@
-(function()
-{
-	title('Люди')
+title(text('pages.people.title'));
 	
+(function()
+{	
 	var loader
 	
 	page.load = function()

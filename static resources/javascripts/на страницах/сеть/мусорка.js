@@ -1,3 +1,5 @@
+title(text('pages.trash.title'));
+
 (function()
 {
 	var main_content

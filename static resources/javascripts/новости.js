@@ -73,13 +73,15 @@ var Новости = new (new Class
 		{
 			// если уже загружена первая партия сообщений,
 			// то получен _id общения: page.data.общение._id
-			if (page.data.общение._id && options.общение)
+			if (options.общение && page.data.общение._id)
 			{
 				if (page.data.общение._id === options.общение)
 				{
 					show_bubble = false
 				}
 			}
+			else
+				show_bubble = false
 			
 			var message = page.get('.author_content_date > li[message_id="' + последнее_сообщение + '"]')
 			

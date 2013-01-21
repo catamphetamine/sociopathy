@@ -1,4 +1,4 @@
-title('Обсуждения');
+title(text('pages.discussions.title'));
 	
 (function()
 {	
@@ -12,7 +12,7 @@ title('Обсуждения');
 	
 		breadcrumbs
 		([
-			{ title: 'Обсуждения', link: '/сеть/обсуждение' }
+			{ title: text('pages.discussions.title'), link: '/сеть/обсуждение' }
 		])
 		
 		text_button.new(page.get('.new_discussion.button')).does(function()
@@ -101,11 +101,14 @@ title('Обсуждения');
 					{
 						var обсуждение = this
 						
-						iterate(this.подписчики || [], function(подписчик)
+						this.подписчики = this.подписчики || []
+						
+						this.подписчики.filter(function(подписчик)
 						{
 							return подписчик === пользователь._id
-						},
-						function()
+						})
+						
+						this.подписчики.each(function()
 						{
 							обсуждение.подписан = true
 						})

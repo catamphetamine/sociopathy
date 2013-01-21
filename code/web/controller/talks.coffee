@@ -11,11 +11,11 @@ options.сообщения_чего = (result, сообщения_чего) ->
 	result.участники = сообщения_чего.участники.map((x) -> x.toString())
 					
 options.save = (сообщение, environment) ->
-	db(options.collection)._.update({ _id: environment.сообщения_чего._id }, { $pull: { собеседники: environment.пользователь._id } })
-	db(options.collection)._.update({ _id: environment.сообщения_чего._id }, { $addToSet: { собеседники: environment.пользователь._id } })	
+	db(options.collection)._.update({ _id: environment.сообщения_чего._id }, { $pull: { участники: environment.пользователь._id } })
+	db(options.collection)._.update({ _id: environment.сообщения_чего._id }, { $addToSet: { участники: environment.пользователь._id } })	
 
-options.bulk_get_extra = (беседы) ->
-	пользовательское.подставить.await(беседы, 'собеседники')
+#options.bulk_get_extra = (беседы) ->
+#	пользовательское.подставить.await(беседы, 'участники')
 
 result = messages.messages(options)
 

@@ -26,10 +26,10 @@ $(document).on_page('режим.переход', function(event, из, в)
 })
 */
 
+title(text('pages.books.title'));
+
 (function()
 {
-	title('Книги')
-	
 	var loader
 	
 	page.load = function()

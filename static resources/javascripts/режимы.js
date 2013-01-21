@@ -35,7 +35,7 @@ var Режим = (function()
 	режимы.push
 	({
 		название: 'обычный',
-		заголовок: 'Обычный',
+		заголовок: text('modes.view'),
 		перейти: function(из)
 		{
 		}
@@ -44,7 +44,7 @@ var Режим = (function()
 	режимы.push
 	({
 		название: 'правка',
-		заголовок: 'Правка',
+		заголовок: text('modes.edit'),
 		перейти: function(из)
 		{
 //			$('[editable=true]').attr('contenteditable', true)
@@ -54,7 +54,7 @@ var Режим = (function()
 	режимы.push
 	({
 		название: 'действия',
-		заголовок: 'Действия',
+		заголовок: text('modes.action'),
 		перейти: function(из)
 		{
 			//$('[editable=true]').attr('contenteditable', true)
@@ -74,7 +74,7 @@ var Режим = (function()
 			
 		if (!переходы_разрешены)
 		{
-			info('Здесь и сейчас переходы между режимами заморожены')
+			info(text('modes.switching is frozen'))
 			return false
 		}
 		
@@ -83,9 +83,9 @@ var Режим = (function()
 			var описание_режима = найти_описание_режима(в)
 			
 			if (обещания[в])
-				info('Переход в режим «' + описание_режима.заголовок + '» будет доступен после загрузки страницы')
+				info(text('modes.unavailable before page loads', { mode: описание_режима.заголовок }))
 			else
-				info('Переход в режим «' + описание_режима.заголовок + '» в данном случае не разрешён')
+				info(text('modes.unavailable', { mode: описание_режима.заголовок }))
 				
 			return false
 		}
@@ -105,7 +105,7 @@ var Режим = (function()
 					})
 				}
 			}
-			info('Вы не можете сейчас ничего править, так как вы не вошли в нашу сеть. Если вы являетесь членом нашей сети, <a href=\'#войти\'  class=\'enter\'>войдите</a>. Если же вы не являетесь членом нашей сети, вы можете попробовать <a href=\'http://localhost:8081/прописка\'>прописаться</a>.', options)
+			info(text('modes.log in to edit'), options)
 			return false
 		}
 

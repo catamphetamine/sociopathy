@@ -9,6 +9,8 @@ var initial_scripts =
 	{ path: 'mootools/mootools-core-1.4.5-full-nocompat' },
 	{ path: 'язык' },
 	{ path: 'jquery/jquery.extension' },
+	{ path: 'jquery/jquery.cookie' },
+	{ path: 'пользователь', await: true },
 	{ path: 'языки', await: true }
 ]
 
@@ -18,8 +20,6 @@ var scripts =
 	[
 		'jquery.tmpl',
 		'jquery.disable.text.select',
-		//'jquery.extension',
-		'jquery.cookie',
 		'jquery.color',
 		'jquery.animate-shadow',
 		'jquery.tools',
@@ -313,11 +313,7 @@ function extra_markup(what, where, callback)
 		},
 		error: function()
 		{
-			if (window.onerror)
-				window.onerror('Ошибка при загрузке страницы')
-			else
-				alert('Ошибка при загрузке страницы')
-	
+			alert('Ошибка при загрузке страницы')
 			console.error('Extra markup not loaded')
 		}
 	})
@@ -357,39 +353,44 @@ function extra_markup(what, where, callback)
 //if (!window.development_mode)
 //	options.cache = true
 
-var initial_scripts_in_progress =
+var initial_script_in_progress =
 {
-	list: [],
-	
-	done: false,
-	
-	add: function(path)
+	set: function(path)
 	{
-		this.list.push(path)
+		this.path = path
 	},
 	
 	finished: function(path)
 	{
-		if (this.list.indexOf(path) >= 0)
-			this.list.splice(this.list.indexOf(path), 1)
+		if (this.path !== path)
+			throw 'Weird error loading initial scripts'
 		
-		if (this.list.length === 0)
-			this.ready()
-	},
+		this.path = null
+		
+		do_insert_initial_scripts()
+	}
+}
+
+function insert_initial_scripts(callback)
+{
+	if (initial_scripts.length === 0)
+		return callback()
 	
-	shall_we: function()
-	{
-		if (this.done)
-			return
-		
-		if (this.list.length === 0)
-			this.ready()
-	},
+	var script = initial_scripts.shift()
 	
-	ready: function()
+	if (script.await)
 	{
-		done = true
-		
+		initial_script_in_progress.set(script.path)
+		insert_script('/javascripts/' + script.path)
+	}
+	else
+		insert_script('/javascripts/' + script.path, do_insert_initial_scripts)
+}
+
+function do_insert_initial_scripts()
+{
+	insert_initial_scripts(function()
+	{
 		extra_markup('основа (head)', $('head'), function()
 		{
 			extra_markup('основа (body)', $('body'), function()
@@ -398,25 +399,7 @@ var initial_scripts_in_progress =
 				insert_scripts()
 			})
 		})
-	}
+	})
 }
 
-initial_scripts.forEach(function(script)
-{
-	if (script.await)
-		initial_scripts_in_progress.add(script.path)
-})
-
-function insert_initial_scripts(callback)
-{
-	if (initial_scripts.length === 0)
-		return callback
-	
-	var script = initial_scripts.shift()
-	insert_script('/javascripts/' + script.path, function() { insert_initial_scripts(callback) })
-}
-
-insert_initial_scripts(function()
-{
-	initial_scripts_in_progress.shall_we()
-})
+do_insert_initial_scripts()

@@ -25,7 +25,7 @@
 		function get_breadcrumbs()
 		{
 			var link = '/читальня'
-			var crumbs = [{ title: 'Читальня', link: link }]
+			var crumbs = [{ title: text('pages.library.title'), link: link }]
 			
 			page.data.путь_к_заметке.split('/').forEach(function(раздел_или_заметка)
 			{

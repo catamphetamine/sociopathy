@@ -91,7 +91,7 @@ global.messages_api = (options) ->
 					options.добавить_в_общение(_id, добавляемый, пользователь, @)
 					
 				.сделать (result) ->
-					if result.уже_участвует?
+					if result? && result.уже_участвует?
 						return вывод.send { уже_участвует: yes }
 					вывод.send {}
 						

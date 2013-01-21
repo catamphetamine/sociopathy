@@ -1,4 +1,4 @@
-title('Беседы');
+title(text('pages.talks.title'));
 
 (function()
 {
@@ -12,7 +12,7 @@ title('Беседы');
 	
 		breadcrumbs
 		([
-			{ title: 'Беседы', link: '/сеть/беседы' }
+			{ title: text('pages.talks.title'), link: '/сеть/беседы' }
 		])
 		
 		text_button.new(page.get('.new_talk.button')).does(function()
@@ -103,11 +103,14 @@ title('Беседы');
 					{
 						var беседа = this
 						
-						iterate(this.участники || [], function(участник)
+						this.участники = this.участники || []
+						
+						this.участники.filter(function(участник)
 						{
 							return участник._id === пользователь._id
-						},
-						function()
+						})
+						
+						this.участники.each(function()
 						{
 							беседа.участник = true
 						})

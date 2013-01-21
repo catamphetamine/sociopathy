@@ -43,9 +43,11 @@ var page_buttons =
 	
 	{ page: 'сеть/обсуждения', button: 'обсуждения' },
 	{ page: 'сеть/обсуждение', button: 'обсуждения' },
+	{ page: 'сеть/общение', when: function(page) { return page.data.общение === 'обсуждение' }, button: 'обсуждения' },
 	
 	{ page: 'сеть/беседы', button: 'беседы' },
 	{ page: 'сеть/беседа', button: 'беседы' },
+	{ page: 'сеть/общение', when: function(page) { return page.data.общение === 'беседа' }, button: 'беседы' },
 	
 	//{ page: 'человек/дневник', button: 'дневник' },
 	//{ page: 'человек/запись в дневнике', button: 'дневник' },
@@ -69,11 +71,17 @@ var page_buttons =
 	{ page: 'управление', button: 'управление' }
 ]
 
-var match_page = function(options)
+var match_page = function(options, new_page)
 {
 	if (options.page)
+	{
 		if (!Страница.is(options.page))
 			return false
+		
+		if (options.when)
+			if (!options.when(new_page))
+				return false
+	}
 	
 	if (options.page_pattern)
 		if (!Страница.matches(options.page_pattern))
@@ -82,14 +90,14 @@ var match_page = function(options)
 	return true
 }
 
-var get_page_button = function()
+var get_page_button = function(new_page)
 {
 	var i = 0
 	while (i < page_buttons.length)
 	{
 		var page_and_button = page_buttons[i]
 		
-		if (match_page(page_and_button))
+		if (match_page(page_and_button, new_page))
 			return page_and_button.button
 		
 		i++
@@ -283,13 +291,13 @@ var Panel = new Class
 		$('#panel').children().disableTextSelect()
 	},
 	
-	highlight_current_page: function()
+	highlight_current_page: function(new_page)
 	{
 		var panel = this
 		
 		var previously_highlighted_menu_item = panel.highlighted_menu_item
 		
-		var page_button = get_page_button()
+		var page_button = get_page_button(new_page)
 		
 		function highlight_current_page_button(page_button)
 		{

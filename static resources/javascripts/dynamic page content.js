@@ -12,6 +12,7 @@ var navigating = false;
 		'loading popup',
 		'simple value dialog window',
 		'unsupported browser popup',
+		'навершие',
 		'наглядный писарь',
 		'нижняя панель режима правки',
 		'окошко входа'
@@ -87,45 +88,19 @@ var navigating = false;
 				
 			вставить_кусочки(function()
 			{
+				var menu = $('#panel_menu')
+				var menu_items = menu.children()
+				menu.empty().append(menu_items)
+				
+				$('#panel').appendTo('nav').css('display', 'block')
+				
 				callback()
 			})
 		})
 	}
 	
-	var данные_пользователя = {}
-	
 	вставить_общее_содержимое = function(возврат)
 	{
-		function получить_пользовательские_данные_для_страницы(возврат)
-		{
-			Ajax.get('/приложение/пользовательские_данные_для_страницы')
-			.ошибка(function(ошибка)
-			{
-				page_loading_error()
-					
-				// если кука user - кривая, то она уже сама удалилась на сервере
-				if (ошибка === 'Пользователь не найден')
-				{
-					error('Пользователь не опознан')
-					go_to('/')
-				}
-			})
-			.ok(function(данные) 
-			{
-				данные_пользователя = данные
-				
-				пользователь = данные.пользователь
-				
-				//пользователь.versioning = window.versioning.пользователь
-				
-				if (!пользователь && Страница.эта().starts_with('сеть/'))
-					window.location = '/прописка'
-						
-				//$(document).trigger('authenticated', данные)
-				user_authenticated(данные, возврат)
-			})
-		}
-		
 		function вставить_пользовательское_содержимое(возврат)
 		{
 			вставить_содержимое('/страницы/кусочки/user content.html', данные_пользователя, { куда: $('body') }, возврат)
@@ -136,21 +111,10 @@ var navigating = false;
 			вставить_содержимое('/страницы/кусочки/guest content.html', {}, { куда: $('body') }, возврат)
 		}
 		
-		if ($.cookie('user'))
-		{
-			получить_пользовательские_данные_для_страницы(function()
-			{
-				вставить_пользовательское_содержимое(function()
-				{
-					возврат()
-				})
-			})
-		}
+		if (пользователь)
+			вставить_пользовательское_содержимое(возврат)
 		else
-			вставить_гостевое_содержимое(function()
-			{
-				возврат()
-			})
+			вставить_гостевое_содержимое(возврат)
 	}
 	
 	var new_page
@@ -228,7 +192,7 @@ var navigating = false;
 		Страница.определить(url, new_page, proceed)
 		
 		if (!first_time_page_loading)
-			panel.highlight_current_page()
+			panel.highlight_current_page(new_page)
 						
 		if (!first_time_page_loading)
 			immediate_loading_page = loading_page()

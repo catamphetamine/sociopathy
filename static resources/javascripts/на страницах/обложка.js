@@ -1,6 +1,6 @@
 (function()
 {
-	title('Собрание')
+	title(text('pages.main.title'))
 	
 	/**
 	 * Welcome page initialization
@@ -185,7 +185,10 @@
 		}
 		else
 		{
+			$('.join_button_block').children().hide()
+			$('.join_button_block > [type=ok]').show()
 			$('.join_button_block').show()
+			
 			activate_registration()
 		}
 	}

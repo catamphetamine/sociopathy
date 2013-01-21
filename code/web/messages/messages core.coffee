@@ -58,7 +58,6 @@ global.prepare_messages = (options) ->
 				.сделать (последние_сообщения) ->
 					последние_сообщения.merge_into(@.$[options.общение_во_множественном_числе], 'последнее_сообщение', (общение) -> @.общение + '' == общение._id + '')
 					
-				#.сделать ->
 					вывод.send @.$
 					
 				.go()
@@ -140,7 +139,7 @@ global.prepare_messages = (options) ->
 			options.добавить_в_общение = (_id, добавляемый, пользователь, возврат) ->
 				цепь(возврат)
 					.сделать ->
-						db(options.collection).findOne({ _id: _id }, @)
+						db(options.collection).findOne({ _id: _id }, @.в 'общение')
 						
 					.сделать (общение) ->
 						нет_прав = yes
@@ -162,25 +161,33 @@ global.prepare_messages = (options) ->
 						
 					.сделать (session) ->
 						query = { чего: options.общение, общение: _id }
+							
+						db(options.messages_collection).find(query, { limit: 1, sort: [['_id', -1]] }).toArray(@)
+						
+					.сделать (latest_messages) ->
+						latest_message_id = latest_messages.map((message) -> message._id.toString())[0]
+						
+						has_new_messages = yes
 						
 						latest_read = options.latest_read(session, { сообщения_чего: { _id: _id } })
 						if latest_read?
-							query._id = { $gt: latest_read }
+							if latest_read + '' == latest_message_id + ''
+								has_new_messages = no
 							
-						db(options.messages_collection).find(query).toArray(@)
-						
-					.сделать (unread_messages) ->
-						unread_message_ids = unread_messages.map((message) -> message._id.toString())
-						
-						эфир.отправить('новости', options.сообщения_чего, { _id: _id.toString(), сообщения: unread_message_ids }, { кому: добавляемый })
-						
-						set_id = 'новости.' + options.path({ сообщения_чего: { _id: _id } })
-						
-						set_operation = {}
-						set_operation[set_id] = { $each: unread_message_ids }
-						
-						db('people_sessions').update({ пользователь: добавляемый }, { $addToSet: set_operation }, @)
-				
+						эфир.отправить('новости', options.общение + '.' + 'добавление', { id: @.$.общение.id, название: @.$.общение.название }, { кому: добавляемый })
+							
+						if has_new_messages?
+							эфир.отправить('новости', options.общение, { _id: _id.toString(), сообщение: latest_message_id }, { кому: добавляемый })
+							
+							set_id = 'новости.' + options.path({ сообщения_чего: { _id: _id } })
+							
+							set_operation = {}
+							set_operation[set_id] = latest_message_id
+							
+							db('people_sessions').update({ пользователь: добавляемый }, { $set: set_operation }, @)
+						else
+							эфир.отправить('новости', options.общение + '.' + 'добавление', { id: @.$.общение.id, название: @.$.общение.название }, { кому: добавляемый })
+							
 			options.creation_extra = (_id, пользователь, ввод, возврат) ->
 				кому = ввод.body.кому
 				

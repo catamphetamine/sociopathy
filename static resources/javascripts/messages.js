@@ -259,10 +259,11 @@ var Messages = new Class
 		})
 	},
 	
+	// этот метод убирает (или не убирает) табличку "Прокрутите вниз, чтобы увидеть новые сообщения"
 	check_if_there_are_still_unread_messages: function()
 	{
 		var messages = this
-		iterate(messages.new_messages, function(message)
+		iterate_removing(messages.new_messages, function(message)
 		{
 			return message.is_visible_on_screen({ fully: true })
 		},
@@ -586,7 +587,13 @@ var Messages = new Class
 		{
 			if (!send_message())
 				return
-				
+			
+			// если непрочитанное сообщение было скрыто писарем,
+			// и отправили своё сообщение, тем самым уменьшив высоту писаря,
+			// то проверить, не видны ли теперь полностью какие-то из ранее непрочитанных сообщений
+			$(document).trigger('focused')
+			
+			// и мб убрать табличку "Прокрутите вниз, чтобы увидеть новые сообщения"
 			messages.check_if_there_are_still_unread_messages()
 		}
 		

@@ -1,3 +1,128 @@
 {
-	"user language is not supported": "Выбранный вами язык ({preferred language}) пока не поддерживается. Вы можете изменить его в [link to user settings]своих настройках[/link]. Язык по умолчанию — {current language}"
+	"user language is not supported": "Выбранный вами язык ({preferred language}) пока не поддерживается. Вы можете изменить его в [link to user settings]своих настройках[/link]. Язык по умолчанию — {current language}",
+	
+	"pages":
+	{
+		"main":
+		{
+			"title": "Собрание"
+		},
+		"library":
+		{
+			"title": "Читальня"
+		},
+		"people":
+		{
+			"title": "Люди"
+		},
+		"help":
+		{
+			"title": "Помощь"
+		},
+		"chat":
+		{
+			"title": "Болталка"
+		},
+		"discussions":
+		{
+			"title": "Обсуждения"
+		},
+		"talks":
+		{
+			"title": "Беседы"
+		},
+		"books":
+		{
+			"title": "Книги"
+		},
+		"circles":
+		{
+			"title": "Круги"
+		},
+		"settings":
+		{
+			"title": "Настройки",
+			
+			"email_not_specified": "почтовый ящик не указан",
+			
+			"language": "Язык",
+			"language_not_specified": "по умолчанию",
+			
+			"modes":
+			{
+				"title": "Режимы",
+				
+				"view": "Обычный",
+				"edit": "Правка",
+				"action": "Действия"
+			},
+			
+			"actions":
+			{
+				"title": "Действия",
+				
+				"create": "Создать",
+				"add": "Добавить",
+				"delete": "Удалить"
+			},
+			
+			"editor":
+			{
+				"title": "Писарь",
+				
+				"breaking space": "Разрывный пробел",
+				"show": "Показать"
+			},
+			
+			"other":
+			{
+				"title": "Прочее",
+				
+				"log in": "Вход"
+			}
+		},
+		"trash":
+		{
+			"title": "Мусорка"
+		},
+		"administration":
+		{
+			"title": "Управление",
+			
+			"load dummy data into the database": "Заполнить хранилище пробными данными",
+			"create an invite": "Выдать приглашение",
+			"execute database altering script": "Внести в хранилище изменения, прописанные в «administration.coffee» (используется только для разработки)"
+		},
+		"registration":
+		{
+			"title": "Прописка"
+		}
+	},
+	
+	"top panel":
+	{
+		"log in": "Войти",
+		"log out": "Выйти"
+	},
+	
+	"modes":
+	{
+		"view": "Обычный",
+		"edit": "Правка",
+		"action": "Действия",
+		
+		"unavailable before page loads": "Переход в режим «{mode}» будет доступен после загрузки страницы",
+		"unavailable": "Переход в режим «{mode}» в данном случае не разрешён",
+		"switching is frozen": "Здесь и сейчас переходы между режимами заморожены",
+		"log in to edit": "Вы не можете сейчас ничего править, так как вы не вошли в нашу сеть. Если вы являетесь членом нашей сети, <a href='#' class='enter'>войдите</a>. Если же вы не являетесь членом нашей сети, вы можете попробовать [link to registration]прописаться[/link].",
+		
+		"edit mode":
+		{
+			"action panel":
+			{
+				"save": "Сохранить правки",
+				"cancel": "Отмена"
+			}
+		}
+	}
 }

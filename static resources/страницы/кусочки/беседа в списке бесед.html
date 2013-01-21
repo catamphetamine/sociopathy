@@ -5,8 +5,8 @@
 		</div>
 	{{/if}}
 	
-	<a href="/сеть/беседы/${escape_id(id)}">
-		{{each(index, собеседник) собеседники}}
+	<a href="/сеть/беседы/${id}">
+		{{each(index, собеседник) участники}}
 			{{tmpl(Object.x_over_y({ no_link: true }, собеседник)) 'маленький аватар'}}
 		{{/each}}
 		

@@ -98,7 +98,7 @@ $ (function () {
     var thisID = 'jouele-ui-zone-' + (1000 + Math.round (Math.random ()*8999))
     
 	var $container = $ ('<div class="jouele" id="' + thisID + '"></div>')
-	
+  
     $jdiv = this.after ($container)
 
     var thisSelector = '#' + thisID
@@ -152,10 +152,12 @@ $ (function () {
       return this.src.indexOf (filename) != -1
     }).eq (0)
 
+	var swfPath
+	
     if ($exists.size ()) {
       swfPath = ($exists.attr ('src').slice (0, -1 - filename.length)) + '/jplayer.swf'
     }
-    
+	
     if (swfPathA = $aHref.attr ('data-swfSource')) swfPath = swfPathA
     
     the_player = $container.find ('.jouele-invisible-object').jPlayer ({

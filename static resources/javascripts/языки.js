@@ -1,15 +1,84 @@
-function load_translation(language, success, error)
+var Url_map =
 {
-	$.ajax(add_version('/international/' + language + '/' + 'translation' + '.json'))
-	.success(function(translation)
-	{
-		window.Перевод = JSON.parse(translation)
-		window.Язык = language
-		
-		success(language)
-	})
-	.error(error)
+	'user settings': '/сеть/настройки',
+	'registration': '/прописка'
 }
+
+var Язык
+var Перевод
+
+;(function()
+{
+	function load_translation(language, success, error)
+	{
+		$.ajax(add_version('/international/' + language + '/' + 'translation' + '.json'))
+		.success(function(translation)
+		{
+			Перевод = JSON.parse(translation)
+			Язык = language
+			
+			success(language)
+		})
+		.error(error)
+	}
+	
+	function success(language)
+	{
+		initial_script_in_progress.finished('языки')
+	
+		if (language !== Configuration.Locale.Предпочитаемый_язык)
+		{
+			$(document).once_on('display_page', function()
+			{
+				var supported = []
+				Configuration.Locale.Supported_languages.for_each(function()
+				{
+					supported.push(this.name)
+				})
+				
+				info('Seems that your preferred language (code «' + Configuration.Locale.Предпочитаемый_язык + '») isn\'t supported. The supported languages are: ' + supported.join(', ') + '. ' + 'Defaulting to "' + get_language(language).name + '"')
+			})
+		}
+		
+		//console.log(Перевод)
+	
+		// test
+		//alert(text('user language is not supported', { 'preferred language': 'es', 'current language': Язык }))
+	}
+	
+	var языки = []
+	Configuration.Locale.Предпочитаемые_языки.forEach(function(язык)
+	{
+		языки.push(язык)
+	})
+	
+	function try_next_language()
+	{
+		// defaults
+		var язык = Configuration.Locale.Default_language
+		var on_error = function()
+		{
+			if (window.onerror)
+				window.onerror('Error while loading page translation')
+			else
+				alert('Error while loading page translation')
+		
+			console.error('Internationalization not loaded')
+		}
+		
+		if (!языки.is_empty())
+		{
+			язык = языки.shift()
+			on_error = try_next_language
+		}
+		
+		load_translation(язык, success, on_error)
+	}
+	
+	try_next_language()
+})()
+
+// utilities
 
 function get_language(id)
 {
@@ -22,74 +91,6 @@ function get_language(id)
 	})
 	
 	return language
-}
-
-function success(language)
-{
-	initial_scripts_in_progress.finished('языки')
-
-	if (language !== Configuration.Locale.Предпочитаемый_язык)
-	{
-		$(document).once_on('display_page', function()
-		{
-			var supported = []
-			Configuration.Locale.Supported_languages.for_each(function()
-			{
-				supported.push(this.name)
-			})
-			
-			info('Seems that your preferred language (code «' + Configuration.Locale.Предпочитаемый_язык + '») isn\'t supported. The supported languages are: ' + supported.join(', ') + '. ' + 'Defaulting to "' + get_language(language).name + '"')
-		})
-	}
-	
-	if (language !== 'ru')
-	{
-		$(document).once_on('display_page', function()
-		{
-			info('Seems that the chosen language (' + get_language(language).name + ') isn\'t Russian. This social network is currently translated to only Russian language. Everything is ready for adding other language translations')
-		})
-	}
-	
-	//console.log(Перевод)
-
-	// test
-	//alert(text('user language is not supported', { 'preferred language': 'es', 'current language': Язык }))
-}
-
-var языки = []
-Configuration.Locale.Предпочитаемые_языки.forEach(function(язык)
-{
-	языки.push(язык)
-})
-
-function try_next_language()
-{
-	// defaults
-	var язык = Configuration.Locale.Default_language
-	var on_error = function()
-	{
-		if (window.onerror)
-			window.onerror('Error while loading page translation')
-		else
-			alert('Error while loading page translation')
-	
-		console.error('Internationalization not loaded')
-	}
-	
-	if (!языки.is_empty())
-	{
-		язык = языки.shift()
-		on_error = try_next_language
-	}
-	
-	load_translation(язык, success, on_error)
-}
-
-try_next_language()
-
-var Url_map =
-{
-	'user settings': '/сеть/настройки'
 }
 
 function text(key, variables)
