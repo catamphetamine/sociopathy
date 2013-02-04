@@ -41,6 +41,9 @@ var Uri =
 {
 	parse: function(uri)
 	{
+		if (!uri)
+			uri = window.location
+		
 		var parsed = parseUri(uri)
 		
 		var result =

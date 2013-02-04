@@ -101,8 +101,12 @@ var войти
 			
 			if (data.go_to)
 				return window.location = data.go_to
+			
+			if (page.data.go_to_after_login)
+				return window.location = page.data.go_to_after_login
 				
-			window.location.reload()
+			reload_web_page()
+			//reload_page()
 		})
 	}
 	

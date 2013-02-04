@@ -33,9 +33,7 @@ Configuration = Object.x_over_y
 },
 Configuration)
 
-if (путь_страницы() === 'сеть' || путь_страницы().starts_with('сеть/'))
-	if (!$.cookie('user'))
-		window.location = '/'
+проверить_доступ(Uri.parse().path) //путь_страницы())
 
 $(document).on('scripts_loaded', function()
 {
@@ -67,6 +65,8 @@ $(document).on('page_initialized', function()
 		page_initialized()
 	})
 })
+
+var can_navigate_to_page = false
 
 $(document).on('page_loaded', function()
 {
@@ -103,6 +103,8 @@ $(document).on('page_loaded', function()
 			})
 
 			page_loaded()
+			
+			can_navigate_to_page = true
 			
 			navigating = false
 		})

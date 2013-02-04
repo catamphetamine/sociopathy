@@ -138,6 +138,9 @@ var navigating = false;
 			return false
 		}
 		
+		if (!проверить_доступ(url))
+			return
+		
 		navigating = true
 		
 		if (options.before)

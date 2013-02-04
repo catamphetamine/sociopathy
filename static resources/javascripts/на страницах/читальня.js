@@ -429,8 +429,9 @@
 			
 			ok: function(data)
 			{
-				//return reload_page()
+				return reload_page()
 				
+				/*
 				data.новые_разделы = JSON.parse(data.новые_разделы)
 				data.переименованные_разделы = JSON.parse(data.переименованные_разделы)
 				data.удалённые_разделы = JSON.parse(data.удалённые_разделы)
@@ -490,6 +491,7 @@
 				})
 				
 				page.Data_store.edited_data.разделы.новые = []
+				*/
 			}
 		})
 	}

@@ -34,7 +34,7 @@ var dialog_window = new Class
 		width: 'auto',
 		height: 'auto',
 		
-		show_duration: 0.2,
+		show_duration: 0.1,
 		collapse_duration: 0.1,
 		
 		//theme: 'fade'

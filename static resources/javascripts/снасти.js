@@ -761,11 +761,13 @@ function возраст(birth_date)
 
 function go_to(url)
 {
-	if (url.starts_with('/'))
+	if (url.starts_with('/') && can_navigate_to_page)
+	{
 		return navigate_to_page(url,
 		{
 			before: function() { set_new_url(url) }
 		})
+	}
 	
 	window.location = url
 }
@@ -804,6 +806,8 @@ var Page_url_patterns =
 	/^\/помощь(\/(.*))?$/,
 	/^\/управление(\/(.*))?$/,
 	/^\/сеть\/((.*))?$/,
+	/^\/ошибка(\/(.*))?$/,
+	/^\/требуется вход(\/(.*))?$/,
 ]
 
 function ajaxify_internal_links(where)
@@ -869,4 +873,18 @@ function ajaxify_internal_links(where)
 		
 		link.data('ajaxified', true)
 	})
+}
+
+function проверить_доступ(uri)
+{
+	if (uri === '/сеть' || uri.starts_with('/сеть/'))
+	{
+		if (!$.cookie('user'))
+		{
+			go_to('/требуется вход' + '?' + 'url' + '=' + encodeURI(uri))
+			return false
+		}
+	}
+	
+	return true
 }
