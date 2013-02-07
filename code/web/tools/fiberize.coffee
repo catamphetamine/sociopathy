@@ -16,6 +16,17 @@ Function.prototype.bind_await = (binding) ->
 	
 exports.express_action = (action, url, input, output) ->
 	action(input, output)
+
+parse_error = (error) ->
+	console.log '=========================== Error: ==========================='
+	console.log error
+	console.log '=============================================================='
+	
+	if typeof error == 'object'
+		if JSON.stringify(error) == '{}'
+			error = error + ''
+	
+	error
 		
 exports.express = (application) ->
 	global.http = {}
@@ -27,13 +38,7 @@ exports.express = (application) ->
 					try
 						exports.express_action(action, url, input, output)
 					catch error
-						console.error error
-						
-						if typeof error == 'object'
-							if JSON.stringify(error) == '{}'
-								error = error + ''
-								
-						output.send(error: error)
+						output.send(error: parse_error(error))
 						
 			application[method](encodeURI(url), enhanced_action)
 			
@@ -46,5 +51,4 @@ exports.websocket = (socket) ->
 				try
 					action(message)
 				catch error
-					console.error error
-					socket.emit('error', error)
+					socket.emit('error', parse_error(error))

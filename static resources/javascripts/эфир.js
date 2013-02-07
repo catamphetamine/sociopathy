@@ -102,14 +102,14 @@ $(document).on('panel_loaded', function()
 				$(document).trigger('ether_is_online')
 		})
 		
-		эфир.on('error', function(error)
+		эфир.on('error', function(ошибка)
 		{
 			var options = { sticky: true }
 			
-			if (error === true)
+			if (ошибка === true)
 				return error('Ошибка связи с сервером', options)
 	
-			error(error, options)
+			error(ошибка, options)
 		})
 		
 		on('пользователи', 'кто здесь', function(пользователи)

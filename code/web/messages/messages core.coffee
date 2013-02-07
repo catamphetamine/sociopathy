@@ -314,7 +314,7 @@ global.prepare_messages = (options) ->
 		if not latest_read?
 			for сообщение in сообщения
 				сообщение.новое = yes
-			return @.return()
+			return возврат()
 			
 		for сообщение in сообщения
 			if сообщение._id + '' > latest_read + ''

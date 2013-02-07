@@ -145,7 +145,7 @@ global.prepare_messages_socket = (options) ->
 							broadcast('сообщение', данные_сообщения)
 																				
 						соединение.on 'прочитано', (_id) ->
-							options.message_read(collection.id(_id), environment)
+							options.message_read.await(collection.id(_id), environment)
 								
 							сообщения_чего = null
 							if environment.сообщения_чего?

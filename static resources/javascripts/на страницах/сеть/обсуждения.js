@@ -85,7 +85,7 @@ title(text('pages.discussions.title'));
 							{
 								the_button.element.fade_out(0.3)
 							})
-							.ошибка(function()
+							.ошибка(function(ошибка)
 							{
 								error(ошибка)
 								the_button.unlock()

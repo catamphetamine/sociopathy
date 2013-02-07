@@ -565,17 +565,18 @@ var Interactive_messages = function(options)
 				set_status(пользователь._id, 'пишет', { изтекает: 1000 })
 			})
 			
-			connection.on('error', function(error)
+			connection.on('error', function(ошибка)
 			{
 				var options = { sticky: true }
 				
-				if (error === true)
+				if (ошибка === true)
 					return error('Ошибка связи с сервером', options)
 		
-				if (error === 'Слишком много сообщений пропущено')
+				if (ошибка === 'Слишком много сообщений пропущено')
 					return error('Не удалось догрузить сообщения. Обновите страницу.', { sticky: true })
 		
-				error(error, options)
+				console.log(ошибка)
+				error(ошибка, options)
 			})
 			
 			messages.connection = connection
