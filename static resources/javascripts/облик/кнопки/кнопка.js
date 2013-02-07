@@ -735,6 +735,23 @@ button.physics =
 		return the_button
 	},
 	
+	immediate: function(the_button)
+	{
+		the_button.setOptions
+		({
+			'ready frame fade in duration': 0,
+			'ready frame fade out duration': 0,
+			
+			'pushed frame fade in duration': 0,
+			'pushed frame fade out duration': 0,
+
+			'pushed frame fade in easing': 'swing',
+			'pushed frame fade out easing': 'swing'
+		})
+		
+		return the_button
+	},
+	
 	simple: function(the_button)
 	{
 		the_button.setOptions

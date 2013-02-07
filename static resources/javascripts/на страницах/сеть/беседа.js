@@ -53,11 +53,12 @@
 				
 				if (page.data.участник_ли)
 				{
-					var add_user_to_talk_window = simple_value_dialog_window
+					var add_user_to_talk_simple_dialog_window = simple_value_dialog_window
 					({
 						class: 'add_user_to_talk_window',
 						title: 'Добавить пользователя в беседу',
-						ok_button_text: 'Добавить',
+						//ok_button_text: 'Добавить',
+						no_ok_button: true,
 						fields:
 						[{
 							id: 'companion',
@@ -98,6 +99,10 @@
 								title: function(data)
 								{
 									return data.имя
+								},
+								choice: function(_id)
+								{
+									add_user_to_talk_simple_dialog_window.ok()
 								}
 							},
 							validation: 'беседа.добавить_пользователя'
@@ -124,7 +129,8 @@
 							})
 						}
 					})
-					.window
+					
+					var add_user_to_talk_window = add_user_to_talk_simple_dialog_window.window
 					
 					text_button.new(page.get('.add_to_talk.button')).does(function()
 					{

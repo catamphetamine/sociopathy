@@ -51,7 +51,7 @@ function simple_value_dialog_window(options)
 		else if (field.autocomplete)
 		{
 			var autocomplete = $('<div/>')
-			autocomplete.autocomplete(field.autocomplete)
+			field.the_autocomplete = autocomplete.autocomplete(field.autocomplete)
 			autocomplete.appendTo(form)
 			
 			field.input = autocomplete.find('> input[type="hidden"]')
@@ -100,6 +100,9 @@ function simple_value_dialog_window(options)
 			options.fields.forEach(function(field, index)
 			{
 				field.input.val('')
+				
+				if (field.autocomplete)
+					field.the_autocomplete.reset()
 			})
 		},
 		'on cancel': function()
@@ -180,6 +183,12 @@ function simple_value_dialog_window(options)
 	.bind(dialog_window))
 	.submits(validating_form, options.before_ok ? options.before_ok.bind(dialog_window) : null)
 	
+	if (options.no_ok_button)
+	{
+		button.physics.immediate(ok)
+		ok.hide()
+	}
+	
 	dialog_window.register_controls(validating_form, cancel, ok)
 	
 	var submit_on_enter = true
@@ -206,7 +215,8 @@ function simple_value_dialog_window(options)
 	
 	var result =
 	{
-		window: dialog_window
+		window: dialog_window,
+		ok: function() { ok.push() }
 	}
 	
 	return result
