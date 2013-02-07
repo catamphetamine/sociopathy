@@ -75,6 +75,7 @@ var scripts =
 		'form',
 		'conditional',
 		'scroll navigation',
+		'autocomplete',
 		
 		{окошко:
 		[
@@ -251,7 +252,9 @@ var styles =
 	
 	'audio player',
 	
-	'either way loading'
+	'either way loading',
+	
+	'autocomplete'
 ]
 
 function insert_style(path)
@@ -402,4 +405,40 @@ function do_insert_initial_scripts()
 	})
 }
 
-do_insert_initial_scripts()
+function initialize(next)
+{
+	ajax
+	({
+		url: '/приложение/initialize',
+		success: function(data)
+		{
+			Configuration.Invites = data.invites
+			
+			Configuration.Locale =
+			{
+				Default_language: 'en',
+				Supported_languages:
+				[
+					{ id: 'ru', name: 'Русский' },
+					{ id: 'en', name: 'English' }
+				],
+				
+				Предпочитаемый_язык: data.язык,
+				Предпочитаемые_языки: data.языки,
+				
+				Страна: data.страна || 'US'
+			}
+			
+			next()
+		},
+		error: function()
+		{
+			if (window.page_loading_error)
+				page_loading_error()
+			else
+				console.error('Ошибка при получении настроек сайта')
+		}
+	})
+}
+
+initialize(do_insert_initial_scripts)

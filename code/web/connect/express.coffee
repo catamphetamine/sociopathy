@@ -12,29 +12,26 @@ access_logger = (ввод, вывод, следующий) ->
 	
 	когда_был_здесь = new Date()
 	db('people_sessions').update({ пользователь: ввод.пользователь._id }, { $set: { 'когда был здесь': когда_был_здесь }}) #, online: yes
+
+	check_online_status = ->
+		fiber ->
+			session = db('people_sessions')._.find_one({ пользователь: ввод.пользователь._id })
 	
-	check_online_status = () ->
-		цепь()
-			.сделать ->
-				db('people_sessions').findOne({ пользователь: ввод.пользователь._id }, @)
-				
-			.сделать (session) ->
-				когда_был_здесь_в_последний_раз = session['когда был здесь']
-				if когда_был_здесь_в_последний_раз?
-					if когда_был_здесь_в_последний_раз.getTime() == когда_был_здесь.getTime()
-						эфир.offline(ввод.пользователь)
-						#db('people_sessions').update({ пользователь: ввод.пользователь._id }, { $set: { online: no } })
-					ввод.session.delete('online_timeout')
-	
-	цепь()
-		.сделать ->
-			ввод.session.get('online_timeout', @)
+			когда_был_здесь_в_последний_раз = session['когда был здесь']
 			
-		.сделать (online_timeout) ->
-			if online_timeout?
-				clearTimeout(online_timeout)
+			if когда_был_здесь_в_последний_раз?
+				if когда_был_здесь_в_последний_раз.getTime() == когда_был_здесь.getTime()
+					эфир.offline(ввод.пользователь)
+					#db('people_sessions').update({ пользователь: ввод.пользователь._id }, { $set: { online: no } })
+				ввод.session.delete('online_timeout')
+
+	fiber ->
+		online_timeout = ввод.session.get.await('online_timeout')
+			
+		if online_timeout?
+			clearTimeout(online_timeout)
 				
-			ввод.session.set({ online_timeout: setTimeout(check_online_status, Options.User.Online.Timeout) })
+		ввод.session.set({ online_timeout: setTimeout(check_online_status, Options.User.Online.Timeout) })
 	
 remember_me = (ввод, вывод, следующий) ->
 	тайный_ключ = ввод.cookies.user
@@ -46,21 +43,18 @@ remember_me = (ввод, вывод, следующий) ->
 		return следующий()
 		
 	следующий = снасти.приостановить_ввод(ввод, следующий)
-	цепь(вывод)
-		.сделать ->
-			пользовательское.опознать(тайный_ключ, @)
+	
+	fiber ->
+		try
+			пользователь = пользовательское.опознать.await(тайный_ключ)
+			пользовательское.войти.await(пользователь, ввод, вывод)
 			
-		.ошибка (ошибка) ->
+		catch ошибка
 			console.error ошибка
 			пользовательское.выйти(ввод, вывод)
-			следующий()
 			
-		.сделать (пользователь) ->
-			пользовательское.войти(пользователь, ввод, вывод, @)
+		следующий()
 			
-		.сделать ->
-			следующий()
-
 module.exports = (приложение) ->
 	if not приложение?
 		приложение = express.createServer()
@@ -83,25 +77,13 @@ module.exports = (приложение) ->
 		приложение.configure 'production', ->
 			#приложение.use express.errorHandler()
 		
-	снасти = {}
+		fiberize.express_action = (действие, адрес, ввод, вывод) ->
+			if адрес.starts_with('/сеть/') || адрес.starts_with('/управление/')
+				return if пользовательское.требуется_вход(ввод, вывод)
 	
-	снасти.http = {}
-	
-	['get', 'post', 'put', 'delete'].forEach (способ) ->
-		снасти.http[способ] = (адрес, действие) ->
-			action = (ввод, вывод) ->
-				synchronous () ->
-					try
-						if адрес.starts_with('/сеть/') || адрес.starts_with('/управление/')
-							return if пользовательское.требуется_вход(ввод, вывод)
-				
-							пользователь = пользовательское.пользователь.await(ввод)
-							действие(ввод, вывод, пользователь)
-						else
-							действие(ввод, вывод)
-					catch ошибка
-						return вывод.send(ошибка: ошибка)
-						
-			приложение[способ](encodeURI(адрес), action)
-		
-	снасти
+				пользователь = пользовательское.пользователь.await(ввод)
+				действие(ввод, вывод, пользователь)
+			else
+				действие(ввод, вывод)
+			
+		fiberize.express(приложение)

@@ -628,6 +628,9 @@ function get_function(variable)
 
 $.fn.is_empty = function()
 {
+	if (this.node().childNodes.length === 0)
+		return true
+	
 	return this.text().trim() == ''
 }
 
@@ -643,14 +646,59 @@ $.fn.escaped_outer_html = function()
 	return $("<div/>").text(this.outer_html()).html()
 }
 
+function validate_xml(xml)
+{
+	// code for Mozilla, Firefox, Opera, etc.
+	if (document.implementation.createDocument)
+	{
+		var parser = new DOMParser()
+		
+		//xml = '<!DOCTYPE P [<!ENTITY nbsp "&#xA0;">]>' + '\n\n' + xml
+		
+		var xml_document = parser.parseFromString(xml, "text/xml")
+		
+		if (xml_document.getElementsByTagName("parsererror").length > 0)
+		{
+			var error = xml_document.getElementsByTagName("parsererror")[0]
+			
+			//console.log('error:')
+			//console.log(error)
+			
+			var summary = ""
+			
+			function collect_xml_validation_errors(node)
+			{
+				if (node.nodeName == "h3")
+					return
+				
+				if (node.nodeName == "#text")
+					summary += node.nodeValue + "\n"
+				
+				var i = 0
+				while (i < node.childNodes.length)
+				{
+					collect_xml_validation_errors(node.childNodes[i])
+					i++
+				}
+			}
+			
+			collect_xml_validation_errors(error)
+			
+			throw summary.trim()
+		}
+		
+		return xml_document
+	}
+}
+
 $.validate_xml = function(xml)
 {
 	try
 	{
-		var document = $.parseXML('<xml>' + xml + '</xml>')
+		//var document = $.parseXML('<xml>' + xml + '</xml>')
 		
-		//console.log('<xml>' + xml + '</xml>')
-		
+		var document = validate_xml('<html>' + xml + '</html>')
+
 		var text_node = Dom_tools.child_text_node(document.firstChild)
 		
 		if (text_node)

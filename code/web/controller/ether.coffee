@@ -12,6 +12,8 @@ online = redis.createClient()
 эфир = websocket
 	.of('/эфир')
 	.on 'connection', (соединение) ->
+		fiberize.websocket(соединение)
+		
 		соединение.вид = 'эфир'
 	
 		пользователь = null
@@ -35,81 +37,64 @@ online = redis.createClient()
 			return finish_disconnection() if still_online
 				
 			if пользователь?
-				цепь(соединение)
-					.сделать ->
-						online.hdel('ether:online', пользователь._id, @)
+				online.hdel.bind_await(online)('ether:online', пользователь._id)
 						
-					.сделать () ->
-						for id, listener of listeners
-							listener.offline(пользователь)
+				for id, listener of listeners
+					listener.offline(пользователь)
 						
-						finish_disconnection()
-			else
-				finish_disconnection()
+			finish_disconnection()
 
-		соединение.on 'выход', () ->
+		соединение.on 'выход', ->
 			if not disconnected
 				выход()
 			
-		соединение.on 'disconnect', () ->
+		соединение.on 'disconnect', ->
 			if not disconnected
 				выход()
 		
 		соединение.on 'пользователь', (тайный_ключ) ->
-			цепь(соединение)
-				.сделать ->
-					пользовательское.опознать(тайный_ключ, @.в 'пользователь')
-				
-				.сделать (user) ->
-					if not user?
-						return send(ошибка: 'Пользователь не найден: ' + тайный_ключ)
-						
-					пользователь = пользовательское.поля(user)
-					
-					соединение.пользователь = { _id: user._id }
-					соединения.эфир[соединение.id] = соединение
+			пользователь = пользовательское.опознать.await(тайный_ключ)
 		
-					@.done()
-				
-				.сделать ->
-					online.hget('ether:online', пользователь._id.toString(), @)
+			if not пользователь?
+				return send(ошибка: 'Пользователь не найден: ' + тайный_ключ)
 					
-				.сделать (was_online) ->
-					if not was_online?
-						online.hset('ether:online', пользователь._id.toString(), JSON.stringify(пользователь))
-				
-						for id, listener of listeners
-							listener.online(пользователь)
-							
-					@.done()
+			соединение.пользователь = { _id: пользователь._id }
+			соединения.эфир[соединение.id] = соединение
+						
+			пользователь = пользовательское.поля(пользователь)
+
+			was_online = online.hget.bind_await(online)('ether:online', пользователь._id.toString())
+			
+			if not was_online?
+				online.hset('ether:online', пользователь._id.toString(), JSON.stringify(пользователь))
+		
+				for id, listener of listeners
+					listener.online(пользователь)
 					
-				.сделать ->
-					listener = {}
+			#
 					
-					_id = пользователь._id.toString()
+			listener = {}
+			
+			_id = пользователь._id.toString()
+			
+			listener.online = (user) =>
+				#if _id != user._id.toString()
+				соединение.emit('online', Object.выбрать(['_id'], user))
 					
-					listener.online = (user) =>
-						#if _id != user._id.toString()
-						соединение.emit('online', Object.выбрать(['_id'], user))
-							
-					listener.offline = (user) ->
-						#if _id != user._id.toString()
-						соединение.emit('offline', Object.выбрать(['_id'], user))
+			listener.offline = (user) ->
+				#if _id != user._id.toString()
+				соединение.emit('offline', Object.выбрать(['_id'], user))
+			
+			listener.пользователь = _id
+			listeners[соединение.id] = listener
 					
-					listener.пользователь = _id
-					listeners[соединение.id] = listener
+			#соединение.emit('online', Object.выбрать(['_id'], пользователь))
+			
+			соединение.on 'уведомления', ->
+				уведомления = новости.уведомления.await(соединение.пользователь)		
+				соединение.emit('новости' + ':' + 'уведомления', уведомления)
 					
-					#соединение.emit('online', Object.выбрать(['_id'], пользователь))
-					
-					соединение.on 'уведомления', () ->
-						цепь(соединение)
-							.сделать ->
-								новости.уведомления(соединение.пользователь, @)
-								
-							.сделать (уведомления) ->
-								соединение.emit('новости' + ':' + 'уведомления', уведомления)
-							
-					соединение.emit 'готов'
+			соединение.emit 'готов'
 					
 		соединение.emit 'поехали'
 		соединение.emit 'version', Options.Version
@@ -126,31 +111,29 @@ exports.отправить = (group, name, data, options, возврат) ->
 	options = options || {}
 	возврат = возврат || (() ->)
 	
-	цепь(возврат)
-		.сделать ->
-			connections = соединения.эфир
-			
-			if options.кому?
-				for id, connection of connections
-					if connection.пользователь?
-						if connection.пользователь._id + '' == options.кому + ''
-							connection.emit(group + ':' + name, data)
-						
-				return @.done(yes)
-		
-			if options.кроме?
-				for id, connection of connections
-					if connection.пользователь?
-						if connection.пользователь._id + '' != options.кроме + ''
-							connection.emit(group + ':' + name, data)
-						
-				return @.done(yes)
-			
-			for id, connection of connections
-				if connection.пользователь?
+	connections = соединения.эфир
+	
+	if options.кому?
+		for id, connection of connections
+			if connection.пользователь?
+				if connection.пользователь._id + '' == options.кому + ''
 					connection.emit(group + ':' + name, data)
-					
-			return @.done(yes)
+				
+		return возврат(null, yes)
+
+	if options.кроме?
+		for id, connection of connections
+			if connection.пользователь?
+				if connection.пользователь._id + '' != options.кроме + ''
+					connection.emit(group + ':' + name, data)
+				
+		return возврат(null, yes)
+	
+	for id, connection of connections
+		if connection.пользователь?
+			connection.emit(group + ':' + name, data)
+			
+	return возврат(null, yes)
     
 exports.соединение_с = (вид, options) ->
 	if Object.пусто(соединения[вид])
@@ -178,46 +161,41 @@ exports.пользователи = () ->
 exports.отправить_одному_соединению = (group, name, data, options, возврат) ->
 	возврат = возврат || (() ->)
 	
-	цепь(возврат)
-		.сделать ->
-			connections = соединения.эфир
-				
-			if options.кому?
-				user_connections = []
-						
-				for id, connection of connections
-					if connection.пользователь?
-						if connection.пользователь._id + '' == options.кому + ''
-							connection.emit(group + ':' + name, data)
-							return @.done(yes)
-						
-				console.error('No connections for user: ' + options.кому)
-				return @.done(no)
+	connections = соединения.эфир
 		
-			else if options.кроме?
-				notified_users = []
+	if options.кому?
+		user_connections = []
 				
-				users_connections = {}
+		for id, connection of connections
+			if connection.пользователь?
+				if connection.пользователь._id + '' == options.кому + ''
+					connection.emit(group + ':' + name, data)
+					return возврат(null, yes)
 				
-				for id, connection of connections
-					if connection.пользователь?
-						user_id = connection.пользователь._id + ''
-						if !notified_users.has(user_id) && user_id != options.кроме + ''
-							connection.emit(group + ':' + name, data)
-							notified_users[user_id] = yes
-						
-				return @.done(yes)
-            
+		console.error('No connections for user: ' + options.кому)
+		return возврат(null, no)
+
+	else if options.кроме?
+		notified_users = []
+		
+		users_connections = {}
+		
+		for id, connection of connections
+			if connection.пользователь?
+				user_id = connection.пользователь._id + ''
+				if !notified_users.has(user_id) && user_id != options.кроме + ''
+					connection.emit(group + ':' + name, data)
+					notified_users[user_id] = yes
+				
+		return возврат(null, yes)
+	
 exports.в_сети_ли = (_id, возврат) ->
-	цепь(возврат)
-		.сделать ->
-			online.hget('ether:online', _id + '', @)
-			
-		.сделать (user) ->
-			is_online = no
-			if user?
-				is_online = yes
-				
-			return @.return(is_online)
+	user = online.hget.bind_await(online)('ether:online', _id + '')
+	
+	is_online = no
+	if user?
+		is_online = yes
+		
+	возврат(null, is_online)
 			
 exports.соединения = соединения

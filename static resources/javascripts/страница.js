@@ -545,6 +545,7 @@ var Page = new Class
 		this.ajaxes.for_each(function()
 		{
 			this.expire()
+			this.abort()
 		})
 		
 		this.ticking_actions.for_each(function()

@@ -36,6 +36,8 @@ function simple_value_dialog_window(options)
 				field.label.addClass('in-place_input_label')
 		}
 		
+		field.append_input = true
+			
 		if (field.multiline)
 		{
 			field.input = $('<textarea/>')
@@ -46,6 +48,15 @@ function simple_value_dialog_window(options)
 			field.input = $('<input/>')
 			field.input.attr('type', 'hidden')
 		}
+		else if (field.autocomplete)
+		{
+			var autocomplete = $('<div/>')
+			autocomplete.autocomplete(field.autocomplete)
+			autocomplete.appendTo(form)
+			
+			field.input = autocomplete.find('> input[type="hidden"]')
+			field.append_input = false
+		}
 		else
 		{
 			field.input = $('<input/>')
@@ -54,7 +65,9 @@ function simple_value_dialog_window(options)
 		}
 	
 		field.input.attr('name', field.id)
-		field.input.appendTo(form)
+		
+		if (field.append_input)
+			field.input.appendTo(form)
 
 		if (field.validation)
 			field.input.attr('validation', field.validation)

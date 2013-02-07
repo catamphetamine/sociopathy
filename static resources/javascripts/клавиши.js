@@ -6,6 +6,10 @@ var Клавиши =
 	Enter: 13,
 	Ввод: 13,
 	
+	Ctrl: 18,
+	Alt: 17,
+	Shift: 16,
+	
     Pause: 19,
     Escape: 27,
 	

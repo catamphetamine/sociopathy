@@ -43,6 +43,19 @@
 	{
 		display: none;
 	}
+	
+	form
+	{
+		> .autocomplete
+		{
+			margin-top: 10px;
+			
+			> input[type="text"]
+			{
+				margin-top: 0;
+			}
+		}
+	}
 }
 
 .add_to_talk

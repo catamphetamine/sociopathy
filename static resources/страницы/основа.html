@@ -170,23 +170,6 @@
 				if (data.development)
 					window.development_mode = true
 					
-				Configuration.Invites = data.invites
-				
-				Configuration.Locale =
-				{
-					Default_language: 'en',
-					Supported_languages:
-					[
-						{ id: 'ru', name: 'Русский' },
-						{ id: 'en', name: 'English' }
-					],
-					
-					Предпочитаемый_язык: data.язык,
-					Предпочитаемые_языки: data.языки,
-					
-					Страна: data.страна || 'US'
-				}
-				
 				insert_script('/javascripts/основа')
 			},
 			error: function()

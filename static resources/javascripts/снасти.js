@@ -59,6 +59,8 @@ var Ajax =
 			
 		var ajax = $.ajax(jQuery_options)
 		
+		result.abort = function() { ajax.abort() }
+		
 		var default_on_error = function(сообщение)
 		{
 			error('Ошибка связи с сервером')
@@ -87,8 +89,11 @@ var Ajax =
 					return console.log('No output for Ajax request')
 			
 				if (data.ошибка)
+					data.error = data.ошибка
+			
+				if (data.error)
 				{
-					var сообщение = data.ошибка
+					var сообщение = data.error
 					if (сообщение == true)
 						сообщение = Default_ajax_error_message
 						
@@ -112,7 +117,12 @@ var Ajax =
 					сообщение = Default_ajax_error_message
 				
 				if ($.isFunction(ошибка))
+				{
+					if (web_page_still_loading())
+						error(сообщение, { sticky: true })
+				
 					ошибка(сообщение, options)
+				}
 				else if (сообщение && typeof сообщение === 'string')
 					error(сообщение)
 				else if (typeof ошибка === 'string')

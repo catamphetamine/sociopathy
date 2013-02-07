@@ -88,6 +88,7 @@ Validation.беседа =
 {
 	добавить_пользователя: function(value, callback)
 	{
+		/*
 		value = value.trim()
 		
 		if (!value)
@@ -98,6 +99,26 @@ Validation.беседа =
 		page.Ajax.get('/приложение/человек/по имени',
 		{
 			имя: value
+		})
+		.ok(function(data)
+		{
+			form.user = data
+			callback()
+		})
+		.ошибка(function(error)
+		{
+			callback({ error: error })
+		})
+		*/
+		
+		if (!value)
+			return callback({ error: 'Выберите пользователя' })
+		
+		var form = this
+			
+		page.Ajax.get('/приложение/человек',
+		{
+			_id: value
 		})
 		.ok(function(data)
 		{

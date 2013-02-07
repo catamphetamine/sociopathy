@@ -3,34 +3,22 @@ http = require 'http'
 connect_utilities = require('connect').utils
 file_system = require 'fs'
 
-global.synchronous = require 'sync'
-
-Function.prototype.await = () ->
-	parameters = Array.prototype.slice.call(arguments)
-	@synchronize(@).apply(@, parameters)
-	
-Function.prototype.synchronize = (binding) ->
-	return () =>
-		parameters = Array.prototype.slice.call(arguments)
-		# add binding as a first argument
-		parameters.unshift(binding)
-		@sync.apply(@, parameters)
-	
 global.db = (collection) ->
 	mongo = хранилище.collection(collection)
 	
 	api = {}
 	
-	api.find_one = mongo.findOne.synchronize(mongo)
+	api.find_one = mongo.findOne.bind_await(mongo)
 	
-	api.count = mongo.count.synchronize(mongo)
+	api.count = mongo.count.bind_await(mongo)
 	
 	api.find = (query, options) ->
+		options = options || {}
 		object = mongo.find(query, options)
-		object.toArray.synchronize(object)()
+		object.toArray.bind_await(object)()
 
-	api.update = mongo.update.synchronize(mongo)
-	api.save = mongo.save.synchronize(mongo)
+	api.update = mongo.update.bind_await(mongo)
+	api.save = mongo.save.bind_await(mongo)
 	
 	mongo._ = api
 	mongo
@@ -406,14 +394,3 @@ module.exports = снасти
 
 global.show_error = (ошибка) ->
 	throw { error: ошибка, display_this_error: yes }
-
-global.web_socket = (соединение) ->
-	соединение.old_on = соединение.on
-	
-	соединение.on = (message_type, action) ->
-		@old_on message_type, (message) =>
-			цепь(@, { manual: yes })
-				.сделать ->
-					synchronous ->
-						action(message)
-				.go()

@@ -75,7 +75,7 @@
 				padding-top: 6px;
 				padding-bottom: 6px;
 				
-				box-sizing: border-box;
+				.include_padding_in_width();
 			}
 		}
 	}

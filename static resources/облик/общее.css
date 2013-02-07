@@ -233,7 +233,7 @@ textarea.multiline, input.field
 	padding-left: 10px;
 	padding-right: 10px;
 	
-	box-sizing: border-box;
+	.include_padding_in_width();
 
 	border-top-color: #afafaf;
 	border-left-color: #bfbfbf;
@@ -716,6 +716,8 @@ body[mode="правка"] .rich_formatting a
 	font-size: @textual_font_size;
 	line-height: @textual_line_height;
 
+	white-space: pre-wrap;
+	
 	.hint
 	{
 		color: #7f7f7f !important;

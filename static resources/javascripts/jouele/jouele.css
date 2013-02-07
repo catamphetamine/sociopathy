@@ -31,6 +31,7 @@
 .jouele-load-bar,
 .jouele-play-bar {
   box-sizing: border-box;
+  -moz-box-sizing: border-box;
 }
 
 .jouele-mine-bar {

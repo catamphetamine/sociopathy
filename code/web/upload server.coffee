@@ -10,31 +10,20 @@ upload_file = (ввод, возврат) ->
 	
 	приостановленный_ввод = connect_utilities.pause(ввод)
 	
-	цепь(возврат, { upload: yes })
-		.сделать ->
-			пользовательское.опознать(тайный_ключ_пользователя, @)
-		.сделать ->
-			снасти.создать_путь(Options.Upload_server.Temporary_file_path, @)
-		.сделать ->
-			monitor_upload(ввод, @)
-			приостановленный_ввод.resume()
-		.сделать (files) ->
-			file = files[0][1]
-			@.done(file)
-		.go()
+	fiber ->
+		пользовательское.опознать.await(тайный_ключ_пользователя)
+		снасти.создать_путь.await(Options.Upload_server.Temporary_file_path)
+		files = monitor_upload.await(ввод)
+		приостановленный_ввод.resume()
+		file = files[0][1]
+		возврат(null, file)
 
 upload_image = (ввод, вывод, настройки) ->
-	цепь(вывод, { upload: yes })
-		.сделать ->
-			upload_file(ввод, @._.в 'file')
-		.сделать ->
-			global.resize(@._.file.path, @._.file.path, настройки, @)
-		.сделать ->
-			снасти.переименовать(@._.file.path, снасти.имя_файла(@._.file.path) + '.jpg', @)
-		.сделать ->
-			адрес = @._.file.path.to_unix_path().replace(Options.Upload_server.File_path, Options.Upload_server.File_url) + '.jpg'
-			вывод.send { имя: снасти.имя_файла(@._.file.path), адрес: адрес }
-		.go()
+	file = upload_file.await(ввод)
+	global.resize.await(file.path, file.path, настройки)
+	снасти.переименовать.await(file.path, снасти.имя_файла(file.path) + '.jpg')
+	адрес = file.path.to_unix_path().replace(Options.Upload_server.File_path, Options.Upload_server.File_url) + '.jpg'
+	вывод.send({ имя: снасти.имя_файла(file.path), адрес: адрес })
 
 server = http.createServer (ввод, вывод) ->
 	вывод.send = (что) ->

@@ -1,18 +1,15 @@
 Cookie_expiration_date = new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 365 * 50)
 
 exports.войти = (пользователь, ввод, вывод, возврат) ->
-	цепь(возврат)
-		.сделать ->
-			if ввод.пользователь?
-				if ввод.пользователь._id == пользователь._id
-					return @.return(пользователь)
+	if ввод.пользователь?
+		if ввод.пользователь._id == пользователь._id
+			return возврат(null, пользователь)
 				
-			ввод.пользователь = { _id: пользователь._id }
-			пользовательское.тайный_ключ(пользователь._id, @)
+	ввод.пользователь = { _id: пользователь._id }
+	тайный_ключ = пользовательское.тайный_ключ.await(пользователь._id)
 
-		.сделать (тайный_ключ) ->
-			вывод.cookie('user', тайный_ключ, { expires: Cookie_expiration_date, httpOnly: false })
-			return @.return(пользователь)
+	вывод.cookie('user', тайный_ключ, { expires: Cookie_expiration_date, httpOnly: false })
+	return возврат(null, пользователь)
 
 exports.выйти = (ввод, вывод) ->
 	ввод.session.delete()
@@ -54,14 +51,12 @@ exports.не_он = (_id, ввод, вывод) ->
 	return no
 	
 exports.опознать = (тайный_ключ, возврат) ->
-	цепь(возврат)
-		.сделать ->
-			db('people_private_keys').findOne({ 'тайный ключ': тайный_ключ }, @)
+	данные = db('people_private_keys')._.find_one({ 'тайный ключ': тайный_ключ })
 			
-		.сделать (данные) ->
-			if not данные?
-				throw 'пользователь не опознан по ' + тайный_ключ
-			пользовательское.взять(данные.пользователь, @)
+	if not данные?
+		throw 'пользователь не опознан по ' + тайный_ключ
+	
+	возврат(null, пользовательское.взять.await(данные.пользователь))
 
 exports.сделать_тайный_ключ = (пользователь) ->
 	пользователь._id + '&' + Math.random()
@@ -70,12 +65,9 @@ exports.тайный_ключ = (_id, возврат) ->
 	if typeof _id == 'string'
 		_id = db('people').id(_id)
 		
-	цепь(возврат)
-		.сделать ->
-			db('people_private_keys').findOne({ пользователь: _id }, @)
+	тайный_ключ = db('people_private_keys')._.find_one({ пользователь: _id })
 			
-		.сделать (тайный_ключ) ->
-			@.done(тайный_ключ['тайный ключ'])
+	возврат(null, тайный_ключ['тайный ключ'])
 
 exports.get_session_data = (тайный_ключ, возврат) ->
 	цепь(возврат)
@@ -130,27 +122,24 @@ exports.взять = (_id, настройки, возврат) ->
 		example = { _id: db('people').id(_id) }
 		single = true
 		
-	цепь(возврат, { manual: yes })
-		.сделать ->
-			if single
-				db('people').findOne(example, @)
-			else
-				db('people').find(example, options).toArray(@)
-				
-		.сделать (result) ->		
-			if not result?
-				return @.done()
+	result = null
 	
-			if not настройки.полностью?
-				if single
-					пользовательское.скрыть(result)
-				else
-					for человек in result
-						пользовательское.скрыть(человек)
-						
-			@.done(result)
-			
-		.go()
+	if single
+		result = db('people')._.find_one(example)
+	else
+		result = db('people')._.find(example, options)
+	
+	if not result?
+		return возврат()
+		
+	if not настройки.полностью?
+		if single
+			пользовательское.скрыть(result)
+		else
+			for человек in result
+				пользовательское.скрыть(человек)
+				
+	возврат(null, result)
 			
 exports.подставить = (куда, переменная, возврат) ->
 	цепь(возврат, { manual: yes })

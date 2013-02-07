@@ -60,11 +60,49 @@
 						ok_button_text: 'Добавить',
 						fields:
 						[{
-							id: 'name',
+							id: 'companion',
 							description: 'Кого добавим',
+							autocomplete:
+							{
+								mininum_query_length: 3,
+								search: function(query, callback)
+								{
+									var ajax = page.Ajax.get('/приложение/люди/найти',
+									{
+										query: query,
+										max: 5
+									})
+									.ok(function(data)
+									{
+										callback(data.люди)
+									})
+															
+									var search =
+									{
+										cancel: function()
+										{
+											ajax.abort()
+										}
+									}
+									
+									return search
+								},
+								decorate: function(data)
+								{
+									this.text(data.имя)
+								},
+								value: function(data)
+								{
+									return data._id + ''
+								},
+								title: function(data)
+								{
+									return data.имя
+								}
+							},
 							validation: 'беседа.добавить_пользователя'
 						}],
-						ok: function(name)
+						ok: function()
 						{
 							var user = add_user_to_talk_window.form.user
 							

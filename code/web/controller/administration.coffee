@@ -2,6 +2,11 @@ http.get '/versioning', (ввод, вывод) ->
 	data =
 		site_version: Options.Version
 		development: Options.Development
+
+	вывод.send(data)
+	
+http.get '/initialize', (ввод, вывод) ->
+	data =
 		invites: Options.Invites
 		
 	locales = require('./../tools/locale').list(ввод)

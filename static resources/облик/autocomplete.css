@@ -1,0 +1,105 @@
+@import "/облик/вспомогательный.less";
+
+.autocomplete
+{
+	display: inline-block;
+	
+	position: relative;
+	
+	overflow: visible;
+	
+	> .selected
+	{
+		display: none;
+	}
+	
+	> input[type="text"]
+	{
+		background-image: url('/картинки/навершие/поиск/magnifier.png');
+		background-repeat: no-repeat;
+		background-size: 16px 16px;
+		background-position: 12px 16px;
+		padding-left: 38px;
+
+		.include_padding_in_width();
+
+		width: 100%;
+	}
+	
+	> ul
+	{
+		position: absolute;
+		z-index: 1;
+		
+		width: 100%;
+		
+		margin: 0;
+		padding: 0;
+		
+		top: 50px;
+		
+		list-style-type: none;
+		
+		box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.2);
+		
+		border-width: 1px;
+		border-color: #cfcfcf;
+		border-style: solid;
+		
+		border-radius: 5px;
+		
+		.include_padding_in_width();
+		
+		> li
+		{
+			&:first-child
+			{
+				border-top-left-radius: 5px;
+				border-top-right-radius: 5px;
+			}
+			
+			&:last-child
+			{
+				border-bottom-left-radius: 5px;
+				border-bottom-right-radius: 5px;
+			}
+		}
+		
+		> li
+		{
+			padding-left: 11px;
+			padding-right: 11px;
+			
+			padding-left: 39px;
+			
+			padding-top: 5px;
+			padding-bottom: 5px;
+			
+			text-align: left;
+			
+			border-top-width: 0;
+			
+			background-color: #ffffff;
+			
+			/* background-color: #f7f7f7; */
+			
+			/* .top_to_bottom_gradient(#ffffff, #f0f0f0); */
+			
+			cursor: pointer;
+			
+			&.highlighted
+			{
+				background-color: #e7f6ff;
+				/* .top_to_bottom_gradient(#e7f6ff, #e7f6ff); */
+			}
+		}
+	}
+	
+	&.invalid
+	{
+		> input[type="text"]
+		{
+			border-color: #a50000;
+		}
+	}
+}

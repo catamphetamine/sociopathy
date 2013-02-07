@@ -69,7 +69,7 @@
 			width: 250px;
 			height: 250px;
 			
-			box-sizing: border-box;
+			.include_padding_in_width();
 			
 			border-width: 1px;
 			border-style: solid;

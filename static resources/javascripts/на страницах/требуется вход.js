@@ -11,4 +11,6 @@ page.load = function()
 		page.get('.url').attr('href', адрес).text(адрес)
 		page.data.go_to_after_login = адрес
 	}
+	
+	page.get('.autocomplete').autocomplete()
 }

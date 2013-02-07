@@ -82,7 +82,7 @@ var jquery_animator = new Class
 	}
 })
 
-// jQuery animator
+// MooTools animator
 var moo_tools_animator = new Class
 ({
 	stop: function($element)

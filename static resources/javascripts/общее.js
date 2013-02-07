@@ -123,6 +123,11 @@ function hide_page_loading_screen()
 	$('body').removeClass('loading')
 }
 
+function web_page_still_loading()
+{
+	return $('body').hasClass('loading')
+}
+
 $(function()
 {
 	$('form').submit(function(event)
@@ -458,7 +463,9 @@ function show_error(выпавшая_ошибка, url, line)
 		else
 		{
 			error(ошибка, { sticky: true })
-			warning(explanation, { sticky: true })
+			
+			if (explanation)
+				warning(explanation, { sticky: true })
 		}
 	}
 }

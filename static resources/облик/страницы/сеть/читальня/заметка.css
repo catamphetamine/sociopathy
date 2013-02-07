@@ -8,7 +8,7 @@
 	{
 		width: 100%;
 		
-		box-sizing: border-box;
+		.include_padding_in_width();
 		
 		padding-left: 80px;
 		padding-right: 80px;

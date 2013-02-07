@@ -85,6 +85,9 @@ var Wiki_processor = new (new Class
 		
 		var result = $.validate_xml(xml)
 		
+		if (!result)
+			return
+		
 		if (!result.cause)
 		{
 			var document = $(result)
@@ -93,7 +96,7 @@ var Wiki_processor = new (new Class
 			if (inner_paragraph.exists())
 				throw { ошибка: 'Нарушено форматирование текста: абзац внутри абзаца', explanation: inner_paragraph.outer_html() , verbose: true }
 			
-			return result
+			return
 		}
 		
 		switch (result.cause)
@@ -101,9 +104,14 @@ var Wiki_processor = new (new Class
 			case 'text node in root':
 				console.log(result.explanation)
 				throw { ошибка: 'Нарушено форматирование текста: текст вне абзаца', explanation: result.explanation, verbose: true }
+			
+			default:
+				console.log(result.cause)
+			//	throw { ошибка: result.cause, verbose: true }
 		}
 		
-		throw 'Не "валидный" код xml'
+		//throw { ошибка: 'Не "валидный" код xml', verbose: true }
+		throw 'Не "валидный" код xml' // + xml
 	},
 	
 	simplify: function(xml, options)
@@ -322,6 +330,8 @@ var Wiki_processor = new (new Class
 	
 	parse_and_validate: function(xml, options)
 	{
+		xml = xml.replace_all('&nbsp;', ' ')
+		
 		var wiki = this.parse(xml, options)
 		
 		try
@@ -1001,6 +1011,6 @@ Wiki_processor.Syntax =
 }
 
 //var xml = '<paragraph>Материальная точка — объект, не имеющий размеров, но обладающий всеми остальными свойствами (массой, зарядом и т.п.).</paragraph><paragraph>Используется в физике <formula>(physics)</formula> в качестве <code>упрощённой модели</code> относительно малого объекта (относительно малого в рамках задачи). Например, при расчёте пути, пройденного поездом из Петрограда во Владивосток, можно пренебречь его очертаниями и размерами, поскольку они гораздо меньше протяжённости пути.</paragraph><citation><text>Война - это путь обмана. Поэтому, даже если [ты] способен, показывай противнику свою неспособность. Когда должен ввести в бой свои силы, притворись бездеятельным. Когда [цель] близко, показывай, будто она далеко; когда же она действительн далеко, создавай впечатление, что она близко</text><author>Cунь Цзы, «Искусство Войны»</author></citation><paragraph>Вставим-ка сюда картинку: <picture>http://cdn1.iconfinder.com/data/icons/49handdrawing/128x128/picture.png</picture>, вот так.</paragraph><paragraph><youtube>quYfLkJMN1g</youtube></paragraph><paragraph><vimeo>47387431</vimeo></paragraph><paragraph>Однако <bold>не всегда</bold> можно <italic>пользоваться</italic> материальными<superscript>1</superscript> точками<subscript>2</subscript> для решения задач. Например, при расчёте распределения энергии молекул в &lt;a type="hyperlink" href="/%D1%87%D0%B8%D1%82%D0%B0%D0%BB%D1%8C%D0%BD%D1%8F/%D1%85%D0%B8%D0%BC%D0%B8%D1%8F/%D0%B8%D0%BD%D0%B5%D1%80%D1%82%D0%BD%D1%8B%D0%B9%20%D0%B3%D0%B0%D0%B7"&gt;инертном газе&lt;/a&gt; можно представить молекулы материальными точками (шариками). Однако для других веществ начинает иметь значение строение молекулы, так как </paragraph><multiline_code>колебание и вращение</multiline_code> самой молекулы начинают запасать в себе значительную энергию.<paragraph></paragraph><header_2>Ссылки</header_2><list><item><hyperlink at="http://ru.wikipedia.org/wiki/%D0%9C%D0%B0%D1%82%D0%B5%D1%80%D0%B8%D0%B0%D0%BB%D1%8C%D0%BD%D0%B0%D1%8F_%D1%82%D0%BE%D1%87%D0%BA%D0%B0">WikiPedia</hyperlink></item><item><hyperlink at="http://phys.msu.ru/">ФизФак МГУ</hyperlink></item></list>'
-//alert(Wiki_processor.validate(xml))
+//Wiki_processor.validate(xml)
 
 //alert(Wiki_processor.parse('<p></p><div class="audio_player"><a href="test">abc</a></div><p></p>'))

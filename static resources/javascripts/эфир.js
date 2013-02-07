@@ -102,6 +102,16 @@ $(document).on('panel_loaded', function()
 				$(document).trigger('ether_is_online')
 		})
 		
+		эфир.on('error', function(error)
+		{
+			var options = { sticky: true }
+			
+			if (error === true)
+				return error('Ошибка связи с сервером', options)
+	
+			error(error, options)
+		})
+		
 		on('пользователи', 'кто здесь', function(пользователи)
 		{
 			пользователи.for_each(function()
