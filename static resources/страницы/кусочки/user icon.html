@@ -3,8 +3,8 @@
 	<div class="user_online_picture_glow"></div>
 	<div class="picture" title="${имя}">
 		<img class="real_picture"
-			{{if $data.avatar_version}}
-				src="/загруженное/люди/${escape_id($data['адресное имя'])}/картинка/маленькая.jpg?version=${data.avatar_version}"
+			{{if avatar_version}}
+				src="/загруженное/люди/${$data['адресное имя']}/картинка/маленькая.jpg?version=${avatar_version}"
 			{{else}}
 				src="/картинки/temporary/картинка с навершия.jpg"
 				style="display: none"

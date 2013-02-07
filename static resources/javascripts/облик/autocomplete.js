@@ -140,10 +140,16 @@
 			this.input.val(this.options.title(this.find_result_data_by_value()))
 			this.input.focus()
 			
-			var selected_result = $('<div/>')
-			this.options.decorate.bind(selected_result)(this)
+			var selected_result = $('<div/>').addClass('selected_result')
+			this.options.decorate.bind(selected_result)(this.find_result_data_by_value())
 			
 			this.selected.append(selected_result)
+			
+			if (this.options.hide_input_after_selection)
+			{
+				this.input.hide()
+				this.selected.show()
+			}
 			
 			if (this.options.choice)
 				this.options.choice(this.value)

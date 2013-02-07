@@ -88,22 +88,26 @@
 									
 									return search
 								},
-								decorate: function(data)
+								decorate: function(user)
 								{
-									this.text(data.имя)
+									$.tmpl('user icon', user).appendTo(this)
+									
+									var name = $('<div/>').addClass('name').text(user.имя)
+									name.appendTo(this)
 								},
-								value: function(data)
+								value: function(user)
 								{
-									return data._id + ''
+									return user._id + ''
 								},
-								title: function(data)
+								title: function(user)
 								{
-									return data.имя
+									return user.имя
 								},
 								choice: function(_id)
 								{
 									add_user_to_talk_simple_dialog_window.ok()
-								}
+								},
+								//hide_input_after_selection: true
 							},
 							validation: 'беседа.добавить_пользователя'
 						}],

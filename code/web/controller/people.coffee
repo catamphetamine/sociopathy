@@ -5,15 +5,7 @@
 
 http.get '/люди/найти', (ввод, вывод) ->
 	люди = db('people')._.find({ имя: { $regex: '.*' + RegExp.escape(ввод.настройки.query) + '.*', $options: 'i' } }, { limit: ввод.настройки.max })
-	
-	if not люди.пусто()
-		люди.push(люди[0])
-		люди.push(люди[0])
-		
-	result = ->
-		вывод.send(люди: люди)
-		
-	setTimeout(result, 2000)
+	вывод.send(люди: люди)
 			
 http.get '/люди', (ввод, вывод) ->
 	цепь(вывод)
