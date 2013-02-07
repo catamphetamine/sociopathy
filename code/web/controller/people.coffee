@@ -8,26 +8,23 @@ http.get '/люди/найти', (ввод, вывод) ->
 	вывод.send(люди: люди)
 			
 http.get '/люди', (ввод, вывод) ->
-	цепь(вывод)
-		.сделать ->
-			options =
-				collection: 'people'
-				query: {},
-				total: yes
-				
-			either_way_loading(ввод, options, @)
-			
-		.сделать (result) ->
-			for man in result.data
-				man = пользовательское.скрыть(man)
-				
-			ответ = 
-				люди: result.data
-				'есть ещё?': result['есть ещё?']
-				'есть ли предыдущие?': result['есть ли предыдущие?']
-				всего: result.всего
-				
-			вывод.send(ответ)
+	options =
+		collection: 'people'
+		query: {},
+		total: yes
+		
+	result = either_way_loading.await(ввод, options)
+	
+	for man in result.data
+		man = пользовательское.скрыть(man)
+		
+	ответ = 
+		люди: result.data
+		'есть ещё?': result['есть ещё?']
+		'есть ли предыдущие?': result['есть ли предыдущие?']
+		всего: result.всего
+		
+	вывод.send(ответ)
 
 http.get '/человек', (ввод, вывод) ->
 	пользователь = null
@@ -141,10 +138,8 @@ http.get '/человек/видео/альбом', (ввод, вывод) ->
 	вывод.send $
 			
 http.get '/сеть/черновик', (ввод, вывод) ->
-	цепь(вывод)
-		.сделать ->
-			#console.log(ввод.настройки.что)
-			вывод.send({})
+	#console.log(ввод.настройки.что)
+	вывод.send({})
 			
 http.get '/человек/по имени', (ввод, вывод) ->
 	человек = db('people')._.find_one({ имя: ввод.настройки.имя })

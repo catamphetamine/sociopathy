@@ -11,60 +11,41 @@ prefix = 'session:'
 
 client = new redis.createClient(options.port || options.socket, options.host, options)
 
-###
-# if using these, add something like 'global.session_store_initialized()', so that it initializes before running the web server
-
-if options.password?
-	client.auth options.password, (error) ->
-		if error?
-			throw error
-
-if options.db?
-	client.select(options.db)
-	client.on "connect", () ->
-		client.send_anyways = true
-		client.select(options.db)
-		client.send_anyways = false
-###
-
 exports.get = (id, key, возврат) ->
 	if typeof key == 'function'
 		возврат = key
 		key = null
 		
-	цепь(возврат)
-		.сделать ->
-			client.get(prefix + id, @)
-		.сделать (data) ->
-			if not data?
-				return @.return()
-			data = JSON.parse(data.toString())
-			if key?
-				data = data[key]
-			@.return(data)
-			
+	data = client.get.bind_await(client)(prefix + id)
+	
+	if not data?
+		return возврат()
+	
+	data = JSON.parse(data.toString())
+	if key?
+		data = data[key]
+		
+	возврат(null, data)
+	
 exports.set = (id, extra_data, возврат) ->
 	multi = client.multi()
 
-	цепь(возврат)
-		.сделать ->
-			multi.get(prefix + id, @)
+	data = multi.get.bind_await(multi)(prefix + id)
 			
-		.сделать (data) ->
-			if data?
-				data = JSON.parse(data.toString())
-			else
-				data = {}
-				
-			data = Object.merge_recursive(data, extra_data)
-			data = JSON.stringify(data)
+	if data?
+		data = JSON.parse(data.toString())
+	else
+		data = {}
 		
-			if options.time_to_live?
-				multi.setex(prefix + id, options.time_to_live, data)
-			else
-				multi.set(prefix + id, data)
-		
-			multi.exec(@)
+	data = Object.merge_recursive(data, extra_data)
+	data = JSON.stringify(data)
+
+	if options.time_to_live?
+		multi.setex(prefix + id, options.time_to_live, data)
+	else
+		multi.set(prefix + id, data)
+
+	multi.exec(возврат)
 		
 exports.delete = (id, возврат) ->	
 	client.del(prefix + id, возврат)

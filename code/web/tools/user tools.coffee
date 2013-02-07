@@ -70,21 +70,17 @@ exports.тайный_ключ = (_id, возврат) ->
 	возврат(null, тайный_ключ['тайный ключ'])
 
 exports.get_session_data = (тайный_ключ, возврат) ->
-	цепь(возврат)
-		.сделать ->
-			redis_session_store.get(тайный_ключ, @)
-		.сделать (session_data) ->
-			возврат(null, session_data)
+	session_data = redis_session_store.get.bind_await(redis_session_store)(тайный_ключ)
+	возврат(null, session_data)
 
 exports.set_session_data = (тайный_ключ, ключ, значение, возврат) ->
-	цепь(возврат)
-		.сделать ->
-			redis_session_store.get(тайный_ключ, @)
-		.сделать (session_data) ->
-			if not session_data?
-				session_data = {}
-			session_data[ключ] = значение
-			redis_session_store.set(тайный_ключ, session_data, возврат)
+	session_data = redis_session_store.get.bind_await(redis_session_store)(тайный_ключ)
+	
+	if not session_data?
+		session_data = {}
+		
+	session_data[ключ] = значение
+	redis_session_store.set(тайный_ключ, session_data, возврат)
 			
 exports.приглашение = ->
 	снасти.цифры_в_символы(new Date().getTime().toString() + (Math.random()+ '').replace('.', '').substring(0, 5))
@@ -142,52 +138,46 @@ exports.взять = (_id, настройки, возврат) ->
 	возврат(null, result)
 			
 exports.подставить = (куда, переменная, возврат) ->
-	цепь(возврат, { manual: yes })
-		.сделать ->
-			_ids = []
-			
-			if куда instanceof Array
-				for куда_подставить in куда
-					if куда_подставить[переменная]?
-						if куда_подставить[переменная] instanceof Array
-							for _id in куда_подставить[переменная]
-								if not _ids.has(_id)
-									_ids.put(_id)
-						else
-							_id = куда_подставить[переменная]
-							if not _ids.has(_id)
-								_ids.put(_id)
-			else
-				if куда[переменная]?
-					_ids.put(куда[переменная])
+	_ids = []
+	
+	if куда instanceof Array
+		for куда_подставить in куда
+			if куда_подставить[переменная]?
+				if куда_подставить[переменная] instanceof Array
+					for _id in куда_подставить[переменная]
+						if not _ids.has(_id)
+							_ids.put(_id)
+				else
+					_id = куда_подставить[переменная]
+					if not _ids.has(_id)
+						_ids.put(_id)
+	else
+		if куда[переменная]?
+			_ids.put(куда[переменная])
 
-			@.done(_ids)
-		
-		.все_вместе (_id) ->
-			пользовательское.взять(_id, @)
+	пользователи = []
+	for _id in _ids
+		пользователи.push(пользовательское.взять.await(_id))
+
+	users = {}
+	for пользователь in пользователи
+		users[пользователь._id + ''] = пользователь
 	
-		.сделать (пользователи) ->
-			users = {}
-			for пользователь in пользователи
-				users[пользователь._id + ''] = пользователь
-			@.done(users)
-		
-		.сделать (пользователи) ->
-			if куда instanceof Array
-				for куда_подставить in куда
-					if куда_подставить[переменная]?
-						if куда_подставить[переменная] instanceof Array
-							куда_подставить[переменная].forEach (_id, индекс) ->
-								куда_подставить[переменная][индекс] = пользовательское.поля(пользователи[_id + ''])
-						else
-							куда_подставить[переменная] = пользовательское.поля(пользователи[куда_подставить[переменная] + ''])
-			else
-				if куда[переменная]?
-					куда[переменная] = пользовательское.поля(пользователи[куда[переменная] + ''])
-			
-			@.done(куда)
+	пользователи = users
 	
-		.go()
+	if куда instanceof Array
+		for куда_подставить in куда
+			if куда_подставить[переменная]?
+				if куда_подставить[переменная] instanceof Array
+					куда_подставить[переменная].forEach (_id, индекс) ->
+						куда_подставить[переменная][индекс] = пользовательское.поля(пользователи[_id + ''])
+				else
+					куда_подставить[переменная] = пользовательское.поля(пользователи[куда_подставить[переменная] + ''])
+	else
+		if куда[переменная]?
+			куда[переменная] = пользовательское.поля(пользователи[куда[переменная] + ''])
+	
+	возврат(null, куда)
 			
 exports.поля = (поля, пользователь) ->
 	поля_по_умолчанию = ['имя', 'адресное имя', 'пол', 'avatar_version']
@@ -208,11 +198,8 @@ exports.в_сети_ли = (_id, возврат) ->
 	if typeof _id == 'string'
 		_id = db('people').id(_id)
 		
-	цепь(возврат)
-		.сделать ->
-			db('people_sessions').findOne({ пользователь: _id }, @)
-		.сделать (session) ->
-			if not session.online?
-				return @.done(no)
-			@.done(session.online)
+	session = db('people_sessions')._.find_one({ пользователь: _id })
+	if not session.online?
+		return возврат(null, no)
+	возврат(null, session.online)
 ###
