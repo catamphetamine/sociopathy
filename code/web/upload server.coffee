@@ -8,21 +8,19 @@ upload_file = (ввод, возврат) ->
 	if not тайный_ключ_пользователя?
 		show_error('Не указан тайный ключ пользователя')
 	
-	приостановленный_ввод = connect_utilities.pause(ввод)
-	
-	fiber ->
-		пользовательское.опознать.await(тайный_ключ_пользователя)
-		снасти.создать_путь.await(Options.Upload_server.Temporary_file_path)
-		files = monitor_upload.await(ввод)
-		приостановленный_ввод.resume()
-		file = files[0][1]
-		возврат(null, file)
+	pause = connect_utilities.pause(ввод)
+	пользовательское.опознать.await(тайный_ключ_пользователя)
+	снасти.создать_путь.await(Options.Upload_server.Temporary_file_path)
+	files = monitor_upload.await(ввод, pause)
+	file = files[0][1]
+	возврат(null, file)
 
 upload_image = (ввод, вывод, настройки) ->
 	file = upload_file.await(ввод)
 	global.resize.await(file.path, file.path, настройки)
 	снасти.переименовать.await(file.path, снасти.имя_файла(file.path) + '.jpg')
 	адрес = file.path.to_unix_path().replace(Options.Upload_server.File_path, Options.Upload_server.File_url) + '.jpg'
+	console.log({ имя: снасти.имя_файла(file.path), адрес: адрес })
 	вывод.send({ имя: снасти.имя_файла(file.path), адрес: адрес })
 
 server = http.createServer (ввод, вывод) ->
@@ -32,17 +30,18 @@ server = http.createServer (ввод, вывод) ->
 			что = JSON.stringify(что)
 		@end(что)
 
-	switch decodeURI(require('url').parse(ввод.url, true).pathname)
-		when '/сеть/человек/картинка'
-			upload_image(ввод, вывод, { размер: Options.User.Picture.Generic.Size, квадрат: yes })
-		when '/сеть/человек/фотография'
-			upload_image(ввод, вывод, { размер: Options.User.Photo.Size })
-		else
-			console.error "URI not found: #{decodeURI(ввод.url)}"
-			вывод.writeHead(404, { 'content-type': 'text/plain' })
-			return вывод.end('404')
+	fiber ->
+		switch decodeURI(require('url').parse(ввод.url, true).pathname)
+			when '/сеть/человек/картинка'
+				upload_image(ввод, вывод, { размер: Options.User.Picture.Generic.Size, квадрат: yes })
+			when '/сеть/человек/фотография'
+				upload_image(ввод, вывод, { размер: Options.User.Photo.Size })
+			else
+				console.error "URI not found: #{decodeURI(ввод.url)}"
+				вывод.writeHead(404, { 'content-type': 'text/plain' })
+				return вывод.end('404')
 
-monitor_upload = (ввод, возврат) ->
+monitor_upload = (ввод, pause, возврат) ->
 	form = new formidable.IncomingForm()
 
 	files = []
@@ -65,6 +64,7 @@ monitor_upload = (ввод, возврат) ->
 			возврат(null, files)
 
 	form.parse(ввод)
+	pause.resume()
 	
 server.listen(Options.Upload_server.Port)
 

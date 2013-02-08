@@ -643,10 +643,10 @@
 			var value = $(this).find('dd').text().trim()
 			
 			if (!key && !value)
-				return
+				return $(this).remove()
 			
 			if (key === 'Название' && value === 'Описание')
-				return
+				return $(this).remove()
 			
 			result.о_себе[key] = value
 		})
