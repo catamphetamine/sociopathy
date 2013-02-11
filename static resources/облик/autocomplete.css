@@ -87,6 +87,9 @@
 			
 			cursor: pointer;
 			
+			overflow: hidden;
+			text-overflow: ellipsis;
+			
 			&.highlighted
 			{
 				background-color: #e7f6ff;

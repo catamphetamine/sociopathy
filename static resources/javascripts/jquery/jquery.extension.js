@@ -361,7 +361,9 @@ $.fn.fade_out = function(duration, options, callback)
 
 	options.duration = duration
 	options.callback = callback
-	options.hide = true
+	
+	if (typeof options.hide === 'undefined')
+		options.hide = true
 	
 	//animator.jquery
 	animator.fade_out(this, options)

@@ -12,9 +12,9 @@
 		if (!page.data.раздел)
 			title(text('pages.library.title'))
 	
-		Подсказка('добавление в читальню', 'Вы можете добавлять разделы, перейдя в <a href=\'/помощь/режимы#Режим правки\'>«режим правки»</a>. Вы можете добавлять заметки, перейдя в <a href=\'/помощь/режимы#Режим действий\'>«режим действий»</a>, или нажав клавиши <a href=\'/сеть/настройки\'>«Действия → Добавить»</a>');
-		Подсказка('правка разделов', 'Вы можете добавлять, удалять и переименовывать разделы, перейдя в <a href=\'/помощь/режимы#Режим правки\'>«режим правки»</a>. Для удаления раздела — «потащите» его мышью и потрясите из стороны в сторону');
-		Подсказка('перенос раздела', 'Вы можете перенести этот раздел, перейдя в <a href=\'/помощь/режимы#Режим действий\'>«режим действий»</a>');
+		Подсказка('добавление в читальню', 'Вы можете добавлять разделы, перейдя в <a href=\'/помощь/режимы#Режим правки\'>«режим правки»</a>. Вы можете добавлять заметки, перейдя в <a href=\'/помощь/режимы#Режим действий\'>«режим действий»</a>, или нажав клавиши <a href=\'/сеть/настройки\'>«Действия → Добавить»</a>')
+		Подсказка('правка разделов', 'Вы можете добавлять, удалять и переименовывать разделы, перейдя в <a href=\'/помощь/режимы#Режим правки\'>«режим правки»</a>. Для удаления раздела — «потащите» его мышью и «выбросите» в сторону')
+		Подсказка('перенос раздела', 'Вы можете перенести этот раздел, перейдя в <a href=\'/помощь/режимы#Режим действий\'>«режим действий»</a>')
 		//Подсказка('временные глюки читальни', 'Не сообщайте мне пока о следующих глюках читальни: \n невозможность рекурсивного удаления разделов, \nстарые пути к разделам и заметкам после их переименования или переноса. \n Я знаю об этих глюках, и поправлю их в следующей версии сайта. Я решил, что лучше «выкатить» сейчас то, что есть, чем ждать ещё полгода-год.');
 
 		//insert_search_bar_into($('#panel'))
@@ -250,29 +250,58 @@
 			
 			category.draggable
 			({
-				revert: true,
+				scroll: false,
+				revert: false, // Whether the element should revert to its start position when dragging stops.
 				revertDuration: draggable_return_to_position_time,
-				stack: '#categories',
-				cancel: '.title > span'
+				stack: '#categories', // Controls the z-index of the set of elements that match the selector, always brings the currently dragged item to the front
+				cancel: '.title > span' // Prevents dragging from starting on specified elements.
 			})
 			
-			var shaker = new Shaker(function()
+			var thrower
+			
+			category.on('dragstart', function(event, ui)
 			{
-				category.draggable('cancel');
-				
-				(function()
-				{
-					category.fade_out(0.3, function()
-					{
-						category.draggable('destroy').hide()
-					})
-				})
-				.delay(draggable_return_to_position_time)
+				thrower = new Thrower()
 			})
 			
 			category.on('drag', function(event, ui)
 			{
-				shaker.moved(ui.position.left, ui.position.top)
+				thrower.moved(ui.position.left, ui.position.top)
+				if (thrower.throwing)
+				{
+					category.draggable('option', 'revert', false)
+				}
+				else
+				{
+					category.draggable('option', 'revert', true)
+				}
+			})
+			
+			category.on('dragstop', function(event, ui)
+			{
+				if (thrower.thrown())
+				{
+					thrower.stop_watching()
+					
+					thrower.throw_out(category)
+					
+					category.fade_out(0.2, { hide: false }, function()
+					{
+						category.draggable('destroy')
+						
+						thrower.stop_throwing()
+						
+						category.css('width', 0)
+						category.css('margin-left', 0)
+						category.css('margin-right', 0)
+						
+						;(function()
+						{
+							category.remove()
+						})
+						.delay(300)
+					})
+				}
 			})
 		})
 	}

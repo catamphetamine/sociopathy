@@ -90,7 +90,8 @@ var scripts =
 		
 		'навершие',
 		
-		'shaker',
+		//'shaker',
+		'thrower',
 		
 		'validation',
 		

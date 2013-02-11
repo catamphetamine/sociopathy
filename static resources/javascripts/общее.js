@@ -554,3 +554,55 @@ function есть_ли_полномочия(какие)
 {
 	return пользователь && пользователь.полномочия && пользователь.полномочия.contains(какие)
 }
+
+window.request_animation_frame =
+		window.requestAnimationFrame || 
+		window.webkitRequestAnimationFrame || 
+		window.mozRequestAnimationFrame || 
+		window.oRequestAnimationFrame || 
+		window.msRequestAnimationFrame
+
+function animate(element, render)
+{
+	if (element instanceof jQuery)
+		element = element.node()
+		
+	;(function animation_loop(now)
+	{
+		var result = render(now)
+		if (result === false)
+			return
+		
+		request_animation_frame(animation_loop, element)
+	})()
+}
+
+/*
+;(function()
+{
+	var previous_time = 0
+	var vendors = ['ms', 'moz', 'webkit', 'o']
+	for (var x = 0; x < vendors.length && !window.request_animation_frame; ++x)
+	{
+		window.request_animation_frame = window[vendors[x] + 'RequestAnimationFrame']
+		window.cancel_animation_frame = 
+			window[vendors[x] + 'CancelAnimationFrame'] || window[vendors[x] + 'CancelRequestAnimationFrame']
+	}
+
+	if (!window.request_animation_frame)
+		window.request_animation_frame = function(callback, element)
+		{
+			var now = new Date().getTime()
+			var interval = Math.max(0, 16 - (now - previous_time))
+			var id = window.setTimeout(function() { callback(now + interval) }, interval)
+			previous_time = now + interval
+			return id
+		}
+
+	if (!window.cancel_animation_frame)
+		window.cancel_animation_frame = function(id)
+		{
+			clearTimeout(id)
+		}
+}())
+*/

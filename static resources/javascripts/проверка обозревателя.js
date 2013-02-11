@@ -145,7 +145,13 @@ function is_browser_supported()
 		||
 		(BrowserDetect.browser === 'Chrome' && parseFloat(BrowserDetect.version) >= 16)
 		
-	return is_supported
+	if (!is_supported)
+		return
+	
+	if (!window.request_animation_frame)
+		return
+	
+	return true
 }
 
 function check_browser_support()

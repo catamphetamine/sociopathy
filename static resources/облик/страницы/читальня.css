@@ -198,6 +198,9 @@ body[mode="правка"] #categories > li
 	.no_shadow();
 	
 	border-color: #9f9f9f;
+			
+	.css_transition_property(width, margin-left, margin-right);
+	.css_transition_duration(300ms);
 		
 	.title > span
 	{

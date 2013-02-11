@@ -81,6 +81,13 @@
 			}
 		}
 	}
+	
+	> .not_yet
+	{
+		color: #7f7f7f;
+		text-align: center;
+		margin-bottom: 100px;
+	}
 }
 
 #add_book_window

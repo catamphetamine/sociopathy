@@ -182,23 +182,25 @@ var text_button = new Class
 			'min-height': this.skin.height + 'px',
 			'max-height': this.skin.height + 'px',
 
-			// strange bug in FireFox
 			'width': this.skin['side bar size'] + 'px',
 
-			'background_position_x': 'left',
+			'background_position_x': 'right',
 			'background_position_y': 'top',
-			'background-image': this.get_image_path('left'),
+			'background-image': this.get_image_path('right'),
 			'background-color': 'transparent',
 			'background-repeat': 'no-repeat',
 			
+			/*
+			// causes a strange bug - an empty pixel stripe before the right side
 			'-moz-transform': 'scaleX(-1)',
 			'-o-transform': 'scaleX(-1)',
 			'-webkit-transform': 'scaleX(-1)',
 			'transform': 'scaleX(-1)'
+			*/
 		})
 		
-		// fixes a strange bug in FireFox - an empty pixel stripe before the right side
-		right_part.width(right_part.width() - 1)
+		// (does not) fix a strange bug - an empty pixel stripe before the right side
+		//right_part.width(right_part.width() - 1)
 
 		idle_frame.prepend(left_part).append(right_part)
 
