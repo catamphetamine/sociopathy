@@ -8,11 +8,15 @@ global.db = (collection) ->
 	
 	api = {}
 	
-	api.find_one = mongo.findOne.bind_await(mongo)
+	api.find_one = (query, options) ->
+		query = query || {}
+		options = options || {}
+		mongo.findOne.bind_await(mongo)(query, options)
 	
 	api.count = mongo.count.bind_await(mongo)
 	
 	api.find = (query, options) ->
+		query = query || {}
 		options = options || {}
 		object = mongo.find(query, options)
 		object.toArray.bind_await(object)()
