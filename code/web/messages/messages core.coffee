@@ -41,12 +41,12 @@ global.prepare_messages = (options) ->
 			последние_сообщения = []
 		
 			for общение in общения
-				последние_сообщения.push(db(options.messages_collection)._.find({ общение: общение._id, чего: options.общение }, { sort: [['_id', -1]], limit: 1 }))
+				последние_сообщения.add(db(options.messages_collection)._.find({ общение: общение._id, чего: options.общение }, { sort: [['_id', -1]], limit: 1 }))
 				
 			сообщения = []
 			for array in последние_сообщения
 				if not array.пусто()
-					сообщения.push(array[0])
+					сообщения.add(array[0])
 			
 			последние_сообщения = сообщения
 			последние_сообщения = пользовательское.подставить.await(последние_сообщения, 'отправитель')
@@ -167,7 +167,7 @@ global.prepare_messages = (options) ->
 				возврат()
 					
 			options.creation_extra = (_id, пользователь, ввод, возврат) ->
-				кому = ввод.body.кому
+				кому = ввод.данные.кому
 				
 				if not кому?
 					return возврат()
@@ -213,7 +213,7 @@ global.prepare_messages = (options) ->
 		
 		query.$or = []
 			
-		query.$or.push({ последние_прочитанные_сообщения: { $exists: 0 } })
+		query.$or.add({ последние_прочитанные_сообщения: { $exists: 0 } })
 		
 		less_than = {}
 		less_than[path] = { $lt: _id }
@@ -221,8 +221,8 @@ global.prepare_messages = (options) ->
 		nothing_read_yet = {}
 		nothing_read_yet[path] = { $exists: 0 }
 		
-		query.$or.push(less_than)
-		query.$or.push(nothing_read_yet)
+		query.$or.add(less_than)
+		query.$or.add(nothing_read_yet)
 			
 		actions = $set: {}
 		actions.$set[path] = _id
@@ -245,11 +245,11 @@ global.prepare_messages = (options) ->
 						   
 			subquery = {}
 			subquery['последние_сообщения.' + options.path(environment)] = { $exists: 0 }
-			query.$or.push(subquery)
+			query.$or.add(subquery)
 			
 			subquery = {}
 			subquery['последние_сообщения.' + options.path(environment)] = { $lt: _id }
-			query.$or.push(subquery)
+			query.$or.add(subquery)
 			
 			if options.notified_users?
 				users = options.notified_users(общение)
@@ -268,8 +268,8 @@ global.prepare_messages = (options) ->
 			query = {}
 			
 			query.$or = []
-			query.$or.push({ последнее_сообщение: { $exists: 0 } })
-			query.$or.push({ последнее_сообщение: { $lt: _id } })
+			query.$or.add({ последнее_сообщение: { $exists: 0 } })
+			query.$or.add({ последнее_сообщение: { $lt: _id } })
 			
 			db(options.info_collection)._.update(query, { $set: { последнее_сообщение: _id } })
 		

@@ -77,7 +77,7 @@ Object.get_keys = (object) ->
 	keys = []
 	for key, value of object
 		if object.hasOwnProperty(key)
-			keys.push(key)
+			keys.add(key)
 	keys
 	
 Object.пусто = (object) ->
@@ -104,7 +104,7 @@ Array.prototype.last = () ->
 Array.prototype.map_to = (mapper) ->
 	result = []
 	@forEach (element) ->
-		result.push(mapper.bind(element)())
+		result.add(mapper.bind(element)())
 	result
 	
 Array.prototype.zip = (array) ->
@@ -188,3 +188,5 @@ Object.path = (object, path) ->
 			return
 		object = object[key]
 	object
+	
+Array.prototype.add = Array.prototype.push

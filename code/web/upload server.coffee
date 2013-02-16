@@ -52,11 +52,11 @@ monitor_upload = (ввод, pause, возврат) ->
 	form
 		.on 'field', (field, value) ->
 			#console.log(field, value)
-			fields.push([field, value])
+			fields.add([field, value])
 			
 		.on 'file', (field, file) ->
 			#console.log(field, file)
-			files.push([field, file])
+			files.add([field, file])
 	
 		.on 'end', ->
 			#console.log('-> upload done')

@@ -168,6 +168,9 @@ function проверить_ссылку_на_раздел(url, options, callbac
 	page.Ajax.get('/приложение/раздел или заметка', { путь: путь })
 	.ошибка(function(ошибка, options)
 	{
+		if (ошибка === 'not found')
+			ошибка = 'Раздел или заметка «' + путь + '» не найдены'
+			
 		return callback({ error: ошибка })
 	})
 	.ok(function(данные) 

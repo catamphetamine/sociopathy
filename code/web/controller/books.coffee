@@ -27,7 +27,7 @@ http.get '/человек/книги', (ввод, вывод) ->
 	
 	books = []
 	for книга in книги.книги.reverse()
-		books.push(db('books')._.find_one({ _id: книга }))
+		books.add(db('books')._.find_one({ _id: книга }))
 			
 	$.книги = books
 	вывод.send $

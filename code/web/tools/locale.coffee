@@ -50,7 +50,7 @@ class Locales
 			@_languages = []
 			for locale in @
 				if not @_languages.has(locale.language)
-					@_languages.push(locale.language) 
+					@_languages.add(locale.language) 
 
 		@_languages
 

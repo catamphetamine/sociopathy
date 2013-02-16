@@ -48,6 +48,8 @@ global.снасти = require './tools/tools'
 global.пользовательское = require './tools/user tools'
 global.читальня = require './tools/library tools'
 
+global.хранилище.create = global.хранилище.createCollection.bind_await(global.хранилище)
+
 global.either_way_loading = require './tools/either way loading'
 
 global.application_tools = require('./connect/express')()

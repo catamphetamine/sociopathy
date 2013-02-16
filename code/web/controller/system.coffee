@@ -3,10 +3,10 @@ http.get '/сеть/мусорка', (ввод, вывод, пользовате
 	пользовательское.подставить.await(trash, 'кто_выбросил')
 	вывод.send(trash: trash)
 			
-global.system_trash = (что, data, пользователь, возврат) ->
+global.system_trash = (что, data, пользователь) ->
 	данные = { что: что, когда_выброшено: new Date(), кто_выбросил: пользователь._id }
 	
 	for key, value of data
 		данные[key] = value
 	
-	db('system_trash').save(данные, возврат)
+	db('system_trash')._.save(данные)

@@ -56,8 +56,8 @@ global.messages_api = (options) ->
 				
 	if options.private?
 		http.put  '/сеть/' + options.общение_во_множественном_числе + '/участие', (ввод, вывод, пользователь) ->
-			_id = db(options.collection).id(ввод.body[options.общение])
-			добавляемый = db('people').id(ввод.body.пользователь)
+			_id = db(options.collection).id(ввод.данные[options.общение])
+			добавляемый = db('people').id(ввод.данные.пользователь)
 			
 			result = options.добавить_в_общение.await(_id, добавляемый, пользователь)
 					
@@ -67,7 +67,7 @@ global.messages_api = (options) ->
 			вывод.send {}
 						
 		http.delete '/сеть/' + options.общение_во_множественном_числе + '/участие', (ввод, вывод, пользователь) ->
-			_id = ввод.body._id
+			_id = ввод.данные._id
 			
 			db(options.collection)._.update({ _id: db(options.collection).id(_id) }, { $pull: { участники: пользователь._id } })
 					

@@ -88,7 +88,7 @@ global.prepare_messages_socket = (options) ->
 							who_is_connected_info = []
 							for id, json of who_is_connected
 								if id + '' != пользователь._id + ''
-									who_is_connected_info.push(JSON.parse(json))
+									who_is_connected_info.add(JSON.parse(json))
 									
 							соединение.emit 'кто здесь', who_is_connected_info
 						

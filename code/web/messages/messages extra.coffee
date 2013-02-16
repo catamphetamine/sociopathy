@@ -7,7 +7,7 @@ global.messages_tools = (options) ->
 		options = options || {}
 		
 		http.post '/сеть/' + url + '/сообщения/правка', (ввод, вывод, пользователь) ->
-			for data in JSON.parse(ввод.body.messages)
+			for data in JSON.parse(ввод.данные.messages)
 				if options.update?
 					options.update.await(data._id, пользователь._id, data.content)
 				else
@@ -26,7 +26,7 @@ global.messages_tools = (options) ->
 					
 	result.enable_unsubscription = (url) ->
 		http.delete '/сеть/' + url + '/подписка', (ввод, вывод, пользователь) ->
-			_id = ввод.body._id
+			_id = ввод.данные._id
 			
 			db(options.id)._.update({ _id: db(options.id).id(_id) }, { $pull: { подписчики: пользователь._id } })
 					
@@ -40,8 +40,8 @@ global.messages_tools = (options) ->
 		
 	result.enable_renaming = (url) ->
 		http.post '/сеть/' + url + '/переназвать', (ввод, вывод, пользователь) ->
-			_id = ввод.body._id
-			название = ввод.body.название.trim()
+			_id = ввод.данные._id
+			название = ввод.данные.название.trim()
 			
 			создатель = options.создатель.await(_id)
 		
@@ -55,8 +55,8 @@ global.messages_tools = (options) ->
 				
 	result.enable_creation = (url, append) ->
 		http.put '/сеть/' + url, (ввод, вывод, пользователь) ->
-			название = ввод.body.название.trim()
-			сообщение = ввод.body.сообщение
+			название = ввод.данные.название.trim()
+			сообщение = ввод.данные.сообщение
 			
 			environment =
 				пользователь: пользователь

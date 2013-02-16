@@ -19,6 +19,9 @@ global.db = (collection) ->
 
 	api.update = mongo.update.bind_await(mongo)
 	api.save = mongo.save.bind_await(mongo)
+	api.remove = mongo.remove.bind_await(mongo)
+	api.drop = mongo.drop.bind_await(mongo)
+	api.index = mongo.ensureIndex.bind_await(mongo)
 	
 	mongo._ = api
 	mongo
