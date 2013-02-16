@@ -93,6 +93,10 @@
 			"create an invite": "Выдать приглашение",
 			"execute database altering script": "Внести в хранилище изменения, прописанные в «administration.coffee» (используется только для разработки)"
 		},
+		"errors":
+		{
+			"title": "Ошибки"
+		},
 		"registration":
 		{
 			"title": "Прописка"

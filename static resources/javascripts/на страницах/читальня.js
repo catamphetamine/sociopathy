@@ -67,6 +67,9 @@
 					page.data.разделы = data.раздел.подразделы
 					//page.data.заметки = data.раздел.заметки
 					
+					по_порядку(data.раздел.подразделы)
+					по_порядку(data.раздел.заметки)
+					
 					if (data.раздел.заметки.пусто() && data.раздел.подразделы.пусто())
 						page.get('.main_content > .empty').show()
 			
@@ -335,8 +338,12 @@
 	{
 		var data = { разделы: { новые: [] } }
 		
+		var index = 0
+		
 		page.categories.find('> li').each(function()
 		{
+			index++
+			
 			var category = $(this)
 			
 			if (category.hidden())
@@ -344,7 +351,8 @@
 			
 			var category_data =
 			{
-				название: category.find('.title').text().trim()
+				название: category.find('.title').text().trim(),
+				порядок: index
 			}
 			
 			/*
@@ -384,11 +392,7 @@
 	
 	page.Data_store.reset = function()
 	{
-		// для удалённых разделов - показать обратно
-		page.categories.find('> li').each(function()
-		{
-			$(this).fade_in(0)
-		})
+		reload_page()
 	}
 	
 	page.save = function(data)
@@ -411,10 +415,28 @@
 					
 					if (раздел.название !== data.разделы[_id].название)
 					{
-						данные.разделы.переименованные.push(data.разделы[_id])
+						данные.разделы.переименованные.push
+						({
+							_id: data.разделы[_id]._id,
+							название: data.разделы[_id].название
+						})
+						
+						anything_changed = true
+					}
+					
+					if (раздел.порядок !== data.разделы[_id].порядок)
+					{
+						данные.разделы.переупорядоченные.push
+						({
+							_id: data.разделы[_id]._id,
+							порядок: data.разделы[_id].порядок
+						})
+						
 						anything_changed = true
 					}
 				})
+				
+				// ещё проверить переупорядоченность заметок - сделать
 				
 				if (data.разделы.новые && !data.разделы.новые.пусто())
 				{
@@ -457,7 +479,8 @@
 				{
 					переименованные: [],
 					новые: [],
-					удалённые: []
+					удалённые: [],
+					переупорядоченные: []
 				},
 				надраздел: page.data.раздел
 			},
@@ -466,69 +489,7 @@
 			
 			ok: function(data)
 			{
-				return reload_page()
-				
-				/*
-				data.новые_разделы = JSON.parse(data.новые_разделы)
-				data.переименованные_разделы = JSON.parse(data.переименованные_разделы)
-				data.удалённые_разделы = JSON.parse(data.удалённые_разделы)
-				
-				if (!data.удалённые_разделы.пусто())
-				{
-					Подсказка('удалённые разделы читальни', 'Удалённые разделы выброшены в <a href=\'/сеть/мусорка\'>мусорку</a>')
-				}
-				
-				page.categories.find('> li').each(function()
-				{
-					var category = $(this)
-					
-					if (category.attr('_id'))
-						return
-						
-					var title = category.find('.title > span').text().trim()
-						
-					if (title === 'Название раздела')
-					{
-						category.remove()
-						return
-					}
-					
-					data.новые_разделы.for_each(function()
-					{
-						if (title === this.название)
-							category.attr('_id', this._id)
-					})
-				})
-				
-				data.новые_разделы.for_each(function()
-				{
-					page.Data_store.edited_data.разделы[this._id] =
-					{
-						_id: this._id,
-						путь: this.путь,
-						название: this.название
-					}
-				})
-				
-				data.переименованные_разделы.for_each(function()
-				{
-					page.Data_store.edited_data.разделы[this._id].путь = this.путь
-				})
-				
-				data.новые_разделы.for_each(function()
-				{
-					//page.categories.append($('<li/>').attr('_id', this._id))
-					page.Data_store.edited_data.разделы[this._id] = this
-				})
-				
-				data.удалённые_разделы.for_each(function()
-				{
-					delete page.Data_store.edited_data.разделы[this._id]
-					page.categories.find('> li[_id="' + this._id + '"]').remove()
-				})
-				
-				page.Data_store.edited_data.разделы.новые = []
-				*/
+				reload_page()
 			}
 		})
 	}

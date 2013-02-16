@@ -74,6 +74,7 @@ var Режим = (function()
 			
 		if (!переходы_разрешены)
 		{
+			//console.log('из ' + из + ' в ' + в)
 			info(text('modes.switching is frozen'))
 			return false
 		}
@@ -440,26 +441,25 @@ var Режим = (function()
 		{
 			if (options.ok)
 			{
-				var result
-				
 				if (options.continues)
-					result = options.ok(загрузка, data)
-				else
-					result = options.ok(data)
-				
-				if (result === false)
 				{
-					загрузка.hide()
-					Режим.разрешить_переходы()
-					return Режим.ошибка_правки()
-				}
-				
-				if (options.continues)
+					if (options.ok(загрузка, data) === false)
+					{
+						загрузка.hide()
+						Режим.разрешить_переходы()
+						return Режим.ошибка_правки()
+					}
+					
 					return
+				}
+					
+				загрузка.hide()
+				Режим.разрешить_переходы()
+				
+				if (options.ok(data) === false)
+					return Режим.ошибка_правки()
 			}
 			
-			загрузка.hide()
-			Режим.разрешить_переходы()
 			Режим.изменения_сохранены()
 		})
 	}

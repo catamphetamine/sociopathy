@@ -149,13 +149,27 @@
 				10 * 1000)
 			}
 			
-			function report_error(где, ошибка)
+			function report_error(тип, ошибка)
 			{
+				var data =
+				{
+					ошибка: ошибка,
+					адрес: Uri.parse().to_relative_url()
+				}
+				
+				if (тип)
+					data.тип = тип
+				
+				if (пользователь)
+				{
+					data.пользователь = пользователь._id
+				}
+				
 				ajax
 				({
 					method: 'PUT',
 					url: '/приложение/ошибка',
-					data: { где: где, ошибка: ошибка }
+					data: data
 				})
 			}
 			
@@ -163,7 +177,7 @@
 			{
 				console.error('**** Error in ' + url + ' at line ' + line + ': ' + ошибка)
 				
-				report_error(ошибка)
+				report_error(null, ошибка)
 			}
 		</script>
 		

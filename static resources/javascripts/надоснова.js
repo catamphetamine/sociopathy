@@ -111,7 +111,7 @@ $(document).on('page_loaded', function()
 	}
 	
 	if (first_time_page_loading)
-	{
+	{	
 		$.getScript('/javascripts/less.js', function()
 		{
 			if (window.development_mode)
@@ -124,6 +124,8 @@ $(document).on('page_loaded', function()
 				$('#logo').remove()
 				$('#panel .enter').remove()
 			}
+			
+			prepare_panel_icons()
 		
 			panel = new Panel()
 			

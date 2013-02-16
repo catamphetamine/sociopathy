@@ -89,6 +89,10 @@
 			"create an invite": "Выдать приглашение",
 			"execute database altering script": "Execute database altering script from «administration.coffee» (for development purposes only)"
 		},
+		"errors":
+		{
+			"title": "Errors"
+		},
 		"registration":
 		{
 			"title": "Register"

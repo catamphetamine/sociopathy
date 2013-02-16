@@ -508,7 +508,7 @@ function error(error)
 		
 		if (ошибка && !ошибка.non_critical)
 		{
-			report_error(ошибка)
+			report_error(null, ошибка)
 		}
 	
 		show_error(ошибка, url, line)

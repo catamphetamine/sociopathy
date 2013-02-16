@@ -97,7 +97,8 @@ var Ajax =
 					if (сообщение == true)
 						сообщение = Default_ajax_error_message
 						
-					report_error('ajax', сообщение)
+					if (data.уровень !== 'ничего страшного')
+						report_error('ajax', data.debug || сообщение)
 						
 					return on_error(сообщение, { уровень: data.уровень, data: data })
 				}
@@ -900,3 +901,104 @@ function проверить_доступ(uri)
 	
 	return true
 }
+
+Array.prototype.swap = function(a, b)
+{
+	var temporary = this[a]
+	this[a] = this[b]
+	this[b] = temporary
+}
+
+var Quick_sort = new Class
+({
+	Implements: [Options],
+	
+	options:
+	{
+		value: function(array, index)
+		{
+			return array[index]
+		}
+	},
+	
+	initialize: function(options)
+	{
+		this.setOptions(options)
+	},
+	
+	// The partitioning function scans an array segment array
+	// from element begin to element end,
+	// and moves all elements that are less than the pivot value
+	// to the beginning of the array
+	partition: function(array, begin, end, pivot)
+	{
+		var pivot_value = this.options.value(array, pivot)
+		
+		// move pivot to end
+		array.swap(pivot, end)
+		
+		var store_smaller_ones_at = begin
+		
+		var index = begin
+		while (index < end)
+		{
+			if (this.options.value(array, index) <= pivot_value)
+			{
+				array.swap(store_smaller_ones_at, index)
+				store_smaller_ones_at++
+			}
+			
+			index++
+		}
+		
+		pivot = store_smaller_ones_at
+		
+		// move pivot to its final place
+		array.swap(end, pivot)
+	
+		// new pivot index
+		return pivot
+	},
+	
+	sort: function(array, begin, end)
+	{
+		// default behaviour is to sort the whole array
+		if (typeof begin === 'undefined')
+		{
+			begin = 0
+			end = array.length - 1
+		}
+		
+		if (end <= begin)
+			return
+		
+		var pivot = begin + Math.floor(Math.random() * (end - begin + 1))
+	
+		pivot = this.partition(array, begin, end, pivot)
+	
+		this.sort(array, begin, pivot - 1)
+		this.sort(array, pivot + 1, end)
+	}
+})
+
+function по_порядку(array)
+{
+	if (array.is_empty())
+		return
+	
+	new Quick_sort
+	({
+		value: function(array, index)
+		{
+			return array[index].порядок
+		}
+	})
+	.sort(array)
+}
+
+/*
+// test sorting by order
+var test_data = [{ name: 'lalala', порядок: 1000 }, { name: 'aaa', порядок: 55 }, { name: 'ooo', порядок: 200 }, { name: 'ccc', порядок: 201 }, { name: 'xyz', порядок: 0 }]
+по_порядку(test_data)
+console.log(test_data)
+*/

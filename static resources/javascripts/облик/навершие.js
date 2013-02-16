@@ -68,7 +68,8 @@ var page_buttons =
 	{ page: 'сеть/черновики', button: 'черновики' },
 	{ page: 'сеть/мусорка', button: 'мусорка' },
 	
-	{ page: 'управление', button: 'управление' }
+	{ page: 'управление', button: 'управление' },
+	{ page: 'сеть/ошибки', button: 'ошибки' }
 ]
 
 var match_page = function(options, new_page)
@@ -542,3 +543,33 @@ var Panel = new Class
 		})
 	}
 })
+
+function prepare_panel_icons()
+{
+	$('#panel_menu').find('> li').each(function()
+	{
+		var раздел = $(this)
+		
+		if (!раздел.attr('name'))
+			return
+		
+		var states = ['выбрано']
+		
+		if (раздел.attr('unreadable'))
+		{
+			раздел.removeAttr('unreadable')
+			states = ['выбрано', 'непрочитанные', 'выбрано и непрочитанные']
+		}
+			
+		states.for_each(function()
+		{
+			var state_icon = $('<li/>')
+			
+			state_icon.attr('hidden', 'true')
+			state_icon.attr('link', раздел.attr('link'))
+			state_icon.attr('name', раздел.attr('name') + ' (' + this + ')')
+			
+			state_icon.append_after(раздел)
+		})
+	})
+}

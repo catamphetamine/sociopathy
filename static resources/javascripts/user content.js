@@ -36,6 +36,11 @@ $(document).on('display_page', function()
 		panel.buttons.управление.element.parent().css('display', 'inline-block')
 		//panel.buttons.управление.tooltip.update_position()
 	}
+	
+	if (есть_ли_полномочия('управляющий'))
+	{
+		panel.buttons.ошибки.element.parent().css('display', 'inline-block')
+	}
 })
 
 function доступна_ли_страница_управления()

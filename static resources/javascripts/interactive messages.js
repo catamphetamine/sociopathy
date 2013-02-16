@@ -567,9 +567,12 @@ var Interactive_messages = function(options)
 			
 			connection.on('error', function(ошибка)
 			{
-				var options = { sticky: true }
+				var debug = ошибка.debug
+				ошибка = ошибка.error
 				
-				report_error('messages', ошибка)
+				var options = { sticky: true }
+		
+				report_error('messages', debug || ошибка)
 			
 				if (ошибка === true)
 					return error('Ошибка связи с сервером', options)

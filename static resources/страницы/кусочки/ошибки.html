@@ -1,0 +1,9 @@
+<tr>
+	<td>{{if тип}}${тип}{{/if}}</td>
+	<td>${ошибка}</td>
+	<td>${адрес}</td>
+	<td>
+		{{tmpl(пользователь) "linked user icon"}}
+	</td>
+	<td class="intelligent_date" date="${когда.getTime()}">${неточное_время(когда)}</td>
+</tr>

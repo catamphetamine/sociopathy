@@ -151,7 +151,7 @@ a.image
 		margin-right: -2px;
 	}
 	
-	li[name="управление"]
+	li[name="управление"], li[name="ошибки"]
 	{
 		display: inline-block;
 	}

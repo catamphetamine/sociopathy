@@ -19,7 +19,7 @@ exports.express_action = (action, url, input, output) ->
 
 parse_error = (error) ->
 	console.log '=========================== Error ============================'
-	console.log error
+	console.log error.stack
 	console.log '=============================================================='
 	
 	if typeof error == 'object'
@@ -38,7 +38,7 @@ exports.express = (application) ->
 					try
 						exports.express_action(action, url, input, output)
 					catch error
-						output.send(error: parse_error(error))
+						output.send(error: parse_error(error), debug: error.stack)
 						
 			application[method](encodeURI(url), enhanced_action)
 			
@@ -51,4 +51,4 @@ exports.websocket = (socket) ->
 				try
 					action(message)
 				catch error
-					socket.emit('error', parse_error(error))
+					socket.emit('error', { error: parse_error(error), debug: error.stack })
