@@ -569,6 +569,8 @@ var Interactive_messages = function(options)
 			{
 				var options = { sticky: true }
 				
+				report_error('messages', ошибка)
+			
 				if (ошибка === true)
 					return error('Ошибка связи с сервером', options)
 		

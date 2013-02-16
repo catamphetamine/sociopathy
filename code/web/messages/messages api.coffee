@@ -19,7 +19,7 @@ global.messages_api = (options) ->
 		if options.authorize?
 			options.authorize.await(environment)
 		
-		if not ввод.настройки.после?
+		if not ввод.данные.после?
 			loading_options.с = show_from.await(environment)
 
 		loading_options.query = options.these_messages_query({}, environment)
@@ -37,7 +37,7 @@ global.messages_api = (options) ->
 		if options.extra_get?
 			options.extra_get.await($, environment)
 		
-		if ввод.настройки.первый_раз?
+		if ввод.данные.первый_раз?
 			if options.создатель?
 				if environment.сообщения_чего?
 					$.создатель = options.создатель.await(environment.сообщения_чего._id)

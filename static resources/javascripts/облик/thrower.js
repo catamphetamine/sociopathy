@@ -1,8 +1,6 @@
 var Thrower = new Class
 ({
-	//Minimum_acceleration: 100,
 	Speed_threshold: 5,
-	//Minimum_throwing_path_radius: 100,
 	Minimum_dt: 30,
 	
 	Cooldown: 2.2,
@@ -13,10 +11,13 @@ var Thrower = new Class
 	{
 	},
 	
-	moved: function(left, top)
+	moved: function(info)
 	{
 		if (!this.watching)
 			return
+		
+		var left = info.absolute.left
+		var top = info.absolute.top
 		
 		var time = new Date().getTime()
 		var previous_time = this.time
@@ -45,8 +46,6 @@ var Thrower = new Class
 		this.speed_y = dy * 1.0 / dt
 		
 		var speed = dr / dt
-		
-		//console.log('speed: ' + speed)
 		
 		var previous_speed = this.speed
 		this.speed = speed
@@ -89,23 +88,6 @@ var Thrower = new Class
 			return
 		
 		return true
-		
-		/*
-		var throwing_path_dx = x - this.throwing_started_at.x
-		var throwing_path_dy = y - this.throwing_started_at.y
-		var throwing_path_radius = Math.sqrt(throwing_path_dx * throwing_path_dx + throwing_path_dy * throwing_path_dy)
-		
-		console.log('throwing_path_radius: ' + throwing_path_radius)
-		
-		if (throwing_path_radius < this.Minimum_throwing_path_radius)
-			return
-		
-		var acceleration = calculations.dv * 1.0 / calculations.dt
-		
-		console.log('acceleration: ' + acceleration())
-		
-		return acceleration > this.Minimum_acceleration
-		*/
 	},
 	
 	throw_out: function(element)
@@ -138,8 +120,11 @@ var Thrower = new Class
 			var delta_x = this.speed_x * delta_t
 			var delta_y = this.speed_y * delta_t
 			
-			element.css('left', (left + delta_x) + 'px')
-			element.css('top', (top - delta_y) + 'px')
+			element.move_to
+			({
+				left: left + delta_x,
+				top: top - delta_y
+			})
 		})
 		.bind(this))
 	}

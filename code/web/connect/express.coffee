@@ -2,8 +2,8 @@
 express = require 'express'
 session = require './connect session'
 
-получатель_настроек = (ввод, вывод, следующий) ->
-	ввод.настройки = снасти.настройки(ввод)
+получатель_данных = (ввод, вывод, следующий) ->
+	ввод.данные = снасти.данные(ввод)
 	следующий()
 	
 access_logger = (ввод, вывод, следующий) ->
@@ -65,7 +65,7 @@ module.exports = (приложение) ->
 			приложение.use express.methodOverride()
 			приложение.use express.cookieParser()
 			приложение.use session
-			приложение.use получатель_настроек
+			приложение.use получатель_данных
 			приложение.use remember_me
 			приложение.use access_logger
 			#приложение.use require('./../tools/locale').middleware

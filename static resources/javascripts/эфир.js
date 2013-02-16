@@ -106,6 +106,8 @@ $(document).on('panel_loaded', function()
 		{
 			var options = { sticky: true }
 			
+			report_error('эфир', ошибка)
+			
 			if (ошибка === true)
 				return error('Ошибка связи с сервером', options)
 	

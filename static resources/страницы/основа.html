@@ -49,8 +49,46 @@
 		<script>
 			function ajax(options)
 			{
+				options.data = options.data || {}
+				
+				switch (options.method)
+				{
+					case 'PUT':
+						options.data._method = 'PUT'
+						options.method = 'POST'
+						break
+					
+					case 'DELETE':
+						options.data._method = 'DELETE'
+						options.method = 'POST'
+						break
+						
+					case 'POST':
+						break
+					
+					default:
+						options.method = 'GET'
+				}
+				
 				var request = new XMLHttpRequest()
-				request.open('GET', options.url, true)
+				request.open(options.method, options.url, true)
+				
+				var on_success = function(data)
+				{
+					if (data.error)
+						return on_error(data.error)
+					
+					if (options.success)
+						options.success(data)
+				}
+				
+				var on_error = function(error)
+				{
+					if (options.error)
+						options.error(error)
+						
+					report_error('ajax', error)
+				}
 				
 				request.onreadystatechange = function()
 				{
@@ -74,36 +112,15 @@
 								data = request.responseXML
 								break
 							
-							//case 'script':
-							//	data = request.responseText
-								
-								/*
-								var script = document.createElement('script')
-								script.type = 'text/javascript'
-								script.src = options.url
-								
-								var head = document.getElementsByTagName('head')[0]
-								head.append(script)
-								*/
-								
-//								break
-								
 							default:
 								data = JSON.parse(request.responseText)
 						}
 						
-						/*
-						console.log('request.responseText')
-						console.log(request.responseText)
-						console.log('data')
-						console.log(data)
-						*/
-						
-						options.success(data)
+						on_success(data)
 					}
 					else
 					{
-						options.error(request.statusText) // вызвать обработчик ошибки с текстом ответа
+						on_error(request.statusText) // вызвать обработчик ошибки с текстом ответа
 					}
 				}
 					
@@ -111,16 +128,42 @@
 					request.responseType = 'document'
 				else if (options.dataType === 'xml')
 					request.overrideMimeType('text/xml')
+				
+				if (options.method === 'POST')
+					request.setRequestHeader("Content-type", "application/x-www-form-urlencoded")
+
+				var data = []
 					
-				request.send()
+				for (var key in options.data)
+					if (options.data.hasOwnProperty(key))
+						data.push(encodeURIComponent(key) + '=' + encodeURIComponent(options.data[key]))
+					
+				request.send(data.join('&'))
 					
 				// Таймаут 10 секунд
 				var timeout = setTimeout(function()
 				{
 					request.abort()
-					options.error('Timeout')
+					on_error('Timeout')
 				},
 				10 * 1000)
+			}
+			
+			function report_error(где, ошибка)
+			{
+				ajax
+				({
+					method: 'PUT',
+					url: '/приложение/ошибка',
+					data: { где: где, ошибка: ошибка }
+				})
+			}
+			
+			window.onerror = function(ошибка, url, line)
+			{
+				console.error('**** Error in ' + url + ' at line ' + line + ': ' + ошибка)
+				
+				report_error(ошибка)
 			}
 		</script>
 		

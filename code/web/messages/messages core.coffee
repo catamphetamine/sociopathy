@@ -178,10 +178,10 @@ global.prepare_messages = (options) ->
 		options.сообщения_чего = (ввод, возврат) ->
 			сообщения_чего = null
 		
-			if ввод.настройки._id?
-				сообщения_чего = db(options.collection)._.find_one({ _id: ввод.настройки._id })
+			if ввод.данные._id?
+				сообщения_чего = db(options.collection)._.find_one({ _id: ввод.данные._id })
 			else
-				сообщения_чего = db(options.collection)._.find_one({ id: ввод.настройки.id })
+				сообщения_чего = db(options.collection)._.find_one({ id: ввод.данные.id })
 	
 			result = Object.выбрать(['_id', 'название'], сообщения_чего)
 			if options.сообщения_чего_extra?

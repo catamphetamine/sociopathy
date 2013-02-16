@@ -548,7 +548,7 @@ h1, h2, h3, h4, h5, h6
 #edit_mode_actions
 {
 	display: none;
-
+	
 	width: 100%;
 	
 	background-color: #d2d2d2;
@@ -1267,6 +1267,9 @@ body[mode="правка"] .rich_formatting a
 {
 	position: fixed;
 	
+	/* to prevent draggable items from being on top of it */
+	z-index: 1;
+	
 	height: 66px;
 	overflow: hidden;
 	
@@ -1583,10 +1586,15 @@ body
 	}
 }
 
-[draggable]
+.dragged
 {
 	-moz-user-select: none;
 	-khtml-user-select: none;
 	-webkit-user-select: none;
 	user-select: none;
+	
+	&, *
+	{
+		cursor: url('/картинки/cursor/grab.png') 0 0, auto;
+	}
 }

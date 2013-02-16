@@ -133,22 +133,18 @@ global.db = (collection) ->
 		result[key] = value
 	result
 
-снасти.настройки = (ввод) ->
-	настройки = адрес.parse(ввод.url, true).query
+снасти.данные = (ввод) ->
+	if (ввод.body)
+		return ввод.body
 	
-	for ключ, значение of настройки
+	данные = адрес.parse(ввод.url, true).query
+	
+	for ключ, значение of данные
 		if значение?
 			if (typeof значение != 'string')
-				настройки[ключ] = значение + ''
+				данные[ключ] = значение + ''
 	
-	#for ключ, значение of настройки
-	#	if (typeof значение is 'string')
-	#		if "#{parseInt(значение)}" == значение
-	#			настройки[ключ] = parseInt(значение)
-	#		else if "#{parseFloat(значение)}" == значение
-	#			настройки[ключ] = parseFloat(значение)
-	
-	return настройки
+	return данные
 	
 снасти.cookie = (имя, ввод) ->
 	if ввод.cookies?
@@ -284,7 +280,7 @@ global.db = (collection) ->
 	id
 	
 снасти.batch_loading = (ввод, options, возврат) ->
-	после = ввод.настройки.после
+	после = ввод.данные.после
 	collection = db(options.from)
 	data = null
 				
@@ -292,7 +288,7 @@ global.db = (collection) ->
 	
 	цепь(возврат, { manual: yes })
 		.сделать ->
-			query_options = Object.x_over_y(parameters, { limit: ввод.настройки.сколько, sort: [['_id', -1]] })
+			query_options = Object.x_over_y(parameters, { limit: ввод.данные.сколько, sort: [['_id', -1]] })
 			query = Object.clone(options.query)
 			
 			if после?
@@ -302,7 +298,7 @@ global.db = (collection) ->
 			batch = collection._.find(query, query_options)
 					
 			data = batch
-			if batch.length < ввод.настройки.сколько
+			if batch.length < ввод.данные.сколько
 				return @.done(data)
 			
 			more = Object.clone(options.query)

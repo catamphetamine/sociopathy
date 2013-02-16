@@ -234,6 +234,13 @@
 	{
 		populate('раздел читальни (правка)')(data)
 		
+		page.dragger = new Dragger(page.categories,
+		{
+			dont_start_dragging_on: '.title > span'
+		})
+		
+		var draggable_sorter = new Draggable_sorter(page.categories, page.dragger)
+			
 		page.categories.find('> li').each(function()
 		{
 			var category = $(this)
@@ -246,48 +253,42 @@
 			if (!_id)
 				return
 			
-			var draggable_return_to_position_time = 300
-			
-			category.draggable
-			({
-				scroll: false,
-				revert: false, // Whether the element should revert to its start position when dragging stops.
-				revertDuration: draggable_return_to_position_time,
-				stack: '#categories', // Controls the z-index of the set of elements that match the selector, always brings the currently dragged item to the front
-				cancel: '.title > span' // Prevents dragging from starting on specified elements.
-			})
-			
 			var thrower
 			
-			category.on('dragstart', function(event, ui)
+			category.on('dragging_starts', function(event)
 			{
 				thrower = new Thrower()
+				
+				draggable_sorter.dragging_started(category)
 			})
 			
-			category.on('drag', function(event, ui)
+			category.on('dragging', function(event, data)
 			{
-				thrower.moved(ui.position.left, ui.position.top)
+				draggable_sorter.dragged(category, data.left, data.top)
+				
+				thrower.moved(data)
+				
 				if (thrower.throwing)
 				{
-					category.draggable('option', 'revert', false)
+					page.dragger.options.come_back_after_drop = false
 				}
 				else
 				{
-					category.draggable('option', 'revert', true)
+					page.dragger.options.come_back_after_drop = true
 				}
 			})
 			
-			category.on('dragstop', function(event, ui)
+			category.on('dropped', function(event)
 			{
+				thrower.stop_watching()
+					
 				if (thrower.thrown())
 				{
-					thrower.stop_watching()
-					
 					thrower.throw_out(category)
 					
 					category.fade_out(0.2, { hide: false }, function()
 					{
-						category.draggable('destroy')
+						page.dragger.destroy(category)
 						
 						thrower.stop_throwing()
 						
@@ -304,6 +305,13 @@
 				}
 			})
 		})
+	}
+	
+	page.Data_store.remove_draft = function(data)
+	{		
+		page.dragger.destroy()
+		
+		this.reset_view()
 	}
 	
 	page.Data_store.populate_view = function(data)

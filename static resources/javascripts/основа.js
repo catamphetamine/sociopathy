@@ -32,7 +32,7 @@ var scripts =
 		'jquery.hoverattribute',
 		'jquery.text-shadow',
 		'jquery.background.position.x.y',
-		'jquery-ui', // Draggable
+//		'jquery-ui', // Draggable
 	]},
 	
 	{mootools:
@@ -92,6 +92,9 @@ var scripts =
 		
 		//'shaker',
 		'thrower',
+		
+		'dragger',
+		'draggable sorter',
 		
 		'validation',
 		

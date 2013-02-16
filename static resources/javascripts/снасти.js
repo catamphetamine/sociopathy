@@ -97,6 +97,8 @@ var Ajax =
 					if (сообщение == true)
 						сообщение = Default_ajax_error_message
 						
+					report_error('ajax', сообщение)
+						
 					return on_error(сообщение, { уровень: data.уровень, data: data })
 				}
 				

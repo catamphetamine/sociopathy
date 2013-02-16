@@ -428,9 +428,12 @@ $.style_class_property = function(style_class, property)
 	return $('<div/>').addClass(style_class).css(property)
 }
 
-$.fn.child_or_self = function(element)
+$.fn.contains_or_is = function(element)
 {
-	if (this[0] === element)
+	if (element instanceof jQuery)
+		element = element.node()
+		
+	if (this.node() === element)
 		return true
 	
 	var children = this.children()
@@ -438,7 +441,7 @@ $.fn.child_or_self = function(element)
 	var i = 0
 	while (i < children.length)
 	{
-		if ($(children[i]).child_or_self(element))
+		if ($(children[i]).contains_or_is(element))
 			return true
 		i++
 	}
@@ -471,7 +474,7 @@ $.fn.is_visible_on_screen = function(options)
 		return false
 	
 	var element = document.elementFromPoint(offset.left, offset.top - scroll_top)
-	if (!element || !this.child_or_self(element))
+	if (!element || !this.contains_or_is(element))
 		return false
 		
 	if (options.fully)
@@ -481,7 +484,7 @@ $.fn.is_visible_on_screen = function(options)
 			amendment = 1
 			
 		element = document.elementFromPoint(offset.left, offset.top - scroll_top + height - 1 - amendment)
-		if (!element || !this.child_or_self(element))
+		if (!element || !this.contains_or_is(element))
 			return false
 	}
 	
@@ -833,4 +836,54 @@ $.fn.once_on = function(event, action)
 		element.unbind('.' + namespace)
 		action()
 	})
+}
+
+$.fn.append_after = function(element)
+{
+	element.after(this)
+}
+
+$.fn.append_before = function(element)
+{
+	element.before(this)
+}
+
+$.fn.move_by = function(how_much)
+{
+	this.css('left', (parseInt(this.css('left')) + how_much.left) + 'px')
+	this.css('top', (parseInt(this.css('top')) + how_much.top) + 'px')
+}
+
+$.fn.move_to = function(coordinates)
+{
+	this.css('left', coordinates.left + 'px')
+	this.css('top', coordinates.top + 'px')
+}
+
+$.fn.lies_after = function(that)
+{
+	var parent = this.parent().node()
+	
+	var this_index
+	var that_index
+	
+	var i = 0
+	while (i < parent.childNodes.length)
+	{
+		if (parent.childNodes[i] === this.node())
+		{
+			this_index = i
+		}
+		else if (parent.childNodes[i] === that.node())
+		{
+			that_index = i
+		}
+		
+		i++
+	}
+	
+	if (typeof that_index === 'undefined')
+		throw 'The passed element doesn\'t have the same parent as this element'
+	
+	return this_index > that_index
 }

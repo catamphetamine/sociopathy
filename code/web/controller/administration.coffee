@@ -5,6 +5,14 @@ http.get '/versioning', (ввод, вывод) ->
 
 	вывод.send(data)
 	
+http.put '/ошибка', (ввод, вывод) ->
+	console.log '======================== Client Error ========================'
+	console.log 'Где: ' + ввод.данные.где
+	console.log 'Ошибка: ' + ввод.данные.ошибка
+	console.log '=============================================================='
+
+	вывод.send {}
+	
 http.get '/initialize', (ввод, вывод) ->
 	data =
 		invites: Options.Invites

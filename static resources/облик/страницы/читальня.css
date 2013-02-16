@@ -5,7 +5,7 @@
 	padding-top: 60px;
 	margin-bottom: 60px;
 	
-	overflow: auto;
+	overflow: hidden;
 	
 	.main_content
 	{
@@ -53,6 +53,7 @@
 		
 		display: inline-block;
 		position: relative;
+		
 		list-style: none;
 		text-indent: 0;
 		
@@ -215,11 +216,6 @@ body[mode="правка"] #categories > li
 	.title:active > span
 	{
 		background-color: #ffffff;
-	}
-	
-	&.ui-draggable-dragging
-	{
-		cursor: url('/картинки/cursor/grab.png') 0 0, auto;
 	}
 }
 

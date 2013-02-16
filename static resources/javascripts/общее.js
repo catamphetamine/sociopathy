@@ -505,6 +505,11 @@ function error(error)
 			else if (ошибка.indexOf('INVALID_STATE_ERR: DOM Exception 11') >= 0)
 				ошибка = { ошибка: ошибка, non_critical: true } //return
 		}
+		
+		if (ошибка && !ошибка.non_critical)
+		{
+			report_error(ошибка)
+		}
 	
 		show_error(ошибка, url, line)
 	}

@@ -18,7 +18,7 @@ exports.express_action = (action, url, input, output) ->
 	action(input, output)
 
 parse_error = (error) ->
-	console.log '=========================== Error: ==========================='
+	console.log '=========================== Error ============================'
 	console.log error
 	console.log '=============================================================='
 	

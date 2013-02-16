@@ -697,6 +697,8 @@ memcache
 
 
 
+//// писать ошибки javascript-а в лог в базу данных, с веб-интерфейсом для просмотра
+
 
 
 // Installation instructions translation
