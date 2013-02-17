@@ -223,7 +223,7 @@ body[mode="правка"]
 	
 	#articles > li
 	{
-		cursor: url('/картинки/cursor/grab.png') 0 0, auto;
+		cursor: url('/картинки/cursor/hand.png') 0 0, auto;
 	}
 }
 

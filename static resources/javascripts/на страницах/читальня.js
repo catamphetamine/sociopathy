@@ -118,14 +118,18 @@
 	
 	function add_category()
 	{
-		var list_item = $('<li/>').append($.tmpl('раздел читальни (правка)', { название: 'Название раздела' }))
-		list_item.appendTo(page.categories)
+		var category = $('<li/>').append($.tmpl('раздел читальни (правка)', { название: 'Название раздела' }))
+		category.appendTo(page.categories)
 		
-		list_item.find('.title > span').focus().on('keypress', function()
+		category.find('.title > span').focus().on('keypress.initial_keypress', function()
 		{
 			if ($(this).text() === 'Название раздела')
 				$(this).text('')
+				
+			category.unbind('.initial_keypress')
 		})
+		
+		page.category_dragger.refresh()
 	}
 	
 	function categories_loaded()

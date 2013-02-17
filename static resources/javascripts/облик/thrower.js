@@ -7,6 +7,11 @@ var Thrower = new Class
 	
 	watching: true,
 	
+	options:
+	{
+		звук: '/звуки/фух.ogg'
+	},
+	
 	initialize: function()
 	{
 	},
@@ -127,6 +132,8 @@ var Thrower = new Class
 			})
 		})
 		.bind(this))
+		
+		new Audio(this.options.звук).play()
 	}
 })
 
@@ -139,13 +146,13 @@ var Dragger_throwing_plugin = new Class
 	
 	each_item: function(item)
 	{
-		item.on('dragging_starts', (function(event)
+		item.on('dragging_starts.thrower', (function(event)
 		{
 			this.thrower = new Thrower()
 		})
 		.bind(this))
 		
-		item.on('dragging', (function(event, data)
+		item.on('dragging.thrower', (function(event, data)
 		{
 			this.thrower.moved(data)
 			
@@ -156,7 +163,7 @@ var Dragger_throwing_plugin = new Class
 		})
 		.bind(this))
 		
-		item.on('dropped', (function(event)
+		item.on('dropped.thrower', (function(event)
 		{
 			var dragger = this.dragger
 			var thrower = this.thrower
@@ -186,5 +193,13 @@ var Dragger_throwing_plugin = new Class
 			})
 		})
 		.bind(this))
-	}	
+	},
+	
+	destroy: function(item)
+	{
+		if (item)
+		{
+			item.unbind('.thrower')
+		}
+	}
 })

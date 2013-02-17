@@ -14,16 +14,14 @@ var Dragger = new Class
 	initialize: function(list, options)
 	{
 		this.setOptions(options)
+			
+		this.list = list
 		
 		if (this.options.sortable)
 			this.plugins.push(Dragger_sorting_plugin)
 		
 		if (this.options.throwable)
 			this.plugins.push(Dragger_throwing_plugin)
-			
-		var dragger = this
-		
-		this.list = list
 		
 		var i = 0
 		while (i < this.plugins.length)
@@ -32,11 +30,20 @@ var Dragger = new Class
 			i++
 		}
 		
-		var offset = list.offset()
+		this.create()
+	},
+	
+	create: function()
+	{
+		var dragger = this
 		
-		list.children().each(function()
+		var offset = this.list.offset()
+		
+		this.list.children().each(function()
 		{
 			var item = $(this)
+			
+			console.log(item.node())
 			
 			dragger.draggable(item)
 			
@@ -162,6 +169,12 @@ var Dragger = new Class
 		$('body').unbind(this.namespace)
 	},
 	
+	refresh: function()
+	{
+		this.destroy()
+		this.create()
+	},
+	
 	destroy: function(element)
 	{
 		if (element)
@@ -177,6 +190,11 @@ var Dragger = new Class
 			element.removeClass('dragged')
 			
 			element.unbind(this.namespace)
+			
+			this.plugins.for_each(function()
+			{
+				this.destroy(element)
+			})
 		}
 		else
 		{
@@ -188,6 +206,11 @@ var Dragger = new Class
 			})
 				
 			$('body').unbind(this.namespace)
+			
+			this.plugins.for_each(function()
+			{
+				this.destroy()
+			})
 		}
 	}
 })

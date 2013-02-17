@@ -129,14 +129,22 @@ var Dragger_sorting_plugin = new Class
 	{
 		var sorter = this.sorter
 		
-		item.on('dragging_starts', function(event)
+		item.on('dragging_starts.sorter', function(event)
 		{
 			sorter.dragging_started(item)
 		})
 		
-		item.on('dragging', function(event, data)
+		item.on('dragging.sorter', function(event, data)
 		{
 			sorter.dragged(item, data.left, data.top)
 		})
-	}	
+	},
+	
+	destroy: function(item)
+	{
+		if (item)
+		{
+			item.unbind('.sorter')
+		}
+	}
 })
