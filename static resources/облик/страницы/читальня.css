@@ -194,28 +194,36 @@
 	margin-bottom: 20px;
 }
 
-body[mode="правка"] #categories > li
+body[mode="правка"]
 {
-	.no_shadow();
-	
-	border-color: #9f9f9f;
-			
-	.css_transition_property(width, margin-left, margin-right);
-	.css_transition_duration(300ms);
+	#categories > li
+	{
+		.no_shadow();
 		
-	.title > span
-	{
-		cursor: text !important;
-	}
-
-	.title:hover > span
-	{
-		background-color: #ffffff;
+		border-color: #9f9f9f;
+				
+		.css_transition_property(width, margin-left, margin-right);
+		.css_transition_duration(300ms);
+			
+		.title > span
+		{
+			cursor: text !important;
+		}
+	
+		.title:hover > span
+		{
+			background-color: #ffffff;
+		}
+		
+		.title:active > span
+		{
+			background-color: #ffffff;
+		}
 	}
 	
-	.title:active > span
+	#articles > li
 	{
-		background-color: #ffffff;
+		cursor: url('/картинки/cursor/grab.png') 0 0, auto;
 	}
 }
 

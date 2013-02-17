@@ -7,25 +7,49 @@ var Dragger = new Class
 		come_back_after_drop: true
 	},
 	
+	namespace: '.dragger',
+	
+	plugins: [],
+	
 	initialize: function(list, options)
 	{
 		this.setOptions(options)
 		
+		if (this.options.sortable)
+			this.plugins.push(Dragger_sorting_plugin)
+		
+		if (this.options.throwable)
+			this.plugins.push(Dragger_throwing_plugin)
+			
 		var dragger = this
 		
 		this.list = list
+		
+		var i = 0
+		while (i < this.plugins.length)
+		{
+			this.plugins[i] = new this.plugins[i](this, list, this.options)
+			i++
+		}
 		
 		var offset = list.offset()
 		
 		list.children().each(function()
 		{
-			dragger.draggable($(this))
+			var item = $(this)
+			
+			dragger.draggable(item)
+			
+			dragger.plugins.for_each(function()
+			{
+				this.each_item(item)
+			})
 		})
 	},
 	
 	draggable: function(element)
 	{
-		element.on('mousedown.dragger', (function(event)
+		element.on('mousedown' + this.namespace, (function(event)
 		{
 			if (element.find(this.options.dont_start_dragging_on).contains_or_is($(event.target)))
 				return
@@ -57,14 +81,14 @@ var Dragger = new Class
 	start: function(element)
 	{
 		element.trigger('dragging_starts')
-	
+		
 		this.initially_clicked_at = 
 		{
 			left: this.clicked_at.left,
 			top: this.clicked_at.top
 		}
 		
-		$('body').on('mouseup.dragger', (function()
+		$('body').on('mouseup' + this.namespace, (function()
 		{
 			this.drop()
 		})
@@ -72,7 +96,7 @@ var Dragger = new Class
 		
 		this.element = element
 		
-		$('body').on('mousemove.dragger', (function(event)
+		$('body').on('mousemove' + this.namespace, (function(event)
 		{
 			var left = event.pageX - this.clicked_at.left
 			var top = event.pageY - this.clicked_at.top
@@ -135,8 +159,7 @@ var Dragger = new Class
 		this.element.addClass('dropped')
 		this.element.removeClass('dragged')
 		
-		$('body').unbind('mousemove.dragger')
-		$('body').unbind('mouseup.dragger')
+		$('body').unbind(this.namespace)
 	},
 	
 	destroy: function(element)
@@ -153,7 +176,7 @@ var Dragger = new Class
 			
 			element.removeClass('dragged')
 			
-			element.unbind('.dragger')
+			element.unbind(this.namespace)
 		}
 		else
 		{
@@ -164,7 +187,7 @@ var Dragger = new Class
 				dragger.destroy($(this))
 			})
 				
-			$('body').unbind('.dragger')
+			$('body').unbind(this.namespace)
 		}
 	}
 })

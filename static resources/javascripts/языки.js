@@ -11,7 +11,12 @@ var Перевод
 {
 	function load_translation(language, success, error)
 	{
-		$.ajax(add_version('/international/' + language + '/' + 'translation' + '.json'))
+		var settings = {}
+		
+		if (development_mode)
+			settings.cache = false
+			
+		$.ajax(add_version('/international/' + language + '/' + 'translation' + '.json'), settings)
 		.success(function(translation)
 		{
 			Перевод = JSON.parse(translation)

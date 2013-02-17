@@ -349,8 +349,8 @@ var button = new Class
 				}
 				catch (error)
 				{
-					console.log(error)
 					button.allow_to_redo()
+					throw error
 				}
 			}).delay(delay)
 		}

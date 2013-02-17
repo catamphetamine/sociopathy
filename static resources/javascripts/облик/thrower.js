@@ -129,3 +129,62 @@ var Thrower = new Class
 		.bind(this))
 	}
 })
+
+var Dragger_throwing_plugin = new Class
+({
+	initialize: function(dragger, list)
+	{
+		this.dragger = dragger
+	},
+	
+	each_item: function(item)
+	{
+		item.on('dragging_starts', (function(event)
+		{
+			this.thrower = new Thrower()
+		})
+		.bind(this))
+		
+		item.on('dragging', (function(event, data)
+		{
+			this.thrower.moved(data)
+			
+			if (this.thrower.throwing)
+				this.dragger.options.come_back_after_drop = false
+			else
+				this.dragger.options.come_back_after_drop = true
+		})
+		.bind(this))
+		
+		item.on('dropped', (function(event)
+		{
+			var dragger = this.dragger
+			var thrower = this.thrower
+			
+			thrower.stop_watching()
+				
+			if (!thrower.thrown())
+				return
+		
+			thrower.throw_out(item)
+			
+			item.fade_out(0.2, { hide: false }, function()
+			{
+				dragger.destroy(item)
+				
+				thrower.stop_throwing()
+				
+				item.css('width', 0)
+				item.css('margin-left', 0)
+				item.css('margin-right', 0)
+				
+				;(function()
+				{
+					item.remove()
+				})
+				.delay(300)
+			})
+		})
+		.bind(this))
+	}	
+})

@@ -6,6 +6,7 @@
 	//var on_the_right_side_of_the_panel_right
 	
 	page.query('#categories', 'categories')
+	page.query('#articles', 'articles')
 	
 	page.load = function()
 	{
@@ -47,7 +48,7 @@
 					заметки:
 					{
 						template: 'заметка раздела читальни',
-						container: $('#articles'),
+						container: page.articles,
 						postprocess_element: function(item, data)
 						{
 							return $('<li/>').attr('_id', data._id).append(item)
@@ -65,7 +66,7 @@
 					title(data.раздел.название)
 					
 					page.data.разделы = data.раздел.подразделы
-					//page.data.заметки = data.раздел.заметки
+					page.data.заметки = data.раздел.заметки
 					
 					по_порядку(data.раздел.подразделы)
 					по_порядку(data.раздел.заметки)
@@ -202,13 +203,8 @@
 	{
 		center_list($('#categories'), { space: $('#content'), item_width: 250, item_margin: 40 })
 	}
-	
-	//page.Data_store.что = 'заметка'
-	//page.Data_store.query = { заметка:  }
-	
-	//page.Data_store.is_used = true
 
-	var populate = function(template)
+	var populate_categories = function(template)
 	{
 		return function(data)
 		{
@@ -232,114 +228,80 @@
 			})
 		}
 	}
+
+	var populate_articles = function(template)
+	{
+		return function(data)
+		{
+			page.articles.find('> li').each(function()
+			{
+				var _id = $(this).attr('_id')
+			
+				$.tmpl(template, data.заметки[_id]).appendTo(this)
+			})
+		}
+	}
 	
 	page.Data_store.populate_draft = function(data)
 	{
-		populate('раздел читальни (правка)')(data)
+		populate_categories('раздел читальни (правка)')(data)
+		populate_articles('заметка раздела читальни (правка)')(data)
 		
-		page.dragger = new Dragger(page.categories,
+		page.category_dragger = new Dragger(page.categories,
 		{
-			dont_start_dragging_on: '.title > span'
+			dont_start_dragging_on: '.title > span',
+			sortable: true,
+			throwable: true
 		})
-		
-		var draggable_sorter = new Draggable_sorter(page.categories, page.dragger)
 			
-		page.categories.find('> li').each(function()
+		page.article_dragger = new Dragger(page.articles,
 		{
-			var category = $(this)
-			
-			if (category.hidden())
-				return
-			
-			var _id = category.attr('_id')
-				
-			if (!_id)
-				return
-			
-			var thrower
-			
-			category.on('dragging_starts', function(event)
-			{
-				thrower = new Thrower()
-				
-				draggable_sorter.dragging_started(category)
-			})
-			
-			category.on('dragging', function(event, data)
-			{
-				draggable_sorter.dragged(category, data.left, data.top)
-				
-				thrower.moved(data)
-				
-				if (thrower.throwing)
-				{
-					page.dragger.options.come_back_after_drop = false
-				}
-				else
-				{
-					page.dragger.options.come_back_after_drop = true
-				}
-			})
-			
-			category.on('dropped', function(event)
-			{
-				thrower.stop_watching()
-					
-				if (thrower.thrown())
-				{
-					thrower.throw_out(category)
-					
-					category.fade_out(0.2, { hide: false }, function()
-					{
-						page.dragger.destroy(category)
-						
-						thrower.stop_throwing()
-						
-						category.css('width', 0)
-						category.css('margin-left', 0)
-						category.css('margin-right', 0)
-						
-						;(function()
-						{
-							category.remove()
-						})
-						.delay(300)
-					})
-				}
-			})
+			sortable: true,
+			throwable: true
 		})
 	}
 	
 	page.Data_store.remove_draft = function(data)
 	{		
-		page.dragger.destroy()
+		page.category_dragger.destroy()
+		page.article_dragger.destroy()
 		
 		this.reset_view()
 	}
 	
 	page.Data_store.populate_view = function(data)
 	{
-		populate('раздел читальни')(data)
+		populate_categories('раздел читальни')(data)
 		ajaxify_internal_links(page.categories)
+
+		populate_articles('заметка раздела читальни')(data)
+		ajaxify_internal_links(page.articles)
 		
 		page.categories.find('> li').each(function()
 		{
-			if (!$(this).attr('_id') && $(this).find('.title span').is_empty())
-				$(this).remove()
+			var category = $(this)
+			if (!category.attr('_id') && category.find('.title span').is_empty())
+				category.remove()
 		})
 	}
 	
 	page.Data_store.reset_view = function()
 	{
 		page.categories.find('> li').empty()
+		page.articles.find('> li').empty()
 	}
 	
 	page.Data_store.collect_unmodified = function()
 	{
-		var data = { разделы: { новые: [] } }
+		var data =
+		{
+			разделы: { новые: [] },
+			заметки: {}
+		}
 		
-		var index = 0
+		var index
 		
+		index = 0
 		page.categories.find('> li').each(function()
 		{
 			index++
@@ -373,6 +335,23 @@
 			data.разделы[_id] = category_data
 		})
 		
+		index = 0
+		page.articles.find('> li').each(function()
+		{
+			index++
+			
+			var article = $(this)
+			
+			var article_data =
+			{
+				порядок: index
+			}
+			
+			var _id = article.attr('_id')
+			
+			data.заметки[_id] = article_data
+		})
+		
 		return data
 	}
 
@@ -380,11 +359,20 @@
 	
 	page.Data_store.deduce = function()
 	{
-		var data = { разделы: {} }
+		var data =
+		{
+			разделы: {},
+			заметки: {}
+		}
 		
 		page.data.разделы.for_each(function()
 		{
 			data.разделы[this._id] = this
+		})
+		
+		page.data.заметки.for_each(function()
+		{
+			data.заметки[this._id] = this
 		})
 		
 		return data
@@ -405,6 +393,7 @@
 				
 				var данные = this
 				
+				// разделы
 				Object.for_each(page.Data_store.unmodified_data.разделы, function(_id, раздел)
 				{
 					if (!data.разделы[_id])
@@ -417,7 +406,7 @@
 					{
 						данные.разделы.переименованные.push
 						({
-							_id: data.разделы[_id]._id,
+							_id: _id,
 							название: data.разделы[_id].название
 						})
 						
@@ -428,7 +417,7 @@
 					{
 						данные.разделы.переупорядоченные.push
 						({
-							_id: data.разделы[_id]._id,
+							_id: _id,
 							порядок: data.разделы[_id].порядок
 						})
 						
@@ -436,8 +425,28 @@
 					}
 				})
 				
-				// ещё проверить переупорядоченность заметок - сделать
+				// заметки
+				Object.for_each(page.Data_store.unmodified_data.заметки, function(_id, заметка)
+				{
+					if (!data.заметки[_id])
+					{
+						anything_changed = true
+						return данные.заметки.удалённые.push(_id)
+					}
+					
+					if (заметка.порядок !== data.заметки[_id].порядок)
+					{
+						данные.заметки.переупорядоченные.push
+						({
+							_id: _id,
+							порядок: data.заметки[_id].порядок
+						})
+						
+						anything_changed = true
+					}
+				})
 				
+				// есть ли новые разделы
 				if (data.разделы.новые && !data.разделы.новые.пусто())
 				{
 					данные.разделы.новые = data.разделы.новые
@@ -479,6 +488,11 @@
 				{
 					переименованные: [],
 					новые: [],
+					удалённые: [],
+					переупорядоченные: []
+				},
+				заметки:
+				{
 					удалённые: [],
 					переупорядоченные: []
 				},

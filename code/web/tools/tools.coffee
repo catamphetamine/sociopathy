@@ -13,6 +13,14 @@ global.db = (collection) ->
 		options = options || {}
 		mongo.findOne.bind_await(mongo)(query, options)
 	
+	api.find_just_one = (query, options) ->
+		query = query || {}
+		options = options || {}
+		options.limit = 1
+		found = api.find(query, options)
+		if not found.пусто()
+			return found[0]
+	
 	api.count = mongo.count.bind_await(mongo)
 	
 	api.find = (query, options) ->

@@ -65,7 +65,6 @@ title(text('pages.books.title'));
 	
 	page.unload = function()
 	{
-		console.log(loader)
 		loader.destroy()
 	}
 	

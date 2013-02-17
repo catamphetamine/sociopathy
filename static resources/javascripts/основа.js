@@ -94,7 +94,7 @@ var scripts =
 		'thrower',
 		
 		'dragger',
-		'draggable sorter',
+		'dragger sorter',
 		
 		'validation',
 		

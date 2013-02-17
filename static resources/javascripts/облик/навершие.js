@@ -31,7 +31,7 @@ var есть_ли_новости = function(what)
 
 var page_buttons =
 [
-	{ page: 'читальня', button: 'читальня' },
+	{ page_pattern: 'читальня(/.*)?', button: 'читальня' },
 	{ page: 'заметка', button: 'читальня' },
 	{ page: 'люди', button: 'люди' },
 	

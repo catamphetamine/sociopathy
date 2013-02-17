@@ -1,4 +1,4 @@
-var Draggable_sorter = new Class
+var Dragger_sorter = new Class
 ({
 	Implements: [Options],
 	
@@ -114,4 +114,29 @@ var Draggable_sorter = new Class
 	
 		this.refresh_item_positions()
 	}
+})
+
+var Dragger_sorting_plugin = new Class
+({
+	initialize: function(dragger, list)
+	{
+		this.dragger = dragger
+		
+		this.sorter = new Dragger_sorter(list, dragger)
+	},
+	
+	each_item: function(item)
+	{
+		var sorter = this.sorter
+		
+		item.on('dragging_starts', function(event)
+		{
+			sorter.dragging_started(item)
+		})
+		
+		item.on('dragging', function(event, data)
+		{
+			sorter.dragged(item, data.left, data.top)
+		})
+	}	
 })
