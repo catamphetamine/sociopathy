@@ -43,8 +43,6 @@ var Dragger = new Class
 		{
 			var item = $(this)
 			
-			console.log(item.node())
-			
 			dragger.draggable(item)
 			
 			dragger.plugins.for_each(function()
@@ -76,6 +74,8 @@ var Dragger = new Class
 	
 	dragged: function(left, top)
 	{
+		this.moved = true
+		
 		//console.log('left = ' + left + ', top = ' + top)
 	},
 	
@@ -88,6 +88,8 @@ var Dragger = new Class
 	start: function(element)
 	{
 		element.trigger('dragging_starts')
+		
+		this.moved = false
 		
 		this.initially_clicked_at = 
 		{
@@ -139,6 +141,9 @@ var Dragger = new Class
 	drop: function()
 	{
 		this.element.trigger('dropped')
+		
+		if (!this.moved)
+			this.element.trigger('clicked')
 		
 		if (this.options.come_back_after_drop)
 		{

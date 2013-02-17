@@ -52,3 +52,24 @@ exports.websocket = (socket) ->
 					action(message)
 				catch error
 					socket.emit('error', { error: parse_error(error), debug: error.stack })
+					
+exports.http_server = (actions) ->
+	require('http').createServer (ввод, вывод) ->
+		вывод.send = (что) ->
+			@writeHead(200, { 'content-type': 'text/plain', 'Access-Control-Allow-Origin': '*' })
+			if typeof что == 'object'
+				что = JSON.stringify(что)
+			@end(что)
+	
+		fiber ->
+			try
+				path = decodeURI(require('url').parse(ввод.url, true).pathname)
+				if actions[path]?
+					actions[path](ввод, вывод)
+				else
+					console.error "URI not found: #{decodeURI(ввод.url)}"
+					вывод.writeHead(404, { 'content-type': 'text/plain' })
+					return вывод.end('URI not found')
+					#return вывод.end('404')
+			catch error
+				вывод.send(error: parse_error(error), debug: error.stack)

@@ -237,3 +237,13 @@ body[mode="правка"]
 		}
 	}
 }
+
+#categories > li > .picture_uploading_screen
+{	
+	> span
+	{
+		font-size: 28px;
+		margin-top: -14px;
+		letter-spacing: normal;
+	}
+}

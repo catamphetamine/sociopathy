@@ -221,8 +221,6 @@
 		return data
 	}
 	
-	page.Data_store.collect_unmodified = page.Data_store.collect_edited
-	
 	page.Data_store.deduce = function()
 	{
 		return неправленная_заметка

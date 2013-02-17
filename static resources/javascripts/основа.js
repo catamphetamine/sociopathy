@@ -145,7 +145,7 @@ var scripts =
 
 		'окошко входа'
 	]},
-	
+		
 	'здесь или не здесь',
 	
 	'youtube',
@@ -164,6 +164,7 @@ var scripts =
 	'either way loading',
 	
 	'uploader',
+	'picture uploader',
 	
 	'эфир',
 	'новости',

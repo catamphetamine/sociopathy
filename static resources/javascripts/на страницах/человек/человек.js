@@ -2,7 +2,6 @@
 {
 	var id_card
 	var online_status
-	var the_picture
 	var avatar
 	var content
 
@@ -147,7 +146,6 @@
 		}
 	
 		avatar = id_card.find('.picture')
-		the_picture = avatar.find('.real_picture')
 	
 		online_status =
 		{
@@ -300,6 +298,9 @@
 		{
 			if (page.photo.hidden())
 				page.photo.show()
+				
+			page.avatar_uploader.activate()
+			page.photo_uploader.activate()
 				
 			//the_picture.animate({ 'boxShadow': '0 0 20px ' + highlight_color })
 		})
@@ -491,8 +492,6 @@
 							ok: function()
 							{
 								photo_file_name = null
-								
-								//page.refresh()
 							}
 						})
 					}
@@ -509,52 +508,57 @@
 		if (пользователь._id !== page.data.пользователь_сети._id)
 			return
 		
-		var avatar_uploader = new Uploader($('.upload_new_picture'),
-		{
-			//url: '/загрузка/человек/сменить картинку',
-			//url: '/приложение/человек/сменить картинку',
-			url: 'http://' + host + ':' + Configuration.Upload_server_port + '/сеть/человек/картинка',
-			parameter: { name: 'user', value: $.cookie('user') },
-			success: function(data)
+		page.avatar_uploader = new Picture_uploader
+		({
+			namespace: '.режим_правка',
+			max_size: 0.5,
+			max_size_text: '500 килобайтов',
+			url: '/сеть/человек/картинка',
+			element: function()
 			{
-				if (data.ошибка)
-					return error(data.ошибка)
-				
+				return id_card.find('.picture')
+			},
+			ok: function(data, element)
+			{
 				image_file_name = data.имя
-				the_picture.attr('src', data.адрес).show()
-				
-				id_card.find('.uploading_picture').hide() //fade_out(0.2)
+				element.find('.real_picture').attr('src', data.адрес).show()
 			},
-			error: function()
-			{
-				error("Не удалось загрузить картинку")
-				id_card.find('.uploading_picture').fade_out(0.2)
-			},
-			Ajax: page.Ajax
+			error: "Не удалось загрузить картинку"
 		})
-	
-		var photo_uploader = new Uploader($('.upload_new_photo'),
-		{
-			url: 'http://' + host + ':' + Configuration.Upload_server_port + '/сеть/человек/фотография',
-			parameter: { name: 'user', value: $.cookie('user') },
-			success: function(data)
+		
+		page.photo_uploader = new Picture_uploader
+		({
+			namespace: '.режим_правка',
+			max_size: 10,
+			max_size_text: '10-ти мегабайтов',
+			url: '/сеть/человек/фотография',
+			element: function()
 			{
-				if (data.ошибка)
-					return error(data.ошибка)
-				
-				get_image_size(data.адрес, function(size)
+				return page.photo
+			},
+			uploading_screen_size: function(element)
+			{
+				var size =
 				{
-					photo_file_name = data.имя
-					page.photo.find('> img').attr('src', data.адрес).width(size.width).height(size.height)
-					page.photo.find('.uploading').hide() //fade_out(0.2)		 
-				})
+					width: element.find('> img').width(),
+					height: element.find('> img').height()
+				}
+				
+				return size
 			},
-			error: function()
+			ok: function(data, element)
 			{
-				error("Не удалось загрузить фотографию")
-				page.photo.find('.uploading').fade_out(0.2)
+				return function(callback)
+				{
+					get_image_size(data.адрес, function(size)
+					{
+						photo_file_name = data.имя
+						page.photo.find('> img').attr('src', data.адрес).width(size.width).height(size.height)
+						callback()
+					})
+				}
 			},
-			Ajax: page.Ajax
+			error: "Не удалось загрузить фотографию"
 		})
 	
 		$(document).on_page('режим.правка', function(event)
@@ -568,49 +572,13 @@
 			avatar.on('click.режим_правка', function(event)
 			{
 				event.preventDefault()
-				file_chooser.click()
+				page.avatar_uploader.choose()
 			})
-			
-			file_chooser.on('change.режим_правка', function()
-			{
-				var file = file_chooser[0].files[0]
-				
-				if (file.size > 5000000)
-					return warning('Эта картинка слишком много весит')
-	
-				if (file.type !== "image/jpeg" && file.type !== "image/png")
-					return warning('Можно загружать только картинки форматов Jpeg и Png')
-				
-				id_card.find('.uploading_picture').fade_in(0.2)
-				avatar_uploader.send()
-			})
-			
-			// photo
-			
-			var photo_file_chooser = $('.upload_new_photo')
 			
 			page.photo.find('> img').on('click.режим_правка', function(event)
 			{
 				event.preventDefault()
-				photo_file_chooser.click()
-			})
-			
-			photo_file_chooser.on('change.режим_правка', function()
-			{
-				var file = photo_file_chooser[0].files[0]
-				
-				if (file.size > 5000000)
-					return warning('Эта фотография слишком много весит')
-	
-				if (file.type !== "image/jpeg" && file.type !== "image/png")
-					return warning('Можно загружать только фотографии форматов Jpeg и Png')
-				
-				page.photo.find('.uploading')
-					.width(page.photo.find('> img').width())
-					.height(page.photo.find('> img').height())
-					.fade_in(0.2)
-					
-				photo_uploader.send()
+				page.photo_uploader.choose()
 			})
 		})
 	}

@@ -75,6 +75,11 @@
 			height: 120px;
 			
 			border-radius: 5px;
+			
+			> .picture_uploading_screen
+			{
+				border-radius: 5px;
+			}
 		}
 		
 		.picture
@@ -87,12 +92,6 @@
 			margin-left: 15px;
 			
 			.beautiful_shadow_5(0px, 1px, 3px, 3px, 5px, 3px, 7px, 0.12);
-		}
-				
-		.upload_new_picture
-		{
-			position: absolute;
-			visibility: hidden;
 		}
 
 		.name

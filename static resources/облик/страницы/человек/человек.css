@@ -221,23 +221,31 @@ body[mode="правка"]
 {
 	#content
 	{
-		.business_card .picture
+		.main_content
 		{
-			cursor: pointer;
-		}
-		
-		.photo img
-		{
-			cursor: pointer;
+			.business_card
+			{
+				.picture
+				{
+					cursor: pointer;
+				}
+			}
+			
+			.photo img
+			{
+				cursor: pointer;
+			}
+			
+			> .miscellaneous
+			{
+				margin-top: 100px;
+			}
 		}
 	}
 }
 
-.business_card .uploading_picture
+.business_card .picture_uploading_screen
 {
-	width: 120px;
-	height: 120px;
-	
 	> span
 	{
 		font-size: 18px;
@@ -253,7 +261,7 @@ body[mode="правка"]
 	
 	margin-top: 80px;
 	
-	> img, > .uploading
+	> img, > .picture_uploading_screen
 	{
 		border-width: 1px;
 		border-style: solid;

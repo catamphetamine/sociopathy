@@ -313,7 +313,6 @@ var Page = new Class
 
 			reset: $.noop,
 			
-			collect_unmodified: function() { return {} },
 			collect_edited: function() { return {} },
 			
 			draft_persistence: false,
@@ -334,8 +333,6 @@ var Page = new Class
 				Режим.при_переходе({ в: 'правка' }, function()
 				{
 					data_store.watch_for_changes = true
-					
-					//data_store.unmodified_data = data_store.collect_unmodified()
 					
 					if (data_store.refresh_when_switching)
 					{

@@ -30,6 +30,23 @@
 			
 		var conditional = initialize_conditional($('.main_conditional'), { immediate: true })
 
+		page.category_icon_uploader = new Picture_uploader
+		({
+			namespace: '.режим_правка',
+			max_size: 0.5,
+			max_size_text: '500 килобайтов',
+			url: '/сеть/читальня/раздел/картинка',
+			element: function()
+			{
+				return this.category
+			},
+			ok: function(data, element)
+			{
+				element.find('.title').css('background-image', 'url(' + encodeURI(data.адрес) + ')')
+				element.data('icon', data)
+			}
+		})
+		
 		function show_content()
 		{
 			new Data_templater
@@ -116,6 +133,14 @@
 		//$('.on_the_right_side_of_the_panel').css('right', on_the_right_side_of_the_panel_right)
 	}
 	
+	function choose_category_icon()
+	{
+		var category = $(this)
+			
+		page.category_icon_uploader.category = category
+		page.category_icon_uploader.choose()
+	}
+	
 	function add_category()
 	{
 		var category = $('<li/>').append($.tmpl('раздел читальни (правка)', { название: 'Название раздела' }))
@@ -129,6 +154,8 @@
 			category.unbind('.initial_keypress')
 		})
 		
+		category.on('clicked.режим_правка', choose_category_icon)
+		
 		page.category_dragger.refresh()
 	}
 	
@@ -140,7 +167,9 @@
 		
 		Режим.при_переходе({ в: 'правка' }, function()
 		{
-			page.get('.empty').hide()	
+			page.get('.empty').hide()
+			
+			page.category_icon_uploader.activate()
 		})
 		
 		//page.get('.breadcrumbs > span:last').attr('editable', true)
@@ -228,7 +257,12 @@
 				else
 					раздел = data.разделы[_id]
 				
-				$.tmpl(template, раздел).appendTo(this)
+				var category = $.tmpl(template, раздел)
+				
+				category.appendTo(this)
+				
+				if (раздел.icon)
+					category.data('icon', раздел.icon)
 			})
 		}
 	}
@@ -256,6 +290,11 @@
 			dont_start_dragging_on: '.title > span',
 			sortable: true,
 			throwable: true
+		})
+		
+		page.categories.children().each(function()
+		{
+			$(this).on('clicked.режим_правка', choose_category_icon)
 		})
 			
 		page.article_dragger = new Dragger(page.articles,
@@ -295,7 +334,7 @@
 		page.articles.find('> li').empty()
 	}
 	
-	page.Data_store.collect_unmodified = function()
+	page.Data_store.collect_edited = function()
 	{
 		var data =
 		{
@@ -311,7 +350,7 @@
 			index++
 			
 			var category = $(this)
-			
+		
 			if (category.hidden())
 				return
 			
@@ -321,12 +360,9 @@
 				порядок: index
 			}
 			
-			/*
-			var background_url = category.find('.title').background_url()
-			if (background_url)
-				category_data.background_version = Uri.parse(background_url).version
-			*/
-				
+			if (category.data('icon'))
+				category_data.icon = category.data('icon')
+	
 			var _id = category.attr('_id')
 			
 			if (!_id)
@@ -334,7 +370,7 @@
 			
 			category_data._id = _id
 			category_data.путь = page.Data_store.unmodified_data.разделы[_id].путь
-			category_data.background_version = page.Data_store.unmodified_data.разделы[_id].background_version
+			category_data.icon_version = page.Data_store.unmodified_data.разделы[_id].icon_version
 			
 			data.разделы[_id] = category_data
 		})
@@ -358,8 +394,6 @@
 		
 		return data
 	}
-
-	page.Data_store.collect_edited = page.Data_store.collect_unmodified	
 	
 	page.Data_store.deduce = function()
 	{
@@ -423,6 +457,17 @@
 						({
 							_id: _id,
 							порядок: data.разделы[_id].порядок
+						})
+						
+						anything_changed = true
+					}
+					
+					if (data.разделы[_id].icon)
+					{
+						данные.разделы.обновлённые_картинки.push
+						({
+							_id: _id,
+							icon: data.разделы[_id].icon.имя
 						})
 						
 						anything_changed = true
@@ -493,7 +538,8 @@
 					переименованные: [],
 					новые: [],
 					удалённые: [],
-					переупорядоченные: []
+					переупорядоченные: [],
+					обновлённые_картинки: []
 				},
 				заметки:
 				{

@@ -4,7 +4,7 @@ formidable = require 'formidable'
 connect_utilities = require('connect').utils
 
 upload_file = (ввод, возврат) ->
-	тайный_ключ_пользователя = снасти.настройки(ввод).user
+	тайный_ключ_пользователя = снасти.данные(ввод).user
 	if not тайный_ключ_пользователя?
 		show_error('Не указан тайный ключ пользователя')
 	
@@ -20,26 +20,20 @@ upload_image = (ввод, вывод, настройки) ->
 	global.resize.await(file.path, file.path, настройки)
 	снасти.переименовать.await(file.path, снасти.имя_файла(file.path) + '.jpg')
 	адрес = file.path.to_unix_path().replace(Options.Upload_server.File_path, Options.Upload_server.File_url) + '.jpg'
-	console.log({ имя: снасти.имя_файла(file.path), адрес: адрес })
 	вывод.send({ имя: снасти.имя_файла(file.path), адрес: адрес })
 
-server = http.createServer (ввод, вывод) ->
-	вывод.send = (что) ->
-		@writeHead(200, { 'content-type': 'text/plain', 'Access-Control-Allow-Origin': '*' })
-		if typeof что == 'object'
-			что = JSON.stringify(что)
-		@end(что)
+actions = {}
 
-	fiber ->
-		switch decodeURI(require('url').parse(ввод.url, true).pathname)
-			when '/сеть/человек/картинка'
-				upload_image(ввод, вывод, { размер: Options.User.Picture.Generic.Size, квадрат: yes })
-			when '/сеть/человек/фотография'
-				upload_image(ввод, вывод, { размер: Options.User.Photo.Size })
-			else
-				console.error "URI not found: #{decodeURI(ввод.url)}"
-				вывод.writeHead(404, { 'content-type': 'text/plain' })
-				return вывод.end('404')
+actions['/сеть/человек/картинка'] = (ввод, вывод) ->
+	upload_image(ввод, вывод, { размер: Options.User.Picture.Generic.Size, квадрат: yes })
+
+actions['/сеть/читальня/раздел/картинка'] = (ввод, вывод) ->
+	upload_image(ввод, вывод, { размер: Options.Library.Category.Icon.Size, квадрат: yes })
+	
+actions['/сеть/человек/фотография'] = (ввод, вывод) ->
+	upload_image(ввод, вывод, { размер: Options.User.Photo.Size })
+		
+server = fiberize.http_server(actions)
 
 monitor_upload = (ввод, pause, возврат) ->
 	form = new formidable.IncomingForm()
@@ -93,3 +87,16 @@ global.resize = (что, во_что, настройки, возврат) ->
 		options.height = настройки.размер + '>'
 		
 	image_magick.resize(options, возврат) #(error, output, errors_output) ->
+	
+global.finish_picture_upload = (options) ->
+	временное_название = options.временное_название.to_unix_file_name()
+	путь = Options.Upload_server.Temporary_file_path + '/' + временное_название + '.jpg'
+
+	место = Options.Upload_server.File_path + options.место
+	снасти.создать_путь.await(место)
+	
+	if options.sizes?
+		for name, sizing of options.sizes
+			resize.await(путь, место + '/' + name + '.jpg', sizing)
+			
+	снасти.переместить_и_переименовать.await(путь, { место: место, имя: options.название + '.jpg' })

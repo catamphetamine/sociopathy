@@ -22,6 +22,10 @@ module.exports =
 				Size: 48
 		Photo:
 			Size: 1024
+	Library:
+		Category:
+			Icon:
+				Size: 250
 	Mail:
 		Box: 'sobranie.net@gmail.com'
 		Smtp:

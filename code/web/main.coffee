@@ -27,8 +27,21 @@ global.Options.Version = require "./version.coffee"
 # memcache
 memcache = require('memcache')
 global.memcache = new memcache.Client(Options.Memcache.Port, 'localhost')
-global.хранилище = require('mongoskin').db('localhost:' + Options.MongoDB.Port + '/' + Options.MongoDB.Database + '?auto_reconnect=true&safe=true')
 
+mongo_db = require './tools/mongo db'
+
+mongo_db_options =
+	server:
+		host: 'localhost'
+		port: Options.MongoDB.Port
+		auto_reconnect: yes
+	database:
+		name: Options.MongoDB.Database
+		safe: yes
+	
+global.хранилище = mongo_db.open(mongo_db_options)
+
+# conveyor is now superceeded by fiberize
 global.Цепь = require './tools/conveyor'
 global.цепь = (object, options) ->
 	if not object? || typeof object == 'function'
