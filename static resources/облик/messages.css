@@ -301,8 +301,3 @@ body[mode="правка"] .messages_framework > .older a
 {
 	cursor: not-allowed;
 }
-
-body[mode="правка"] #page
-{
-	margin-bottom: 66px;
-}

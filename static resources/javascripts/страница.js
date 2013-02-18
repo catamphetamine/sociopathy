@@ -301,17 +301,56 @@ var Page = new Class
 		{
 			query: {},
 			
-			populate_view: $.noop,
-			populate_draft: $.noop,
-			
-			remove_draft: function()
+			modes:
 			{
-				this.reset_view()
+				обычный:
+				{
+					create: $.noop,
+					destroy: $.noop
+				}
 			},
 			
-			reset_view: $.noop,
+			режим: function(режим, settings)
+			{
+				Object.for_each(settings, (function(key, value)
+				{
+					this.modes[режим] = this.modes[режим] || {}
+					this.modes[режим][key] = value
+				})
+				.bind(this))
+			},
+			
+			create_mode: function(mode, data)
+			{
+				if (!data)
+				{
+					data = mode
+					mode = null
+				}
+				
+				if (!mode)
+					mode = Режим.текущий()
+					
+				if (this.modes[mode])
+					if (this.modes[mode].create)
+						return this.modes[mode].create.bind(this)(data)
+				
+				return this.modes.обычный.create.bind(this)(data)
+			},
+			
+			destroy_mode: function(mode)
+			{
+				if (!mode)
+					mode = Режим.текущий()
+					
+				if (this.modes[mode])
+					if (this.modes[mode].destroy)
+						return this.modes[mode].destroy.bind(this)()
+				
+				return this.modes.обычный.destroy.bind(this)()
+			},
 
-			reset: $.noop,
+			reset_changes: $.noop,
 			
 			collect_edited: function() { return {} },
 			
@@ -327,32 +366,29 @@ var Page = new Class
 				this.unmodified_data = this.deduce()
 				this.edited_data = this.unmodified_data
 			
-				this.reset_view()
-				this.populate_view(this.unmodified_data)
+				this.destroy_mode()
+				this.create_mode(this.unmodified_data)
 				
-				Режим.при_переходе({ в: 'правка' }, function()
+				Режим.при_переходе(function(info)
 				{
-					data_store.watch_for_changes = true
-					
 					if (data_store.refresh_when_switching)
 					{
-						data_store.reset_view()
-						data_store.populate_draft(data_store.edited_data)
+						data_store.destroy_mode(info.из)
+						data_store.create_mode(info.в, data_store.edited_data)
 					}
 				})
-							
-				Режим.при_переходе({ из: 'правка' }, function()
+				
+				Режим.при_переходе({ в: 'правка' }, function(info)
+				{
+					data_store.watch_for_changes = true
+				})
+				
+				Режим.при_переходе({ из: 'правка' }, function(info)
 				{
 					if (data_store.watch_for_changes)
 						data_store.edited_data = data_store.collect_edited()
 					else
 						data_store.edited_data = data_store.unmodified_data
-					
-					if (data_store.refresh_when_switching)
-					{
-						data_store.remove_draft()
-						data_store.populate_view(data_store.edited_data)
-					}
 				})
 				
 				Режим.activate_edit_actions({ on_save: function()
@@ -365,8 +401,8 @@ var Page = new Class
 					{
 						if (!Режим.правка_ли())
 						{
-							data_store.reset_view()
-							data_store.populate_view(data_store.edited_data)
+							data_store.destroy_mode()
+							data_store.create_mode('обычный', data_store.edited_data)
 						}
 					})
 				},
@@ -376,11 +412,11 @@ var Page = new Class
 					
 					if (!Режим.правка_ли())
 					{
-						data_store.remove_draft()
-						data_store.populate_view(data_store.unmodified_data)
+						data_store.destroy_mode()
+						data_store.create_mode(data_store.unmodified_data)
 					}
 						
-					data_store.reset()
+					data_store.reset_changes()
 					
 					if (page.discard)
 						page.discard()
@@ -389,8 +425,6 @@ var Page = new Class
 				$(document).on_page('режим_изменения_сохранены', function()
 				{
 					data_store.unmodified_data = data_store.edited_data
-					
-					data_store.edited_data = {}
 				})
 				
 				if (this.draft_persistence)

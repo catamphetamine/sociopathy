@@ -54,22 +54,22 @@ exports.websocket = (socket) ->
 					socket.emit('error', { error: parse_error(error), debug: error.stack })
 					
 exports.http_server = (actions) ->
-	require('http').createServer (ввод, вывод) ->
-		вывод.send = (что) ->
+	require('http').createServer (input, output) ->
+		output.send = (what) ->
 			@writeHead(200, { 'content-type': 'text/plain', 'Access-Control-Allow-Origin': '*' })
-			if typeof что == 'object'
-				что = JSON.stringify(что)
-			@end(что)
+			if typeof what == 'object'
+				what = JSON.stringify(what)
+			@end(what)
 	
 		fiber ->
 			try
-				path = decodeURI(require('url').parse(ввод.url, true).pathname)
+				path = decodeURI(require('url').parse(input.url, true).pathname)
 				if actions[path]?
-					actions[path](ввод, вывод)
+					actions[path](input, output)
 				else
-					console.error "URI not found: #{decodeURI(ввод.url)}"
-					вывод.writeHead(404, { 'content-type': 'text/plain' })
-					return вывод.end('URI not found')
-					#return вывод.end('404')
+					console.error "URI not found: #{decodeURI(input.url)}"
+					output.writeHead(404, { 'content-type': 'text/plain' })
+					return output.end('URI not found')
+					#return output.end('404')
 			catch error
-				вывод.send(error: parse_error(error), debug: error.stack)
+				output.send(error: parse_error(error), debug: error.stack)

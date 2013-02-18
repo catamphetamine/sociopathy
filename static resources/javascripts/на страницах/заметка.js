@@ -1,7 +1,7 @@
 (function()
 {
 	Режим.пообещать('правка')
-	Режим.пообещать('действия')
+	//Режим.пообещать('действия')
 	
 	var заметка = page.data.заметка
 	var неправленная_заметка
@@ -156,52 +156,7 @@
 			})
 		}
 		
-		text_button.new(page.get('.delete_article > .button')).does(delete_article)
-		page.hotkey('Действия.Удалить', 'действия', delete_article)
-		
-		var move_article_window = simple_value_dialog_window
-		({
-			class: 'move_article_window',
-			title: 'Перенести эту заметку',
-			ok_button_text: 'Перенести',
-			fields:
-			[{
-				id: 'where',
-				description: 'Скопируйте сюда ссылку на раздел, \nв который вы хотите переместить эту заметку',
-				validation: 'читальня.ссылка_на_раздел_для_заметки'
-			}],
-			ok: function(where)
-			{
-				var раздел = move_article_window.form.раздел
-				
-				var data =
-				{
-					заметка: page.data.заметка
-				}
-				
-				if (раздел)
-					data.куда = раздел
-				
-				page.Ajax.post('/приложение/сеть/читальня/заметка/перенести', data)
-				.ok(function(data)
-				{
-					info('Заметка перенесена')
-					go_to('/читальня/' + data.путь)
-				})
-				.ошибка(function(ошибка)
-				{
-					error(ошибка)
-				})
-			}
-		})
-		.window
-		
-		text_button.new(page.get('.move_article > .button')).does(function()
-		{
-			move_article_window.open()
-		})
-		
-		Режим.разрешить('действия')
+		//Режим.разрешить('действия')
 	}
 	
 	page.Data_store.collect_edited = function()

@@ -282,8 +282,3 @@ body[mode="правка"]
 	position: absolute;
 	visibility: hidden;
 }
-
-body[mode="правка"] #content
-{
-	margin-bottom: 120px;
-}

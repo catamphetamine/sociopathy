@@ -15,7 +15,7 @@
 	
 		Подсказка('добавление в читальню', 'Вы можете добавлять разделы, перейдя в <a href=\'/помощь/режимы#Режим правки\'>«режим правки»</a>. Вы можете добавлять заметки, перейдя в <a href=\'/помощь/режимы#Режим действий\'>«режим действий»</a>, или нажав клавиши <a href=\'/сеть/настройки\'>«Действия → Добавить»</a>')
 		Подсказка('правка разделов', 'Вы можете добавлять, удалять и переименовывать разделы, перейдя в <a href=\'/помощь/режимы#Режим правки\'>«режим правки»</a>. Для удаления раздела — «потащите» его мышью и «выбросите» в сторону')
-		Подсказка('перенос раздела', 'Вы можете перенести этот раздел, перейдя в <a href=\'/помощь/режимы#Режим действий\'>«режим действий»</a>')
+		Подсказка('перенос раздела', 'Вы можете перенести этот раздел, перейдя в <a href=\'/помощь/режимы#Режим действий\'>«режим действий»</a>, нажав правой кнопкой на разделе и выбрав действие «Перенести»')
 		//Подсказка('временные глюки читальни', 'Не сообщайте мне пока о следующих глюках читальни: \n невозможность рекурсивного удаления разделов, \nстарые пути к разделам и заметкам после их переименования или переноса. \n Я знаю об этих глюках, и поправлю их в следующей версии сайта. Я решил, что лучше «выкатить» сейчас то, что есть, чем ждать ещё полгода-год.');
 
 		//insert_search_bar_into($('#panel'))
@@ -176,36 +176,119 @@
 			
 		Режим.разрешить('правка')
 		
-		if (!page.data.раздел)
-			return Режим.запретить('действия')
+		function autocomplete_field(options)
+		{
+			var field =
+			{
+				id: 'where',
+				description: 'Куда',
+				autocomplete:
+				{
+					mininum_query_length: 3,
+					search: function(query, callback)
+					{
+						var ajax = page.Ajax.get('/приложение/читальня/разделы/найти',
+						{
+							query: query,
+							max: 5
+						})
+						.ok(function(data)
+						{
+							if (options.include_root)
+								data.разделы.unshift({ _id: 0, название: 'Корень' })
+							
+							data.разделы.remove(function()
+							{
+								return this._id === page.data.раздел
+							})
+							
+							callback(data.разделы)
+						})
+												
+						var search =
+						{
+							cancel: function()
+							{
+								ajax.abort()
+							}
+						}
+						
+						return search
+					},
+					decorate: function(раздел)
+					{
+						$('<div/>').text(раздел.название).appendTo(this)
+					},
+					value: function(раздел)
+					{
+						return раздел._id + ''
+					},
+					title: function(раздел)
+					{
+						return раздел.название
+					},
+					choice: function(_id)
+					{
+						options.ok()
+					}
+				}
+			}
+			
+			return field
+		}
 		
-		var move_category_window = simple_value_dialog_window
+		page.move_category = simple_value_dialog_window
 		({
 			class: 'move_category_window',
-			title: 'Перенести этот раздел',
-			ok_button_text: 'Перенести',
-			fields:
-			[{
-				id: 'where',
-				description: 'Скопируйте сюда ссылку на раздел, \nв который вы хотите переместить этот раздел',
-				validation: 'читальня.ссылка_на_раздел'
-			}],
-			ok: function(where)
+			title: 'Перенести раздел',
+			no_ok_button: true,
+			fields: [autocomplete_field({ include_root: true, ok: function() { page.move_category.ok() } })],
+			ok: function(_id)
 			{
-				var раздел = move_category_window.form.раздел
-				
 				var data =
 				{
-					раздел: page.data.раздел
+					раздел: page.move_category.раздел
 				}
 				
-				if (раздел)
-					data.куда = раздел
+				if (_id != 0)
+					data.куда = _id
 				
 				page.Ajax.post('/приложение/сеть/читальня/раздел/перенести', data)
 				.ok(function(data)
 				{
 					info('Раздел перенесён')
+					
+					if (data.путь)
+						go_to('/читальня/' + data.путь)
+					else
+						go_to('/читальня')
+				})
+				.ошибка(function(ошибка)
+				{
+					error(ошибка)
+				})
+			}
+		})
+		
+		page.move_article = simple_value_dialog_window
+		({
+			class: 'move_category_window',
+			title: 'Перенести заметку',
+			no_ok_button: true,
+			fields: [autocomplete_field({ ok: function() { page.move_article.ok() } })],
+			ok: function(_id)
+			{
+				var data =
+				{
+					заметка: page.move_article.заметка,
+					куда: _id
+				}
+				
+				page.Ajax.post('/приложение/сеть/читальня/заметка/перенести', data)
+				.ok(function(data)
+				{
+					info('Заметка перенесена')
+					
 					go_to('/читальня/' + data.путь)
 				})
 				.ошибка(function(ошибка)
@@ -214,20 +297,22 @@
 				})
 			}
 		})
-		.window
 		
-		text_button.new('.main_content > .move > .button').does(function()
+		// в корне не создают заметок
+		if (page.data.раздел)
 		{
-			move_category_window.open()
-		})
-		
-		function new_article()
-		{
-			go_to('/сеть/читальня/заметка/' + page.data.раздел)
+			function new_article()
+			{
+				go_to('/сеть/читальня/заметка/' + page.data.раздел)
+			}
+			
+			text_button.new('.main_content > .new_article > .button').does(new_article)
+			page.hotkey('Действия.Добавить', 'действия', new_article)
 		}
-		
-		text_button.new('.main_content > .new_article > .button').does(new_article)
-		page.hotkey('Действия.Добавить', 'действия', new_article)
+		else
+		{
+			$('.main_content > .new_article').remove()
+		}
 			
 		Режим.разрешить('действия')
 	}
@@ -280,59 +365,137 @@
 		}
 	}
 	
-	page.Data_store.populate_draft = function(data)
+	page.Data_store.режим('обычный',
 	{
-		populate_categories('раздел читальни (правка)')(data)
-		populate_articles('заметка раздела читальни (правка)')(data)
-		
-		page.category_dragger = new Dragger(page.categories,
+		create: function(data)
 		{
-			dont_start_dragging_on: '.title > span',
-			sortable: true,
-			throwable: true
-		})
-		
-		page.categories.children().each(function()
-		{
-			$(this).on('clicked.режим_правка', choose_category_icon)
-		})
+			populate_categories('раздел читальни')(data)
+			ajaxify_internal_links(page.categories)
+	
+			populate_articles('заметка раздела читальни')(data)
+			ajaxify_internal_links(page.articles)
 			
-		page.article_dragger = new Dragger(page.articles,
-		{
-			sortable: true,
-			throwable: true
-		})
-	}
-	
-	page.Data_store.remove_draft = function(data)
-	{		
-		page.category_dragger.destroy()
-		page.article_dragger.destroy()
+			page.categories.find('> li').each(function()
+			{
+				var category = $(this)
+				if (!category.attr('_id') && category.find('.title span').is_empty())
+					category.remove()
+			})
+		},
 		
-		this.reset_view()
-	}
-	
-	page.Data_store.populate_view = function(data)
-	{
-		populate_categories('раздел читальни')(data)
-		ajaxify_internal_links(page.categories)
-
-		populate_articles('заметка раздела читальни')(data)
-		ajaxify_internal_links(page.articles)
-		
-		page.categories.find('> li').each(function()
+		destroy: function()
 		{
-			var category = $(this)
-			if (!category.attr('_id') && category.find('.title span').is_empty())
-				category.remove()
-		})
-	}
+			page.categories.find('> li').empty()
+			page.articles.find('> li').empty()
+		}
+	})
 	
-	page.Data_store.reset_view = function()
+	page.Data_store.режим('правка',
 	{
-		page.categories.find('> li').empty()
-		page.articles.find('> li').empty()
-	}
+		create: function(data)
+		{
+			populate_categories('раздел читальни (правка)')(data)
+			populate_articles('заметка раздела читальни (правка)')(data)
+			
+			page.category_dragger = new Dragger(page.categories,
+			{
+				dont_start_dragging_on: '.title > span',
+				sortable: true,
+				throwable: true
+			})
+			
+			page.categories.children().each(function()
+			{
+				$(this).on('clicked.режим_правка', choose_category_icon)
+			})
+			
+			page.article_dragger = new Dragger(page.articles,
+			{
+				sortable: true,
+				throwable: true
+			})
+		},
+		
+		destroy: function(data)
+		{
+			page.category_dragger.destroy()
+			page.article_dragger.destroy()
+			
+			this.modes.обычный.destroy()
+		}
+	})
+	
+	page.Data_store.режим('действия',
+	{
+		create: function(data)
+		{
+			page.actions_mode_context_menus = []
+			
+			page.categories.children().each(function()
+			{
+				var _id = $(this).attr('_id')
+				
+				if (_id)
+				{
+					var menu = new Context_menu($(this),
+					{
+						items:
+						[
+							{
+								title: 'Перенести',
+								action: function(_id)
+								{
+									page.move_category.раздел = _id
+									page.move_category.window.open()
+								}
+							}
+						]
+					})
+					
+					menu.data = _id
+					page.actions_mode_context_menus.push(menu)
+				}
+			})
+			
+			page.articles.children().each(function()
+			{
+				var _id = $(this).attr('_id')
+				
+				if (_id)
+				{
+					var menu = new Context_menu($(this),
+					{
+						items:
+						[
+							{
+								title: 'Перенести',
+								action: function(_id)
+								{
+									page.move_article.заметка = _id
+									page.move_article.window.open()
+								}
+							}
+						]
+					})
+					
+					menu.data = _id
+					page.actions_mode_context_menus.push(menu)
+				}
+			})
+			
+			this.modes.обычный.create(data)
+		},
+		
+		destroy: function(data)
+		{
+			page.actions_mode_context_menus.for_each(function()
+			{
+				this.destroy()
+			})
+			
+			this.modes.обычный.destroy()
+		}
+	})
 	
 	page.Data_store.collect_edited = function()
 	{
@@ -389,6 +552,9 @@
 			
 			var _id = article.attr('_id')
 			
+			article_data.название = page.Data_store.unmodified_data.заметки[_id].название
+			article_data.путь = page.Data_store.unmodified_data.заметки[_id].путь
+			
 			data.заметки[_id] = article_data
 		})
 		
@@ -416,12 +582,12 @@
 		return data
 	}
 	
-	page.Data_store.reset = function()
+	page.Data_store.reset_changes = function()
 	{
 		reload_page()
 	}
 	
-	page.save = function(data)
+	page.save = function(data, finish)
 	{
 		Режим.save_changes_to_server
 		({
@@ -553,6 +719,7 @@
 			
 			ok: function(data)
 			{
+				//finish()
 				reload_page()
 			}
 		})

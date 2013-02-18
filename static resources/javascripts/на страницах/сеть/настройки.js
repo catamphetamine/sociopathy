@@ -145,251 +145,250 @@ title(text('pages.settings.title'));
 		return result
 	}
 	
-	page.Data_store.populate_view = function(data)
-	{
-		if (data.почта)
-			page.email.text(data.почта)
-			
-		if (data.язык)
-		{
-			page.language.find('.name').text(get_language(data.язык).name)
-			page.language_id.text(data.язык)
-		}
-		else
-		{
-			page.language.find('.name').text(No_language_text)
-			page.language_id.empty()
-		}
-			
-		page.shortcuts.find('> ul').each(function()
-		{
-			var category = $(this)
-			category.find('> li[path]').each(function()
-			{
-				var key = $(this)
-				
-				var directory = data.клавиши
-				
-				if (category.attr('path') != "Прочее")
-					directory = directory[category.attr('path')]
-				
-				var path = $('<span/>')
-				path.addClass('shortcut_path').text(directory[key.attr('path')].join(', ')) //.attr('editable', true)
-				path.appendTo(key)
-			})
-		})
-	}
-	
-	/*
-	$(document).on('keypress.press_any_key_combination', function(event)
-	{
-		 console.log(Клавиши.what(event))
-	})
-	*/
-	
 	page.Data_store.refresh_when_switching = true
 	
-	page.Data_store.populate_draft = function(data)
+	page.Data_store.режим('обычный',
 	{
-		page.Data_store.populate_view(data)
-		
-		// language
-		
-		page.language.find('.name').remove()
-		
-		var select = $('<select/>')
-		
-		var none = $('<option/>')
-		
-		if (!data.язык)
-			none.attr('selected', true)
-			
-		none.appendTo(select)
-		
-		Configuration.Locale.Supported_languages.for_each(function()
+		create: function(data)
 		{
-			var option = $('<option/>').attr('value', this.id).text(this.name)
-			
-			if (data.язык === this.id)
-				option.attr('selected', true)
+			if (data.почта)
+				page.email.text(data.почта)
 				
-			option.appendTo(select)
-		})
-		
-		select.on('change', function(event)
-		{
-			if (!select.val())
+			if (data.язык)
+			{
+				page.language.find('.name').text(get_language(data.язык).name)
+				page.language_id.text(data.язык)
+			}
+			else
 			{
 				page.language.find('.name').text(No_language_text)
 				page.language_id.empty()
-				return
 			}
-			
-			page.language.find('.name').text(get_language(select.val()).name)
-			page.language_id.text(select.val())
-		})
-		
-		select.appendTo(page.language)
-		
-		// shortcuts
-		
-		page.shortcuts.find('.shortcut_path').each(function()
-		{
-			var path = $(this)
-			
-			var old_path
-			
-			path.click(function()
+				
+			page.shortcuts.find('> ul').each(function()
 			{
-				if (path.hasClass('press_any_key_combination'))
+				var category = $(this)
+				category.find('> li[path]').each(function()
 				{
-					return finished(old_path)
-				}
-				
-				if (page.data.по_нажатию_id)
-					return
-				
-				old_path = path.text()
-				
-				path.text('Нажмите клавиши')
-				path.addClass('press_any_key_combination')
-				
-				function finished(the_path)
-				{
-					path.text(the_path)
-					path.removeClass('press_any_key_combination')
+					var key = $(this)
 					
-					page.убрать_по_нажатию(page.data.по_нажатию_id)
-					delete page.data.по_нажатию_id
-				}
-				
-				page.data.по_нажатию_id = page.по_нажатию(function(event)
-				{
-					 //event.preventDefault()
-					 
-					if (Клавиши.is('Escape', event))
-					{
-						event.preventDefault()
-						event.stopImmediatePropagation()
-						return finished(old_path)
-					}
-					 
-					var what = Клавиши.what(event)
+					var directory = data.клавиши
 					
-					what = Клавиши.по_порядку(what)
+					if (category.attr('path') != "Прочее")
+						directory = directory[category.attr('path')]
 					
-					if (what.пусто())
-						return
-					 
-					event.preventDefault()
-					event.stopImmediatePropagation()
-					
-					var Key_combination_finder = function()
-					{
-						this.find = function(what, where, path)
-						{
-							var finder = this
-							
-							if (where instanceof Array)
-							{
-								var keys = Клавиши.по_порядку(Array.clone(where))
-								
-								if (keys.length !== what.length)
-									return
-								
-								var i = 0
-								while (i < keys.length)
-								{
-									if (keys[i] !== what[i])
-										return
-									
-									i++
-								}
-								
-								return true
-							}
-							else if (typeof where === 'object')
-							{
-								var found
-							
-								Object.for_each(where, function(section, keys)
-								{
-									if (keys instanceof Array || typeof keys === 'object')
-									{
-										var old_path = finder.path
-										
-										if (finder.path)
-											finder.path += '.' + section
-										else
-											finder.path = section
-										
-										var result = finder.find(what, keys)
-										
-										if (result)
-										{
-											if (!finder.found)
-												finder.found = finder.path
-										}
-										
-										finder.path = old_path
-									}
-								})
-								
-								return this.found
-							}
-						}
-					}
-					 
-					var found = (new Key_combination_finder()).find(what, data.клавиши)
-					
-					function calculate_path(from, path)
-					{
-						var path_part = from.parent().attr('path')
-						
-						if (!path_part)
-							return path
-						
-						if (!path)
-							path = path_part
-						else
-							path = path_part + '.' + path
-							
-						return calculate_path(from.parent(), path)
-					}
-					
-					var self_path = calculate_path(path)
-					
-					if (found && found !== self_path)
-					{
-						return warning('Сочетание клавиш ' + Клавиши.сочетание(what) + ' уже используется для действия «' + found + '»')
-					}
-					
-					finished(what.join(', '))
+					var path = $('<span/>')
+					path.addClass('shortcut_path').text(directory[key.attr('path')].join(', ')) //.attr('editable', true)
+					path.appendTo(key)
 				})
 			})
-		})
-	}
-	
-	page.Data_store.remove_draft = function()
-	{
-		page.language.find('select').remove()
+		},
 		
-		// reset language name
-		var text = No_language_text
-		if (whats_the_language())
-			text = get_language(whats_the_language()).name
-		page.language.append($('<div/>').addClass('name').text(text))
-		
-		page.Data_store.reset_view()
-	}
-	
-	page.Data_store.reset_view = function()
-	{
-		page.shortcuts.find('> ul > li').each(function()
+		destroy: function()
 		{
-			$(this).find(':not(label:first)').remove()
-		})
-	}
+			page.shortcuts.find('> ul > li').each(function()
+			{
+				$(this).find(':not(label:first)').remove()
+			})
+		}
+	})
+	
+	page.Data_store.режим('правка',
+	{
+		create: function(data)
+		{
+			this.create_mode('обычный', data)
+			
+			// language
+			
+			page.language.find('.name').remove()
+			
+			var select = $('<select/>')
+			
+			var none = $('<option/>')
+			
+			if (!data.язык)
+				none.attr('selected', true)
+				
+			none.appendTo(select)
+			
+			Configuration.Locale.Supported_languages.for_each(function()
+			{
+				var option = $('<option/>').attr('value', this.id).text(this.name)
+				
+				if (data.язык === this.id)
+					option.attr('selected', true)
+					
+				option.appendTo(select)
+			})
+			
+			select.on('change', function(event)
+			{
+				if (!select.val())
+				{
+					page.language.find('.name').text(No_language_text)
+					page.language_id.empty()
+					return
+				}
+				
+				page.language.find('.name').text(get_language(select.val()).name)
+				page.language_id.text(select.val())
+			})
+			
+			select.appendTo(page.language)
+			
+			// shortcuts
+			
+			page.shortcuts.find('.shortcut_path').each(function()
+			{
+				var path = $(this)
+				
+				var old_path
+				
+				path.click(function()
+				{
+					if (path.hasClass('press_any_key_combination'))
+					{
+						return finished(old_path)
+					}
+					
+					if (page.data.по_нажатию_id)
+						return
+					
+					old_path = path.text()
+					
+					path.text('Нажмите клавиши')
+					path.addClass('press_any_key_combination')
+					
+					function finished(the_path)
+					{
+						path.text(the_path)
+						path.removeClass('press_any_key_combination')
+						
+						page.убрать_по_нажатию(page.data.по_нажатию_id)
+						delete page.data.по_нажатию_id
+					}
+					
+					page.data.по_нажатию_id = page.по_нажатию(function(event)
+					{
+						 //event.preventDefault()
+						 
+						if (Клавиши.is('Escape', event))
+						{
+							event.preventDefault()
+							event.stopImmediatePropagation()
+							return finished(old_path)
+						}
+						 
+						var what = Клавиши.what(event)
+						
+						what = Клавиши.по_порядку(what)
+						
+						if (what.пусто())
+							return
+						 
+						event.preventDefault()
+						event.stopImmediatePropagation()
+						
+						var Key_combination_finder = function()
+						{
+							this.find = function(what, where, path)
+							{
+								var finder = this
+								
+								if (where instanceof Array)
+								{
+									var keys = Клавиши.по_порядку(Array.clone(where))
+									
+									if (keys.length !== what.length)
+										return
+									
+									var i = 0
+									while (i < keys.length)
+									{
+										if (keys[i] !== what[i])
+											return
+										
+										i++
+									}
+									
+									return true
+								}
+								else if (typeof where === 'object')
+								{
+									var found
+								
+									Object.for_each(where, function(section, keys)
+									{
+										if (keys instanceof Array || typeof keys === 'object')
+										{
+											var old_path = finder.path
+											
+											if (finder.path)
+												finder.path += '.' + section
+											else
+												finder.path = section
+											
+											var result = finder.find(what, keys)
+											
+											if (result)
+											{
+												if (!finder.found)
+													finder.found = finder.path
+											}
+											
+											finder.path = old_path
+										}
+									})
+									
+									return this.found
+								}
+							}
+						}
+						 
+						var found = (new Key_combination_finder()).find(what, data.клавиши)
+						
+						function calculate_path(from, path)
+						{
+							var path_part = from.parent().attr('path')
+							
+							if (!path_part)
+								return path
+							
+							if (!path)
+								path = path_part
+							else
+								path = path_part + '.' + path
+								
+							return calculate_path(from.parent(), path)
+						}
+						
+						var self_path = calculate_path(path)
+						
+						if (found && found !== self_path)
+						{
+							return warning('Сочетание клавиш ' + Клавиши.сочетание(what) + ' уже используется для действия «' + found + '»')
+						}
+						
+						finished(what.join(', '))
+					})
+				})
+			})
+		},
+		
+		destroy: function()
+		{
+			page.language.find('select').remove()
+			
+			// reset language name
+			var text = No_language_text
+			if (whats_the_language())
+				text = get_language(whats_the_language()).name
+			page.language.append($('<div/>').addClass('name').text(text))
+			
+			this.destroy_mode('обычный')
+		}
+	})
 	
 	page.Data_store.deduce = function()
 	{
@@ -403,5 +402,5 @@ title(text('pages.settings.title'));
 		return result
 	}
 
-	page.Data_store.что = 'настройки пользователя'
+	//page.Data_store.что = 'настройки пользователя'
 })()

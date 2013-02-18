@@ -11,10 +11,10 @@ global.messages_tools = (options) ->
 				if options.update?
 					options.update.await(data._id, пользователь._id, data.content)
 				else
-					_id = db(options.messages_collection).id(data._id)
-					db(options.messages_collection)._.update({ _id: _id, отправитель: пользователь._id }, { $set: { сообщение: data.content } })
+					_id = db(initial_options.messages_collection).id(data._id)
+					db(initial_options.messages_collection)._.update({ _id: _id, отправитель: пользователь._id }, { $set: { сообщение: data.content } })
 
-					message = db(options.messages_collection)._.find_one({ _id: _id })
+					message = db(initial_options.messages_collection)._.find_one({ _id: _id })
 
 					data = { _id: data._id, сообщение: data.content }
 					if message?

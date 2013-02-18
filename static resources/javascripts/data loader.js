@@ -334,10 +334,12 @@ var Data_loader = new Class
 			data = loader.options.get_data.bind(loader)(data)
 			
 			if (data instanceof Array)
+			{
 				data.for_each(function()
 				{
 					loader.options.each.bind(this)(data)
 				})
+			}
 			
 			callback(null, data)
 		})

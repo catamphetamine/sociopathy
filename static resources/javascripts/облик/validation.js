@@ -84,54 +84,6 @@ Validation.прописка =
 	}
 }
 
-Validation.беседа = 
-{
-	добавить_пользователя: function(value, callback)
-	{
-		/*
-		value = value.trim()
-		
-		if (!value)
-			return callback({ error: 'Укажите имя пользователя' })
-			
-		var form = this
-			
-		page.Ajax.get('/приложение/человек/по имени',
-		{
-			имя: value
-		})
-		.ok(function(data)
-		{
-			form.user = data
-			callback()
-		})
-		.ошибка(function(error)
-		{
-			callback({ error: error })
-		})
-		*/
-		
-		if (!value)
-			return callback({ error: 'Выберите пользователя' })
-		
-		var form = this
-			
-		page.Ajax.get('/приложение/человек',
-		{
-			_id: value
-		})
-		.ok(function(data)
-		{
-			form.user = data
-			callback()
-		})
-		.ошибка(function(error)
-		{
-			callback({ error: error })
-		})
-	}
-}
-
 function проверить_ссылку_на_раздел(url, options, callback)
 {
 	if (!url)

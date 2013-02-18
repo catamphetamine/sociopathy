@@ -48,7 +48,7 @@
 		({
 			url: '/приложение/человек',
 			parameters: { адресное_имя: page.data.адресное_имя },
-			get_data: function (data)
+			get_data: function(data)
 			{
 				if (data['когда был здесь'])
 					parse_date(data, 'когда был здесь')
@@ -625,18 +625,21 @@
 		return result
 	}
 	
-	page.Data_store.populate_view = function(data)
+	page.Data_store.режим('обычный',
 	{
-		Object.each(data.общее, function(value, key)
+		create: function(data)
 		{
-			id_card.find(editable_info[key]).attr('editable', true).text(value)
-		})
-		
-		Object.for_each(data.о_себе, function(поле, значение)
-		{
-			add_minor_info(поле, значение)
-		})
-	}
+			Object.each(data.общее, function(value, key)
+			{
+				id_card.find(editable_info[key]).attr('editable', true).text(value)
+			})
+			
+			Object.for_each(data.о_себе, function(поле, значение)
+			{
+				add_minor_info(поле, значение)
+			})
+		}
+	})
 	
 	page.Data_store.deduce = function()
 	{
@@ -663,5 +666,5 @@
 		return result
 	}
 
-	page.Data_store.что = 'страница пользователя'
+	//page.Data_store.что = 'страница пользователя'
 })()

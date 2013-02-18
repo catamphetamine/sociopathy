@@ -153,7 +153,6 @@ var Режим = (function()
 		описание_режима.перейти(режим)
 		
 		$(document).trigger('режим.переход', [режим, mode, options])
-		$(document).trigger('режим.' + mode)
 	
 		$('*').unbind('.режим_' + режим)
 	
@@ -174,6 +173,8 @@ var Режим = (function()
 		}
 		
 		$('body').attr('mode', описание_режима.название)
+		
+		$(document).trigger('режим.' + mode)
 	}
 	
 	function найти_описание_режима(название)
@@ -290,6 +291,8 @@ var Режим = (function()
 		{
 			save_changes_button.unlock()
 		})
+		
+		$('body').removeClass('with_actions_on_bottom')
 	}
 	
 	result.изменения_отменены = function()
@@ -301,6 +304,8 @@ var Режим = (function()
 		{
 			cancel_changes_button.unlock()
 		})
+		
+		$('body').removeClass('with_actions_on_bottom')
 	}
 	
 	result.ошибка_правки = function()
@@ -320,7 +325,7 @@ var Режим = (function()
 	
 		actions = $('.edit_mode_actions').clone()
 		actions.appendTo($('body')).move_out_downwards().disableTextSelect()
-
+		
 		save_changes_button = text_button.new(actions.find('.done'), { 'prevent double submission': true })
 		.does(on_save)
 		
@@ -333,8 +338,12 @@ var Режим = (function()
 		
 		$(document).on('режим.переход', function(event, из, в)
 		{
-			if (в === 'правка')	
+			if (в === 'правка')
+			{
 				actions.slide_in_from_bottom()
+				
+				$('body').addClass('with_actions_on_bottom')
+			}
 		})
 	}
 	
@@ -459,6 +468,9 @@ var Режим = (function()
 				if (options.ok(data) === false)
 					return Режим.ошибка_правки()
 			}
+			
+			загрузка.hide()
+			Режим.разрешить_переходы()
 			
 			Режим.изменения_сохранены()
 		})

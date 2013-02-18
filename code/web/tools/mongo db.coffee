@@ -31,17 +31,24 @@ global.db = (collection) ->
 		object = mongo.find(query, options)
 		object.toArray.bind_await(object)()
 
-	api.update = (query, options) ->
+	api.update = (query, data, options) ->
 		query = query || {}
+		data = data || {}
 		options = options || {}
 		
-		mongo.update.bind_await(mongo)(query, options)
+		if not options.safe?
+			options.safe = yes
 		
-	api.save = (query, options) ->
-		query = query || {}
+		mongo.update.bind_await(mongo)(query, data, options)
+		
+	api.save = (data, options) ->
+		data = data || {}
 		options = options || {}
 		
-		mongo.save.bind_await(mongo)(query, options)
+		if not options.safe?
+			options.safe = yes
+		
+		mongo.save.bind_await(mongo)(data, options)
 		
 	api.remove = mongo.remove.bind_await(mongo)
 	api.drop = mongo.drop.bind_await(mongo)

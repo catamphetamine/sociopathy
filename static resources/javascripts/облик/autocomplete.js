@@ -82,6 +82,11 @@
 			this.hide_results()
 		},
 		
+		selection_data: function()
+		{
+			return this.data[this.value]
+		},
+		
 		hide_results: function()
 		{
 			if (!this.results_shown)
@@ -207,6 +212,13 @@
 			{
 				this.results_list.forEach(this.append_match)
 				this.show_results()
+				
+				this.data = {}
+				this.results_list.forEach((function(match)
+				{
+					this.data[this.options.value(match)] = match
+				})
+				.bind(this))
 			}
 		},
 		
@@ -355,10 +367,23 @@
 				if (highlighted.exists())
 				{
 					highlighted.trigger('click')
-					
+				
 					event.preventDefault()
 					event.stopImmediatePropagation()
 					
+					return
+				}
+				
+				if (this.results_list.length === 1)
+				{
+					$(this.results.children()[0]).click()
+					return
+				}
+				else
+				{
+					event.preventDefault()
+					event.stopImmediatePropagation()
+				
 					return
 				}
 			}

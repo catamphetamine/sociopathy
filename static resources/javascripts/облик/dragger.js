@@ -56,6 +56,9 @@ var Dragger = new Class
 	{
 		element.on('mousedown' + this.namespace, (function(event)
 		{
+			if (!left_mouse_button(event))
+				return
+			
 			if (element.find(this.options.dont_start_dragging_on).contains_or_is($(event.target)))
 				return
 			

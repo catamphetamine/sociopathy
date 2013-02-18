@@ -1602,3 +1602,28 @@ form.picture_uploader
 {
 	display: none;
 }
+
+.context_menu
+{
+	position: absolute;
+	
+	> ul
+	{
+		list-style-type: none;
+		margin: 0;
+		
+		> li
+		{
+			cursor: pointer;
+		}
+	}
+}
+
+body.with_actions_on_bottom
+{
+	> .actions_on_bottom_gap
+	{
+		display: block;
+		height: 74px;
+	}
+}

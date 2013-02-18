@@ -23,8 +23,16 @@ function simple_value_dialog_window(options)
 	if (options.icon === false)
 		element.find('> .main_content > .icon').remove()
 
-	options.fields.forEach(function(field, index)
+	var fields = {}
+		
+	options.fields.forEach(function(field_info, index)
 	{
+		var field = {}
+		Object.for_each(field_info, function(key, value)
+		{
+			field[key] = value
+		})
+		
 		if (field.description)
 		{
 			field.label = $('<label/>')
@@ -51,7 +59,7 @@ function simple_value_dialog_window(options)
 		else if (field.autocomplete)
 		{
 			var autocomplete = $('<div/>')
-			field.the_autocomplete = autocomplete.autocomplete(field.autocomplete)
+			field.autocomplete = autocomplete.autocomplete(field.autocomplete)
 			autocomplete.appendTo(form)
 			
 			field.input = autocomplete.find('> input[type="hidden"]')
@@ -74,6 +82,8 @@ function simple_value_dialog_window(options)
 			
 		if (field.postprocess)
 			field.postprocess(field.input, form)
+			
+		fields[field.id] = field
 	})
 	
 	var dialog_window = element.dialog_window
@@ -83,7 +93,7 @@ function simple_value_dialog_window(options)
 		{
 			$('body').addClass('no_scrollbar')
 			
-			options.fields.forEach(function(field, index)
+			Object.for_each(fields, function(id, field)
 			{
 				if (field.label)
 					if (field.label.hasClass('in-place_input_label'))
@@ -97,12 +107,12 @@ function simple_value_dialog_window(options)
 		{
 			$('body').removeClass('no_scrollbar')
 			
-			options.fields.forEach(function(field, index)
+			Object.for_each(fields, function(id, field)
 			{
 				field.input.val('')
 				
 				if (field.autocomplete)
-					field.the_autocomplete.reset()
+					field.autocomplete.reset()
 			})
 		},
 		'on cancel': function()
@@ -152,10 +162,10 @@ function simple_value_dialog_window(options)
 	var validating_form = new Form(form)
 	
 	var index = 0
-	options.fields.for_each(function()
+	Object.for_each(fields, function(id, field)
 	{
-		if (this.setter)
-			validating_form.inputs[index].setter = this.setter
+		if (field.setter)
+			validating_form.inputs[index].setter = field.setter
 			
 		index++
 	})
@@ -167,16 +177,16 @@ function simple_value_dialog_window(options)
 		
 		var data
 		
-		if (options.fields.length > 1)
+		if (Object.getLength(fields) > 1)
 		{
 			data = {}
-			options.fields.forEach(function(field)
+			Object.for_each(fields, function(id, field)
 			{
 				data[field.id] = field.input.val()
 			})
 		}
 		else
-			data = options.fields[0].input.val()
+			data = Object.value(fields).input.val()
 			
 		options.ok.bind(this)(data)
 	}
@@ -192,7 +202,7 @@ function simple_value_dialog_window(options)
 	dialog_window.register_controls(validating_form, cancel, ok)
 	
 	var submit_on_enter = true
-	options.fields.forEach(function(field, index)
+	Object.for_each(fields, function(id, field)
 	{
 		if (field.multiline)
 			submit_on_enter = false
@@ -216,7 +226,8 @@ function simple_value_dialog_window(options)
 	var result =
 	{
 		window: dialog_window,
-		ok: function() { ok.push() }
+		ok: function() { ok.push() },
+		fields: fields
 	}
 	
 	return result

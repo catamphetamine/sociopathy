@@ -186,7 +186,7 @@ Array.prototype.remove = function(element)
 	function test(i)
 	{
 		if (typeof element === 'function')
-			return element(array[i])
+			return element.bind(array[i])(array[i])
 		else
 			return array[i] === element
 	}
@@ -397,4 +397,16 @@ String.prototype.capitalize = function()
 String.prototype.escape_quotes = function()
 {
 	return this.replace_all('"', '\\"')
+}
+
+Object.value = function(object)
+{
+	var the_value
+	
+	Object.for_each(object, function(key, value)
+	{
+		the_value = value
+	})
+	
+	return the_value
 }

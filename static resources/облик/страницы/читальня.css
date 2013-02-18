@@ -231,9 +231,14 @@ body[mode="правка"]
 {
 	form
 	{
-		input[name="where"]
+		> .autocomplete
 		{
-			width: 660px !important;
+			margin-top: 10px;
+			
+			> input[type="text"]
+			{
+				margin-top: 0;
+			}
 		}
 	}
 }

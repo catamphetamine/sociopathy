@@ -136,8 +136,6 @@
 
 body[mode="правка"] #content
 {
-	margin-bottom: 140px;
-
 	.shortcut_path
 	{
 		cursor: pointer;

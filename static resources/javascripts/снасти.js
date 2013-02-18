@@ -97,10 +97,13 @@ var Ajax =
 					if (сообщение == true)
 						сообщение = Default_ajax_error_message
 						
+					if (сообщение.текст)
+						сообщение = сообщение.текст
+						
 					if (data.уровень !== 'ничего страшного')
 						report_error('ajax', data.debug || сообщение)
 						
-					return on_error(сообщение, { уровень: data.уровень, data: data })
+					return on_error(сообщение, { уровень: data.error.уровень, показать: data.error.показать, data: data })
 				}
 				
 				on_ok(data)
@@ -116,18 +119,24 @@ var Ajax =
 				
 			on_error = function(сообщение, options)
 			{
+				options = options || {}
+				
 				if (сообщение === 'Internal Server Error')
 					сообщение = Default_ajax_error_message
 				
 				if ($.isFunction(ошибка))
 				{
 					if (web_page_still_loading())
-						error(сообщение, { sticky: true })
+						if (options.показать !== false)
+							error(сообщение, { sticky: true })
 				
 					ошибка(сообщение, options)
 				}
 				else if (сообщение && typeof сообщение === 'string')
-					error(сообщение)
+				{
+					if (options.показать !== false)
+						error(сообщение)
+				}
 				else if (typeof ошибка === 'string')
 					error(ошибка)
 				else
@@ -1002,3 +1011,8 @@ var test_data = [{ name: 'lalala', порядок: 1000 }, { name: 'aaa', пор
 по_порядку(test_data)
 console.log(test_data)
 */
+
+function left_mouse_button(event)
+{
+	return event.which === 1
+}
