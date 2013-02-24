@@ -584,6 +584,9 @@ var Interactive_messages = function(options)
 				if (ошибка === 'Слишком много сообщений пропущено')
 					return error('Не удалось догрузить сообщения. Обновите страницу.', { sticky: true })
 		
+				if (!ошибка)
+					return
+				
 				console.log(ошибка)
 				error(ошибка, options)
 			})

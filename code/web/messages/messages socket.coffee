@@ -155,7 +155,7 @@ global.prepare_messages_socket = (options) ->
 							
 						broadcast('подцепился', пользовательское.поля(пользователь))
 						соединение.emit 'готов'
-								
+							
 					if options.authorize?
 						options.authorize.await(environment)
 					

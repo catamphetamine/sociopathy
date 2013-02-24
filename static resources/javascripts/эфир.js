@@ -114,6 +114,9 @@ $(document).on('panel_loaded', function()
 			if (ошибка === true)
 				return error('Ошибка связи с сервером', options)
 	
+			if (!ошибка)
+				return
+			
 			error(ошибка, options)
 		})
 		
