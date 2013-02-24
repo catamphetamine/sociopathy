@@ -16,6 +16,8 @@ var Context_menu = new Class
 		this.options.items.forEach((function(item)
 		{
 			var element = $('<li/>').text(item.title)
+		
+			element.disableTextSelect()
 			
 			element.on('mousedown', function(event)
 			{
@@ -36,8 +38,6 @@ var Context_menu = new Class
 		
 		this.menu.addClass('popup_panel_container')
 		this.menu.list.addClass('popup_panel')
-		
-		this.menu.disableTextSelect()
 		
 		this.menu.hide().appendTo('body')
 			

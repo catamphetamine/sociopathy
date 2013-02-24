@@ -43,7 +43,7 @@ title(text('pages.settings.title'));
 	
 	function подготовить_режим_правки()
 	{
-		$(document).on_page('режим.правка', function(event)
+		Режим.при_переходе({ в: 'правка' }, function(event)
 		{
 			page.data.старая_почта = get_email()
 		})
@@ -90,7 +90,7 @@ title(text('pages.settings.title'));
 			category.find('> li[path]').each(function()
 			{
 				var key = $(this)
-				
+		
 				var keys = key.find('> span').text().split(',')._map(function() { return this.trim() })
 				
 				directory[key.attr('path')] = keys
@@ -145,15 +145,13 @@ title(text('pages.settings.title'));
 		return result
 	}
 	
-	page.Data_store.refresh_when_switching = true
-	
 	page.Data_store.режим('обычный',
 	{
 		create: function(data)
 		{
 			if (data.почта)
 				page.email.text(data.почта)
-				
+			
 			if (data.язык)
 			{
 				page.language.find('.name').text(get_language(data.язык).name)
@@ -176,7 +174,7 @@ title(text('pages.settings.title'));
 					
 					if (category.attr('path') != "Прочее")
 						directory = directory[category.attr('path')]
-					
+
 					var path = $('<span/>')
 					path.addClass('shortcut_path').text(directory[key.attr('path')].join(', ')) //.attr('editable', true)
 					path.appendTo(key)

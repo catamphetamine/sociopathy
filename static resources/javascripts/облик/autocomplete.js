@@ -106,7 +106,8 @@
 			
 			this.results_shown = true
 			
-			this.highlight()
+			if (this.results_list.length > 1)
+				this.highlight()
 			
 			this.results.fade_in(0.2)
 		},

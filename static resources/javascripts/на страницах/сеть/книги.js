@@ -1,5 +1,5 @@
 /*
-$(document).on_page('режим.переход', function(event, из, в)
+$(document).on_page('смена_режима', function(event, из, в)
 {
 	if (в === 'правка')
 	{

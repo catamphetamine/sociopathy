@@ -225,7 +225,10 @@ var Page = new Class
 ({
 	Implements: [Options],
 
-	data: {},
+	data:
+	{
+		режим: {}
+	},
 	
 	event_handlers: [],
 	
@@ -316,6 +319,9 @@ var Page = new Class
 				{
 					this.modes[режим] = this.modes[режим] || {}
 					this.modes[режим][key] = value
+					
+					if (key === 'destroy')
+						this.destroy_modes_when_switching = true
 				})
 				.bind(this))
 			},
@@ -366,17 +372,8 @@ var Page = new Class
 				this.unmodified_data = this.deduce()
 				this.edited_data = this.unmodified_data
 			
-				this.destroy_mode()
+				//this.destroy_mode()
 				this.create_mode(this.unmodified_data)
-				
-				Режим.при_переходе(function(info)
-				{
-					if (data_store.refresh_when_switching)
-					{
-						data_store.destroy_mode(info.из)
-						data_store.create_mode(info.в, data_store.edited_data)
-					}
-				})
 				
 				Режим.при_переходе({ в: 'правка' }, function(info)
 				{
@@ -389,6 +386,19 @@ var Page = new Class
 						data_store.edited_data = data_store.collect_edited()
 					else
 						data_store.edited_data = data_store.unmodified_data
+				})
+				
+				Режим.при_переходе(function(info)
+				{
+					if (!data_store.destroy_modes_when_switching)
+						return
+					
+					data_store.destroy_mode(info.из)
+					
+					$(document).on_page_once('режим', function(event, режим)
+					{
+						data_store.create_mode(info.в, data_store.edited_data)
+					})
 				})
 				
 				Режим.activate_edit_actions({ on_save: function()
@@ -611,6 +621,20 @@ var Page = new Class
 		this.when_unloaded_actions.empty()
 	},
 	
+	namespaces: {},
+	
+	unique_namespace: function()
+	{
+		var namespace = (Math.random() + '').substring(2)
+		
+		if (this.namespaces[namespace])
+			return this.unique_namespace()
+		
+		this.namespaces[namespace] = true
+		
+		return namespace
+	},
+	
 	on: function(element, event, action)
 	{
 		if (typeof element === 'string')
@@ -620,17 +644,25 @@ var Page = new Class
 			element = $(document)
 		}
 		
+		var namespace
+		
 		if (!event.contains('.'))
-			event += '.' + (Math.random() + '').substring(2)
-			//throw 'You must specify a namespace for page event: ' + event
+		{
+			namespace = this.unique_namespace()
+			event += '.' + namespace
+		}
 			
 		this.event_handlers.push({ element: element, event: event })
 		element.on(event, action)
 		
-		return function()
+		return (function()
 		{
 			element.unbind(event)
-		}
+			
+			if (namespace)
+				delete this.namespaces[namespace]
+		})
+		.bind(this)
 	},
 	
 	ticking: function(action, interval)

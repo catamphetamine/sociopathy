@@ -303,12 +303,13 @@ function initialize_body_edit_mode_effects()
 	var background_fade_time = dummy_div.transition_duration() * 1000
 	var edit_mode_background_color = dummy_div.css('background-color')
 	
-	$(document).on_page('режим.правка', function()
+	Режим.при_переходе({ в: 'правка' }, function()
 	{
 		$('body').stop(true, false).animate({ 'background-color': edit_mode_background_color }, background_fade_time)
+		$('body').stop(true, false).css({ 'background-color': edit_mode_background_color })
 	})
 
-	$(document).on_page('режим.переход', function(event, из, в)
+	$(document).on_page('смена_режима', function(event, из, в)
 	{
 		if (из === 'правка')
 		{
@@ -389,8 +390,21 @@ $.fn.on_page = function(event, action)
 {
 	if (!page)
 		throw 'Page hasn\'t been initialized yet'
-		
+	
 	return page.on(this, event, action)
+}
+
+$.fn.on_page_once = function(event, action)
+{
+	var cancel
+	
+	var new_action = function(event, data)
+	{
+		action(event, data)
+		cancel()
+	}
+	
+	cancel = this.on_page(event, new_action)
 }
 
 function anti_cache_postfix(url)

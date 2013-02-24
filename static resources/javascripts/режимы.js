@@ -152,9 +152,11 @@ var Режим = (function()
 		var описание_режима = найти_описание_режима(mode)
 		описание_режима.перейти(режим)
 		
-		$(document).trigger('режим.переход', [режим, mode, options])
+		$(document).trigger('смена_режима', [режим, mode, options])
 	
 		$('*').unbind('.режим_' + режим)
+	
+		page.data.режим = {}
 	
 		режим = mode
 		
@@ -174,7 +176,7 @@ var Режим = (function()
 		
 		$('body').attr('mode', описание_режима.название)
 		
-		$(document).trigger('режим.' + mode)
+		$(document).trigger('режим', mode)
 	}
 	
 	function найти_описание_режима(название)
@@ -214,7 +216,7 @@ var Режим = (function()
 			}
 		}
 		
-		$(document).on_page('режим.переход', function(event, из, в, options)
+		$(document).on_page('смена_режима', function(event, из, в, options)
 		{
 			if (в_какой)
 				if (в_какой !== в)
@@ -336,7 +338,7 @@ var Режим = (function()
 			Режим.изменения_отменены()
 		})
 		
-		$(document).on('режим.переход', function(event, из, в)
+		$(document).on('смена_режима', function(event, из, в)
 		{
 			if (в === 'правка')
 			{
@@ -479,6 +481,26 @@ var Режим = (function()
 	result.перейти_в_режим = перейти_в_режим
 
 	result.режимы = режимы
+	
+	result.data = function(key, value, options)
+	{
+		options = options || {}
+		
+		var store = page.data.режим
+		
+		if (typeof value === 'undefined')
+			return store[key]
+		
+		if (options.add)
+		{
+			if (!(store[key] instanceof Array))
+				store[key] = [store[key]]
+				
+			return store[key].push(value)
+		}
+		
+		store[key] = value
+	}
 	
 	return result
 })()

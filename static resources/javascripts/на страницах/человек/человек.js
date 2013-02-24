@@ -294,7 +294,7 @@
 	
 		//var highlight_color = '#44adcb'
 		
-		$(document).on_page('режим.правка', function()
+		Режим.при_переходе({ в: 'правка' }, function()
 		{
 			if (page.photo.hidden())
 				page.photo.show()
@@ -305,7 +305,7 @@
 			//the_picture.animate({ 'boxShadow': '0 0 20px ' + highlight_color })
 		})
 	
-		$(document).on_page('режим.переход', function(event, из, в)
+		$(document).on_page('смена_режима', function(event, из, в)
 		{
 			if (из === 'правка')
 			{
@@ -410,7 +410,7 @@
 			return info
 		}
 		
-		$(document).on_page('режим.правка', function(event)
+		Режим.при_переходе({ в: 'правка' }, function(event)
 		{
 			$('.minor_info .info').each(function()
 			{
@@ -418,7 +418,7 @@
 			})
 		})
 			
-		$(document).on_page('режим.переход', function(event, из, в)
+		$(document).on_page('смена_режима', function(event, из, в)
 		{
 			if (из === 'правка')
 			{
@@ -561,7 +561,7 @@
 			error: "Не удалось загрузить фотографию"
 		})
 	
-		$(document).on_page('режим.правка', function(event)
+		Режим.при_переходе({ в: 'правка' }, function(event)
 		{
 			//info('Вы можете сменить картинку (120 на 120), нажав на неё.')
 	

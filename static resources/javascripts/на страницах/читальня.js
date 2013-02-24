@@ -14,9 +14,8 @@
 			title(text('pages.library.title'))
 	
 		Подсказка('добавление в читальню', 'Вы можете добавлять разделы, перейдя в <a href=\'/помощь/режимы#Режим правки\'>«режим правки»</a>. Вы можете добавлять заметки, перейдя в <a href=\'/помощь/режимы#Режим действий\'>«режим действий»</a>, или нажав клавиши <a href=\'/сеть/настройки\'>«Действия → Добавить»</a>')
-		Подсказка('правка разделов', 'Вы можете добавлять, удалять и переименовывать разделы, перейдя в <a href=\'/помощь/режимы#Режим правки\'>«режим правки»</a>. Для удаления раздела — «потащите» его мышью и «выбросите» в сторону')
-		Подсказка('перенос раздела', 'Вы можете перенести этот раздел, перейдя в <a href=\'/помощь/режимы#Режим действий\'>«режим действий»</a>, нажав правой кнопкой на разделе и выбрав действие «Перенести»')
-		//Подсказка('временные глюки читальни', 'Не сообщайте мне пока о следующих глюках читальни: \n невозможность рекурсивного удаления разделов, \nстарые пути к разделам и заметкам после их переименования или переноса. \n Я знаю об этих глюках, и поправлю их в следующей версии сайта. Я решил, что лучше «выкатить» сейчас то, что есть, чем ждать ещё полгода-год.');
+		Подсказка('правка разделов', 'Вы можете добавлять, удалять, переименовывать и переупорядочивать разделы, перейдя в <a href=\'/помощь/режимы#Режим правки\'>«режим правки»</a>. Для удаления раздела — «потащите» его мышью и «выбросите» в сторону')
+		Подсказка('перенос раздела или заметки', 'Вы можете перенести раздел (или заметку), нажав на нём (или на ней) правой кнопкой мыши и выбрав действие «Перенести». Для переноса раздела в корень читальни введите слово «Корень»')
 
 		//insert_search_bar_into($('#panel'))
 		
@@ -68,7 +67,7 @@
 						container: page.articles,
 						postprocess_element: function(item, data)
 						{
-							return $('<li/>').attr('_id', data._id).append(item)
+							return $('<li/>').attr('_id', data._id) //.append(item)
 						}
 					}
 				},
@@ -195,7 +194,9 @@
 						.ok(function(data)
 						{
 							if (options.include_root)
-								data.разделы.unshift({ _id: 0, название: 'Корень' })
+								if (page.data.раздел)
+									if ('корень'.starts_with(data.запрос.toLowerCase()))
+										data.разделы.unshift({ _id: 0, название: 'Корень' })
 							
 							data.разделы.remove(function()
 							{
@@ -307,7 +308,7 @@
 			}
 			
 			text_button.new('.main_content > .new_article > .button').does(new_article)
-			page.hotkey('Действия.Добавить', 'действия', new_article)
+			page.hotkey('Действия.Создать', new_article)
 		}
 		else
 		{
@@ -365,6 +366,72 @@
 		}
 	}
 	
+	function initialize_actions_context_menu()
+	{
+		Режим.data('context_menus', [])
+		
+		page.categories.children().each(function()
+		{
+			var _id = $(this).attr('_id')
+			
+			if (_id)
+			{
+				var menu = new Context_menu($(this),
+				{
+					items:
+					[
+						{
+							title: 'Перенести',
+							action: function(_id)
+							{
+								page.move_category.раздел = _id
+								page.move_category.window.open()
+							}
+						}
+					]
+				})
+				
+				menu.data = _id
+				Режим.data('context_menus', menu, { add: true })
+			}
+		})
+	
+		page.articles.children().each(function()
+		{
+			var _id = $(this).attr('_id')
+			
+			if (_id)
+			{
+				var menu = new Context_menu($(this),
+				{
+					items:
+					[
+						{
+							title: 'Перенести',
+							action: function(_id)
+							{
+								page.move_article.заметка = _id
+								page.move_article.window.open()
+							}
+						}
+					]
+				})
+				
+				menu.data = _id
+				
+				Режим.data('context_menus', menu, { add: true })
+			}
+		})
+	}
+	
+	function destroy_actions_context_menu()
+	{
+		(Режим.data('context_menus') || []).for_each(function()
+		{
+			this.destroy()
+		})
+	}
+	
 	page.Data_store.режим('обычный',
 	{
 		create: function(data)
@@ -381,10 +448,14 @@
 				if (!category.attr('_id') && category.find('.title span').is_empty())
 					category.remove()
 			})
+			
+			initialize_actions_context_menu()
 		},
 		
 		destroy: function()
 		{
+			destroy_actions_context_menu()
+			
 			page.categories.find('> li').empty()
 			page.articles.find('> li').empty()
 		}
@@ -429,70 +500,11 @@
 	{
 		create: function(data)
 		{
-			page.actions_mode_context_menus = []
-			
-			page.categories.children().each(function()
-			{
-				var _id = $(this).attr('_id')
-				
-				if (_id)
-				{
-					var menu = new Context_menu($(this),
-					{
-						items:
-						[
-							{
-								title: 'Перенести',
-								action: function(_id)
-								{
-									page.move_category.раздел = _id
-									page.move_category.window.open()
-								}
-							}
-						]
-					})
-					
-					menu.data = _id
-					page.actions_mode_context_menus.push(menu)
-				}
-			})
-			
-			page.articles.children().each(function()
-			{
-				var _id = $(this).attr('_id')
-				
-				if (_id)
-				{
-					var menu = new Context_menu($(this),
-					{
-						items:
-						[
-							{
-								title: 'Перенести',
-								action: function(_id)
-								{
-									page.move_article.заметка = _id
-									page.move_article.window.open()
-								}
-							}
-						]
-					})
-					
-					menu.data = _id
-					page.actions_mode_context_menus.push(menu)
-				}
-			})
-			
 			this.modes.обычный.create(data)
 		},
 		
 		destroy: function(data)
 		{
-			page.actions_mode_context_menus.for_each(function()
-			{
-				this.destroy()
-			})
-			
 			this.modes.обычный.destroy()
 		}
 	})
@@ -724,6 +736,4 @@
 			}
 		})
 	}
-	
-	page.Data_store.refresh_when_switching = true
 })()
