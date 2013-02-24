@@ -219,7 +219,7 @@ $(document).on('panel_loaded', function()
 			}
 		})
 		
-		on('новости', 'прочитано', function(data)
+		Inter_tab_communication.on('новости_прочитано', function(data)
 		{
 			function transform()
 			{

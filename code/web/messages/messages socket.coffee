@@ -150,8 +150,6 @@ global.prepare_messages_socket = (options) ->
 							сообщения_чего = null
 							if environment.сообщения_чего?
 								сообщения_чего = environment.сообщения_чего._id.toString()
-								
-							эфир.отправить('новости', 'прочитано', { что: options.общение, сообщения_чего: сообщения_чего, _id: _id.toString() })
 
 						connected.hset.bind_await(connected)(connected_data_source(), пользователь._id.toString(), JSON.stringify(пользовательское.поля(пользователь)))
 							

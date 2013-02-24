@@ -621,20 +621,6 @@ var Page = new Class
 		this.when_unloaded_actions.empty()
 	},
 	
-	namespaces: {},
-	
-	unique_namespace: function()
-	{
-		var namespace = (Math.random() + '').substring(2)
-		
-		if (this.namespaces[namespace])
-			return this.unique_namespace()
-		
-		this.namespaces[namespace] = true
-		
-		return namespace
-	},
-	
 	on: function(element, event, action)
 	{
 		if (typeof element === 'string')
@@ -648,7 +634,7 @@ var Page = new Class
 		
 		if (!event.contains('.'))
 		{
-			namespace = this.unique_namespace()
+			namespace = $.unique_namespace()
 			event += '.' + namespace
 		}
 			
@@ -660,7 +646,7 @@ var Page = new Class
 			element.unbind(event)
 			
 			if (namespace)
-				delete this.namespaces[namespace]
+				$.free_namespace(namespace)
 		})
 		.bind(this)
 	},

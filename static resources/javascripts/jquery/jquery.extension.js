@@ -887,3 +887,22 @@ $.fn.lies_after = function(that)
 	
 	return this_index > that_index
 }
+
+window.event_namespaces = {}
+
+$.unique_namespace = function()
+{
+	var namespace = (Math.random() + '').substring(2)
+	
+	if (event_namespaces[namespace])
+		return $.unique_namespace()
+	
+	event_namespaces[namespace] = true
+	
+	return namespace
+}
+
+$.free_namespace = function(namespace)
+{
+	delete event_namespaces[namespace]
+}

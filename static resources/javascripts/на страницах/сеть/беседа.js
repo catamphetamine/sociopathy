@@ -18,6 +18,11 @@
 
 		messages = Interactive_messages
 		({
+			info:
+			{
+				что: 'беседа',
+				общение: function() { return page.data.общение._id }
+			},
 			data_source:
 			{
 				url: '/приложение/сеть/беседа/сообщения',

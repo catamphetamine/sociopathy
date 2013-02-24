@@ -17,6 +17,10 @@ var Новости = new (new Class
 		обсуждения: new Audio("/звуки/пук.ogg")
 	},
 	
+	initialize: function()
+	{
+	},
+	
 	появились_новости: function()
 	{
 		//if (!this.есть_новости)
@@ -111,6 +115,9 @@ var Новости = new (new Class
 			{
 				postprocess: function(container)
 				{
+					this.attr('communication', options.общение)
+					this.attr('message_id', последнее_сообщение)
+					
 					var text_container = $('<div/>').addClass('text')
 					this.wrapInner(text_container)
 					
@@ -118,7 +125,29 @@ var Новости = new (new Class
 					avatar.prependTo(this)
 				},
 				ссылка: '/' + options.url + '/' + options.id,
-				время: 1.5
+				время: 1.5,
+				on_close: function()
+				{
+					/*
+					switch (options.english)
+					{
+						case 'talk':
+							data.что = 'беседа'
+							break
+						
+						case 'discussion':
+							data.что = 'обсуждение'
+							break
+					}
+					*/
+					
+					Inter_tab_communication.send('убрать_уведомление',
+					{
+						what: options.english,
+						общение: this.attr('communication'),
+						сообщение: this.attr('message_id')
+					})
+				}
 			})
 		}
 	},
@@ -184,13 +213,15 @@ var Новости = new (new Class
 	прочитано: function(что)
 	{
 		if (что.новость)
-		{
+		{	
 			this.что_нового.новости.remove(что.новость)
 			if (this.что_нового.новости.пусто())
 				panel.no_more_new_news()
 		}
 		else if (что.обсуждение)
 		{
+			убрать_уведомления_сообщениях('обсуждение', что.обсуждение, что.сообщение)
+			
 			$(document).trigger('message_read', что)
 		
 			if (!this.что_нового.обсуждения[что.обсуждение])
@@ -204,6 +235,8 @@ var Новости = new (new Class
 		}
 		else if (что.беседа)
 		{
+			убрать_уведомления_сообщениях('беседа', что.беседа, что.сообщение)
+			
 			$(document).trigger('message_read', что)
 			
 			if (!this.что_нового.беседы[что.беседа])
@@ -236,3 +269,61 @@ var Новости = new (new Class
 		}
 	}
 }))()
+
+function close_popup(where, общение, последнее_прочитанное, options)
+{
+	options = options || {}
+	
+	$('.new_message_in_' + where + ' .popup_panel[communication="' + общение + '"]').each(function()
+	{
+		var element = $(this)
+		
+		var close
+		
+		if (options.including_before)
+		{
+			if (element.attr('message_id') <= последнее_прочитанное)
+				close = true
+		}
+		else
+		{
+			if (element.attr('message_id') === последнее_прочитанное)
+				close = true
+		}
+		
+		if (close)
+		{
+			element.parent().parent().trigger('contextmenu')
+		}
+	})
+}
+
+function убрать_уведомления_сообщениях(чего, общение, последнее_прочитанное)
+{
+	switch (чего)
+	{
+		case 'беседа':
+			close_popup('talk', общение, последнее_прочитанное, { including_before: true })
+			break
+		
+		case 'обсуждение':
+			close_popup('discussion', общение, последнее_прочитанное, { including_before: true })
+			break
+	}
+}
+
+Inter_tab_communication.on('убрать_уведомление', function(data)
+{
+	switch (data.what)
+	{
+		case 'talk':
+			что = 'беседа'
+			break
+		
+		case 'discussion':
+			что = 'обсуждение'
+			break
+	}
+	
+	убрать_уведомления_сообщениях(что, data.общение, data.сообщение)
+})

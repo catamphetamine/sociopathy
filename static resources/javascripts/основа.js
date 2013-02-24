@@ -150,6 +150,8 @@ var scripts =
 		
 	'здесь или не здесь',
 	
+	'inter tab communication',
+	
 	'youtube',
 	'vimeo',
 	

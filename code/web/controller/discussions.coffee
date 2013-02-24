@@ -3,9 +3,8 @@ options =
 	общение: 'обсуждение'
 	общение_во_множественном_числе: 'обсуждения'
 
-options.save = (сообщение, environment, возврат) ->
+options.save = (сообщение, environment) ->
 	db(options.collection)._.update({ _id: environment.сообщения_чего._id }, { $addToSet: { подписчики: environment.пользователь._id } })
-	возврат()
 
 result = messages.messages(options)
 

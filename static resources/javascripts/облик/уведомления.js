@@ -228,10 +228,14 @@ var Message =
 			
 			if (closing)
 				return
+			
 			closing = true
 			
 			message_container.data('dissapearance_duration', 0.25)
 			Message.vanisher.schedule(message_container)
+			
+			if (options.on_close)
+				options.on_close.bind(message_itself)(message)
 		})
 		
 		//var message = $('<div class="' + type + '"/>').html(text)
