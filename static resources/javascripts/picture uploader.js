@@ -86,9 +86,9 @@ var Picture_uploader = new Class
 				else
 					finish()
 			},
-			error: function(error)
+			error: function(ошибка)
 			{
-				//report_error('picture uploader', error)
+				//report_error('picture uploader', ошибка)
 				error(picture_uploader.options.error)
 				picture_uploader.uploading_screen().fade_out(0.2)
 			},

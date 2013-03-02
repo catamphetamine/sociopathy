@@ -1,5 +1,7 @@
 (function()
 {
+	var initialize_search
+	
 	Режим.пообещать('правка')
 	Режим.пообещать('действия')
 		
@@ -102,6 +104,9 @@
 		
 		var finish = function()
 		{
+			if (!page.data.раздел)
+				initialize_search()
+			
 			show_content()
 		}
 		
@@ -218,7 +223,18 @@
 					},
 					decorate: function(раздел)
 					{
-						$('<div/>').text(раздел.название).appendTo(this)
+						if (раздел.icon_version)
+						{
+							var icon = $('<div/>')
+								.addClass('icon')
+								.css('background-image', 'url("/загруженное/читальня/разделы/' + раздел._id + '/крошечная обложка.jpg?version=' + раздел.icon_version + '")')
+								.appendTo(this)
+						}
+						
+						$('<div/>')
+							.addClass('title')
+							.text(раздел.название)
+							.appendTo(this)
 					},
 					value: function(раздел)
 					{
@@ -316,6 +332,13 @@
 		}
 			
 		Режим.разрешить('действия')
+		
+		if (page.data.search)
+			(function()
+			{
+				page.data.search.focus()
+			})
+			.delay(1)
 	}
 	
 	function center_categories_list()
@@ -731,9 +754,74 @@
 			
 			ok: function(data)
 			{
-				//finish()
 				reload_page()
 			}
+		})
+	}
+	
+	function initialize_search()
+	{
+		page.data.search = page.get('.search').autocomplete
+		({
+			mininum_query_length: 3,
+			search: function(query, callback)
+			{
+				var ajax = page.Ajax.get('/приложение/читальня/поиск',
+				{
+					query: query,
+					max: 5
+				})
+				.ok(function(data)
+				{
+					data.разделы.for_each(function()
+					{
+						this.раздел = true
+					})
+					
+					callback(data.разделы.append(data.заметки))
+				})
+										
+				var search =
+				{
+					cancel: function()
+					{
+						ajax.abort()
+					}
+				}
+				
+				return search
+			},
+			decorate: function(data)
+			{
+				if (data.раздел && data.icon_version)
+				{
+					var icon = $('<div/>')
+						.addClass('icon')
+						.css('background-image', 'url("/загруженное/читальня/разделы/' + data._id + '/крошечная обложка.jpg?version=' + data.icon_version + '")')
+						.appendTo(this)
+				}
+				
+				$('<div/>')
+					.addClass('title')
+					.text(data.название)
+					.appendTo(this)
+			},
+			value: function(data)
+			{
+				if (data.раздел)
+					return 'раздел ' + data._id
+				
+				return 'заметка ' + data._id
+			},
+			title: function(data)
+			{
+				return data.название
+			},
+			choice: function(value)
+			{
+				go_to('/читальня/' + this.путь)
+			},
+			required: false
 		})
 	}
 })()

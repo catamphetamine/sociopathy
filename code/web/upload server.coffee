@@ -25,13 +25,13 @@ upload_image = (ввод, вывод, настройки) ->
 actions = {}
 
 actions['/сеть/человек/картинка'] = (ввод, вывод) ->
-	upload_image(ввод, вывод, { размер: Options.User.Picture.Generic.Size, квадрат: yes })
+	upload_image(ввод, вывод, { размер: Options.User.Picture.Generic.Size })
 
 actions['/сеть/читальня/раздел/картинка'] = (ввод, вывод) ->
-	upload_image(ввод, вывод, { размер: Options.Library.Category.Icon.Size, квадрат: yes })
+	upload_image(ввод, вывод, { размер: Options.Library.Category.Icon.Generic.Size })
 	
 actions['/сеть/человек/фотография'] = (ввод, вывод) ->
-	upload_image(ввод, вывод, { размер: Options.User.Photo.Size })
+	upload_image(ввод, вывод, { наибольший_размер: Options.User.Photo.Size })
 		
 server = fiberize.http_server(actions)
 
@@ -73,7 +73,7 @@ global.resize = (что, во_что, настройки, возврат) ->
 		strip: false
 		filter: 'Lagrange'
 
-	if настройки.квадрат?
+	if настройки.размер?
 		options.width = настройки.размер
 		options.height = "#{настройки.размер}^"
 		options.customArgs = [
@@ -83,8 +83,8 @@ global.resize = (что, во_что, настройки, возврат) ->
 			"#{настройки.размер}x#{настройки.размер}"
 		]
 	else
-		options.width = настройки.размер
-		options.height = настройки.размер + '>'
+		options.width = настройки.наибольший_размер
+		options.height = настройки.наибольший_размер + '>'
 		
 	image_magick.resize(options, возврат) #(error, output, errors_output) ->
 	
@@ -95,8 +95,8 @@ global.finish_picture_upload = (options) ->
 	место = Options.Upload_server.File_path + options.место
 	снасти.создать_путь.await(место)
 	
-	if options.sizes?
-		for name, sizing of options.sizes
+	if options.extra_sizes?
+		for name, sizing of options.extra_sizes
 			resize.await(путь, место + '/' + name + '.jpg', sizing)
 			
 	снасти.переместить_и_переименовать.await(путь, { место: место, имя: options.название + '.jpg' })

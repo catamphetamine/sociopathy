@@ -190,3 +190,6 @@ Object.path = (object, path) ->
 	object
 	
 Array.prototype.add = Array.prototype.push
+
+Array.prototype.remove_at = (at) ->
+	@splice(at, 1)

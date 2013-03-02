@@ -25,7 +25,10 @@ module.exports =
 	Library:
 		Category:
 			Icon:
-				Size: 250
+				Generic:
+					Size: 250
+				Tiny:
+					Size: 38
 	Mail:
 		Box: 'sobranie.net@gmail.com'
 		Smtp:
