@@ -7,48 +7,21 @@ var Url_map =
 var Язык
 var Перевод
 
-;(function()
+function load_relevant_translation(path, options)
 {
 	function load_translation(language, success, error)
 	{
 		var settings = {}
 		
-		if (development_mode)
+		if (window.development_mode)
 			settings.cache = false
 			
-		$.ajax(add_version('/international/' + language + '/' + 'translation' + '.json'), settings)
+		$.ajax(add_version(path.replace('${language}', language), settings))
 		.success(function(translation)
 		{
-			Перевод = JSON.parse(translation)
-			Язык = language
-			
-			success(language)
+			success(language, JSON.parse(translation))
 		})
 		.error(error)
-	}
-	
-	function success(language)
-	{
-		initial_script_in_progress.finished('языки')
-	
-		if (language !== Configuration.Locale.Предпочитаемый_язык)
-		{
-			$(document).once_on('display_page', function()
-			{
-				var supported = []
-				Configuration.Locale.Supported_languages.for_each(function()
-				{
-					supported.push(this.name)
-				})
-				
-				info('Seems that your preferred language (code «' + Configuration.Locale.Предпочитаемый_язык + '») isn\'t supported. The supported languages are: ' + supported.join(', ') + '. ' + 'Defaulting to "' + get_language(language).name + '"')
-			})
-		}
-		
-		//console.log(Перевод)
-	
-		// test
-		//alert(text('user language is not supported', { 'preferred language': 'es', 'current language': Язык }))
 	}
 	
 	var языки = []
@@ -61,7 +34,46 @@ var Перевод
 	{
 		// defaults
 		var язык = Configuration.Locale.Default_language
-		var on_error = function()
+		var on_error = options.no_translation
+		
+		if (!языки.is_empty())
+		{
+			язык = языки.shift()
+			on_error = try_next_language
+		}
+		
+		load_translation(язык, options.ok, on_error)
+	}
+	
+	try_next_language()
+}
+
+;(function()
+{
+	load_relevant_translation('/international/${language}/translation.json',
+	{
+		ok: function(language, translation)
+		{
+			Перевод = translation
+			Язык = language
+		
+			initial_script_in_progress.finished('языки')
+		
+			if (language !== Configuration.Locale.Предпочитаемый_язык)
+			{
+				$(document).once_on('display_page', function()
+				{
+					var supported = []
+					Configuration.Locale.Supported_languages.for_each(function()
+					{
+						supported.push(this.name)
+					})
+					
+					info('Seems that your preferred language (code «' + Configuration.Locale.Предпочитаемый_язык + '») isn\'t supported. The supported languages are: ' + supported.join(', ') + '. ' + 'Defaulting to «' + get_language(language).name + '»')
+				})
+			}
+		},
+		no_translation: function()
 		{
 			if (window.onerror)
 				window.onerror('Error while loading page translation')
@@ -70,17 +82,7 @@ var Перевод
 		
 			console.error('Internationalization not loaded')
 		}
-		
-		if (!языки.is_empty())
-		{
-			язык = языки.shift()
-			on_error = try_next_language
-		}
-		
-		load_translation(язык, success, on_error)
-	}
-	
-	try_next_language()
+	})
 })()
 
 // utilities
@@ -137,4 +139,18 @@ function text(key, variables)
 	translation = translation.replace_all('[/link]', '</a>')
 		
 	return translation
+}
+
+function подгрузить_перевод(перевод, куда)
+{
+	if (!куда)
+		куда = Перевод
+		
+	Object.for_each(перевод, function(key, translation)
+	{
+		if (typeof куда[key] === 'undefined')
+			куда[key] = translation
+		else if (typeof куда[key] === 'object')
+			подгрузить_перевод(translation, куда[key])
+	})
 }

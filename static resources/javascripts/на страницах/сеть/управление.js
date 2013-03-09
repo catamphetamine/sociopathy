@@ -1,7 +1,7 @@
-title(text('pages.administration.title'));
-
 (function()
 {
+	title(text('pages.administration.title'))
+
 	page.needs_initializing = false
 	
 	page.load = function()

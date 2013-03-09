@@ -1,12 +1,8 @@
-create_collection = (name, indexes_or_options) ->
-	indexes = null
-	options = {}
+create_collection = (name, options) ->
+	options = options || {}
 	
-	if indexes_or_options?
-		if indexes_or_options instanceof Array
-			indexes = indexes_or_options
-		else
-			options = indexes_or_options
+	if options instanceof Array
+		options = { indexes: options }
 			
 	try
 		db(name)._.drop()
@@ -15,10 +11,10 @@ create_collection = (name, indexes_or_options) ->
 			console.error ошибка
 			throw ошибка
 				
-	хранилище.create(name, options)
+	хранилище.create(name, options.options)
 			
-	if indexes?
-		for pair in indexes
+	if options.indexes?
+		for pair in options.indexes
 			db(name)._.index(pair[0], pair[1])
 	
 http.post '/управление/приглашение/выдать', (ввод, вывод, пользователь) ->
@@ -52,8 +48,6 @@ http.post '/управление/хранилище/изменить', (ввод
 		
 		
 	
-	#create_collection('system_trash', [['что', no]])
-	create_collection('errors', { capped: yes, size: 100 })
 		
 		
 		
@@ -554,7 +548,7 @@ http.post '/хранилище/создать', (ввод, вывод) ->
 		
 	# мусорка
 	
-	create_collection('trash', [['пользователь', no]])
+	create_collection('trash', { options: { capped: yes, size: 1000 } }, [['пользователь', no]])
 		
 	# заполнить болталку
 		
@@ -572,7 +566,7 @@ http.post '/хранилище/создать', (ввод, вывод) ->
 	
 	# errors
 		
-	create_collection('errors', { capped: yes, size: 100 })
+	create_collection('errors', { options: { capped: yes, size: 100 } })
 				
 	# готово
 		

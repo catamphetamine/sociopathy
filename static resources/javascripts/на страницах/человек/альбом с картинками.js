@@ -13,10 +13,6 @@
 		({
 			template_url: '/страницы/кусочки/картинка в альбоме.html',
 			container: $('#pictures'),
-			postprocess_element: function(item)
-			{
-				return $('<li/>').append(item)
-			},
 			conditional: $('.main_conditional')
 		},
 		new  Data_loader

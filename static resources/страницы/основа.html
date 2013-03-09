@@ -262,20 +262,121 @@
 	<script>
 		ajax
 		({
-			url: '/приложение/versioning',
+			url: '/приложение/initialize',
 			success: function(data)
 			{
+				window.initialization_info = data
+				
 				Version = data.site_version
-				//window.versioning = data
 				
 				if (data.development)
+				{
 					window.development_mode = true
+					Configuration.Optimized = false
+				}
+				else
+				{
+					// optimization code is not finished yet
+					// and currently is suspended,
+					// but you can finish it if you like
 					
-				insert_script('/javascripts/основа')
+					//Configuration.Optimized = true
+				}
+				
+				// not finished writing this code yet
+				// what is left is to insert the javascripts, styles and html templates on the page
+				if (Configuration.Optimized)
+				{
+					// здесь версия подставляется автоматически
+					/* version → */ Version = "0.0.0.10-beta" /* ← version */
+					
+					ajax
+					({
+						url: add_version('/compressed/everything.html'),
+						dataType: 'xml',
+						success: function(everything)
+						{
+							var find = function(selector)
+							{
+								return everything.querySelectorAll(selector)
+							}
+							
+							var scripts = find('html > head > script')
+							
+							var i = 0
+							while (i < scripts.length)
+							{
+								var script = scripts[i]
+								
+								var id = script.getAttribute('for')
+								var content = script.firstChild.nodeValue
+								
+								console.log('inserting javascript for ' + id)
+								console.log('content: ' + content)
+								
+								$('head').append($('<script/>').html(content))
+								
+								i++
+							}
+							
+							var styles = find('html > head > style')
+							
+							var i = 0
+							while (i < styles.length)
+							{
+								var style = styles[i]
+								
+								var id = style.getAttribute('for')
+								var content = style.firstChild.nodeValue
+								
+								console.log('inserting style for ' + id)
+								console.log('content: ' + content)
+								
+								$('head').append($('<style/>').html(content))
+								
+								i++
+							}
+							
+							function xml_to_text(element)
+							{
+								var dummy_container = document.createElement("div")
+								dummy_container.appendChild(element)
+								return dummy_container.innerHTML
+							}
+							
+							var templates = find('html > body > div')
+							
+							var i = 0
+							while (i < templates.length)
+							{
+								var template = templates[i]
+								
+								var xml = xml_to_text(template)
+								
+								var id = template.getAttribute('for')
+								var html = xml.substring(xml.indexOf('>') + 1, xml.lastIndexOf('</div>'))
+								
+								console.log('inserting html templates for ' + id)
+								console.log('content: ' + html)
+								
+								$('body').append($(html))
+								
+								i++
+							}
+						},
+						error: function()
+						{
+							console.error('Ошибка при получении сжатой версии сайта')
+							webpage_loading_error()
+						}
+					})
+				}
+				else
+					insert_script('/javascripts/основа')
 			},
 			error: function()
 			{
-				console.error('Ошибка при получении версии сайта')
+				console.error('Ошибка при получении настроек сайта')
 				webpage_loading_error()
 			}
 		})

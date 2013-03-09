@@ -7,10 +7,6 @@
 		{
 			"title": "Sociopathy"
 		},
-		"library":
-		{
-			"title": "Library"
-		},
 		"people":
 		{
 			"title": "People"
@@ -81,7 +77,7 @@
 		{
 			"title": "Trash",
 			
-			"description": "In future you will be able to restore accidentially deleted data from this trashbin"
+			"description": "You can restore accidentially deleted data from trashbin"
 		},
 		"administration":
 		{

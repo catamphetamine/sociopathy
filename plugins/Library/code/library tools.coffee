@@ -118,4 +118,4 @@
 	db('library_paths')._.remove({ заметка: _id })
 	db('library_articles')._.remove({ _id: _id })
 			
-module.exports = читальня
+global.читальня = читальня

@@ -38,17 +38,15 @@
 
 		breadcrumbs(get_breadcrumbs())
 		
-		var conditional = initialize_conditional($('.main_conditional'))
-		
 		new Data_templater
 		({
-			template_url: '/страницы/кусочки/заметка читальни.html',
+			template: 'заметка читальни',
 			to: page.get('.main_content'),
-			conditional: conditional
+			single: true
 		},
 		new  Data_loader
 		({
-			url: '/приложение/читальня/заметка',
+			url: '/читальня/заметка',
 			parameters: { _id: page.data.заметка },
 			get_data: function(data)
 			{
@@ -146,7 +144,7 @@
 			if (!confirm('Удалить эту заметку в корзину?\nСейчас пока не сделано восстановление из корзины, поэтому мы спрашиваем.'))
 				return
 
-			page.Ajax.delete('/приложение/сеть/читальня/заметка',
+			page.Ajax.delete('/сеть/читальня/заметка',
 			{
 				_id: page.data.заметка
 			})
@@ -208,7 +206,7 @@
 				версия: page.data.версия
 			},
 			
-			url: '/приложение/сеть/читальня/заметка',
+			url: '/сеть/читальня/заметка',
 			
 			ok: function(data)
 			{
@@ -245,7 +243,7 @@
 		
 		alert('Предоставьте _id')
 		
-		page.Ajax.delete('/приложение/сеть/черновик',
+		page.Ajax.delete('/сеть/черновик',
 		{
 			что: "заметка",
 			_id: null

@@ -98,12 +98,14 @@ online = redis.createClient()
 					
 		соединение.emit 'поехали'
 		соединение.emit 'version', Options.Version
-							
-exports.offline = (пользователь) ->
+						
+api = {}
+			
+api.offline = (пользователь) ->
 	for id, listener of listeners
 		listener.offline(пользователь)
 
-exports.отправить = (group, name, data, options, возврат) ->
+api.отправить = (group, name, data, options, возврат) ->
 	if typeof options == 'function'
 		возврат = options
 		options = {}
@@ -135,7 +137,7 @@ exports.отправить = (group, name, data, options, возврат) ->
 			
 	return возврат(null, yes)
     
-exports.соединение_с = (вид, options) ->
+api.соединение_с = (вид, options) ->
 	if Object.пусто(соединения[вид])
 		return false
 	
@@ -150,7 +152,7 @@ exports.соединение_с = (вид, options) ->
 		
 	return false
     
-exports.пользователи = () ->
+api.пользователи = () ->
 	пользователи = {}
 	
 	for id, connection of соединения.эфир
@@ -158,7 +160,7 @@ exports.пользователи = () ->
 		
 	return Object.get_keys(пользователи)
 	        
-exports.отправить_одному_соединению = (group, name, data, options, возврат) ->
+api.отправить_одному_соединению = (group, name, data, options, возврат) ->
 	возврат = возврат || (() ->)
 	
 	connections = соединения.эфир
@@ -189,7 +191,7 @@ exports.отправить_одному_соединению = (group, name, dat
 				
 		return возврат(null, yes)
 	
-exports.в_сети_ли = (_id, возврат) ->
+api.в_сети_ли = (_id, возврат) ->
 	user = online.hget.bind_await(online)('ether:online', _id + '')
 	
 	is_online = no
@@ -198,4 +200,6 @@ exports.в_сети_ли = (_id, возврат) ->
 		
 	возврат(null, is_online)
 			
-exports.соединения = соединения
+api.соединения = соединения
+
+global.эфир = api

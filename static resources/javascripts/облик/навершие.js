@@ -131,11 +131,16 @@ var Panel = new Class
 			var $menu_item = $(this)
 			
 			// initialize variables
-			var title = $menu_item.attr("name")
+			//var title = $menu_item.attr("name")
+			var picture = $menu_item.attr("picture")
 			var link = $menu_item.attr("link")
-
-			if (!title)
+			
+			if (!picture)
 				return
+
+			var title = picture
+			if (title.lastIndexOf('/') >= 0)
+				title = title.substring(title.lastIndexOf('/') + 1)
 			
 			// tooltip
 			//$('<em/>').append($menu_item.contents()).appendTo($menu_item)
@@ -154,7 +159,7 @@ var Panel = new Class
 			(
 				$hyperlink, 
 				{
-					skin: 'url(\'' + images_path + '/' + title + '.png' + '\')',
+					skin: 'url(\'' + picture + '.png' + '\')',
 					width: panel.icon_size,
 					height: panel.icon_size
 				}
@@ -550,7 +555,7 @@ function prepare_panel_icons()
 	{
 		var раздел = $(this)
 		
-		if (!раздел.attr('name'))
+		if (!раздел.attr('picture'))
 			return
 		
 		var states = ['выбрано']
@@ -567,9 +572,42 @@ function prepare_panel_icons()
 			
 			state_icon.attr('hidden', 'true')
 			state_icon.attr('link', раздел.attr('link'))
-			state_icon.attr('name', раздел.attr('name') + ' (' + this + ')')
+			state_icon.attr('picture', раздел.attr('picture') + ' (' + this + ')')
 			
 			state_icon.append_after(раздел)
 		})
 	})
+}
+
+function add_top_panel_button()
+{
+	if (!this.icon)
+		return
+	
+	var is_private = this.private
+	var url = this.url
+	var picture = '/картинки/навершие/menu/' + this.icon
+	
+	if (typeof this.icon === 'object')
+	{
+		is_private = this.icon.private
+		url = this.icon.to
+		picture = '/plugins/' + this.title + '/icon/' + this.icon.picture
+	}
+	
+	if (is_private)
+		url = '/сеть' + url
+	
+	var icon = $('<li/>')
+		.attr('picture', picture)
+		.attr('link', url)
+		//.text(text(this.title))
+		
+	if (this.unreadable)
+		icon.attr('unreadable', true)
+		
+	if (this.restricted)
+		icon.attr('hidden', true)
+		
+	icon.appendTo('#panel_menu')
 }

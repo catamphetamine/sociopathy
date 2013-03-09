@@ -410,3 +410,15 @@ Object.value = function(object)
 	
 	return the_value
 }
+
+Object.size = function(object)
+{
+	var size = 0
+	
+	Object.for_each(object, function()
+	{
+		size++
+	})
+	
+	return size
+}

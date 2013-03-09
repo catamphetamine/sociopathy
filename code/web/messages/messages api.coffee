@@ -5,6 +5,10 @@ global.messages_api = (options) ->
 		return возврат() if not session?
 		return возврат(null, options.latest_read(session, environment))
 			
+	http.get options.unread_uri, (ввод, вывод, пользователь) ->
+		environment = {}
+		environment.пользователь = пользователь
+			
 	http.get options.data_uri, (ввод, вывод, пользователь) ->
 		environment = {}
 		environment.пользователь = пользователь

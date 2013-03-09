@@ -1,3 +1,5 @@
+library = require(__dirname + '/library tools')
+
 http.get '/читальня/раздел/путь', (ввод, вывод) ->
 	_id = db('library_categories').id(ввод.данные._id)
 	

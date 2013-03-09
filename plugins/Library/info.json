@@ -1,0 +1,15 @@
+{
+	"description": "The wiki",
+	
+	"version": "1.0.0",
+	
+	"code": "library",
+	
+	"icon": 
+	{
+		"picture": "читальня",
+		"to": "/читальня"
+	},
+	
+	"pages": ["читальня", "заметка"]
+}

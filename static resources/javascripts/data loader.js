@@ -45,6 +45,8 @@ var Batch_loader = new Class
 	{
 		this.setOptions(options)
 
+		this.options.url = correct_internal_url(this.options.url)
+		
 		if (page)
 			if (!this.options.Ajax)
 				this.options.Ajax = page.Ajax
@@ -311,6 +313,8 @@ var Data_loader = new Class
 	initialize: function(options)
 	{
 		this.setOptions(options)
+
+		this.options.url = correct_internal_url(this.options.url)
 		
 		if (this.options.conditional)
 			this.options.callback = this.options.conditional.callback
@@ -405,11 +409,8 @@ var Data_templater = new Class
 		if (conditional.constructor === jQuery)
 			conditional = initialize_conditional(options.conditional)
 
-		if (!options.postprocess_element)
-			options.postprocess_element = function(element)
-			{
-				return element
-			}
+		if (!options.postprocess_item)
+			options.postprocess_item = $.noop
 		
 		var show_item
 		if (options.show)
@@ -429,7 +430,24 @@ var Data_templater = new Class
 				else
 					item = $.tmpl(options.template_url, data)
 					
-				return options.postprocess_element(item, data).appendTo(options.container)
+				if (options.table)
+				{
+					if (!item.is('tr'))
+					{
+						if (!item.is('td'))
+						{
+							item = $('<td/>').append(item)
+						}
+						
+						item = $('<tr/>').append(item)
+					}
+				}
+				else if (!item.is('li') && !options.single)
+					item = $('<li/>').append(item)
+					
+				item = options.postprocess_item.bind(item)(data) || item
+				
+				return item.appendTo(options.container)
 			}
 		
 		if (!options.process_data)

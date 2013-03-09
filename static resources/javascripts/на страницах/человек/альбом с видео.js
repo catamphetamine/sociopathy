@@ -13,10 +13,6 @@
 		({
 			template_url: '/страницы/кусочки/видео в альбоме.html',
 			container: $('#videos'),
-			postprocess_element: function(item)
-			{
-				return $('<li/>').append(item)
-			},
 			conditional: conditional
 		},
 		new  Data_loader

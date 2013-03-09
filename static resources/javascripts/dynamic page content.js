@@ -3,10 +3,22 @@ var вставить_общее_содержимое
 var navigate_to_page
 var раздел_или_заметка
 
-var navigating = false;
+var navigating = false
 
-(function()
+var страницы_плагинов = {}
+		
+;(function()
 {
+	Object.for_each(Configuration.Plugins, function()
+	{
+		var plugin = this
+		
+		this.pages.for_each(function()
+		{
+			страницы_плагинов[this] = plugin.title
+		})
+	})
+
 	var кусочки =
 	[
 		'loading popup',
@@ -33,10 +45,6 @@ var navigating = false;
 		'breadcrumbs',
 		'сообщение в болталке',
 		'either way loading',
-		'раздел читальни',
-		'раздел читальни (правка)',
-		'заметка раздела читальни',
-		'заметка раздела читальни (правка)'
 	]
 	
 	подгрузить_шаблоны = function(callback)
@@ -79,7 +87,75 @@ var navigating = false;
 			
 			кусочки.forEach(function(кусочек)
 			{
-				вставить_содержимое('/страницы/кусочки/' + кусочек + '.html', {}, { куда: $('body') }, callback)
+				var возврат = callback
+				
+				if (кусочек === 'навершие')
+				{
+					возврат = function()
+					{
+						Object.for_each(Configuration.Old_plugins, function(key)
+						{
+							if (!this.private)
+								add_top_panel_button.bind(this)()
+						})
+						
+						Object.for_each(Configuration.Plugins, function(key)
+						{
+							if (!this.icon.private)
+								add_top_panel_button.bind(this)()
+						})
+						
+						callback()
+					}
+				}
+				
+				вставить_содержимое('/страницы/кусочки/' + кусочек + '.html', {}, { куда: $('body') }, возврат)
+			})
+		}
+		
+		function вставить_шаблоны_плагинов(возврат)
+		{
+			var плагинов_осталось = Object.size(Configuration.Plugins)
+			
+			Object.for_each(Configuration.Plugins, function()
+			{
+				вставить_шаблоны_плагина(this, function()
+				{
+					плагинов_осталось--
+					
+					if (плагинов_осталось > 0)
+						return
+					
+					возврат()
+				})
+			})
+		}
+		
+		function вставить_шаблоны_плагина(plugin, возврат)
+		{
+			var шаблоны = plugin.templates
+			
+			var counter = шаблоны.length
+			var callback = function()
+			{
+				counter--
+				if (counter === 0)
+					возврат()
+			}
+			
+			шаблоны.forEach(function(шаблон)
+			{
+				Ajax.get(add_version('/plugins/' + plugin.title + '/templates/' + шаблон + '.html'), {}, { type: 'html' })
+				.ошибка(function()
+				{
+					page_loading_error()
+					возврат(true)
+				})
+				.ok(function(template) 
+				{
+					$.template(шаблон, template)
+					callback()
+				})
 			})
 		}
 		
@@ -96,7 +172,13 @@ var navigating = false;
 				
 				$('#panel').appendTo('nav').css('display', 'block')
 				
-				callback()
+				вставить_шаблоны_плагинов(function()
+				{
+					if (ошибка)
+						return callback(true)
+				
+					callback()
+				})
 			})
 		})
 	}
@@ -225,15 +307,49 @@ var navigating = false;
 		
 		function вставить_содержимое_страницы(возврат)
 		{
-			вставить_содержимое('/страницы/' + Страница.эта() + '.html', new_page.data.данные_для_страницы,
+			function теперь_вставить_содержимое_страницы(template_path)
 			{
-				on_error: function()
+				вставить_содержимое(template_path + '.html', new_page.data.данные_для_страницы,
 				{
-					Страница.эта('страница не найдена')
-					вставить_содержимое_страницы(возврат)
+					on_error: function()
+					{
+						Страница.эта('страница не найдена')
+						вставить_содержимое_страницы(возврат)
+					},
+					before: вставить_стиль_и_javascript
 				},
-				before: вставить_стиль_и_javascript
-			}, возврат)
+				возврат)
+			}
+			
+			if (страницы_плагинов[Страница.эта()])
+			{
+				var plugin_path = '/plugins/' + страницы_плагинов[Страница.эта()]
+				
+				load_relevant_translation(plugin_path + '/translation/${language}.json',
+				{
+					ok: function(язык, перевод)
+					{
+						подгрузить_перевод(перевод)
+					
+						if (язык !== Язык)
+						{
+							console.log('Seems that your preferred language (code «' + Configuration.Locale.Предпочитаемый_язык + '») isn\'t supported by this plugin. ' + 'Defaulting to «' + get_language(язык).name + '»')
+						}
+						
+						теперь_вставить_содержимое_страницы(plugin_path + '/pages/' + Страница.эта())
+					},
+					no_translation: function()
+					{
+						console.log('No appropriate translation found for this plugin')
+						
+						теперь_вставить_содержимое_страницы(plugin_path + '/pages/' + Страница.эта())
+					}
+				})
+			}
+			else
+			{
+				теперь_вставить_содержимое_страницы('/страницы/' + Страница.эта())
+			}
 		}
 		
 		function вставить_стиль_и_javascript(callback)
@@ -271,6 +387,23 @@ var navigating = false;
 		
 		if (new_page)
 			ajax = new_page.Ajax
+			
+		var вставить = function(шаблон)
+		{
+			var after = function()
+			{
+				if (!options.куда)
+					options.куда = Page.element
+					
+				options.куда.append($.tmpl(шаблон, данные))
+				возврат()
+			}
+			
+			if (options.before)
+				options.before(after)
+			else
+				after()
+		}
 		
 		ajax.get(url, {}, { type: 'html' })
 		.ошибка(function()
@@ -284,19 +417,7 @@ var navigating = false;
 		{
 			$.template(url, template)
 			
-			var after = function()
-			{
-				if (!options.куда)
-					options.куда = Page.element
-					
-				options.куда.append($.tmpl(url, данные))
-				возврат()
-			}
-			
-			if (options.before)
-				options.before(after)
-			else
-				after()
+			вставить(url)
 		})
 	}
 	
@@ -335,6 +456,10 @@ function get_page_less_style_link(название_страницы)
 {
 	if (!название_страницы)
 		название_страницы = Страница.эта()
+		
+	if (страницы_плагинов[название_страницы])
+		return '/plugins/' + страницы_плагинов[название_страницы] + '/pages/' + название_страницы + '.css'
+		
 	return '/облик/страницы/' + название_страницы + '.css'
 }
 
@@ -342,5 +467,9 @@ function get_page_javascript_link(название_страницы)
 {
 	if (!название_страницы)
 		название_страницы = Страница.эта()
+		
+	if (страницы_плагинов[название_страницы])
+		return '/plugins/' + страницы_плагинов[название_страницы] + '/pages/' + название_страницы + '.js'
+	
 	return '/javascripts/на страницах/' + название_страницы.escape_html() + '.js'
 }

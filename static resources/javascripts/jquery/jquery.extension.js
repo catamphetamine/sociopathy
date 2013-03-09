@@ -292,8 +292,37 @@ $.fn.slide_out_downwards = function(duration, callback)
 	function()
 	{
 		this.hide()
+		
 		if (callback)
 			callback()
+	})
+}
+
+$.fn.shrink_upwards = function(duration, callback)
+{
+	if (typeof duration === 'function')
+	{
+		callback = duration
+		duration = 0.5
+	}
+	
+	duration *= 1000
+	
+	this.stop_animation()
+	
+	this.css('overflow', 'hidden')
+	
+	this.animate
+	({
+		height: 0
+	},
+	duration,
+	function()
+	{
+		this.hide()
+		
+		if (callback)
+			callback.bind(this)()
 	})
 }
 

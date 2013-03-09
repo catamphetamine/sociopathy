@@ -22,6 +22,13 @@ var Ajax =
 	
 	request: function(method, url, data, options)
 	{
+		options = options || {}
+		
+		options.type = options.type || 'json'
+		
+		if (options.type === 'json')
+			url = correct_internal_url(url)
+		
 		//var id = Math.random() + '@' + new Date().getTime()
 		var result =
 		{
@@ -35,10 +42,6 @@ var Ajax =
 				this.valid = false
 			}
 		}
-	
-		options = options || {}
-		
-		options.type = options.type || 'json'
 	
 		Default_ajax_error_message = 'Произошла ошибка на сервере'
 		

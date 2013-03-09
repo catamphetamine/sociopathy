@@ -1,7 +1,7 @@
-title(text('pages.errors.title'));
-
 (function()
 {
+	title(text('pages.errors.title'))
+
 	page.query('.errors', 'errors')
 	
 	page.load = function()
@@ -12,6 +12,7 @@ title(text('pages.errors.title'));
 		({
 			template: 'ошибки',
 			to: page.errors,
+			table: true,
 			loader: new Batch_data_loader_with_infinite_scroll
 			({
 				url: '/приложение/сеть/ошибки',

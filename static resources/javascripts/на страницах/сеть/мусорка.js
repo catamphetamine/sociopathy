@@ -1,17 +1,46 @@
-title(text('pages.trash.title'));
-
 (function()
 {
+	title(text('pages.trash.title'))
+
+	Режим.пообещать('действия')
+
 	page.query('.trash', 'trash')
 	
 	page.load = function()
 	{
-		Подсказка('мусорка', 'Это общая мусорка. Все общие удалённые данные попадают сюда. Если данные были удалени по ошибке, их можно (будет) отсюда восстановить')
+		Подсказка('мусорка', 'Это общая мусорка. Все общие удалённые данные попадают сюда. Если данные были удалени по ошибке, их можно отсюда восстановить')
 	
 		new Data_templater
 		({
 			template: 'содержимое мусорки',
 			to: page.trash,
+			table: true,
+			postprocess_item: function(data)
+			{
+				var menu = new Context_menu(this,
+				{
+					items:
+					[
+						{
+							title: 'Восстановить',
+							action: function()
+							{
+								page.Ajax.post('/сеть/мусорка/восстановить',
+								{
+									_id: data._id
+								})
+								.ok(function()
+								{
+									this.shrink_upwards(function()
+									{
+										this.remove()
+									})
+								})
+							}
+						}
+					]
+				})
+			},
 			loader: new Batch_data_loader_with_infinite_scroll
 			({
 				url: '/приложение/сеть/мусорка',

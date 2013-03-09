@@ -58,18 +58,18 @@
 					{
 						template: 'раздел читальни',
 						container: page.categories,
-						postprocess_element: function(item, data)
+						postprocess_item: function(data)
 						{
-							return $('<li/>').attr('_id', data._id)//.append(item)
+							this.attr('_id', data._id).empty()
 						}
 					},
 					заметки:
 					{
 						template: 'заметка раздела читальни',
 						container: page.articles,
-						postprocess_element: function(item, data)
+						postprocess_item: function(data)
 						{
-							return $('<li/>').attr('_id', data._id) //.append(item)
+							this.attr('_id', data._id).empty()
 						}
 					}
 				},

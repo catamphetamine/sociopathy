@@ -13,10 +13,6 @@
 		({
 			template_url: '/страницы/кусочки/альбом с картинками в списке альбомов.html',
 			container: $('#albums'),
-			postprocess_element: function(item)
-			{
-				return $('<li/>').append(item)
-			},
 			callback: function(error)
 			{
 				if (error)

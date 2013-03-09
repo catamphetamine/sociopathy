@@ -1,11 +1,7 @@
-domain = require 'domain'
-
 require 'coffee-script'
 
-require './tools/date'
+require './tools/language'
 
-global.redis = require 'redis'
-	
 global.mode = 'development'
 
 get_launch_options = ->
@@ -15,15 +11,21 @@ get_launch_options = ->
 
 launch_options = get_launch_options()
 
-require './tools/language'
-
 # configuration
-global.Options = require "./configuration.coffee"
-Object.merge_recursive(global.Options, require "./../../configuration/#{launch_options.server}/configuration.coffee")
-require "./../../configuration/#{launch_options.server}/configuration.private.coffee"
+global.Options = require "./configuration"
+Object.merge_recursive(global.Options, require "./../../configuration/#{launch_options.server}/configuration")
+require "./../../configuration/#{launch_options.server}/configuration.private"
 
-global.Options.Version = require "./version.coffee"
+global.Options.Version = require "./version"
 
+global.disk_tools = require './tools/disk'
+require './tools/date'
+
+if Options.Optimize? && Options.Optimize
+	require './compressor'
+
+global.redis = require 'redis'
+	
 # memcache
 memcache = require('memcache')
 global.memcache = new memcache.Client(Options.Memcache.Port, 'localhost')
@@ -59,7 +61,6 @@ global.цепь = (object, options) ->
 global.fiberize = require './tools/fiberize'
 global.снасти = require './tools/tools'
 global.пользовательское = require './tools/user tools'
-global.читальня = require './tools/library tools'
 
 global.хранилище.create = global.хранилище.createCollection.bind_await(global.хранилище)
 
@@ -82,23 +83,19 @@ global.session = require './session'
 
 require './upload server'
 
-require './controller/administration'
-require './controller/library'
-require './controller/people'
-require './controller/user'
-require './controller/diary'
-require './controller/journal'
-require './controller/books'
-global.новости = require './controller/news'
-require './controller/circles'
+# old plugin system. now irrelevant
 
-require './controller/chat'
-require './controller/talks'
-require './controller/discussions'
+require './old plugins'
 
-global.эфир = require './controller/ether'
-require './controller/drafts'
-require './controller/system'
+for plugin in global.Options.Old_plugins
+	if require('fs').existsSync(__dirname + '/plugins/' + plugin + '.coffee')
+		console.log 'Loading plugin: ' + plugin
+		require './plugins/' + plugin
+		
+# old plugin system ends
+
+# new plugin system
+require './plugins'
 
 #global.memcache_available = false
 global.memcache.on 'connect', () ->
@@ -115,7 +112,7 @@ global.memcache.on 'error', (error) ->
 
 #global.memcache.connect()
 
-web_server_domain = domain.create()
+web_server_domain = require('domain').create()
 
 web_server_domain.on 'error', (error) ->
 	console.error('Application error:')

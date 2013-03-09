@@ -596,32 +596,11 @@ function animate(element, render)
 	})()
 }
 
-/*
-;(function()
+function correct_internal_url(url)
 {
-	var previous_time = 0
-	var vendors = ['ms', 'moz', 'webkit', 'o']
-	for (var x = 0; x < vendors.length && !window.request_animation_frame; ++x)
-	{
-		window.request_animation_frame = window[vendors[x] + 'RequestAnimationFrame']
-		window.cancel_animation_frame = 
-			window[vendors[x] + 'CancelAnimationFrame'] || window[vendors[x] + 'CancelRequestAnimationFrame']
-	}
-
-	if (!window.request_animation_frame)
-		window.request_animation_frame = function(callback, element)
-		{
-			var now = new Date().getTime()
-			var interval = Math.max(0, 16 - (now - previous_time))
-			var id = window.setTimeout(function() { callback(now + interval) }, interval)
-			previous_time = now + interval
-			return id
-		}
-
-	if (!window.cancel_animation_frame)
-		window.cancel_animation_frame = function(id)
-		{
-			clearTimeout(id)
-		}
-}())
-*/
+	if (url.starts_with('/'))
+		if (!url.starts_with('/приложение/'))
+			return '/приложение' + url
+		
+	return url
+}

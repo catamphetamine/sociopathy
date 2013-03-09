@@ -1,9 +1,18 @@
-var panel_menu = $('#panel_menu')
-$('#extra_panel_menu li').each(function()
+var навершие = $('#panel_menu')
+
+$('<li><div class="loading"></div><span class="divider"></span></li>').appendTo(навершие)
+
+Object.for_each(Configuration.Old_plugins, function(key)
 {
-	panel_menu.append(this)
+	if (this.private)
+		add_top_panel_button.bind(this)()
 })
-$('#extra_panel_menu').remove()
+
+Object.for_each(Configuration.Plugins, function(key)
+{
+	if (this.icon.private)
+		add_top_panel_button.bind(this)()
+})
 
 $(document).on('authenticated', function(event, data)
 {

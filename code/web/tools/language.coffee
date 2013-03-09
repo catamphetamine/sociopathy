@@ -193,3 +193,17 @@ Array.prototype.add = Array.prototype.push
 
 Array.prototype.remove_at = (at) ->
 	@splice(at, 1)
+	
+String.prototype.before = (what) ->
+	index = @indexOf(what)
+	if index >= 0
+		return @substring(0, index)
+		
+	return @
+
+String.prototype.after = (what) ->
+	index = @indexOf(what)
+	if index >= 0
+		return @substring(index + what.length)
+		
+	return @

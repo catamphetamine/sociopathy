@@ -10,6 +10,7 @@ var initial_scripts =
 	{ path: 'язык' },
 	{ path: 'jquery/jquery.extension' },
 	{ path: 'jquery/jquery.cookie' },
+	{ path: 'hotkeys' },
 	{ path: 'пользователь', await: true },
 	{ path: 'языки', await: true }
 ]
@@ -179,48 +180,54 @@ var scripts =
 	'режимы'
 ]
 
-var all_scripts = scripts
-
-function insert_scripts(scripts, path)
+function script_insertion(all_scripts, root_path, finished)
 {
-	if (typeof scripts === 'undefined')
+	var insert_scripts = function(scripts, path)
 	{
-		return insert_scripts(all_scripts, '/javascripts')
-	}
-	
-	if (scripts.length === 0)
-	{
-		if (all_scripts.length !== 0)
-			return insert_scripts()
-		
-		// к этому времени jQuery уже подгружен
-		$(document).trigger('scripts_loaded')
-		return
-	}
-	
-	var script = scripts[0]
-		
-	if (typeof script === 'string')
-	{
-		scripts.shift()
-		return insert_script(path + '/' + script, function() { insert_scripts(scripts, path) })
-	}
-		
-	if (typeof script === 'object')
-	{
-		var directory
-		for (var key in script)
-			directory = key
-			
-		if (!directory || script[directory].length === 0)
+		if (typeof scripts === 'undefined')
 		{
-			scripts.shift()
-			return insert_scripts(scripts, path)
+			return insert_scripts(all_scripts, root_path)
 		}
 		
-		return insert_scripts(script[directory], path + '/' + directory)
+		if (scripts.length === 0)
+		{
+			if (all_scripts.length !== 0)
+				return insert_scripts()
+			
+			return finished()
+		}
+		
+		var script = scripts[0]
+			
+		if (typeof script === 'string')
+		{
+			scripts.shift()
+			return insert_script(path + '/' + script, function() { insert_scripts(scripts, path) })
+		}
+			
+		if (typeof script === 'object')
+		{
+			var directory
+			for (var key in script)
+				directory = key
+				
+			if (!directory || script[directory].length === 0)
+			{
+				scripts.shift()
+				return insert_scripts(scripts, path)
+			}
+			
+			return insert_scripts(script[directory], path + '/' + directory)
+		}
 	}
+	
+	return insert_scripts
 }
+
+var insert_scripts = script_insertion(scripts, '/javascripts', function()
+{
+	insert_plugin_scripts()
+})
 
 // insert styles
 
@@ -408,6 +415,7 @@ function do_insert_initial_scripts()
 			extra_markup('основа (body)', $('body'), function()
 			{
 				insert_styles(styles, '/облик')
+				
 				insert_scripts()
 			})
 		})
@@ -416,37 +424,52 @@ function do_insert_initial_scripts()
 
 function initialize(next)
 {
-	ajax
-	({
-		url: '/приложение/initialize',
-		success: function(data)
+	data = window.initialization_info
+	
+	Configuration.Invites = data.invites
+	
+	Configuration.Old_plugins = data.old_plugins
+	Configuration.Plugins = data.plugins
+	
+	Configuration.Locale =
+	{
+		Default_language: 'en',
+		Supported_languages:
+		[
+			{ id: 'ru', name: 'Русский' },
+			{ id: 'en', name: 'English' }
+		],
+		
+		Предпочитаемый_язык: data.язык,
+		Предпочитаемые_языки: data.языки,
+		
+		Страна: data.страна || 'US'
+	}
+	
+	next()
+}
+
+function insert_plugin_scripts()
+{
+	var plugins_to_load = Object.size(Configuration.Plugins)
+	
+	Object.for_each(Configuration.Plugins, function()
+	{
+		if (!this.client_scripts)
+			return
+		
+		var insert_plugin_scripts = script_insertion(this.client_scripts, '/plugins/' + this.title + '/client scripts', function()
 		{
-			Configuration.Invites = data.invites
+			plugins_to_load--
 			
-			Configuration.Locale =
-			{
-				Default_language: 'en',
-				Supported_languages:
-				[
-					{ id: 'ru', name: 'Русский' },
-					{ id: 'en', name: 'English' }
-				],
-				
-				Предпочитаемый_язык: data.язык,
-				Предпочитаемые_языки: data.языки,
-				
-				Страна: data.страна || 'US'
-			}
+			if (plugins_to_load > 0)
+				return
 			
-			next()
-		},
-		error: function()
-		{
-			if (window.page_loading_error)
-				page_loading_error()
-			else
-				console.error('Ошибка при получении настроек сайта')
-		}
+			// к этому времени jQuery уже подгружен
+			$(document).trigger('scripts_loaded')
+		})
+	
+		insert_plugin_scripts()
 	})
 }
 

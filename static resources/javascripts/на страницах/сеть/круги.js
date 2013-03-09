@@ -13,10 +13,6 @@ title(text('pages.circles.title'));
 		({
 			template_url: '/страницы/кусочки/круг в списке кругов.html',
 			to: $('#circles'),
-			postprocess_element: function(item)
-			{
-				return $('<li/>').append(item)
-			},
 			conditional: conditional
 		},
 		new  Data_loader
