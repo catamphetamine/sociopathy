@@ -147,3 +147,14 @@
 		}
 	}
 }
+
+.search_container
+{
+	text-align: center;
+	margin-bottom: 80px;
+	
+	> .search
+	{
+		width: 50%;
+	}
+}

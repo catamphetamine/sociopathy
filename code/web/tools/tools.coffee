@@ -259,43 +259,43 @@ file_system = require 'fs'
 	id = id.to_unix_file_name()
 	id
 	
-снасти.batch_loading = (ввод, options, возврат) ->
+снасти.batch_loading = (ввод, куда, свойство, options) ->
 	после = ввод.данные.после
 	collection = db(options.from)
 	data = null
 				
 	parameters = options.parameters || {}
 	
-	цепь(возврат, { manual: yes })
-		.сделать ->
-			query_options = Object.x_over_y(parameters, { limit: ввод.данные.сколько, sort: [['_id', -1]] })
-			query = Object.clone(options.query)
+	query_options = Object.x_over_y(parameters, { limit: ввод.данные.сколько, sort: [['_id', -1]] })
+	query = Object.clone(options.query)
+	
+	if после?
+		после =  collection.id(после)
+		query._id = { $lt: после }
 			
-			if после?
-				после =  collection.id(после)
-				query._id = { $lt: после }
-					
-			batch = collection._.find(query, query_options)
-					
-			data = batch
-			if batch.length < ввод.данные.сколько
-				return @.done(data)
+	batch = collection._.find(query, query_options)
 			
-			more = Object.clone(options.query)
-			more._id = { $lt: batch.last()._id }
-			
-			query_options = Object.x_over_y(parameters, { limit: 1, sort: [['_id', -1]] })
-			
-			more = collection._.find(more, query_options)
-			
-			if more? && !more.пусто()
-				возврат.$['есть ещё?'] = yes
-			else
-				возврат.$['есть ещё?'] = no
-				
-			return @.done(data)
+	data = batch
+	if batch.length < ввод.данные.сколько
+		console.log(batch.length + '<' + ввод.данные.сколько)
+		куда[свойство] = data
+		return data
+	
+	more = Object.clone(options.query)
+	more._id = { $lt: batch.last()._id }
+	
+	query_options = Object.x_over_y(parameters, { limit: 1, sort: [['_id', -1]] })
+	
+	more = collection._.find(more, query_options)
+	
+	if more? && !more.пусто()
+		console.log('EST ESHE')
+		куда['есть ещё?'] = yes
+	else
+		куда['есть ещё?'] = no
 		
-		.go()
+	куда[свойство] = data
+	return data
 			
 снасти.escape_id = (id) ->
 	'/\?@#&%*:|"\'<>.'.split('').forEach((symbol) -> id = id.replace_all(symbol, ''))
@@ -322,7 +322,7 @@ Digit_symbols = '☀★☄☆☭☮☯☢☤☣☁'
 	else
 		return base + Digit_symbols.random()
 
-снасти.generate_unique_id = (base, проверка, options, возврат) ->
+снасти.generate_unique_id = (base, проверка, options) ->
 	if not возврат?
 		возврат = options
 		options = {}
@@ -332,40 +332,17 @@ Digit_symbols = '☀★☄☆☭☮☯☢☤☣☁'
 		id = снасти.escape_id(base)
 	else
 		id = снасти.generate_id(base, options)
-		
-	цепь(возврат)
-		.сделать ->
-			проверка(id, @)
-			
-		.сделать (unique) ->
-			if unique
-				return @.return(id)
-			
-			next_options = { base_is_reserved: yes }
-			
-			if options.base_is_reserved?
-				next_options.randomize = yes
-			
-			снасти.generate_unique_id(id, проверка, next_options, возврат)
-
-#снасти.generate_unique_id('abc/\?%def*:|"<>. spacebar', ((id, callback) -> console.log('trying id = ' + id); callback(null, id.length > 40)), ((error, id) -> console.log(id)))
-
-# check = (id, возврат) ->
-#	цепь(возврат)
-#		.сделать ->
-#			db('').findOne({ id: id }, @)
-#			
-#		.сделать (found) ->
-#			@.done(not found?)
-#
-# снасти.generate_unique_id(title, check, @)
-
-#console.log(снасти.escape_id('abc/\?%def*:|"<>. spacebar'))
-
-#id = снасти.generate_id('abc/\?%def*:|"<>. spacebar')
-#console.log(id)
-#console.log(снасти.generate_id(id, { randomize: yes }))
 	
+	if проверка(id)
+		return id
+		
+	next_options = { base_is_reserved: yes }
+	
+	if options.base_is_reserved?
+		next_options.randomize = yes
+	
+	return снасти.generate_unique_id(id, проверка, next_options)
+
 module.exports = снасти
 
 global.show_error = (ошибка) ->

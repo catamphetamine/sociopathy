@@ -2,8 +2,6 @@ function either_way_loading(options)
 {
 	parameters = options.data.parameters || {}
 	
-	//var page = options.page
-	
 	var bottom_loader
 		
 	var overall_count
@@ -20,16 +18,10 @@ function either_way_loading(options)
 	
 	var skip_pages = (options.страница || 1) - 1
 	
-	//page.load = function()
-	//{
-		//page.content.disableTextSelect()
-		
 	var loader_markup = $.tmpl('either way loading', {})
 	
 	options.container = page.get(options.container)
 	
-	//var real_content = //page.content.children()
-	//page.content.prepend(loader_markup)
 	options.container.before(loader_markup)
 	
 	var ok_block = page.get('.main_conditional > [type=ok]')
@@ -66,8 +58,12 @@ function either_way_loading(options)
 		data = data[options.data.name]
 			
 		if (options.data.loaded)
-			data = options.data.loaded(data)
-			
+		{
+			var altered_data = options.data.loaded(data)
+			if (typeof altered_data !== 'undefined')
+				data = altered_data
+		}
+		
 		return data
 	}
 	
@@ -77,6 +73,9 @@ function either_way_loading(options)
 		latest_first: options.data.latest_first,
 		batch_size: options.data.batch_size,
 	}
+	
+	if (options.data.before_output)
+		common_loader_options.before_output = options.data.before_output
 	
 	if (options.data.before_output_async)
 		common_loader_options.before_output_async = options.data.before_output_async
@@ -175,33 +174,57 @@ function either_way_loading(options)
 		previous_link.addClass('inactive')
 	}
 	
+	function create_item_from_template(data)
+	{
+		var item = $.tmpl(options.template, data)
+		
+		if (!item.is('li'))
+			item = $('<li/>').append(item)
+			
+		return item
+	}
+	
+	function prepend_item(data)
+	{
+		if (options.data.prepend)
+			return options.data.prepend(data)
+		
+		var item = create_item_from_template(data)
+		options.container.prepend(item)
+		return item
+	}
+	
+	function append_item(data)
+	{
+		if (options.data.append)
+			return options.data.append(data)
+		
+		var item = create_item_from_template(data)
+		options.container.append(item)
+		return item
+	}
+	
+	function show_item(data, inserter)
+	{
+		var item = inserter(data)
+	
+		if (!item)
+			return
+		
+		if (options.с_номерами_страниц)
+		{
+			activate_page_scrolling(data, item)
+			прокрутчик.watch(item)
+		}
+		
+		return item
+	}
+	
 	new Data_templater
 	({
-		template_url: options.template,
+		template: options.template,
 		container: options.container,
-		show: function(data)
-		{
-			var element
-			
-			if (options.data.prepend)
-				element = options.data.prepend(data)
-			else
-			{
-				element = $.tmpl(options.template, data)
-				options.container.prepend($('<li/>').append(element))
-			}
-		
-			if (!element)
-				return
-			
-			if (options.с_номерами_страниц)
-			{
-				activate_page_scrolling(data, element)
-				прокрутчик.watch(element)
-			}
-			
-			return element
-		},
+		show: function(data) { return show_item(data, prepend_item) },
 		conditional: previous_conditional,
 		load_data_immediately: false
 	},
@@ -272,31 +295,8 @@ function either_way_loading(options)
 	
 	new Data_templater
 	({
-		template_url: options.template,
 		container: options.container,
-		show: function(data)
-		{
-			var element
-			
-			if (options.data.append)
-				element = options.data.append(data)
-			else
-			{
-				element = $.tmpl(options.template, data)
-				options.container.append($('<li/>').append(element))
-			}
-			
-			if (!element)
-				return
-				
-			if (options.с_номерами_страниц)
-			{
-				activate_page_scrolling(data, element)
-				прокрутчик.watch(element)
-			}
-			
-			return element
-		},
+		show: function(data) { return show_item(data, append_item) },
 		conditional: main_conditional
 	},
 	bottom_loader)
@@ -328,10 +328,17 @@ function either_way_loading(options)
 		progress.update(bottom_loader.уже_загружено(), update_options)
 	}
 	
+	var destroyed = false
+	
 	var result =
 	{
 		destroy: function()
 		{
+			if (destroyed)
+				return
+			
+			destroyed = true
+			
 			bottom_loader.deactivate()
 			
 			if (options.progress_bar)

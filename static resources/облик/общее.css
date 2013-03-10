@@ -1268,7 +1268,7 @@ body[mode="правка"] .rich_formatting a
 	position: fixed;
 	
 	/* to prevent draggable items from being on top of it */
-	z-index: 1;
+	z-index: 3;
 	
 	height: 66px;
 	overflow: hidden;

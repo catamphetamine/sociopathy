@@ -82,9 +82,6 @@ write_everything = (everything) ->
 	disk.writeFileSync(everything_path, everything, 'utf8')
 	disk.writeFileSync(version_path, Options.Version, 'utf8')
 	
-#if not Options.Optimize
-#	return
-	
 if disk.existsSync(version_path)
 	if disk.readFileSync(version_path, 'utf8') == Options.Version
 		console.log('Up to date')

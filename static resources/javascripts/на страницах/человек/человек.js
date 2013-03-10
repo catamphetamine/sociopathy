@@ -32,6 +32,8 @@
 			}
 		})
 	
+		// убрать этот conditional потом.
+		// для этого нормально обрабатывать ошибку "пользователь не найден"
 		var conditional = initialize_conditional($('.main_conditional'), { immediate: true })
 		conditional.on_error(function()
 		{
@@ -40,9 +42,10 @@
 		
 		new Data_templater
 		({
-			template_url: '/страницы/кусочки/личная карточка.html',
+			template: 'личная карточка',
 			container: id_card,
-			conditional: conditional
+			conditional: conditional,
+			single: true
 		},
 		new  Data_loader
 		({

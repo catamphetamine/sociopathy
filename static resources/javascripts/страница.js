@@ -242,6 +242,8 @@ var Page = new Class
 	
 	ticking_actions: [],
 	
+	destroyables: [],
+	
 	по_нажатию_ids: [],
 	
 	void: false,
@@ -407,14 +409,7 @@ var Page = new Class
 						data_store.edited_data = data_store.collect_edited()
 					
 					data_store.watch_for_changes = false
-					page.save(data_store.edited_data, function()
-					{
-						if (!Режим.правка_ли())
-						{
-							data_store.destroy_mode()
-							data_store.create_mode('обычный', data_store.edited_data)
-						}
-					})
+					page.save(data_store.edited_data)
 				},
 				on_discard: function()
 				{
@@ -589,6 +584,11 @@ var Page = new Class
 			this.abort()
 		})
 		
+		this.destroyables.for_each(function()
+		{
+			this.destroy()
+		})
+		
 		this.ticking_actions.for_each(function()
 		{
 			this.stop()
@@ -649,6 +649,13 @@ var Page = new Class
 				$.free_namespace(namespace)
 		})
 		.bind(this)
+	},
+	
+	either_way_loading: function(options)
+	{
+		var loader = either_way_loading(options)
+		this.destroyables.push(loader)
+		return loader
 	},
 	
 	ticking: function(action, interval)

@@ -27,12 +27,7 @@ global.prepare_messages = (options) ->
 				return общение.подписчики
 			return []
 		
-		http.get '/сеть/' + options.общение_во_множественном_числе, (ввод, вывод, пользователь) ->
-			if not options.общения_query?
-				options.общения_query = () -> {}
-
-			общения = снасти.batch_loading.await(ввод, { from: options.collection, query: options.общения_query(пользователь), parameters: { sort: [['обновлено', -1]] } })
-			
+		дополнить_общения = (общения) ->
 			пользовательское.подставить.await(общения, 'участники')
 			
 			if options.bulk_get_extra?
@@ -52,10 +47,57 @@ global.prepare_messages = (options) ->
 			последние_сообщения = пользовательское.подставить.await(последние_сообщения, 'отправитель')
 			
 			последние_сообщения.merge_into(общения, 'последнее_сообщение', (общение) -> @.общение + '' == общение._id + '')
+			
+		bulk_uri = '/сеть/' + options.общение_во_множественном_числе
+		unread_uri = bulk_uri + '/непрочитанные'
+		
+		http.get unread_uri, (ввод, вывод, пользователь) ->
+			environment =
+				пользователь: пользователь
+			
+			if options.authorize?
+				options.authorize.await(environment)
+			
+			непрочитанные = ->
+				session = пользовательское.session(пользователь)
+				
+				if not session.последние_сообщения?
+					return []
+				
+				последние_сообщения = session.последние_сообщения[options.общение_во_множественном_числе]
 					
+				if not последние_сообщения?
+					return []
+				
+				непрочитанные = []
+				for _id, сообщение of последние_сообщения
+					непрочитанные.add(db(options.collection).id(_id))
+				
+				непрочитанные = db(options.collection)._.find({ _id: { $in: непрочитанные }})
+				
+				return непрочитанные
+			
 			$ = {}
+			
+			общения = дополнить_общения(непрочитанные())
 			$[options.общение_во_множественном_числе] = общения
-					
+			
+			вывод.send $
+		
+		http.get bulk_uri, (ввод, вывод, пользователь) ->
+			if not options.общения_query?
+				options.общения_query = () -> {}
+		
+			$ = {}
+			
+			loading_options =
+				from: options.collection,
+				query: options.общения_query(пользователь),
+				parameters: { sort: [['обновлено', -1]] }
+			
+			общения = снасти.batch_loading(ввод, $, options.общение_во_множественном_числе, loading_options)
+			дополнить_общения(общения)
+			
 			вывод.send $
 			
 	else

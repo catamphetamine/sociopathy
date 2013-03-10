@@ -247,6 +247,10 @@
 					choice: function(_id)
 					{
 						options.ok()
+					},
+					nothing_found: function(query)
+					{
+						info(text('pages.library.section not found', { query: query }))
 					}
 				}
 			}
@@ -399,8 +403,8 @@
 			
 			if (_id)
 			{
-				var menu = new Context_menu($(this),
-				{
+				var menu = $(this).context_menu
+				({
 					items:
 					[
 						{
@@ -425,8 +429,8 @@
 			
 			if (_id)
 			{
-				var menu = new Context_menu($(this),
-				{
+				var menu = $(this).context_menu
+				({
 					items:
 					[
 						{
@@ -622,7 +626,7 @@
 		reload_page()
 	}
 	
-	page.save = function(data, finish)
+	page.save = function(data)
 	{
 		Режим.save_changes_to_server
 		({
@@ -820,6 +824,10 @@
 			choice: function(value)
 			{
 				go_to('/читальня/' + this.путь)
+			},
+			nothing_found: function(query)
+			{
+				info(text('pages.library.section or article not found', { query: query }))
 			},
 			required: false
 		})

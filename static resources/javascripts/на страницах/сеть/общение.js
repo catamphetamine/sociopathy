@@ -11,6 +11,8 @@
 				return 'обсуждения'
 		}
 	}
+
+	page.needs_initializing = false
 	
 	page.load = function()
 	{
@@ -62,6 +64,4 @@
 		
 		page.get('form .title').focus()
 	}
-	
-	page.needs_initializing = false
 })()

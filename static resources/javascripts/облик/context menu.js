@@ -8,6 +8,22 @@ var Context_menu = new Class
 	{
 		this.element = element
 		
+		if (options instanceof Array)
+		{
+			options = { items: options }
+		}
+		else if (!options.items)
+		{
+			var items = []
+			
+			Object.for_each(options, function(key, value)
+			{
+				items.push({ title: key, action: value })
+			})
+			
+			options = { items: items }
+		}
+		
 		this.setOptions(options)
 			
 		this.menu = $('<div/>').addClass('context_menu')
@@ -26,7 +42,7 @@ var Context_menu = new Class
 			
 			element.on('click', (function(event)
 			{
-				item.action(this.data || this)
+				item.action.bind(this)(this.data)
 				
 				this.menu.fade_out(0.2)
 			})
@@ -69,6 +85,7 @@ var Context_menu = new Class
 	}
 })
 
-$.fn.context_menu = function()
+$.fn.context_menu = function(options)
 {
+	return new Context_menu(this, options)
 }

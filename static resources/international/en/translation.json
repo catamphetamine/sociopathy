@@ -29,7 +29,9 @@
 		},
 		"books":
 		{
-			"title": "Books"
+			"title": "Books",
+			
+			"not found": "We couldn't find a book titled «{query}». Searching by both author and title isn't implemented yet"
 		},
 		"circles":
 		{
@@ -129,5 +131,10 @@
 	"math":
 	{
 		"temporarily unavailable": "Formulae are temporarily broken \n (cdn.mathjax.org is unavailable)"
+	},
+	
+	"autocomplete":
+	{
+		"query is too short": "The search query you entered is too short. Be a bit more specific"
 	}
 }

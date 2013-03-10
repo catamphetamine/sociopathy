@@ -1,40 +1,16 @@
-/*
-$(document).on_page('смена_режима', function(event, из, в)
+title(text('pages.books.title'))
+
+;(function()
 {
-	if (в === 'правка')
-	{
-		add_book.element.fade_in(0.2)
-		
-		$('.book_place .book').each(function()
-		{
-			var book = $(this)
-			book.on('click.режим_правка', function(event)
-			{
-				event.preventDefault()
-				info("открыть окошко правки книги")
-			})
-		})
-		
-		return
-	}
+	page.needs_initializing = true
 	
-	if (из === 'правка')
-	{
-		add_book.element.fade_out(0.2)
-		return
-	}
-})
-*/
-
-title(text('pages.books.title'));
-
-(function()
-{
+	page.query('#books', 'books')
+	
 	var loader
 	
 	page.load = function()
 	{
-		loader = either_way_loading
+		loader = page.either_way_loading
 		({
 			путь: '/сеть/книги',
 			с_номерами_страниц: true,
@@ -44,28 +20,27 @@ title(text('pages.books.title'));
 				name: 'книги',
 				latest_first: true,
 				batch_size: 16,
-				
 				loaded: function(books)
 				{
 					parse_dates(books, 'добавлена')
-					return books
 				},
-				on_first_output: page.initialized
+				on_first_output: page.initialized,
+				before_output: initialize_context_menus
 			},
-			container: '#books',
-			template: '/страницы/кусочки/книга в списке книг.html',
+			container: page.books,
+			template: 'книга в списке книг',
 			страница: page.data.номер_страницы,
 			error: 'Не удалось загрузить список книг',
 			progress_bar: true
 		})
 	
 		$(window).on_page('resize.books', center_books)
-		center_books()
+		
+		initialize_search()
 	}
 	
 	page.unload = function()
 	{
-		loader.destroy()
 	}
 	
 	function center_books()
@@ -73,5 +48,91 @@ title(text('pages.books.title'));
 		center_list($('#books'), { space: $('#content'), item_width: 410, item_margin: 20 })
 	}
 	
-	page.needs_initializing = true
+	function initialize_search()
+	{
+		search = page.get('.search').autocomplete
+		({
+			mininum_query_length: 3,
+			search: function(query, callback)
+			{
+				var ajax = page.Ajax.get('/сеть/книги/поиск',
+				{
+					query: query,
+					max: 5
+				})
+				.ok(function(data)
+				{
+					callback(data.книги)
+				})
+										
+				var search =
+				{
+					cancel: function()
+					{
+						ajax.abort()
+					}
+				}
+				
+				return search
+			},
+			decorate: function(книга)
+			{
+				this.text(книга.сочинитель + ' «' + книга.название + '»')
+			},
+			value: function(книга)
+			{
+				return книга._id
+			},
+			title: function(книга)
+			{
+				return книга.сочинитель + ' «' + книга.название + '»'
+			},
+			choice: function(_id)
+			{
+				loader.destroy()
+				
+				page.Ajax.get('/сеть/книга', { _id: _id }).ok(function(data)
+				{
+					page.books.empty().append($('<li/>').append($.tmpl('книга в списке книг', data.книга)))
+				})
+			},
+			nothing_found: function(query)
+			{
+				info(text('pages.books.not found', { query: query }))
+			},
+			required: false
+		})
+		
+		;(function()
+		{
+			search.focus()
+		})
+		.delay(1)
+	}
+	
+	function initialize_context_menus(books)
+	{
+		books.for_each(function()
+		{
+			initialize_context_menu($(this))
+		})
+	}
+	
+	function initialize_context_menu(book)
+	{
+		var cover = book.find('.cover_image')
+		
+		var menu = cover.context_menu
+		({
+			'Добавить себе': function(_id)
+			{
+				page.Ajax.put('/сеть/книжный шкаф', { _id: _id }).ok(function()
+				{
+					info('Книга добавлена в ваш книжный шкаф')
+				})
+			}
+		})
+		
+		menu.data = book.attr('_id')
+	}
 })()

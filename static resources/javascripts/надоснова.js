@@ -31,6 +31,11 @@ Configuration = Object.x_over_y
 			Width: 560,
 			Height: 315
 		}
+	},
+	Loading_screen:
+	{
+		Fade_in: 0.1,
+		Fade_out: 0.1
 	}
 },
 Configuration)
@@ -96,7 +101,7 @@ $(document).on('page_loaded', function()
 			
 			$('.non_selectable').disableTextSelect()
 			
-			$(document).on_page('page_initialized', function()
+			$(document).on_page_once('page_initialized', function()
 			{
 				if (page.data.scroll_to)
 					$(window).scrollTop(page.data.scroll_to)

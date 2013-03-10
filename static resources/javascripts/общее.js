@@ -79,7 +79,7 @@ function loading_page(options)
 	
 	loading_screen.find('.loading').fade_in(2.0, { maximum_opacity: 0.5 })
 	
-	loading_screen.fade_in(0.2)
+	loading_screen.fade_in(Configuration.Loading_screen.Fade_in)
 	$('body').addClass('loading')
 		
 	return function()
@@ -115,7 +115,7 @@ function hide_page_loading_screen()
 {
 	var loading_screen = $('#loading_screen')
 	
-	loading_screen.fade_out(0.2, function()
+	loading_screen.fade_out(Configuration.Loading_screen.Fade_out, function()
 	{
 		loading_screen.find('.loading').stop_animator().fade_out(0)
 	})

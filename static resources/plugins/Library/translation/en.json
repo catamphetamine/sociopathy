@@ -3,7 +3,10 @@
 	{
 		"library":
 		{
-			"title": "Library"
+			"title": "Library",
+			
+			"section not found": "Section «{query}» not found",
+			"section or article not found": "Section or article «{query}» not found"
 		}
 	}
 }

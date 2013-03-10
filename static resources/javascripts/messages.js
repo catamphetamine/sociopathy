@@ -107,7 +107,7 @@ var Messages = new Class
 				data_source_parameters = options.data_source.parameters
 		}
 		
-		either_way_loading
+		page.either_way_loading
 		({
 			data:
 			{

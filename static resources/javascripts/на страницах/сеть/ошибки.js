@@ -16,7 +16,7 @@
 			loader: new Batch_data_loader_with_infinite_scroll
 			({
 				url: '/приложение/сеть/ошибки',
-				batch_size: 18,
+				batch_size: 10,
 				data: function(data)
 				{
 					data.ошибки.for_each(function()

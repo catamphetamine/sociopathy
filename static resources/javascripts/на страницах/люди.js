@@ -1,12 +1,12 @@
 title(text('pages.people.title'));
 	
 (function()
-{	
-	var loader
+{
+	page.query('#id_cards', 'people')
 	
 	page.load = function()
 	{
-		loader = either_way_loading
+		page.either_way_loading
 		({
 			путь: '/люди',
 			с_номерами_страниц: true,
@@ -16,16 +16,14 @@ title(text('pages.people.title'));
 				name: 'люди',
 				latest_first: true,
 				batch_size: 18,
-				
 				loaded: function(people)
 				{
 					parse_dates(people, 'время рождения')
-					return people
 				},
 				on_first_output: page.initialized
 			},
-			container: '#id_cards',
-			template: '/страницы/кусочки/личная карточка.html',
+			container: page.people,
+			template: 'личная карточка',
 			страница: page.data.номер_страницы,
 			//page: page,
 			error: 'Не удалось загрузить список людей',
@@ -35,6 +33,5 @@ title(text('pages.people.title'));
 	
 	page.unload = function()
 	{
-		loader.destroy()
 	}
 })()

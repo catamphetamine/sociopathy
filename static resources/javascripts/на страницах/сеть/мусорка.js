@@ -17,6 +17,8 @@
 			table: true,
 			postprocess_item: function(data)
 			{
+				var item = this
+				
 				var menu = new Context_menu(this,
 				{
 					items:
@@ -31,9 +33,11 @@
 								})
 								.ok(function()
 								{
-									this.shrink_upwards(function()
+									return info('Восстановление из корзины пока не сделано')
+									
+									item.shrink_upwards(function()
 									{
-										this.remove()
+										item.remove()
 									})
 								})
 							}
@@ -44,7 +48,7 @@
 			loader: new Batch_data_loader_with_infinite_scroll
 			({
 				url: '/приложение/сеть/мусорка',
-				batch_size: 18,
+				batch_size: 10,
 				data: function(data)
 				{
 					data.trash.for_each(function()

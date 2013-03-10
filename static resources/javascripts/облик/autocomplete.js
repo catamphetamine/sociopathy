@@ -224,18 +224,25 @@
 				return
 			}
 			
-			if (this.results_list.length === 1)
+			if (this.results_list && this.results_list.length === 1)
 			{
 				$(this.results.children()[0]).click()
 				return
 			}
-			else
-			{
-				event.preventDefault()
-				event.stopImmediatePropagation()
-			
+		
+			event.preventDefault()
+			event.stopImmediatePropagation()
+		
+			var query = this.input.val()
+		
+			if (!query)
 				return
-			}
+			
+			if (query.length < this.options.mininum_query_length)
+				return info(text('autocomplete.query is too short'))
+			
+			if (this.options.nothing_found)
+				this.options.nothing_found(this.input.val())
 		},
 		
 		up: function()
@@ -453,6 +460,10 @@
 			else
 			{
 				this.valid()
+				
+				this.results.empty()
+				this.results_list = []
+				
 				this.results_viewer('input')
 			}
 		},

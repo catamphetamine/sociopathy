@@ -23,6 +23,16 @@
 		
 		#discussions
 		{
+			margin-top: 0;
+		}
+		
+		#unread_discussions
+		{
+			margin-bottom: 0;
+		}
+		
+		.discussions
+		{
 			margin-top: 60px;
 		
 			list-style-type: none;

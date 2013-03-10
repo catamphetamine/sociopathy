@@ -60,29 +60,6 @@ var Batch_loader = new Class
 		this.get(this.options.batch_size, возврат)
 	},
 	
-	/*
-	next: function()
-	{
-		var count = 1
-		var callback
-		
-		switch (arguments.length)
-		{
-			case 1:
-				callback = arguments[0]
-				break
-			case 2:
-				count = arguments[0]
-				callback = arguments[1]
-				break
-			default:
-				throw 'next: invalid argument count'
-		}
-
-		this.get(count, callback)
-	},
-	*/
-	
 	get: function(count, callback)
 	{
 		var loader = this
@@ -372,6 +349,9 @@ var Data_loader = new Class
 			
 			loader.options.before_done(список)
 				
+			if (loader.options.before_output)
+				loader.options.before_output(elements)
+				
 			loader.options.callback(null, function()
 			{
 				if (loader.options.after_output)
@@ -408,10 +388,10 @@ var Data_templater = new Class
 		var conditional = options.conditional
 		if (conditional.constructor === jQuery)
 			conditional = initialize_conditional(options.conditional)
-
+			
 		if (!options.postprocess_item)
 			options.postprocess_item = $.noop
-		
+	
 		var show_item
 		if (options.show)
 			show_item = options.show
@@ -503,18 +483,24 @@ var Data_templater = new Class
 				if (options.data_structure.hasOwnProperty(property))
 				{
 					if (latest_deferred)
+					{
 						latest_deferred = latest_deferred.pipe(function()
 						{
 							return load_template(options.data_structure[property].template_url)
 						})
+					}
 					else
+					{
 						latest_deferred = load_template(options.data_structure[property].template_url)
+					}
 				}
 			
 			latest_deferred.done(load_data)
 		}
 		else
+		{
 			load_template(options.template_url).done(load_data)
+		}
 			
 		function load_template(template_url)
 		{

@@ -61,11 +61,11 @@ global.messages_tools = (options) ->
 			environment =
 				пользователь: пользователь
 				
-			проверка = (id, возврат) ->
+			проверка = (id) ->
 				found = db(options.id)._.find_one({ id: id })
-				возврат(null, not found?)
+				return not found?
 						
-			id = снасти.generate_unique_id.await(название, проверка)
+			id = снасти.generate_unique_id(название, проверка)
 			
 			values = { название: название, id: id, создано: new Date() }
 			

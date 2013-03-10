@@ -93,6 +93,8 @@ var match_page = function(options, new_page)
 
 var get_page_button = function(new_page)
 {
+	new_page = new_page || page
+		 
 	var i = 0
 	while (i < page_buttons.length)
 	{

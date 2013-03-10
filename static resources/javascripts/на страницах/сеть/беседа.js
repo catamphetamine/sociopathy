@@ -111,6 +111,10 @@
 								{
 									add_user_to_talk.ok()
 								},
+								nothing_found: function(query)
+								{
+									info('Пользователя «' + query + '» не существует в нашей сети')
+								}
 								//hide_input_after_selection: true
 							}
 						}],

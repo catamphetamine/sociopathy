@@ -29,13 +29,14 @@
 	
 	// some selection filters from jQuery UI: focusable and tabbable
 
-	function visible( element ) 
+	function visible(element)
 	{
-		return !$( element ).parents().andSelf().filter(function() 
+		return !$(element).parents().andSelf().filter(function() 
 		{
-			return $.curCSS( this, "visibility" ) === "hidden" ||
-				$.expr.filters.hidden( this );
-		}).length;
+			return $.css(this, "visibility") === "hidden" ||
+				$.expr.filters.hidden(this)
+		})
+		.length
 	}
 	
 	$.extend( $.expr[ ":" ], 
