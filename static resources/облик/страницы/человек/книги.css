@@ -314,3 +314,8 @@ body[mode="правка"] .book
 {
 	/* cursor: pointer !important; */
 }
+
+.context_menu
+{
+	z-index: 3;
+}

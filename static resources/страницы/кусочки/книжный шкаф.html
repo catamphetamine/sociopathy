@@ -10,7 +10,7 @@
 					<div class="right"></div>
 					<div class="books">
 						{{each(index, book) books}}
-							<div class="book_place">
+							<div class="book_place" _id="${book._id}">
 								{{if book.название}}
 									<div class="book_info popup_panel_container">
 										<div class="info popup_panel">

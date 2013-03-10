@@ -35,7 +35,7 @@ var page_buttons =
 	{ page: 'заметка', button: 'читальня' },
 	{ page: 'люди', button: 'люди' },
 	
-	{ page: 'человек/человек', button: 'люди' },
+	{ page_pattern: 'человек(/.*)?', button: 'люди' },
 	{ page_pattern: 'помощь(/.*)?', button: 'помощь' },
 	
 	{ page: 'сеть/новости', button: 'новости' },

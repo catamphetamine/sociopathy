@@ -31,7 +31,8 @@
 		{
 			"title": "Books",
 			
-			"not found": "We couldn't find a book titled «{query}». Searching by both author and title isn't implemented yet"
+			"not found": "We couldn't find a book titled «{query}». Searching by both author and title isn't implemented yet",
+			"added to bookshelf": "The book has been added to [link to bookshelf(user id)]your bookshelf[/link]"
 		},
 		"circles":
 		{

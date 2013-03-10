@@ -1,7 +1,8 @@
 var Url_map =
 {
 	'user settings': '/сеть/настройки',
-	'registration': '/прописка'
+	'registration': '/прописка',
+	'bookshelf': function(id) { return '/люди/' + id + '/книги' }
 }
 
 var Язык
@@ -128,8 +129,27 @@ function text(key, variables)
 		found = found[0]
 			
 		var url = found.substring('[link to '.length, found.length - 1)
-		if (Url_map[url])
-			url = Url_map[url]
+		
+		var key = url
+		if (key.ends_with(')'))
+		{
+			var code = key
+			var opening = code.indexOf('(')
+			
+			key = code.substring(0, opening)
+			parameter = variables[code.substring(opening + 1, code.length - 1)]
+		}
+		
+		console.log('key: ' + key)
+		console.log('parameter: ' + parameter)
+		
+		if (Url_map[key])
+		{
+			if (typeof parameter !== 'undefined')
+				url = Url_map[key](parameter)
+			else
+				url = Url_map[key]
+		}
 			
 		url = url.replace_all('\'', '"')
 		

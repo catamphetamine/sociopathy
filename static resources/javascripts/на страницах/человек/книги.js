@@ -115,10 +115,34 @@
 		
 		$('.bookshelf_container .book_place').animate({ opacity: 1 }, 500)
 			
+		$('.bookshelf_container .book').each(function()
+		{
+			initialize_context_menu($(this))
+		})
+			
 		Режим.разрешить('правка')
 		//Режим.разрешить('действия')
 		
 		page.initialized()
+	}
+	
+	function initialize_context_menu(book)
+	{
+		var list_item = book.parent()
+		
+		var menu = book.context_menu
+		({
+			'Убрать': function(_id)
+			{
+				page.Ajax.delete('/сеть/книжный шкаф', { _id: _id }).ok(function()
+				{
+					info('Книга убрана')
+					page.refresh()
+				})
+			}
+		})
+		
+		menu.data = list_item.attr('_id')
 	}
 	
 	page.save = function(данные)

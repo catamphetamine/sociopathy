@@ -93,7 +93,9 @@ title(text('pages.books.title'))
 				
 				page.Ajax.get('/сеть/книга', { _id: _id }).ok(function(data)
 				{
-					page.books.empty().append($('<li/>').append($.tmpl('книга в списке книг', data.книга)))
+					var book = $.tmpl('книга в списке книг', data.книга)
+					initialize_context_menu(book)
+					page.books.empty().append(book)
 				})
 			},
 			nothing_found: function(query)
@@ -128,7 +130,7 @@ title(text('pages.books.title'))
 			{
 				page.Ajax.put('/сеть/книжный шкаф', { _id: _id }).ok(function()
 				{
-					info('Книга добавлена в ваш книжный шкаф')
+					info(text('pages.books.added to bookshelf', { 'user id': пользователь['адресное имя'] }))
 				})
 			}
 		})
