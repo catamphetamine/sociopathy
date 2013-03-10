@@ -265,7 +265,8 @@
 			url: '/приложение/initialize',
 			success: function(data)
 			{
-				window.initialization_info = data
+				window.initialization_data = data.initialization_data
+				window.user_data = data.user_data
 				
 				Version = data.site_version
 				

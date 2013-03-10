@@ -40,24 +40,6 @@ http.post '/управление/хранилище/изменить', (ввод
 	второй_человек = db('people')._.find_one({ имя: 'Анна Каренина' })
 	
 	
-			
-		
-			
-			
-		
-		
-		
-	
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
 		
 	вывод.send {}
 
@@ -246,21 +228,14 @@ http.post '/хранилище/создать', (ввод, вывод) ->
 		#ссылки: [ 'http://vkontakte.ru/kuchumovn', 'http://youtube.com/user/kuchumovn' ]
 		полномочия: ['управляющий']
 		
-	db('people')._.save(человек)
-		
 	# заполнить сессии людей
 					
 	create_collection('people_sessions', [['пользователь', yes]])
 	
-	for человек in db('people')._.find()
-		db('people_sessions')._.save({ пользователь: человек._id, новости: { беседы: {}, обсуждения: {}, новости: {} } })
-		
 	# заполнить тайные ключи людей
 	
 	create_collection('people_private_keys', [['пользователь', yes], ['тайный ключ', yes]])
 	
-	db('people_private_keys')._.save({ пользователь: человек._id, 'тайный ключ': человек._id + new Date().getTime() + Math.random() })
-		
 	# заполнить приглашения
 		
 	create_collection('invites', [['ключ', yes]])
@@ -268,9 +243,11 @@ http.post '/хранилище/создать', (ввод, вывод) ->
 	# заполнить круги пользователей
 		
 	create_collection('circles', [[['пользователь', 1], ['название', 1]], yes])
-	
-	db('circles')._.save({ пользователь: человек._id, круг: 'Основной', члены: [] })
 
+	# создать управляющего
+	
+	пользовательское.создать(человек)
+	
 	# заполнить книги
 		
 	create_collection('books', [['id', yes], [[[ 'сочинитель', 1 ], [ 'название', 1 ]], yes]])
@@ -544,11 +521,11 @@ http.post '/хранилище/создать', (ввод, вывод) ->
 	
 	# системная мусорка
 		
-	create_collection('system_trash', [['что', no]])
+	create_collection('system_trash', { options: { capped: yes, size: 1000 } }, [['что', no]])
 		
 	# мусорка
 	
-	create_collection('trash', { options: { capped: yes, size: 1000 } }, [['пользователь', no]])
+	create_collection('trash', { options: { capped: yes, size: 10000 } }, [['пользователь', no]])
 		
 	# заполнить болталку
 		

@@ -1,3 +1,5 @@
+See "/plugins/Library" and "/static resources/plugins/Library" for an example.
+
 Для того, чтобы написать плагин, нужно:
 
 1) создать папку с названием плагина в папке plugins

@@ -10,6 +10,11 @@ global.db = (collection) ->
 		query = query || {}
 		options = options || {}
 		
+		if typeof query == 'string'
+			query = { _id: mongo.id(query) }
+		else if query.toHexString
+			query = { _id: query }
+		
 		mongo.findOne.bind_await(mongo)(query, options)
 	
 	api.find_just_one = (query, options) ->

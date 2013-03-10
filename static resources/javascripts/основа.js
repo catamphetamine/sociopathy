@@ -424,7 +424,7 @@ function do_insert_initial_scripts()
 
 function initialize(next)
 {
-	data = window.initialization_info
+	data = window.initialization_data
 	
 	Configuration.Invites = data.invites
 	

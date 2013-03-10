@@ -32,47 +32,37 @@ var данные_пользователя = {}
 	
 	function получить_данные_пользователя(возврат)
 	{
-		$.ajax('/приложение/сеть/данные пользователя')
-		.error(function(ошибка)
+		данные = window.user_data
+	
+		if (данные.error)
 		{
-			alert('Ошибка при загрузке страницы')
-			console.error('User data not loaded')
-		})
-		.success(function(данные) 
-		{
-			if (данные.ошибка)
+			if (данные.error === 'user.not authenticated')
 			{
-				// если кука user - кривая, то она уже сама удалилась на сервере
-				if (данные.ошибка === 'Пользователь не найден')
-				{
-					//alert('Пользователь не опознан')
-					console.error('Пользователь не опознан')
-					//go_to('/')
-					return возврат()
-				}
-				else
-				{
-					alert('Ошибка при загрузке страницы')
-					console.error(данные.ошибка)
-					console.error('User data not loaded')
-					return
-				}
+				// гость
+				return возврат()
 			}
+			// если кука user - кривая, то она уже сама удалилась на сервере
+			else if (данные.error === 'user.invalid authentication token')
+			{
+				console.error('Пользователь не опознан')
+				return возврат()
+			}
+			else
+			{
+				alert('Ошибка при опознании пользователя')
+				console.error(данные.error)
+				console.error('User data not loaded')
+				return
+			}
+		}
 				
-			window.данные_пользователя = данные
-			
-			пользователь = данные.пользователь
-			
-			//пользователь.versioning = window.versioning.пользователь
-			
-			if (!пользователь && Страница.эта().starts_with('сеть/'))
-				window.location = '/прописка'
-					
-			//$(document).trigger('authenticated', данные)
-			user_authenticated(данные)
-			
-			возврат()
-		})
+		window.данные_пользователя = данные
+		
+		пользователь = данные.пользователь
+				
+		user_authenticated(данные)
+		
+		возврат()
 	}
 	
 	//$(document).on('authenticated', function(event, данные)
