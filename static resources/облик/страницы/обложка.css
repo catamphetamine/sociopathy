@@ -43,7 +43,7 @@
 		margin-top: 10px;
 	}
 
-	.name
+	[name=name]
 	{
 		.icon
 		{
@@ -68,7 +68,7 @@
 		}
 	}
 	
-	.origin
+	[name=origin]
 	{
 		.icon
 		{
@@ -92,7 +92,7 @@
 		}	
 	}
 	
-	.gender
+	[name=gender]
 	{
 		label
 		{
@@ -129,7 +129,7 @@
 		}
 	}
 
-	.mail
+	[name=mail]
 	{
 		.icon
 		{
@@ -158,7 +158,7 @@
 		}
 	}
 
-	.password
+	[name=password]
 	{
 		.icon
 		{

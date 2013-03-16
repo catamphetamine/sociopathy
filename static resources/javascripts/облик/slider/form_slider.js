@@ -114,7 +114,14 @@ function form_slider(options)
 		
 		// for all the slides
 		var slide_index = 1
-		$(options.selector + " .slide").each(function() 
+		
+		var slides
+		if (options.selector)
+			slides = $(options.selector + ' .slide')
+		else
+			slides = options.element.find('.slide')
+		
+		slides.each(function() 
 		{
 			var slide = $(this)
 			var form = new Form(slide.find('form').eq(0))
@@ -162,7 +169,15 @@ function form_slider(options)
 	{
 		ok = ok || function()
 		{
-			$(this.options.selector + ' .slide:eq(' + (this.slider.index - 1) + ') input:first').focus()
+			var selector = '.slide:eq(' + (this.slider.index - 1) + ') input:first'
+			
+			var slide
+			if (options.selector)
+				slide = $(options.selector + ' ' + selector)
+			else
+				slide = options.element.find(selector)
+				
+			slide.focus()
 		}
 		.bind(this)
 		
@@ -287,6 +302,16 @@ function form_slider(options)
 		{
 			return this.element.val()
 		}
+	}
+	
+	this.slide_out = function()
+	{
+		this.slider.slide_out()
+	}
+	
+	this.slide_in = function()
+	{
+		this.slider.slide_in()
 	}
 	
 	// call the constructor

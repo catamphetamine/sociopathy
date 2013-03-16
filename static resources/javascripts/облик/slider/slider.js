@@ -70,9 +70,21 @@ function slider(options)
 	{
 		if (this.options.selector)
 			this.$element = $(this.options.selector)
+		else
+			this.$element = this.options.element
 			
 		var $slides = this.$element.children()
 		this.count = $slides.length
+		
+		this.slides = {}
+		var slider = this
+		
+		var index = 1
+		$slides.each(function()
+		{
+			slider.slides[index] = $(this).attr('name')
+			index++
+		})
 		
 		// get dimensions
 		
@@ -120,11 +132,26 @@ function slider(options)
 		// set index
 		this.index = index
 		
-		this.$element.trigger('slide_No_' + index)
+		this.slide_out = function()
+		{
+			this.slide_in = function()
+			{
+				// perform scrolling, refresh buttons
+				this.scroll(callback)
+				this.hide_or_show_controls()
+			}
+			
+			this.$element.trigger('slide_in', this.slides[index])
+		}
+		.bind(this)
 		
-		// perform scrolling, refresh buttons
-		this.scroll(callback)
-		this.hide_or_show_controls()
+		this.$element.trigger('slide_out', this.slides[index - 1])
+		
+		if (!this.options.asynchronous)
+		{
+			this.slide_out()
+			this.slide_in()
+		}
 	}
 	
 	// next slide

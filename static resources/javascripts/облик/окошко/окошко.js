@@ -358,7 +358,24 @@ var dialog_window = new Class
 			if (control.lock)
 				return control.lock() 
 		})
-		.clear()
+		
+		var element = this.content.parent()
+		
+		this.content.find(':focus').blur()
+		
+		this.locker = $('<div/>')
+			.css
+			({
+				position: 'absolute',
+				
+				width: element.width() + 'px',
+				height: element.height() + 'px',
+				
+				'z-index': 1,
+				
+				cursor: 'wait'
+			})
+			.prependTo(element)
 	},
 	
 	/**
@@ -373,5 +390,11 @@ var dialog_window = new Class
 		
 		// unlock controls
 		this.control_locks.each(function(lock) { lock.unlock() })
+		
+		if (this.locker)
+		{
+			this.locker.remove()
+			this.locker = null
+		}
 	}
 })
