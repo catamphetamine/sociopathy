@@ -1,0 +1,43 @@
+{
+	"pages":
+	{
+		"settings":
+		{
+			"title": "Settings",
+			
+			"email_not_specified": "email not specified",
+			
+			"language": "Language",
+			"language_not_specified": "detect automatically",
+			
+			"modes":
+			{
+				"title": "Modes"
+			},
+			
+			"actions":
+			{
+				"title": "Actions",
+				
+				"create": "Create",
+				"add": "Add",
+				"delete": "Delete"
+			},
+			
+			"editor":
+			{
+				"title": "Editor",
+				
+				"breaking space": "Breaking space",
+				"show": "Show"
+			},
+			
+			"other":
+			{
+				"title": "Other",
+				
+				"log in": "Log in"
+			}
+		}
+	}
+}

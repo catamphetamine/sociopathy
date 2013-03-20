@@ -1670,3 +1670,19 @@ body.with_actions_on_bottom
 		height: 74px;
 	}
 }
+
+.popup
+{	
+	.buttons
+	{
+		.left
+		{
+			float: left;
+		}
+		
+		.right
+		{
+			float: right;
+		}
+	}
+}

@@ -60,6 +60,8 @@ var scripts =
 	
 	'движение',
 	
+	'подгрузка статики',
+	
 	'dynamic page content',
 	
 	'надоснова',
@@ -228,7 +230,8 @@ function script_insertion(all_scripts, root_path, finished)
 
 var insert_scripts = script_insertion(scripts, '/javascripts', function()
 {
-	insert_plugin_scripts()
+	// к этому времени jQuery уже подгружен
+	$(document).trigger('scripts_loaded')
 })
 
 // insert styles
@@ -430,7 +433,7 @@ function initialize(next)
 	
 	Configuration.Invites = data.invites
 	
-	Configuration.Old_plugins = data.old_plugins
+	Configuration.Core_modules = data.core_modules
 	Configuration.Plugins = data.plugins
 	
 	Configuration.Locale =
@@ -449,30 +452,6 @@ function initialize(next)
 	}
 	
 	next()
-}
-
-function insert_plugin_scripts()
-{
-	var plugins_to_load = Object.size(Configuration.Plugins)
-	
-	Object.for_each(Configuration.Plugins, function()
-	{
-		if (!this.client_scripts)
-			return
-		
-		var insert_plugin_scripts = script_insertion(this.client_scripts, '/plugins/' + this.title + '/client scripts', function()
-		{
-			plugins_to_load--
-			
-			if (plugins_to_load > 0)
-				return
-			
-			// к этому времени jQuery уже подгружен
-			$(document).trigger('scripts_loaded')
-		})
-	
-		insert_plugin_scripts()
-	})
 }
 
 initialize(do_insert_initial_scripts)

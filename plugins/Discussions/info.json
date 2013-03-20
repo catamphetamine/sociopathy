@@ -1,0 +1,16 @@
+{
+	"description": "Forum",
+	
+	"version": "1.0.0",
+	
+	"code": "discussions",
+	
+	"icon": 
+	{
+		"picture": "обсуждения",
+		"to": "/обсуждения",
+		
+		"private": true,
+		"unreadable": true
+	}
+}

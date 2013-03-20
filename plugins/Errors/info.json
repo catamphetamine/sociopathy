@@ -1,0 +1,16 @@
+{
+	"description": "Log and watch system and user errors",
+	
+	"version": "1.0.0",
+	
+	"code": "errors",
+	
+	"icon": 
+	{
+		"picture": "ошибки",
+		"to": "/ошибки",
+		
+		"private": true,
+		"restricted": true
+	}
+}

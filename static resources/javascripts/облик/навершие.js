@@ -585,7 +585,7 @@ function add_top_panel_button()
 {
 	if (!this.icon)
 		return
-	
+
 	var is_private = this.private
 	var url = this.url
 	var picture = '/картинки/навершие/menu/' + this.icon
@@ -605,10 +605,10 @@ function add_top_panel_button()
 		.attr('link', url)
 		//.text(text(this.title))
 		
-	if (this.unreadable)
+	if (this.icon.unreadable)
 		icon.attr('unreadable', true)
 		
-	if (this.restricted)
+	if (this.icon.restricted)
 		icon.attr('hidden', true)
 		
 	icon.appendTo('#panel_menu')

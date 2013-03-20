@@ -1,0 +1,16 @@
+{
+	"description": "Private talks",
+	
+	"version": "1.0.0",
+	
+	"code": "talks",
+	
+	"icon": 
+	{
+		"picture": "беседы",
+		"to": "/беседы",
+		
+		"private": true,
+		"unreadable": true
+	}
+}

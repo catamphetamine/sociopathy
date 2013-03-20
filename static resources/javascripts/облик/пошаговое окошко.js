@@ -9,6 +9,8 @@ var Step_by_step_dialog_window = new Class
 		this.options = $.extend(true, this.options, options)
 		//this.setOptions(options) // doesn't work - mootools bug
 		
+		this.process_template()
+		
 		this.initialize_buttons()
 		this.initialize_slider()
 		this.initialize_dialog_window()
@@ -17,6 +19,27 @@ var Step_by_step_dialog_window = new Class
 	open: function()
 	{
 		this.dialog_window.open()
+	},
+	
+	process_template: function()
+	{
+		var template = $.tmpl('пошаговое окошко', {})
+		
+		template = $('<div/>').append(template)
+		
+		var wrapper = $(template.find('> [type=wrapper]').children()[0])
+		var ending = template.find('> [type=ending]').children()
+		
+		var slides = this.options.dialog_window.children()
+		slides.each(function()
+		{
+			$(this).addClass('slide')
+		})
+		
+		wrapper.find('> .slider').append(slides)
+		this.options.dialog_window.append(wrapper)
+		
+		this.options.dialog_window.append(ending)
 	},
 	
 	initialize_dialog_window: function()

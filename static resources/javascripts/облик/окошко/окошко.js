@@ -353,11 +353,14 @@ var dialog_window = new Class
 		this.is_locked = true
 		
 		// lock controls
-		this.control_locks = this.controls.map(function(control) 
+		this.control_locks = []
+		
+		this.controls.map(function(control) 
 		{ 
 			if (control.lock)
-				return control.lock() 
-		})
+				this.control_locks.push(control.lock())
+		}
+		.bind(this))
 		
 		var element = this.content.parent()
 		

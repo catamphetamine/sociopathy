@@ -42,6 +42,15 @@
 		display: block;
 		margin-top: 10px;
 	}
+	
+	.slide
+	{
+		form
+		{
+			display: inline-block;
+			vertical-align: top;
+		}
+	}
 
 	[name=name]
 	{
@@ -60,9 +69,6 @@
 
 		form
 		{
-			display: inline-block;
-			vertical-align: top;
-			
 			font-size: 1em;
 			padding-top: 10px;
 		}
@@ -85,9 +91,6 @@
 		
 		form
 		{
-			display: inline-block;
-			vertical-align: top;
-			
 			padding-top: 5px;
 		}	
 	}
@@ -97,6 +100,11 @@
 		label
 		{
 			margin-left: 15px;
+		}
+		
+		form
+		{
+			display: block;
 		}
 
 		.chooser 
@@ -146,9 +154,6 @@
 		
 		form
 		{
-			display: inline-block;
-			vertical-align: top;
-			
 			padding-top: 5px;
 			
 			input[type="text"]
@@ -175,9 +180,6 @@
 		
 		form
 		{
-			display: inline-block;
-			vertical-align: top;
-			
 			padding-top: 5px;
 		}
 	}
@@ -185,16 +187,6 @@
 	.buttons
 	{
 		padding-right: 30px;
-		
-		.left
-		{
-			float: left;
-		}
-		
-		.right
-		{
-			float: right;
-		}
 	}
 }
 

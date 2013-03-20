@@ -19,7 +19,8 @@ for plugin in Options.Plugins
 	info = JSON.parse(disk_tools.read(path_to('info.json')))
 	info.title = plugin
 	
-	require(path_to('code/' + info.code))
+	if info.code?
+		require(path_to('code/' + info.code))
 	
 	info.client_scripts = disk_tools.map_files(path_to_static('client scripts'), { type: 'js' })
 	info.templates = disk_tools.list_files(path_to_static('templates'), { type: 'html' })

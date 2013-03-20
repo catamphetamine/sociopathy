@@ -1,13 +1,48 @@
+var url_matchers = []
+
+function url_matcher(matcher)
+{
+	url_matchers.push(matcher)
+}
+
 var Страница =
 {
-	определить: function(url, new_page, proceed)
+	определить: function(url)
 	{
-		var название_страницы = путь_страницы(url)
-			
-		if (!название_страницы)
-			название_страницы = 'обложка'
+		this.эта(this.выяснить_страницу_по_пути(путь_страницы(url)))
+	},
+	
+	выяснить_страницу_по_пути: function(путь)
+	{
+		if (!путь)
+			return 'обложка'
 		
-		match_url(название_страницы,
+		var страница
+		
+		var tools =
+		{
+			page: function(page)
+			{
+				страница = page
+			},
+			wait: function()
+			{
+				страница = '_wait_'
+				page.data.proceed_manually = true
+				return page.proceed
+			}
+		}
+		
+		url_matchers.for_each(function()
+		{
+			if (!страница)
+				this.bind(tools)(путь)
+		})
+		
+		if (страница)
+			return страница
+		
+		match_url(путь,
 		{
 			'люди': function(rest)
 			{
@@ -15,108 +50,10 @@ var Страница =
 				{
 					'*': function(value, rest)
 					{
-						var int_value = parseInt(value)
-						if (int_value == value && int_value > 0)
-						{
-							new_page.data.номер_страницы = int_value
-							название_страницы = 'люди'
-							return
-						}
+						page.data.адресное_имя = value
+						страница = 'человек'
 						
-						new_page.data.адресное_имя = value
-						название_страницы = 'человек/человек'
-						
-						new_page.data.пользователь_сети = { 'адресное имя': value }
-						
-						match_url(rest,
-						{
-							'дневник': function(rest)
-							{
-								название_страницы = 'человек/дневник'
-								
-								match_url(rest,
-								{
-									'*': function(value, rest)
-									{
-										название_страницы = 'человек/запись в дневнике'
-										new_page.data.запись = value
-									}
-								})
-							},
-							'журнал': function(rest)
-							{
-								название_страницы = 'человек/журнал'
-								
-								match_url(rest,
-								{
-									'*': function(value, rest)
-									{
-										название_страницы = 'человек/запись в журнале'
-										new_page.data.запись = value
-									}
-								})
-							},
-							'книги': function()
-							{
-								название_страницы = 'человек/книги'
-							},
-							'картинки': function(rest)
-							{
-								название_страницы = 'человек/картинки'
-								
-								match_url(rest,
-								{
-									'*': function(value, rest)
-									{
-										название_страницы = 'человек/альбом с картинками'
-										new_page.data.альбом = value
-										new_page.data.картинка = rest
-									}
-								})
-							},
-							'видео': function(rest)
-							{
-								название_страницы = 'человек/видео'
-								
-								match_url(rest,
-								{
-									'*': function(value, rest)
-									{
-										название_страницы = 'человек/альбом с видео'
-										new_page.data.альбом = value
-										new_page.data.видеозапись = rest
-									}
-								})
-							}
-						},
-						{
-							no_match: function()
-							{
-								название_страницы = 'страница не найдена'
-							}
-						})
-					}
-				})
-			},
-			'сеть/беседы': function(rest)
-			{
-				match_url(rest,
-				{
-					'*': function(value, rest)
-					{
-						название_страницы = 'сеть/беседа'
-						new_page.data.общение = { id: value }
-					}
-				})
-			},
-			'сеть/обсуждения': function(rest)
-			{
-				match_url(rest,
-				{
-					'*': function(value, rest)
-					{
-						название_страницы = 'сеть/обсуждение'
-						new_page.data.общение = { id: value }
+						page.data.пользователь_сети = { 'адресное имя': value }
 					}
 				})
 			},
@@ -126,68 +63,25 @@ var Страница =
 				{
 					'*': function(value, rest)
 					{
-						название_страницы = 'сеть/общение'
-						new_page.data.общение = value
+						страница = 'общение'
+						page.data.общение = value
 						
 						match_url(rest,
 						{
 							'*': function(value, rest)
 							{
-								new_page.data.кому = value
+								page.data.кому = value
 							}
 						})
-					}
-				})
-			},
-			'сеть/читальня/заметка': function(rest)
-			{
-				match_url(rest,
-				{
-					'*': function(value, rest)
-					{
-						название_страницы = 'сеть/читальня/заметка'
-						new_page.data.раздел = value
-					}
-				})
-			},
-			'сеть/книги': function(rest)
-			{
-				match_url(rest,
-				{
-					'*': function(value, rest)
-					{
-						var int_value = parseInt(value)
-						if (int_value == value && int_value > 0)
-						{
-							new_page.data.номер_страницы = int_value
-							название_страницы = 'сеть/книги'
-							return
-						}
-						
-						название_страницы = 'сеть/книги'
-						return
-						
-						//new_page.data.книга = { id: value }
-						//название_страницы = 'сеть/книга'
-					}
-				})
-			},
-			'читальня': function(rest)
-			{
-				match_url(rest,
-				{
-					'*': function()
-					{
-						var путь = название_страницы.substring('читальня/'.length)
-						new_page.data.путь = путь
-						раздел_или_заметка(путь, proceed)
-						new_page.data.breaks_from_normal_workflow = true
 					}
 				})
 			}
 		})
 		
-		this.эта(название_страницы)
+		if (страница)
+			return страница
+		
+		return 'страница не найдена'
 	},
 
 	переход: function()
@@ -379,22 +273,18 @@ var Page = new Class
 				
 				Режим.при_переходе({ в: 'правка' }, function(info)
 				{
-					data_store.watch_for_changes = true
 				})
 				
 				Режим.при_переходе({ из: 'правка' }, function(info)
 				{
-					if (data_store.watch_for_changes)
-						data_store.edited_data = data_store.collect_edited()
-					else
-						data_store.edited_data = data_store.unmodified_data
+					data_store.edited_data = data_store.collect_edited()
 				})
 				
 				Режим.при_переходе(function(info)
 				{
 					if (!data_store.destroy_modes_when_switching)
 						return
-					
+
 					data_store.destroy_mode(info.из)
 					
 					$(document).on_page_once('режим', function(event, режим)
@@ -408,12 +298,11 @@ var Page = new Class
 					if (Режим.правка_ли())
 						data_store.edited_data = data_store.collect_edited()
 					
-					data_store.watch_for_changes = false
 					page.save(data_store.edited_data)
 				},
 				on_discard: function()
 				{
-					data_store.watch_for_changes = false
+					data_store.edited_data = data_store.unmodified_data
 					
 					if (!Режим.правка_ли())
 					{

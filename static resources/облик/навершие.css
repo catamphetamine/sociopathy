@@ -57,7 +57,12 @@
 	margin: 0;
 	padding: 0;
 
-	li
+	> li[link="/читальня"]
+	{
+		margin-right: 16px;
+	}
+	
+	> li
 	{
 		position: relative;
 	
@@ -71,7 +76,7 @@
 			
 		margin-left: 2px;
 		margin-right: 2px;
-
+		
 		a, .divider
 		{
 			display: block;

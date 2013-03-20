@@ -75,7 +75,7 @@ global.image_magick.convert.path = Options.ImageMagick.Convert.Path
 
 global.почта = require './tools/email'
 
-global.messages = require './messages/messages'
+global.messages = require './core/messages/messages'
 
 global.session = require './session'
 
@@ -83,18 +83,12 @@ global.session = require './session'
 
 require './upload server'
 
-# old plugin system. now irrelevant
+require './core/system'
+require './core/user'
+require './core/ether' 
+require './core/drafts'
 
-require './old plugins'
-
-for plugin in global.Options.Old_plugins
-	if require('fs').existsSync(__dirname + '/plugins/' + plugin + '.coffee')
-		console.log 'Loading plugin: ' + plugin
-		require './plugins/' + plugin
-		
-# old plugin system ends
-
-# new plugin system
+# plugin system
 require './plugins'
 
 #global.memcache_available = false

@@ -22,6 +22,8 @@ file_map = (path, options) ->
 			continue
 		
 		if disk.statSync(path + '/' + entry).isDirectory()
+			if map[entry]?
+				throw 'Both file and folder are named «' + entry + '»'
 			map[entry] = file_map(path + '/' + entry, options)
 		else
 			dot_position = entry.lastIndexOf('.')
@@ -33,9 +35,9 @@ file_map = (path, options) ->
 			extension = entry.substring(dot_position + 1)
 			
 			if extension + '' == options.type + ''
+				if map[title]?
+					throw 'Both file and folder are named «' + title + '»'
 				map[title] = yes
-	
-	remove_empty_objects(map)
 	
 	return map
 			

@@ -1,0 +1,13 @@
+{
+	"pages":
+	{
+		"administration":
+		{
+			"title": "Управление",
+			
+			"load dummy data into the database": "Заполнить хранилище пробными данными",
+			"create an invite": "Выдать приглашение",
+			"execute database altering script": "Внести в хранилище изменения, прописанные в «administration.coffee» (используется только для разработки)"
+		}
+	}
+}

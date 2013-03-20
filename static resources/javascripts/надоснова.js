@@ -40,7 +40,7 @@ Configuration = Object.x_over_y
 },
 Configuration)
 
-проверить_доступ(Uri.parse().path) //путь_страницы())
+проверить_доступ(Uri.parse().path)
 
 $(document).on('scripts_loaded', function()
 {
@@ -48,7 +48,7 @@ $(document).on('scripts_loaded', function()
 
 	Page.element = $('#page')
 
-	подгрузить_шаблоны(function(ошибка)
+	подгрузить_статику(function(ошибка)
 	{
 		if (ошибка)
 			return

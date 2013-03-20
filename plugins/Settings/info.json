@@ -1,0 +1,15 @@
+{
+	"description": "User settings",
+	
+	"version": "1.0.0",
+	
+	"code": "settings",
+	
+	"icon": 
+	{
+		"picture": "настройки",
+		"to": "/настройки",
+		
+		"private": true
+	}
+}

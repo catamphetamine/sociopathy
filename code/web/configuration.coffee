@@ -36,6 +36,5 @@ module.exports =
 			Host: 'smtp.gmail.com'
 			Port: 465 # 587 #
 	Invites: yes
-	Old_plugins: ['system', 'user', 'people', 'help', 'news', 'chat', 'talks', 'discussions', 'books', 'circles', 'ether', 'drafts', 'settings', 'trash', 'administration', 'errors'] # 'diary', 'journal'
-	Plugins: ['Library']
+	Plugins: ['Library', 'People', 'Help', 'News', 'Chat', 'Talks', 'Discussions', 'Books', 'Bookshelf', 'Circles', 'Settings', 'Trash', 'Administration', 'Errors', 'Picture albums', 'Video albums'] # 'Diary', 'Journal'
 Optimize: no

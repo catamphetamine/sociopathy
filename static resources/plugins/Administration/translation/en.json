@@ -1,0 +1,13 @@
+{
+	"pages":
+	{
+		"administration":
+		{
+			"title": "Administration",
+			
+			"load dummy data into the database": "Load dummy data into the database",
+			"create an invite": "Issue an invite",
+			"execute database altering script": "Execute database altering script from «administration.coffee» (for development purposes only)"
+		}
+	}
+}

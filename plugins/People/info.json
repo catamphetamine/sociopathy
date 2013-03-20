@@ -1,0 +1,13 @@
+{
+	"description": "List users",
+	
+	"version": "1.0.0",
+	
+	"code": "people",
+	
+	"icon": 
+	{
+		"picture": "люди",
+		"to": "/люди"
+	}
+}

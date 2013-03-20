@@ -1,0 +1,16 @@
+{
+	"description": "Chat",
+	
+	"version": "1.0.0",
+	
+	"code": "chat",
+	
+	"icon": 
+	{
+		"picture": "болталка",
+		"to": "/болталка",
+		
+		"private": true,
+		"unreadable": true
+	}
+}

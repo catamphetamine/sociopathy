@@ -1,0 +1,24 @@
+<section id="content" class="either_way_loading">
+	<div class="add_book_container">
+		<div class="button add_book" mode="действия">${text('pages.books.add')}</div>
+	</div>
+	
+	<div class="search_container">
+		<div class="search"></div>
+	</div>
+			
+	<ul id="books">
+	</ul>
+	
+	<div id="add_book" class="collapsed" title="Добавить книгу">
+		<div name="title">
+			<form>
+				<label for="название">${text('pages.books.book.title')}</label>
+				<input name="название" class="field" type="text" validation="книга.название"/>
+				
+				<label for="сочинитель">${text('pages.books.book.author')}</label>
+				<input name="сочинитель" class="field" type="text" validation="книга.сочинитель"/>
+			</form>
+		</div>
+	</div>
+</section>

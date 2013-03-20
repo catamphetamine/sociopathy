@@ -90,6 +90,7 @@ var button = new Class
 		lock: function()
 		{
 			this.locker = this.self.lock()
+			return this.locker
 		},
 		
 		unlock: function(options)
@@ -554,7 +555,7 @@ var button = new Class
 		var lock = this.lock()
 		
 		this.element.css('opacity', 0)
-		this.element.fade_in(0.4, function() 
+		this.element.fade_in(0.3, function() 
 		{ 
 			self.is_shown = true
 			
@@ -594,7 +595,7 @@ var button = new Class
 				lock.unlock()				
 			}
 				
-			self.element.fade_out(0.3, action)
+			self.element.fade_out(0.2, action)
 		}
 		
 		fade_out_after_pushed()

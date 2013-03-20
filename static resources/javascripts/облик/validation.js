@@ -268,3 +268,26 @@ Validation.наглядный_писарь.аудиозапись =
 		callback()
 	}
 }
+
+Validation.книга =
+{
+	название: function(название, callback)
+	{
+		название = название.trim()
+		
+		if (!название)
+			return callback({ error: 'Введите название книги' })
+			
+		callback()
+	},
+	
+	сочинитель: function(сочинитель, callback)
+	{
+		сочинитель = сочинитель.trim()
+		
+		if (!сочинитель)
+			return callback({ error: 'Укажите автора книги' })
+			
+		callback()
+	}
+}

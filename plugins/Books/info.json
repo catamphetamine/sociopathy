@@ -1,0 +1,15 @@
+{
+	"description": "Books",
+	
+	"version": "1.0.0",
+	
+	"code": "books",
+	
+	"icon": 
+	{
+		"picture": "книги",
+		"to": "/книги",
+		
+		"private": true
+	}
+}

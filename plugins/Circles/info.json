@@ -1,0 +1,15 @@
+{
+	"description": "Circles",
+	
+	"version": "1.0.0",
+	
+	"code": "circles",
+	
+	"icon": 
+	{
+		"picture": "круги",
+		"to": "/круги",
+		
+		"private": true
+	}
+}

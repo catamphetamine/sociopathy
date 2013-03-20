@@ -277,7 +277,6 @@ file_system = require 'fs'
 			
 	data = batch
 	if batch.length < ввод.данные.сколько
-		console.log(batch.length + '<' + ввод.данные.сколько)
 		куда[свойство] = data
 		return data
 	
@@ -289,7 +288,6 @@ file_system = require 'fs'
 	more = collection._.find(more, query_options)
 	
 	if more? && !more.пусто()
-		console.log('EST ESHE')
 		куда['есть ещё?'] = yes
 	else
 		куда['есть ещё?'] = no

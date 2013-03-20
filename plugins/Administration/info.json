@@ -1,0 +1,16 @@
+{
+	"description": "Administration panel",
+	
+	"version": "1.0.0",
+	
+	"code": "administration",
+	
+	"icon": 
+	{
+		"picture": "управление",
+		"to": "/управление",
+		
+		"private": true,
+		"restricted": true
+	}
+}

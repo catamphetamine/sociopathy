@@ -2,16 +2,11 @@ var навершие = $('#panel_menu')
 
 $('<li><div class="loading"></div><span class="divider"></span></li>').appendTo(навершие)
 
-Object.for_each(Configuration.Old_plugins, function(key)
-{
-	if (this.private)
-		add_top_panel_button.bind(this)()
-})
-
 Object.for_each(Configuration.Plugins, function(key)
 {
-	if (this.icon.private)
-		add_top_panel_button.bind(this)()
+	if (this.icon)
+		if (this.icon.private)
+			add_top_panel_button.bind(this)()
 })
 
 $(document).on('authenticated', function(event, data)

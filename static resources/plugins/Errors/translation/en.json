@@ -1,0 +1,11 @@
+{
+	"pages":
+	{
+		"errors":
+		{
+			"title": "Errors",
+			
+			"description": "Global error log"
+		}
+	}
+}

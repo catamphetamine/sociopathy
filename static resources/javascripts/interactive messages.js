@@ -603,7 +603,7 @@ var Interactive_messages = function(options)
 		var container = $('<li user="' + user._id + '"></li>')
 		container.addClass('online')
 		
-		var icon = $.tmpl('chat user icon', { отправитель: user })
+		var icon = $.tmpl('message user icon', { отправитель: user })
 		
 		if (user._id !== пользователь._id)
 		{

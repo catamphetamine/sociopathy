@@ -1,0 +1,47 @@
+{
+	"pages":
+	{
+		"settings":
+		{
+			"title": "Настройки",
+			
+			"email_not_specified": "почтовый ящик не указан",
+			
+			"language": "Язык",
+			"language_not_specified": "по умолчанию",
+			
+			"modes":
+			{
+				"title": "Режимы",
+				
+				"view": "Обычный",
+				"edit": "Правка",
+				"action": "Действия"
+			},
+			
+			"actions":
+			{
+				"title": "Действия",
+				
+				"create": "Создать",
+				"add": "Добавить",
+				"delete": "Удалить"
+			},
+			
+			"editor":
+			{
+				"title": "Писарь",
+				
+				"breaking space": "Разрывный пробел",
+				"show": "Показать"
+			},
+			
+			"other":
+			{
+				"title": "Прочее",
+				
+				"log in": "Вход"
+			}
+		}
+	}
+}

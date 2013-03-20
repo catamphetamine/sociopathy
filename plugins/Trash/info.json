@@ -1,0 +1,15 @@
+{
+	"description": "Public and private trashbins",
+	
+	"version": "1.0.0",
+	
+	"code": "trash",
+	
+	"icon": 
+	{
+		"picture": "мусорка",
+		"to": "/мусорка",
+		
+		"private": true
+	}
+}

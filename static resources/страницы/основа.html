@@ -213,7 +213,7 @@
 				script.onload = script.onreadystatechange = function()
 				{
 					// Attach handlers for all browsers
-					if ( !done && (!this.readyState || this.readyState === "loaded" || this.readyState === "complete") )
+					if (!done && (!this.readyState || this.readyState === "loaded" || this.readyState === "complete"))
 					{
 						done = true
 						

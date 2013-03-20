@@ -1,0 +1,11 @@
+{
+	"description": "Help",
+	
+	"version": "1.0.0",
+	
+	"icon": 
+	{
+		"picture": "помощь",
+		"to": "/помощь"
+	}
+}
