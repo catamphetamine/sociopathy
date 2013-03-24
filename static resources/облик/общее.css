@@ -440,7 +440,7 @@ label.error
 		position: relative;
 		display: inline-block;
 		
-		background-image: url('/картинки/temporary/картинка с навершия.jpg');
+		background-image: url('/картинки/avatar/картинка с навершия.jpg');
 		background-repeat: no-repeat;
 
 		border-style: solid;
@@ -1530,7 +1530,7 @@ body
 {
 	> .message_container
 	{
-		.new_message_in_talk, .new_message_in_discussion
+		.new_message_in_communication
 		{
 			.popup_panel
 			{

@@ -1,6 +1,6 @@
 (function()
 {
-	title('Видео. ' + page.data.адресное_имя)
+	title(text('pages.video albums.title'))
 	
 	Режим.пообещать('правка')
 	Режим.пообещать('действия')
@@ -11,22 +11,24 @@
 		
 		new Data_templater
 		({
-			template_url: '/страницы/кусочки/альбом с видео в списке альбомов.html',
+			template: 'альбом с видео в списке альбомов',
 			container: $('#albums'),
 			conditional: conditional
 		},
 		new  Data_loader
 		({
-			url: '/приложение/человек/видео/альбомы',
+			url: '/человек/видео/альбомы',
 			parameters: { 'адресное имя': page.data.адресное_имя },
 			before_done: albums_loaded,
 			done: page.initialized,
 			get_data: function(data)
 			{
+				title(text('pages.video albums.title') + '. ' + data.пользователь.имя)
+	
 				breadcrumbs
 				([
 					{ title: data.пользователь.имя, link: '/люди/' + page.data.адресное_имя },
-					{ title: 'Видео', link: '/люди/' + page.data.адресное_имя + '/видео' }
+					{ title: text('pages.video albums.title'), link: '/люди/' + page.data.адресное_имя + '/видео' }
 				])
 				
 				return data.альбомы

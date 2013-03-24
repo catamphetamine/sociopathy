@@ -1,5 +1,15 @@
 {
 	"pages":
 	{
+		"bookshelf":
+		{
+			"title": "Книги",
+			
+			"book":
+			{
+				"remove": "Убрать",
+				"removed": "Книга убрана"
+			}
+		}
 	}
 }

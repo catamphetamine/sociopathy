@@ -96,17 +96,19 @@ var войти
 		.ok(function(данные)
 		{
 			loading.hide()
-			loading_page({ full: true })
-			enter_window.close()
-			
-			if (data.go_to)
-				return window.location = data.go_to
-			
-			if (page.data.go_to_after_login)
-				return window.location = page.data.go_to_after_login
+			loading_page({ full: true }, function()
+			{
+				enter_window.close()
 				
-			reload_web_page()
-			//reload_page()
+				if (data.go_to)
+					return window.location = data.go_to
+				
+				if (page.data.go_to_after_login)
+					return window.location = page.data.go_to_after_login
+					
+				reload_web_page()
+				//reload_page()
+			})
 		})
 	}
 	
@@ -122,9 +124,10 @@ var войти
 		.ok(function(данные)
 		{ 
 			loading.hide()
-			loading_page({ full: true })
-			
-			window.location = '/'
+			loading_page({ full: true }, function()
+			{
+				window.location = '/'
+			})
 		})
 	}
 })()

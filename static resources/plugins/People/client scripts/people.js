@@ -1,6 +1,10 @@
+Page_icon({ page: 'человек', icon: 'People' })
+
 url_matcher(function(url)
 {
 	var tools = this
+	
+	tools.id = 'People'
 
 	match_url(url,
 	{

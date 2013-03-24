@@ -44,7 +44,7 @@ Configuration)
 
 $(document).on('scripts_loaded', function()
 {
-	loading_page()
+	loading_page({ immediate: true })
 
 	Page.element = $('#page')
 

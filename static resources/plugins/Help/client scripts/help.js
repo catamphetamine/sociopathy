@@ -1,6 +1,8 @@
 url_matcher(function(url)
 {
 	var tools = this
+	
+	tools.id = 'Help'
 
 	match_url(url,
 	{

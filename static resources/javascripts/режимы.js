@@ -384,17 +384,27 @@ var Режим = (function()
 			if (!options.anything_changed.bind(options.data)())
 			{
 				if (options.continues)
+				{
 					if (options.ok)
-						return options.ok(options.загрузка)
+						options.ok(options.загрузка)
+						
+					return
+				}
 					
 				if (options.загрузка)
 				{
 					options.загрузка.hide()
+					
 					Режим.разрешить_переходы()
+					Режим.изменения_сохранены()
+					
+					if (options.ok)
+						options.ok(options.загрузка)
+						
+					return
 				}
-				else
-					info('Вы не внесли никаких правок')
 				
+				info('Вы не внесли никаких правок')
 				return Режим.изменения_сохранены()
 			}
 		}

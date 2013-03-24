@@ -2,13 +2,7 @@ var Новости = new (new Class
 ({
 	//задержка_уведомления_о_новостях: 3000,
 	
-	что_нового:
-	{
-		новости: [],
-		беседы: {},
-		обсуждения: {},
-		болталка: null
-	},
+	news: {},
 	
 	// если не открыто окно обсуждения
 	звуки:
@@ -23,9 +17,6 @@ var Новости = new (new Class
 	
 	появились_новости: function()
 	{
-		//if (!this.есть_новости)
-		//	this.задержанное_уведомление_о_новостях = site_icon.something_new.delay(this.задержка_уведомления_о_новостях)
-		
 		if (!this.есть_новости)
 			window_notification.something_new()
 		
@@ -42,18 +33,13 @@ var Новости = new (new Class
 	
 	сброс: function()
 	{
-		this.что_нового =
+		Object.for_each(this.news, function()
 		{
-			новости: [],
-			беседы: {},
-			обсуждения: {},
-			болталка: null
-		}
+			this.reset()
+		})
 		
 		window_notification.nothing_new()
 		this.есть_новости = false
-		
-		panel.no_more_new_chat_messages()
 	},
 	
 	общение: function(options, последнее_сообщение)
@@ -94,16 +80,16 @@ var Новости = new (new Class
 		}
 			
 		var indicate = false
-		if (!Object.path(this.что_нового, options.path))
+		if (!this.news[options.communication_id].anything_new())
 			indicate = true
 			
-		Object.set(this.что_нового, options.path, последнее_сообщение)
+		this.news[options.communication_id].new_message(options.общение, последнее_сообщение)
 			
 		if (indicate)
 		{
 			options.indication()
 			
-			if (options.important !== false)
+			if (!this.news[options.communication_id].not_important)
 				this.появились_новости()			
 		}
 		
@@ -111,7 +97,7 @@ var Новости = new (new Class
 		{
 			var text = Wiki_processor.simplify(options.text)
 			
-			Message.message('new_message_in_' + options.english, text,
+			Message.message('new_message_in_communication new_message_in_' + options.english, text,
 			{
 				postprocess: function(container)
 				{
@@ -128,22 +114,9 @@ var Новости = new (new Class
 				время: 1.5,
 				on_close: function()
 				{
-					/*
-					switch (options.english)
-					{
-						case 'talk':
-							data.что = 'беседа'
-							break
-						
-						case 'discussion':
-							data.что = 'обсуждение'
-							break
-					}
-					*/
-					
 					Inter_tab_communication.send('убрать_уведомление',
 					{
-						what: options.english,
+						what: options.id,
 						общение: this.attr('communication'),
 						сообщение: this.attr('message_id')
 					})
@@ -151,118 +124,30 @@ var Новости = new (new Class
 			})
 		}
 	},
-	
-	болталка: function(последнее_сообщение)
-	{
-		this.общение
-		({
-			page: 'сеть/болталка',
-			path: 'болталка',
-			indication: panel.new_chat_messages,
-			important: false
-		},
-		последнее_сообщение)
-	},
     
-	обсуждение: function(обсуждение, последнее_сообщение, options)
-	{
-		this.общение
-		(Object.x_over_y(options,
-		{
-			page: 'сеть/обсуждение',
-			url: 'сеть/обсуждения',
-			общение: обсуждение,
-			path: 'обсуждения.' + обсуждение,
-			indication: panel.new_discussion_messages,
-			english: 'discussion'
-		}),
-		последнее_сообщение)
-	},
-    
-	беседа: function(беседа, последнее_сообщение, options)
-	{
-		this.общение
-		(Object.x_over_y(options,
-		{
-			page: 'сеть/беседа',
-			url: 'сеть/беседы',
-			общение: беседа,
-			path: 'беседы.' + беседа,
-			indication: panel.new_talk_messages,
-			english: 'talk'
-		}),
-		последнее_сообщение)
-	},
-    
-	новости: function(новости)
-	{
-		var indicate = false
-		if (this.что_нового.новости.пусто())
-			indicate = true
-			
-		this.что_нового.новости.combine(новости)
-		
-		if (indicate)
-		{
-			panel.new_news()
-			
-			//this.появились_новости()
-		}
-	},
-	
 	прочитано: function(что)
 	{
-		if (что.новость)
-		{	
-			this.что_нового.новости.remove(что.новость)
-			if (this.что_нового.новости.пусто())
-				panel.no_more_new_news()
-		}
-		else if (что.обсуждение)
+		var found = false
+		Object.for_each(this.news, function()
 		{
-			убрать_уведомления_сообщениях('обсуждение', что.обсуждение, что.сообщение)
-			
-			$(document).trigger('message_read', что)
+			if (!found)
+				found = this.read(что)
+		})
 		
-			if (!this.что_нового.обсуждения[что.обсуждение])
+		// should we notify about news
+		var anything_new = false
+		Object.for_each(this.news, function()
+		{
+			if (anything_new)
 				return
 			
-			if (this.что_нового.обсуждения[что.обсуждение] === что.сообщение)
-			{
-				delete this.что_нового.обсуждения[что.обсуждение]
-				panel.no_more_new_discussion_messages()
-			}
-		}
-		else if (что.беседа)
-		{
-			убрать_уведомления_сообщениях('беседа', что.беседа, что.сообщение)
-			
-			$(document).trigger('message_read', что)
-			
-			if (!this.что_нового.беседы[что.беседа])
+			if (this.not_important)
 				return
 			
-			if (this.что_нового.беседы[что.беседа] === что.сообщение)
-			{
-				delete this.что_нового.беседы[что.беседа]
-				panel.no_more_new_talk_messages()
-			}
-		}
-		else if (что.болталка)
-		{
-			$(document).trigger('message_read', что)
-			
-			if (this.что_нового.болталка)
-				if (this.что_нового.болталка <= что.болталка)
-				{
-					this.что_нового.болталка = null
-					panel.no_more_new_chat_messages()
-				}
-		}
+			anything_new = this.anything_new()
+		})
 		
-		if (this.что_нового.новости.пусто()
-			&& Object.пусто(this.что_нового.обсуждения)
-			&& Object.пусто(this.что_нового.беседы))
+		if (!anything_new)
 		{	
 			window_notification.nothing_new()
 			this.есть_новости = false
@@ -298,32 +183,7 @@ function close_popup(where, общение, последнее_прочитан�
 	})
 }
 
-function убрать_уведомления_сообщениях(чего, общение, последнее_прочитанное)
+function News(id, methods)
 {
-	switch (чего)
-	{
-		case 'беседа':
-			close_popup('talk', общение, последнее_прочитанное, { including_before: true })
-			break
-		
-		case 'обсуждение':
-			close_popup('discussion', общение, последнее_прочитанное, { including_before: true })
-			break
-	}
+	Новости.news[id] = methods
 }
-
-Inter_tab_communication.on('убрать_уведомление', function(data)
-{
-	switch (data.what)
-	{
-		case 'talk':
-			что = 'беседа'
-			break
-		
-		case 'discussion':
-			что = 'обсуждение'
-			break
-	}
-	
-	убрать_уведомления_сообщениях(что, data.общение, data.сообщение)
-})

@@ -290,6 +290,18 @@ var Scroller = new Class
 			value = 0
 			
 		return 1000 * value + 700
+	},
+	
+	in_the_end: function()
+	{
+		return $(window).scrollTop() + $(window).height() === $(document).height()
+	},
+	
+	to_the_end: function()
+	{
+		var scroll_to = $(document).height() - $(window).height()
+		if (scroll_to > 0)
+			$(window).scrollTop(scroll_to)
 	}
 })
 

@@ -51,9 +51,15 @@ function get_scroll_position()
 /**
  * show loading screen
  */
-function loading_page(options)
+function loading_page(options, callback)
 {
-	options = options || {}
+	if (!callback)
+	{
+		callback = options
+		options = {}
+	}
+	else
+		options = options || {}
 	
 	if (!first_time_page_loading)
 	{
@@ -79,13 +85,13 @@ function loading_page(options)
 	
 	loading_screen.find('.loading').fade_in(2.0, { maximum_opacity: 0.5 })
 	
-	loading_screen.fade_in(Configuration.Loading_screen.Fade_in)
+	var fade_in_for = Configuration.Loading_screen.Fade_in
+	if (options.immediate)
+		fade_in_for = 0
+	
 	$('body').addClass('loading')
-		
-	return function()
-	{
-		loading_screen.stop_animator().fade_in(0)
-	}
+	
+	loading_screen.fade_in(fade_in_for, callback)
 }
 
 /**

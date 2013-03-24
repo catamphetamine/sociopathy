@@ -321,9 +321,7 @@ Digit_symbols = '☀★☄☆☭☮☯☢☤☣☁'
 		return base + Digit_symbols.random()
 
 снасти.generate_unique_id = (base, проверка, options) ->
-	if not возврат?
-		возврат = options
-		options = {}
+	options = options || {}
 	
 	id = null
 	if not options.base_is_reserved?

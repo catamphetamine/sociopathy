@@ -2,6 +2,8 @@ url_matcher(function(url)
 {
 	var tools = this
 	
+	tools.id = 'Books'
+	
 	match_url(url,
 	{
 		'сеть/книги': function(rest)

@@ -77,7 +77,7 @@ http.put '/прописать', (ввод, вывод) ->
 	человек['когда пришёл'] = new Date()
 	
 	проверка = (id) ->
-		found = db('people')._.find_one({ id: id })
+		found = db('people')._.find_one({ 'адресное имя': id })
 		return not found?
 				
 	адресное_имя = снасти.generate_unique_id(человек.имя, проверка)

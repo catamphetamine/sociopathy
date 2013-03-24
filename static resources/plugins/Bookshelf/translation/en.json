@@ -1,5 +1,15 @@
 {
 	"pages":
 	{
+		"bookshelf":
+		{
+			"title": "Books",
+			
+			"book":
+			{
+				"remove": "Remove",
+				"removed": "The book has been removed"
+			}
+		}
 	}
 }

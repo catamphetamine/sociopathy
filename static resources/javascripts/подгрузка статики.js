@@ -98,9 +98,9 @@ var вставить_содержимое
 				{
 					Object.for_each(Configuration.Plugins, function(key)
 					{
-						if (this.icon)
+						if (typeof this.icon === 'object')
 							if (!this.icon.private)
-								add_top_panel_button.bind(this)()
+								add_top_panel_button.bind(this)(this)
 					})
 					
 					callback()
@@ -108,6 +108,50 @@ var вставить_содержимое
 			}
 			
 			вставить_содержимое('/страницы/кусочки/' + кусочек + '.html', {}, { куда: $('body') }, возврат)
+		})
+	}
+	
+	function подгрузить_переводы_плагинов(возврат)
+	{
+		var плагинов_осталось = Object.size(Configuration.Plugins)
+		
+		Object.for_each(Configuration.Plugins, function()
+		{
+			подгрузить_перевод_плагина(this, function()
+			{
+				плагинов_осталось--
+				
+				if (плагинов_осталось > 0)
+					return
+				
+				возврат()
+			})
+		})
+	}
+	
+	function подгрузить_перевод_плагина(plugin, возврат)
+	{
+		load_relevant_translation('/plugins/' + plugin.title + '/translation/${language}.json',
+		{
+			ok: function(язык, перевод)
+			{
+				подгрузить_перевод(перевод)
+			
+				/*
+				if (язык !== Язык)
+				{
+					console.log('Seems that your preferred language (code «' + Configuration.Locale.Предпочитаемый_язык + '») isn\'t supported by this plugin. ' + 'Defaulting to «' + get_language(язык).name + '»')
+				}
+				*/
+				
+				возврат()
+			},
+			no_translation: function()
+			{
+				console.log('No appropriate translation found for this plugin')
+				
+				возврат()
+			}
 		})
 	}
 	
@@ -178,12 +222,12 @@ var вставить_содержимое
 				
 				$('#panel').appendTo('nav').css('display', 'block')
 				
-				подгрузить_скрипты_плагинов(function()
+				подгрузить_переводы_плагинов(function()
 				{
-					if (ошибка)
-						return callback(true)
-				
-					callback()
+					подгрузить_скрипты_плагинов(function()
+					{
+						callback()
+					})
 				})
 			})
 		})

@@ -147,7 +147,7 @@ title(text('pages.discussions.title'))
 								{
 									var discussion = $(this)
 									
-									if (Новости.что_нового.обсуждения[discussion.attr('_id')])
+									if (Новости.news['Discussions'].обсуждения[discussion.attr('_id')])
 										discussion.addClass('new')
 										
 									interactive(discussion)

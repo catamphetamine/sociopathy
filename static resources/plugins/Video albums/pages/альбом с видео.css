@@ -75,12 +75,12 @@
 			{
 				.previous
 				{
-					cursor: url('/картинки/cursor/влево (белый).png') 32 0, auto;
+					/* cursor: url('/картинки/cursor/влево (белый).png') 32 0, auto; */
 				}
 				
 				.next
 				{
-					cursor: url('/картинки/cursor/вправо (белый).png') 0 0, auto;
+					/* cursor: url('/картинки/cursor/вправо (белый).png') 0 0, auto; */
 				}
 			}
 			
@@ -119,7 +119,7 @@
 				width: 50%;
 				height: 100%;
 				
-				cursor: url('/картинки/cursor/влево (белый).png') 32 0, auto;
+				/* cursor: url('/картинки/cursor/влево (белый).png') 32 0, auto; */
 			}
 			
 			.next
@@ -131,7 +131,7 @@
 				width: 50%;
 				height: 100%;
 				
-				cursor: url('/картинки/cursor/вправо (белый).png') 0 0, auto;
+				/* cursor: url('/картинки/cursor/вправо (белый).png') 0 0, auto; */
 			}
 		}
 	}

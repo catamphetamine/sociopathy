@@ -7,12 +7,14 @@
 				{{/if}}
 			{{/if}}
 			
+			<!--  title="${сочинитель.escape_quotes()} «${название.escape_quotes()}»" -->
+			
 			<!-- блок начала ссылки -->
 			{{if формат}}
-				<a target="_blank" href="/загруженное/книги/${id}.${формат}" class="book_link" title="${сочинитель.escape_quotes()} «${название.escape_quotes()}»">
+				<a target="_blank" href="/загруженное/книги/${id}.${формат}" class="book_link">
 			{{else}}
 				{{if ссылка}}
-					<a target="_blank" href="${ссылка.escape_quotes()}" class="book_link" title="${сочинитель.escape_quotes()} «${название.escape_quotes()}»">
+					<a target="_blank" href="${ссылка.escape_quotes()}" class="book_link">
 				{{/if}}	
 			{{/if}}
 	

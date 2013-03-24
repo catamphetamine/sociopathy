@@ -17,30 +17,7 @@ var Страница =
 		if (!путь)
 			return 'обложка'
 		
-		var страница
-		
-		var tools =
-		{
-			page: function(page)
-			{
-				страница = page
-			},
-			wait: function()
-			{
-				страница = '_wait_'
-				page.data.proceed_manually = true
-				return page.proceed
-			}
-		}
-		
-		url_matchers.for_each(function()
-		{
-			if (!страница)
-				this.bind(tools)(путь)
-		})
-		
-		if (страница)
-			return страница
+		var страница_человека = false
 		
 		match_url(путь,
 		{
@@ -50,13 +27,54 @@ var Страница =
 				{
 					'*': function(value, rest)
 					{
-						page.data.адресное_имя = value
-						страница = 'человек'
+						страница_человека = true
 						
+						page.data.адресное_имя = value
 						page.data.пользователь_сети = { 'адресное имя': value }
 					}
 				})
-			},
+			}
+		})
+			
+		var страница
+		
+		var tools = function(id)
+		{
+			var result = 
+			{
+				id: id || '',
+				page: function(page)
+				{
+					if (this.id)
+						page = this.id + '/' + page
+					
+					страница = page
+				},
+				wait: function()
+				{
+					страница = '_wait_'
+					page.data.proceed_manually = true
+					return page.proceed
+				}
+			}
+			
+			return result
+		}
+		
+		url_matchers.for_each(function()
+		{
+			if (!страница)
+				this.bind(tools())(путь)
+		})
+		
+		if (страница)
+			return страница
+		
+		if (страница_человека)
+			return 'человек'
+		
+		match_url(путь,
+		{
 			'сеть/общение': function(rest)
 			{
 				match_url(rest,

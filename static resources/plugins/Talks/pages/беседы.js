@@ -56,7 +56,7 @@ title(text('pages.talks.title'));
 					{
 						var talk = $(this)
 						
-						if (Новости.что_нового.беседы[talk.attr('_id')])
+						if (Новости.news['Talks'].беседы[talk.attr('_id')])
 							talk.addClass('new')
 					})
 					

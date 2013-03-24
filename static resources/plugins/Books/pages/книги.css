@@ -90,60 +90,40 @@
 	}
 }
 
-#add_book_window
+.add_book_dialog_window
 {
-	.buttons
+	.main_content
 	{
-		label.add, label.apply
-		{
-			display: none;
-		}
-	}
-	
-	form
-	{
-		margin-top: 16px;
+		width: 840px;
 		
-		label[for="сочинитель"]
+		.buttons
 		{
-			margin-top: 30px;
+			padding-right: 30px;
 		}
-	}
-	
-	.icon
-	{
-		margin-right: 10px;
-	
-		width: 120px;
-		height: 170px;
 		
-		> table
+		form
 		{
-			width: 100%;
-			height: 100%;
-			
-			td
+			input[type="text"]
 			{
-				text-align: center;
-				
-				> *
-				{
-					vertical-align: middle;
-				}
+				width: 840px;
+				display: block;
+				margin-top: 10px;
+			}
+			
+			label[for="title"]
+			{
+				margin-top: 0;
+			}
+			
+			label[for="author"]
+			{
+				margin-top: 30px;
 			}
 		}
 		
-		img
+		.icon
 		{
-			cursor: pointer;
-		}
-		
-		.no_icon
-		{
-			width: 100px;
-			height: 150px;
-			
-			box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+			display: none;
 		}
 	}
 }
@@ -156,72 +136,6 @@
 	> .search
 	{
 		width: 50%;
-	}
-}
-
-#add_book
-{
-	.main_content
-	{
-		width: 840px;
-		height: 320px;
-	}
-
-	input[type="text"]
-	{
-		width: 840px;
-		display: block;
-		margin-top: 10px;
-	}
-	
-	.slide
-	{
-		form
-		{
-			display: inline-block;
-			vertical-align: top;
-			
-			padding-top: 10px;
-		}
-	}
-
-	[name=title]
-	{
-		input[name="название"]
-		{
-			margin-bottom: 64px;
-		}
-	}
-
-	[name=cover]
-	{
-		.icon
-		{
-			float: left;
-
-			background-image: url('/картинки/на страницах/сеть/книги/нет обложки.jpg');
-			background-repeat: no-repeat;
-
-			width: 213px;
-			height: 320px;
-			
-			padding-right: 34px;
-		}
-	}
-	
-	.buttons
-	{
-		padding-right: 30px;
-		
-		.left
-		{
-			float: left;
-		}
-		
-		.right
-		{
-			float: right;
-		}
 	}
 }
 

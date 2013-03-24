@@ -40,37 +40,55 @@
 		
 		initialize_search()
 		
-		var step_by_step = new Step_by_step_dialog_window
+		var add_book = simple_value_dialog_window
 		({
-			dialog_window: $('#add_book'),
-		
+			class: 'add_book_dialog_window',
+			title: text('pages.books.add'),
+			ok_button_text: text('actions.add'),
 			fields:
-			{
-				название:
-				{
-				},
-				сочинитель:
-				{
-				},
-				обложка:
-				{
-				}
+			[{
+				id: 'title',
+				description: text('pages.books.book.title'),
+				validation: 'книга.название'
 			},
-			
-			done: function(data, done)
 			{
-				done()
+				id: 'author',
+				description: text('pages.books.book.author'),
+				validation: 'книга.сочинитель'
+			}],
+			ok: function(data, finish)
+			{
+				var loading = loading_indicator.show()
+				
+				page.Ajax.put('/сеть/книга', data)
+				.ok(function(data)
+				{
+					loading.hide()
+					finish(page.refresh)
+				})
+				.ошибка(function(message)
+				{
+					if (message === 'already exists')
+						error(text('pages.books.adding.already exists'))
+					else
+						error('Не удалось добавить книгу')
+						
+					loading.hide()
+					finish(true)
+				})
+				
+				return 'wait'
 			}
 		})
 		
-		function add_book()
+		function add_a_book()
 		{
-			step_by_step.open()
+			add_book.window.open()
 		}
 		
-		text_button.new(page.get('.add_book')).does(add_book)
+		text_button.new(page.get('.add_book')).does(add_a_book)
 		
-		page.hotkey('Действия.Добавить', 'действия', add_book)
+		page.hotkey('Действия.Добавить', add_a_book)
 		
 		Режим.разрешить('действия')	
 	}

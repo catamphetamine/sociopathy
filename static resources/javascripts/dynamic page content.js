@@ -13,7 +13,15 @@ var get_page_less_style_link
 	
 		this.pages.for_each(function()
 		{
-			страницы_плагинов[this] = plugin.title
+			var page = plugin.title + '/' + this
+			
+			страницы_плагинов[page] = plugin.title
+			
+			var icon = plugin.title
+			if (typeof plugin.icon === 'string')
+				icon = plugin.icon
+			
+			Page_icon({ page: page, icon: icon })
 		})
 	})
 	
@@ -22,8 +30,9 @@ var get_page_less_style_link
 		if (!название_страницы)
 			название_страницы = Страница.эта()
 			
-		if (страницы_плагинов[название_страницы])
-			return '/plugins/' + страницы_плагинов[название_страницы] + '/pages/' + название_страницы + '.css'
+		var plugin = страницы_плагинов[название_страницы]
+		if (plugin)
+			return '/plugins/' + plugin + '/pages/' + название_страницы.substring(plugin.length + 1) + '.css'
 			
 		return '/облик/страницы/' + название_страницы + '.css'
 	}
@@ -69,48 +78,50 @@ var get_page_less_style_link
 		}
 		
 		clear_previous_page_data()
-		
 		page = new Page()
 		
 		page.proceed = function(ошибка)
 		{
-			if (!first_time_page_loading)
-				loading_page()
-			
-			var finish = function()
+			function do_proceed()
 			{
-				page.content = $('#content')
-				$('*').unbind('.page')
-				
-				if (options.state)
+				var finish = function()
 				{
-					page.data.scroll_to = options.state.scrolled
+					page.content = $('#content')
+					$('*').unbind('.page')
+					
+					if (options.state)
+					{
+						page.data.scroll_to = options.state.scrolled
+					}
+					
+					$(document).trigger('page_loaded')
 				}
 				
-				$(document).trigger('page_loaded')
-				
-				if (options.initialized)
+				if (ошибка)
+				{
+					var error = $('<div/>').addClass('error')
+					error.append(ошибка_на_экране(ошибка))
+					Page.element.empty().append(error)
+					finish()
 					page.initialized()
+				}
+					
+				вставить_содержимое_страницы(finish)
 			}
-		
-			if (ошибка)
-			{
-				var error = $('<div/>').addClass('error')
-				error.append(ошибка_на_экране(ошибка))
-				Page.element.empty().append(error)
-				return finish({ initialized: true })
-			}
-		
+			
 			if (!first_time_page_loading)
-				panel.highlight_current_page(page)
-				
-			вставить_содержимое_страницы(finish)
+				loading_page(do_proceed)
+			else
+				do_proceed()
 		}
 		
 		Страница.определить(url)
 		
 		page.data.данные_для_страницы = данные_пользователя
 		
+		if (!first_time_page_loading)
+			panel.highlight_current_page(page)
+			
 		if (!page.data.proceed_manually)
 			page.proceed()
 		
@@ -130,30 +141,11 @@ var get_page_less_style_link
 				возврат)
 			}
 			
-			if (страницы_плагинов[Страница.эта()])
+			var plugin = страницы_плагинов[Страница.эта()]
+			
+			if (plugin)
 			{
-				var plugin_path = '/plugins/' + страницы_плагинов[Страница.эта()]
-				
-				load_relevant_translation(plugin_path + '/translation/${language}.json',
-				{
-					ok: function(язык, перевод)
-					{
-						подгрузить_перевод(перевод)
-					
-						if (язык !== Язык)
-						{
-							console.log('Seems that your preferred language (code «' + Configuration.Locale.Предпочитаемый_язык + '») isn\'t supported by this plugin. ' + 'Defaulting to «' + get_language(язык).name + '»')
-						}
-						
-						теперь_вставить_содержимое_страницы(plugin_path + '/pages/' + Страница.эта())
-					},
-					no_translation: function()
-					{
-						console.log('No appropriate translation found for this plugin')
-						
-						теперь_вставить_содержимое_страницы(plugin_path + '/pages/' + Страница.эта())
-					}
-				})
+				теперь_вставить_содержимое_страницы('/plugins/' + plugin + '/pages/' + Страница.эта().substring(plugin.length + 1))
 			}
 			else
 			{
@@ -175,8 +167,9 @@ var get_page_less_style_link
 		if (!название_страницы)
 			название_страницы = Страница.эта()
 			
-		if (страницы_плагинов[название_страницы])
-			return '/plugins/' + страницы_плагинов[название_страницы] + '/pages/' + название_страницы + '.js'
+		var plugin = страницы_плагинов[название_страницы]
+		if (plugin)
+			return '/plugins/' + plugin + '/pages/' + название_страницы.substring(plugin.length + 1) + '.js'
 		
 		return '/javascripts/на страницах/' + название_страницы.escape_html() + '.js'
 	}

@@ -422,3 +422,5 @@ Object.size = function(object)
 	
 	return size
 }
+
+Array.prototype.add = Array.prototype.push

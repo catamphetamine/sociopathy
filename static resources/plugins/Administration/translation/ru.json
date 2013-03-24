@@ -3,11 +3,11 @@
 	{
 		"administration":
 		{
-			"title": "Управление",
+			"title": "РЈРїСЂР°РІР»РµРЅРёРµ",
 			
-			"load dummy data into the database": "Заполнить хранилище пробными данными",
-			"create an invite": "Выдать приглашение",
-			"execute database altering script": "Внести в хранилище изменения, прописанные в «administration.coffee» (используется только для разработки)"
+			"load dummy data into the database": "Р—Р°РїРѕР»РЅРёС‚СЊ С…СЂР°РЅРёР»РёС‰Рµ РїСЂРѕР±РЅС‹РјРё РґР°РЅРЅС‹РјРё",
+			"create an invite": "Р’С‹РґР°С‚СЊ РїСЂРёРіР»Р°С€РµРЅРёРµ",
+			"execute database altering script": "Р’РЅРµСЃС‚Рё РІ С…СЂР°РЅРёР»РёС‰Рµ РёР·РјРµРЅРµРЅРёСЏ, РїСЂРѕРїРёСЃР°РЅРЅС‹Рµ РІ В«administration.coffeeВ» (РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ С‚РѕР»СЊРєРѕ РґР»СЏ СЂР°Р·СЂР°Р±РѕС‚РєРё)"
 		}
 	}
 }

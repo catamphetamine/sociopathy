@@ -173,8 +173,6 @@ function simple_value_dialog_window(options)
 	var ok = text_button.new(dialog_window.content.find('.buttons .ok'), { 'prevent double submission': true })
 	.does(function()
 	{
-		dialog_window.close(options.when_closed ? options.when_closed.bind(this) : null)
-		
 		var data
 		
 		if (Object.getLength(fields) > 1)
@@ -187,8 +185,33 @@ function simple_value_dialog_window(options)
 		}
 		else
 			data = Object.value(fields).input.val()
+
+		var close = function(error, callback)
+		{
+			if (typeof error === 'function')
+			{
+				callback = error
+				error = null
+			}
 			
-		options.ok.bind(this)(data)
+			if (error)
+				return ok.allow_to_redo()
+			
+			dialog_window.close((function()
+			{
+				if (options.when_closed)
+					options.when_closed.bind(this)()
+					
+				if (callback)
+					callback()
+			})
+			.bind(this))
+		}
+		
+		var result = options.ok.bind(this)(data, close)
+
+		if (result !== 'wait')
+			close()
 	}
 	.bind(dialog_window))
 	.submits(validating_form, options.before_ok ? options.before_ok.bind(dialog_window) : null)

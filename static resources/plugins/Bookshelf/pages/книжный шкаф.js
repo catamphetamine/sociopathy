@@ -3,7 +3,7 @@
 	Режим.пообещать('правка')
 	//Режим.пообещать('действия')
 	
-	title(text('pages.books.title'))
+	title(text('pages.bookshelf.title'))
 
 	page.load = function()
 	{
@@ -40,13 +40,13 @@
 		
 		new Data_templater
 		({
-			template_url: '/страницы/кусочки/книжный шкаф.html',
+			template: 'книжный шкаф',
 			container: $('.bookshelf_container'),
 			single: true
 		},
 		new  Data_loader
 		({
-			url: '/приложение/человек/книги',
+			url: '/человек/книги',
 			parameters: { 'адресное имя': page.data.адресное_имя },
 			before_done: books_loaded,
 			done: books_shown,
@@ -55,7 +55,7 @@
 				breadcrumbs
 				([
 					{ title: data.пользователь.имя, link: '/люди/' + page.data.адресное_имя },
-					{ title: 'Книги', link: '/люди/' + page.data.адресное_имя + '/книги' }
+					{ title: text('pages.bookshelf.title'), link: '/люди/' + page.data.адресное_имя + '/книги' }
 				])
 				
 				var books = data.книги
@@ -129,17 +129,18 @@
 	{
 		var list_item = book.parent()
 		
-		var menu = book.context_menu
-		({
-			'Убрать': function(_id)
+		var menu_items = {}
+		
+		menu_items[text('pages.bookshelf.book.remove')] = function(_id)
+		{
+			page.Ajax.delete('/сеть/книжный шкаф', { _id: _id }).ok(function()
 			{
-				page.Ajax.delete('/сеть/книжный шкаф', { _id: _id }).ok(function()
-				{
-					info('Книга убрана')
-					page.refresh()
-				})
-			}
-		})
+				info(text('pages.bookshelf.book.removed'))
+				page.refresh()
+			})
+		}
+		
+		var menu = book.context_menu(menu_items)
 		
 		menu.data = list_item.attr('_id')
 	}

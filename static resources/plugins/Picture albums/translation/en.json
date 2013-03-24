@@ -1,5 +1,9 @@
 {
 	"pages":
 	{
+		"picture albums":
+		{
+			"title": "Pictures"
+		}
 	}
 }

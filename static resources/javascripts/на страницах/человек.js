@@ -317,23 +317,6 @@
 		})
 	}
 	
-	/*
-	function show_links()
-	{
-		var links_block = page.get('.miscellaneous .links')
-		
-		if (!page.data.пользователь_сети.ссылки || page.data.пользователь_сети.ссылки.is_empty())
-			return links_block.hide()
-			
-		var list = links_block.find('ul')
-		
-		page.data.пользователь_сети.ссылки.forEach(function(link)
-		{
-			list.append($('<li/>').append($('<a/>').attr('href', link).text(human_readable_url(link))))
-		})
-	}
-	*/
-	
 	function human_readable_url(url)
 	{
 		var host = parseUri(url).host
@@ -472,7 +455,7 @@
 					
 					ok: function(loading)
 					{
-						image_file_name = null
+						//image_file_name = null
 						
 						var small_picture = $('.authenticated_user .real_picture')
 						small_picture.attr('src', anti_cache_postfix(small_picture.attr('src'))).show()
@@ -494,7 +477,9 @@
 							
 							ok: function()
 							{
-								photo_file_name = null
+								//photo_file_name = null
+								
+								page.refresh()
 							}
 						})
 					}

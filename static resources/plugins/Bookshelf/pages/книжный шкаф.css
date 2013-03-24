@@ -107,13 +107,13 @@
 	
 	.top_border, .bottom_border
 	{
-		background-image: url('/картинки/книжный шкаф/пологая доска.png');
+		background-image: url('/plugins/Bookshelf/pictures/книжный шкаф/пологая доска.png');
 		height: 13px;
 	}
 
 	.left_border, .right_border
 	{
-		background-image: url('/картинки/книжный шкаф/отвесная доска.png');
+		background-image: url('/plugins/Bookshelf/pictures/книжный шкаф/отвесная доска.png');
 		width: 13px;
 		height: 100%;
 		position: absolute;
@@ -149,7 +149,7 @@
 		.left, .right
 		{
 			width: 320px;
-			background-image: url('/картинки/книжный шкаф/левая сторона полки.png');
+			background-image: url('/plugins/Bookshelf/pictures/книжный шкаф/левая сторона полки.png');
 		}
 		
 		.right
@@ -160,7 +160,7 @@
 		.center
 		{
 			width: 319px;
-			background-image: url('/картинки/книжный шкаф/середина полки.png');
+			background-image: url('/plugins/Bookshelf/pictures/книжный шкаф/середина полки.png');
 		}
 		
 		.books
@@ -256,13 +256,13 @@
 							width: 100px;
 							height: 150px;
 							
-							background-image: url('/картинки/книжный шкаф/книга без обложки.png');
+							background-image: url('/plugins/Bookshelf/pictures/книжный шкаф/книга без обложки.png');
 						}
 					}
 					
 					.bottom_shadow
 					{
-						background-image: url('/картинки/книжный шкаф/тень от книги на подставке.png');
+						background-image: url('/plugins/Bookshelf/pictures/книжный шкаф/тень от книги на подставке.png');
 						height: 10px;
 	
 						width: 110%;
@@ -294,7 +294,7 @@
 		.left, .right
 		{
 			width: 320px;
-			background-image: url('/картинки/книжный шкаф/левый торец полки.png');
+			background-image: url('/plugins/Bookshelf/pictures/книжный шкаф/левый торец полки.png');
 		}
 		
 		.right
@@ -305,7 +305,7 @@
 		.center
 		{
 			width: 319px;
-			background-image: url('/картинки/книжный шкаф/торец полки.png');
+			background-image: url('/plugins/Bookshelf/pictures/книжный шкаф/торец полки.png');
 		}
 	}
 }

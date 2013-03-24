@@ -85,6 +85,6 @@
 {
 	> li:nth-child(odd)
 	{
-		background-color: #ecf3f4;
+		background-color: #f2f2f2;
 	}
 }

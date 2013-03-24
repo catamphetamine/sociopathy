@@ -654,7 +654,7 @@ var Messages = new Class
 		
 		this.visual_editor.show_tools()
 		
-		page.ticking(this.adjust_listing_margin, 1000)
+		page.ticking(this.adjust_listing_margin, 500)
 		
 		this.compose_message.fadeIn()
 		
@@ -709,7 +709,18 @@ var Messages = new Class
 	
 	adjust_listing_margin: function()
 	{
+		var scroll = false
+		if (прокрутчик.in_the_end())
+		{
+			scroll = true
+		}
+		
 		this.lift_messages_by(this.compose_message.height())
+		
+		if (scroll)
+		{
+			прокрутчик.to_the_end()
+		}
 	},
 	
 	new_messages_notification: function()

@@ -1,6 +1,8 @@
 url_matcher(function(url)
 {
 	var tools = this
+	
+	tools.id = 'Video albums'
 
 	match_url(url,
 	{

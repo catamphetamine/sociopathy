@@ -87,6 +87,7 @@ require './core/system'
 require './core/user'
 require './core/ether' 
 require './core/drafts'
+require './core/news'
 
 # plugin system
 require './plugins'

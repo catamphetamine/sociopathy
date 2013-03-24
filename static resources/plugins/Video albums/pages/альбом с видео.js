@@ -1,6 +1,6 @@
 (function()
 {
-	title(page.data.альбом + '. ' + 'Видео. ' + page.data.адресное_имя)
+	title(page.data.альбом + '. ' + text('pages.video albums.title'))
 	
 	Режим.пообещать('правка')
 	Режим.пообещать('действия')
@@ -11,18 +11,20 @@
 		
 		new Data_templater
 		({
-			template_url: '/страницы/кусочки/видео в альбоме.html',
+			template: 'видео в альбоме',
 			container: $('#videos'),
 			conditional: conditional
 		},
 		new  Data_loader
 		({
-			url: '/приложение/человек/видео/альбом',
+			url: '/человек/видео/альбом',
 			parameters: { 'адресное имя': page.data.адресное_имя, альбом: page.data.альбом },
 			before_done: videos_loaded,
 			done: page.initialized,
 			get_data: function(data)
 			{
+				title(page.data.альбом + '. ' + text('pages.video albums.title') + '. ' + data.пользователь.имя)
+	
 				if (data.альбом.описание)
 				{
 					$('#videos').before($('<p/>').addClass('description').text(data.альбом.описание))
@@ -31,7 +33,7 @@
 				breadcrumbs
 				([
 					{ title: data.пользователь.имя, link: '/люди/' + page.data.адресное_имя },
-					{ title: 'Видео', link: '/люди/' + page.data.адресное_имя + '/видео' },
+					{ title: text('pages.video albums.title'), link: '/люди/' + page.data.адресное_имя + '/видео' },
 					{ title: data.альбом.название, link: '/люди/' + page.data.адресное_имя + '/видео/' + page.data.альбом }
 				])
 				

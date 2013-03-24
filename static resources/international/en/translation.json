@@ -48,5 +48,13 @@
 	"autocomplete":
 	{
 		"query is too short": "The search query you entered is too short. Be a bit more specific"
+	},
+	
+	"actions":
+	{
+		"add": "Add",
+		"cancel": "Cancel",
+		"apply": "Apply",
+		"ok": "Ok"
 	}
 }

@@ -5,10 +5,15 @@
 		{
 			"title": "Books",
 			
-			"not found": "We couldn't find a book titled «{query}». Searching by both author and title isn't implemented yet",
+			"not found": "We couldn't find a book titled Â«{query}Â». Searching by both author and title isn't implemented yet",
 			"added to bookshelf": "The book has been added to [link to bookshelf(user id)]your bookshelf[/link]",
 			
 			"add": "Add a book",
+			
+			"adding":
+			{
+				"already exists": "The book already exists"
+			},
 			
 			"book":
 			{

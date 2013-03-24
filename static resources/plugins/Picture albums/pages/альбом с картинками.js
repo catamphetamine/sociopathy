@@ -1,6 +1,6 @@
 (function()
 {
-	title(page.data.альбом + '. ' + 'Картинки. ' + page.data.адресное_имя)
+	title(page.data.альбом + '. ' + text('pages.picture albums.title'))
 	
 	Режим.пообещать('правка')
 	Режим.пообещать('действия')
@@ -11,18 +11,20 @@
 		
 		new Data_templater
 		({
-			template_url: '/страницы/кусочки/картинка в альбоме.html',
+			template: 'картинка в альбоме',
 			container: $('#pictures'),
 			conditional: $('.main_conditional')
 		},
 		new  Data_loader
 		({
-			url: '/приложение/человек/картинки/альбом',
+			url: '/человек/картинки/альбом',
 			parameters: { 'адресное имя': page.data.адресное_имя, альбом: page.data.альбом },
 			before_done: pictures_loaded,
 			done: page.initialized,
 			get_data: function(data)
 			{
+				title(page.data.альбом + '. ' + text('pages.picture albums.title') + '. ' + data.пользователь.имя)
+				
 				if (data.альбом.описание)
 				{
 					$('#pictures').before($('<p/>').addClass('description').text(data.альбом.описание))
@@ -31,7 +33,7 @@
 				breadcrumbs
 				([
 					{ title: data.пользователь.имя, link: '/люди/' + page.data.адресное_имя },
-					{ title: 'Картинки', link: '/люди/' + page.data.адресное_имя + '/картинки' },
+					{ title: text('pages.picture albums.title'), link: '/люди/' + page.data.адресное_имя + '/картинки' },
 					{ title: data.альбом.название, link: '/люди/' + page.data.адресное_имя + '/картинки/' + page.data.альбом }
 				])
 				

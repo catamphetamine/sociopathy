@@ -11,84 +11,28 @@
  * @github kuchumovn
  */
 
-var есть_ли_новости = function(what)
-{
-	switch (what)
-	{
-		case 'болталка':
-			return Новости.что_нового.болталка != null
-		
-		case 'беседы':
-			return !Object.пусто(Новости.что_нового.беседы)
-			
-		case 'обсуждения':
-			return !Object.пусто(Новости.что_нового.обсуждения)
-			
-		case 'новости':
-			return !Новости.что_нового.новости.пусто()
-	}
-}
+var Page_icons = []
 
-var page_buttons =
-[
-	{ page_pattern: 'читальня(/.*)?', button: 'читальня' },
-	{ page: 'заметка', button: 'читальня' },
-	{ page: 'люди', button: 'люди' },
-	
-	{ page_pattern: 'человек(/.*)?', button: 'люди' },
-	{ page_pattern: 'помощь(/.*)?', button: 'помощь' },
-	
-	{ page: 'сеть/новости', button: 'новости' },
-	{ page: 'сеть/болталка', button: 'болталка' },
-	
-	{ page: 'сеть/обсуждения', button: 'обсуждения' },
-	{ page: 'сеть/обсуждение', button: 'обсуждения' },
-	{ page: 'сеть/общение', when: function(page) { return page.data.общение === 'обсуждение' }, button: 'обсуждения' },
-	
-	{ page: 'сеть/беседы', button: 'беседы' },
-	{ page: 'сеть/беседа', button: 'беседы' },
-	{ page: 'сеть/общение', when: function(page) { return page.data.общение === 'беседа' }, button: 'беседы' },
-	
-	//{ page: 'человек/дневник', button: 'дневник' },
-	//{ page: 'человек/запись в дневнике', button: 'дневник' },
-	
-	//{ page: 'человек/журнал', button: 'журнал' },
-	//{ page: 'человек/запись в журнале', button: 'журнал' },
-	
-	{ page: 'сеть/книги', button: 'книги' },
-	//{ page: 'человек/книги', button: 'люди' },
-	
-	{ page: 'человек/картинки', button: 'люди' },
-	{ page: 'человек/альбом с картинками', button: 'люди' },
-	{ page: 'человек/видео', button: 'люди' },
-	{ page: 'человек/альбом с видео', button: 'люди' },
-	
-	{ page: 'сеть/круги', button: 'круги' },
-	{ page: 'сеть/настройки', button: 'настройки' },
-	{ page: 'сеть/черновики', button: 'черновики' },
-	{ page: 'сеть/мусорка', button: 'мусорка' },
-	
-	{ page: 'управление', button: 'управление' },
-	{ page: 'сеть/ошибки', button: 'ошибки' }
-]
+function Page_icon(data)
+{
+	Page_icons.add(data)
+}
 
 var match_page = function(options, new_page)
 {
 	if (options.page)
 	{
-		if (!Страница.is(options.page))
-			return false
+		if (Страница.is(options.page))
+			return true
 		
 		if (options.when)
-			if (!options.when(new_page))
-				return false
+			if (options.when(new_page))
+				return true
 	}
 	
 	if (options.page_pattern)
-		if (!Страница.matches(options.page_pattern))
-			return false
-		
-	return true
+		if (Страница.matches(options.page_pattern))
+			return true
 }
 
 var get_page_button = function(new_page)
@@ -96,12 +40,12 @@ var get_page_button = function(new_page)
 	new_page = new_page || page
 		 
 	var i = 0
-	while (i < page_buttons.length)
+	while (i < Page_icons.length)
 	{
-		var page_and_button = page_buttons[i]
+		var page_and_icon = Page_icons[i]
 		
-		if (match_page(page_and_button, new_page))
-			return page_and_button.button
+		if (match_page(page_and_icon, new_page))
+			return page_and_icon.icon
 		
 		i++
 	}
@@ -133,7 +77,6 @@ var Panel = new Class
 			var $menu_item = $(this)
 			
 			// initialize variables
-			//var title = $menu_item.attr("name")
 			var picture = $menu_item.attr("picture")
 			var link = $menu_item.attr("link")
 			
@@ -141,12 +84,11 @@ var Panel = new Class
 				return
 
 			var title = picture
-			if (title.lastIndexOf('/') >= 0)
-				title = title.substring(title.lastIndexOf('/') + 1)
-			
-			// tooltip
-			//$('<em/>').append($menu_item.contents()).appendTo($menu_item)
-			$menu_item.empty()
+			if ($menu_item.attr('title'))
+			{
+				title = $menu_item.attr('title')
+				$menu_item.removeAttr('title')
+			}
 
 			// place the panel menu item
 			var $hyperlink = $('<a/>')
@@ -184,11 +126,11 @@ var Panel = new Class
 			if ($menu_item.attr('hidden'))
 				$menu_item.hide()
 				
-			var type = title
-			if (type.indexOf(' (') >= 0)
-				type = type.substring(0, type.indexOf(' ('))
+			var id = title
+			if (id.indexOf(' (') >= 0)
+				id = id.substring(0, id.indexOf(' ('))
 				
-			if (type !== title)
+			if (id !== title)
 			{
 				button.element.css
 				({
@@ -197,74 +139,8 @@ var Panel = new Class
 					opacity: 0
 				})
 			
-				button.element.appendTo(panel.buttons[type].element.parent().node())
+				button.element.appendTo(panel.buttons[id].element.parent().node())
 			}
-		})
-	},
-	
-	activate_tooltips: function()
-	{
-		var panel = this
-		var tooltips = []
-		
-		// for every tooltip
-		$('#' + this.options.menu_id + ' > li > a').each(function()
-		{
-			var menu_item = $(this)
-			
-			// get the tooltip and position it appropriately
-			var tooltip = $(this).next('em')
-			tooltip.disableTextSelect()
-			
-			tooltips.push(tooltip)
-			
-			if (tooltip.parent().attr('not_yet_implemented'))
-			{
-				menu_item.click(function(event) { event.preventDefault(); info('Ещё не сделано'); })
-			}
-			
-			tooltip.addClass('panel_menu_tooltip')
-			$('body').append(tooltip)
-			
-			tooltip.data('menu item', menu_item)
-			panel.buttons[menu_item.parent().attr('name')].tooltip = tooltip
-			
-			tooltip.update_position = function()
-			{
-				this.css('left', (tooltip.data('menu item').offset().left + 10) + 'px')
-			}
-			
-			tooltip.update_position()
-			
-			return
-			
-			$(this).hover
-			(
-				// on mouse roll over - show
-				function() 
-				{
-					var speed = 'slow'
-				
-					tooltips.each(function(a_tooltip)
-					{
-						if (a_tooltip !== tooltip && a_tooltip.css('display') !== 'none')
-						{
-							a_tooltip.stop(true, true).fadeOut(100)
-							speed = 300
-						}
-					})
-					
-					if (speed !== 'slow')
-						tooltip.css('top', panel.options.tooltip_show_bottom)
-					
-					tooltip.stop(true, true).animate({opacity: 'show', top: panel.options.tooltip_show_bottom}, speed)
-				},
-				// on mouse roll out - hide 
-				function()
-				{
-					tooltip.animate({opacity: "hide", top: panel.options.tooltip_hide_bottom}, "fast")
-				}
-			)
 		})
 	},
 	
@@ -272,18 +148,9 @@ var Panel = new Class
 	initialize: function()
 	{
 		this.activate_buttons(this.options.images_path)
-		//this.activate_tooltips()
 	
 		if (пользователь)
-		{
-			this.initialize_new_talk_messages_indication()
-			this.initialize_news_feed_indication()
-			this.initialize_new_discussion_messages_indication()
-			this.initialize_new_chat_messages_indication()
-			
-			//this.buttons.мусорка.element.parent().show()
-			//this.buttons.мусорка.tooltip.update_position()
-			
+		{	
 			var loading_indicator = $('#panel_menu > li > .loading')
 			var opacity = loading_indicator.css('opacity')
 			
@@ -293,8 +160,6 @@ var Panel = new Class
 				hide: function() { loading_indicator.css('opacity', 0) }
 			}
 		}
-
-		//this.new_news.bind(this).delay(1000)
 		
 		$('#panel').children().disableTextSelect()
 	},
@@ -353,7 +218,7 @@ var Panel = new Class
 			var news = false
 			var current = false
 			
-			if (options.new || есть_ли_новости(type))
+			if (options.new || (Новости.news[type] && Новости.news[type].anything_new()))
 				news = true
 				
 			if (options.current || get_page_button() === type)
@@ -373,7 +238,7 @@ var Panel = new Class
 			
 			if (!this.buttons[type + postfix])
 			{
-				console.log('button not found')
+				console.log('button not found: ' + type + postfix)
 				return
 			}
 			
@@ -460,10 +325,15 @@ var Panel = new Class
 			}
 		}
 		
-		if (options.activation_name)
+		if (options.initialize)
 		{
-			this[options.activation_name] = activate
-			this[options.deactivation_name] = deactivate
+			var result =
+			{
+				on: activate,
+				off: deactivate
+			}
+			
+			return result
 		}
 		else
 		{
@@ -472,82 +342,6 @@ var Panel = new Class
 				
 			activate()
 		}
-	},
-	
-	initialize_news_feed_indication: function(options)
-	{
-		options = options || {}
-		
-		this.toggle_buttons
-		({
-			type: 'новости',
-			fade_in_duration: 2,
-			fade_out_duration: 3,
-			show:
-			{
-				button: { new: true }
-			},
-			activation_name: 'new_news',
-			deactivation_name: 'no_more_new_news',
-			immediate: options.immediate
-		})
-	},
-	
-	initialize_new_talk_messages_indication: function(options)
-	{
-		options = options || {}
-	
-		this.toggle_buttons
-		({
-			type: 'беседы',
-			fade_in_duration: 1,
-			fade_out_duration: 1.5,
-			show:
-			{
-				button: { new: true }
-			},
-			activation_name: 'new_talk_messages',
-			deactivation_name: 'no_more_new_talk_messages',
-			immediate: options.immediate
-		})
-	},
-	
-	initialize_new_discussion_messages_indication: function(options)
-	{
-		options = options || {}
-	
-		this.toggle_buttons
-		({
-			type: 'обсуждения',
-			fade_in_duration: 1,
-			fade_out_duration: 1.5,
-			show:
-			{
-				button: { new: true }
-			},
-			activation_name: 'new_discussion_messages',
-			deactivation_name: 'no_more_new_discussion_messages',
-			immediate: options.immediate
-		})
-	},
-	
-	initialize_new_chat_messages_indication: function(options)
-	{
-		options = options || {}
-	
-		this.toggle_buttons
-		({
-			type: 'болталка',
-			fade_in_duration: 1,
-			fade_out_duration: 1.5,
-			show:
-			{
-				button: { new: true }
-			},
-			activation_name: 'new_chat_messages',
-			deactivation_name: 'no_more_new_chat_messages',
-			immediate: options.immediate
-		})
 	}
 })
 
@@ -575,17 +369,18 @@ function prepare_panel_icons()
 			state_icon.attr('hidden', 'true')
 			state_icon.attr('link', раздел.attr('link'))
 			state_icon.attr('picture', раздел.attr('picture') + ' (' + this + ')')
+			state_icon.attr('title', раздел.attr('title') + ' (' + this + ')')
 			
 			state_icon.append_after(раздел)
 		})
 	})
 }
 
-function add_top_panel_button()
+function add_top_panel_button(plugin)
 {
 	if (!this.icon)
 		return
-
+		
 	var is_private = this.private
 	var url = this.url
 	var picture = '/картинки/навершие/menu/' + this.icon
@@ -604,6 +399,9 @@ function add_top_panel_button()
 		.attr('picture', picture)
 		.attr('link', url)
 		//.text(text(this.title))
+		
+	if (plugin)
+		icon.attr('title', plugin.title)
 		
 	if (this.icon.unreadable)
 		icon.attr('unreadable', true)
