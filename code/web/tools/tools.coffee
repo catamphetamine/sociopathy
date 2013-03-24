@@ -274,7 +274,7 @@ file_system = require 'fs'
 		query._id = { $lt: после }
 			
 	batch = collection._.find(query, query_options)
-			
+	
 	data = batch
 	if batch.length < ввод.данные.сколько
 		куда[свойство] = data

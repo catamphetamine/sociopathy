@@ -114,13 +114,16 @@
 		
 		$('.bookshelf_container .book_place').animate({ opacity: 1 }, 500)
 			
-		$('.bookshelf_container .book').each(function()
+		if (page.data.этот_пользователь)
 		{
-			initialize_context_menu($(this))
-		})
-			
-		Режим.разрешить('правка')
-		//Режим.разрешить('действия')
+			$('.bookshelf_container .book').each(function()
+			{
+				initialize_context_menu($(this))
+			})
+				
+			Режим.разрешить('правка')
+			//Режим.разрешить('действия')
+		}
 		
 		page.initialized()
 	}

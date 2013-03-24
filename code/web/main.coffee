@@ -85,7 +85,7 @@ require './upload server'
 
 require './core/system'
 require './core/user'
-require './core/ether' 
+require './core/ether'
 require './core/drafts'
 require './core/news'
 

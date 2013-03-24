@@ -28,10 +28,11 @@ http.get '/initialize', (ввод, вывод) ->
 		development: Options.Development
 		initialization_data: initialization_data(ввод)
 	
-	try
-		data.user_data = пользовательское.данные_пользователя(ввод, вывод)
-	catch error
-		console.error error
-		data.user_data = { error: error }
+	if пользовательское.пользователь_ли(ввод)
+		try
+			data.user_data = пользовательское.данные_пользователя(ввод, вывод)
+		catch error
+			console.error error
+			data.user_data = { error: error }
 		
 	вывод.send(data)

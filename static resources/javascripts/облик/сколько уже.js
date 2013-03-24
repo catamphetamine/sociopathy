@@ -17,7 +17,7 @@ var Progress = new Class
 	{
 		this.setOptions(options)
 
-		if (!this.options.maximum)
+		if (typeof this.options.maximum === 'undefined')
 			throw 'Overall count not set for progress'
 		
 		if (!this.options.event_namespace)
