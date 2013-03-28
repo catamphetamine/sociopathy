@@ -106,9 +106,19 @@ function slider(options)
 		this.$element.height(this.options.height)
 		
 		// size the slides
-		$slides.width(this.options.width)
-		$slides.height(this.options.height)
+		var width = this.options.width
+		var height = this.options.height
+		
+		$slides.each(function()
+		{
+			var slide = $(this)
+			slide.width(width - parseInt(slide.css('padding-left')) - parseInt(slide.css('padding-right')))
+			slide.height(height - parseInt(slide.css('padding-top')) - parseInt(slide.css('padding-bottom')))
+		})
 
+		this.$element.prepend($('<div/>').addClass('left_border'))
+		this.$element.append($('<div/>').addClass('right_border'))
+		
 		// adjust controls visibility
 		this.hide_or_show_controls({ immediately: true })
 		

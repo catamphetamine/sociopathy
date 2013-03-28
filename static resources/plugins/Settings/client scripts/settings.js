@@ -1,3 +1,5 @@
+Url_map['user settings'] = '/сеть/настройки'
+
 url_matcher(function(url)
 {
 	var tools = this

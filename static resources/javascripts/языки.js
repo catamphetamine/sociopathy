@@ -1,9 +1,6 @@
-var Url_map =
-{
-	'user settings': '/сеть/настройки',
-	'registration': '/прописка',
-	'bookshelf': function(id) { return '/люди/' + id + '/книги' }
-}
+var Url_map = {}
+
+Url_map['registration'] = '/прописка'
 
 var Язык
 var Перевод

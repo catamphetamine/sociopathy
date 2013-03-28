@@ -1686,3 +1686,33 @@ body.with_actions_on_bottom
 		}
 	}
 }
+
+.slider
+{
+	> .left_border, > .right_border
+	{
+		position: absolute;
+		top: 0;
+		
+		height: 100%;
+		width: 16px;
+	}
+	
+	> .left_border
+	{
+		left: 0;
+		background-image: url('/картинки/окошко/slider/левая граница.png');
+	}
+	
+	> .right_border
+	{
+		right: 0;
+		background-image: url('/картинки/окошко/slider/правая граница.png');
+	}
+	
+	.slide
+	{
+		padding-left: 16px;
+		padding-right: 16px;
+	}
+}

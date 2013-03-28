@@ -1,3 +1,5 @@
+Url_map['bookshelf'] = function(id) { return '/люди/' + id + '/книги' }
+
 (function()
 {
 	Режим.пообещать('правка')
