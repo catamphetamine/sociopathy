@@ -228,10 +228,7 @@ var Page = new Class
 			{
 				options = options || {}
 				
-				var json = {}
-				json[title] = action
-				
-				this.actions.add(json)
+				this.actions.add({ title: title, action: action, options: options })
 				
 				if (options.действие)
 					page.hotkey('Действия.' + options.действие, action)
@@ -249,7 +246,15 @@ var Page = new Class
 			
 			destroy: function()
 			{
-				// this.available_actions_list.close()
+				if (this.is_empty())
+					return
+				
+				this.available_actions_list.close()
+			},
+			
+			each: function(method)
+			{
+				this.actions.for_each(method)
 			}
 		}))(),
 		
@@ -573,29 +578,52 @@ var Page = new Class
 	
 	create_actions_list: function()
 	{
-		var actions_list = $('<div/>')
+		if (this.Available_actions.is_empty())
+		{
+			return this.hotkey('Показать_действия', function()
+			{
+				info(text('page.no available actions'))
+			})
+		}
+		
+		var actions_list_window = $('<div/>')
+			.addClass('available_actions')
 			.attr('title', text('page.available actions'))
+			
+		var actions_list = $('<ul/>').appendTo(actions_list_window)
 		
 		var dialog_window
 		
-		this.Available_actions.actions.for_each(function()
+		this.Available_actions.each(function()
 		{
-			var text = Object.key(this)
-			var action = Object.value(this)
+			var action = this.action
+			var options = this.options
 			
 			var button = $('<div/>')
-				.text(text)
+				.text(this.title)
 				
-			button.appendTo(actions_list)
+			$('<li/>').append(button).appendTo(actions_list)
 			
 			text_button.new(button).does(function()
 			{
-				dialog_window.close()
-				action()
+				if (options.immediate_transition_between_dialog_windows)
+				{
+					var dialog_window_options =
+					{
+						immediately: true,
+						leave_modal: true
+					}
+					
+					action(dialog_window_options)
+					dialog_window.close(dialog_window_options)
+					return
+				}
+				
+				dialog_window.close(action)
 			})
 		})
 		
-		dialog_window = actions_list.dialog_window
+		dialog_window = actions_list_window.dialog_window
 		({
 			'close on escape': true
 		})
@@ -604,9 +632,6 @@ var Page = new Class
 		
 		this.hotkey('Показать_действия', function()
 		{
-			if (page.Available_actions.is_empty())
-				return info(text('page.no available actions'))
-			
 			page.Available_actions.show()
 		})
 	},

@@ -1279,17 +1279,13 @@ body[mode="правка"] .rich_formatting a
 	
 	background-color: #d2d2d2;
 	box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
-	
-background: rgb(221,221,221); /* Old browsers */
-background: -moz-linear-gradient(top,  rgba(221,221,221,1) 0%, rgba(193,193,193,1) 100%); /* FF3.6+ */
-background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(221,221,221,1)), color-stop(100%,rgba(193,193,193,1))); /* Chrome,Safari4+ */
-background: -webkit-linear-gradient(top,  rgba(221,221,221,1) 0%,rgba(193,193,193,1) 100%); /* Chrome10+,Safari5.1+ */
-background: -o-linear-gradient(top,  rgba(221,221,221,1) 0%,rgba(193,193,193,1) 100%); /* Opera 11.10+ */
-background: -ms-linear-gradient(top,  rgba(221,221,221,1) 0%,rgba(193,193,193,1) 100%); /* IE10+ */
-background: linear-gradient(to bottom,  rgba(221,221,221,1) 0%,rgba(193,193,193,1) 100%); /* W3C */
-filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#dddddd', endColorstr='#c1c1c1',GradientType=0 ); /* IE6-9 */
-
-
+		
+	background: -moz-linear-gradient(top,  rgba(221,221,221,1) 0%, rgba(193,193,193,1) 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(221,221,221,1)), color-stop(100%,rgba(193,193,193,1))); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  rgba(221,221,221,1) 0%,rgba(193,193,193,1) 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  rgba(221,221,221,1) 0%,rgba(193,193,193,1) 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  rgba(221,221,221,1) 0%,rgba(193,193,193,1) 100%); /* IE10+ */
+	background: linear-gradient(to bottom,  rgba(221,221,221,1) 0%,rgba(193,193,193,1) 100%); /* W3C */
 
 	position: fixed;
 	bottom: 0;
@@ -1585,13 +1581,16 @@ body
 	}
 }
 
+.draggable
+{
+	&, *
+	{
+		cursor: url('/картинки/cursor/hand.png') 0 0, auto !important;
+	}
+}
+
 .dragged
 {
-	-moz-user-select: none;
-	-khtml-user-select: none;
-	-webkit-user-select: none;
-	user-select: none;
-	
 	&, *
 	{
 		cursor: url('/картинки/cursor/grab.png') 0 0, auto !important;
@@ -1719,5 +1718,22 @@ body.with_actions_on_bottom
 
 .available_actions
 {
-	display: none;
+	ul
+	{
+		list-style-type:  none;
+		
+		padding: 0;
+		margin: 0;
+		
+		> li
+		{
+			margin-bottom: 16px;
+			text-align: center;
+			
+			&:last-child
+			{
+				margin-bottom: 0;
+			}
+		}
+	}
 }

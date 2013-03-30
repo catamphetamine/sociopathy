@@ -81,13 +81,13 @@
 			}
 		})
 		
-		function add_a_book()
+		function add_a_book(options)
 		{
-			add_book.window.open()
+			add_book.window.open(options)
 		}
 		
-		page.Available_actions.add(text('pages.books.add'), add_a_book, { действие: 'Создать' })
-		
+		page.Available_actions.add(text('pages.books.add'), add_a_book, { действие: 'Создать', immediate_transition_between_dialog_windows: true })
+
 		page.book_cover_uploader = new Picture_uploader
 		({
 			namespace: '.режим_правка',
@@ -231,7 +231,7 @@
 	{
 		create: function(data)
 		{
-			page.book_dragger = new Dragger(page.books,
+			page.book_dragger = new List_dragger(page.books,
 			{
 				dont_start_dragging_on: '.title, .author',
 				sortable: true,

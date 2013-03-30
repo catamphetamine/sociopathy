@@ -494,7 +494,7 @@
 			populate_categories('раздел читальни (правка)')(data)
 			populate_articles('заметка раздела читальни (правка)')(data)
 			
-			page.category_dragger = new Dragger(page.categories,
+			page.category_dragger = new List_dragger(page.categories,
 			{
 				dont_start_dragging_on: '.title > span',
 				sortable: true,
@@ -506,7 +506,7 @@
 				$(this).on('clicked.режим_правка', choose_category_icon)
 			})
 			
-			page.article_dragger = new Dragger(page.articles,
+			page.article_dragger = new List_dragger(page.articles,
 			{
 				sortable: true,
 				throwable: true

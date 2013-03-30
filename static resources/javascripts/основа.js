@@ -58,7 +58,7 @@ var scripts =
 	
 	'проверка обозревателя',
 	
-	'движение',
+	'animator',
 	
 	'подгрузка статики',
 	
@@ -149,7 +149,7 @@ var scripts =
 		'окошко входа'
 	]},
 	
-	'dynamic page content',
+	'navigation',
 	
 	'надоснова',
 		

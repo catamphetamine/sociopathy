@@ -91,8 +91,6 @@ function simple_value_dialog_window(options)
 		'close on escape': true,
 		'on open': function()
 		{
-			$('body').addClass('no_scrollbar')
-			
 			Object.for_each(fields, function(id, field)
 			{
 				if (field.label)
@@ -105,8 +103,6 @@ function simple_value_dialog_window(options)
 		},
 		'on close': function()
 		{
-			$('body').removeClass('no_scrollbar')
-			
 			Object.for_each(fields, function(id, field)
 			{
 				field.input.val('')

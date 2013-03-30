@@ -7,15 +7,15 @@ var Dragger = new Class
 		come_back_after_drop: true
 	},
 	
-	namespace: '.dragger',
+	namespace: '.' + $.unique_namespace(),
 	
 	plugins: [],
 	
-	initialize: function(list, options)
+	initialize: function(element, options)
 	{
 		this.setOptions(options)
 			
-		this.list = list
+		this.element = element
 		
 		if (this.options.sortable)
 			this.plugins.push(Dragger_sorting_plugin)
@@ -35,20 +35,14 @@ var Dragger = new Class
 	
 	create: function()
 	{
-		var dragger = this
+		var element = this.element
+			//.addClass('draggable')
 		
-		var offset = this.list.offset()
+		this.draggable(this.element)
 		
-		this.list.children().each(function()
+		this.plugins.for_each(function()
 		{
-			var item = $(this)
-			
-			dragger.draggable(item)
-			
-			dragger.plugins.for_each(function()
-			{
-				this.each_item(item)
-			})
+			this.each_item(element)
 		})
 	},
 	
@@ -59,8 +53,25 @@ var Dragger = new Class
 			if (!left_mouse_button(event))
 				return
 			
-			if (element.find(this.options.dont_start_dragging_on).contains_or_is($(event.target)))
-				return
+			var target = $(event.target)
+			
+			if (this.options.dont_start_dragging_on)
+				if (element.find(this.options.dont_start_dragging_on).contains_or_is(target))
+					return
+			
+			if (this.options.drag_on)
+			{
+				var can_drag = false
+				
+				this.element.find(this.options.drag_on).each(function()
+				{
+					if ($(this).contains_or_is(target))
+						can_drag = true
+				})
+				   
+				if (!can_drag)
+					return
+			}
 			
 			event.preventDefault()
 			
@@ -69,6 +80,15 @@ var Dragger = new Class
 				left: event.pageX,
 				top: event.pageY
 			}
+			
+			this.element_resided_at =
+			{
+				left: parseInt(element.css('left')),
+				top: parseInt(element.css('top'))
+			}
+			
+			this.element_resided_at.left = this.element_resided_at.left || 0
+			this.element_resided_at.top = this.element_resided_at.top || 0
 			
 			this.start(element)
 		})
@@ -110,8 +130,11 @@ var Dragger = new Class
 		
 		$('body').on('mousemove' + this.namespace, (function(event)
 		{
-			var left = event.pageX - this.clicked_at.left
-			var top = event.pageY - this.clicked_at.top
+			var delta_left = event.pageX - this.clicked_at.left
+			var delta_top = event.pageY - this.clicked_at.top
+			
+			var left = this.element_resided_at.left + delta_left
+			var top = this.element_resided_at.top + delta_top
 			
 			var absolute =
 			{
@@ -131,8 +154,8 @@ var Dragger = new Class
 		({
 			position: 'relative',
 			
-			left: 0,
-			top: 0,
+			left: this.element_resided_at.left + 'px',
+			top: this.element_resided_at.top + 'px',
 			
 			'z-index': 1
 		})
@@ -206,13 +229,8 @@ var Dragger = new Class
 		}
 		else
 		{
-			var dragger = this
+			this.clean_up()
 			
-			this.list.children().each(function()
-			{
-				dragger.destroy($(this))
-			})
-				
 			$('body').unbind(this.namespace)
 			
 			this.plugins.for_each(function()
@@ -220,5 +238,51 @@ var Dragger = new Class
 				this.destroy()
 			})
 		}
+	},
+	
+	clean_up: function()
+	{
+		this.destroy(this.element)
+	}
+})
+
+var List_dragger = new Class
+({
+	Extends: Dragger,
+	
+	initialize: function(element, options)
+	{
+		this.list = element
+		
+		this.parent(element, options)
+	},
+	
+	create: function()
+	{
+		var dragger = this
+		
+		var offset = this.list.offset()
+		
+		this.list.children().each(function()
+		{
+			var item = $(this)
+			
+			dragger.draggable(item)
+			
+			dragger.plugins.for_each(function()
+			{
+				this.each_item(item)
+			})
+		})
+	},
+	
+	clean_up: function()
+	{
+		var dragger = this
+		
+		this.list.children().each(function()
+		{
+			dragger.destroy($(this))
+		})
 	}
 })

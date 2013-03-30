@@ -231,11 +231,11 @@
 			}
 		})
 		
-		function add_person()
+		function add_person(options)
 		{
-			add_user_to_talk.window.open()
+			add_user_to_talk.window.open(options)
 		}
 		
-		page.Available_actions.add(text('pages.talks.talk.add person'), add_person, { действие: 'Добавить' })
+		page.Available_actions.add(text('pages.talks.talk.add person'), add_person, { действие: 'Добавить', immediate_transition_between_dialog_windows: true })
 	}
 })()

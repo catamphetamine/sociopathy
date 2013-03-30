@@ -1293,7 +1293,7 @@ Visual_editor.implement
 					})
 				}
 				
-				tool.dialog_window.open(state)
+				tool.dialog_window.open({ state: state })
 			}
 			
 			tool.backup_caret = function()

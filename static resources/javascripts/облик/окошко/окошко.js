@@ -29,6 +29,7 @@ var dialog_window = new Class
 	options: 
 	{
 		modal: true,
+		draggable: true,
 		'close on escape': false,
 		
 		width: 'auto',
@@ -67,8 +68,11 @@ var dialog_window = new Class
 		{
 			main_content = $('<div/>')
 				.addClass('main_content')
-				.append($element.children())
-				.appendTo($element)
+				
+			while ($element.node().firstChild)
+				main_content.node().appendChild($element.node().firstChild)
+				
+			main_content.appendTo($element)
 		}
 		
 		this.container = $('<div/>')
@@ -77,7 +81,8 @@ var dialog_window = new Class
 			.addClass("collapsed")
 			.appendTo(document.body)
 			//.addClass(this.options.theme)
-			
+			.disableTextSelect()
+		
 		$(document).on('keydown.' + this.namespace, function(event) 
 		{
 			// close on escape key
@@ -102,7 +107,7 @@ var dialog_window = new Class
 		
 		// set dialog title bar
 		$('<h1/>')
-			.addClass("top_bar non_selectable")
+			.addClass('top_bar') // non_selectable")
 			.appendTo(dialog_window)	
 			.text(title)
 
@@ -116,7 +121,18 @@ var dialog_window = new Class
 		//var shadow = $('<div class="shadow"><table><tr><td class="left_top corner"></td><td class="top"></td><td class="right_top corner"></td></tr><tr><td class="left"></td><td class="void"></td><td class="right"></td></tr><tr><td class="left_bottom corner"></td><td class="bottom"></td><td class="right_bottom corner"></td></tr></table></div>')
 		dialog_window.append(shadow)
 		
+		this.element = dialog_window
+		
 		this.reset()
+		
+		if (this.options.draggable)
+		{
+			new Dragger(dialog_window,
+			{
+				come_back_after_drop: false,
+				drag_on: '> h1'
+			})
+		}
 		
 		this.content.on('keydown', function(event) 
 		{
@@ -197,17 +213,24 @@ var dialog_window = new Class
 	},
 	
 	// opens the dialog window
-	open: function(state) 
+	open: function(options) 
 	{
-		if (state)
-			this.state = state
-			
-		if (this.options['on open'])
-			this.options['on open'].bind(this.content)()
-	
 		if (this.is_open)
 			return
 		
+		options = options || {}
+		
+		var state = options.state
+		
+		if (state)
+			this.state = state
+		
+		if (this.options.modal)
+			$('body').addClass('no_scrollbar')
+			
+		if (this.options['on open'])
+			this.options['on open'].bind(this.content)()
+			
 		this.resize()
 		
 		this.container.removeClass('collapsed').addClass('shown')
@@ -223,7 +246,11 @@ var dialog_window = new Class
 		// hack
 		var dialog_window = this
 				
-		this.container.fade_in(this.options.show_duration, (function()
+		var show_duration = this.options.show_duration
+		if (options.immediately)
+			show_duration = 0
+			
+		this.container.fade_in(show_duration, (function()
 		{
 			dialog_window.content.find('input[type=text],textarea,select').filter(':visible:first').focus()
 			
@@ -235,7 +262,8 @@ var dialog_window = new Class
 			
 			this.is_open = true
 			this.content.trigger('open')
-		}).bind(this))
+		})
+		.bind(this))
 	},
 	
 	// prevent tabbing out of modal dialog windows
@@ -275,12 +303,23 @@ var dialog_window = new Class
 	},
 	
 	// closes the dialog window
-	close: function(callback) 
+	close: function(options, callback) 
 	{
+		if (typeof options === 'function')
+		{
+			callback = options
+			options = {}
+		}
+		
+		options = options || {}
+		
 		var closed = function()
 		{
 			this.container.removeClass('shown').addClass('collapsed')
 		
+			if (this.options.modal && !options.leave_modal)
+				$('body').removeClass('no_scrollbar')
+				
 			if (this.options['on close'])
 				this.options['on close'].bind(this.content)()
 			
@@ -297,13 +336,17 @@ var dialog_window = new Class
 			this.unrise()
 	
 			this.reset()
-	
+		
 			this.is_open = false
 			this.container.css('z-index', -1)
 			this.content.trigger('close')
 		}
 		
-		this.container.fade_out(this.options.collapse_duration, closed.bind(this))
+		var close_duration = this.options.collapse_duration
+		if (options.immediately)
+			close_duration = 0
+		
+		this.container.fade_out(close_duration, closed.bind(this))
 	},
 
 	/**
@@ -336,7 +379,12 @@ var dialog_window = new Class
 				return control.val('')
 
 			control.reset()
-		})			
+		})
+		
+		if (this.options.draggable)
+		{
+			this.element.css({ left: 0, top: 0 })
+		}
 	},
 	
 	/**
