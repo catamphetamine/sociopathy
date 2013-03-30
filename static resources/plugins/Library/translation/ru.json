@@ -6,7 +6,12 @@
 			"title": "Читальня",
 			
 			"section not found": "Раздела «{query}» не найдено",
-			"section or article not found": "Раздела или заметки «{query}» не найдено"
+			"section or article not found": "Раздела или заметки «{query}» не найдено",
+			
+			"article":
+			{
+				"new": "Написать заметку"
+			}
 		}
 	}
 }

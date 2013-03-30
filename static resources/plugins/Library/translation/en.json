@@ -6,7 +6,12 @@
 			"title": "Library",
 			
 			"section not found": "Section «{query}» not found",
-			"section or article not found": "Section or article «{query}» not found"
+			"section or article not found": "Section or article «{query}» not found",
+			
+			"article":
+			{
+				"new": "Write an article"
+			}
 		}
 	}
 }

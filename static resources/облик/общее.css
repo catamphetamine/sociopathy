@@ -1737,3 +1737,11 @@ body.with_actions_on_bottom
 		}
 	}
 }
+
+#unsaved_changes
+{
+	.main_content
+	{
+		white-space: pre-wrap;
+	}
+}

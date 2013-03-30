@@ -61,6 +61,15 @@
 	"page":
 	{
 		"available actions": "Available actions",
-		"no available actions": "No available actions on this page"
+		"no available actions": "No available actions on this page",
+		
+		"unsaved changes":
+		{
+			"title": "Discard your edits?",
+			"text": "There are unsaved edits on this page.\n\nAre you sure you want to navigate away and discard these edits you've made?",
+			
+			"yes": "Discard my edits",
+			"no": "Stay on this page"
+		}
 	}
 }

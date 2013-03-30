@@ -25,3 +25,8 @@
 		margin-top: 1px;
 	}
 }
+
+.minor_button_pushed .button_contents
+{
+	color: #3f3f3f;
+}

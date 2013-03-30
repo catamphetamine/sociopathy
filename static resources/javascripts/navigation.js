@@ -56,6 +56,26 @@ var get_page_less_style_link
 			return false
 		}
 		
+		var proceed = function()
+		{
+			if (page)
+				page.unsaved_changes = false
+				
+			do_navigate_to_page(url, options)
+		}
+		
+		if (page && page.unsaved_changes)
+		{
+			discard_changes_confirmation(proceed)
+		}
+		else
+		{
+			proceed()
+		}
+	}
+	
+	function do_navigate_to_page(url, options)
+	{
 		if (!проверить_доступ(url))
 			return
 		

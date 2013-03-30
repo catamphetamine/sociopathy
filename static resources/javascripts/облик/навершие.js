@@ -35,16 +35,17 @@ var match_page = function(options, new_page)
 			return true
 }
 
-var get_page_button = function(new_page)
+var get_page_button = function()
 {
-	new_page = new_page || page
-		 
+	if (Страница.эта() === '_wait_')
+		return page.data._icon
+		
 	var i = 0
 	while (i < Page_icons.length)
 	{
 		var page_and_icon = Page_icons[i]
 		
-		if (match_page(page_and_icon, new_page))
+		if (match_page(page_and_icon, page))
 			return page_and_icon.icon
 		
 		i++
@@ -164,13 +165,13 @@ var Panel = new Class
 		$('#panel').children().disableTextSelect()
 	},
 	
-	highlight_current_page: function(new_page)
+	highlight_current_page: function()
 	{
 		var panel = this
 		
 		var previously_highlighted_menu_item = panel.highlighted_menu_item
 		
-		var page_button = get_page_button(new_page)
+		var page_button = get_page_button()
 		
 		function highlight_current_page_button(page_button)
 		{

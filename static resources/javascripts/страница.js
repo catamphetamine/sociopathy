@@ -54,6 +54,13 @@ var Страница =
 					
 					страница = page
 				},
+				icon: function(icon)
+				{
+					if (!icon)
+						icon = this.id
+					
+					page.data._icon = icon
+				},
 				wait: function()
 				{
 					страница = '_wait_'

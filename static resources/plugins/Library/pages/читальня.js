@@ -326,8 +326,7 @@
 				go_to('/сеть/читальня/заметка/' + page.data.раздел)
 			}
 			
-			text_button.new('.main_content > .new_article > .button').does(new_article)
-			page.hotkey('Действия.Создать', new_article)
+			page.Available_actions.add(text('pages.library.article.new'), new_article, { действие: 'Создать' })
 		}
 		else
 		{

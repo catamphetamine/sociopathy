@@ -146,7 +146,9 @@ var scripts =
 		
 		'формулы',
 
-		'окошко входа'
+		'окошко входа',
+	
+		'unsaved changes'
 	]},
 	
 	'navigation',
@@ -181,7 +183,9 @@ var scripts =
 	//'tinycon',
 	'window notification',
 	
-	'режимы'
+	'режимы',
+	
+	'rich content'
 ]
 
 function script_insertion(all_scripts, root_path, finished)
@@ -245,7 +249,8 @@ var styles =
 	[
 		'generic',
 		'minor',
-		'caution'
+		'caution',
+		'dangerous'
 	]},
 		
 	'уведомления',
