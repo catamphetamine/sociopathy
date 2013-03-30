@@ -2,9 +2,6 @@ title(text('pages.circles.title'));
 
 (function()
 {
-	//Режим.пообещать('правка')
-	//Режим.пообещать('действия')
-	
 	page.load = function()
 	{
 		var conditional = initialize_conditional($('.main_conditional'), { immediate: true })

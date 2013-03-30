@@ -6,7 +6,7 @@
 	
 	page.query('#books', 'books')
 	
-	Режим.пообещать('действия')
+	Режим.пообещать('правка')
 	
 	var loader
 	
@@ -26,7 +26,7 @@
 				{
 					parse_dates(books, 'добавлена')
 				},
-				on_first_output: page.initialized,
+				on_first_output: books_loaded,
 				before_output: initialize_context_menus
 			},
 			container: page.books,
@@ -86,11 +86,38 @@
 			add_book.window.open()
 		}
 		
-		text_button.new(page.get('.add_book')).does(add_a_book)
+		page.Available_actions.add(text('pages.books.add'), add_a_book, { действие: 'Создать' })
 		
-		page.hotkey('Действия.Добавить', add_a_book)
+		page.book_cover_uploader = new Picture_uploader
+		({
+			namespace: '.режим_правка',
+			max_size: 0.5,
+			max_size_text: '500 килобайтов',
+			url: '/сеть/книга/обложка',
+			element: function()
+			{
+				return this.book
+			},
+			ok: function(data, element)
+			{
+				element.find('.title').css('background-image', 'url(' + encodeURI(data.адрес) + ')')
+				element.data('cover', data)
+			}
+		})
 		
-		Режим.разрешить('действия')	
+		Режим.разрешить('правка')
+	}
+	
+	function books_loaded()
+	{
+		page.initialized()
+		
+		Режим.при_переходе({ в: 'правка' }, function()
+		{
+			//page.get('.empty').hide()
+			
+			page.book_cover_uploader.activate()
+		})
 	}
 	
 	page.unload = function()
@@ -191,4 +218,35 @@
 		
 		menu.data = book.attr('_id')
 	}
+	
+	function choose_book_cover()
+	{
+		var book = $(this)
+			
+		page.book_cover_uploader.book = book
+		page.book_cover_uploader.choose()
+	}
+	
+	page.Data_store.режим('правка',
+	{
+		create: function(data)
+		{
+			page.book_dragger = new Dragger(page.books,
+			{
+				dont_start_dragging_on: '.title, .author',
+				sortable: true,
+				throwable: true
+			})
+			
+			page.books.children().each(function()
+			{
+				$(this).find('.cover').on('clicked.режим_правка', choose_book_cover)
+			})
+		},
+		
+		destroy: function(data)
+		{
+			page.book_dragger.destroy()
+		}
+	})
 })()

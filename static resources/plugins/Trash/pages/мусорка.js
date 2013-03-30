@@ -2,8 +2,6 @@
 {
 	title(text('pages.trash.title'))
 
-	Режим.пообещать('действия')
-
 	page.query('.trash', 'trash')
 	
 	page.load = function()

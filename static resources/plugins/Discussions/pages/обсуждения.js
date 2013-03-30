@@ -5,21 +5,21 @@ title(text('pages.discussions.title'))
 	page.query('#discussions', 'discussions')
 	page.query('#unread_discussions', 'unread_discussions')
 	
-	Режим.разрешить('действия')
+	function start_new_discussion()
+	{
+		go_to('/сеть/общение/обсуждение')
+	}
 	
 	page.load = function()
 	{
-		Подсказка('создание обсуждения', 'Вы можете начать новое обсуждение, перейдя в <a href=\'/помощь/режимы#Режим действий\'>«режим действий»</a>, или нажав клавиши <a href=\'/сеть/настройки\'>«Действия → Создать»</a>');
+		//Подсказка('создание обсуждения', 'Вы можете начать новое обсуждение, перейдя в <a href=\'/помощь/режимы#Режим действий\'>«режим действий»</a>, или нажав клавиши <a href=\'/сеть/настройки\'>«Действия → Создать»</a>');
 	
 		breadcrumbs
 		([
 			{ title: text('pages.discussions.title'), link: '/сеть/обсуждение' }
 		])
 		
-		text_button.new(page.get('.new_discussion.button')).does(function()
-		{
-			go_to('/сеть/общение/обсуждение')
-		})
+		page.Available_actions.add(text('pages.discussions.new'), start_new_discussion, { действие: 'Создать' })
 
 		$(document).on_page('message_read', function(event, что)
 		{
@@ -170,14 +170,5 @@ title(text('pages.discussions.title'))
 		}
 		
 	//	Режим.разрешить('правка')
-	//	Режим.разрешить('действия')
 	}
-	
-	$(document).on_page('keydown.actions', function(event)
-	{
-		if (Клавиши.поймано(Настройки.Клавиши.Действия.Создать, event))
-		{
-			return go_to('/сеть/общение/обсуждение')
-		}
-	})
 })()

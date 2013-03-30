@@ -4,21 +4,21 @@ title(text('pages.talks.title'));
 {
 	page.query('#talks', 'talks')
 	
-	Режим.разрешить('действия')
+	function create_new_talk()
+	{
+			go_to('/сеть/общение/беседа')
+	}
 	
 	page.load = function()
 	{
-		Подсказка('создание беседы', 'Вы можете завести новую беседу, перейдя в <a href=\'/помощь/режимы#Режим действий\'>«режим действий»</a>, или нажав клавиши <a href=\'/сеть/настройки\'>«Действия → Создать»</a>');
+		//Подсказка('создание беседы', 'Вы можете завести новую беседу, перейдя в <a href=\'/помощь/режимы#Режим действий\'>«режим действий»</a>, или нажав клавиши <a href=\'/сеть/настройки\'>«Действия → Создать»</a>');
 	
 		breadcrumbs
 		([
 			{ title: text('pages.talks.title'), link: '/сеть/беседы' }
 		])
 		
-		text_button.new(page.get('.new_talk.button')).does(function()
-		{
-			go_to('/сеть/общение/беседа')
-		})
+		page.Available_actions.add(text('pages.talks.new'), create_new_talk, { действие: 'Создать' })
 
 		$(document).on_page('message_read', function(event, что)
 		{
@@ -137,14 +137,5 @@ title(text('pages.talks.title'));
 		}
 		
 	//	Режим.разрешить('правка')
-	//	Режим.разрешить('действия')
 	}
-	
-	$(document).on_page('keydown.actions', function(event)
-	{
-		if (Клавиши.поймано(Настройки.Клавиши.Действия.Создать, event))
-		{
-			return go_to('/сеть/общение/беседа')
-		}
-	})
 })()

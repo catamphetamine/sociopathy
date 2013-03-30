@@ -26,8 +26,8 @@
 		"action": "Actions",
 		
 		"unavailable before page loads": "You'll be able to enter the «{mode}» mode after the page loads",
-		"unavailable": "The «{mode}» mode is unavailable right here right now",
-		"switching is frozen": "Switching modes is disabled right now",
+		"unavailable": "The «{mode}» mode is unavailable on this page",
+		"switching is frozen": "Wait a second",
 		"log in to edit": "You can't edit anything here right now because you are not logged in. If you are a registered member you should <a href='#' class='enter'>log in</a>. Otherwise you should [link to registration]register[/link].",
 		
 		"edit mode":
@@ -56,5 +56,11 @@
 		"cancel": "Cancel",
 		"apply": "Apply",
 		"ok": "Ok"
+	},
+	
+	"page":
+	{
+		"available actions": "Available actions",
+		"no available actions": "No available actions on this page"
 	}
 }

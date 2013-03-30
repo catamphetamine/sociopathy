@@ -51,6 +51,7 @@ var Режим = (function()
 		}
 	})
 	
+	/*
 	режимы.push
 	({
 		название: 'действия',
@@ -60,6 +61,7 @@ var Режим = (function()
 			//$('[editable=true]').attr('contenteditable', true)
 		}
 	})
+	*/
 	
 	function возможен_ли_переход(из, в)
 	{

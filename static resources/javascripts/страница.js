@@ -218,6 +218,41 @@ var Page = new Class
 			}		
 		}
 		
+		this.Available_actions = new (new Class
+		({
+			Binds: ['show'],
+			
+			actions: [],
+			
+			add: function(title, action, options)
+			{
+				options = options || {}
+				
+				var json = {}
+				json[title] = action
+				
+				this.actions.add(json)
+				
+				if (options.действие)
+					page.hotkey('Действия.' + options.действие, action)
+			},
+			
+			show: function()
+			{
+				this.available_actions_list.open()
+			},
+			
+			is_empty: function()
+			{
+				return this.actions.пусто()
+			},
+			
+			destroy: function()
+			{
+				// this.available_actions_list.close()
+			}
+		}))(),
+		
 		this.Data_store =
 		{
 			query: {},
@@ -444,6 +479,8 @@ var Page = new Class
 	
 	initialized: function()
 	{
+		page.create_actions_list()
+		
 		$(document).trigger('page_initialized')
 	},
 	
@@ -530,6 +567,48 @@ var Page = new Class
 		})
 		
 		this.when_unloaded_actions.empty()
+		
+		this.Available_actions.destroy()
+	},
+	
+	create_actions_list: function()
+	{
+		var actions_list = $('<div/>')
+			.attr('title', text('page.available actions'))
+		
+		var dialog_window
+		
+		this.Available_actions.actions.for_each(function()
+		{
+			var text = Object.key(this)
+			var action = Object.value(this)
+			
+			var button = $('<div/>')
+				.text(text)
+				
+			button.appendTo(actions_list)
+			
+			text_button.new(button).does(function()
+			{
+				dialog_window.close()
+				action()
+			})
+		})
+		
+		dialog_window = actions_list.dialog_window
+		({
+			'close on escape': true
+		})
+		
+		this.Available_actions.available_actions_list = dialog_window
+		
+		this.hotkey('Показать_действия', function()
+		{
+			if (page.Available_actions.is_empty())
+				return info(text('page.no available actions'))
+			
+			page.Available_actions.show()
+		})
 	},
 	
 	on: function(element, event, action)

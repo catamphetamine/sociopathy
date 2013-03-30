@@ -3,7 +3,6 @@ Url_map['bookshelf'] = function(id) { return '/люди/' + id + '/книги' }
 (function()
 {
 	Режим.пообещать('правка')
-	//Режим.пообещать('действия')
 	
 	title(text('pages.bookshelf.title'))
 
@@ -124,7 +123,6 @@ Url_map['bookshelf'] = function(id) { return '/люди/' + id + '/книги' }
 			})
 				
 			Режим.разрешить('правка')
-			//Режим.разрешить('действия')
 		}
 		
 		page.initialized()

@@ -3,7 +3,6 @@
 	page.query('#talk', 'talk')
 	
 	Режим.пообещать('правка')
-	Режим.пообещать('действия')
 	
 	var messages
 	
@@ -12,9 +11,9 @@
 	page.load = function()
 	{
 		Подсказка('написание сообщения', 'Для того, чтобы написать сообщение, нажмите клавишу <a href=\'/сеть/настройки\'>«Писарь → Показать»</a>');
-		Подсказка('правка сообщений', 'Вы можете править свои сообщения, перейдя в <a href=\'/помощь/режимы#Режим правки\'>«режим правки»</a>');
-		Подсказка('добавление в беседу', 'Вы можете добавлять людей в беседу, перейдя в <a href=\'/помощь/режимы#Режим действий\'>«режим действий»</a>, или нажав клавиши <a href=\'/сеть/настройки\'>«Действия → Добавить»</a>');
-		Подсказка('переименование общения', 'Вы можете переименовать этот разговор, перейдя в <a href=\'/помощь/режимы#Режим правки\'>«режим правки»</a>');
+		//Подсказка('правка сообщений', 'Вы можете править свои сообщения, перейдя в <a href=\'/помощь/режимы#Режим правки\'>«режим правки»</a>');
+		//Подсказка('добавление в беседу', 'Вы можете добавлять людей в беседу, перейдя в <a href=\'/помощь/режимы#Режим действий\'>«режим действий»</a>, или нажав клавиши <a href=\'/сеть/настройки\'>«Действия → Добавить»</a>');
+		//Подсказка('переименование общения', 'Вы можете переименовать этот разговор, перейдя в <a href=\'/помощь/режимы#Режим правки\'>«режим правки»</a>');
 
 		messages = Interactive_messages
 		({
@@ -58,104 +57,7 @@
 				
 				if (page.data.участник_ли)
 				{
-					var add_user_to_talk = simple_value_dialog_window
-					({
-						class: 'add_user_to_talk_window',
-						title: 'Добавить пользователя в беседу',
-						no_ok_button: true,
-						fields:
-						[{
-							id: 'companion',
-							description: 'Кого добавим',
-							autocomplete:
-							{
-								mininum_query_length: 3,
-								search: function(query, callback)
-								{
-									var ajax = page.Ajax.get('/приложение/люди/найти',
-									{
-										query: query,
-										max: 5
-									})
-									.ok(function(data)
-									{
-										callback(data.люди)
-									})
-															
-									var search =
-									{
-										cancel: function()
-										{
-											ajax.abort()
-										}
-									}
-									
-									return search
-								},
-								decorate: function(user)
-								{
-									$.tmpl('user icon', user).appendTo(this)
-									
-									var name = $('<div/>').addClass('name').text(user.имя)
-									name.appendTo(this)
-								},
-								value: function(user)
-								{
-									return user._id + ''
-								},
-								title: function(user)
-								{
-									return user.имя
-								},
-								choice: function(_id)
-								{
-									add_user_to_talk.ok()
-								},
-								nothing_found: function(query)
-								{
-									info('Пользователя «' + query + '» не существует в нашей сети')
-								}
-								//hide_input_after_selection: true
-							}
-						}],
-						ok: function(_id)
-						{
-							var user = add_user_to_talk.fields.companion.autocomplete.selection_data()
-							
-							page.Ajax.put('/приложение/сеть/беседы/участие',
-							{
-								беседа: page.data.общение._id,
-								пользователь: user._id
-							})
-							.ok(function(data)
-							{
-								if (data.уже_участвует)
-									return info(user.имя + ' уже участвует в этой беседе')
-								
-								info(user.имя + ' добавлен' + (user.пол === 'женский' ? 'а' : '') + ' в эту беседу')
-							})
-							.ошибка(function(ошибка)
-							{
-								error(ошибка)
-							})
-						}
-					})
-					
-					text_button.new(page.get('.add_to_talk.button')).does(function()
-					{
-						add_user_to_talk.window.open()
-					})
-		
-					Режим.разрешить('действия')
-					
-					page.hotkey('Действия.Добавить', function()
-					{
-						add_user_to_talk.window.open()
-					})
-				}
-				else
-				{
-					Режим.запретить('действия')
+					can_add_person_to_talk()
 				}
 			},
 			more_link: $('.messages_framework > .older > a'),
@@ -242,5 +144,98 @@
 				unedited_talk_title = edited_talk_title
 			}
 		})
+	}
+	
+	function can_add_person_to_talk()
+	{
+		var add_user_to_talk = simple_value_dialog_window
+		({
+			class: 'add_user_to_talk_window',
+			title: 'Добавить пользователя в беседу',
+			no_ok_button: true,
+			fields:
+			[{
+				id: 'companion',
+				description: 'Кого добавим',
+				autocomplete:
+				{
+					mininum_query_length: 3,
+					search: function(query, callback)
+					{
+						var ajax = page.Ajax.get('/приложение/люди/найти',
+						{
+							query: query,
+							max: 5
+						})
+						.ok(function(data)
+						{
+							callback(data.люди)
+						})
+												
+						var search =
+						{
+							cancel: function()
+							{
+								ajax.abort()
+							}
+						}
+						
+						return search
+					},
+					decorate: function(user)
+					{
+						$.tmpl('user icon', user).appendTo(this)
+						
+						var name = $('<div/>').addClass('name').text(user.имя)
+						name.appendTo(this)
+					},
+					value: function(user)
+					{
+						return user._id + ''
+					},
+					title: function(user)
+					{
+						return user.имя
+					},
+					choice: function(_id)
+					{
+						add_user_to_talk.ok()
+					},
+					nothing_found: function(query)
+					{
+						info('Пользователя «' + query + '» не существует в нашей сети')
+					}
+					//hide_input_after_selection: true
+				}
+			}],
+			ok: function(_id)
+			{
+				var user = add_user_to_talk.fields.companion.autocomplete.selection_data()
+				
+				page.Ajax.put('/приложение/сеть/беседы/участие',
+				{
+					беседа: page.data.общение._id,
+					пользователь: user._id
+				})
+				.ok(function(data)
+				{
+					if (data.уже_участвует)
+						return info(user.имя + ' уже участвует в этой беседе')
+					
+					info(user.имя + ' добавлен' + (user.пол === 'женский' ? 'а' : '') + ' в эту беседу')
+				})
+				.ошибка(function(ошибка)
+				{
+					error(ошибка)
+				})
+			}
+		})
+		
+		function add_person()
+		{
+			add_user_to_talk.window.open()
+		}
+		
+		page.Available_actions.add(text('pages.talks.talk.add person'), add_person, { действие: 'Добавить' })
 	}
 })()

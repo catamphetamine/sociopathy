@@ -18,7 +18,7 @@ var dialog_window = new Class
 	controls: [],
 	control_locks: [],
 	
-	namespace: "window",
+	namespace: $.unique_namespace(),
 	
 	state: {},
 
@@ -61,25 +61,38 @@ var dialog_window = new Class
 		var title = $element.attr('title')
 		$element.removeAttr('title')
 		
+		var main_content = $element.find('> .main_content')
+		
+		if (!main_content.exists())
+		{
+			main_content = $('<div/>')
+				.addClass('main_content')
+				.append($element.children())
+				.appendTo($element)
+		}
+		
 		this.container = $('<div/>')
 			.addClass("veil")
 			.addClass("popup_veil")
 			.addClass("collapsed")
 			.appendTo(document.body)
-			.on('keydown.' + this.namespace, function(event) 
-			{
-				// close on escape key
-				if (self.options['close on escape'] && event.keyCode &&
-					event.keyCode === Клавиши.Escape) 
-				{	
-					event.preventDefault()
-					self.cancel()
-				}
-			})
 			//.addClass(this.options.theme)
+			
+		$(document).on('keydown.' + this.namespace, function(event) 
+		{
+			// close on escape key
+			if (self.options['close on escape'] && event.keyCode &&
+				event.keyCode === Клавиши.Escape) 
+			{
+				event.preventDefault()
+				
+				if (self.is_open)
+					self.cancel()
+			}
+		})
 		
-		if (options.veil_style)
-			this.container.css(options.veil_style)
+		if (this.options.veil_style)
+			this.container.css(this.options.veil_style)
 		
 		var dialog_window = $('<article/>')
 			// setting tabIndex makes the div focusable
@@ -272,7 +285,9 @@ var dialog_window = new Class
 				this.options['on close'].bind(this.content)()
 			
 			this.container.unbind('keypress.' + this.namespace)
-			this.content.unbind('keypress.' + this.namespace)
+			
+			//this.content.unbind('keypress.' + this.namespace)
+			$(document).unbind('keypress.' + this.namespace)
 			
 			if (callback)
 				callback()

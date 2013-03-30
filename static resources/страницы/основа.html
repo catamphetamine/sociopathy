@@ -151,16 +151,20 @@
 			
 			function report_error(тип, ошибка)
 			{
+				var uri = window.location.pathname
+				if (window.Uri)
+					 uri = Uri.parse().to_relative_url()
+				
 				var data =
 				{
 					ошибка: ошибка,
-					адрес: Uri.parse().to_relative_url()
+					адрес: uri
 				}
 				
 				if (тип)
 					data.тип = тип
 				
-				if (пользователь)
+				if (window.пользователь)
 				{
 					data.пользователь = пользователь._id
 				}

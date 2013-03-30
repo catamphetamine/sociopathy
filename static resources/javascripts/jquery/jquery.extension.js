@@ -117,6 +117,9 @@
 
 $.fn.slide_in_from_top = function(duration, easing, callback)
 {
+	if (duration)
+		duration *= 1000
+	
 	if (typeof easing === 'function')
 		callback = easing
 
@@ -185,6 +188,9 @@ $.fn.move_out_upwards = function(duration)
 
 $.fn.slide_out_upwards = function(duration)
 {
+	if (duration)
+		duration *= 1000
+		
 	this.stop_animation()
 	
 	switch (this.css('position'))

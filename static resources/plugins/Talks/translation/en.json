@@ -3,7 +3,14 @@
 	{
 		"talks":
 		{
-			"title": "Talks"
+			"title": "Talks",
+			
+			"new": "Start a new talk",
+			
+			"talk":
+			{
+				"add person": "Add a person to talk"
+			}
 		}
 	}
 }

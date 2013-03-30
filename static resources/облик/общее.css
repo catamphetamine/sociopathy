@@ -1716,3 +1716,8 @@ body.with_actions_on_bottom
 		padding-right: 16px;
 	}
 }
+
+.available_actions
+{
+	display: none;
+}
