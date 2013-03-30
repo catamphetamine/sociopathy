@@ -26,7 +26,7 @@ var Dragger = new Class
 		var i = 0
 		while (i < this.plugins.length)
 		{
-			this.plugins[i] = new this.plugins[i](this, list, this.options)
+			this.plugins[i] = new this.plugins[i](this, element, this.options)
 			i++
 		}
 		
