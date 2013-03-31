@@ -59,7 +59,14 @@
 		
 		padding-left: 0;
 		
-		li
+		> li.selected
+		{
+			.beautiful_shadow_5 (0, 0, 10px, 15px, 20px, 40px, 60px, 0.25, 0, 72, 105);
+					
+			.css_transition_duration(100ms);
+		}
+		
+		> li
 		{
 			cursor: pointer;
 			border-radius: 10px;
@@ -102,13 +109,13 @@
 			
 			.title:hover span
 			{
-				background-color: #ffdeed;
+				background-color: #d8f3ff;
 				color: black;
 			}
 			
 			.title:active span
 			{
-				background-color: #ffd0e6;
+				background-color: #c1eafd;
 				color: black;
 			}
 			
@@ -181,7 +188,17 @@
 		margin-top: 40px;
 		padding-left: 80px;
 
-		li
+		> li.selected
+		{
+			a
+			{
+				color: #0384d7;
+					
+				.css_transition_duration(100ms);
+			}
+		}
+		
+		> li
 		{
 			margin-bottom: 10px;
 		}

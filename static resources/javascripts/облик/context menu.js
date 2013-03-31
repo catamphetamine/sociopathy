@@ -27,6 +27,9 @@ var Context_menu = new Class
 		}
 		
 		this.setOptions(options)
+		
+		if (!this.options.selectable_element)
+			this.options.selectable_element = element
 			
 		this.menu = $('<div/>').addClass('context_menu')
 		this.menu.list = $('<ul/>').appendTo(this.menu)
@@ -70,9 +73,13 @@ var Context_menu = new Class
 				top: event.pageY
 			})
 			
+			this.options.selectable_element.addClass('selected')
+			
 			$('body').on('mousedown' + this.namespace, (function()
 			{
 				this.menu.hide()
+			
+				this.options.selectable_element.removeClass('selected')
 				
 				$('body').unbind('mousedown' + this.namespace)
 			})
@@ -96,6 +103,8 @@ $.fn.context_menu = function(options)
 	
 	var menu = new Context_menu(this, options)
 	this.data('context_menu', menu)
+	
+	Режим.data('context_menus', menu, { add: true })
 	
 	return menu
 }

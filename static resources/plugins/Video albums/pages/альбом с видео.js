@@ -19,7 +19,11 @@
 			url: '/человек/видео/альбом',
 			parameters: { 'адресное имя': page.data.адресное_имя, альбом: page.data.альбом },
 			before_done: videos_loaded,
-			done: page.initialized,
+			done: function()
+			{
+				page.initialized()
+				center_videos_list()
+			},
 			get_data: function(data)
 			{
 				title(page.data.альбом + '. ' + text('pages.video albums.title') + '. ' + data.пользователь.имя)
@@ -41,7 +45,6 @@
 			}))
 		
 		$(window).on_page('resize.videos', center_videos_list)
-		center_videos_list()
 	}
 
 	var scroll_navigation

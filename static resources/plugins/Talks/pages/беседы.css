@@ -28,6 +28,14 @@
 			list-style-type: none;
 			padding: 0;
 		
+			> li.selected
+			{
+				border-color: #c1ebff;
+				background-color: #e3f6ff !important;
+				
+				.css_transition_duration(100ms);
+			}
+			
 			> li
 			{
 				position: relative;
@@ -37,6 +45,10 @@
 				.css_transition(500ms, background-color);
 				
 				border-radius: 6px;
+				
+				border-width: 1px;
+				border-style: solid;
+				border-color: white;
 				
 				&.new
 				{

@@ -17,7 +17,18 @@
 		
 		padding-left: 0;
 		
-		li
+		> li.selected
+		{
+			background-color: #edf2fa;
+			border-radius: 10px;
+			
+			border-color: #cbdbf5;
+			
+			.css_transition_duration(100ms);
+			.css_transition_property(background-color border-radius border-color);
+		}
+		
+		> li
 		{
 			display: inline-block;
 			
@@ -25,9 +36,20 @@
 			
 			vertical-align: top;
 			
-			/* margin править также в books.js */
-			margin: 20px;
-			margin-bottom: 120px;
+			/* margin править также в книги.js */
+			margin-left: 0px;
+			margin-right: 0px;
+			margin-bottom: 100px;
+			
+			padding-top: 20px;
+			padding-bottom: 20px;
+			
+			padding-left: 20px;
+			padding-right: 20px;
+			
+			border-style: solid;
+			border-color: white;
+			border-width: 1px;
 			
 			text-align: center;
 				

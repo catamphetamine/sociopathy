@@ -19,7 +19,11 @@
 			url: '/человек/картинки/альбом',
 			parameters: { 'адресное имя': page.data.адресное_имя, альбом: page.data.альбом },
 			before_done: pictures_loaded,
-			done: page.initialized,
+			done: function()
+			{
+				page.initialized()
+				center_pictures_list()
+			},
 			get_data: function(data)
 			{
 				title(page.data.альбом + '. ' + text('pages.picture albums.title') + '. ' + data.пользователь.имя)
@@ -41,7 +45,6 @@
 		}))
 	
 		$(window).on_page('resize.pictures', center_pictures_list)
-		center_pictures_list()
 	}
 	
 	function center_pictures_list()

@@ -10,6 +10,14 @@
 				"remove": "Remove",
 				"removed": "The book has been removed"
 			}
+		},
+		
+		"books":
+		{
+			"book":
+			{
+				"add to bookshelf": "Add to my bookshelf"
+			}
 		}
 	}
 }

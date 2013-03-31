@@ -147,16 +147,6 @@
 	//	Режим.разрешить('правка')
 	}
 	
-	function create_actions_context_menus()
-	{
-		Режим.data('context_menus', [])
-		
-		page.discussions.children().each(function()
-		{
-			create_context_menu($(this))
-		})
-	}
-	
 	function create_context_menu(discussion)
 	{
 		var _id = discussion.attr('_id')
@@ -164,34 +154,24 @@
 		if (!page.data.подписан_на_обсуждения.contains(_id))
 			return
 		
-		var menu = discussion.context_menu
-		({
-			'Отписаться': function()
-			{
-				page.Ajax.delete('/сеть/обсуждения/подписка',
-				{
-					_id: _id
-				})
-				.ok(function()
-				{
-					page.refresh()
-				})
-				.ошибка(function(ошибка)
-				{
-					error(ошибка)
-				})
-			}
-		})
-		
-		Режим.data('context_menus', menu, { add: true })
-	}
-	
-	function destroy_actions_context_menu()
-	{
-		(Режим.data('context_menus') || []).for_each(function()
+		var menu = {}
+		menu[text('pages.discussions.discussion.unsubscribe')] = function()
 		{
-			this.destroy()
-		})
+			page.Ajax.delete('/сеть/обсуждения/подписка',
+			{
+				_id: _id
+			})
+			.ok(function()
+			{
+				page.refresh()
+			})
+			.ошибка(function(ошибка)
+			{
+				error(ошибка)
+			})
+		}
+		
+		discussion.context_menu(menu)
 	}
 	
 	page.Data_store.режим('обычный',
@@ -202,14 +182,10 @@
 
 			//populate_discussions('обсуждение в списке обсуждений')(data)
 			//ajaxify_internal_links(page.discussions)
-			
-			create_actions_context_menus()
 		},
 		
 		destroy: function()
 		{
-			destroy_actions_context_menu()
-			
 			//page.discussions.find('> li').empty()
 		}
 	})

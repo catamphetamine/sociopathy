@@ -129,16 +129,6 @@
 	//	Режим.разрешить('правка')
 	}
 	
-	function create_actions_context_menus()
-	{
-		Режим.data('context_menus', [])
-		
-		page.talks.children().each(function()
-		{
-			create_context_menu($(this))
-		})
-	}
-	
 	function create_context_menu(talk)
 	{
 		var menu = {}
@@ -161,17 +151,7 @@
 			})
 		}
 		
-		menu = talk.context_menu(menu)
-		
-		Режим.data('context_menus', menu, { add: true })
-	}
-	
-	function destroy_actions_context_menu()
-	{
-		(Режим.data('context_menus') || []).for_each(function()
-		{
-			this.destroy()
-		})
+		talk.context_menu(menu)
 	}
 	
 	page.Data_store.режим('обычный',
@@ -182,14 +162,10 @@
 
 			//populate_talks('беседа в списке бесед')(data)
 			//ajaxify_internal_links(page.talks)
-			
-			create_actions_context_menus()
 		},
 		
 		destroy: function()
 		{
-			destroy_actions_context_menu()
-			
 			//page.talks.find('> li').empty()
 		}
 	})

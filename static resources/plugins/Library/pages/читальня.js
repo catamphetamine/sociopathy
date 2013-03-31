@@ -94,11 +94,15 @@
 					return data.раздел
 				},
 				before_done: categories_loaded,
-				done: page.initialized
+				done: function()
+				{
+					page.initialized()
+					
+					center_categories_list()
+				}
 			}))
 		
 			$(window).on_page('resize.library', center_categories_list)
-			center_categories_list()
 		}
 		
 		var finish = function()
@@ -391,10 +395,8 @@
 		}
 	}
 	
-	function initialize_actions_context_menu()
+	function create_context_menus()
 	{
-		Режим.data('context_menus', [])
-		
 		page.categories.children().each(function()
 		{
 			var _id = $(this).attr('_id')
@@ -417,7 +419,6 @@
 				})
 				
 				menu.data = _id
-				Режим.data('context_menus', menu, { add: true })
 			}
 		})
 	
@@ -443,17 +444,7 @@
 				})
 				
 				menu.data = _id
-				
-				Режим.data('context_menus', menu, { add: true })
 			}
-		})
-	}
-	
-	function destroy_actions_context_menu()
-	{
-		(Режим.data('context_menus') || []).for_each(function()
-		{
-			this.destroy()
 		})
 	}
 	
@@ -473,16 +464,17 @@
 				if (!category.attr('_id') && category.find('.title span').is_empty())
 					category.remove()
 			})
-			
-			initialize_actions_context_menu()
 		},
 		
 		destroy: function()
 		{
-			destroy_actions_context_menu()
-			
 			page.categories.find('> li').empty()
 			page.articles.find('> li').empty()
+		},
+		
+		context_menus: function()
+		{
+			create_context_menus()
 		}
 	})
 	

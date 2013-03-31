@@ -186,6 +186,13 @@
 				width: 152px;
 				text-align: center;
 			
+				.book.selected
+				{
+					.beautiful_shadow_5 (0, 0, 10px, 15px, 20px, 40px, 60px, 1, 255, 200, 0);
+					
+					.css_transition_duration(100ms);
+				}
+		
 				.book
 				{
 					display: inline-block;

@@ -5,7 +5,12 @@
 		{
 			"title": "Discussions",
 			
-			"new": "Start a new discussion"
+			"new": "Start a new discussion",
+			
+			"discussion":
+			{
+				"unsubscribe": "Unsubscribe"
+			}
 		}
 	}
 }

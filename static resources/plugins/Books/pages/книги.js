@@ -25,7 +25,13 @@
 					parse_dates(books, 'добавлена')
 				},
 				on_first_output: books_loaded,
-				before_output: initialize_context_menus
+				before_output: function(elements)
+				{
+					elements.for_each(function()
+					{
+						create_context_menu(this)
+					})
+				}
 			},
 			container: page.books,
 			template: 'книга в списке книг',
@@ -110,6 +116,8 @@
 	{
 		page.initialized()
 		
+		center_books()
+		
 		Режим.при_переходе({ в: 'правка' }, function()
 		{
 			//page.get('.empty').hide()
@@ -124,7 +132,7 @@
 	
 	function center_books()
 	{
-		center_list($('#books'), { space: $('#content'), item_width: 410, item_margin: 20 })
+		center_list($('#books'), { space: $('#content'), item_width: 1 + 410 + 1, item_margin: 20 })
 	}
 	
 	function initialize_search()
@@ -173,7 +181,7 @@
 				page.Ajax.get('/сеть/книга', { _id: _id }).ok(function(data)
 				{
 					var book = $.tmpl('книга в списке книг', data.книга)
-					initialize_context_menu(book)
+					create_context_menu(book)
 					page.books.empty().append(book)
 				})
 			},
@@ -191,30 +199,25 @@
 		.delay(1)
 	}
 	
-	function initialize_context_menus(books)
-	{
-		books.for_each(function()
-		{
-			initialize_context_menu($(this))
-		})
-	}
-	
-	function initialize_context_menu(book)
+	function create_context_menu(book)
 	{
 		var cover = book.find('.cover_image')
 		
-		var menu = cover.context_menu
-		({
-			'Добавить себе': function(_id)
+		var _id = book.attr('_id')
+		
+		var items =
+		[{
+			title: text('pages.books.book.add to bookshelf'),
+			action: function()
 			{
 				page.Ajax.put('/сеть/книжный шкаф', { _id: _id }).ok(function()
 				{
 					info(text('pages.books.added to bookshelf', { 'user id': пользователь['адресное имя'] }))
 				})
 			}
-		})
+		}]
 		
-		menu.data = book.attr('_id')
+		cover.context_menu({ items: items, selectable_element: book })
 	}
 	
 	function choose_book_cover()
@@ -225,10 +228,36 @@
 		page.book_cover_uploader.choose()
 	}
 	
+	page.Data_store.режим('обычный',
+	{
+		create: function(data)
+		{
+			// в обычном режиме - включать обратно подгрузку
+
+			//populate_discussions('обсуждение в списке обсуждений')(data)
+			//ajaxify_internal_links(page.discussions)
+		},
+		
+		destroy: function()
+		{
+			//page.discussions.find('> li').empty()
+		},
+		
+		create_context_menus: function()
+		{
+			page.books.children().each(function()
+			{
+				create_context_menu($(this))
+			})
+		}
+	})
+	
 	page.Data_store.режим('правка',
 	{
 		create: function(data)
 		{
+			// в режиме правки отключать подгрузку
+	
 			page.book_dragger = new List_dragger(page.books,
 			{
 				dont_start_dragging_on: '.title, .author',
@@ -247,4 +276,6 @@
 			page.book_dragger.destroy()
 		}
 	})
+	
+	page.save = function(data) { }
 })()

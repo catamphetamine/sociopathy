@@ -43,9 +43,9 @@
 	user-select: @value;
 }
 
-.shadow (@left: 0px, @top: 0px, @radius: 5px, @opacity: 0.3)
+.shadow (@left: 0px, @top: 0px, @radius: 5px, @opacity: 0.3, @r: 0, @g: 0, @b: 0)
 {
-	@value: @left @top @radius rgba(0, 0, 0, @opacity);
+	@value: @left @top @radius rgba(@r, @g, @b, @opacity);
 
 	-webkit-box-shadow: @value;
 	-moz-box-shadow: @value;

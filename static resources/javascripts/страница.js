@@ -303,8 +303,15 @@ var Page = new Class
 					mode = Режим.текущий()
 					
 				if (this.modes[mode])
+				{
 					if (this.modes[mode].create)
-						return this.modes[mode].create.bind(this)(data)
+						this.modes[mode].create.bind(this)(data)
+						
+					if (this.modes[mode].context_menus)
+						this.modes[mode].context_menus()
+						
+					return
+				}
 				
 				return this.modes.обычный.create.bind(this)(data)
 			},
@@ -315,8 +322,12 @@ var Page = new Class
 					mode = Режим.текущий()
 					
 				if (this.modes[mode])
+				{
 					if (this.modes[mode].destroy)
-						return this.modes[mode].destroy.bind(this)()
+						this.modes[mode].destroy.bind(this)()
+					
+					return
+				}
 				
 				return this.modes.обычный.destroy.bind(this)()
 			},

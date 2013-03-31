@@ -94,6 +94,10 @@ var get_page_less_style_link
 		
 			Page.element.empty()
 			
+			if (add_version(get_page_javascript_link()).contains('"'))
+				throw 'Page javascript file can\'t contain double quotes'
+			
+			$('head').find('> script[src="' + add_version(get_page_javascript_link()) + '"]').remove()
 			Less.unload_style(add_version(get_page_less_style_link(Страница.эта())))
 		}
 		

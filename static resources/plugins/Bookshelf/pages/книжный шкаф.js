@@ -1,6 +1,6 @@
 Url_map['bookshelf'] = function(id) { return '/люди/' + id + '/книги' }
 
-(function()
+;(function()
 {
 	Режим.пообещать('правка')
 	
@@ -119,7 +119,7 @@ Url_map['bookshelf'] = function(id) { return '/люди/' + id + '/книги' }
 		{
 			$('.bookshelf_container .book').each(function()
 			{
-				initialize_context_menu($(this))
+				create_context_menu($(this))
 			})
 				
 			Режим.разрешить('правка')
@@ -128,7 +128,7 @@ Url_map['bookshelf'] = function(id) { return '/люди/' + id + '/книги' }
 		page.initialized()
 	}
 	
-	function initialize_context_menu(book)
+	function create_context_menu(book)
 	{
 		var list_item = book.parent()
 		

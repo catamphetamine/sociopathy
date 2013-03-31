@@ -601,7 +601,7 @@ function center_list(list, options)
 	{
 		throw 'centered list position must be relative'
 	}
-		
+	
 	function calculate_width(count)
 	{
 		return count * (options.item_width + (options.item_margin * 2))
@@ -625,7 +625,9 @@ function center_list(list, options)
 	}
 	
 	list.width(suitable_width)
+	
 	var left_shift = (available_width - margins - suitable_width) / 2
+	
 	list.css
 	({
 		left: left_shift + 'px',

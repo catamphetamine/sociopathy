@@ -13,6 +13,14 @@ var Режим = (function()
 
 	var переходы_разрешены
 	
+	function destroy_context_menus()
+	{
+		(Режим.data('context_menus') || []).for_each(function()
+		{
+			this.destroy()
+		})
+	}
+	
 	сбросить()
 	
 	function сбросить()
@@ -20,7 +28,10 @@ var Режим = (function()
 		$('body > .edit_mode_actions.destroyable').remove()
 
 		if (режим)
+		{
+			destroy_context_menus()
 			перейти_в_режим('обычный')
+		}
 		else
 			режим = 'обычный'
 			
@@ -131,6 +142,8 @@ var Режим = (function()
 	{
 		if (!возможен_ли_переход(режим, mode))
 			return
+		
+		destroy_context_menus()
 		
 		if (режим === 'правка')
 		{
@@ -516,6 +529,9 @@ var Режим = (function()
 		
 		if (options.add)
 		{
+			if (typeof store[key] === 'undefined')
+				return store[key] = [value]
+			
 			if (!(store[key] instanceof Array))
 				store[key] = [store[key]]
 				
