@@ -19,6 +19,8 @@
 		reset: function()
 		{
 			this.новости = []
+			
+			news_indication.off()
 		},
 		
 		new: function(data)
@@ -74,7 +76,7 @@
 		
 		news_indication = panel.toggle_buttons
 		({
-			type: 'новости',
+			type: 'News',
 			fade_in_duration: 2,
 			fade_out_duration: 3,
 			show:

@@ -237,5 +237,25 @@
 		}
 		
 		page.Available_actions.add(text('pages.talks.talk.add person'), add_person, { действие: 'Добавить', immediate_transition_between_dialog_windows: true })
+		
+		page.Available_actions.add(text('pages.talks.talk.leave'), function()
+		{		
+			page.Ajax.delete('/сеть/беседы/участие',
+			{
+				_id: page.data.общение._id
+			})
+			.ok(function()
+			{
+				go_to('/сеть/беседы')
+			})
+			.ошибка(function(ошибка)
+			{
+				error(ошибка)
+			})
+		},
+		{
+			type: 'dark dangerous',
+			styles: 'generic, dangerous'
+		})
 	}
 })()

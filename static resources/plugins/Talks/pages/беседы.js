@@ -67,7 +67,7 @@
 						{
 							event.preventDefault()
 							
-							page.Ajax.put('/приложение/сеть/беседы/участие',
+							page.Ajax.put('/сеть/беседы/участие',
 							{
 								_id: talk.attr('_id'),
 								пользователь: пользователь._id
@@ -141,26 +141,27 @@
 	
 	function create_context_menu(talk)
 	{
-		var menu = talk.context_menu
-		({
-			'Выйти из беседы': function()
+		var menu = {}
+		
+		menu[text('pages.talks.talk.leave')] = function()
+		{
+			page.Ajax.delete('/сеть/беседы/участие',
 			{
-				page.Ajax.delete('/приложение/сеть/беседы/участие',
-				{
-					_id: talk.attr('_id')
-				})
-				.ok(function()
-				{
-					talk.find('> .left').show()
-					talk.find('> a').remove()
-					talk.find('> .leave').hide()
-				})
-				.ошибка(function(ошибка)
-				{
-					error(ошибка)
-				})
-			}
-		})
+				_id: talk.attr('_id')
+			})
+			.ok(function()
+			{
+				talk.find('> .left').show()
+				talk.find('> a').remove()
+				talk.find('> .leave').hide()
+			})
+			.ошибка(function(ошибка)
+			{
+				error(ошибка)
+			})
+		}
+		
+		menu = talk.context_menu(menu)
 		
 		Режим.data('context_menus', menu, { add: true })
 	}

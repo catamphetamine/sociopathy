@@ -110,11 +110,18 @@
 		reset: function()
 		{
 			this.обсуждения = {}
+			news_indication.off()
 		},
 		
 		new_message: function(communication, new_message)
 		{
 			this.обсуждения[communication] = new_message
+		},
+		
+		звуковое_оповещение: function(чего)
+		{
+			if (чего === 'обсуждение')
+				new Audio("/звуки/пук.ogg").play()
 		},
 		
 		read: function(что)

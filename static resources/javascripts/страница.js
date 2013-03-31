@@ -613,6 +613,12 @@ var Page = new Class
 			
 			var button = $('<div/>')
 				.text(this.title)
+			
+			if (options.type)
+				button.attr('type', options.type)
+				
+			if (options.styles)
+				button.attr('styles', options.styles)
 				
 			$('<li/>').append(button).appendTo(actions_list)
 			

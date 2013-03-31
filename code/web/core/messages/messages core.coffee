@@ -216,24 +216,21 @@ global.prepare_messages = (options) ->
 				has_new_messages = yes
 				
 				latest_read = options.latest_read(session, { сообщения_чего: { _id: _id } })
+				
 				if latest_read?
 					if latest_read + '' == latest_message_id + ''
 						has_new_messages = no
 					
 				if not сам_себя
 					эфир.отправить('новости', options.общение + '.' + 'добавление', { id: общение.id, название: общение.название }, { кому: добавляемый })
-					
-				if has_new_messages?
+				
+				if has_new_messages
 					эфир.отправить('новости', options.общение, { _id: _id.toString(), сообщение: latest_message_id }, { кому: добавляемый })
 					
-					set_id = 'новости.' + options.path({ сообщения_чего: { _id: _id } })
+					set = {}
+					set['последние_сообщения.' + options.path({ сообщения_чего: { _id: _id } })] = latest_message_id
 					
-					set_operation = {}
-					set_operation[set_id] = latest_message_id
-					
-					db('people_sessions')._.update({ пользователь: добавляемый }, { $set: set_operation })
-				else
-					эфир.отправить.await('новости', options.общение + '.' + 'добавление', { id: общение.id, название: общение.название }, { кому: добавляемый })
+					db('people_sessions')._.update({ пользователь: добавляемый }, { $set: set })
 					
 				возврат()
 					

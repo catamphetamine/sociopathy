@@ -119,11 +119,18 @@
 		reset: function()
 		{
 			this.беседы = {}
+			news_indication.off()
 		},
 		
 		new_message: function(communication, new_message)
 		{
 			this.беседы[communication] = new_message
+		},
+		
+		звуковое_оповещение: function(чего)
+		{
+			if (чего === 'беседа')
+				new Audio("/звуки/пук.ogg").play()
 		},
 	 
 		read: function(что)

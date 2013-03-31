@@ -423,4 +423,9 @@ Object.size = function(object)
 	return size
 }
 
+Object.is_empty = function(object)
+{
+	return Object.size(object) === 0
+}
+
 Array.prototype.add = Array.prototype.push

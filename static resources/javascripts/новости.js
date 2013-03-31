@@ -4,13 +4,6 @@ var Новости = new (new Class
 	
 	news: {},
 	
-	// если не открыто окно обсуждения
-	звуки:
-	{
-		беседы: new Audio("/звуки/пук.ogg"),
-		обсуждения: new Audio("/звуки/пук.ogg")
-	},
-	
 	initialize: function()
 	{
 	},
@@ -25,10 +18,11 @@ var Новости = new (new Class
 	
 	звуковое_оповещение: function(чего)
 	{
-		if (!this.звуки[чего])
-			return //throw 'Sound not found for ' + чего
-		
-		this.звуки[чего].play()
+		Object.for_each(this.news, function()
+		{
+			if (this.звуковое_оповещение)
+				this.звуковое_оповещение(чего)
+		})
 	},
 	
 	сброс: function()

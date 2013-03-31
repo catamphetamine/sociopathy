@@ -9,7 +9,8 @@
 			
 			"talk":
 			{
-				"add person": "Add a person to talk"
+				"add person": "Add a person to talk",
+				"leave": "Leave this conversation"
 			}
 		}
 	}

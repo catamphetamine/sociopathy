@@ -10,6 +10,7 @@
 		"picture": "новости",
 		"to": "/новости",
 		
-		"private": true
+		"private": true,
+		"unreadable": true
 	}
 }

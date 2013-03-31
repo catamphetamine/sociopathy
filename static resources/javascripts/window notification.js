@@ -266,7 +266,7 @@ var Minimalistic_window_notification = new Class
 	//attention_symbol = '•'
 	attention_symbol: '✽ ',
 
-	delay: 3000,
+	delay: 0, //3000,
 	delayed: [],
 	
 	prepends_asterisk: false,

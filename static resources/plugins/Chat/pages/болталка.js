@@ -1,7 +1,7 @@
-title(text('pages.chat.title'));
-
 (function()
 {	
+	title(text('pages.chat.title'))
+	
 	Режим.пообещать('правка')
 	
 	var messages
