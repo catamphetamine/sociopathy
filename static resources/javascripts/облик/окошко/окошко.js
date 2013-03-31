@@ -462,5 +462,11 @@ var dialog_window = new Class
 			this.locker.remove()
 			this.locker = null
 		}
+	},
+	
+	destroy: function()
+	{
+		this.close()
+		this.container.remove()
 	}
 })

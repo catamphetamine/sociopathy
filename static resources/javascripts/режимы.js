@@ -17,6 +17,8 @@ var Режим = (function()
 	
 	function сбросить()
 	{
+		$('body > .edit_mode_actions.destroyable').remove()
+
 		if (режим)
 			перейти_в_режим('обычный')
 		else
@@ -320,14 +322,14 @@ var Режим = (function()
 	
 	result.activate_edit_actions = function(options)
 	{
-		var on_save = options.on_save
+		var on_save = options.on_save || $.noop
 		var on_discard = options.on_discard || function()
 		{
 			//var загрузка = loading_indicator.show()
 			reload_page()
 		}
 	
-		actions = $('.edit_mode_actions').clone()
+		actions = $('.edit_mode_actions').clone().addClass('destroyable')
 		actions.appendTo($('body')).move_out_downwards().disableTextSelect()
 		
 		save_changes_button = text_button.new(actions.find('.done'), { 'prevent double submission': true })
@@ -335,8 +337,7 @@ var Режим = (function()
 		{
 			page.unsaved_changes = false
 			
-			if (on_save)
-				on_save()
+			on_save()
 		})
 		
 		cancel_changes_button = text_button.new(actions.find('.cancel'), { 'prevent double submission': true })

@@ -1,12 +1,12 @@
-title(text('pages.talks.title'));
-
 (function()
 {
+	title(text('pages.talks.title'))
+
 	page.query('#talks', 'talks')
 	
 	function create_new_talk()
 	{
-			go_to('/сеть/общение/беседа')
+		go_to('/сеть/общение/беседа')
 	}
 	
 	page.load = function()
@@ -42,14 +42,18 @@ title(text('pages.talks.title'));
 		({
 			template: 'беседа в списке бесед',
 			to: page.talks,
-			conditional: initialize_conditional($('.main_conditional'), { immediate: true }),
 			loader: new  Batch_data_loader_with_infinite_scroll
 			({
-				url: '/приложение/сеть/беседы',
-				batch_size: 18,
+				url: '/сеть/беседы',
+				batch_size: 12,
+				get_item_locator: function(data)
+				{
+					return data.обновлено_по_порядку
+				},
 				scroll_detector: page.get('#scroll_detector'),
 				before_done: talks_loaded,
 				before_done_more: function() { ajaxify_internal_links(page.talks) },
+				done: page.initialized,
 				before_output: function(elements)
 				{
 					elements.for_each(function()
@@ -58,43 +62,29 @@ title(text('pages.talks.title'));
 						
 						if (Новости.news['Talks'].беседы[talk.attr('_id')])
 							talk.addClass('new')
-					})
-					
-					elements.for_each(function()
-					{
-						var talk = $(this)
-						var container = talk.find('> .leave')
-					
-						var the_button = button.physics.simple(new image_button(container.find('> .button'),
+							
+						talk.find('.cancel_unparticipation').on('click', function(event)
 						{
-							'auto unlock': false
-						}))
-						
-						container.hide()
-						
-						the_button.does(function()
-						{
-							page.Ajax.delete('/приложение/сеть/беседы/участие',
+							event.preventDefault()
+							
+							page.Ajax.put('/приложение/сеть/беседы/участие',
 							{
-								_id: talk.attr('_id')
+								_id: talk.attr('_id'),
+								пользователь: пользователь._id
 							})
 							.ok(function()
 							{
-								the_button.element.fade_out(0.3)
-								
-								talk.find('> .left').show()
-								talk.find('> a').remove()
-								talk.find('> .leave').hide()
+								page.refresh()
 							})
 							.ошибка(function(ошибка)
 							{
 								error(ошибка)
-								the_button.unlock()
 							})
 						})
+							
+						create_context_menu(talk)
 					})
 				},
-				done: page.initialized,
 				data: function(data)
 				{
 					parse_dates(data.беседы, 'создана')
@@ -138,4 +128,72 @@ title(text('pages.talks.title'));
 		
 	//	Режим.разрешить('правка')
 	}
+	
+	function create_actions_context_menus()
+	{
+		Режим.data('context_menus', [])
+		
+		page.talks.children().each(function()
+		{
+			create_context_menu($(this))
+		})
+	}
+	
+	function create_context_menu(talk)
+	{
+		var menu = talk.context_menu
+		({
+			'Выйти из беседы': function()
+			{
+				page.Ajax.delete('/приложение/сеть/беседы/участие',
+				{
+					_id: talk.attr('_id')
+				})
+				.ok(function()
+				{
+					talk.find('> .left').show()
+					talk.find('> a').remove()
+					talk.find('> .leave').hide()
+				})
+				.ошибка(function(ошибка)
+				{
+					error(ошибка)
+				})
+			}
+		})
+		
+		Режим.data('context_menus', menu, { add: true })
+	}
+	
+	function destroy_actions_context_menu()
+	{
+		(Режим.data('context_menus') || []).for_each(function()
+		{
+			this.destroy()
+		})
+	}
+	
+	page.Data_store.режим('обычный',
+	{
+		create: function(data)
+		{
+			// в обычном режиме - включать обратно подгрузку
+
+			//populate_talks('беседа в списке бесед')(data)
+			//ajaxify_internal_links(page.talks)
+			
+			create_actions_context_menus()
+		},
+		
+		destroy: function()
+		{
+			destroy_actions_context_menu()
+			
+			//page.talks.find('> li').empty()
+		}
+	})
+	
+	// в режиме правки отключать подгрузку
+	
+	page.save = function(data) { }
 })()

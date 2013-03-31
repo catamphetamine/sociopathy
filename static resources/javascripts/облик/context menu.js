@@ -4,6 +4,8 @@ var Context_menu = new Class
 	
 	options: {},
 	
+	namespace: '.' + $.unique_namespace(),
+	
 	initialize: function(element, options)
 	{
 		this.element = element
@@ -57,7 +59,7 @@ var Context_menu = new Class
 		
 		this.menu.hide().appendTo('body')
 			
-		element.on('contextmenu.context_menu', (function(event)
+		element.on('contextmenu' + this.namespace, (function(event)
 		{
 			event.preventDefault()
 			
@@ -67,25 +69,33 @@ var Context_menu = new Class
 				left: event.pageX,
 				top: event.pageY
 			})
-		})
-		.bind(this))
-		
-		$('body').on('mousedown.context_menu', (function()
-		{
-			this.menu.hide()
+			
+			$('body').on('mousedown' + this.namespace, (function()
+			{
+				this.menu.hide()
+				
+				$('body').unbind('mousedown' + this.namespace)
+			})
+			.bind(this))
 		})
 		.bind(this))
 	},
 	
 	destroy: function()
 	{
-		this.element.unbind('.context_menu')
-		$('body').unbind('.context_menu')
+		this.element.unbind(this.namespace)
+		$('body').unbind(this.namespace)
 		this.menu.remove()
 	}
 })
 
 $.fn.context_menu = function(options)
 {
-	return new Context_menu(this, options)
+	if (this.data('context_menu'))
+		this.data('context_menu').destroy()
+	
+	var menu = new Context_menu(this, options)
+	this.data('context_menu', menu)
+	
+	return menu
 }

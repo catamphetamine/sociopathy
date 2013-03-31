@@ -28,7 +28,6 @@
 			},
 			on_first_time_data: function(data)
 			{
-				//console.log(data)
 				title(data.название)
 				
 				page.data.общение._id = data._id

@@ -260,40 +260,71 @@ file_system = require 'fs'
 	id
 	
 снасти.batch_loading = (ввод, куда, свойство, options) ->
-	после = ввод.данные.после
+	if not options.после?
+		options.после = (_id) -> _id
+	
+	после = options.после(ввод.данные.после)
 	collection = db(options.from)
 	data = null
-				
+	
+	if not options.задом_наперёд?
+		options.задом_наперёд = yes
+	
 	parameters = options.parameters || {}
 	
-	query_options = Object.x_over_y(parameters, { limit: ввод.данные.сколько, sort: [['_id', -1]] })
-	query = Object.clone(options.query)
+	if not parameters.sort?
+		_id_sorting = null
+		if options.задом_наперёд?
+			_id_sorting = -1
+		else
+			_id_sorting = 1
+			
+		parameters.sort = [['_id', _id_sorting]]
 	
+	query_options = Object.x_over_y(parameters, { limit: ввод.данные.сколько, sort: parameters.sort })
+	query = Object.clone(options.query)
+
+	сравнение = null
+	if options.задом_наперёд?
+		сравнение = '$lt'
+	else
+		сравнение = '$gt'
+		
 	if после?
-		после =  collection.id(после)
-		query._id = { $lt: после }
+		if not options.после_query?
+			options.после_query = (после, query) -> 
+				query._id = {}
+				query._id[сравнение] = collection.id(после)
+				
+		options.после_query(после, query)
 			
 	batch = collection._.find(query, query_options)
 	
-	data = batch
-	if batch.length < ввод.данные.сколько
-		куда[свойство] = data
-		return data
+	if batch.пусто()
+		куда[свойство] = batch
+		return batch
 	
-	more = Object.clone(options.query)
-	more._id = { $lt: batch.last()._id }
+	more_query = null
 	
-	query_options = Object.x_over_y(parameters, { limit: 1, sort: [['_id', -1]] })
+	if not options.more_query?
+		options.more_query = (last, query) ->
+			query._id = {}
+			query._id[сравнение] = last._id
+		
+	more_query = Object.clone(options.query)
+	options.more_query(batch.last(), more_query)
 	
-	more = collection._.find(more, query_options)
+	query_options = Object.x_over_y(parameters, { limit: 1, sort: parameters.sort })
+	
+	more = collection._.find(more_query, query_options)
 	
 	if more? && !more.пусто()
 		куда['есть ещё?'] = yes
 	else
 		куда['есть ещё?'] = no
 		
-	куда[свойство] = data
-	return data
+	куда[свойство] = batch
+	return batch
 			
 снасти.escape_id = (id) ->
 	'/\?@#&%*:|"\'<>.'.split('').forEach((symbol) -> id = id.replace_all(symbol, ''))

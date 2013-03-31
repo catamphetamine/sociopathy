@@ -1,10 +1,4 @@
 <li _id="${_id}">
-	{{if участник}}
-		<div class="leave" title="Выйти из беседы">
-			<div class="button"></div>
-		</div>
-	{{/if}}
-	
 	<a href="/сеть/беседы/${id}">
 		{{each(index, собеседник) участники}}
 			{{tmpl(Object.x_over_y({ no_link: true }, собеседник)) 'маленький аватар'}}
@@ -22,6 +16,6 @@
 	</a>
 	
 	<div class="left">
-		<span>Вы вышли из беседы «${название}»</span>
+		<span>Вы вышли из беседы «${название}».</span> <a class="cancel_unparticipation" href="#">Отмена</a>
 	</div>
 </li>

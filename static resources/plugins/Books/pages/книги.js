@@ -1,8 +1,6 @@
 (function()
 {
 	title(text('pages.books.title'))
-
-	page.needs_initializing = true
 	
 	page.query('#books', 'books')
 	

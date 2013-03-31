@@ -68,14 +68,21 @@ global.prepare_messages = (options) ->
 					
 				if not последние_сообщения?
 					return []
+
+				последние_прочитанные_сообщения = null
 				
+				if session.последние_прочитанные_сообщения?
+					последние_прочитанные_сообщения = session.последние_прочитанные_сообщения[options.общение_во_множественном_числе]
+					
+				if not последние_прочитанные_сообщения?
+					последние_прочитанные_сообщения = {}
+
 				непрочитанные = []
 				for _id, сообщение of последние_сообщения
-					непрочитанные.add(db(options.collection).id(_id))
+					if последние_прочитанные_сообщения[_id] + '' != сообщение + ''
+						непрочитанные.add(db(options.collection).id(_id))
 				
-				непрочитанные = db(options.collection)._.find({ _id: { $in: непрочитанные }})
-				
-				return непрочитанные
+				return db(options.collection)._.find({ _id: { $in: непрочитанные }}, { sort: [['обновлено_по_порядку', -1]] })
 			
 			$ = {}
 			
@@ -91,9 +98,14 @@ global.prepare_messages = (options) ->
 			$ = {}
 			
 			loading_options =
-				from: options.collection,
-				query: options.общения_query(пользователь),
-				parameters: { sort: [['обновлено', -1]] }
+				from: options.collection
+				query: options.общения_query(пользователь)
+				more_query: (last, more_query) ->
+					more_query.обновлено_по_порядку = { $lt: last.обновлено_по_порядку }
+				parameters:
+					sort: [['обновлено_по_порядку', -1]]
+				после_query: (после, query) ->
+					query.обновлено_по_порядку = { $lt: после }
 			
 			общения = снасти.batch_loading(ввод, $, options.общение_во_множественном_числе, loading_options)
 			дополнить_общения(общения)
@@ -121,7 +133,7 @@ global.prepare_messages = (options) ->
 		сообщение = db(options.messages_collection)._.save(data)
 				
 		if options.общение_во_множественном_числе?
-			db(options.collection)._.update({ _id: environment.сообщения_чего._id }, { $set: { обновлено: data.когда } })
+			db(options.collection)._.update({ _id: environment.сообщения_чего._id }, { $set: { обновлено: data.когда,  обновлено_по_порядку: data.когда.getTime() + data.общение } })
 
 		if save?
 			save(сообщение, environment)
@@ -172,12 +184,28 @@ global.prepare_messages = (options) ->
 						if участник + '' == пользователь._id + ''
 							нет_прав = no
 							
+				session = пользовательское.session(добавляемый)
+				
+				сам_себя = no
+				
+				if нет_прав
+					if Object.path(session, 'сам_вышел_из_общений.' + options.path({ сообщения_чего: { _id: _id } }))?
+						нет_прав = no
+						сам_себя = yes
+					
 				if нет_прав
 					throw "Вы не участник этого общения, и поэтому \n не можете добавлять в неё людей"
 	
 				db(options.collection)._.update({ _id: _id }, { $addToSet: { участники: добавляемый } })
 				
-				session = db('people_sessions')._.find_one({ пользователь: добавляемый })
+				# если сам удалялся раньше - затереть это
+				
+				unset = {}
+				unset['сам_вышел_из_общений.' + options.path({ сообщения_чего: { _id: _id } })] = yes
+				
+				db('people_sessions')._.update({ пользователь: добавляемый }, { $unset: unset })
+				
+				# теперь обновить новости
 				
 				query = { чего: options.общение, общение: _id }
 					
@@ -192,7 +220,8 @@ global.prepare_messages = (options) ->
 					if latest_read + '' == latest_message_id + ''
 						has_new_messages = no
 					
-				эфир.отправить('новости', options.общение + '.' + 'добавление', { id: общение.id, название: общение.название }, { кому: добавляемый })
+				if not сам_себя
+					эфир.отправить('новости', options.общение + '.' + 'добавление', { id: общение.id, название: общение.название }, { кому: добавляемый })
 					
 				if has_new_messages?
 					эфир.отправить('новости', options.общение, { _id: _id.toString(), сообщение: latest_message_id }, { кому: добавляемый })

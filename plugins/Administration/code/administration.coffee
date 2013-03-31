@@ -520,11 +520,11 @@ http.get '/хранилище/создать', (ввод, вывод) ->
 	
 	# беседы
 		
-	create_collection('talks', [['участники', no], ['обновлена', no], ['id', yes]])
+	create_collection('talks', [['участники', no], [['участники', no], ['обновлено_по_порядку', yes]], ['id', yes]])
 	
 	# обсуждения
 		
-	create_collection('discussions', [['подписчики', no], ['обновлена', no], ['id', yes]])
+	create_collection('discussions', [['подписчики', no], ['обновлено_по_порядку', yes], ['id', yes]])
 	
 	# сообщения
 		

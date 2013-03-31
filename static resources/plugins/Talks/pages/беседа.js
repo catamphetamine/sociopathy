@@ -214,7 +214,7 @@
 				
 				page.Ajax.put('/приложение/сеть/беседы/участие',
 				{
-					беседа: page.data.общение._id,
+					_id: page.data.общение._id,
 					пользователь: user._id
 				})
 				.ok(function(data)

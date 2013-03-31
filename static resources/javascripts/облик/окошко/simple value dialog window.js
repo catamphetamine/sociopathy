@@ -152,7 +152,7 @@ function simple_value_dialog_window(options)
 		})
 	}
 
-	var cancel = text_button.new(dialog_window.content.find('.buttons .cancel'), { 'prevent double submission': true, physics: 'fast' })
+	var cancel = text_button.new(dialog_window.content.find('.buttons .cancel'), { 'prevent double submission': true, physics: 'immediate' })
 	.does(dialog_window.cancel)
 	
 	var validating_form = new Form(form)

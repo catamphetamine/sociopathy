@@ -9,11 +9,9 @@ $(document).on('page_loaded', function()
 	
 	var unsaved_changes = $("#unsaved_changes")
 	
-	console.log(unsaved_changes.node())
+	var dialog_window = unsaved_changes.dialog_window({ 'close on escape': true })
 	
-	var dialog_window = unsaved_changes.dialog_window()
-	
-	var cancel = text_button.new(unsaved_changes.find('.buttons .cancel'), { 'prevent double submission': true, physics: 'fast' })
+	var cancel = text_button.new(unsaved_changes.find('.buttons .cancel'), { 'prevent double submission': true, physics: 'immediate' })
 	.does(function()
 	{
 		dialog_window.close()

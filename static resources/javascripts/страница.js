@@ -256,7 +256,7 @@ var Page = new Class
 				if (this.is_empty())
 					return
 				
-				this.available_actions_list.close()
+				this.available_actions_list.destroy()
 			},
 			
 			each: function(method)
@@ -331,6 +331,8 @@ var Page = new Class
 			{
 				if (!page.save)
 					return возврат()
+				
+				this.enabled = true
 				
 				var data_store = this
 							
@@ -529,6 +531,9 @@ var Page = new Class
 	{
 		this.void = true
 		
+		if (this.Data_store.enabled)
+			this.Data_store.destroy_mode()
+	
 		Режим.сбросить()
 	
 		this.unload()

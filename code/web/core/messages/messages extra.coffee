@@ -31,7 +31,10 @@ global.messages_tools = (options) ->
 			db(options.id)._.update({ _id: db(options.id).id(_id) }, { $pull: { подписчики: пользователь._id } })
 					
 			set_id = 'последние_сообщения.' + options.path({ сообщения_чего: { _id: _id } })
-			db('people_sessions')._.update({ пользователь: пользователь._id }, { $unset: set_id })
+			unset = {}
+			unset[set_id] = yes
+			
+			db('people_sessions')._.update({ пользователь: пользователь._id }, { $unset: unset })
 					
 			уведомления = новости.уведомления(пользователь)
 			

@@ -159,8 +159,6 @@ exports.подставить = (куда, переменная, возврат) 
 	for _id in _ids
 		пользователи.add(пользовательское.взять.await(_id))
 
-	console.log(_ids)
-	console.log(пользователи)
 	users = {}
 	for пользователь in пользователи
 		users[пользователь._id + ''] = пользователь
@@ -251,7 +249,11 @@ exports.данные_пользователя = (ввод, вывод) ->
 	return $
 
 exports.session = (пользователь) ->
-	return db('people_sessions')._.find_one({ пользователь: пользователь._id })
+	_id = пользователь
+	if пользователь._id?
+		_id = пользователь._id
+		
+	return db('people_sessions')._.find_one({ пользователь: _id })
 
 exports.создать = (человек) ->
 	пользователь = db('people')._.save(человек)

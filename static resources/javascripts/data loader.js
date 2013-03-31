@@ -3,9 +3,17 @@ function loader_get_data(data)
 	if (this.options.data)
 	{
 		if (typeof this.options.data === 'string')
+		{
 			return data[this.options.data]
+		}
 		else if (typeof this.options.data === 'function')
-			return this.options.data(data)
+		{
+			var modified_data = this.options.data(data)
+			if (modified_data)
+				return modified_data
+			
+			return data
+		}
 	}
 		
 	return data
@@ -26,7 +34,7 @@ var Batch_loader = new Class
 		after_output: function() {},
 		before_done: function() {},
 		before_done_more: function() {},
-		get_id: function(object) { return object._id },
+		get_item_locator: function(object) { return object._id },
 		reverse: false,
 		Ajax: Ajax,
 		each: function() {}
@@ -67,7 +75,7 @@ var Batch_loader = new Class
 		var data = { сколько: count }
 		
 		if (this.latest)
-			data.после = this.latest
+			data.после = this.options.get_item_locator(this.latest)
 			
 		if (this.options.skip_pages)
 			data.пропустить = this.options.skip_pages * this.options.batch_size
@@ -160,15 +168,15 @@ var Batch_loader = new Class
 			
 			if (!список.is_empty())
 			{
+				loader.earliest = список.first()
+				loader.latest = список.last()
+				
 				if (loader.options.order === 'обратный')
 				{
-					loader.earliest = loader.options.get_id(список[список.length - 1])
-					loader.latest = loader.options.get_id(список[0])
-				}
-				else
-				{
-					loader.earliest = loader.options.get_id(список[0])
-					loader.latest = loader.options.get_id(список[список.length - 1])
+					var earliest = loader.earliest
+					
+					loader.earliest = loader.latest
+					loader.latest = earliest
 				}
 			}
 			

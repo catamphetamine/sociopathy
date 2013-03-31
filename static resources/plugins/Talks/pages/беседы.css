@@ -45,29 +45,9 @@
 					border-radius: 6px;
 				}
 				
-				> .leave
+				.cancel_unparticipation
 				{
-					position: absolute;
-					left: -80px;
-					top: 4px;
-					
-					width: 80px;
-					height: 64px;
-					
-					.css_transition(100ms);
-					
-					> .button
-					{
-						left: 25px;
-						top: 12px;
-					}
-					
-					> .button
-					{
-						background-image: url('/картинки/кнопки/выйти.png');
-						width: 43px;
-						height: 43px;
-					}
+					color: #6b8fa7;
 				}
 				
 				> a, > .left

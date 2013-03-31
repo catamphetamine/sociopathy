@@ -1,14 +1,15 @@
-title(text('pages.discussions.title'))
-	
-;(function()
+(function()
 {	
+	title(text('pages.discussions.title'))
+	
 	page.query('#discussions', 'discussions')
-	page.query('#unread_discussions', 'unread_discussions')
 	
 	function start_new_discussion()
 	{
 		go_to('/сеть/общение/обсуждение')
 	}
+	
+	page.data.подписан_на_обсуждения = []
 	
 	page.load = function()
 	{
@@ -39,38 +40,6 @@ title(text('pages.discussions.title'))
 				discussion.find('.title').text(data.как)
 		})
 		
-		function interactive(discussion)
-		{
-			var container = discussion.find('> .unsubscribe')
-		
-			if (!container.exists())
-				return
-			
-			var the_button = button.physics.simple(new image_button(container.find('> .button'),
-			{
-				'auto unlock': false
-			}))
-			
-			container.hide()
-			
-			the_button.does(function()
-			{
-				page.Ajax.delete('/приложение/сеть/обсуждения/подписка',
-				{
-					_id: discussion.attr('_id')
-				})
-				.ok(function()
-				{
-					the_button.element.fade_out(0.3)
-				})
-				.ошибка(function(ошибка)
-				{
-					error(ошибка)
-					the_button.unlock()
-				})
-			})
-		}
-		
 		function postprocess_data(data)
 		{
 			parse_dates(data.обсуждения, 'создано')
@@ -79,23 +48,14 @@ title(text('pages.discussions.title'))
 			{
 				var обсуждение = this
 				
-				if (page.unread_discussions.find('> li[_id="' + обсуждение._id + '"]').exists())
-				{
-					data.обсуждения.remove(обсуждение)
-					return
-				}
-				
 				this.подписчики = this.подписчики || []
 				
-				this.подписчики.filter(function(подписчик)
-				{
-					return подписчик === пользователь._id
-				})
-				
-				this.подписчики.each(function()
+				if (this.подписчики.contains(пользователь._id))
 				{
 					обсуждение.подписан = true
-				})
+					
+					page.data.подписан_на_обсуждения.add(обсуждение._id)
+				}
 				
 				if (this.последнее_сообщение)
 				{
@@ -110,12 +70,10 @@ title(text('pages.discussions.title'))
 		new Data_templater
 		({
 			template: 'обсуждение в списке обсуждений',
-			to: page.unread_discussions,
+			to: page.discussions,
 			loader: new  Data_loader
 			({
-				url: '/приложение/сеть/обсуждения/непрочитанные',
-				done: page.initialized,
-				before_done_more: function() { ajaxify_internal_links(page.unread_discussions) },
+				url: '/сеть/обсуждения/непрочитанные',
 				before_output: function(elements)
 				{
 					elements.for_each(function()
@@ -123,34 +81,51 @@ title(text('pages.discussions.title'))
 						var discussion = $(this)
 						
 						discussion.addClass('new')
-						interactive(discussion)
 					})
 				},
-				data: postprocess_data,
+				data: function(data)
+				{
+					page.data.unread_discussions = data.обсуждения.map(function(discussion) { return discussion._id })
+					
+					return postprocess_data(data)
+				},
 				before_done: function()
 				{
+					ajaxify_internal_links(page.discussions)
+				
 					new Data_templater
 					({
 						template: 'обсуждение в списке обсуждений',
 						to: page.discussions,
 						loader: new  Batch_data_loader_with_infinite_scroll
 						({
-							url: '/приложение/сеть/обсуждения',
-							batch_size: 10,
+							url: '/сеть/обсуждения',
+							batch_size: 12,
+							get_item_locator: function(data)
+							{
+								return data.обновлено_по_порядку
+							},
 							scroll_detector: page.get('#scroll_detector'),
 							before_done: discussions_loaded,
+							before_done_more: function()
+							{
+								ajaxify_internal_links(page.discussions)
+							},
 							done: page.initialized,
-							before_done_more: function() { ajaxify_internal_links(page.discussions) },
 							before_output: function(elements)
 							{
 								elements.for_each(function()
 								{
-									var discussion = $(this)
+									var discussion = this
+									
+									var _id = discussion.attr('_id')
+									if (page.data.unread_discussions.contains(_id))
+										return discussion.remove()
 									
 									if (Новости.news['Discussions'].обсуждения[discussion.attr('_id')])
 										discussion.addClass('new')
 										
-									interactive(discussion)
+									create_context_menu(discussion)
 								})
 							},
 							data: postprocess_data
@@ -171,4 +146,75 @@ title(text('pages.discussions.title'))
 		
 	//	Режим.разрешить('правка')
 	}
+	
+	function create_actions_context_menus()
+	{
+		Режим.data('context_menus', [])
+		
+		page.discussions.children().each(function()
+		{
+			create_context_menu($(this))
+		})
+	}
+	
+	function create_context_menu(discussion)
+	{
+		var _id = discussion.attr('_id')
+		
+		if (!page.data.подписан_на_обсуждения.contains(_id))
+			return
+		
+		var menu = discussion.context_menu
+		({
+			'Отписаться': function()
+			{
+				page.Ajax.delete('/сеть/обсуждения/подписка',
+				{
+					_id: _id
+				})
+				.ok(function()
+				{
+					page.refresh()
+				})
+				.ошибка(function(ошибка)
+				{
+					error(ошибка)
+				})
+			}
+		})
+		
+		Режим.data('context_menus', menu, { add: true })
+	}
+	
+	function destroy_actions_context_menu()
+	{
+		(Режим.data('context_menus') || []).for_each(function()
+		{
+			this.destroy()
+		})
+	}
+	
+	page.Data_store.режим('обычный',
+	{
+		create: function(data)
+		{
+			// в обычном режиме - включать обратно подгрузку
+
+			//populate_discussions('обсуждение в списке обсуждений')(data)
+			//ajaxify_internal_links(page.discussions)
+			
+			create_actions_context_menus()
+		},
+		
+		destroy: function()
+		{
+			destroy_actions_context_menu()
+			
+			//page.discussions.find('> li').empty()
+		}
+	})
+	
+	// в режиме правки отключать подгрузку
+	
+	page.save = function(data) { }
 })()

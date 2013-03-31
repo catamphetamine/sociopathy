@@ -56,11 +56,11 @@ global.messages_api = (options) ->
 				
 	if options.private?
 		http.put  '/сеть/' + options.общение_во_множественном_числе + '/участие', (ввод, вывод, пользователь) ->
-			_id = db(options.collection).id(ввод.данные[options.общение])
+			_id = db(options.collection).id(ввод.данные._id)
 			добавляемый = db('people').id(ввод.данные.пользователь)
 			
 			result = options.добавить_в_общение.await(_id, добавляемый, пользователь)
-					
+			
 			if result? && result.уже_участвует?
 				return вывод.send { уже_участвует: yes }
 			
@@ -68,13 +68,29 @@ global.messages_api = (options) ->
 						
 		http.delete '/сеть/' + options.общение_во_множественном_числе + '/участие', (ввод, вывод, пользователь) ->
 			_id = ввод.данные._id
+			удаляемый = null
+			сам_себя = no
 			
-			db(options.collection)._.update({ _id: db(options.collection).id(_id) }, { $pull: { участники: пользователь._id } })
+			if not ввод.данные.пользователь?
+				удаляемый = пользователь
+				сам_себя = yes
+			else
+				удаляемый = db('people').id(ввод.данные.пользователь)
+			
+			db(options.collection)._.update({ _id: db(options.collection).id(_id) }, { $pull: { участники: удаляемый._id } })
+			
+			if сам_себя
+				set = {}
+				set['сам_вышел_из_общений.' + options.path({ сообщения_чего: { _id: _id } })] = yes
+				
+				db('people_sessions')._.update({ пользователь: удаляемый._id }, { $set: set })
 					
-			set_id = 'последние_сообщения.' + options.path({ сообщения_чего: { _id: _id } })
-			db('people_sessions')._.update({ пользователь: пользователь._id }, { $unset: set_id })
+			unset = {}
+			unset['последние_сообщения.' + options.path({ сообщения_чего: { _id: _id } })] = yes
+			
+			db('people_sessions')._.update({ пользователь: удаляемый._id }, { $unset: unset })
 					
-			уведомления = новости.уведомления(пользователь)
+			уведомления = новости.уведомления(удаляемый)
 			
 			эфир.отправить('новости', 'уведомления', уведомления)
 			вывод.send {}

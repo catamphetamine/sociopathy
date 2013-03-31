@@ -21,16 +21,6 @@
 			margin-bottom: 60px;
 		}
 		
-		#discussions
-		{
-			margin-top: 0;
-		}
-		
-		#unread_discussions
-		{
-			margin-bottom: 0;
-		}
-		
 		.discussions
 		{
 			margin-top: 60px;
@@ -50,31 +40,6 @@
 					background-color: #F0FBFF;
 					box-shadow: 0 0 4px #F0FBFF;
 					border-radius: 6px;
-				}
-				
-				> .unsubscribe
-				{
-					position: absolute;
-					left: -80px;
-					top: 4px;
-					
-					width: 80px;
-					height: 64px;
-					
-					.css_transition(100ms);
-					
-					> .button
-					{
-						top: 6px;
-						left: 19px;
-					}
-					
-					> .button
-					{
-						background-image: url('/картинки/кнопки/отписаться.png');
-						width: 43px;
-						height: 43px;
-					}
 				}
 				
 				> a
