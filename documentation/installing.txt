@@ -1,137 +1,30 @@
-Установка на домашнем компьютере:
+(An excerpt from the README.md file)
 
-Ставим виртуальную машину (например, VMWare Workstation)
-Заводим в ней рабочую систему (например, Ubuntu Server)
+On Ubuntu Linux:
 
-Заводим пользователя sociopathy
+Download the interactive installation script: 'automation/install.sh'.
+Run it as root.
+It will download this repository to your machine and will set it up.
 
-sudo adduser sociopathy
-addgroup admin
-nano /etc/sudoers
-%admin ALL=(ALL) ALL
-sudo adduser sociopathy admin
+On Windows:
 
-Входим под ним
+Install NginX, Mongodb, Redis, Node.js.
+Use the "windows" configuration as a reference.
+You may be required to replace the "d:\work\sociopathy" and "d:/work/sociopathy" paths there to your own paths.
+And paths to binaries in the *.bat files as well.
 
-Ставим git
-Скачиваем "репозиторий" git://github.com/kuchumovn/sociopathy.git в папку "repository" пользователя sociopathy
+Post Installation:
 
-git clone git://github.com/kuchumovn/sociopathy.git repository
+Now go to http://[server's IP address]:8081/
+There you should see the welcome page.
 
-Идём на http://nodejs.org/download/ и скачиваем исходники node.js
-Устанавливаем node.js
-(наверное, лучше из репозитория joyent, чем прямо из исходников, как я описал здесь)
+Now you should create the administrator user.
+Go to http://[server's IP address]:8081/приложение/хранилище/создать
+It will initialize the database
 
-mkdir ~/sociopathy
-cd ~/sociopathy
-wget http://nodejs.org/dist/v0.8.9/node-v0.8.9.tar.gz
-tar xvf node-v0.8.9.tar.gz
-rm node-v0.8.9.tar.gz
-mv node-v0.8.9 node
-cd node
-./configure
-sudo make
-sudo make install
-cd ..
+Now log in - username / password is: Дождь со Снегом / 123
+Done.
 
-может быть ещё: npm install socket.io
-
-cd ~
-npm install coffee-script
-
-npm install sync
-
-Устанавливаем NginX
-
-sudo -s
-nginx=stable # use nginx=development for latest development version
-add-apt-repository ppa:nginx/$nginx
-apt-get update 
-apt-get install nginx
-
-Устанавливаем ImageMagick
-
-sudo apt-get install imagemagick
-
-Устанавливаем MongoDB
-
-sudo apt-key adv --keyserver keyserver.ubuntu.com --recv 7F0CEB10
-sudo echo "deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen" >> /etc/apt/sources.list
-sudo apt-get update
-sudo apt-get install mongodb-10gen
-
-Это будет папка с базой данных, её нужно ежедневно бекапить
-
-mkdir /home/sociopathy/database
-
-Устанавливаем Redis
-
-wget http://redis.googlecode.com/files/redis-2.4.17.tar.gz
-tar xzf redis-2.4.17.tar.gz
-rm redis-2.4.17.tar.gz
-mv redis-2.4.17 redis
-cd redis
-make
-
-создаём свою папку с настройками в папке configuration
-(наподобие home_windows — сейчас пока это самая актуальная версия конфигурации NginX)
-
-там в файле enginex.conf меняем пути "root" на свои (2 штуки)
-в configuration.coffee - тоже
-в configuration.private.coffee - тоже
-
-настраиваем NginX, чтобы он использовал enginex.conf
-
-sudo nano /etc/nginx/nginx.conf
-ищем там строчку: include /etc/nginx/sites-enabled/*;
-обе эти include стираем
-пишем вместо них: include /home/sociopathy/repository/configuration/[название папки с вашими настройками]/enginex.conf;
-
-проверяем NginX:
-
-sudo nginx
-
-если работает, можете добавить NginX в автозагрузку.
-(например так: http://www.discoded.com/2012/05/22/autostart-nginx-under-ubuntu-linux/)
-
-NginX будет писать ошибки сюда:
-
-/var/log/nginx/error.log
-
-В redis.conf тоже нужно поменять пути.
-
-создаём свой запускальщик наподобие: если на винде, то запустить.bat, если на линуксе, то run.sh
-запускаем запускальщик
-
-* Если что-то не запустится - смотрите логи ошибок всего используемого здесь ПО (nginx, базы данных, прочее)
-
-Заходим на http://[IP]:8081/
-Должны увидеть работающий сайт, только пока полностью пустой.
-
-Заходим на http://[IP]:8081/приложение/хранилище/создать
-Этот запрос произведёт первоначальную настройку "базы данных"
-
-Идём на главную и входим: Дождь со Снегом / 123
-Сайт готов к работе.
-
-можно сменить себе пароль:
-
-//mongo sociopathy
-//db.people.update({}, { $set: { пароль: 'ваш пароль' } })
-
-http://[IP]:8081/приложение/сеть/пароль?пароль=ваш_пароль_здесь
-(меняет только в том случае, если ваш текущий пароль = 123)
-
-можно зайти в болталку и написать первое сообщение.
-пока там нет сообщений - при заходе в неё будет выдавать ошибку "не удалось загрузить сообщения".
-нажмите Пробел и отправьте туда первое сообщение (Ctrl + Enter).
-обновите страницу.
-
-если будете менять скрипты или стили - всё кешируется.
-для обновления кешей пользователей измените версию в файлу version.coffee.
-
-
-//Подключаем услугу "внешний IP"
-//На домашнем маршрутизаторе пробрасываем 80-ый порт извне на виртуальную машину
-//Переводим nginx с 8081-ого на 80-ый порт
-//Заходим на http://[внешний IP] и пользуемся сайтом
+To change your administrator password go to
+http://[server's IP address]:8081/приложение/сеть/пароль?пароль=Your_Password_Here
+(works only if your current password is '123')

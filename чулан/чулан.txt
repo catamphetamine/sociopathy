@@ -631,3 +631,13 @@ Object.x_over_y = function(obj1, obj2)
 									}
 								})
 							},
+							
+							
+							
+							
+							
+							
+
+
+//mongo sociopathy
+//db.people.update({}, { $set: { пароль: 'ваш пароль' } })

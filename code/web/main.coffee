@@ -16,6 +16,9 @@ global.Options = require "./configuration"
 Object.merge_recursive(global.Options, require "./../../configuration/#{launch_options.server}/configuration")
 require "./../../configuration/#{launch_options.server}/configuration.private"
 
+
+global.Options.Upload_server.Temporary_file_path = global.Options.Upload_server.File_path + '/временное'
+
 global.Options.Version = require "./version"
 
 global.disk_tools = require './tools/disk'
