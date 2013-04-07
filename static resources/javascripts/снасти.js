@@ -790,10 +790,7 @@ function go_to(url)
 {
 	if (url.starts_with('/') && can_navigate_to_page)
 	{
-		return navigate_to_page(url,
-		{
-			before: function() { set_new_url(url) }
-		})
+		return navigate_to_page(url, { set_new_url: true })
 	}
 	
 	window.location = url

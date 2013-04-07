@@ -137,9 +137,6 @@ function text(key, variables)
 			parameter = variables[code.substring(opening + 1, code.length - 1)]
 		}
 		
-		console.log('key: ' + key)
-		console.log('parameter: ' + parameter)
-		
 		if (Url_map[key])
 		{
 			if (typeof parameter !== 'undefined')

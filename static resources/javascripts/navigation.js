@@ -80,9 +80,6 @@ var get_page_less_style_link
 			return
 		
 		navigating = true
-		
-		if (options.before)
-			options.before()
 				
 		function clear_previous_page_data()
 		{
@@ -90,6 +87,10 @@ var get_page_less_style_link
 				return
 	
 			page.full_unload()
+			
+			if (options.set_new_url)
+				set_new_url(url)
+			
 			$(document).trigger('page_unloaded')
 		
 			Page.element.empty()
