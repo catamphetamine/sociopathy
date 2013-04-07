@@ -18,7 +18,7 @@ function Page_icon(data)
 	Page_icons.add(data)
 }
 
-var match_page = function(options, new_page)
+var match_page = function(options)
 {
 	if (options.page)
 	{
@@ -26,7 +26,7 @@ var match_page = function(options, new_page)
 			return true
 		
 		if (options.when)
-			if (options.when(new_page))
+			if (options.when())
 				return true
 	}
 	
@@ -45,7 +45,7 @@ var get_page_button = function()
 	{
 		var page_and_icon = Page_icons[i]
 		
-		if (match_page(page_and_icon, page))
+		if (match_page(page_and_icon))
 			return page_and_icon.icon
 		
 		i++

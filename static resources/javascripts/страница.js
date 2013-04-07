@@ -332,11 +332,16 @@ var Page = new Class
 				return this.modes.обычный.destroy.bind(this)()
 			},
 
-			reset_changes: $.noop,
+			reset_changes: function()
+			{
+				reload_page()
+			},
 			
 			collect_edited: function() { return {} },
 			
 			draft_persistence: false,
+			
+			unmodified_data: {},
 			
 			initialize: function(возврат)
 			{
@@ -347,7 +352,9 @@ var Page = new Class
 				
 				var data_store = this
 							
-				this.unmodified_data = this.deduce()
+				if (this.collect_initial_data)
+					this.collect_initial_data(this.unmodified_data)
+					
 				this.edited_data = this.unmodified_data
 			
 				//this.destroy_mode()
@@ -367,11 +374,13 @@ var Page = new Class
 					if (!data_store.destroy_modes_when_switching)
 						return
 
+					var scroll = $(window).scrollTop()
 					data_store.destroy_mode(info.из)
 					
 					$(document).on_page_once('режим', function(event, режим)
 					{
 						data_store.create_mode(info.в, data_store.edited_data)
+						прокрутчик.scroll_to(scroll)
 					})
 				})
 				
@@ -418,10 +427,15 @@ var Page = new Class
 				else
 					return возврат()
 			},
-			deduce: function()
+			
+			new_data_loaded: function(updater)
 			{
-				return {}
+				updater(this.unmodified_data)
+				
+				if (this.edited_data)
+					updater(this.edited_data)
 			},
+			
 			load_draft: function(возврат)
 			{
 				var data_store = this
@@ -440,6 +454,7 @@ var Page = new Class
 					возврат()
 				})
 			},
+			
 			save_draft: function(возврат)
 			{
 				var data_store = this

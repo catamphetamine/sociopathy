@@ -151,6 +151,10 @@ var Batch_loader = new Class
 	{
 		var loader = this
 		
+		var заморозка
+		if (this.options.editable)
+			заморозка = Режим.заморозить_переходы()
+		
 		var is_first_batch = loader.no_data_yet()
 			
 		this.batch(function(ошибка, список)
@@ -205,6 +209,10 @@ var Batch_loader = new Class
 					
 					if (loader.есть_ли_ещё)
 						loader.activate()
+						
+					if (заморозка)
+						заморозка.разморозить()
+						
 					//else
 					//{
 					//	if (loader.options.finished)
@@ -258,12 +266,22 @@ var Batch_loader_with_infinite_scroll = new Class
 		this.options.scroll_detector = this.options.scroll_detector || $('#scroll_detector')
 	},
 	
+	disabled: function()
+	{
+		if (this.options.editable)
+			if (!Режим.обычный_ли())
+				return true
+	},
+	
 	activate: function()
 	{
 		var loader = this
 		
 		this.options.scroll_detector.on('appears_on_bottom.scroller', function(event)
 		{
+			if (loader.disabled())
+				return
+			
 			loader.load_more()
 			event.stopPropagation()
 		})

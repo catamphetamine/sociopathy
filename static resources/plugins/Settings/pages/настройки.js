@@ -388,16 +388,11 @@ title(text('pages.settings.title'));
 		}
 	})
 	
-	page.Data_store.deduce = function()
+	page.Data_store.collect_initial_data = function(data)
 	{
-		var result =
-		{
-			почта: page.data.настройки.почта,
-			клавиши: Настройки.Клавиши,
-			язык: page.data.настройки.язык
-		}
-		
-		return result
+		data.почта = page.data.настройки.почта,
+		data.клавиши = Настройки.Клавиши,
+		data.язык = page.data.настройки.язык
 	}
 
 	//page.Data_store.что = 'настройки пользователя'

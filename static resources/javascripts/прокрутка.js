@@ -6,8 +6,15 @@ var Scroller = new Class
 
 	initialize: function()
 	{
-		$(window).on('scroll', this.process_scroll.bind(this))
-		$(document).on('focused', this.process_scroll.bind(this))
+		var process_scroll = this.process_scroll.bind(this)
+		
+		$(window).on('scroll', process_scroll)
+		
+		$(document).on('focused', function()
+		{
+			process_scroll({ first_time: true })
+		})
+		
 		//$(window).on('resize', this.reset.bind(this))
 	},
 	
@@ -165,10 +172,20 @@ var Scroller = new Class
 				element.trigger('fully_appears_on_bottom')
 		}
 		
-		if (!top_was_visible && top_is_visible)
+		function appears_on_bottom()
 		{
-			if (first_time || upwards)
-				element.trigger('appears_on_bottom', window_height - top_offset_in_window)
+			element.trigger('appears_on_bottom', window_height - top_offset_in_window)
+		}
+		
+		if (first_time)
+		{
+			if (top_is_visible)
+				appears_on_bottom()
+		}
+		else if (!top_was_visible && top_is_visible)
+		{
+			if (upwards)
+				appears_on_bottom()
 		}
 		
 		if (!first_time)
@@ -202,8 +219,24 @@ var Scroller = new Class
 		}
 	},
 	
+	scroll_to_position: function(y)
+	{
+		var scroller
+		if ($.browser.webkit)
+			scroller = $('body')
+		else if ($.browser.mozilla)
+			scroller = $('html')
+		else
+			throw 'Unsupported browser'
+			
+		scroller.scrollTop(y)
+	},
+	
 	scroll_to: function(element, options, callback)
 	{
+		if (typeof element === 'number')
+			return this.scroll_to_position(element)
+		
 		options = options || {}
 		callback = callback || $.noop
 	

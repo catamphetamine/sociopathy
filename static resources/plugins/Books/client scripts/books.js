@@ -18,7 +18,7 @@ url_matcher(function(url)
 					var int_value = parseInt(value)
 					if (int_value == value && int_value > 0)
 					{
-						new_page.data.номер_страницы = int_value
+						page.data.номер_страницы = int_value
 						return tools.page('книги')
 					}
 					

@@ -8,12 +8,17 @@
 	
 	var loader
 	
+	page.data.books = {}
+	
+	page.Data_store.unmodified_data = {}
+	
 	page.load = function()
 	{
 		loader = page.either_way_loading
 		({
 			путь: '/сеть/книги',
 			с_номерами_страниц: true,
+			editable: true,
 			data:
 			{
 				url: '/приложение/сеть/книги',
@@ -23,6 +28,18 @@
 				loaded: function(books)
 				{
 					parse_dates(books, 'добавлена')
+					
+					books.forEach(function(book)
+					{
+						page.Data_store.new_data_loaded(function(store)
+						{
+							store[book._id] = book
+						})
+					})
+				},
+				postprocess_item: function(data)
+				{
+					this.attr('_id', data._id)
 				},
 				on_first_output: books_loaded,
 				before_output: function(elements)
@@ -111,6 +128,11 @@
 		
 		Режим.разрешить('правка')
 	}
+	
+	Режим.on('обычный', function()
+	{
+		прокрутчик.process_scroll({ first_time: true })
+	})
 	
 	function books_loaded()
 	{
@@ -228,22 +250,35 @@
 		page.book_cover_uploader.choose()
 	}
 	
+	function populate(template)
+	{
+		return function(data)
+		{
+			Object.for_each(data, function()
+			{
+				var item = page.books.find('> [_id="' + this._id + '"]')
+				
+				$.tmpl(template, this).appendTo(item.empty())
+				
+				if (this.обложка)
+					item.data('cover', this.обложка)
+			})
+		}
+	}
+	
 	page.Data_store.режим('обычный',
 	{
 		create: function(data)
 		{
-			// в обычном режиме - включать обратно подгрузку
-
-			//populate_discussions('обсуждение в списке обсуждений')(data)
-			//ajaxify_internal_links(page.discussions)
+			populate('книга в списке книг')(data)
 		},
 		
 		destroy: function()
 		{
-			//page.discussions.find('> li').empty()
+			page.books.find('> li').empty()
 		},
 		
-		create_context_menus: function()
+		context_menus: function()
 		{
 			page.books.children().each(function()
 			{
@@ -256,26 +291,140 @@
 	{
 		create: function(data)
 		{
-			// в режиме правки отключать подгрузку
+			populate('книга в списке книг (правка)')(data)
 	
 			page.book_dragger = new List_dragger(page.books,
 			{
-				dont_start_dragging_on: '.title, .author',
-				sortable: true,
+				drag_on: '.cover_image',
 				throwable: true
 			})
 			
 			page.books.children().each(function()
 			{
-				$(this).find('.cover').on('clicked.режим_правка', choose_book_cover)
+				$(this).on('clicked.режим_правка', choose_book_cover)
 			})
 		},
 		
 		destroy: function(data)
 		{
 			page.book_dragger.destroy()
+			
+			page.books.find('> li').empty()
 		}
 	})
 	
-	page.save = function(data) { }
+	page.Data_store.collect_edited = function()
+	{
+		var books = {}
+		
+		page.books.find('> li').each(function()
+		{
+			var item = $(this)
+		
+			var book =
+			{
+				сочинитель: item.find('.author').text().trim(),
+				название: item.find('.title > span').text().trim()
+			}
+			
+			if (item.data('cover'))
+				book.обложка = item.data('cover')
+	
+			var _id = item.attr('_id')
+			
+			book._id = _id
+			
+			book.id = page.Data_store.unmodified_data[_id].id
+			book.icon_version = page.Data_store.unmodified_data[_id].icon_version
+			
+			books[_id] = book
+		})
+		
+		return books
+	}
+	
+	page.save = function(data)
+	{
+		Режим.save_changes_to_server
+		({
+			anything_changed: function()
+			{
+				var anything_changed = false
+				
+				var книги = this
+				
+				Object.for_each(page.Data_store.unmodified_data, function(_id, книга)
+				{
+					if (!data[_id])
+					{
+						anything_changed = true
+						return книги.удалённые.push(_id)
+					}
+					
+					if (книга.сочинитель !== data[_id].сочинитель
+						|| книга.название !== data[_id].название)
+					{
+						книги.переименованные.push
+						({
+							_id: _id,
+							сочинитель: data[_id].сочинитель,
+							название: data[_id].название
+						})
+						
+						anything_changed = true
+					}
+					
+					if (data[_id].icon)
+					{
+						книги.обновлённые_картинки.push
+						({
+							_id: _id,
+							icon: data[_id].icon.имя
+						})
+						
+						anything_changed = true
+					}
+				})
+				
+				return anything_changed
+			},
+			
+			validate: function()
+			{
+				var названия = {}
+				var сочинители = {}
+				
+				var книги = []
+					.append(this.книги.переименованные)
+					
+				Object.for_each(page.Data_store.unmodified_data, function(книга)
+				{
+					книги.push(книга)
+				})
+				
+				книги.for_each(function()
+				{
+					if (названия[this.название] && сочинители[this.сочинитель])
+						throw { error: 'У двух книг совпадают автор и название: ' + this.сочинитель + ' «' + this.название + '»', level: 'warning' }
+					
+					названия[this.название] = true
+					сочинители[this.сочинитель] = true
+				})
+			},
+			
+			data:
+			{
+				переименованные: [],
+				удалённые: [],
+				обновлённые_картинки: []
+			},
+			
+			url: '/приложение/сеть/книги',
+			
+			ok: function()
+			{
+				reload_page()
+			}
+		})
+	}
 })()

@@ -63,7 +63,7 @@ var Dragger = new Class
 			{
 				var can_drag = false
 				
-				this.element.find(this.options.drag_on).each(function()
+				element.find(this.options.drag_on).each(function()
 				{
 					if ($(this).contains_or_is(target))
 						can_drag = true
@@ -75,20 +75,29 @@ var Dragger = new Class
 			
 			event.preventDefault()
 			
+			// to disable links
+			element.on('click' + this.namespace, function(event)
+			{
+				event.preventDefault()
+				event.stopImmediatePropagation()
+			
+				element.unbind('click' + this.namespace)
+			})
+			
 			this.clicked_at =
 			{
 				left: event.pageX,
 				top: event.pageY
 			}
 			
-			this.element_resided_at =
+			this.dragged_element_resided_at =
 			{
 				left: parseInt(element.css('left')),
 				top: parseInt(element.css('top'))
 			}
 			
-			this.element_resided_at.left = this.element_resided_at.left || 0
-			this.element_resided_at.top = this.element_resided_at.top || 0
+			this.dragged_element_resided_at.left = this.dragged_element_resided_at.left || 0
+			this.dragged_element_resided_at.top = this.dragged_element_resided_at.top || 0
 			
 			this.start(element)
 		})
@@ -120,21 +129,21 @@ var Dragger = new Class
 			top: this.clicked_at.top
 		}
 		
-		$('body').on('mouseup' + this.namespace, (function()
+		$('body').on('mouseup' + this.namespace, (function(event)
 		{
 			this.drop()
 		})
 		.bind(this))
 		
-		this.element = element
+		this.dragged_element = element
 		
 		$('body').on('mousemove' + this.namespace, (function(event)
 		{
 			var delta_left = event.pageX - this.clicked_at.left
 			var delta_top = event.pageY - this.clicked_at.top
 			
-			var left = this.element_resided_at.left + delta_left
-			var top = this.element_resided_at.top + delta_top
+			var left = this.dragged_element_resided_at.left + delta_left
+			var top = this.dragged_element_resided_at.top + delta_top
 			
 			var absolute =
 			{
@@ -154,8 +163,8 @@ var Dragger = new Class
 		({
 			position: 'relative',
 			
-			left: this.element_resided_at.left + 'px',
-			top: this.element_resided_at.top + 'px',
+			left: this.dragged_element_resided_at.left + 'px',
+			top: this.dragged_element_resided_at.top + 'px',
 			
 			'z-index': 1
 		})
@@ -166,14 +175,17 @@ var Dragger = new Class
 	
 	drop: function()
 	{
-		this.element.trigger('dropped')
+		this.dragged_element.trigger('dropped')
 		
 		if (!this.moved)
-			this.element.trigger('clicked')
+		{
+			this.dragged_element.unbind('click' + this.namespace)
+			this.dragged_element.trigger('clicked')
+		}
 		
 		if (this.options.come_back_after_drop)
 		{
-			this.element.animate
+			this.dragged_element.animate
 			({
 				left: 0,
 				top: 0
@@ -181,21 +193,21 @@ var Dragger = new Class
 			300,
 			'easeInOutQuad', (function()
 			{
-				if (this.element.hasClass('dropped'))
+				if (this.dragged_element.hasClass('dropped'))
 				{
-					this.element.css
+					this.dragged_element.css
 					({
 						'z-index': 0
 					})
 		
-					this.element.removeClass('dropped')
+					this.dragged_element.removeClass('dropped')
 				}
 			})
 			.bind(this))
 		}
 		
-		this.element.addClass('dropped')
-		this.element.removeClass('dragged')
+		this.dragged_element.addClass('dropped')
+		this.dragged_element.removeClass('dragged')
 		
 		$('body').unbind(this.namespace)
 	},

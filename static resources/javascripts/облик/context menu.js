@@ -91,6 +91,7 @@ var Context_menu = new Class
 	destroy: function()
 	{
 		this.element.unbind(this.namespace)
+		this.options.selectable_element.removeClass('selected')
 		$('body').unbind(this.namespace)
 		this.menu.remove()
 	}

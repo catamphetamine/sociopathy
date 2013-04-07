@@ -16,7 +16,7 @@
 		последнее_сообщение)
 	}
 	
-	Page_icon({ page: 'общение', when: function(page) { return page.data.общение === 'беседа' }, icon: 'Talks' })
+	Page_icon({ page: 'общение', when: function() { return page.data.общение === 'беседа' }, icon: 'Talks' })
 			
 	function убрать_уведомления_о_сообщениях(общение, последнее_прочитанное)
 	{

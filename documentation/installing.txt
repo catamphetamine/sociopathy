@@ -13,9 +13,13 @@ Use the "windows" configuration as a reference.
 You may be required to replace the "d:\work\sociopathy" and "d:/work/sociopathy" paths there to your own paths.
 And paths to binaries in the *.bat files as well.
 
-Post Installation:
+========================
+Post Installation
+========================
 
-Now go to http://[server's IP address]:8081/
+Now it's time to run the webserver by executing the 'configuration/ubuntu/run/run.sh' script.
+
+After the webserver starts, go to http://[server's IP address]:8081/
 There you should see the welcome page.
 
 Now you should create the administrator user.

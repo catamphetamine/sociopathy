@@ -74,13 +74,16 @@ sudo chmod +x $backup_script
 #
 # now you need to create your own configuration files (default settings will do for Ubuntu)
 #
-echo "#########################################"
 
-read -p "What will be your configuration name? " -e configuration_name
+configuration_name=ubuntu
 
-if [ -z "$configuration_name" ]; then
-    echo "You haven't entered your configuration name. Defaulting to 'my_server'"
-fi
+#echo "#########################################"
+
+#read -p "What will be your configuration name? " -e configuration_name
+
+#if [ -z "$configuration_name" ]; then
+#    echo "You haven't entered your configuration name. Defaulting to 'my_server'"
+#fi
 
 dummy_configuration=ubuntu
 
@@ -105,8 +108,16 @@ fi
 # http://stackoverflow.com/questions/6739258/how-do-i-add-a-line-of-text-to-the-middle-of-a-file-using-bash
 #
 
-sudo sed -n 'H;${x;s/include \/etc\/nginx\/sites-enabled\/\*;\n/include \/home\/sociopathy\/repository\/configuration\/$configuration_name\/enginex.conf;\
-&/;p;}' /etc/nginx/nginx.conf
+nginx_configuration=/etc/nginx/nginx.conf
+
+nginx_configuration_already_patched=`cat $nginx_configuration | grep "\"/home/sociopathy/repository/configuration/$configuration_name/enginex.conf\";"`
+
+if [[ "$nginx_configuration_already_patched" == "" ]]; then
+sudo sed -n 'H;${x;s/include \/etc\/nginx\/sites-enabled\/\*;\n/include "\/home\/sociopathy\/repository\/configuration\/$configuration_name\/enginex.conf";\
+&/;p;}' $nginx_configuration
+else
+	echo "NginX configuration already patched"
+fi
 
 #
 # you can also add NginX to autostart

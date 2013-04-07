@@ -12,6 +12,7 @@ var Режим = (function()
 	var сообщение_о_выключенной_правке = 'Сейчас здесь нечего править'
 
 	var переходы_разрешены
+	var запреты_переходов
 	
 	function destroy_context_menus()
 	{
@@ -38,7 +39,7 @@ var Режим = (function()
 		проверки_перехода = []
 		
 		разрешённые_режимы = { обычный: true }
-		переходы_разрешены = true
+		запреты_переходов = []
 		обещания = {}
 		
 		if (actions)
@@ -87,7 +88,7 @@ var Режим = (function()
 			return false
 		}
 			
-		if (!переходы_разрешены)
+		if (!переходы_разрешены())
 		{
 			//console.log('из ' + из + ' в ' + в)
 			info(text('modes.switching is frozen'))
@@ -278,6 +279,15 @@ var Режим = (function()
 		}
 	})
 	
+	result.on = function(режим, action)
+	{
+		$(document).on_page('режим', function(event, mode)
+		{
+			if (mode === режим)
+				action()
+		})
+	}
+	
 	result.initialize_page = function()
 	{
 		режимы.forEach(function(описание_режима)
@@ -287,14 +297,29 @@ var Режим = (function()
 		})
 	}
 	
+	переходы_разрешены = function()
+	{
+		return запреты_переходов.пусто()
+	}
+	
 	result.заморозить_переходы = function()
 	{
-		переходы_разрешены = false
+		var запрет =
+		{
+			разморозить: function()
+			{
+				запреты_переходов.remove(запрет)
+			}
+		}
+		
+		запреты_переходов.push(запрет)
+		
+		return запрет
 	}
 	
 	result.разрешить_переходы = function()
 	{
-		переходы_разрешены = true
+		запреты_переходов = []
 	}
 	
 	var actions

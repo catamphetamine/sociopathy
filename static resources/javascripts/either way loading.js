@@ -72,14 +72,11 @@ function either_way_loading(options)
 		url: options.data.url,
 		latest_first: options.data.latest_first,
 		batch_size: options.data.batch_size,
+		editable: options.editable,
+		before_output: options.data.before_output,
+		before_output_async: options.data.before_output_async
 	}
 	
-	if (options.data.before_output)
-		common_loader_options.before_output = options.data.before_output
-	
-	if (options.data.before_output_async)
-		common_loader_options.before_output_async = options.data.before_output_async
-
 	var after_output = function(elements)
 	{
 		if (options.data.after_output)
@@ -145,10 +142,20 @@ function either_way_loading(options)
 			event.stopPropagation()
 		})
 	}
+	
+	function disabled()
+	{
+		if (options.editable)
+			if (!Режим.обычный_ли())
+				return true
+	}
 
 	function show_previous(event)
 	{
 		event.preventDefault()
+		
+		if (disabled())
+			return
 		
 		top_loader.deactivate()
 		var indicate_loading = top_loader.load_more()
@@ -217,7 +224,11 @@ function either_way_loading(options)
 			прокрутчик.watch(item)
 		}
 		
-		return item
+		var postprocessed_item
+		if (options.data.postprocess_item)
+			postprocessed_item = options.data.postprocess_item.bind(item)(data)
+		
+		return postprocessed_item || item
 	}
 	
 	new Data_templater

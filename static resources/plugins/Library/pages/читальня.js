@@ -577,13 +577,10 @@
 		return data
 	}
 	
-	page.Data_store.deduce = function()
+	page.Data_store.collect_initial_data = function(data)
 	{
-		var data =
-		{
-			разделы: {},
-			заметки: {}
-		}
+		data.разделы = {}
+		data.заметки = {}
 		
 		page.data.разделы.for_each(function()
 		{
@@ -594,13 +591,6 @@
 		{
 			data.заметки[this._id] = this
 		})
-		
-		return data
-	}
-	
-	page.Data_store.reset_changes = function()
-	{
-		reload_page()
 	}
 	
 	page.save = function(data)

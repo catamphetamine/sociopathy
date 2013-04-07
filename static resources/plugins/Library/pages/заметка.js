@@ -3,7 +3,6 @@
 	Режим.пообещать('правка')
 	
 	var заметка = page.data.заметка
-	var неправленная_заметка
 		
 	var visual_editor
 	
@@ -51,7 +50,7 @@
 			{
 				title(data.заметка.название)
 			   
-				неправленная_заметка =
+				page.Data_store.unmodified_data =
 				{
 					название: data.заметка.название,
 					содержимое: data.заметка.содержимое
@@ -171,11 +170,6 @@
 		return data
 	}
 	
-	page.Data_store.deduce = function()
-	{
-		return неправленная_заметка
-	}
-	
 	page.save = function(data)
 	{
 		Режим.save_changes_to_server
@@ -218,7 +212,7 @@
 				if (data.путь)
 					return go_to('/читальня/' + data.путь)
 			
-				неправленная_заметка =
+				page.Data_store.unmodified_data =
 				{
 					название: data.название,
 					содержимое: data.содержимое
@@ -230,6 +224,7 @@
 		})
 	}
 	
+	/*
 	page.discard = function()
 	{
 		return reload_page()
@@ -257,11 +252,12 @@
 			
 			Режим.обычный()
 			
-			visual_editor.editor.load_content(Wiki_processor.decorate(неправленная_заметка.content))
+			visual_editor.editor.load_content(Wiki_processor.decorate(page.Data_store.unmodified_data.content))
 			
 			postprocess_rich_content(visual_editor.editor.get_content())
 			
-			set_title(неправленная_заметка.title)
+			set_title(page.Data_store.unmodified_data.title)
 		})
 	}
+	*/
 })()

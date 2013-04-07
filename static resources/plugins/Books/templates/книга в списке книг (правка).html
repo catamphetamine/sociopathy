@@ -1,0 +1,31 @@
+<div class="centerer">
+	<div class="cover">
+		{{if обложка}}
+			{{if обложка.большая}}
+				${( $data.есть_большая_обложка = true ), ''}
+			{{/if}}
+		{{/if}}
+		
+		<div class="cover_image" style="
+			{{if есть_большая_обложка}}
+				 background-image: url('/загруженное/книги/обложки/большие/${id}.${обложка.формат}?version=${обложка.version}');
+				width: ${обложка.большая.ширина}px;
+				height: ${обложка.большая.высота}px;
+				margin-left: -${parseInt(обложка.большая.ширина / 2)}px;
+			{{else}}
+				background-image: url('/картинки/на страницах/сеть/книги/нет обложки.jpg');
+				width: 213px;
+				height: 320px;
+				margin-left: -${parseInt(213 / 2)}px;
+			{{/if}}
+		"></div>
+	</div>
+ 
+	<div class="author">
+		${сочинитель}
+	</div>
+ 
+	<div class="title">
+		«<span>${название}</span>»
+	</div>
+</div>
