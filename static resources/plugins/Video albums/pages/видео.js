@@ -30,8 +30,8 @@
 	
 				breadcrumbs
 				([
-					{ title: data.пользователь.имя, link: '/люди/' + page.data.адресное_имя },
-					{ title: text('pages.video albums.title'), link: '/люди/' + page.data.адресное_имя + '/видео' }
+					{ title: data.пользователь.имя, link: link_to('user', page.data.адресное_имя) },
+					{ title: text('pages.video albums.title'), link: link_to('user.videos', page.data.адресное_имя) }
 				])
 				
 				return data.альбомы

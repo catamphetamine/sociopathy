@@ -3,9 +3,20 @@
 	{
 		"errors":
 		{
+			"url section": "errors",
+			
 			"title": "Errors",
 			
-			"description": "Global error log"
+			"description": "Global error log",
+			
+			"table":
+			{
+				"type": "Type",
+				"description": "Error",
+				"url": "Url",
+				"user": "User",
+				"when": "When"
+			}
 		}
 	}
 }

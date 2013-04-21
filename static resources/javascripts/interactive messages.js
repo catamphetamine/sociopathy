@@ -358,21 +358,22 @@ var Interactive_messages = function(options)
 			{
 				var latest_message = messages.options.container.find('> li:last').attr('message_id')
 				if (!latest_message)
-					return error('Не удалось загрузить сообщения')
+					return пропущенные_сообщения_учтены = true
 				
 				connection.emit('получить пропущенные сообщения', { _id: latest_message })		
 			}
 			
 			function try_to_append_message(сообщение)
 			{
-				if (messages.has_message(сообщение.предыдущее))
-				{
-					if (сообщение.новое)
-						messages.new_messages_notification()
-				
-					messages.add_message(сообщение)
-					return true
-				}
+				if (сообщение.предыдущее)
+					if (!messages.has_message(сообщение.предыдущее))
+						return
+					
+				if (сообщение.новое)
+					messages.new_messages_notification()
+			
+				messages.add_message(сообщение)
+				return true
 			}
 				
 			function try_to_append_pending_messages()
@@ -534,8 +535,6 @@ var Interactive_messages = function(options)
 					return
 				
 				parse_date(сообщение, 'когда')
-
-				//console.log(сообщение)
 				
 				if (сообщение.отправитель._id != пользователь._id)
 					сообщение.новое = true

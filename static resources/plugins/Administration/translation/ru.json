@@ -3,6 +3,8 @@
 	{
 		"administration":
 		{
+			"url section": "управление",
+			
 			"title": "Управление",
 			
 			"load dummy data into the database": "Заполнить хранилище пробными данными",

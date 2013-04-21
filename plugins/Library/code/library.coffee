@@ -1,3 +1,12 @@
+# заполнить разделы читальни
+хранилище.create_collection('library_categories', [['название', no], ['надраздел', no]])
+
+# пути разделов и заметок
+хранилище.create_collection('library_paths', [['путь', yes], ['раздел', no], ['заметка', no]])
+
+# заметки
+хранилище.create_collection('library_articles', [['название', no], ['раздел', no]])
+
 library = require(__dirname + '/library tools')
 
 http.get '/читальня/раздел/путь', (ввод, вывод) ->

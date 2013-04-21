@@ -1,5 +1,10 @@
 (function()
 {
+	Url_map['discussions'] = text('url.network') + '/' + text('pages.discussions.url section')
+	Url_map['discussion'] = function(id) { return link_to('discussions') + '/' + id }
+	
+	Communication_type('discussions', { 'new communication type': 'обсуждение' })
+	
 	var news_indication
 
 	function notification(_id, последнее_сообщение, options)
@@ -165,19 +170,25 @@
 		
 		tools.id = 'Discussions'
 	
-		match_url(url,
+		tools.match(url,
 		{
-			'сеть/обсуждения': function(rest)
+			'url.network': function(rest)
 			{
-				if (!rest)
-					return tools.page('обсуждения')
-			
-				match_url(rest,
+				tools.match(rest,
 				{
-					'*': function(value, rest)
+					'pages.discussions.url section': function(rest)
 					{
-						page.data.общение = { id: value }
-						tools.page('обсуждение')
+						if (!rest)
+							return tools.page('обсуждения')
+					
+						tools.match(rest,
+						{
+							'*': function(value, rest)
+							{
+								page.data.общение = { id: value }
+								tools.page('обсуждение')
+							}
+						})
 					}
 				})
 			}

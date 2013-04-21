@@ -1,6 +1,5 @@
 .bundle
-db/*.sqlite3
-log/*.log
+logs/*.log
 загруженное/временное/*
 временное/*
 /configuration/home_osx/configuration.private.coffee

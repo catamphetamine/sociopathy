@@ -8,7 +8,7 @@
 	"icon": 
 	{
 		"picture": "круги",
-		"to": "/круги",
+		"to": "pages.circles.url section",
 		
 		"private": true
 	}

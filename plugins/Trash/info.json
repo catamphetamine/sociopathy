@@ -8,7 +8,7 @@
 	"icon": 
 	{
 		"picture": "мусорка",
-		"to": "/мусорка",
+		"to": "pages.trash.url section",
 		
 		"private": true
 	}

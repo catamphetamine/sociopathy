@@ -4,11 +4,17 @@ url_matcher(function(url)
 	
 	tools.id = 'Circles'
 	
-	match_url(url,
+	tools.match(url,
 	{
-		'сеть/круги': function(rest)
+		'url.network': function(rest)
 		{
-			tools.page('круги')
+			tools.match(rest,
+			{
+				'pages.circles.url section': function(rest)
+				{
+					tools.page('круги')
+				}
+			})
 		}
 	})
 })

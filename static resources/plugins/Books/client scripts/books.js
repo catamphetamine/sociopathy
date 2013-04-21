@@ -4,26 +4,32 @@ url_matcher(function(url)
 	
 	tools.id = 'Books'
 	
-	match_url(url,
+	tools.match(url,
 	{
-		'сеть/книги': function(rest)
+		'url.network': function(rest)
 		{
-			if (!rest)
-				return tools.page('книги')
-				
-			match_url(rest,
+			tools.match(rest,
 			{
-				'*': function(value, rest)
+				'pages.books.url section': function(rest)
 				{
-					var int_value = parseInt(value)
-					if (int_value == value && int_value > 0)
-					{
-						page.data.номер_страницы = int_value
+					if (!rest)
 						return tools.page('книги')
-					}
-					
-					// здесь можно пойти на адрес какой-то определённой книги
-					tools.page('книги')
+						
+					tools.match(rest,
+					{
+						'*': function(value, rest)
+						{
+							var int_value = parseInt(value)
+							if (int_value == value && int_value > 0)
+							{
+								page.data.номер_страницы = int_value
+								return tools.page('книги')
+							}
+							
+							// здесь можно пойти на адрес какой-то определённой книги
+							tools.page('книги')
+						}
+					})
 				}
 			})
 		}

@@ -31,11 +31,11 @@
 			get_data: function(data)
 			{	
 				title(text('pages.picture albums.title') + '. ' + data.пользователь.имя)
-				
+
 				breadcrumbs
 				([
-					{ title: data.пользователь.имя, link: '/люди/' + page.data.адресное_имя },
-					{ title: text('pages.picture albums.title'), link: '/люди/' + page.data.адресное_имя + '/картинки' }
+					{ title: data.пользователь.имя, link: link_to('user', page.data.адресное_имя) },
+					{ title: text('pages.picture albums.title'), link: link_to('user.pictures', page.data.адресное_имя) }
 				])
 				
 				return data.альбомы

@@ -10,6 +10,13 @@
 		"registration":
 		{
 			"title": "Прописка"
+		},
+		"new communication":
+		{
+			"communication":
+			{
+				"title": "Название"
+			}
 		}
 	},
 	
@@ -54,7 +61,8 @@
 		"add": "Добавить",
 		"cancel": "Отмена",
 		"apply": "Применить",
-		"ok": "Готово"
+		"ok": "Готово",
+		"close": "Закрыть"
 	},
 	
 	"page":
@@ -69,6 +77,85 @@
 			
 			"yes": "Отменить мои правки",
 			"no": "Остаться на этой странице"
+		},
+		
+		"Empty": "Пусто"
+	},
+	
+	"url":
+	{
+		"registration": "/прописка",
+		"network": "/сеть",
+		"error": "/ошибка",
+		"login required": "/требуется вход",
+		"new communication": "общение"
+	},
+	
+	"human readable time":
+	{
+		"just now": "только что",
+		"half an hour ago": "получасом ранее",
+		"an hour ago": "часом ранее",
+		"one and a half an hour ago": "полутора часами ранее",
+		
+		"yesterday": "вчера",
+		"the day before yesterday": "позавчера",
+		"last week": "на прошлой неделе",
+		"2 weeks ago": "на позапрошлой неделе",
+		"3 weeks ago": "3-мя неделями ранее",
+		"last month": "в прошлом месяце",
+		"2 months ago": "в позапрошлом месяце",
+		"half a year ago": "полугодом ранее",
+		"a year ago": "годом ранее",
+		"one and a half years ago": "полутора годами ранее"
+	},
+	
+	"loading":
+	{
+		"either way":
+		{
+			"earlier": "Раньше"
+		},
+		
+		"loading more": "Загружаем ещё"
+	},
+	
+	"visual editor":
+	{
+		"enter your text here": "Вводите текст здесь",
+		
+		"tools":
+		{
+			"align left": "Выравнивание влево",
+			"align center": "Выравнивание посередине",
+			"align right": "Выравнивание вправо",
+			"justify": "Выравнивание по ширине",
+			
+			"subheading": "Подзаголовок",
+			
+			"bold": "Жирный",
+			"italic": "Курсив",
+			
+			"link": "Ссылка",
+			"citation": "Выдержка",
+			"list": "Список",
+			"picture": "Картинка",
+			
+			"undo": "Отменить последнее действие",
+			"redo": "Вернуть обратно отменённое действие",
+			
+			"formula": "Формула",
+			
+			"subscript": "Подстрочный символ",
+			"superscript": "Надстрочный символ",
+			
+			"inline code": "Кусочек кода",
+			"code": "Много кода",
+			
+			"video": "Ролик",
+			"audio": "Аудиозапись",
+			
+			"source": "Исходник"
 		}
 	}
 }

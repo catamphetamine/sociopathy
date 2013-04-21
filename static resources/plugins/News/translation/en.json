@@ -3,7 +3,16 @@
 	{
 		"news":
 		{
-			"title": "News"
+			"url section": "news",
+			
+			"title": "News",
+			
+			"circle": "Circle",
+			
+			"news":
+			{
+				"registration": "joined our network"
+			}
 		}
 	}
 }

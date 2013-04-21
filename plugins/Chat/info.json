@@ -8,7 +8,7 @@
 	"icon": 
 	{
 		"picture": "болталка",
-		"to": "/болталка",
+		"to": "pages.chat.url section",
 		
 		"private": true,
 		"unreadable": true

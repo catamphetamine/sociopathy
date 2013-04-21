@@ -1,19 +1,21 @@
 Page_icon({ page: 'человек', icon: 'People' })
 
+page_url_pattern('pages.people.url')
+						
 url_matcher(function(url)
 {
 	var tools = this
 	
 	tools.id = 'People'
 
-	match_url(url,
+	tools.match(url,
 	{
-		'люди': function(rest)
+		'pages.people.url': function(rest)
 		{
 			if (!rest)
 				return tools.page('люди')
 				
-			match_url(rest,
+			tools.match(rest,
 			{
 				'*': function(value, rest)
 				{

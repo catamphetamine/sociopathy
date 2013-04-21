@@ -3,6 +3,8 @@
 	{
 		"settings":
 		{
+			"url section": "settings",
+			
 			"title": "Settings",
 			
 			"email_not_specified": "email not specified",
@@ -40,5 +42,9 @@
 				"show available actions": "Show avaiable actions"
 			}
 		}
+	},
+	
+	"url":
+	{
 	}
 }

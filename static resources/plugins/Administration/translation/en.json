@@ -3,6 +3,8 @@
 	{
 		"administration":
 		{
+			"url section": "administration",
+			
 			"title": "Administration",
 			
 			"load dummy data into the database": "Load dummy data into the database",

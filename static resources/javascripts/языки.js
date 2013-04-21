@@ -1,7 +1,5 @@
 var Url_map = {}
 
-Url_map['registration'] = '/прописка'
-
 var Язык
 var Перевод
 
@@ -55,6 +53,16 @@ function load_relevant_translation(path, options)
 			Перевод = translation
 			Язык = language
 		
+			Object.for_each(Перевод.url, function(key, url)
+			{
+				if (url.starts_with('function('))
+					url = eval(url)
+					
+				Url_map[key] = url
+			})
+			
+			add_some_standard_url_keys()
+
 			initial_script_in_progress.finished('языки')
 		
 			if (language !== Configuration.Locale.Предпочитаемый_язык)
@@ -126,26 +134,20 @@ function text(key, variables)
 		found = found[0]
 			
 		var url = found.substring('[link to '.length, found.length - 1)
+		var parameters
 		
-		var key = url
 		if (key.ends_with(')'))
 		{
 			var code = key
 			var opening = code.indexOf('(')
 			
 			key = code.substring(0, opening)
-			parameter = variables[code.substring(opening + 1, code.length - 1)]
+			parameters = variables[code.substring(opening + 1, code.length - 1)]
 		}
 		
-		if (Url_map[key])
-		{
-			if (typeof parameter !== 'undefined')
-				url = Url_map[key](parameter)
-			else
-				url = Url_map[key]
-		}
-			
-		url = url.replace_all('\'', '"')
+		var url = link_to(key, parameters)
+		
+		url = url.replace_all('\'', encodeURIComponent('\''))
 		
 		translation = translation.replace_all(found, '<a href=\'' + url + '\'>')
 	}
@@ -167,4 +169,29 @@ function подгрузить_перевод(перевод, куда)
 		else if (typeof куда[key] === 'object')
 			подгрузить_перевод(translation, куда[key])
 	})
+}
+
+function link_to(key)
+{
+	var url = key
+	
+	var parameters = Array.prototype.slice.call(arguments)
+	parameters.shift()
+	
+	if (Url_map[key])
+	{
+		if (!parameters.пусто())
+			url = Url_map[key].apply(this, parameters)
+		else
+			url = Url_map[key]
+	}
+	
+	return url
+}
+
+function add_some_standard_url_keys()
+{
+	Url_map['user'] = function(id) { return text('pages.people.url') + '/' + id }
+	Url_map['new communication'] = function(type) { return text('url.network') + '/' + text('url.new communication') + '/' + type }
+	Url_map['communication'] = function(type, id) { return text('url.network') + '/' + text('pages.' + type + '.url section') + '/' + id }
 }

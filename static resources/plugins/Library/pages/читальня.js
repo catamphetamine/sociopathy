@@ -24,7 +24,7 @@
 		//$('.on_the_right_side_of_the_panel').css('right', $('#search').outerWidth(true) + parseInt($('#search').css('right')) + 'px')
 		
 		var путь_к_разделу
-		var match = путь_страницы().match(/читальня\/(.+)/)
+		var match = путь_страницы().match(new RegExp(text('pages.library.url').substring(1) + '\/(.+)'))
 		if (match)
 			путь_к_разделу = match[1]
 			
@@ -118,7 +118,7 @@
 				
 		function get_breadcrumbs()
 		{
-			var link = '/читальня'
+			var link = text('pages.library.url')
 			var crumbs = [{ title: text('pages.library.title'), link: link }]
 			
 			путь_к_разделу.split('/').forEach(function(раздел_или_заметка)
@@ -277,7 +277,7 @@
 				if (_id != 0)
 					data.куда = _id
 				
-				page.Ajax.post('/приложение/сеть/читальня/раздел/перенести', data)
+				page.Ajax.post('/сеть/читальня/раздел/перенести', data)
 				.ok(function(data)
 				{
 					info('Раздел перенесён')
@@ -308,7 +308,7 @@
 					куда: _id
 				}
 				
-				page.Ajax.post('/приложение/сеть/читальня/заметка/перенести', data)
+				page.Ajax.post('/сеть/читальня/заметка/перенести', data)
 				.ok(function(data)
 				{
 					info('Заметка перенесена')
@@ -327,7 +327,7 @@
 		{
 			function new_article()
 			{
-				go_to('/сеть/читальня/заметка/' + page.data.раздел)
+				go_to(link_to('library.article.new', page.data.раздел))
 			}
 			
 			page.Available_actions.add(text('pages.library.article.new'), new_article, { действие: 'Создать' })

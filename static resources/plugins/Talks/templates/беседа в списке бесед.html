@@ -1,5 +1,5 @@
 <li _id="${_id}">
-	<a href="/сеть/беседы/${id}">
+	<a href="${link_to('talk', id)}">
 		{{each(index, собеседник) участники}}
 			{{tmpl(Object.x_over_y({ no_link: true }, собеседник)) 'маленький аватар'}}
 		{{/each}}

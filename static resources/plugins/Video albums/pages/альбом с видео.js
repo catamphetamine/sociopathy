@@ -35,9 +35,9 @@
 				
 				breadcrumbs
 				([
-					{ title: data.пользователь.имя, link: '/люди/' + page.data.адресное_имя },
-					{ title: text('pages.video albums.title'), link: '/люди/' + page.data.адресное_имя + '/видео' },
-					{ title: data.альбом.название, link: '/люди/' + page.data.адресное_имя + '/видео/' + page.data.альбом }
+					{ title: data.пользователь.имя, link: link_to('user', page.data.адресное_имя) },
+					{ title: text('pages.video albums.title'), link: link_to('user.videos', page.data.адресное_имя) },
+					{ title: data.альбом.название, link: link_to('user.videos.album', page.data.адресное_имя, page.data.альбом) }
 				])
 				
 				return data.альбом.видео
@@ -137,7 +137,7 @@
 				
 		function show_video_file(image, options)
 		{
-			set_url('/люди/' + page.data.адресное_имя + '/видео/' + page.data.альбом + '/' + image.attr('video_id'))
+			set_url(link_to('user.videos.album', page.data.адресное_имя, page.data.альбом) + '/' + image.attr('video_id'))
 		
 			options = options || {}
 		
@@ -206,8 +206,8 @@
 		
 		function hide_video()
 		{
-			set_url('/люди/' + page.data.адресное_имя + '/видео/' + page.data.альбом)
-		
+			set_url(link_to('user.videos.album', page.data.адресное_имя, page.data.альбом))
+
 			scroll_navigation.deactivate()
 			$(document).unbind(namespace)
 			video.unbind(namespace)

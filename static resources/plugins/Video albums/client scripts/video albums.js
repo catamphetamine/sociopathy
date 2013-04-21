@@ -1,24 +1,27 @@
+Url_map['user.videos'] = function(user_id) { return link_to('user', user_id) + '/' + text('pages.video albums.url section') }
+Url_map['user.videos.album'] = function(user_id, album) { return link_to('user.videos', user_id) + '/' + album }
+
 url_matcher(function(url)
 {
 	var tools = this
 	
 	tools.id = 'Video albums'
 
-	match_url(url,
+	tools.match(url,
 	{
-		'люди': function(rest)
+		'pages.people.url': function(rest)
 		{
-			match_url(rest,
+			tools.match(rest,
 			{
 				'*': function(value, rest)
 				{
-					match_url(rest,
+					tools.match(rest,
 					{
-						'видео': function(rest)
+						'pages.video albums.url section': function(rest)
 						{
 							tools.page('видео')
 							
-							match_url(rest,
+							tools.match(rest,
 							{
 								'*': function(value, rest)
 								{

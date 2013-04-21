@@ -12,7 +12,7 @@
 <div class="on_the_right_side_of_the_panel">
 	<div class="authenticated_user non_selectable">
 		<div class="info">
-			<a href="/люди/${escape_id(пользователь['адресное имя'])}" class="name">${пользователь.имя}</a>
+			<a href="${link_to('user', пользователь['адресное имя'])}" class="name">${пользователь.имя}</a>
 			<a href="#" class="logout">${text('top panel.log out')}</a>
 		</div>
 		

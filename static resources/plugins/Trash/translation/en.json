@@ -3,9 +3,19 @@
 	{
 		"trash":
 		{
+			"url section": "trash",
+			
 			"title": "Trash",
 			
-			"description": "You can restore accidentially deleted data from trashbin"
+			"description": "You can restore accidentially deleted data from trashbin",
+			
+			"table":
+			{
+				"what": "What",
+				"content": "Content",
+				"user": "User",
+				"when": "When"
+			}
 		}
 	}
 }

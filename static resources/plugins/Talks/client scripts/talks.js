@@ -1,5 +1,10 @@
 (function()
 {
+	Url_map['talks'] = text('url.network') + '/' + text('pages.talks.url section')
+	Url_map['talk'] = function(id) { return link_to('talks') + '/' + id }
+	
+	Communication_type('talks', { 'new communication type': 'беседа' })
+	
 	var news_indication
 
 	function notification(_id, последнее_сообщение, options)
@@ -174,19 +179,25 @@
 		
 		tools.id = 'Talks'
 	
-		match_url(url,
+		tools.match(url,
 		{
-			'сеть/беседы': function(rest)
+			'url.network': function(rest)
 			{
-				if (!rest)
-					return tools.page('беседы')
-			
-				match_url(rest,
+				tools.match(rest,
 				{
-					'*': function(value, rest)
+					'pages.talks.url section': function(rest)
 					{
-						page.data.общение = { id: value }
-						tools.page('беседа')
+						if (!rest)
+							return tools.page('беседы')
+					
+						tools.match(rest,
+						{
+							'*': function(value, rest)
+							{
+								page.data.общение = { id: value }
+								tools.page('беседа')
+							}
+						})
 					}
 				})
 			}

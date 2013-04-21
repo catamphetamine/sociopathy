@@ -550,7 +550,7 @@ var Messages = new Class
 			}
 			else
 			{
-				visual_editor.hint(hint, 'Вводите сообщение здесь')
+				visual_editor.hint(hint, text('visual editor.enter your text here'))
 			}
 		}
 		

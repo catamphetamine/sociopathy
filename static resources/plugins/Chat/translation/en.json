@@ -3,6 +3,8 @@
 	{
 		"chat":
 		{
+			"url section": "chat",
+			
 			"title": "Chat"
 		}
 	}

@@ -10,6 +10,13 @@
 		"registration":
 		{
 			"title": "Register"
+		},
+		"new communication":
+		{
+			"communication":
+			{
+				"title": "Title"
+			}
 		}
 	},
 	
@@ -55,7 +62,8 @@
 		"add": "Add",
 		"cancel": "Cancel",
 		"apply": "Apply",
-		"ok": "Ok"
+		"ok": "Ok",
+		"close": "Close"
 	},
 	
 	"page":
@@ -70,6 +78,89 @@
 			
 			"yes": "Discard my edits",
 			"no": "Stay on this page"
+		},
+		
+		"empty": "Empty"
+	},
+	
+	"url":
+	{
+		"registration": "/registration",
+		"network": "/network",
+		"error": "/error",
+		"login required": "/login required",
+		"new communication": "communication"
+	},
+	
+	"human readable time":
+	{
+		"just now": "just now",
+		"half an hour ago": "half an hour ago",
+		"an hour ago": "an hour ago",
+		
+		"yesterday": "yesterday",
+		"the day before yesterday": "the day before yesterday",
+		"last week": "last week",
+		"2 weeks ago": "2 weeks ago",
+		"3 weeks ago": "3 weeks ago",
+		"last month": "last month",
+		"2 months ago": "2 months ago",
+		"half a year ago": "half a year ago",
+		"a year ago": "a year ago",
+		
+		"N years ago": "N years ago",
+		"N months ago": "N months ago",
+		"N days ago": "N days ago",
+		"N hours ago": "N hours ago",
+		"N minutes ago": "N minutes ago"
+	},
+	
+	"loading":
+	{
+		"either way":
+		{
+			"earlier": "Earlier"
+		},
+		
+		"loading more": "Loading more"
+	},
+	
+	"visual editor":
+	{
+		"enter your text here": "Enter your text here",
+		
+		"tools":
+		{
+			"align left": "Align left",
+			"align center": "Align center",
+			"align right": "Align right",
+			"justify": "Justify",
+			
+			"subheading": "Subheading",
+			
+			"bold": "Bold",
+			"italic": "Italic",
+			
+			"link": "Link",
+			"citation": "Citation",
+			"list": "List",
+			"picture": "Picture",
+			
+			"undo": "Undo",
+			"redo": "Redo",
+			
+			"formula": "Formula",
+			
+			"subscript": "Subscript",
+			"superscript": "Superscript",
+			
+			"inline code": "Inline code",
+			"code": "Code",
+			
+			"video": "Video",
+			"audio": "Audio",
+			
+			"source": "Source"
 		}
 	}
 }

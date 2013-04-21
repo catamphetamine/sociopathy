@@ -3,6 +3,8 @@
 	{
 		"settings":
 		{
+			"url section": "настройки",
+			
 			"title": "Настройки",
 			
 			"email_not_specified": "почтовый ящик не указан",

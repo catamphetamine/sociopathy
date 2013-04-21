@@ -4,11 +4,17 @@ url_matcher(function(url)
 	
 	tools.id = 'Administration'
 	
-	match_url(url,
+	tools.match(url,
 	{
-		'сеть/управление': function(rest)
+		'url.network': function(rest)
 		{
-			tools.page('управление')
+			tools.match(rest,
+			{
+				'pages.administration.url section': function(rest)
+				{
+					tools.page('управление')
+				}
+			})
 		}
 	})
 })

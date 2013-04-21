@@ -93,11 +93,17 @@
 		
 		tools.id = 'News'
 	
-		match_url(url,
+		tools.match(url,
 		{
-			'сеть/новости': function(rest)
+			'url.network': function(rest)
 			{
-				tools.page('новости')
+				tools.match(rest,
+				{
+					'pages.news.url section': function(rest)
+					{
+						tools.page('новости')
+					}
+				})
 			}
 		})
 	})

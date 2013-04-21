@@ -25,7 +25,6 @@ for plugin in Options.Plugins
 	info.client_scripts = disk_tools.map_files(path_to_static('client scripts'), { type: 'js' })
 	info.templates = disk_tools.list_files(path_to_static('templates'), { type: 'html' })
 	info.pages = disk_tools.list_files(path_to_static('pages'), { type: 'html' })
+	info.translation = disk_tools.list_files(path_to_static('translation'), { type: 'json' })
 	
 	global.Plugins[plugin] = info
-		
-	

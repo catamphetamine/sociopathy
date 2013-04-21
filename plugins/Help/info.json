@@ -6,6 +6,6 @@
 	"icon": 
 	{
 		"picture": "помощь",
-		"to": "/помощь"
+		"to": "pages.help.url"
 	}
 }

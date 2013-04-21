@@ -1,4 +1,4 @@
-<a class="album" href='/люди/${page.data.адресное_имя}/видео/${id}'>
+<a class="album" href='${link_to('user.videos.album', page.data.адресное_имя, id)}'>
 	<div class="cover" style="background-image: url('/картинки/на страницах/человек/видеозаписи/обложка нового альбома.jpg')">
 		<img {{if обложка}}{{else}} style="display: none" {{/if}} src="/загруженное/люди/${page.data.адресное_имя}/видео/${id}/обложка.jpg"/>
 	</div>

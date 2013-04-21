@@ -75,7 +75,7 @@ sudo chmod +x $backup_script
 # now you need to create your own configuration files (default settings will do for Ubuntu)
 #
 
-configuration_name=ubuntu
+configuration_name=my
 
 #echo "#########################################"
 
@@ -86,6 +86,15 @@ configuration_name=ubuntu
 #fi
 
 dummy_configuration=ubuntu
+
+if [ -d "repository/configuration/$configuration_name" ]; then
+	read -p "The \"my\" configuration already exists. What will be your new configuration name? " -e configuration_name
+	
+	if [ -z "$configuration_name" ]; then
+	    echo "You haven't entered your configuration name. Aborting."
+		exit 1
+	fi
+fi
 
 if [[ "$configuration_name" != "$dummy_configuration" ]]; then
 	cp --recursive repository/configuration/$dummy_configuration repository/configuration/$configuration_name
@@ -120,7 +129,7 @@ else
 fi
 
 #
-# you can also add NginX to autostart
+# to add NginX to autostart see
 # http://www.discoded.com/2012/05/22/autostart-nginx-under-ubuntu-linux/
 #
 

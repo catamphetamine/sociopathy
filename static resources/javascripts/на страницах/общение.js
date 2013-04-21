@@ -1,31 +1,17 @@
 (function()
 {
-	function общение_во_множественном_числе()
-	{
-		switch (page.data.общение)
-		{
-			case 'беседа':
-				return 'беседы'
-			
-			case 'обсуждение':
-				return 'обсуждения'
-		}
-	}
-
 	page.needs_initializing = false
 	
 	page.load = function()
 	{
-		switch (page.data.общение)
+		Communication_types.for_each(function()
 		{
-			case 'беседа':
-				title('Завести беседу')
-				break
-			
-			case 'обсуждение':
-				title('Начать обсуждение')
-				break
-		}
+			if (page.data.общение === text('pages.' + this.type + '.communication type'))
+			{
+				page.data.communication_type = this
+				title(text('pages.' + this.type + '.new'))
+			}
+		})
 		
 		var visual_editor = new Visual_editor('#content > .compose_message > article')
 
@@ -35,7 +21,7 @@
 		})
 				
 		var hint = $('<p/>').appendTo(visual_editor.editor.content)
-		visual_editor.hint(hint, 'Вводите сообщение здесь')
+		visual_editor.hint(hint, text('visual editor.enter your text here'))
 	
 		visual_editor.keep_cursor_on_screen()
 	
@@ -46,7 +32,7 @@
 			if (!message)
 				return
 				
-			page.Ajax.put('/приложение/сеть/' + page.data.общение,
+			page.Ajax.put('/сеть/' + page.data.communication_type.options['new communication type'],
 			{
 				название: page.get('form .title').val(),
 				сообщение: message,
@@ -54,7 +40,7 @@
 			})
 			.ok(function(data)
 			{
-				go_to('/сеть/' + общение_во_множественном_числе() + '/' + data.id)
+				go_to(link_to('communication', page.data.communication_type.type, data.id))
 			})
 		}
 		

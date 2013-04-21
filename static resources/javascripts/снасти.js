@@ -258,7 +258,7 @@ function неточное_время(время)
 	var точные_минуты = разница / 60
 	var минуты = Math.floor(точные_минуты)
 	if (минуты < 1)
-		return "только что"
+		return text('human readable time.just now')
 		
 	if (минуты <= 25)
 	{
@@ -266,6 +266,9 @@ function неточное_время(время)
 			окончание_единицы_измерения = 'ой'
 		else
 			окончание_единицы_измерения = 'ами'
+	
+		if (text('human readable time.N minutes ago'))
+			return text('human readable time.N minutes ago').replace('N', минуты)
 		
 		return минуты + '-' + number_ending(минуты, { вопрос: 'чем', род: 'женский' }) + ' минут' + окончание_единицы_измерения + ' ранее'
 	}
@@ -273,13 +276,14 @@ function неточное_время(время)
 	var точные_часы = точные_минуты / 60
 	var часы = Math.floor(точные_часы)
 	if (часы < 0.75)
-		return 'получасом ранее'
+		return text('human readable time.half an hour ago')
 		
 	if (часы < 1.25)
-		return 'часом ранее'
+		return text('human readable time.an hour ago')
 		
 	if (часы < 1.75)
-		return 'полутора часами ранее'
+		if (text('human readable time.one and a half an hour ago'))
+			return text('human readable time.one and a half an hour ago')
 	
 	var количество_часов = 2
 	while (количество_часов <= 23)
@@ -290,7 +294,12 @@ function неточное_время(время)
 			окончание_единицы_измерения = 'ами'
 			
 		if (часы < количество_часов + 0.5)
+		{
+			if (text('human readable time.N hours ago'))
+				return text('human readable time.N hours ago').replace('N', количество_часов)
+			
 			return количество_часов + '-' + number_ending(количество_часов, { вопрос: 'чем', род: 'мужской' }) + ' час' + окончание_единицы_измерения + ' ранее'
+		}
 			
 		количество_часов++
 	}
@@ -298,36 +307,41 @@ function неточное_время(время)
 	var точные_сутки = точные_часы / 24
 	var сутки = Math.floor(точные_сутки)
 	if (сутки < 1.5)
-		return 'вчера'
+		return text('human readable time.yesterday')
 		
 	if (сутки < 2.5)
-		return 'позавчера'
+		return text('human readable time.the day before yesterday')
 		
 	var количество_суток = 3
 	while (количество_суток <= 6)
 	{
 		if (сутки < количество_суток + 0.5)
+		{
+			if (text('human readable time.N days ago'))
+				return text('human readable time.N days ago').replace('N', количество_суток)
+			
 			return количество_суток + '-' + number_ending(количество_суток, { вопрос: 'чем', число: 'множественное' }) + ' сутками ранее'
+		}
 			
 		количество_суток++
 	}
 	
 	var недели = Math.floor(точные_сутки / 7)
 	if (недели < 1.5)
-		return 'на прошлой неделе'
+		return text('human readable time.last week')
 		
 	if (недели < 2.5)
-		return 'на позапрошлой неделе'
+		return text('human readable time.2 weeks ago')
 		
 	if (недели < 3.5)
-		return '3-мя неделями ранее'
+		return text('human readable time.3 weeks ago')
 		
 	var месяцы = Math.floor(точные_сутки / 30)
 	if (месяцы < 1.5)
-		return 'в прошлом месяце'
+		return text('human readable time.last month')
 
 	if (месяцы < 2.5)
-		return 'в позапрошлом месяце'
+		return text('human readable time.2 months ago')
 
 	var количество_месяцев = 3
 	while (количество_месяцев <= 5)
@@ -338,20 +352,26 @@ function неточное_время(время)
 			окончание_единицы_измерения = 'ами'
 			
 		if (месяцы < количество_месяцев + 0.5)
+		{
+			if (text('human readable time.N months ago'))
+				return text('human readable time.N months ago').replace('N', количество_месяцев)
+			
 			return количество_месяцев + '-' + number_ending(количество_месяцев, { вопрос: 'чем', род: 'мужской' }) + ' месяц' + окончание_единицы_измерения + ' ранее'
+		}
 			
 		количество_месяцев++
 	}
 	
 	годы = Math.floor(точные_сутки / 365.2425)
 	if (годы < 0.75)
-		return 'полугодом ранее'
+		return text('human readable time.half a year ago')
 		
 	if (годы < 1.25)
-		return 'годом ранее'
+		return text('human readable time.a year ago')
 		
 	if (годы < 1.75)
-		return 'полутора годами ранее'
+		if (text('human readable time.one and a half years ago'))
+			return text('human readable time.one and a half years ago')
 		
 	var количество_лет = 2
 	while (количество_лет < 1000000)
@@ -362,7 +382,12 @@ function неточное_время(время)
 			окончание_единицы_измерения = 'ами'
 			
 		if (годы < количество_лет + 0.5)
+		{
+			if (text('human readable time.N years ago'))
+				return text('human readable time.N years ago').replace('N', количество_лет)
+			
 			return количество_лет + '-' + number_ending(количество_лет, { вопрос: 'чем', род: 'мужской' }) + ' год' + окончание_единицы_измерения + ' ранее'
+		}
 			
 		количество_лет++
 	}
@@ -824,14 +849,20 @@ function page_error(text)
 // copied from enginex.conf
 var Page_url_patterns =
 [
-	/^\/$/,
-	/^\/люди(\/(.*))?$/,
-	/^\/читальня(\/(.*))?$/,
-	/^\/помощь(\/(.*))?$/,
-	/^\/сеть\/((.*))?$/,
-	/^\/ошибка(\/(.*))?$/,
-	/^\/требуется вход(\/(.*))?$/,
+	/^\/$/
 ]
+
+function page_url_pattern(url)
+{
+	if (!url.starts_with('/'))
+		url = text(url)
+		
+	Page_url_patterns.add(new RegExp('^\\' + url + '(\/(.*))?$'))
+}
+
+page_url_pattern('url.network')
+page_url_pattern('url.error')
+page_url_pattern('url.login required')
 
 function ajaxify_internal_links(where)
 {
@@ -900,11 +931,11 @@ function ajaxify_internal_links(where)
 
 function проверить_доступ(uri)
 {
-	if (uri === '/сеть' || uri.starts_with('/сеть/'))
+	if (uri === Url_map.network || uri.starts_with(Url_map.network + '/'))
 	{
 		if (!$.cookie('user'))
 		{
-			go_to('/требуется вход' + '?' + 'url' + '=' + encodeURI(uri))
+			go_to(text('url.login required') + '?' + 'url' + '=' + encodeURI(uri))
 			return false
 		}
 	}

@@ -3,6 +3,8 @@
 	{
 		"discussions":
 		{
+			"url section": "discussions",
+			
 			"title": "Discussions",
 			
 			"new": "Start a new discussion",
@@ -10,7 +12,9 @@
 			"discussion":
 			{
 				"unsubscribe": "Unsubscribe"
-			}
+			},
+			
+			"communication type": "discussion"
 		}
 	}
 }

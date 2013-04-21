@@ -41,8 +41,7 @@ See the "static resources/international" folder for general translation.
 
 Every plug-in has its own translation located in "static resources/plugins/[Plugin name]/translation" folder.
 
-
-(in future releases URLs will be translateable too)
+URLs are translateable too.
 
 
 Is it modular?

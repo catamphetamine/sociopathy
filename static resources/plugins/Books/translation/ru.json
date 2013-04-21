@@ -3,10 +3,12 @@
 	{
 		"books":
 		{
+			"url section": "книги",
+			
 			"title": "Книги",
 			
 			"not found": "Книги с названием «{query}» не найдено. Поиск сразу и по автору, и по названию пока ещё не сделан",
-			"added to bookshelf": "Книга добавлена в ваш [link to bookshelf(user id)]книжный шкаф[/link]",
+			"added to bookshelf": "Книга добавлена в ваш [link to user.bookshelf(user id)]книжный шкаф[/link]",
 			
 			"add": "Добавить книгу",
 			

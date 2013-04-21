@@ -10,7 +10,7 @@ global.prepare_messages = (options) ->
 		Object.merge_recursive(Object.clone(query), options.messages_query(environment))
 		
 	if options.общение_во_множественном_числе?
-		options.messages_collection = 'messages'
+		options.messages_collection = options.id + '_messages'
 		options.path = (environment) -> options.общение_во_множественном_числе + '.' + environment.сообщения_чего._id
 			
 		options.messages_query = (environment) ->

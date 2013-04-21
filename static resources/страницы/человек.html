@@ -8,17 +8,17 @@
 					</div>
 					
 					<ul id="links" class='links non_selectable'>
-						<li><a class="pictures" dummy="true" href="/люди//картинки">${text('pages.picture albums.title')}</a></li>
-						<li><a class="videos" dummy="true" href="/люди//видео">${text('pages.video albums.title')}</a></li>
+						<li><a class="pictures" dummy="true" href="${link_to('user.pictures', '')}">${text('pages.picture albums.title')}</a></li>
+						<li><a class="videos" dummy="true" href="${link_to('user.videos', '')}">${text('pages.video albums.title')}</a></li>
 						<!--
-						<li><a class="journal" dummy="true" href="/люди//журнал">${text('pages.journal.title')}</a></li>
-						<li><a class="diary" dummy="true" href="/люди//дневник">${text('pages.diary.title')}</a></li>
+						<li><a class="journal" dummy="true" href="${text('pages.people.url')}//журнал">${text('pages.journal.title')}</a></li>
+						<li><a class="diary" dummy="true" href="${text('pages.people.url')}//дневник">${text('pages.diary.title')}</a></li>
 						-->
-						<li><a class="books" dummy="true" href="/люди//книги">${text('pages.bookshelf.title')}</a></li>
+						<li><a class="books" dummy="true" href="${link_to('user.bookshelf', '')}">${text('pages.bookshelf.title')}</a></li>
 					</ul>
 					
 					<ul id="actions" class='links non_selectable'>
-						<li class="start_conversation"><a href="/сеть/общение/беседа/{_id}">Написать</a></li>
+						<li class="start_conversation"><a href="${text('url.network')}/общение/беседа/{_id}">Написать</a></li>
 						<!--<li class="contact_by_email">Написать</li>-->
 						<!--<li class="call">Позвать</li>-->
 						<li class="add_to_circles">Внести в круг</li>

@@ -1,4 +1,4 @@
-Url_map['user settings'] = '/сеть/настройки'
+Url_map['user settings'] = text('url.network') + '/' + text('pages.settings.url section')
 
 url_matcher(function(url)
 {
@@ -6,11 +6,17 @@ url_matcher(function(url)
 	
 	tools.id = 'Settings'
 
-	match_url(url,
+	tools.match(url, 
 	{
-		'сеть/настройки': function(rest)
+		'url.network': function(rest)
 		{
-			tools.page('настройки')
+			tools.match(rest,
+			{
+				'pages.settings.url section': function(rest)
+				{
+					tools.page('настройки')
+				}
+			})
 		}
 	})
 })

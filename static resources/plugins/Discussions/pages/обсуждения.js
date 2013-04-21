@@ -6,7 +6,7 @@
 	
 	function start_new_discussion()
 	{
-		go_to('/сеть/общение/обсуждение')
+		go_to(link_to('new communication', text('pages.discussions.communication type')))
 	}
 	
 	page.data.подписан_на_обсуждения = []

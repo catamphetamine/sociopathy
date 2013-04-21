@@ -54,6 +54,11 @@ remember_me = (ввод, вывод, следующий) ->
 			пользовательское.выйти(ввод, вывод)
 			
 		следующий()
+		
+is_internal_url = (url) ->
+	for language, urls of Url_map
+		if url.starts_with(urls.network + '/')
+			return yes
 			
 module.exports = (приложение) ->
 	if not приложение?
@@ -78,7 +83,7 @@ module.exports = (приложение) ->
 			#приложение.use express.errorHandler()
 		
 		fiberize.express_action = (действие, адрес, ввод, вывод) ->
-			if адрес.starts_with('/сеть/')
+			if is_internal_url(адрес)
 				return if пользовательское.требуется_вход(ввод, вывод)
 	
 				пользователь = пользовательское.пользователь(ввод)

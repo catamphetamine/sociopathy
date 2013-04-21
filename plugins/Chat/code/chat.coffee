@@ -1,3 +1,10 @@
+if not хранилище.collection('chat_info').exists()
+	хранилище.create_collection('chat_info')
+	db('chat_info')._.save({})
+	
+	хранилище.create_collection('chat', [['отправитель', no]])
+	#db('chat')._.save({ отправитель: человек._id, сообщение: 'Здравствуйте', когда: new Date() })
+
 Уведомления (пользователь, session, новости) ->
 	chat_info = db('chat_info')._.find_one()
 

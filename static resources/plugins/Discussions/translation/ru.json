@@ -3,6 +3,8 @@
 	{
 		"discussions":
 		{
+			"url section": "обсуждения",
+			
 			"title": "Обсуждения",
 			
 			"new": "Начать новое обсуждение",
@@ -10,7 +12,9 @@
 			"discussion":
 			{
 				"unsubscribe": "Отписаться"
-			}
+			},
+			
+			"communication type": "обсуждение"
 		}
 	}
 }

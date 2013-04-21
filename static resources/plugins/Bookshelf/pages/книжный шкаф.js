@@ -1,6 +1,4 @@
-Url_map['bookshelf'] = function(id) { return '/люди/' + id + '/книги' }
-
-;(function()
+(function()
 {
 	Режим.пообещать('правка')
 	
@@ -55,8 +53,8 @@ Url_map['bookshelf'] = function(id) { return '/люди/' + id + '/книги' }
 			{
 				breadcrumbs
 				([
-					{ title: data.пользователь.имя, link: '/люди/' + page.data.адресное_имя },
-					{ title: text('pages.bookshelf.title'), link: '/люди/' + page.data.адресное_имя + '/книги' }
+					{ title: data.пользователь.имя, link: link_to('user', page.data.адресное_имя) },
+					{ title: text('pages.bookshelf.title'), link: link_to('user.bookshelf', page.data.адресное_имя) }
 				])
 				
 				var books = data.книги

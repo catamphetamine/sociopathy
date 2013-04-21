@@ -8,7 +8,7 @@
 	"icon": 
 	{
 		"picture": "управление",
-		"to": "/управление",
+		"to": "pages.administration.url section",
 		
 		"private": true,
 		"restricted": true

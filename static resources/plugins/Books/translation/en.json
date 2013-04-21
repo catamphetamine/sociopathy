@@ -3,10 +3,12 @@
 	{
 		"books":
 		{
+			"url section": "books",
+			
 			"title": "Books",
 			
 			"not found": "We couldn't find a book titled «{query}». Searching by both author and title isn't implemented yet",
-			"added to bookshelf": "The book has been added to [link to bookshelf(user id)]your bookshelf[/link]",
+			"added to bookshelf": "The book has been added to [link to user.bookshelf(user id)]your bookshelf[/link]",
 			
 			"add": "Add a book",
 			

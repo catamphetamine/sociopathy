@@ -12,7 +12,7 @@ global.db = (collection) ->
 		
 		if typeof query == 'string'
 			query = { _id: mongo.id(query) }
-		else if query.toHexString
+		else if query.toHexString?
 			query = { _id: query }
 		
 		mongo.findOne.bind_await(mongo)(query, options)
@@ -43,6 +43,9 @@ global.db = (collection) ->
 		
 		if not options.safe?
 			options.safe = yes
+			
+		if query.toHexString?
+			query = { _id: query._id }
 		
 		mongo.update.bind_await(mongo)(query, data, options)
 		
@@ -61,11 +64,41 @@ global.db = (collection) ->
 	
 	mongo._ = api
 	mongo
-	
+
+mongoskin.SkinCollection.prototype.exists = ->
+	db = @skinDb
+	find = db.collectionNames.bind_await(db)
+	collection = @collectionName	
+	return not find(collection).пусто()
+				
 exports.open = (options) ->
 	server = new mongodb.Server(options.server.host, options.server.port, options.server)
 
 	skin_server = new mongoskin.SkinServer(server)
 	
 	db = new mongodb.Db(options.database.name, server, options.database)
-	return new mongoskin.SkinDb(db, options.database.username, options.database.password)
+	store = new mongoskin.SkinDb(db, options.database.username, options.database.password)
+	
+	store.create_collection = (name, options) ->
+		if store.collection(name).exists()
+			return
+		
+		options = options || {}
+		
+		if options instanceof Array
+			options = { indexes: options }
+				
+		#try
+		#	db(name)._.drop()
+		#catch ошибка
+		#	if ошибка.message != 'ns not found'
+		#		console.error ошибка
+		#		throw ошибка
+			
+		store.create(name, options.options)
+	
+		if options.indexes?
+			for pair in options.indexes
+				global.db(name)._.index(pair[0], pair[1])
+
+	return store

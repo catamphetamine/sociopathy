@@ -8,7 +8,7 @@
 	"icon": 
 	{
 		"picture": "обсуждения",
-		"to": "/обсуждения",
+		"to": "pages.discussions.url section",
 		
 		"private": true,
 		"unreadable": true

@@ -3,6 +3,8 @@
 	{
 		"library":
 		{
+			"url": "/library",
+			
 			"title": "Library",
 			
 			"section not found": "Section «{query}» not found",
@@ -11,6 +13,25 @@
 			"article":
 			{
 				"new": "Write an article"
+			},
+			
+			"category":
+			{
+				"add": "Add a category"
+			},
+		
+			"new article":
+			{
+				"url section": "library/article",
+				
+				"title": "Write an article",
+				
+				"article":
+				{
+					"title": "Title"
+				},
+				
+				"submit": "Save article"
 			}
 		}
 	}

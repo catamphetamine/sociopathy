@@ -8,6 +8,6 @@
 	"icon": 
 	{
 		"picture": "люди",
-		"to": "/люди"
+		"to": "pages.people.url"
 	}
 }

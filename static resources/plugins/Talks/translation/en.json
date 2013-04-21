@@ -3,6 +3,8 @@
 	{
 		"talks":
 		{
+			"url section": "talks",
+			
 			"title": "Talks",
 			
 			"new": "Start a new talk",
@@ -11,7 +13,14 @@
 			{
 				"add person": "Add a person to talk",
 				"leave": "Leave this conversation"
-			}
+			},
+			
+			"communication type": "talk"
 		}
+	},
+	
+	"visual editor":
+	{
+		"enter your text here": "Enter your text here"
 	}
 }

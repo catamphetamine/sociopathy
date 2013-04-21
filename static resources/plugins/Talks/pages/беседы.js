@@ -6,7 +6,7 @@
 	
 	function create_new_talk()
 	{
-		go_to('/сеть/общение/беседа')
+		go_to(link_to('new communication', text('pages.talks.communication type')))
 	}
 	
 	page.load = function()

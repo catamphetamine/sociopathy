@@ -8,7 +8,7 @@
 	"icon": 
 	{
 		"picture": "настройки",
-		"to": "/настройки",
+		"to": "pages.settings.url section",
 		
 		"private": true
 	}

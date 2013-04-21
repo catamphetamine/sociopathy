@@ -22,7 +22,7 @@
 
 		function get_breadcrumbs()
 		{
-			var link = '/читальня'
+			var link = text('pages.library.url')
 			var crumbs = [{ title: text('pages.library.title'), link: link }]
 			
 			page.data.путь_к_заметке.split('/').forEach(function(раздел_или_заметка)
@@ -148,7 +148,7 @@
 			})
 			.ok(function(data)
 			{
-				go_to('/читальня/' + data.путь_к_разделу)
+				go_to(text('pages.library.url') + '/' + data.путь_к_разделу)
 			})
 		}
 	}
@@ -210,7 +210,7 @@
 				page.data.версия = data.версия
 			
 				if (data.путь)
-					return go_to('/читальня/' + data.путь)
+					return go_to(text('pages.library.url') + '/' + data.путь)
 			
 				page.Data_store.unmodified_data =
 				{

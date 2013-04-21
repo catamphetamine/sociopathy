@@ -3,7 +3,11 @@
 	{
 		"bookshelf":
 		{
+			"url section": "книги",
+			
 			"title": "Книги",
+			
+			"add book": "Добавить книгу",
 			
 			"book":
 			{

@@ -1,7 +1,7 @@
-title('Написать заметку');
-
 (function()
 {
+	title(text('pages.library.new article.title'))
+
 	page.load = function()
 	{
 		if (!page.data.раздел)
@@ -13,7 +13,7 @@ title('Написать заметку');
 		var visual_editor = new Visual_editor('#content > .compose_message > article')
 		
 		var hint = $('<p/>').appendTo(visual_editor.editor.content)
-		visual_editor.hint(hint, 'Вводите текст здесь')
+		visual_editor.hint(hint, text('visual editor.enter your text here'))
 	
 		visual_editor.keep_cursor_on_screen()
 	

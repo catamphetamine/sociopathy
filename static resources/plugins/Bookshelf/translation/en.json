@@ -3,7 +3,11 @@
 	{
 		"bookshelf":
 		{
+			"url section": "books",
+			
 			"title": "Books",
+			
+			"add book": "Add a book",
 			
 			"book":
 			{

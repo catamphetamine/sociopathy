@@ -3,7 +3,14 @@
 	{
 		"circles":
 		{
-			"title": "Круги"
+			"url section": "круги",
+			
+			"title": "Круги",
+			
+			"circle":
+			{
+				"empty": "Пуст"
+			}
 		}
 	}
 }

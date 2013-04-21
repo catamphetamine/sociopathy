@@ -389,12 +389,16 @@ function add_top_panel_button(plugin)
 	if (typeof this.icon === 'object')
 	{
 		is_private = this.icon.private
-		url = this.icon.to
+		
+		url = text(this.icon.to)
+		if (!url.starts_with('/'))
+			url = '/' + url
+		
 		picture = '/plugins/' + this.title + '/icon/' + this.icon.picture
 	}
 	
 	if (is_private)
-		url = '/сеть' + url
+		url = Url_map.network + url
 	
 	var icon = $('<li/>')
 		.attr('picture', picture)

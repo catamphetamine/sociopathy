@@ -8,6 +8,6 @@
 	"icon": 
 	{
 		"picture": "читальня",
-		"to": "/читальня"
+		"to": "pages.library.url"
 	}
 }

@@ -91,24 +91,7 @@ var вставить_содержимое
 		
 		кусочки.forEach(function(кусочек)
 		{
-			var возврат = callback
-			
-			if (кусочек === 'навершие')
-			{
-				возврат = function()
-				{
-					Object.for_each(Configuration.Plugins, function(key)
-					{
-						if (typeof this.icon === 'object')
-							if (!this.icon.private)
-								add_top_panel_button.bind(this)(this)
-					})
-					
-					callback()
-				}
-			}
-			
-			вставить_содержимое('/страницы/кусочки/' + кусочек + '.html', {}, { куда: $('body') }, возврат)
+			вставить_содержимое('/страницы/кусочки/' + кусочек + '.html', {}, { куда: $('body') }, callback)
 		})
 	}
 	
@@ -227,6 +210,13 @@ var вставить_содержимое
 				{
 					подгрузить_скрипты_плагинов(function()
 					{
+						Object.for_each(Configuration.Plugins, function(key)
+						{
+							if (typeof this.icon === 'object')
+								if (!this.icon.private)
+									add_top_panel_button.bind(this)(this)
+						})
+						
 						callback()
 					})
 				})

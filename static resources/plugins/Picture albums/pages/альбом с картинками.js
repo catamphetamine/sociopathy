@@ -35,9 +35,9 @@
 				
 				breadcrumbs
 				([
-					{ title: data.пользователь.имя, link: '/люди/' + page.data.адресное_имя },
-					{ title: text('pages.picture albums.title'), link: '/люди/' + page.data.адресное_имя + '/картинки' },
-					{ title: data.альбом.название, link: '/люди/' + page.data.адресное_имя + '/картинки/' + page.data.альбом }
+					{ title: data.пользователь.имя, link: link_to('user', page.data.адресное_имя) },
+					{ title: text('pages.picture albums.title'), link: link_to('user.pictures', page.data.адресное_имя) },
+					{ title: data.альбом.название, link: link_to('user.pictures.album', page.data.адресное_имя, page.data.альбом) }
 				])
 				
 				return data.альбом.картинки
@@ -132,7 +132,7 @@
 		
 		function show_picture_file(icon)
 		{
-			set_url('/люди/' + page.data.адресное_имя + '/картинки/' + page.data.альбом + '/' + icon.attr('picture_id'))
+			set_url(link_to('user.pictures.album', page.data.адресное_имя, page.data.альбом) + '/' + icon.attr('picture_id'))
 		
 			current_picture_icon = icon
 		
@@ -218,7 +218,7 @@
 		
 		function hide_picture()
 		{
-			set_url('/люди/' + page.data.адресное_имя + '/картинки/' + page.data.альбом)
+			set_url(link_to('user.pictures.album', page.data.адресное_имя, page.data.альбом))
 		
 			scroll_navigation.deactivate()
 			$(document).unbind(namespace)

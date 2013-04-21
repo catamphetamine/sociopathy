@@ -1,5 +1,10 @@
 (function()
 {
+	page_url_pattern('pages.library.url')
+
+	//Url_map['library.category'] = function(id) { return text('pages.library.url') + '/' + id }
+	Url_map['library.article.new'] = function(category) { return text('url.network') + '/' + text('pages.library.new article.url section') + '/' + category }
+
 	function раздел_или_заметка(путь, resume)
 	{
 		page.Ajax.get('/приложение/раздел или заметка', { путь: путь })
@@ -40,29 +45,35 @@
 
 		var initial_url = url
 		
-		match_url(url,
+		tools.match(url,
 		{
-			'сеть/читальня/заметка': function(rest)
+			'url.network': function(rest)
 			{
-				match_url(rest,
+				tools.match(rest,
 				{
-					'*': function(value, rest)
+					'pages.library.new article.url section': function(rest)
 					{
-						page.data.раздел = value
-						tools.page('написать заметку')
+						tools.match(rest,
+						{
+							'*': function(value, rest)
+							{
+								page.data.раздел = value
+								tools.page('написать заметку')
+							}
+						})
 					}
 				})
 			},
-			'читальня': function(rest)
+			'pages.library.url': function(rest)
 			{
 				if (!rest)
 					return tools.page('читальня')
 			
-				match_url(rest,
+				tools.match(rest,
 				{
 					'*': function()
 					{
-						var путь = initial_url.substring('читальня/'.length)
+						var путь = initial_url.substring(initial_url.indexOf('/') + 1)
 						
 						page.data.путь = путь
 						раздел_или_заметка(путь, tools.wait())

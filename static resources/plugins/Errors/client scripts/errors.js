@@ -4,11 +4,17 @@ url_matcher(function(url)
 	
 	tools.id = 'Errors'
 
-	match_url(url,
+	tools.match(url,
 	{
-		'сеть/ошибки': function(rest)
+		'url.network': function(rest)
 		{
-			tools.page('ошибки')
+			tools.match(rest,
+			{
+				'pages.errors.url section': function(rest)
+				{
+					tools.page('ошибки')
+				}
+			})
 		}
 	})
 })

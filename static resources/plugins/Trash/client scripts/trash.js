@@ -4,11 +4,17 @@ url_matcher(function(url)
 	
 	tools.id = 'Trash'
 
-	match_url(url,
+	tools.match(url,
 	{
-		'сеть/мусорка': function(rest)
+		'url.network': function(rest)
 		{
-			tools.page('мусорка')
+			tools.match(rest,
+			{
+				'pages.trash.url section': function(rest)
+				{
+					tools.page('мусорка')
+				}
+			})
 		}
 	})
 })

@@ -4,7 +4,7 @@
 	
 	<section class="personal_info">
 		<!-- who is -->
-		<div class="name"><a href="/люди/${escape_id($data['адресное имя'])}" inactive_in_edit_mode="true">${имя}</a></div>
+		<div class="name"><a href="${link_to('user', $data['адресное имя'])}" inactive_in_edit_mode="true">${имя}</a></div>
 		<div class="description">{{if описание}}${описание}{{else}}участник{{/if}}</div>
 		
 		<!-- avatar -->

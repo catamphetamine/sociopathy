@@ -1,5 +1,5 @@
 <li _id="${_id}">
-	<a href="/сеть/обсуждения/${escape_id(id)}">
+	<a href="${link_to('discussion', id)}">
 		{{if последнее_сообщение}}
 			{{tmpl(Object.x_over_y({ no_link: true }, последнее_сообщение.отправитель)) 'маленький аватар'}}
 		

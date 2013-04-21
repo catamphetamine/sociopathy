@@ -8,7 +8,7 @@
 	"icon": 
 	{
 		"picture": "ошибки",
-		"to": "/ошибки",
+		"to": "pages.errors.url section",
 		
 		"private": true,
 		"restricted": true

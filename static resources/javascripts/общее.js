@@ -576,3 +576,10 @@ function correct_internal_url(url)
 		
 	return url
 }
+
+var Communication_types = []
+
+function Communication_type(type, options)
+{
+	Communication_types.add({ type: type, options: options })
+}

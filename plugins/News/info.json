@@ -8,7 +8,7 @@
 	"icon": 
 	{
 		"picture": "новости",
-		"to": "/новости",
+		"to": "pages.news.url section",
 		
 		"private": true,
 		"unreadable": true

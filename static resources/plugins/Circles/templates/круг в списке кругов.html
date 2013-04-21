@@ -2,7 +2,7 @@
 
 <ul class="members">
 	{{if члены.length == 0}}
-		<li class="empty">Пуст</li>
+		<li class="empty">${text('pages.circles.circle.empty')}</li>
 	{{else}}
 		{{each(index, член) члены}}
 			<li class="member">

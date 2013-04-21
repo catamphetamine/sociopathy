@@ -1,3 +1,6 @@
+хранилище.create_collection('system_trash', { options: { capped: yes, size: 1000 } }, [['что', no]])
+хранилище.create_collection('trash', { options: { capped: yes, size: 10000 } }, [['пользователь', no]])
+
 http.get '/сеть/мусорка', (ввод, вывод, пользователь) ->
 	$ = {}
 	снасти.batch_loading(ввод, $, 'trash', { from: 'system_trash', query: {}, parameters: { sort: [['_id', -1]] } })

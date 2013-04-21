@@ -106,7 +106,7 @@
 		links.find('a').each(function()
 		{
 			var link = $(this)
-			if (link.attr('href').starts_with('/люди//'))
+			if (link.attr('href').starts_with(text('pages.people.url') + '//'))
 				link.attr('href', link.attr('href').replace('//', '/' + page.data.пользователь_сети['адресное имя'] + '/')).removeAttr('dummy')
 		})
 		

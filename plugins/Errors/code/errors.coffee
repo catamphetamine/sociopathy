@@ -1,3 +1,5 @@
+хранилище.create_collection('errors', { options: { capped: yes, size: 100 } })
+
 http.put '/ошибка', (ввод, вывод) ->
 	console.log '======================== Client Error ========================'
 	console.log 'Тип: ' + ввод.данные.тип

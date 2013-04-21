@@ -19,11 +19,33 @@ var Страница =
 		
 		var страница_человека = false
 		
-		match_url(путь,
+		var better_match = function(url, pattern)
 		{
-			'люди': function(rest)
+			var matcher = {}
+			
+			Object.for_each(pattern, function(key, action)
 			{
-				match_url(rest,
+				var path = key
+				
+				if (key !== '*')
+				{
+					path = text(key)
+					
+					if (path.starts_with('/'))
+						path = path.substring(1)
+				}
+					
+				matcher[path] = action
+			})
+
+			match_url(url, matcher)
+		}
+		
+		better_match(путь,
+		{
+			'pages.people.url': function(rest)
+			{
+				better_match(rest,
 				{
 					'*': function(value, rest)
 					{
@@ -66,7 +88,8 @@ var Страница =
 					страница = '_wait_'
 					page.data.proceed_manually = true
 					return page.proceed
-				}
+				},
+				match: better_match
 			}
 			
 			return result
@@ -84,26 +107,43 @@ var Страница =
 		if (страница_человека)
 			return 'человек'
 		
-		match_url(путь,
+		var new_communication_matcher = {}
+		var pattern = text('url.network').substring(1) + '/' + text('url.new communication')
+		new_communication_matcher[pattern] = function(rest)
 		{
-			'сеть/общение': function(rest)
+			match_url(rest,
 			{
-				match_url(rest,
+				'*': function(value, rest)
 				{
-					'*': function(value, rest)
+					страница = 'общение'
+					page.data.общение = value
+					
+					match_url(rest,
 					{
-						страница = 'общение'
-						page.data.общение = value
-						
-						match_url(rest,
+						'*': function(value, rest)
 						{
-							'*': function(value, rest)
-							{
-								page.data.кому = value
-							}
-						})
-					}
-				})
+							page.data.кому = value
+						}
+					})
+				}
+			})
+		}
+		
+		match_url(путь, new_communication_matcher)
+		
+		better_match(путь,
+		{
+			'url.login required': function(rest)
+			{
+				страница = 'требуется вход'
+			},
+			'url.error': function(rest)
+			{
+				страница = 'ошибка'
+			},
+			'url.registration': function(rest)
+			{
+				страница = 'прописка'
 			}
 		})
 		

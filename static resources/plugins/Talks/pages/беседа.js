@@ -37,8 +37,8 @@
 				
 				breadcrumbs
 				([
-					{ title: text('pages.talks.title'), link: '/сеть/беседы' },
-					{ title: data.название, link: '/сеть/беседы/' + page.data.общение.id }
+					{ title: text('pages.talks.title'), link: link_to('talks') },
+					{ title: data.название, link: link_to('talk', page.data.общение.id) }
 				])
 				
 				unedited_talk_title = data.название

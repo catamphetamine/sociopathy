@@ -1,3 +1,6 @@
+хранилище.create_collection('books', [['id', yes], [[[ 'сочинитель', 1 ], [ 'название', 1 ]], yes]])
+хранилище.create_collection('peoples_books', [['пользователь', yes]])
+		
 http.get '/сеть/книги', (ввод, вывод) ->
 	options =
 		collection: 'books'

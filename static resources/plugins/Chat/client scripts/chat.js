@@ -129,11 +129,17 @@
 		
 		tools.id = 'Chat'
 		
-		match_url(url,
+		tools.match(url,
 		{
-			'сеть/болталка': function(rest)
+			'url.network': function(rest)
 			{
-				tools.page('болталка')
+				tools.match(rest,
+				{
+					'pages.chat.url section': function(rest)
+					{
+						tools.page('болталка')
+					}
+				})
 			}
 		})
 	})
