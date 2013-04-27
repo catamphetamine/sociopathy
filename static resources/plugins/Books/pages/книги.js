@@ -42,6 +42,7 @@
 				postprocess_item: function(data)
 				{
 					this.attr('_id', data._id)
+					activate_book_item(this)
 				},
 				on_first_output: books_loaded,
 				before_output: function(elements)
@@ -289,8 +290,6 @@
 				var item = page.books.find('> [_id="' + this._id + '"]')
 				
 				$.tmpl(template, this).appendTo(item.empty())
-				
-				activate_book_item(item)
 				
 				if (this.обложка)
 					item.data('обложка', this.обложка)

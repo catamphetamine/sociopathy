@@ -111,6 +111,21 @@ function get_language(id)
 	return language
 }
 
+function has_text(key)
+{
+	var translation = Перевод
+	
+	var path = key.split('.')
+	while (!path.is_empty())
+	{
+		translation = translation[path.shift()]
+		if (!translation)
+			return false
+	}
+	
+	return true
+}
+
 function text(key, variables)
 {
 	var translation = Перевод

@@ -267,7 +267,7 @@ function неточное_время(время)
 		else
 			окончание_единицы_измерения = 'ами'
 	
-		if (text('human readable time.N minutes ago'))
+		if (has_text('human readable time.N minutes ago'))
 			return text('human readable time.N minutes ago').replace('N', минуты)
 		
 		return минуты + '-' + number_ending(минуты, { вопрос: 'чем', род: 'женский' }) + ' минут' + окончание_единицы_измерения + ' ранее'
@@ -282,7 +282,7 @@ function неточное_время(время)
 		return text('human readable time.an hour ago')
 		
 	if (часы < 1.75)
-		if (text('human readable time.one and a half an hour ago'))
+		if (has_text('human readable time.one and a half an hour ago'))
 			return text('human readable time.one and a half an hour ago')
 	
 	var количество_часов = 2
@@ -295,7 +295,7 @@ function неточное_время(время)
 			
 		if (часы < количество_часов + 0.5)
 		{
-			if (text('human readable time.N hours ago'))
+			if (has_text('human readable time.N hours ago'))
 				return text('human readable time.N hours ago').replace('N', количество_часов)
 			
 			return количество_часов + '-' + number_ending(количество_часов, { вопрос: 'чем', род: 'мужской' }) + ' час' + окончание_единицы_измерения + ' ранее'
@@ -317,7 +317,7 @@ function неточное_время(время)
 	{
 		if (сутки < количество_суток + 0.5)
 		{
-			if (text('human readable time.N days ago'))
+			if (has_text('human readable time.N days ago'))
 				return text('human readable time.N days ago').replace('N', количество_суток)
 			
 			return количество_суток + '-' + number_ending(количество_суток, { вопрос: 'чем', число: 'множественное' }) + ' сутками ранее'
@@ -353,7 +353,7 @@ function неточное_время(время)
 			
 		if (месяцы < количество_месяцев + 0.5)
 		{
-			if (text('human readable time.N months ago'))
+			if (has_text('human readable time.N months ago'))
 				return text('human readable time.N months ago').replace('N', количество_месяцев)
 			
 			return количество_месяцев + '-' + number_ending(количество_месяцев, { вопрос: 'чем', род: 'мужской' }) + ' месяц' + окончание_единицы_измерения + ' ранее'
@@ -370,7 +370,7 @@ function неточное_время(время)
 		return text('human readable time.a year ago')
 		
 	if (годы < 1.75)
-		if (text('human readable time.one and a half years ago'))
+		if (has_text('human readable time.one and a half years ago'))
 			return text('human readable time.one and a half years ago')
 		
 	var количество_лет = 2
@@ -383,7 +383,7 @@ function неточное_время(время)
 			
 		if (годы < количество_лет + 0.5)
 		{
-			if (text('human readable time.N years ago'))
+			if (has_text('human readable time.N years ago'))
 				return text('human readable time.N years ago').replace('N', количество_лет)
 			
 			return количество_лет + '-' + number_ending(количество_лет, { вопрос: 'чем', род: 'мужской' }) + ' год' + окончание_единицы_измерения + ' ранее'

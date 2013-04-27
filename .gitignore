@@ -1,11 +1,11 @@
 .bundle
 logs/*.log
-загруженное/временное/*
-временное/*
 /configuration/home_osx/configuration.private.coffee
 code/scala/classes/*
 static resources/compressed/*
+временное/*
 загруженное/книги/*
 загруженное/читальня/разделы/*
-загруженное/читальня/разделы/*
+загруженное/читальня/раз
+загруженное/временное/*делы/*
 загруженное/люди/*
