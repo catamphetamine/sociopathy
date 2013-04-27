@@ -5,6 +5,7 @@ languages_path = __dirname + '/../../static resources/international'
 translations = disk_tools.list_files(languages_path, { type: 'json' })
 
 global.Url_map = {}
+global.International = {}
 
 for translation in translations
 	texts = JSON.parse(disk_tools.read(languages_path + '/' + translation + '.json'))
@@ -15,3 +16,6 @@ for translation in translations
 		language = language.substring(0, slash)
 		
 	global.Url_map[language] = texts.url
+	
+	global.International[language] = {}
+	global.International[language].Database = texts.database

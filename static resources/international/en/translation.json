@@ -162,5 +162,18 @@
 			
 			"source": "Source"
 		}
+	},
+	
+	"database":
+	{
+		"people":
+		{
+			"name": "name",
+			"description": "description",
+			"gender": "gender",
+			"origin": "origin",
+			"password": "password",
+			"email": "email"
+		}
 	}
 }

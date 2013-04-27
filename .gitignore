@@ -5,3 +5,7 @@ logs/*.log
 /configuration/home_osx/configuration.private.coffee
 code/scala/classes/*
 static resources/compressed/*
+загруженное/книги/*
+загруженное/читальня/разделы/*
+загруженное/читальня/разделы/*
+загруженное/люди/*

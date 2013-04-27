@@ -21,7 +21,7 @@ global.messages_api = (options) ->
 		
 		if not ввод.данные.после?
 			loading_options.с = show_from.await(environment)
-
+			
 		loading_options.query = options.these_messages_query({}, environment)
 
 		result = either_way_loading.await(ввод, loading_options)
@@ -38,6 +38,24 @@ global.messages_api = (options) ->
 			options.extra_get.await($, environment)
 		
 		if ввод.данные.первый_раз?
+			if result.data.пусто()
+				$.всего = 0
+				$.пропущено = 0
+			else
+				$.всего = db(options.messages_collection)._.count(loading_options.query)
+			
+				сравнение_id = null
+				
+				if result.sort == 1
+					сравнение_id = '$lt'
+				else
+					сравнение_id = '$gt'
+					
+				_id_query = {}
+				_id_query[сравнение_id] = result.data[0]._id
+				
+				$.пропущено = db(options.messages_collection)._.count(Object.x_over_y(loading_options.query, { _id: _id_query }))
+			
 			if options.создатель?
 				if environment.сообщения_чего?
 					$.создатель = options.создатель.await(environment.сообщения_чего._id)

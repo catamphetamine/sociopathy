@@ -133,6 +133,8 @@ var Thrower = new Class
 		})
 		.bind(this))
 		
+		element.trigger('thrown_out')
+		
 		new Audio(this.options.звук).play()
 	}
 })

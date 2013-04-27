@@ -7,25 +7,32 @@
 		{{/if}}
 		
 		<div class="cover_image" style="
-			{{if есть_большая_обложка}}
-				 background-image: url('/загруженное/книги/обложки/большие/${id}.${обложка.формат}?version=${обложка.version}');
-				width: ${обложка.большая.ширина}px;
-				height: ${обложка.большая.высота}px;
-				margin-left: -${parseInt(обложка.большая.ширина / 2)}px;
+			{{if новая_обложка}}
+				background-image: url('/загруженное/временное/${новая_обложка.имя}.jpg');
+						width: ${новая_обложка.size.width}px;
+						height: ${новая_обложка.size.height}px;
+						margin-left: -${parseInt(новая_обложка.size.width / 2)}px;
 			{{else}}
-				background-image: url('/картинки/на страницах/сеть/книги/нет обложки.jpg');
-				width: 213px;
-				height: 320px;
-				margin-left: -${parseInt(213 / 2)}px;
+				{{if есть_большая_обложка}}
+					 background-image: url('/загруженное/книги/${_id}/обложки/большая.${обложка.формат}?version=${обложка.version}');
+					width: ${обложка.большая.ширина}px;
+					height: ${обложка.большая.высота}px;
+					margin-left: -${parseInt(обложка.большая.ширина / 2)}px;
+				{{else}}
+					background-image: url('/картинки/на страницах/сеть/книги/нет обложки.jpg');
+					width: 213px;
+					height: 320px;
+					margin-left: -${parseInt(213 / 2)}px;
+				{{/if}}
 			{{/if}}
 		"></div>
 	</div>
  
-	<div class="author">
+	<div class="author" contenteditable="true">
 		${сочинитель}
 	</div>
  
 	<div class="title">
-		«<span>${название}</span>»
+		«<span contenteditable="true">${название}</span>»
 	</div>
 </div>

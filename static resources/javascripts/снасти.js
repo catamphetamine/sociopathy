@@ -66,7 +66,7 @@ var Ajax =
 		
 		var default_on_error = function(сообщение)
 		{
-			error('Ошибка связи с сервером')
+			error(сообщение)
 		}
 		
 		var on_error = default_on_error

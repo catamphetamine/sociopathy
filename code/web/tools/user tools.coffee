@@ -1,4 +1,4 @@
-Cookie_expiration_date = new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 365 * 50)
+#Cookie_expiration_date = new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 365 * 50)
 
 exports.войти = (пользователь, ввод, вывод, возврат) ->
 	if ввод.пользователь?
@@ -8,7 +8,7 @@ exports.войти = (пользователь, ввод, вывод, возвр
 	ввод.пользователь = { _id: пользователь._id }
 	тайный_ключ = пользовательское.тайный_ключ.await(пользователь._id)
 
-	вывод.cookie('user', тайный_ключ, { expires: Cookie_expiration_date, httpOnly: false })
+	вывод.cookie('user', тайный_ключ, { expires: { toUTCString: -> 'max-age' }, httpOnly: false })
 	return возврат(null, пользователь)
 
 exports.выйти = (ввод, вывод) ->
@@ -230,7 +230,9 @@ exports.данные_пользователя = (ввод, вывод) ->
 			throw 'user.invalid authentication token'
 		else
 			throw 'user.not authenticated'
-		
+
+	database_schema = International[ввод.cookies.language].Database
+	
 	пользователь = db('people')._.find_one({ _id: ввод.пользователь._id })
 	session = db('people_sessions')._.find_one({ пользователь: пользователь._id })
 	
@@ -240,7 +242,7 @@ exports.данные_пользователя = (ввод, вывод) ->
 		настройки: session.настройки
 		не_показывать_подсказки: session.не_показывать_подсказки
 	
-	$.пользователь = пользовательское.поля(['...', 'photo_version', 'полномочия'], пользователь)
+	$.пользователь = пользовательское.поля(['...', 'язык', 'photo_version', 'полномочия'], пользователь)
 		
 	$.пользователь.беседы = {}
 	$.пользователь.обсуждения = {}

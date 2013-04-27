@@ -8,8 +8,8 @@ var initial_scripts =
 	{ path: 'jquery/jquery' },
 	{ path: 'mootools/mootools-core-1.4.5-full-nocompat' },
 	{ path: 'язык' },
-	{ path: 'jquery/jquery.extension' },
 	{ path: 'jquery/jquery.cookie' },
+	{ path: 'jquery/jquery.extension' },
 	{ path: 'hotkeys' },
 	{ path: 'пользователь', await: true },
 	{ path: 'языки', await: true }

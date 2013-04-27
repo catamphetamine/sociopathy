@@ -80,6 +80,11 @@
 					border-color: #7f7f7f;
 					
 					.beautiful_shadow_5(0px, 3px, 20px, 12px, 2px, 8px, 4px, 0.2);
+					
+					.picture_uploading_screen
+					{
+						font-size: 22px;
+					}
 				}
 			}
 			
@@ -161,7 +166,7 @@
 	}
 }
 
-body[mode="правка"] #books .cover
+body[mode="правка"] #books .cover .cover_image
 {
 	cursor: pointer;
 }

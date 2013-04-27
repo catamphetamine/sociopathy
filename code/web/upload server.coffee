@@ -17,12 +17,15 @@ upload_file = (ввод, возврат) ->
 
 upload_image = (ввод, вывод, настройки) ->
 	file = upload_file.await(ввод)
-	global.resize.await(file.path, file.path, настройки)
+	test = global.resize.await(file.path, file.path, настройки)
 	снасти.переименовать.await(file.path, снасти.имя_файла(file.path) + '.jpg')
 	адрес = file.path.to_unix_path().replace(Options.Upload_server.File_path, Options.Upload_server.File_url) + '.jpg'
 	вывод.send({ имя: снасти.имя_файла(file.path), адрес: адрес })
 
 actions = {}
+
+actions['/сеть/книга/обложка'] = (ввод, вывод) ->
+	upload_image(ввод, вывод, { ширина: Options.Books.Cover.Big.Width, высота: Options.Books.Cover.Big.Height })
 
 actions['/сеть/человек/картинка'] = (ввод, вывод) ->
 	upload_image(ввод, вывод, { размер: Options.User.Picture.Generic.Size })
@@ -73,19 +76,28 @@ global.resize = (что, во_что, настройки, возврат) ->
 		strip: false
 		filter: 'Lagrange'
 
-	if настройки.размер?
-		options.width = настройки.размер
-		options.height = "#{настройки.размер}^"
-		options.customArgs = [
-			"-gravity"
-			"center"
-			"-extent"
-			"#{настройки.размер}x#{настройки.размер}"
-		]
-	else
+	options.customArgs = []
+	
+	if настройки.наибольший_размер?
+		# уменьшить, если слишком большое
 		options.width = настройки.наибольший_размер
 		options.height = настройки.наибольший_размер + '>'
+	else if настройки.размер?
+		# заполнить как минимум весь размер
+		options.width = настройки.размер
+		options.height = настройки.размер + '^'
+			
+		# протяжённость, для сохранения aspect ratio
+		options.customArgs.add('-extent')
+		options.customArgs.add(настройки.размер + 'x' + настройки.размер)
+	else
+		options.width = настройки.ширина
+		options.height = настройки.высота + '>'
 		
+	# gravitate to center
+	options.customArgs.add('-gravity')
+	options.customArgs.add('center')
+	
 	image_magick.resize(options, возврат) #(error, output, errors_output) ->
 	
 global.finish_picture_upload = (options) ->

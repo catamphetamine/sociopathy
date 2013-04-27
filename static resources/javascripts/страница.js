@@ -131,6 +131,9 @@ var Страница =
 		
 		match_url(путь, new_communication_matcher)
 		
+		if (страница)
+			return страница
+		
 		better_match(путь,
 		{
 			'url.login required': function(rest)
@@ -711,6 +714,8 @@ var Page = new Class
 		({
 			'close on escape': true
 		})
+		
+		dialog_window.content.disableTextSelect()
 		
 		this.Available_actions.available_actions_list = dialog_window
 		

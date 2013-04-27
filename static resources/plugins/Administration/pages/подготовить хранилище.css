@@ -1,0 +1,15 @@
+#content
+{
+	padding: 40px;
+	
+	.data
+	{
+		white-space: pre-wrap;
+	}
+	
+	button
+	{
+		font-size: 28px;
+		padding: 10px;
+	}
+}

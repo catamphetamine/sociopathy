@@ -73,18 +73,23 @@ var Picture_uploader = new Class
 			parameter: { name: 'user', value: $.cookie('user') },
 			success: function(data)
 			{
-				var ok = picture_uploader.options.ok.bind(picture_uploader)
-				var ok_result = ok(data, picture_uploader.element())
-				
-				function finish()
+				get_image_size(data.адрес, function(size)
 				{
-					picture_uploader.uploading_screen().hide() //fade_out(0.2)
-				}
-				
-				if (typeof ok_result === 'function')
-					ok_result(finish)
-				else
-					finish()
+					data.size = size
+					
+					var ok = picture_uploader.options.ok.bind(picture_uploader)
+					var ok_result = ok(data, picture_uploader.element())
+					
+					function finish()
+					{
+						picture_uploader.uploading_screen().hide() //fade_out(0.2)
+					}
+					
+					if (typeof ok_result === 'function')
+						ok_result(finish)
+					else
+						finish()
+				})
 			},
 			error: function(ошибка)
 			{
@@ -115,7 +120,12 @@ var Picture_uploader = new Class
 			
 			uploading_screen.append($('<span/>').text('Загружается'))
 			
-			uploading_screen.appendTo(this.element())
+			var target = this.element()
+			
+			if (this.options.uploading_screen_target)
+				target = target.find(this.options.uploading_screen_target)
+			
+			uploading_screen.appendTo(target)
 		}
 		
 		if (this.options.uploading_screen_size)

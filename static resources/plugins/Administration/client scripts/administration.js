@@ -6,6 +6,10 @@ url_matcher(function(url)
 	
 	tools.match(url,
 	{
+		'pages.administration.initialize.url': function(rest)
+		{
+			tools.page('подготовить хранилище')
+		},
 		'url.network': function(rest)
 		{
 			tools.match(rest,

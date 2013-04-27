@@ -15,7 +15,6 @@ global.prepare_messages = (options) ->
 			
 		options.messages_query = (environment) ->
 			query = {}
-			query.чего = options.общение
 			if environment.сообщения_чего._id.toHexString?
 				query.общение = environment.сообщения_чего._id
 			else
@@ -36,7 +35,7 @@ global.prepare_messages = (options) ->
 			последние_сообщения = []
 		
 			for общение in общения
-				последние_сообщения.add(db(options.messages_collection)._.find({ общение: общение._id, чего: options.общение }, { sort: [['_id', -1]], limit: 1 }))
+				последние_сообщения.add(db(options.messages_collection)._.find({ общение: общение._id }, { sort: [['_id', -1]], limit: 1 }))
 				
 			сообщения = []
 			for array in последние_сообщения
@@ -128,7 +127,6 @@ global.prepare_messages = (options) ->
 			
 		if options.общение_во_множественном_числе?
 			data.общение = environment.сообщения_чего._id
-			data.чего = options.общение
 				
 		сообщение = db(options.messages_collection)._.save(data)
 				
@@ -151,7 +149,7 @@ global.prepare_messages = (options) ->
 			if typeof _id == 'string'
 				_id = db(options.id).id(_id)
 			
-			сообщения = db(options.messages_collection)._.find({ общение: _id, чего: options.общение }, { sort: [['_id', 1]], limit: 1 })
+			сообщения = db(options.messages_collection)._.find({ общение: _id }, { sort: [['_id', 1]], limit: 1 })
 					
 			if сообщения.пусто()
 				throw "Не удалось проверить авторство"
@@ -207,7 +205,7 @@ global.prepare_messages = (options) ->
 				
 				# теперь обновить новости
 				
-				query = { чего: options.общение, общение: _id }
+				query = { общение: _id }
 					
 				latest_messages = db(options.messages_collection)._.find(query, { limit: 1, sort: [['_id', -1]] })
 		

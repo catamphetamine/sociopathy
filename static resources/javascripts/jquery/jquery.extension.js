@@ -941,3 +941,8 @@ $.free_namespace = function(namespace)
 {
 	delete event_namespaces[namespace]
 }
+
+function cookie(name, value)
+{
+	$.cookie(name, value, { path: '/', expires: { toUTCString: function() { 'max-age' } }})
+}

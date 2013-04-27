@@ -86,6 +86,12 @@
 		if (пользователь)
 			return
 		
+		if (Uri.parse().parameters['войти'] == 'true')
+		{
+			$('a.enter').click()
+			Uri.remove_parameter('войти')
+		}
+		
 		if (Configuration.Invites)
 		{
 			if (получить_настройку_запроса('приглашение'))

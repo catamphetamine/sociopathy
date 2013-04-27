@@ -8,7 +8,7 @@ title(text('pages.people.title'));
 	{
 		page.either_way_loading
 		({
-			путь: '/люди',
+			путь: text('pages.people.url'),
 			с_номерами_страниц: true,
 			data:
 			{

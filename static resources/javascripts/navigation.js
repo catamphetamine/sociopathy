@@ -144,6 +144,9 @@ var get_page_less_style_link
 		
 		page.data.данные_для_страницы = данные_пользователя
 		
+		if (Язык !== данные_пользователя.язык)
+			page.Ajax.put('/сеть/пользователь/язык', { язык: Язык })
+		
 		if (!first_time_page_loading)
 			panel.highlight_current_page(page)
 			

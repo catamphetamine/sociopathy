@@ -29,6 +29,14 @@ module.exports =
 					Size: 250
 				Tiny:
 					Size: 38
+	Books:
+		Cover:
+			Big:
+				Width: 250
+				Height: 320
+			Small:
+				Width: 100
+				Height: 150
 	Mail:
 		Box: 'sobranie.net@gmail.com'
 		Smtp:
@@ -37,4 +45,5 @@ module.exports =
 			Port: 465 # 587 #
 	Invites: yes
 	Plugins: ['Library', 'People', 'Help', 'News', 'Chat', 'Talks', 'Discussions', 'Books', 'Bookshelf', 'Circles', 'Settings', 'Trash', 'Administration', 'Errors', 'Picture albums', 'Video albums'] # 'Diary', 'Journal'
-Optimize: no
+	Optimize: no
+	#Language: 'ru' # possible values: 'en'. can't be changed 

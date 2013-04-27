@@ -53,9 +53,15 @@ var Uri =
 			port: parsed.port,
 			path: decodeURI(parsed.path),
 			parameters_raw: parsed.query,
-			parameters: parsed.queryKey
+			parameters: {}
 		}
 		
+		Object.for_each(parsed.queryKey, function(key, value)
+		{
+			result.parameters[decodeURIComponent(key)] = decodeURIComponent(value)
+		})
+		
+		// вынести некоторые параметры прямо в корень возвращаемого объекта
 		Object.for_each(result.parameters, function(key, value)
 		{
 			if (typeof result[key] === 'undefined')
@@ -72,6 +78,14 @@ var Uri =
 		}
 		
 		return result
+	},
+	
+	remove_parameter: function(parameter)
+	{
+		var data = Uri.parse()
+		delete data.parameters[parameter]
+		
+		set_url(data.to_relative_url())
 	},
 	
 	assemble: function(parts)

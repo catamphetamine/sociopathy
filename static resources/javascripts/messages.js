@@ -255,7 +255,8 @@ var Messages = new Class
 				}
 			},
 			container: messages.options.container,
-			error: 'Не удалось загрузить список сообщений'
+			error: 'Не удалось загрузить список сообщений',
+			//progress_bar: true
 		})
 	},
 	

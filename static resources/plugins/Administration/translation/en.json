@@ -9,7 +9,18 @@
 			
 			"load dummy data into the database": "Load dummy data into the database",
 			"create an invite": "Issue an invite",
-			"execute database altering script": "Execute database altering script from «administration.coffee» (for development purposes only)"
+			"execute database altering script": "Execute database altering script from «administration.coffee» (for development purposes only)",
+			
+			"initialize":
+			{
+				"url": "/initialize",
+				
+				"title": "Initialize the database",
+				
+				"submit": "Create the database",
+				
+				"administrator user info": "{ \"name\": \"Michael Jackson\", \"description\": \"the man in charge\", \"gender\": \"male\", \"origin\": \"USA\", \"password\": \"123\", \"email\": \"destination@unreachable.com\" }"
+			}
 		}
 	}
 }

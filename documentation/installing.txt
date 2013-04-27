@@ -23,12 +23,9 @@ After the webserver starts, go to http://[server's IP address]:8081/
 There you should see the welcome page.
 
 Now you should create the administrator user.
-Go to http://[server's IP address]:8081/приложение/хранилище/создать
-It will initialize the database
+Go to http://[server's IP address]:8081/initialize
+Edit the administrator user info as you'd like and push the "Create the database" button.
+It will initialize the database and redirect you to the login screen.
 
-Now log in - username / password is: Дождь со Снегом / 123
+Now log in with your username and password.
 Done.
-
-To change your administrator password go to
-http://[server's IP address]:8081/приложение/сеть/пароль?пароль=Your_Password_Here
-(works only if your current password is '123')

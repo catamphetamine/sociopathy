@@ -59,6 +59,8 @@ module.exports = (ввод, options, возврат) ->
 				else if сравнение_id == '$lte'
 					сравнение_id = '$lt'
 					
+			@.$.sort = sort
+					
 			id_criteria = {}
 			
 			boundary = с || после

@@ -21,7 +21,7 @@
 																	
 									<div class="book {{if book.обложка}} {{else}}no_icon{{/if}} non_selectable">
 										{{if book.формат}}
-											<a target="_blank" href="/загруженное/книги/${book.id}.${book.формат}">
+											<a target="_blank" href="/загруженное/книги/${book._id}/${book.id}.${book.формат}">
 										{{else}}
 											{{if book.ссылка}}
 												<a target="_blank" href="${book.ссылка}">
@@ -29,7 +29,7 @@
 										{{/if}}
 									
 										{{if book.обложка}}
-											<img width="${book.обложка.маленькая.ширина}" height="${book.обложка.маленькая.высота}" class="icon" src="/загруженное/книги/обложки/маленькие/${book.id}.${book.обложка.формат}"/>
+											<img width="${book.обложка.маленькая.ширина}" height="${book.обложка.маленькая.высота}" class="icon" src="/загруженное/книги/${book._id}/обложки/маленькая.${book.обложка.формат}?version=${book.обложка.version}"/>
 										{{else}}
 											<div class="author"><div class="center_vertically"><div>${book.сочинитель}</div></div></div>
 											<div class="title"><div class="center_vertically"><div>${book.название}</div></div></div>

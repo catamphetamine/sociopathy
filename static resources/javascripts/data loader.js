@@ -37,7 +37,8 @@ var Batch_loader = new Class
 		get_item_locator: function(object) { return object._id },
 		reverse: false,
 		Ajax: Ajax,
-		each: function() {}
+		each: function() {},
+		skipped_before: 0
 	},
 	
 	есть_ли_ещё: true,
@@ -61,6 +62,11 @@ var Batch_loader = new Class
 			
 		if (this.options.skip_pages)
 			this.page.number += this.options.skip_pages
+	},
+	
+	set_skipped_before: function(skipped)
+	{
+		this.options.skipped_before = skipped
 	},
 
 	batch: function(возврат)
@@ -114,7 +120,7 @@ var Batch_loader = new Class
 				{
 					loader.page.number++
 					
-					loader.counter = (loader.page.number - 1) * loader.options.batch_size + data_list.length
+					loader.counter = loader.options.skipped_before + (loader.page.number - 1) * loader.options.batch_size + data_list.length
 				}
 				else
 					loader.page.number--
@@ -144,7 +150,7 @@ var Batch_loader = new Class
 	
 	skipped: function()
 	{
-		return (this.page.number - 1) * this.options.batch_size
+		return this.options.skipped_before + (this.page.number - 1) * this.options.batch_size
 	},
 	
 	load: function()

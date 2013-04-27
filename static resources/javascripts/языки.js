@@ -26,6 +26,9 @@ function load_relevant_translation(path, options)
 		языки.push(язык)
 	})
 	
+	// testing english translation
+	//языки = ['en']
+	
 	function try_next_language()
 	{
 		// defaults
@@ -52,6 +55,8 @@ function load_relevant_translation(path, options)
 		{
 			Перевод = translation
 			Язык = language
+			
+			cookie('language', language)
 		
 			Object.for_each(Перевод.url, function(key, url)
 			{
@@ -136,16 +141,16 @@ function text(key, variables)
 		var url = found.substring('[link to '.length, found.length - 1)
 		var parameters
 		
-		if (key.ends_with(')'))
+		if (url.ends_with(')'))
 		{
-			var code = key
+			var code = url
 			var opening = code.indexOf('(')
 			
-			key = code.substring(0, opening)
+			url = code.substring(0, opening)
 			parameters = variables[code.substring(opening + 1, code.length - 1)]
 		}
 		
-		var url = link_to(key, parameters)
+		var url = link_to(url, parameters)
 		
 		url = url.replace_all('\'', encodeURIComponent('\''))
 		

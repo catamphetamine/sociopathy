@@ -9,7 +9,18 @@
 			
 			"load dummy data into the database": "Заполнить хранилище пробными данными",
 			"create an invite": "Выдать приглашение",
-			"execute database altering script": "Внести в хранилище изменения, прописанные в «administration.coffee» (используется только для разработки)"
+			"execute database altering script": "Внести в хранилище изменения, прописанные в «administration.coffee» (используется только для разработки)",
+			
+			"initialize":
+			{
+				"url": "/initialize",
+				
+				"title": "Заполнение хранилища",
+				
+				"submit": "Создать хранилище",
+				
+				"administrator user info": "{ \"имя\": \"Владимир Владимирович\", \"описание\": \"управляющий\", \"пол\": \"мужской\", \"откуда\": \"Кремль\", \"пароль\": \"123\", \"почта\": \"destination@unreachable.com\" }"
+			}
 		}
 	}
 }

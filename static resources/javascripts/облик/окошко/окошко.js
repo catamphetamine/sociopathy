@@ -81,7 +81,7 @@ var dialog_window = new Class
 			.addClass("collapsed")
 			.appendTo(document.body)
 			//.addClass(this.options.theme)
-			.disableTextSelect()
+			//.disableTextSelect()
 		
 		$(document).on('keydown.' + this.namespace, function(event) 
 		{

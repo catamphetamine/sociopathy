@@ -381,7 +381,7 @@ http.post '/сеть/управление/хранилище/заполнить'
 	
 	вывод.send { ok: 'хранилище заполнено' }
 			
-http.get '/хранилище/создать', (ввод, вывод) ->
+http.post '/хранилище/создать', (ввод, вывод) ->
 	человек = null
 	
 	разделы = null
@@ -439,14 +439,30 @@ http.get '/хранилище/создать', (ввод, вывод) ->
 	
 	console.log('* Creating system administrator')
 	
+	administrator = {}
+	
+	if ввод.данные.administrator?
+		administrator = JSON.parse(ввод.данные.administrator)
+	
+	# временное
+	if administrator.gender?
+		if administrator.gender == 'male'
+			administrator.gender = 'мужской'
+		else
+			administrator.gender = 'женский'
+	
+	database_schema = International[ввод.cookies.language].Database
+	
+	# это следует также вынести в translation
 	человек =
-		имя: 'Дождь со Снегом'
-		описание: 'главный архитектор'
-		пол: 'мужской'
-		откуда: 'Россия'
-		пароль: '123'
-		почта: 'kuchumovn@gmail.com'
-		полномочия: ['управляющий']
+		имя: administrator[database_schema.people.name]
+		описание: administrator[database_schema.people.description]
+		пол: administrator[database_schema.people.gender]
+		откуда: administrator[database_schema.people.origin]
+		пароль: administrator[database_schema.people.password]
+		почта: administrator[database_schema.people.email]
+		
+	человек.полномочия = ['управляющий']
 			
 	пользовательское.создать(человек)
 					

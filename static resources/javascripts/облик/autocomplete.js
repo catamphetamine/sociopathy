@@ -170,6 +170,14 @@
 			element.appendTo(this.results)
 		},
 		
+		filter: function(results_list)
+		{
+			if (this.options.filter)
+				return results_list.filter(this.options.filter)
+			
+			return results_list
+		},
+		
 		display: function(results_list)
 		{
 			this.results.empty()
@@ -328,7 +336,7 @@
 			if (!this.options.results_viewer[action])
 				return
 			
-			this.options.results_viewer[action].bind(this)(argument)
+			return this.options.results_viewer[action].bind(this)(argument)
 		},
 		
 		invalid: function()
@@ -403,7 +411,7 @@
 			else
 				this.valid()
 			
-			this.results_viewer('display', results_list)
+			this.results_viewer('display', this.results_viewer('filter', results_list))
 		},
 		
 		perform_search: function(query)

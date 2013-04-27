@@ -1,10 +1,9 @@
 function either_way_loading(options)
 {
 	parameters = options.data.parameters || {}
-	
-	var bottom_loader
 		
 	var overall_count
+	var skipped
 	
 	var progress_bar
 	
@@ -42,6 +41,9 @@ function either_way_loading(options)
 	var first_batch = true
 	var first_output = true
 
+	var top_loader
+	var bottom_loader
+	
 	var on_data = function(data)
 	{
 		if (first_batch)
@@ -49,6 +51,14 @@ function either_way_loading(options)
 			if (!overall_count)
 				overall_count = data.всего
 			
+			if (!skipped && data.пропущено)
+			{
+				skipped = data.пропущено
+				
+				top_loader.set_skipped_before(skipped)
+				bottom_loader.set_skipped_before(skipped)
+			}
+				
 			if (options.data.on_first_batch)
 				options.data.on_first_batch(data)
 
@@ -87,7 +97,7 @@ function either_way_loading(options)
 	
 	var previous_link = previous_block.find('.previous > a')
 	
-	var top_loader = new Batch_loader(Object.x_over_y(common_loader_options,
+	top_loader = new Batch_loader(Object.x_over_y(common_loader_options,
 	{
 		skip_pages: skip_pages + 1,
 		reverse: true,
@@ -325,12 +335,16 @@ function either_way_loading(options)
 	{
 		if (!progress)
 		{
+			if (!skipped)
+				if (skip_pages)
+					skipped = skip_pages * options.data.batch_size
+			
 			progress = new Progress
 			({
 				element: $('.vertical_progress_bar .bar .progress'),
 				maximum: overall_count,
 				vertical: true,
-				skipped: skip_pages * options.data.batch_size
+				skipped: skipped
 			})
 			
 			progress_bar.show()
