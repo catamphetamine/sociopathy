@@ -1,3 +1,29 @@
+# usage example
+#global.Цепь = require './tools/conveyor'
+#global.цепь = (object, options) ->
+#	if not object? || typeof object == 'function'
+#		return new global.Цепь(object, options)
+#
+#	if object.shouldKeepAlive?
+#		return new global.Цепь('web', object, options)
+#		
+#	if object.namespace? && object.namespace.sockets?
+#		return new global.Цепь('websocket', object, options)
+#	
+#	console.log object
+#	throw 'Unknown object for conveyor: ' + object
+#
+# ...
+#
+# цепь(callback)
+#	.сделать ->
+#		db.count('people', @)
+#	.сделать (count) ->
+#		@.$.total = count
+#		console.log(count)
+#	.сделать (count) ->
+#		response.send(@.$)
+
 class Цепь
 	#debug: yes
 

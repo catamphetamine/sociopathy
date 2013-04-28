@@ -1,4 +1,4 @@
-module.exports = (ввод, options, возврат) ->
+module.exports = (ввод, options) ->
 	options.query = options.query || {}
 	
 	настройки =  {}
@@ -30,96 +30,78 @@ module.exports = (ввод, options, возврат) ->
 		
 	if настройки.задом_наперёд?
 		sort = -sort
-	
-	цепь(возврат)
-		.сделать ->
-			if options.total? && not ввод.данные.всего?
-				return db(options.collection).count(options.query, @.в 'всего')
-			@.done()
-			
-		.сделать ->
-			if с? || ввод.данные.пропустить?
-				if настройки.направление == 'вперёд'
-					@._.check_for_earlier_elements = yes
 
-			if not с? && not после?
-				skip = ввод.данные.пропустить || 0
-				return db(options.collection).find(options.query, { limit: сколько, sort: [['_id', sort]], skip: skip }).toArray(@)
-
-			сравнение_id = null
-			
-			if sort == 1
-				сравнение_id = '$gte'
-			else
-				сравнение_id = '$lte'
-		
-			if настройки.прихватить_границу == no
-				if сравнение_id == '$gte'
-					сравнение_id = '$gt'
-				else if сравнение_id == '$lte'
-					сравнение_id = '$lt'
-					
-			@.$.sort = sort
-					
-			id_criteria = {}
-			
-			boundary = с || после
-			
-			if typeof boundary == 'string'
-				boundary = db(options.collection).id(boundary)
-			
-			id_criteria[сравнение_id] = boundary
+	$ = {}
 				
-			db(options.collection).find(Object.merge_recursive({ _id: id_criteria }, options.query), { limit: сколько, sort: [['_id', sort]] }).toArray(@)
-
-		.сделать (data) ->
-			@.$.data = data
-			@.done(@.$.data)
+	$.sort = sort
+	
+	if options.total? && not ввод.данные.всего?
+		$.всего = db(options.collection)._.count(options.query)
 			
-		.сделать (data) ->
-			# check for more
+	check_for_earlier_elements = no
 			
-			return @.done() if data.length < сколько
-			
-			сравнение_id = null
-			
-			if sort == 1
+	if с? || ввод.данные.пропустить?
+		if настройки.направление == 'вперёд'
+			check_for_earlier_elements = yes
+	
+	if not с? && not после?
+		skip = ввод.данные.пропустить || 0
+		$.data = db(options.collection)._.find(options.query, { limit: сколько, sort: [['_id', sort]], skip: skip })
+	else
+		сравнение_id = null
+		
+		if sort == 1
+			сравнение_id = '$gte'
+		else
+			сравнение_id = '$lte'
+	
+		if настройки.прихватить_границу == no
+			if сравнение_id == '$gte'
 				сравнение_id = '$gt'
-			else
+			else if сравнение_id == '$lte'
 				сравнение_id = '$lt'
 				
-			more_id_criteria = {}
-			more_id_criteria[сравнение_id] = data[data.length - 1]._id
-			
-			db(options.collection).find(Object.merge_recursive({ _id: more_id_criteria }, options.query), { limit: 1, sort: [['_id', sort]] }).toArray(@)
+		id_criteria = {}
 		
-		.сделать (more) ->
-			@.$['есть ещё?'] = more? && not more.пусто()
-			@.done()
+		boundary = с || после
+		
+		if typeof boundary == 'string'
+			boundary = db(options.collection).id(boundary)
+		
+		id_criteria[сравнение_id] = boundary
+			
+		$.data = db(options.collection)._.find(Object.merge_recursive({ _id: id_criteria }, options.query), { limit: сколько, sort: [['_id', sort]] })
+
+	# check for more		
+	if $.data.length >= сколько
+		сравнение_id = null
+		
+		if sort == 1
+			сравнение_id = '$gt'
+		else
+			сравнение_id = '$lt'
+			
+		more_id_criteria = {}
+		more_id_criteria[сравнение_id] = $.data[$.data.length - 1]._id
+		
+		more = db(options.collection)._.find(Object.merge_recursive({ _id: more_id_criteria }, options.query), { limit: 1, sort: [['_id', sort]] })
+	
+		$['есть ещё?'] = more? && not more.пусто()
+
+	# check for "earlier" elements
+	if not $.data.пусто() && check_for_earlier_elements
+		сравнение_id = null
+		
+		if sort == 1
+			сравнение_id = '$lt'
+		else
+			сравнение_id = '$gt'
+			
+		earlier_id_criteria = {}
+		earlier_id_criteria[сравнение_id] = $.data[0]._id
+		
+		earlier = db(options.collection)._.find(Object.merge_recursive({ _id: earlier_id_criteria }, options.query), { limit: 1, sort: [['_id', sort]] })
+
+		$['есть ли предыдущие?'] = !earlier.пусто()
 				
-		.сделать ->
-			destination = @.$
-			data = @.$.data
-				
-			if not data.пусто() && @._.check_for_earlier_elements?
-				return цепь(@)
-					.сделать ->
-						сравнение_id = null
-						
-						if sort == 1
-							сравнение_id = '$lt'
-						else
-							сравнение_id = '$gt'
-							
-						earlier_id_criteria = {}
-						earlier_id_criteria[сравнение_id] = data[0]._id
-						
-						db(options.collection).find(Object.merge_recursive({ _id: earlier_id_criteria }, options.query), { limit: 1, sort: [['_id', sort]] }).toArray(@)
-						
-					.сделать (earlier) ->
-						destination['есть ли предыдущие?'] = !earlier.пусто()
-						@.done()
-			@.done()
-					
-		.сделать ->
-			@.done(@.$)
+	return $

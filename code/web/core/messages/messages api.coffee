@@ -24,7 +24,7 @@ global.messages_api = (options) ->
 			
 		loading_options.query = options.these_messages_query({}, environment)
 
-		result = either_way_loading.await(ввод, loading_options)
+		result = either_way_loading(ввод, loading_options)
 		
 		$ = {}
 				

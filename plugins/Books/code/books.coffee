@@ -7,7 +7,7 @@ http.get '/сеть/книги', (ввод, вывод) ->
 		query: {},
 		total: yes
 	
-	result = either_way_loading.await(ввод, options)
+	result = either_way_loading(ввод, options)
 	
 	ответ = 
 		книги: result.data

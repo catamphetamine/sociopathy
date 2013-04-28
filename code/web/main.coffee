@@ -16,7 +16,6 @@ global.Options = require "./configuration"
 Object.merge_recursive(global.Options, require "./../../configuration/#{launch_options.server}/configuration")
 require "./../../configuration/#{launch_options.server}/configuration.private"
 
-
 global.Options.Upload_server.Temporary_file_path = global.Options.Upload_server.File_path + '/временное'
 
 global.Options.Version = require "./version"
@@ -45,21 +44,6 @@ mongo_db_options =
 		safe: yes
 	
 global.хранилище = mongo_db.open(mongo_db_options)
-
-# conveyor is now superceeded by fiberize
-global.Цепь = require './tools/conveyor'
-global.цепь = (object, options) ->
-	if not object? || typeof object == 'function'
-		return new global.Цепь(object, options)
-
-	if object.shouldKeepAlive?
-		return new global.Цепь('web', object, options)
-		
-	if object.namespace? && object.namespace.sockets?
-		return new global.Цепь('websocket', object, options)
-	
-	console.log object
-	throw 'Unknown object for conveyor: ' + object
 
 global.fiberize = require './tools/fiberize'
 global.снасти = require './tools/tools'
