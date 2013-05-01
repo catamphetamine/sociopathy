@@ -42,21 +42,44 @@ apt-get install redis-server
 #
 # create the user
 #
+sociopathy_user_password=
+#
+echo "Enter the password for user sociopathy" 
+read sociopathy_user_password
+#
+if [ -z "$sociopathy_user_password" ]; then
+    echo "You haven't entered password for user sociopathy. Aborting."
+		exit 1
+fi
+#
+useradd -m sociopathy -p=$sociopathy_user_password
+#
+usermod -s /bin/bash sociopathy
+#
 adduser sociopathy sudo
-sudo --user sociopathy
-#cd /home/sociopathy
-#sudo -u sociopathy
+sudo su sociopathy
+cd ~
+#
+echo "Default port usage:"
+#
+echo "8080 (backend):"
+netstat -antp | grep 8080
+#
+echo "8081 (frontend):"
+netstat -antp | grep 8081
+#
+echo "8091 (upload server):"
+netstat -antp | grep 8091
 #
 # install some of the required Node.js packages
 #
-pwd
-cd ~
 npm install coffee-script
 npm install sync
 #
 # copy the files
 #
-git clone git://github.com/kuchumovn/sociopathy.git repository
+# clone only the most recent revision
+git clone --depth=1 git://github.com/kuchumovn/sociopathy.git repository
 #
 # maybe redirect all the logs to this folder
 #
@@ -69,8 +92,8 @@ mkdir database
 # it needs to be backed up daily
 #
 backup_script=/etc/cron.daily/backup_sociopathy_database.sh
-sudo cp repository/automation/backup.sh $backup_script
-sudo chmod +x $backup_script
+echo $sociopathy_user_password | sudo -S cp repository/automation/backup.sh $backup_script
+echo $sociopathy_user_password | sudo -S chmod +x $backup_script
 #
 # now you need to create your own configuration files (default settings will do for Ubuntu)
 #
@@ -88,7 +111,8 @@ configuration_name=my
 dummy_configuration=ubuntu
 
 if [ -d "repository/configuration/$configuration_name" ]; then
-	read -p "The \"my\" configuration already exists. What will be your new configuration name? " -e configuration_name
+	echo "The \"my\" configuration already exists. What will be your new configuration name?"
+	read configuration_name
 	
 	if [ -z "$configuration_name" ]; then
 	    echo "You haven't entered your configuration name. Aborting."
@@ -119,11 +143,13 @@ fi
 
 nginx_configuration=/etc/nginx/nginx.conf
 
-nginx_configuration_already_patched=`cat $nginx_configuration | grep "\"/home/sociopathy/repository/configuration/$configuration_name/enginex.conf\";"`
+# currently not working
+nginx_configuration_already_patched=
+#nginx_configuration_already_patched=`cat $nginx_configuration | grep "\"/home/sociopathy/repository/configuration/$configuration_name/enginex.conf\";"`
 
 if [[ "$nginx_configuration_already_patched" == "" ]]; then
-sudo sed -n 'H;${x;s/include \/etc\/nginx\/sites-enabled\/\*;\n/include "\/home\/sociopathy\/repository\/configuration\/$configuration_name\/enginex.conf";\
-&/;p;}' $nginx_configuration
+sudo sed -i -n "H;\${x;s/include \/etc\/nginx\/sites-enabled\/\*;\n/include \"\/home\/sociopathy\/repository\/configuration\/$configuration_name\/enginex.conf\";\n\t\
+&/;p;}" $nginx_configuration
 else
 	echo "NginX configuration already patched"
 fi
@@ -135,4 +161,5 @@ fi
 
 echo "You can check NginX errors by viewing the '/var/log/nginx/error.log' file"
 
-read -p "The installation is mostly complete. Check the output for signs of any possible errors. See the 'documentation/installing.txt' file for further instructions. Hit any key to continue" -e nothing
+echo "The installation is mostly complete. Check the output for signs of any possible errors. See the 'documentation/installing.txt' file for further instructions. Hit any key to continue"
+read nothing

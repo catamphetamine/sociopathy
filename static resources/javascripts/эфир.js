@@ -193,8 +193,8 @@ $(document).on('panel_loaded', function()
 		
 		on('пользователь', 'аватар обновлён', function(data)
 		{
-			var avatar = $('.authenticated_user .small_avatar .picture img')
-			avatar.attr('src', set_version(avatar.attr('src'), data.version))
+			var avatar = $('.authenticated_user .real_picture')
+			avatar.attr('src', set_version(link_to('user.avatar.small', data.пользователь), data.version))
 		})
 		
 		on('пользователь', 'не_показывать_подсказку', function(data)

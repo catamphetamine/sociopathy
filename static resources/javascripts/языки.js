@@ -60,10 +60,13 @@ function load_relevant_translation(path, options)
 		
 			Object.for_each(Перевод.url, function(key, url)
 			{
-				if (url.starts_with('function('))
-					url = eval(url)
-					
-				Url_map[key] = url
+				if (typeof url === 'string')
+				{
+					if (url.starts_with('function('))
+						url = eval(url)
+						
+					Url_map[key] = url
+				}
 			})
 			
 			add_some_standard_url_keys()
@@ -211,6 +214,7 @@ function link_to(key)
 
 function add_some_standard_url_keys()
 {
+	Url_map['user.avatar.small'] = function(user_id) { return text('url.uploaded') + text('pages.people.url') + '/' + user_id + '/' + text('url.user avatar') + '/' + text('url.user avatars.small') + '.jpg' }
 	Url_map['user'] = function(id) { return text('pages.people.url') + '/' + id }
 	Url_map['new communication'] = function(type) { return text('url.network') + '/' + text('url.new communication') + '/' + type }
 	Url_map['communication'] = function(type, id) { return text('url.network') + '/' + text('pages.' + type + '.url section') + '/' + id }

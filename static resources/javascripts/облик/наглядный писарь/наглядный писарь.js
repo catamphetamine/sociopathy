@@ -152,7 +152,7 @@ var Visual_editor = new Class
 	{
 		return $('<p/>')
 			.addClass('hint')
-			.text('Введите текст абзаца')
+			.text(text('visual editor.enter your text here'))
 	},
 	
 	insert_paragraph: function()
@@ -169,10 +169,12 @@ var Visual_editor = new Class
 		element.text(text).addClass('hint')
 	},
 	
+	/*
 	tagged_hint: function(element, text)
 	{
 		element.text(text).addClass('tagged_hint')
 	},
+	*/
 	
 	store_content: function()
 	{
@@ -188,6 +190,13 @@ var Visual_editor = new Class
 	{
 		this.editor.focus()
 		this.editor.caret.move_to(this.editor.content[0].firstChild)
+	},
+	
+	html: function()
+	{
+		//this.editor.content.find('.hint').remove()
+		
+		return this.editor.html()
 	},
 
 	can_edit: function()

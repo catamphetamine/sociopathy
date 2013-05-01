@@ -6,6 +6,12 @@ Download the interactive installation script: 'automation/install.sh'.
 Run it as root.
 It will download this repository to your machine and will set it up.
 
+If it doesn't work, look at the /home/sociopathy/repository folder.
+If the cyrillic filenames are seen as question marks there then you need to turn on utf-8 support.
+On russian Ubuntu Server it's made like this:
+sudo update-locale LANG=ru_RU.utf8 LC_MESSAGES=POSIX
+(for this command to take effect you should exit from the OS and log in again)
+
 On Windows:
 
 Install NginX, Mongodb, Redis, Node.js.

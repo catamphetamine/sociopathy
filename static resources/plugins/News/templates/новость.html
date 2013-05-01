@@ -2,7 +2,7 @@
 	<div class="content_wrapper">
 		<div class="content multiline_text rich_formatting">
 			{{if что === 'прописка' }}
-				{{if text('pages.news.news.registration')}}
+				{{if has_text('pages.news.news.registration')}}
 					${text('pages.news.news.registration')}
 				{{else}}
 					{{if пользователь.пол === 'женский'}} прописалась {{else}} прописался {{/if}} в нашей сети

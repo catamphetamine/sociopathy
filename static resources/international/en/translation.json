@@ -89,7 +89,13 @@
 		"network": "/network",
 		"error": "/error",
 		"login required": "/login required",
-		"new communication": "communication"
+		"new communication": "communication",
+		"uploaded": "/загруженное",
+		"user avatar": "картинка",
+		"user avatars":
+		{
+			"small": "маленькая"
+		}
 	},
 	
 	"human readable time":

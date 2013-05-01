@@ -182,7 +182,12 @@ var Режим = (function()
 		{
 			$('[editable=true]').each(function()
 			{
-				$(this)
+				var editable = $(this)
+				
+				if (editable.attr('multiline'))
+					return
+				
+				editable
 					.attr('contenteditable', true)
 					.on_page('keydown.режим_правка', function(event)
 					{

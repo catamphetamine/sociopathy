@@ -2,7 +2,12 @@
 
 @article_side_padding: 80px;
 
-#content.article
+body[mode="правка"] #content
+{
+	margin-bottom: 150px;
+}
+
+#content
 {
 	margin-top: 60px;
 	margin-bottom: 60px;

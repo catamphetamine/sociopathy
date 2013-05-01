@@ -88,7 +88,13 @@
 		"network": "/сеть",
 		"error": "/ошибка",
 		"login required": "/требуется вход",
-		"new communication": "общение"
+		"new communication": "общение",
+		"uploaded": "/загруженное",
+		"user avatar": "картинка",
+		"user avatars":
+		{
+			"small": "маленькая"
+		}
 	},
 	
 	"human readable time":

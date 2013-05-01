@@ -916,7 +916,7 @@ body[mode="правка"] .rich_formatting a
 
 .blurred
 {
-	*, #compose_message > article .hint, #compose_message > article .tagged_hint
+	*, #compose_message > article .hint /*, #compose_message > article .tagged_hint*/
 	{
 		.css_transition_duration(1000ms);
 		.css_transition_property(color, text-shadow);
@@ -1658,15 +1658,6 @@ form.picture_uploader
 				background: #1e5799;
 			}
 		}
-	}
-}
-
-body.with_actions_on_bottom
-{
-	> .actions_on_bottom_gap
-	{
-		display: block;
-		height: 74px;
 	}
 }
 

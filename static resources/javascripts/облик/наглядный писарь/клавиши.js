@@ -100,7 +100,7 @@ Visual_editor.implement
 			event.preventDefault()
 			
 			var container = editor.caret.container()
-			var container_tag = container[0].tagName.toLowerCase()
+			var container_tag = container.node().tagName.toLowerCase()
 			
 			var process_enter_key = function()
 			{
@@ -136,12 +136,12 @@ Visual_editor.implement
 				return { captured: captured }
 			}
 			
-			if (container[0] === editor.content[0])
+			if (container.node() === editor.content.node())
 			{
 				if (Клавиши.is('Enter', event))
 					return visual_editor.enter_pressed_in_container()
 			}
-				
+			
 			var result = process_enter_key()
 			
 			if (!result.captured)

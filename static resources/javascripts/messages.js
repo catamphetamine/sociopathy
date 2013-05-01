@@ -559,7 +559,7 @@ var Messages = new Class
 
 		function send_message()
 		{
-			var html = visual_editor.editor.html()
+			var html = visual_editor.html()
 			
 			if ($.browser.mozilla && Firefox_hack_character)
 				if (html.ends_with(Firefox_hack_character + '</p>'))

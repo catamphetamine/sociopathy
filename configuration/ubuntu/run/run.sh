@@ -17,4 +17,4 @@ echo "Configuration folder: $configuration_folder"
 /usr/bin/nginx &
 /usr/bin/mongod --dbpath ~/database &
 #memcached &
-/usr/bin/coffee code/web/main.coffee -options "{ \"server\": \"$configuration\" }"
+/usr/bin/coffee code/web/main.coffee options "{ \"server\": \"$configuration\" }"

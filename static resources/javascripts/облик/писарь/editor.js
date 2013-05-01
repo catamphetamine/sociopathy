@@ -242,11 +242,13 @@ var Editor = new Class
 			container.removeClass('hint')
 			options.replace = true
 		}
+		/*
 		else if (container.hasClass('tagged_hint'))
 		{
 			container.removeClass('tagged_hint')
 			options.replace_tag = true
 		}
+		*/
 		
 		if (typeof(what) === 'string')
 		{
@@ -278,7 +280,7 @@ var Editor = new Class
 			
 			this.mark(what)
 			
-			if (options.replace_tag)
+			/*if (options.replace_tag)
 			{
 				var node = caret_position.node
 				var parent_container = node.parentNode
@@ -288,7 +290,7 @@ var Editor = new Class
 				
 				return this.unmark()
 			}
-			else if (options.replace)
+			else*/ if (options.replace)
 			{
 				var node = caret_position.node
 				Dom_tools.replace(node, what.node())
@@ -334,6 +336,7 @@ var Editor = new Class
 	
 	insert_text: function(inserted_text, options)
 	{
+		/*
 		if (options.replace_tag)
 		{
 			var container = this.caret.node()
@@ -342,7 +345,8 @@ var Editor = new Class
 			Dom_tools.replace(parent_container, inserted_text)
 			return this.caret.move_to(super_parent_container, inserted_text.length)
 		}
-			
+		*/
+		
 		var caret_position = this.caret.caret_position()
 		var caret_offset = caret_position.offset
 		if (options.replace)

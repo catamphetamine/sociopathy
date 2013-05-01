@@ -100,10 +100,12 @@
 	
 	background-color: white;
 	
+	/*
 	article > p.tagged_hint
 	{
 		text-indent: 0;
 	}
+	*/
 	
 	article
 	{
@@ -149,7 +151,7 @@
 	
 	font-size: 34px;
 	
-	.hint, .tagged_hint
+	.hint /*, .tagged_hint */
 	{
 		color: #7f7f7f !important;
 		/* margin: 0; */
