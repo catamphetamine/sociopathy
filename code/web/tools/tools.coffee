@@ -352,3 +352,30 @@ module.exports = снасти
 
 global.show_error = (ошибка) ->
 	throw { error: ошибка, display_this_error: yes }
+
+global.ошибка = (data) ->
+	if not data?
+		console.log '======================= Unknown Error ========================'
+		console.log(data)
+		console.log '=============================================================='
+		return 
+	
+	if data.client_side?
+		console.log '======================== Client Error ========================'
+	else
+		console.log '=========================== Error ============================'
+	
+	if data.тип?
+		console.log 'Тип: ' + data.тип
+	
+	console.log 'Ошибка: ' + data.ошибка
+	
+	if data.адрес?
+		console.log 'Где: ' + data.адрес
+		
+	if data.пользователь?
+		console.log 'Пользователь: ' + data.пользователь
+		
+	console.log '=============================================================='
+
+	data.когда = new Date()

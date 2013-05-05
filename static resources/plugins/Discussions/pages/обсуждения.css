@@ -7,8 +7,8 @@
 		margin-top: 60px;
 		margin-bottom: 60px;
 		
-		margin-left: 80px;
-		margin-right: 80px;
+		margin-left: 60px;
+		margin-right: 20px;
 		
 		> .breadcrumbs_container
 		{
@@ -82,7 +82,7 @@
 					.when
 					{
 						position: relative;
-						top: 12px;
+						top: 16px;
 						
 						margin-right: 19px;
 						margin-left: 19px;

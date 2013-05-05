@@ -83,8 +83,13 @@
 
 .author_content_date
 {
-	> li:nth-child(odd)
+	> li:nth-child(even)
 	{
 		background-color: #f2f2f2;
 	}
+}
+
+.rich_formatting
+{
+	white-space: normal;
 }

@@ -13,6 +13,9 @@
 		},
 		"new communication":
 		{
+			"title is absent": "Enter the title",
+			"message is absent": "Enter the message text",
+			
 			"communication":
 			{
 				"title": "Title"

@@ -20,9 +20,17 @@
 @top_padding: 5px;
 @bottom_padding: 5px;
 @user_icon_margin: 8px;
-		
+
+#content
+{
+	padding-bottom: 30px;
+	margin-bottom: 0;
+}
+
 .messages_framework
 {
+	margin-bottom: 30px;
+	
 	> .older
 	{
 		text-align: center;
@@ -64,17 +72,6 @@
 				}
 			}
 		}
-	}
-}
-
-.messages_framework .rich_formatting > p, #compose_message .rich_formatting > p
-{
-	text-indent: 0;
-	margin-top: 2px;
-	
-	&:last-child
-	{
-		margin-bottom: 2px;
 	}
 }
 
@@ -168,8 +165,8 @@
 	overflow: hidden;
 	height: @top_padding + @user_icon_size + 2 * @user_icon_margin + @bottom_padding;
 
-	margin-bottom: 40px;
-	margin-top: 40px;
+	margin-bottom: 20px;
+	margin-top: 20px;
 			
 	> .who_is_connected_bar
 	{
@@ -229,8 +226,8 @@
 			margin-bottom: @top_padding;
 			
 			padding: 0;
-			padding-left: 50px;
-			padding-right: 50px;
+			padding-left: 20px;
+			padding-right: 20px;
 			
 			overflow: hidden;
 		

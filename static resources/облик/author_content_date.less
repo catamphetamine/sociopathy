@@ -8,7 +8,7 @@
 @AuthorContentDate_author_icon_margin_left: 20px;
 @AuthorContentDate_time_column_padding: 20px;
 @AuthorContentDate_time_column_width: 220px;
-@AuthorContentDate_user_picture_top: 12px;
+@AuthorContentDate_user_picture_top: 4px;
 @AuthorContentDate_user_picture_left: 16px;
 
 @AuthorContentDate_user_icon_size: @small_user_icon_size;
@@ -60,7 +60,7 @@
 			}
 		}
 	
-		&.odd
+		&.even
 		{
 			background-color: #f6f6f6;
 			
@@ -70,7 +70,7 @@
 			}
 		}
 		
-		> .author
+		.author
 		{
 			padding-left: @AuthorContentDate_author_column_left_padding;
 			padding-right: @AuthorContentDate_author_column_right_padding;
@@ -86,7 +86,7 @@
 			.three_column_layout_left(@AuthorContentDate_author_column_width);
 
 			.exact_width(@AuthorContentDate_author_column_width);
-			.exact_height(@AuthorContentDate_user_picture_top + @AuthorContentDate_user_icon_size + 10px);
+			.exact_height(2 * @AuthorContentDate_user_picture_top + @AuthorContentDate_user_icon_size);
 			
 			> a
 			{
@@ -99,7 +99,7 @@
 					font-size: 26px;
 					
 					display: inline-block;
-					margin-top: 19px;
+					margin-top: 12px;
 					vertical-align: top;
 					
 					max-width: @AuthorContentDate_author_column_width - @AuthorContentDate_user_icon_size - @AuthorContentDate_author_icon_margin_left;
@@ -121,24 +121,37 @@
 			}
 		}
 			
-		.content_wrapper > .content, .when
+		.when
 		{
-			padding-top: 12px;
+			padding-top: 4px;
 		}
 		
 		.content_wrapper
 		{
 			float: left;
 			width: 100%;
+		}
+		
+		.content
+		{
+			font-size: 30px;
+
+			padding-left: @AuthorContentDate_inter_column_padding;
+			padding-right: @AuthorContentDate_inter_column_padding;
 			
-			> .content
+			.three_column_layout_center(@AuthorContentDate_author_column_left_padding + @AuthorContentDate_author_column_width + @AuthorContentDate_author_column_right_padding, @AuthorContentDate_inter_column_padding + @AuthorContentDate_time_column_width + @AuthorContentDate_time_column_padding);
+			
+			&.rich_formatting
 			{
-				font-size: 34px;
-	
-				padding-left: @AuthorContentDate_inter_column_padding;
-				padding-right: @AuthorContentDate_inter_column_padding;
+				font-family: Whitney;
+				font-size: 30px;
+				line-height: 56px;
 				
-				.three_column_layout_center(@AuthorContentDate_author_column_left_padding + @AuthorContentDate_author_column_width + @AuthorContentDate_author_column_right_padding, @AuthorContentDate_inter_column_padding + @AuthorContentDate_time_column_width + @AuthorContentDate_time_column_padding);
+				> p
+				{
+					text-indent: 0;
+					margin: 0;
+				}
 			}
 		}
 			
@@ -153,7 +166,7 @@
 			font-size: 20px;
 			
 			position: relative;
-			top: 13px;
+			top: 16px;
 			
 			.three_column_layout_right(@AuthorContentDate_inter_column_padding + @AuthorContentDate_time_column_width + @AuthorContentDate_time_column_padding);
 			

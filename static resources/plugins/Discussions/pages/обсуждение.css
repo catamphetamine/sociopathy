@@ -1,5 +1,4 @@
 @import "/облик/вспомогательный.less";
-@import "/облик/author_content_date.less";
 
 #content
 {
@@ -19,7 +18,7 @@
 		
 		#discussion.author_content_date
 		{
-			> li.odd
+			> li.even
 			{
 				background-color: #f5ffee;
 				
@@ -28,11 +27,6 @@
 					background-color: #e3fee2;
 				}
 			}
-		}
-		
-		.who_is_connected_container
-		{
-			margin-bottom: 40px;
 		}
 	}
 }

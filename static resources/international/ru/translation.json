@@ -13,6 +13,9 @@
 		},
 		"new communication":
 		{
+			"title is absent": "Введите название",
+			"message is absent": "Введите текст сообщения",
+			
 			"communication":
 			{
 				"title": "Название"

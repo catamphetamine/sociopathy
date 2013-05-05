@@ -27,14 +27,19 @@
 	
 		visual_editor.ctrl_enter_pressed_in_container = function()
 		{
+			var title = page.get('form .title').val().trim()
+			
+			if (!title)
+				return info(text('pages.new communication.title is absent'))
+			
 			var message = Wiki_processor.parse_and_validate(visual_editor.editor.html())
 			
 			if (!message)
-				return
+				return info(text('pages.new communication.message is absent'))
 				
 			page.Ajax.put('/сеть/' + page.data.communication_type.options['new communication type'],
 			{
-				название: page.get('form .title').val(),
+				название: title,
 				сообщение: message,
 				кому: page.data.кому
 			})
