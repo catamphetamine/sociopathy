@@ -44,6 +44,6 @@ module.exports =
 			Host: 'smtp.gmail.com'
 			Port: 465 # 587 #
 	Invites: yes
-	Plugins: ['Library', 'People', 'Help', 'News', 'Chat', 'Talks', 'Discussions', 'Books', 'Bookshelf', 'Circles', 'Settings', 'Trash', 'Administration', 'Errors', 'Picture albums', 'Video albums'] # 'Diary', 'Journal'
+	Plugins: ['Library', 'People', 'Help', 'News', 'Chat', 'Talks', 'Discussions', 'Bookshelf', 'Settings', 'Trash', 'Administration', 'Errors', 'Picture albums', 'Video albums'] # 'Diary', 'Journal', 'Books', 'Circles'
 	Optimize: no
 	#Language: 'ru' # possible values: 'en'. can't be changed 
