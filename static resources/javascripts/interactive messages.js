@@ -1,5 +1,8 @@
 var Interactive_messages = function(options)
 {
+	var Who_is_connected_bar_fade_in_duration = 0.8
+	var Who_is_connected_bar_fade_out_duration = 0.5
+	
 	var away_users = {}
 	
 	var получить_пропущенные_сообщения
@@ -238,7 +241,7 @@ var Interactive_messages = function(options)
 		}
 		
 		messages.who_is_connected_bar_list = page.get('.who_is_connected')
-		messages.who_is_connected_bar_list.parent().floating_top_bar()
+		messages.who_is_connected_bar_list.parent().hide().transparent().floating_top_bar()
 		
 		messages.unload = function()
 		{
@@ -596,6 +599,10 @@ var Interactive_messages = function(options)
 
 	messages.внести_пользователя_в_список_вверху = function(user, options)
 	{
+		// не показывать там самого себя
+		if (user._id === пользователь._id)
+			return
+		
 		if (messages.who_is_connected_bar_list.find('> li[user="' + user._id + '"]').exists())
 			return
 	
@@ -613,6 +620,9 @@ var Interactive_messages = function(options)
 		{
 			icon.appendTo(container)
 		}
+		
+		if (messages.who_is_connected_bar_list.is_empty())
+			messages.who_is_connected_bar_list.parent().fade_in(Who_is_connected_bar_fade_in_duration)
 		
 		if (options)
 			if (options.куда === 'в начало')
@@ -635,6 +645,9 @@ var Interactive_messages = function(options)
 		icon.fadeOut(500, function()
 		{
 			icon.remove()
+			
+			if (messages.who_is_connected_bar_list.is_empty())
+				messages.who_is_connected_bar_list.parent().fade_out(Who_is_connected_bar_fade_out_duration)
 		})
 	}
 	

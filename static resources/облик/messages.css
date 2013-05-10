@@ -215,6 +215,8 @@
 			.css_transition_property(background-color);
 			.css_transition_duration(400ms);
 			.css_transition_easing(ease-in-out);
+			
+			opacity: 0.5;
 		}
 		
 		.who_is_connected
@@ -289,8 +291,7 @@
 			
 			.background
 			{
-				background-color: #000000;
-				opacity: 0.8;
+				background-color: #cfcfcf;
 			}
 		}
 	}

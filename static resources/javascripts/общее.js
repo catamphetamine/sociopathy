@@ -413,6 +413,7 @@ $.fn.on_page_once = function(event, action)
 	cancel = this.on_page(event, new_action)
 }
 
+/*
 function anti_cache_postfix(url)
 {
 	if (!url)
@@ -420,6 +421,7 @@ function anti_cache_postfix(url)
 	
 	return url.before('?') + anti_cache_postfix()
 }
+*/
 
 function dont_show_error(ошибка)
 {

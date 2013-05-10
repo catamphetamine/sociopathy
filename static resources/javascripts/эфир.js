@@ -181,9 +181,11 @@ $(document).on('panel_loaded', function()
 			panel.loading.hide()
 		})
 		
-		on('пользователь', 'смена имени', function(name)
+		on('пользователь', 'смена имени', function(имя)
 		{
-			$('.authenticated_user > .info > .name').text(name)
+			$('.authenticated_user > .info > .name').text(имя)
+			
+			пользователь.имя = имя
 		})
 		
 		on('пользователь', 'настройки.клавиши', function(data)
@@ -195,6 +197,8 @@ $(document).on('panel_loaded', function()
 		{
 			var avatar = $('.authenticated_user .real_picture')
 			avatar.attr('src', set_version(link_to('user.avatar.small', data.пользователь), data.version))
+			
+			пользователь.avatar_version = data.version
 		})
 		
 		on('пользователь', 'не_показывать_подсказку', function(data)

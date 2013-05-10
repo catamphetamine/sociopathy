@@ -410,6 +410,11 @@ $.fn.opaque = function()
 	return this.css({ opacity: 1 })
 }
 
+$.fn.transparent = function()
+{
+	return this.css({ opacity: 0 })
+}
+
 $.fn.outer_html = function()
 {
 	return $('<div/>').append(this.eq(0).clone()).html()
