@@ -2,6 +2,8 @@
 {
 	$.fn.floating_top_bar = function(action, options)
 	{
+		options = options || {}
+		
 		switch (action)
 		{
 			case 'show':
