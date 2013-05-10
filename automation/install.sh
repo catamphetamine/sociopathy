@@ -145,6 +145,10 @@ backup_script=/etc/cron.daily/backup_sociopathy_database.sh
 echo $sociopathy_user_password | sudo -S ln --symbolic repository/automation/backup.sh $backup_script
 echo $sociopathy_user_password | sudo -S chmod +x $backup_script
 #
+monitor_script=monitor.sh
+echo $sociopathy_user_password | sudo -S ln --symbolic repository/automation/monitor.sh $monitor_script
+echo $sociopathy_user_password | sudo -S chmod +x $monitor_script
+#
 update_script=update.sh
 ln --symbolic repository/automation/update.sh $update_script
 echo $sociopathy_user_password | sudo chmod +x $update_script
