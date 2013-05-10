@@ -31,11 +31,11 @@
 	{
 		.rich_formatting
 		{
-			font-family: Whitney;
-			font-size: 30px;
-			line-height: 56px;
+			font-family: @messaging_font;
+			font-size: @messaging_font_size;
+			line-height: @messaging_font_line_height;
 			
-			p
+			> p
 			{
 				margin: 0;
 				text-indent: 0;

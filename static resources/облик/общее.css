@@ -462,7 +462,7 @@ label.error
 {
 	font-family: @textual_font;
 	font-size: @textual_font_size;
-	line-height: @textual_line_height;
+	line-height: @textual_font_line_height;
 }
 
 .textual_content
@@ -714,7 +714,7 @@ body[mode="правка"] .rich_formatting a
 	font-family: @textual_font;
 
 	font-size: @textual_font_size;
-	line-height: @textual_line_height;
+	line-height: @textual_font_line_height;
 
 	white-space: pre-wrap;
 	
@@ -1388,7 +1388,7 @@ label.in-place_input_label
 	{		
 		font-family: @textual_font;
 		font-size: @textual_font_size;
-		line-height: @textual_line_height;
+		line-height: @textual_font_line_height;
 	}
 	
 	.CodeMirror pre

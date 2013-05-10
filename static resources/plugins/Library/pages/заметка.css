@@ -21,7 +21,7 @@ body[mode="правка"] #content
 			font-family: @textual_font;
 		
 			font-size: @textual_font_size;
-			line-height: @textual_line_height;
+			line-height: @textual_font_line_height;
 		}
 		
 		h1, > section
