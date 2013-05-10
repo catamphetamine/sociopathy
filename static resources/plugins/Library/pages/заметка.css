@@ -2,11 +2,13 @@
 
 @article_side_padding: 80px;
 
+/*
 body[mode="правка"] #content
 {
 	margin-bottom: 150px;
 }
-
+*/
+	
 #content
 {
 	margin-top: 60px;
@@ -14,16 +16,18 @@ body[mode="правка"] #content
 	
 	article
 	{
-		padding-left: @article_side_padding;
-		padding-right: @article_side_padding;
-		
-		font-family: @textual_font;
-	
-		font-size: @textual_font_size;
-		line-height: @textual_line_height;
-		
-		h1
+		> section
 		{
+			font-family: @textual_font;
+		
+			font-size: @textual_font_size;
+			line-height: @textual_line_height;
+		}
+		
+		h1, > section
+		{
+			padding-left: @article_side_padding;
+			padding-right: @article_side_padding;
 		}
 	}
 }

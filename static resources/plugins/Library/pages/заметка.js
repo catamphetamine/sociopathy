@@ -31,18 +31,15 @@
 				crumbs.push({ title: раздел_или_заметка , link: link })
 			})
 			
+			crumbs.pop()
+			crumbs.is_article = true
+			
 			return crumbs
 		}
 
 		breadcrumbs(get_breadcrumbs())
 		
-		new Data_templater
-		({
-			template: 'заметка читальни',
-			to: page.get('.main_content'),
-			single: true
-		},
-		new  Data_loader
+		load_content
 		({
 			url: '/читальня/заметка',
 			parameters: { _id: page.data.заметка },
@@ -58,11 +55,21 @@
 				
 				page.data.версия = data.заметка.версия
 
+				page.get('article > h1').text(data.заметка.название)
+				
+				page.get('article > section').html(Wiki_processor.decorate(data.заметка.содержимое,
+				{
+					process_element: function(decorated, wiki)
+					{
+						decorated.attr('author', wiki.attr('author'))
+					}
+				}))
+		
 				return data.заметка
 			},
 			before_done: article_loaded,
 			done: page.initialized
-		}))
+		})
 	}
 	
 	page.unload = function()
@@ -70,6 +77,8 @@
 		if (visual_editor)
 			visual_editor.unload()
 	}
+	
+	var Tools_fade_duration = 0.05
 	
 	function initialize_editor()
 	{
@@ -95,13 +104,26 @@
 		
 		visual_editor.keep_cursor_on_screen()
 		
+		var tools_height
+		
+		$('.visual_editor_tools_container').hide()
+		
 		Режим.при_переходе({ в: 'правка' }, function()
 		{
 			visual_editor.activate_tools_inside_content()
 			visual_editor.editor.content.editable()
 			
-			visual_editor.show_tools()
+			$('.visual_editor_tools_container').fade_in(Tools_fade_duration)
 			
+			if (!tools_height)
+			{
+				tools_height = $('.visual_editor_tools_container').outerHeight(true)
+				
+				visual_editor.show_tools({ duration: 0 })
+			}
+			
+			прокрутчик.scroll_by(tools_height)
+
 			if ($.browser.mozilla)
 				visual_editor.editor.content.focus()
 			
@@ -110,7 +132,13 @@
 		
 		Режим.при_переходе({ из: 'правка' }, function()
 		{
-			visual_editor.hide_tools()
+			//visual_editor.hide_tools({ duration: 0 })
+			
+			$('.visual_editor_tools_container').fade_out(Tools_fade_duration, function()
+			{
+				прокрутчик.scroll_by(-tools_height)
+			})
+
 			visual_editor.unbind()
 			visual_editor.editor.content.not_editable()
 		})
@@ -131,7 +159,7 @@
 	
 	function article_loaded()
 	{
-		postprocess_rich_content($('article'))
+		postprocess_rich_content(page.get('article > section'))
 		
 		initialize_editor()
 		

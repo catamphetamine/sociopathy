@@ -559,3 +559,14 @@ var Data_templater = new Class
 		}
 	}
 })
+
+function load_content(options)
+{
+	var loader = new Data_loader(options)
+	
+	new Data_templater
+	({
+		show: function() {}
+	},
+	loader)
+}

@@ -685,7 +685,7 @@
 				var разделы = []
 					.append(this.разделы.переименованные)
 					.append(this.разделы.новые)
-					
+				
 				Object.for_each(page.Data_store.unmodified_data.разделы, function(_id, раздел)
 				{
 					if (_id === 'новые')

@@ -3,6 +3,10 @@ text_button.add_skin('sociopathy',
 { 
 	path: '/картинки/button',
 	'image format': 'png',
-	height: 59,
-	'side bar size': 28
+	height: 50,
+	'side bar size':
+	{
+		left: 26,
+		right: 24
+	}
 })

@@ -250,6 +250,7 @@ var styles =
 		'generic',
 		'minor',
 		'caution',
+		'extreme caution',
 		'dangerous'
 	]},
 		

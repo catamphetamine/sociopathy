@@ -271,6 +271,11 @@ var Scroller = new Class
 		this.scroll_to_y($(document).height() - $(window).height())
 	},
 	
+	scroll_by: function(how_much)
+	{
+		$(window).scrollTop($(window).scrollTop() + how_much)
+	},
+	
 	scroll_to_y: function(y, options, callback)
 	{
 		options = options || {}

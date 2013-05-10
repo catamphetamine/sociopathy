@@ -73,13 +73,55 @@ netstat -antp | grep 8091
 #
 # install some of the required Node.js packages
 #
-npm install coffee-script
+npm install coffee-script --global
 npm install sync
+npm install forever --global
 #
 # copy the files
 #
 # clone only the most recent revision
 git clone --depth=1 git://github.com/kuchumovn/sociopathy.git repository
+#
+# Check Utf-8 support
+#
+if [ -f "repository/static resources/страницы/основа.html" ]
+then
+	echo "Utf-8 check: OK"
+else
+	echo "Utf-8 check failed."
+	echo "Make sure your locale supports Utf-8."
+	echo ""
+	echo "For example, if the \"locale\" command outputs the following:"
+	echo ""
+	echo "$ locale"
+	echo "LANG="
+	echo "LC_CTYPE=\"POSIX\""
+	echo "LC_NUMERIC=\"POSIX\""
+	echo "LC_TIME=\"POSIX\""
+	echo "LC_COLLATE=\"POSIX\""
+	echo "LC_MONETARY=\"POSIX\""
+	echo "LC_MESSAGES=\"POSIX\""
+	echo "LC_PAPER=\"POSIX\""
+	echo "LC_NAME=\"POSIX\""
+	echo "LC_ADDRESS=\"POSIX\""
+	echo "LC_TELEPHONE=\"POSIX\""
+	echo "LC_MEASUREMENT=\"POSIX\""
+	echo "LC_IDENTIFICATION=\"POSIX\""
+	echo "LC_ALL="
+	echo ""
+	echo "Then it means that your locale is POSIX which is not Utf-8."
+	echo ""
+	echo "To fix this for Linux in Russian we use this command:"
+	echo "sudo update-locale LANG=ru_RU.utf8 LC_MESSAGES=POSIX"
+	echo ""
+	echo "For English language it might look like this:"
+	echo "sudo update-locale LANG=en_US.utf8 LC_MESSAGES=POSIX"
+	echo "(though I've never tried this command because my Linux is in Russian)"
+	echo ""
+	echo "If the command above doesn't work contact me on github and I'll find another solution"
+	#
+	exit 1
+fi
 #
 # maybe redirect all the logs to this folder
 #
@@ -89,11 +131,23 @@ mkdir logs
 #
 mkdir database
 #
+# this is the database backup
+#
+mkdir database_backup
+#
+# process identifiers
+#
+mkdir processes
+#
 # it needs to be backed up daily
 #
 backup_script=/etc/cron.daily/backup_sociopathy_database.sh
-echo $sociopathy_user_password | sudo -S cp repository/automation/backup.sh $backup_script
+echo $sociopathy_user_password | sudo -S ln --symbolic repository/automation/backup.sh $backup_script
 echo $sociopathy_user_password | sudo -S chmod +x $backup_script
+#
+update_script=update.sh
+ln --symbolic repository/automation/update.sh $update_script
+echo $sociopathy_user_password | sudo chmod +x $update_script
 #
 # now you need to create your own configuration files (default settings will do for Ubuntu)
 #
@@ -131,6 +185,20 @@ fi
 #read -p "Hit any key to continue" -e nothing
 
 #
+# To start the application
+#
+start_script=start.sh
+cp repository/automation/start.sh $start_script
+echo $sociopathy_user_password | sudo chmod +x $start_script
+sed "s/{configuration_name}/$configuration_name/g" $start_script
+#
+# To stop the application
+#
+stop_script=stop.sh
+cp repository/automation/stop.sh $stop_script
+echo $sociopathy_user_password | sudo chmod +x $stop_script
+sed "s/{configuration_name}/$configuration_name/g" $stop_script
+#
 # now you need to tell NginX to include your enginex.conf file from you configuration folder
 #
 # 1) open the /etc/nginx/nginx.conf file
@@ -148,7 +216,7 @@ nginx_configuration_already_patched=
 #nginx_configuration_already_patched=`cat $nginx_configuration | grep "\"/home/sociopathy/repository/configuration/$configuration_name/enginex.conf\";"`
 
 if [[ "$nginx_configuration_already_patched" == "" ]]; then
-sudo sed -i -n "H;\${x;s/include \/etc\/nginx\/sites-enabled\/\*;\n/include \"\/home\/sociopathy\/repository\/configuration\/$configuration_name\/enginex.conf\";\n\t\
+echo $sociopathy_user_password | sudo sed -i -n "H;\${x;s/include \/etc\/nginx\/sites-enabled\/\*;\n/include \"\/home\/sociopathy\/repository\/configuration\/$configuration_name\/enginex.conf\";\n\t\
 &/;p;}" $nginx_configuration
 else
 	echo "NginX configuration already patched"

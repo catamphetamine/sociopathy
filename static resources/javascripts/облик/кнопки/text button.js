@@ -132,7 +132,7 @@ var text_button = new Class
 			'min-height': this.skin.height + 'px',
 			'max-height': this.skin.height + 'px',
 
-			'width': this.skin['side bar size'] + 'px',
+			'width': this.skin['side bar size'].left + 'px',
 			
 			'background_position_x': 'left',
 			'background_position_y': 'top',
@@ -182,7 +182,7 @@ var text_button = new Class
 			'min-height': this.skin.height + 'px',
 			'max-height': this.skin.height + 'px',
 
-			'width': this.skin['side bar size'] + 'px',
+			'width': this.skin['side bar size'].right + 'px',
 
 			'background_position_x': 'right',
 			'background_position_y': 'top',

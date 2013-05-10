@@ -474,12 +474,12 @@ label.error
 
 h1
 {
-	font-size: 58px;
+	font-size: 48px;
 }
 
 h2
 {
-	font-size: 50px;
+	font-size: 40px;
 }
 
 h1, h2, h3, h4, h5, h6
@@ -577,7 +577,7 @@ h1, h2, h3, h4, h5, h6
 	
 	.cancel
 	{
-		margin-left: 50px;
+		margin-right: 50px;
 	}
 }
 
@@ -737,6 +737,16 @@ body[mode="правка"] .rich_formatting a
 	p
 	{
 		clear: both;
+	}
+	
+	p:first-child
+	{
+		margin-top: 0;
+	}
+	
+	p:last-child
+	{
+		margin-bottom: 0;
 	}
 	
 	.citation
@@ -1270,9 +1280,6 @@ body[mode="правка"] .rich_formatting a
 	/* to prevent draggable items from being on top of it */
 	z-index: 10;
 	
-	height: 66px;
-	overflow: hidden;
-	
 	display: none;
 
 	width: 100%;
@@ -1292,9 +1299,10 @@ body[mode="правка"] .rich_formatting a
 	left: 0;
 	
 	overflow: hidden;
-	padding-top: 8px;
 	
 	text-align: center;
+	
+	padding-bottom: 1px;
 	
 	.cancel, .done
 	{
@@ -1303,7 +1311,7 @@ body[mode="правка"] .rich_formatting a
 	
 	.cancel
 	{
-		margin-left: 50px;
+		margin-right: 30px;
 	}
 }
 
@@ -1495,8 +1503,6 @@ label.in-place_input_label
 
 .visual_editor_tools_container.floats
 {
-	margin-top: 40px;
-
 	min-height: 2 * @visual_editor_tools_panel_height;
 	/* max-height: 2 * @visual_editor_tools_panel_height; */
 	

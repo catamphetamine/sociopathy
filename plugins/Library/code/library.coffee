@@ -168,7 +168,7 @@ http.post '/сеть/читальня/раздел', (ввод, вывод, по
 			extra_sizes: { 'крошечная обложка': { размер: Options.Library.Category.Icon.Tiny.Size } }
 	
 		finish_picture_upload(options)
-				
+		
 		db('library_categories')._.update({ _id: _id }, { $inc: { 'icon_version': 1 } })
 
 	# переупорядочить переупорядоченные разделы

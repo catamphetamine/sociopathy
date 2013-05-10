@@ -34,8 +34,11 @@ var Режим = (function()
 			перейти_в_режим('обычный')
 		}
 		else
+		{
 			режим = 'обычный'
-			
+			$('body').attr('mode', режим)
+		}
+		
 		проверки_перехода = []
 		
 		разрешённые_режимы = { обычный: true }
@@ -170,6 +173,8 @@ var Режим = (function()
 		var описание_режима = найти_описание_режима(mode)
 		описание_режима.перейти(режим)
 		
+		$('body').attr('mode', описание_режима.название)
+		
 		$(document).trigger('смена_режима', [режим, mode, options])
 	
 		$('*').unbind('.режим_' + режим)
@@ -196,8 +201,6 @@ var Режим = (function()
 					})
 			})
 		}
-		
-		$('body').attr('mode', описание_режима.название)
 		
 		$(document).trigger('режим', mode)
 	}
@@ -338,6 +341,8 @@ var Режим = (function()
 		перейти_в_режим('обычный', { saved: true })
 		actions.slide_out_downwards(300, function()
 		{
+			$('footer').height(0)
+				
 			save_changes_button.unlock()
 		})
 		
@@ -375,6 +380,9 @@ var Режим = (function()
 		actions = $('.edit_mode_actions').clone().addClass('destroyable')
 		actions.appendTo($('body')).move_out_downwards().disableTextSelect()
 		
+		var actions_height = actions.outerHeight()
+		$('footer').height(0)
+		
 		save_changes_button = text_button.new(actions.find('.done'), { 'prevent double submission': true })
 		.does(function()
 		{
@@ -397,6 +405,8 @@ var Режим = (function()
 			if (в === 'правка')
 			{
 				actions.slide_in_from_bottom()
+				
+				$('footer').height(actions_height)
 				
 				$('body').addClass('with_actions_on_bottom')
 				

@@ -1,14 +1,14 @@
 (function()
 {
-	$.fn.floating_top_bar = function(action)
+	$.fn.floating_top_bar = function(action, options)
 	{
 		switch (action)
 		{
 			case 'show':
-				return show_floating_top_bar.bind(this)()
+				return show_floating_top_bar.bind(this)(options)
 				
 			case 'hide':
-				return hide_floating_top_bar.bind(this)()
+				return hide_floating_top_bar.bind(this)(options)
 				
 			case 'unload':
 				var container = this.parent()
@@ -49,12 +49,18 @@
 		прокрутчик.watch(container, 0)
 	}
 	
-	function show_floating_top_bar()
+	function show_floating_top_bar(options)
 	{
-		if (!this.hasClass('sticky'))
-			return this.css({ top: 0 }).fade_in(0.3)
-	
 		this.stop_animation()
+		
+		if (!this.hasClass('sticky'))
+		{
+			var duration = 0.3
+			if (typeof options.duration !== 'undefined')
+				duration = options.duration
+				
+			return this.css({ top: 0 }).fade_in(duration)
+		}
 	
 		if (parseFloat(this.css('top')) === 0)
 			this.move_out_upwards()
@@ -62,10 +68,18 @@
 		this.opaque().slide_in_from_top()
 	}
 	
-	function hide_floating_top_bar()
+	function hide_floating_top_bar(options)
 	{
+		this.stop_animation()
+		
 		if (!this.hasClass('sticky'))
-			return this.css({ top: 0 }).fade_out(0.3)
+		{
+			var duration = 0.3
+			if (typeof options.duration !== 'undefined')
+				duration = options.duration
+				
+			return this.css({ top: 0 }).fade_out(duration, { hide: true })
+		}
 	
 		this.opaque().slide_out_upwards()
 	}

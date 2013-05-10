@@ -54,14 +54,14 @@ Visual_editor.implement
 		}		
 	},
 	
-	show_tools: function()
+	show_tools: function(options)
 	{
-		this.tools_element.floating_top_bar('show')
+		this.tools_element.floating_top_bar('show', options)
 	},
 	
-	hide_tools: function()
+	hide_tools: function(options)
 	{
-		this.tools_element.floating_top_bar('hide')
+		this.tools_element.floating_top_bar('hide', options)
 	},
 	
 	disable_tools: function()
