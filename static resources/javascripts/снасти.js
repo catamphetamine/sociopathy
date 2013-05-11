@@ -126,6 +126,10 @@ var Ajax =
 				
 				if (сообщение === 'Internal Server Error')
 					сообщение = Default_ajax_error_message
+					
+				if (сообщение === 'abort')
+					if (page.navigating_away)
+						return
 				
 				if ($.isFunction(ошибка))
 				{

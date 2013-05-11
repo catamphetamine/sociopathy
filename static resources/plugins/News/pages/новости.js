@@ -16,7 +16,7 @@
 				batch_size: 10,
 				scroll_detector: page.get('#scroll_detector'),
 				before_done: news_loaded,
-				done: page.initialized,
+				done: page.content_ready,
 				before_done_more: function() { ajaxify_internal_links(page.news) },
 				get_data: function(data)
 				{

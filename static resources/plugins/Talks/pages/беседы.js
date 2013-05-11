@@ -53,7 +53,7 @@
 				scroll_detector: page.get('#scroll_detector'),
 				before_done: talks_loaded,
 				before_done_more: function() { ajaxify_internal_links(page.talks) },
-				done: page.initialized,
+				done: page.content_ready,
 				before_output: function(elements)
 				{
 					elements.for_each(function()

@@ -21,7 +21,7 @@
 			before_done: videos_loaded,
 			done: function()
 			{
-				page.initialized()
+				page.content_ready()
 				center_videos_list()
 			},
 			get_data: function(data)

@@ -11,6 +11,9 @@
 		"to": "pages.news.url section",
 		
 		"private": true,
-		"unreadable": true
+		"unreadable": true,
+		
+		"order": 10,
+		"group": "main"
 	}
 }

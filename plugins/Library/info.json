@@ -8,6 +8,9 @@
 	"icon": 
 	{
 		"picture": "читальня",
-		"to": "pages.library.url"
+		"to": "pages.library.url",
+		
+		"order": 50,
+		"group": "main"
 	}
 }

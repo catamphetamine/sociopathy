@@ -118,4 +118,7 @@
 	db('library_paths')._.remove({ заметка: _id })
 	db('library_articles')._.remove({ _id: _id })
 			
+#читальня.escape_path = (path) ->
+#	return path.split('/').map((part) -> снасти.escape_id(part)).join('/')
+			
 global.читальня = читальня

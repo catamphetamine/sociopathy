@@ -6,6 +6,9 @@
 	"icon": 
 	{
 		"picture": "помощь",
-		"to": "pages.help.url"
+		"to": "pages.help.url",
+		
+		"order": 500,
+		"group": "other"
 	}
 }

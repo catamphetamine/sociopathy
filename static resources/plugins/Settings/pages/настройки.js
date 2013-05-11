@@ -21,13 +21,11 @@ title(text('pages.settings.title'));
 	
 		var conditional = initialize_conditional($('.main_conditional'), { immediate: true })
 		
-		new Data_loader
+		load_content
 		({
 			url: '/приложение/сеть/пользователь/настройки',
-			callback: conditional.callback,
 			done: settings_loaded,
 		})
-		.load()
 	}
 	
 	function settings_loaded(настройки)
@@ -38,7 +36,7 @@ title(text('pages.settings.title'));
 		
 		Режим.разрешить('правка')
 		
-		page.initialized()
+		page.content_ready()
 	}
 	
 	function подготовить_режим_правки()

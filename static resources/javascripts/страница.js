@@ -299,7 +299,8 @@ var Page = new Class
 				if (this.is_empty())
 					return
 				
-				this.available_actions_list.destroy()
+				if (this.available_actions_list)
+					this.available_actions_list.destroy()
 			},
 			
 			each: function(method)
@@ -558,13 +559,14 @@ var Page = new Class
 		})
 	},
 	
-	needs_initializing: true,
+	needs_to_load_content: true,
 	
-	initialized: function()
+	content_ready: function()
 	{
+		// actions may need some extra info about the current page (e.g. is the user the author of the discussion, etc)
 		page.create_actions_list()
 		
-		$(document).trigger('page_initialized')
+		$(document).trigger('page_content_ready')
 	},
 	
 	full_load: function(возврат)

@@ -97,24 +97,16 @@ function loading_page(options, callback)
 /**
  * hide loading screen
  */
-function page_loaded()
+function page_initialized()
 {
 	if (first_time_page_loading)
 		first_time_page_loading = false
 		
-	if (!page.needs_initializing)
+	if (!page.needs_to_load_content)
 	{
-		page.initialized()
+		page.content_ready()
 		hide_page_loading_screen()
 	}
-}
-
-function page_initialized()
-{
-	if (!page.needs_initializing)
-		return
-
-	hide_page_loading_screen()
 }
 
 function hide_page_loading_screen()
@@ -220,7 +212,7 @@ function activate_anchors()
 	})
 }
 
-$(document).on('page_loaded', function()
+$(document).on('page_initialized', function()
 {
 	activate_anchors()
 })
@@ -475,7 +467,7 @@ function show_error(выпавшая_ошибка, url, line)
 	}
 	else
 	{
-		page_loaded()
+		page_initialized()
 	}
 	
 	if (error && inform_user)

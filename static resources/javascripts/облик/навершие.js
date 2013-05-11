@@ -372,7 +372,7 @@ function prepare_panel_icons()
 			state_icon.attr('picture', раздел.attr('picture') + ' (' + this + ')')
 			state_icon.attr('title', раздел.attr('title') + ' (' + this + ')')
 			
-			state_icon.append_after(раздел)
+			state_icon.insert_after(раздел)
 		})
 	})
 }
@@ -403,6 +403,7 @@ function add_top_panel_button(plugin)
 	var icon = $('<li/>')
 		.attr('picture', picture)
 		.attr('link', url)
+		.attr('order', this.icon.order)
 		//.text(text(this.title))
 		
 	if (plugin)
@@ -414,5 +415,50 @@ function add_top_panel_button(plugin)
 	if (this.icon.restricted)
 		icon.attr('hidden', true)
 		
-	icon.appendTo('#panel_menu')
+	var menu = $('#panel_menu')
+	var menu_divider = menu.find('.divider')
+	
+	if (typeof this.icon.order === 'undefined')
+	{
+		switch (this.icon.group)
+		{
+			case 'main':
+				return icon.before(menu_divider)
+			
+			case 'other':
+			default:
+				return icon.appendTo(menu)
+		}
+	}
+	
+	var icons = menu.children()
+	
+	var into_main_group = this.icon.group === 'main'
+	var this_group = false
+	
+	var index = 0
+	while (index < icons.length)
+	{
+		if (!into_main_group)
+		{
+			if (!this_group)
+			{
+				if (icons[index] === menu_divider.node())
+					this_group = true
+			
+				index++
+				continue
+			}
+		}
+		
+		var another_icon = $(icons[index])
+		var order = another_icon.attr('order')
+		
+		if (typeof order === 'undefined' || order >= this.icon.order)
+			return icon.insert_before(another_icon)
+		
+		index++
+	}
+	
+	icon.appendTo(menu)
 }

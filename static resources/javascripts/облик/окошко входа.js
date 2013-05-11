@@ -73,7 +73,7 @@ var войти
 				enter_window.open()
 	}
 	
-	$(document).on('page_loaded', function()
+	$(document).on('page_initialized', function()
 	{
 		if (first_time_page_loading)
 			initialize_enter_window()

@@ -196,7 +196,7 @@ function simple_value_dialog_window(options)
 			dialog_window.close((function()
 			{
 				if (options.when_closed)
-					options.when_closed.bind(this)()
+					options.when_closed.bind(dialog_window)()
 					
 				if (callback)
 					callback()

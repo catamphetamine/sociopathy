@@ -20,7 +20,7 @@ title(text('pages.people.title'));
 				{
 					parse_dates(people, 'время рождения')
 				},
-				on_first_output: page.initialized
+				on_first_output: page.content_ready
 			},
 			container: page.people,
 			template: 'личная карточка',

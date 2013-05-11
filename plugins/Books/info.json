@@ -10,6 +10,9 @@
 		"picture": "книги",
 		"to": "pages.books.url section",
 		
-		"private": true
+		"private": true,
+		
+		"order": 800,
+		"group": "other"
 	}
 }

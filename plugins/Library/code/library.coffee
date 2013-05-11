@@ -76,7 +76,7 @@ http.get "/читальня/заметка", (ввод, вывод) ->
 	вывод.send(заметка: заметка)
 			
 http.get "/раздел или заметка", (ввод, вывод) ->
-	раздел_или_заметка = db('library_paths')._.find_one({ путь: ввод.данные.путь })
+	раздел_или_заметка = db('library_paths')._.find_one({ путь: ввод.данные.путь }) # library_tools.escape_path(ввод.данные.путь) })
 			
 	if not раздел_или_заметка?
 		ошибка = 
@@ -165,7 +165,7 @@ http.post '/сеть/читальня/раздел', (ввод, вывод, по
 			временное_название: раздел.icon
 			место: '/читальня/разделы/' + раздел._id
 			название: 'обложка'
-			extra_sizes: { 'крошечная обложка': { размер: Options.Library.Category.Icon.Tiny.Size } }
+			extra_sizes: { 'крошечная обложка': { crop: yes, ширина: Options.Library.Category.Icon.Tiny.Width, высота: Options.Library.Category.Icon.Tiny.Height } }
 	
 		finish_picture_upload(options)
 		

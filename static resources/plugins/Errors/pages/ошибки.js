@@ -28,7 +28,7 @@
 				},
 				before_done: data_loaded,
 				before_done_more: function() { ajaxify_internal_links(page.errors) },
-				done: page.initialized
+				done: page.content_ready
 			})
 		})
 	}

@@ -8,6 +8,9 @@
 	"icon": 
 	{
 		"picture": "люди",
-		"to": "pages.people.url"
+		"to": "pages.people.url",
+		
+		"order": 600,
+		"group": "other"
 	}
 }

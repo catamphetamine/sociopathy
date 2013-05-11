@@ -10,7 +10,12 @@ initialization_data = (ввод) ->
 	locales = require('./../tools/locale').list(ввод)
 	locale = locales.best()
 	
-	data.язык = locale.language
+	if Options.Language?
+		data.язык = Options.Language
+		data.language_is_fixed = yes
+	else
+		data.язык = locale.language
+		
 	data.страна = locale.country
 	
 	data.языки = locales.languages()

@@ -21,7 +21,7 @@
 			before_done: albums_loaded,
 			done: function()
 			{
-				page.initialized()
+				page.content_ready()
 				center_albums_list()
 			},
 			get_data: function(data)

@@ -1,3 +1,3 @@
 title('Галерея. Помощь')
 
-page.needs_initializing = false
+page.needs_to_load_content = false

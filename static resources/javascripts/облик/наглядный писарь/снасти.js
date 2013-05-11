@@ -1131,6 +1131,7 @@ Visual_editor.implement
 					},
 					when_closed: function()
 					{
+						console.log(this)
 						this.xml_editor.toTextArea()
 					},
 					ok: function(xml)
@@ -1394,7 +1395,7 @@ Visual_editor.implement
 })
 
 // disable on blur / enable on focus
-$(document).on('page_loaded', function()
+$(document).on('page_initialized', function()
 {
 	if (!first_time_page_loading)
 		return

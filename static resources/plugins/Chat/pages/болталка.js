@@ -27,7 +27,7 @@
 			//show_editor: true,
 			edit_path: 'болталка',
 			on_load: chat_loaded,
-			on_first_output: page.initialized,
+			on_first_output: page.content_ready,
 			on_message_bottom_appears: function(_id)
 			{
 				Новости.прочитано({ болталка: _id })

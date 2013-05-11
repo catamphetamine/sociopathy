@@ -111,7 +111,7 @@
 							{
 								ajaxify_internal_links(page.discussions)
 							},
-							done: page.initialized,
+							done: page.content_ready,
 							before_output: function(elements)
 							{
 								elements.for_each(function()

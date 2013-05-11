@@ -309,7 +309,7 @@ label.error
 	
 	margin: 0;
 	margin-top: 4px;
-	margin-right: 14px;
+	margin-right: 2px;
 	
 	z-index: 1;
 }
@@ -712,7 +712,6 @@ body[mode="правка"] .rich_formatting a
 .rich_formatting
 {
 	font-family: @textual_font;
-
 	font-size: @textual_font_size;
 	line-height: @textual_font_line_height;
 
@@ -1742,5 +1741,19 @@ form.picture_uploader
 	.main_content
 	{
 		white-space: pre-wrap;
+	}
+}
+
+.small_avatar
+{
+	display: inline-block;
+	border: 0;
+}
+
+.authenticated_user
+{	
+	.small_avatar
+	{
+		display: none;
 	}
 }

@@ -29,6 +29,11 @@
 	
 	> .compose_message
 	{
+		article
+		{
+			margin-left: 80px;
+			margin-right: 80px;
+		}
 	}
 	
 	.save

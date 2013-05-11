@@ -67,7 +67,7 @@
 				},
 				before_done: data_loaded,
 				before_done_more: function() { ajaxify_internal_links(page.trash) },
-				done: page.initialized
+				done: page.content_ready
 			})
 		})
 	}

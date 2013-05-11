@@ -37,7 +37,7 @@
 		var conditional = initialize_conditional($('.main_conditional'), { immediate: true })
 		conditional.on_error(function()
 		{
-			page.initialized()
+			page.content_ready()
 		})
 		
 		new Data_templater
@@ -217,7 +217,7 @@
 	
 	function id_card_loaded()
 	{
-		page.initialized()
+		page.content_ready()
 	}
 	
 	function show_photo()

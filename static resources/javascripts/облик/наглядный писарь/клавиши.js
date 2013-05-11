@@ -243,6 +243,49 @@ Visual_editor.implement
 		{
 			if (!visual_editor.can_edit())
 				return
+			
+			if (Клавиши.is('Delete', event))
+			{
+				var focused = editor.caret.container()
+				
+				if (focused.hasClass('hint'))
+				{
+					focused.removeClass('hint').text('')
+					return false
+				}
+				
+				return
+			}
+			
+			if (Клавиши.is('Backspace', event))
+			{
+				var focused = editor.caret.container()
+				
+				if (focused.hasClass('hint'))
+				{
+					var previous = focused.prev()
+					var next = focused.next()
+						
+					if (!previous.exists() && !next.exists())
+					{
+						focused.removeClass('hint').text('')
+						editor.caret.move_to(focused)
+					}
+					else
+					{
+						focused.remove()
+						
+						if (previous.exists())
+							editor.caret.move_to_the_end_of(previous)
+						else
+							editor.caret.move_to(next)
+					}
+					
+					return false
+				}
+					
+				return
+			}
 		})
 	},
 	

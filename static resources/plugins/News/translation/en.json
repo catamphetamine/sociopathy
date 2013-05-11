@@ -3,9 +3,9 @@
 	{
 		"news":
 		{
-			"url section": "news",
+			"url section": "feed",
 			
-			"title": "News",
+			"title": "Feed",
 			
 			"circle": "Circle",
 			

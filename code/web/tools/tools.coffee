@@ -305,8 +305,10 @@ file_system = require 'fs'
 	return batch
 			
 снасти.escape_id = (id) ->
-	'/\?@#&%*:|"\'<>.'.split('').forEach((symbol) -> id = id.replace_all(symbol, ''))
-	id
+	'/\?@#&%*:|"\'<>.'.split('').concat(['\r', '\n', '\t']).forEach((symbol) -> id = id.replace_all(symbol, ' '))
+	while id.contains('  ')
+		id = id.replace_all('  ', ' ')
+	id.trim()
 	
 Digit_symbols = '☀★☄☆☭☮☯☢☤☣☁'
 

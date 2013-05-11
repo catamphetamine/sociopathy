@@ -110,8 +110,12 @@ var Visual_editor = new Class
 			// if bottom is visible - return
 			if (paragraph_bottom_needs_to_be_visible <= 0 && paragraph_top_needs_to_be_visible <= 0)
 				return
-					
-			var left_to_scroll = $(document).height() - window_bottom_coordinate
+			
+			// если низ не влез, но показ низа скроет верх - ничего не делать
+			if (paragraph_bottom_needs_to_be_visible + paragraph_top_needs_to_be_visible > 0)
+				return
+				
+			var left_to_scroll_down = $(document).height() - window_bottom_coordinate
 			var how_much_can_scroll_top = window_top_coordinate
 			
 			/*
@@ -126,20 +130,22 @@ var Visual_editor = new Class
 			console.log(paragraph_bottom_needs_to_be_visible)
 			console.log('paragraph_top_needs_to_be_visible')
 			console.log(paragraph_top_needs_to_be_visible)
-			console.log('left_to_scroll')
-			console.log(left_to_scroll)
+			console.log('left_to_scroll_down')
+			console.log(left_to_scroll_down)
 			*/
 			
-			if (left_to_scroll > 0 && paragraph_bottom_needs_to_be_visible)
+			if (paragraph_bottom_needs_to_be_visible > 0
+				&& paragraph_bottom_needs_to_be_visible < left_to_scroll_down)
 			{
-				return $(window).scrollTop($(window).scrollTop() + paragraph_bottom_needs_to_be_visible)
+				return прокрутчик.scroll_by(paragraph_bottom_needs_to_be_visible)
 			}
 				
 			//console.log(paragraph_top_needs_to_be_visible + paragraph_bottom_needs_to_be_visible)
 			
+			// hz
 			if (paragraph_top_needs_to_be_visible <= -paragraph_bottom_needs_to_be_visible)
 				if (how_much_can_scroll_top > 0)
-					$(window).scrollTop($(window).scrollTop() - paragraph_top_needs_to_be_visible)
+					прокрутчик.scroll_by(paragraph_top_needs_to_be_visible)
 		})
 	},
 	

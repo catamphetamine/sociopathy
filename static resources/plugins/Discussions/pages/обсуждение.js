@@ -51,7 +51,7 @@
 			//show_editor: true,
 			edit_path: 'обсуждения',
 			on_load: discussion_loaded,
-			on_first_output: page.initialized,
+			on_first_output: page.content_ready,
 			on_message_bottom_appears: function(_id)
 			{
 				Новости.прочитано({ обсуждение: page.data.общение._id, сообщение: _id })

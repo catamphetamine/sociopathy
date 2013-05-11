@@ -16,6 +16,8 @@ body[mode="правка"] #content
 	
 	article
 	{
+		margin-top: 60px;
+		
 		> section
 		{
 			font-family: @textual_font;

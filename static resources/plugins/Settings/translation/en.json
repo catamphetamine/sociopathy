@@ -12,6 +12,8 @@
 			"language": "Language",
 			"language_not_specified": "detect automatically",
 			
+			"hotkeys": "Hotkeys",
+			
 			"modes":
 			{
 				"title": "Modes"

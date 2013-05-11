@@ -10,6 +10,9 @@
 		"picture": "круги",
 		"to": "pages.circles.url section",
 		
-		"private": true
+		"private": true,
+		
+		"order": 900,
+		"group": "other"
 	}
 }

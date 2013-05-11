@@ -12,6 +12,8 @@
 			"language": "Язык",
 			"language_not_specified": "по умолчанию",
 			
+			"hotkeys": "Горячие клавиши",
+			
 			"modes":
 			{
 				"title": "Режимы",

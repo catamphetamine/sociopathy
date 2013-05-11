@@ -878,12 +878,12 @@ $.fn.once_on = function(event, action)
 	})
 }
 
-$.fn.append_after = function(element)
+$.fn.insert_after = function(element)
 {
 	element.after(this)
 }
 
-$.fn.append_before = function(element)
+$.fn.insert_before = function(element)
 {
 	element.before(this)
 }

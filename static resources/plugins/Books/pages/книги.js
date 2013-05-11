@@ -147,7 +147,7 @@
 	
 	function books_loaded()
 	{
-		page.initialized()
+		page.content_ready()
 		
 		center_books()
 		

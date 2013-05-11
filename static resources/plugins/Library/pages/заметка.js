@@ -68,7 +68,7 @@
 				return data.заметка
 			},
 			before_done: article_loaded,
-			done: page.initialized
+			done: page.content_ready
 		})
 	}
 	

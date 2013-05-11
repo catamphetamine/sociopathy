@@ -11,6 +11,9 @@
 		"to": "pages.discussions.url section",
 		
 		"private": true,
-		"unreadable": true
+		"unreadable": true,
+		
+		"order": 30,
+		"group": "main"
 	}
 }

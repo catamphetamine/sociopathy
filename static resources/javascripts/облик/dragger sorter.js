@@ -95,11 +95,11 @@ var Dragger_sorter = new Class
 		
 		if (!element.lies_after(below.element))
 		{
-			element.append_after(below.element)
+			element.insert_after(below.element)
 		}
 		else
 		{
-			element.append_before(below.element)
+			element.insert_before(below.element)
 		}
 			
 		this.dragged_element_in_place_position =

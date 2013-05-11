@@ -11,6 +11,9 @@
 		"to": "pages.errors.url section",
 		
 		"private": true,
-		"restricted": true
+		"restricted": true,
+		
+		"order": 1050,
+		"group": "other"
 	}
 }

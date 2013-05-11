@@ -26,9 +26,11 @@ module.exports =
 		Category:
 			Icon:
 				Generic:
-					Size: 250
+					Width: 300
+					Height: 200
 				Tiny:
-					Size: 38
+					Width: 57
+					Height: 38
 	Books:
 		Cover:
 			Big:
@@ -46,4 +48,4 @@ module.exports =
 	Invites: yes
 	Plugins: ['Library', 'People', 'Help', 'News', 'Chat', 'Talks', 'Discussions', 'Bookshelf', 'Settings', 'Trash', 'Administration', 'Errors', 'Picture albums', 'Video albums'] # 'Diary', 'Journal', 'Books', 'Circles'
 	Optimize: no
-	#Language: 'ru' # possible values: 'en'. can't be changed 
+	Language: 'ru' # possible values: 'ru', 'en'

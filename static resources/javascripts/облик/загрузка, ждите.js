@@ -144,13 +144,13 @@ var loading_indicator = new (function()
 	}
 })()
 
-$(document).on('page_loaded', function()
+$(document).on('page_initialized', function()
 {
 	loading_indicator.initialize()
 })
 
 /*
-$(document).on('page_loaded', function()
+$(document).on('page_initialized', function()
 {
 	setTimeout(function()
 	{

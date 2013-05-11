@@ -86,6 +86,8 @@ var get_page_less_style_link
 			if (!Страница.эта())
 				return
 	
+			page.navigating_away = true
+	
 			page.full_unload()
 			
 			if (options.set_new_url)
@@ -119,7 +121,7 @@ var get_page_less_style_link
 						page.data.scroll_to = options.state.scrolled
 					}
 		
-					$(document).trigger('page_loaded')
+					$(document).trigger('page_initialized')
 				}
 				
 				if (ошибка)
@@ -127,8 +129,9 @@ var get_page_less_style_link
 					var error = $('<div/>').addClass('error')
 					error.append(ошибка_на_экране(ошибка))
 					Page.element.empty().append(error)
-					finish()
-					page.initialized()
+					
+					page.needs_to_load_content = false
+					return finish()
 				}
 					
 				вставить_содержимое_страницы(finish)
@@ -144,8 +147,9 @@ var get_page_less_style_link
 		
 		page.data.данные_для_страницы = данные_пользователя
 		
-		if (Язык !== данные_пользователя.язык)
-			page.Ajax.put('/сеть/пользователь/язык', { язык: Язык })
+		if (!Configuration.Locale.Fixed)
+			if (Язык !== данные_пользователя.язык)
+				page.Ajax.put('/сеть/пользователь/язык', { язык: Язык })
 		
 		if (!first_time_page_loading)
 			panel.highlight_current_page(page)
@@ -175,7 +179,7 @@ var get_page_less_style_link
 			{
 				теперь_вставить_содержимое_страницы('/plugins/' + plugin + '/pages/' + Страница.эта().substring(plugin.length + 1))
 			}
-			else
+			else // if (страница !== '_wait_')
 			{
 				теперь_вставить_содержимое_страницы('/страницы/' + Страница.эта())
 			}

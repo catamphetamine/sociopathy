@@ -1,6 +1,6 @@
 (function()
 {
-	page.needs_initializing = false
+	page.needs_to_load_content = false
 	
 	page.load = function()
 	{

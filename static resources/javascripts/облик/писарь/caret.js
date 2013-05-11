@@ -77,7 +77,7 @@ Editor.Caret = new Class
 				return result
 			}
 			
-			node = editor.content[0]
+			node = editor.content.node()
 			offset = node.childNodes.length
 			
 			caret.move_to(node, offset)
@@ -149,12 +149,14 @@ Editor.Caret = new Class
 		if (options.to_the_end)
 			offset = element.nodeValue.length
 		
-		if ($.browser.webkit)
-			if (!options.to_the_end)
-				offset = offset + 1
-		
+		if (!element.nodeValue)
+			element.nodeValue = ' '
+			
 		if ($.browser.webkit)
 		{
+			//if (!options.to_the_end)
+			//	offset = offset + 1
+		
 			// просто на offset - не встаёт
 			return this.create(element, offset)
 		}

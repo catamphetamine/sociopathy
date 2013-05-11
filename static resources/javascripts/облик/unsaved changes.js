@@ -2,7 +2,7 @@
 
 var discard_changes_confirmation
 
-$(document).on('page_loaded', function()
+$(document).on('page_initialized', function()
 {
 	if (!first_time_page_loading)
 		return

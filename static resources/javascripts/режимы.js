@@ -584,7 +584,7 @@ var Режим = (function()
 	return result
 })()
 
-$(document).on('page_loaded', function() 
+$(document).on('page_initialized', function() 
 {
 	if (!first_time_page_loading)
 		return

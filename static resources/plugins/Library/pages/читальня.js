@@ -96,7 +96,7 @@
 				before_done: categories_loaded,
 				done: function()
 				{
-					page.initialized()
+					page.content_ready()
 					
 					center_categories_list()
 				}

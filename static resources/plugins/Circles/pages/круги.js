@@ -15,7 +15,7 @@ title(text('pages.circles.title'));
 		new  Data_loader
 		({
 			url: '/приложение/сеть/круги',
-			done: page.initialized,
+			done: page.content_ready,
 			before_done: circles_loaded,
 			get_data: function(data)
 			{

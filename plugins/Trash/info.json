@@ -10,6 +10,9 @@
 		"picture": "мусорка",
 		"to": "pages.trash.url section",
 		
-		"private": true
+		"private": true,
+		
+		"order": 850,
+		"group": "other"
 	}
 }

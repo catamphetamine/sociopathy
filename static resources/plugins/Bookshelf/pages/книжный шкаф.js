@@ -123,7 +123,7 @@
 			Режим.разрешить('правка')
 		}
 		
-		page.initialized()
+		page.content_ready()
 	}
 	
 	function create_context_menu(book)

@@ -31,7 +31,7 @@ actions['/сеть/человек/картинка'] = (ввод, вывод) ->
 	upload_image(ввод, вывод, { размер: Options.User.Picture.Generic.Size })
 
 actions['/сеть/читальня/раздел/картинка'] = (ввод, вывод) ->
-	upload_image(ввод, вывод, { размер: Options.Library.Category.Icon.Generic.Size })
+	upload_image(ввод, вывод, { crop: yes, ширина: Options.Library.Category.Icon.Generic.Width, высота: Options.Library.Category.Icon.Generic.Height })
 	
 actions['/сеть/человек/фотография'] = (ввод, вывод) ->
 	upload_image(ввод, вывод, { наибольший_размер: Options.User.Photo.Size })
@@ -92,7 +92,11 @@ global.resize = (что, во_что, настройки, возврат) ->
 		options.customArgs.add(настройки.размер + 'x' + настройки.размер)
 	else
 		options.width = настройки.ширина
-		options.height = настройки.высота + '>'
+			
+		if not настройки.crop?
+			options.height = настройки.высота + '>'
+		else	
+			options.height = настройки.высота + '^'
 		
 	# gravitate to center
 	options.customArgs.add('-gravity')

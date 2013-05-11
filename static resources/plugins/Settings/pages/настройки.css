@@ -36,7 +36,7 @@
 	
 	margin-left: 10px;
 	
-	margin-top: 30px;
+	margin-top: 40px;
 	
 	background-color: white;
 	box-shadow: 0 0 20px white;
@@ -45,6 +45,7 @@
 .language_block
 {
 	display: inline-block;
+	display: none;
 	
 	border-radius: 10px;
 	padding: 5px;
@@ -94,9 +95,9 @@
 
 .shortcuts
 {
-	margin-top: 60px;
+	margin-top: 90px;
 	margin-bottom: 60px;
-	margin-left: 10px;
+	margin-left: 60px;
 	
 	border-radius: 10px;
 	
@@ -108,6 +109,11 @@
 	
 	padding-top: 14px;
 	padding-bottom: 14px;
+	
+	> .title
+	{
+		margin-left: -50px;
+	}
 	
 	> ul:last-child
 	{

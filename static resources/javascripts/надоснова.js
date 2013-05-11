@@ -62,20 +62,20 @@ $(document).on('scripts_loaded', function()
 	})
 })
 
-$(document).on('page_initialized', function()
+$(document).on('page_content_ready', function()
 {
 	activate_anchors()
 	ajaxify_internal_links(Page.element)
 	
 	page.Data_store.initialize(function(data)
 	{
-		page_initialized()
+		hide_page_loading_screen()
 	})
 })
 
 var can_navigate_to_page = false
 
-$(document).on('page_loaded', function()
+$(document).on('page_initialized', function()
 {
 	var after_styles = function()
 	{
@@ -96,12 +96,12 @@ $(document).on('page_loaded', function()
 		page.full_load(function()
 		{
 			ajaxify_internal_links()
-		
+			
 			$(document).trigger('display_page')
 			
 			$('.non_selectable').disableTextSelect()
 			
-			$(document).on_page_once('page_initialized', function()
+			$(document).on_page_once('page_content_ready', function()
 			{
 				if (page.data.scroll_to)
 					$(window).scrollTop(page.data.scroll_to)
@@ -109,7 +109,7 @@ $(document).on('page_loaded', function()
 					go_to_anchor()
 			})
 
-			page_loaded()
+			page_initialized()
 			
 			can_navigate_to_page = true
 			

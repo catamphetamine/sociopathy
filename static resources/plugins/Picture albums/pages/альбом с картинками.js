@@ -21,7 +21,7 @@
 			before_done: pictures_loaded,
 			done: function()
 			{
-				page.initialized()
+				page.content_ready()
 				center_pictures_list()
 			},
 			get_data: function(data)

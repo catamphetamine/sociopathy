@@ -11,6 +11,9 @@
 		"to": "pages.chat.url section",
 		
 		"private": true,
-		"unreadable": true
+		"unreadable": true,
+		
+		"order": 20,
+		"group": "main"
 	}
 }

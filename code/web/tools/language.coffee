@@ -207,3 +207,6 @@ String.prototype.after = (what) ->
 		return @substring(index + what.length)
 		
 	return @
+
+String.prototype.contains = (what) ->
+	return @indexOf(what) >= 0

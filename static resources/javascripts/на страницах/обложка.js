@@ -2,7 +2,7 @@
 {
 	title(text('pages.main.title'))
 
-	page.needs_initializing = false
+	page.needs_to_load_content = false
 
 	var gender_chooser
 	
