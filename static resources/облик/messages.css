@@ -120,8 +120,6 @@
 		padding-left: @author_column_left_padding + @author_column_width + @author_column_right_padding + @inter_column_padding;
 		padding-right: @inter_column_padding + @time_column_width + @time_column_padding + @inter_column_padding;
 		
-		font-size: 34px;
-		
 		.hint /*, .tagged_hint */
 		{
 			color: #7f7f7f !important;
