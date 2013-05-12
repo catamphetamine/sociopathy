@@ -10,6 +10,8 @@ $(document).on('panel_loaded', function()
 	if (!пользователь)
 		return
 
+	panel.loading.show()
+
 	(function()
 	{
 		var эфир
@@ -40,8 +42,6 @@ $(document).on('panel_loaded', function()
 		}
 		
 		Эфир.следить_за_пользователем(пользователь)
-		
-		console.log('Connecting to ' + Configuration.Websocket_server())
 		
 		эфир = io.connect('http://' + Configuration.Websocket_server() + '/эфир', { transports: ['websocket'] })
 		эфир.is_ready = false

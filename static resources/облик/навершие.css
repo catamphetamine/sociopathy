@@ -161,6 +161,8 @@ a.image
 
 #panel_menu > li > .loading
 {
+	display: none;
+	
 	width: 16px;
 	height: 16px;
 	
