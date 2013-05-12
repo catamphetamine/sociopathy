@@ -8,8 +8,8 @@ var page
 var host = Uri.parse().host
 var port = Uri.parse().port
 
-Configuration = Object.x_over_y
-({
+Configuration = Object.x_over_y(Configuration,
+{
 	Host: host,
 	Port: port,
 	Upload_server_port: 8091,
@@ -37,8 +37,7 @@ Configuration = Object.x_over_y
 		Fade_in: 0.1,
 		Fade_out: 0.1
 	}
-},
-Configuration)
+})
 
 проверить_доступ(Uri.parse().path)
 
