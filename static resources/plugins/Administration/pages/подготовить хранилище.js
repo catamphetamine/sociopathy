@@ -1,8 +1,6 @@
 (function()
 {
 	title(text('pages.administration.initialize.title'))
-
-	page.needs_to_load_content = false
 	
 	page.load = function()
 	{
@@ -17,6 +15,18 @@
 			{
 				go_to('/?войти=true')
 			})
+		})
+		
+		page.Ajax.get('/хранилище/создано ли')
+		.ok(function(data)
+		{
+			if (data.создано)
+			{
+				page.get('.initialize').hide()
+				page.get('.already_initialized').show()
+			}
+			
+			page.content_ready()
 		})
 	}
 })()

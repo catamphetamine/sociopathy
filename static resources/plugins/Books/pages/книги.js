@@ -114,7 +114,6 @@
 
 		page.book_cover_uploader = new Picture_uploader
 		({
-			namespace: '.режим_правка',
 			uploading_screen_target: '.cover_image',
 			max_size: 0.5,
 			max_size_text: '500 килобайтов',
@@ -122,6 +121,18 @@
 			element: function()
 			{
 				return this.book
+			},
+			on_choose: function(book)
+			{
+				this.book = book
+			},
+			namespace: 'режим_правка',
+			listener: function(listen)
+			{
+				Режим.при_переходе({ в: 'правка' }, function(event)
+				{
+					listen()
+				})
 			},
 			ok: function(data, element)
 			{
@@ -154,8 +165,6 @@
 		Режим.при_переходе({ в: 'правка' }, function()
 		{
 			//page.get('.empty').hide()
-			
-			page.book_cover_uploader.activate()
 		})
 	}
 	
@@ -273,14 +282,6 @@
 		})
 	}
 	
-	function choose_book_cover()
-	{
-		var book = $(this) //.find_parent('li')
-			
-		page.book_cover_uploader.book = book
-		page.book_cover_uploader.choose()
-	}
-	
 	function populate(template)
 	{
 		return function(data)
@@ -332,7 +333,10 @@
 			
 			page.books.children().each(function()
 			{
-				$(this).on('clicked.режим_правка', choose_book_cover)
+				$(this).on('clicked.режим_правка', function()
+				{
+					page.book_cover_uploader.choose(this)
+				})
 			})
 		},
 		

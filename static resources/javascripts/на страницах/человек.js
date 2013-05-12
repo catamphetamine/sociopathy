@@ -2,7 +2,6 @@
 {
 	var id_card
 	var online_status
-	var avatar
 	var content
 
 	page.query('.photo', 'photo')
@@ -150,7 +149,7 @@
 			actions.show()
 		}
 	
-		avatar = id_card.find('.picture')
+		page.avatar = id_card.find('.picture')
 	
 		online_status =
 		{
@@ -303,9 +302,6 @@
 		{
 			if (page.photo.hidden())
 				page.photo.show()
-				
-			page.avatar_uploader.activate()
-			page.photo_uploader.activate()
 				
 			//the_picture.animate({ 'boxShadow': '0 0 20px ' + highlight_color })
 		})
@@ -500,13 +496,20 @@
 		
 		page.avatar_uploader = new Picture_uploader
 		({
-			namespace: '.режим_правка',
 			max_size: 0.5,
 			max_size_text: '500 килобайтов',
 			url: '/сеть/человек/картинка',
 			element: function()
 			{
-				return id_card.find('.picture')
+				return page.avatar
+			},
+			namespace: 'режим_правка',
+			listener: function(listen)
+			{
+				Режим.при_переходе({ в: 'правка' }, function(event)
+				{
+					listen()
+				})
 			},
 			ok: function(data, element)
 			{
@@ -518,7 +521,6 @@
 		
 		page.photo_uploader = new Picture_uploader
 		({
-			namespace: '.режим_правка',
 			max_size: 10,
 			max_size_text: '10-ти мегабайтов',
 			url: '/сеть/человек/фотография',
@@ -526,6 +528,15 @@
 			{
 				return page.photo
 			},
+			namespace: 'режим_правка',
+			listener: function(listen)
+			{
+				Режим.при_переходе({ в: 'правка' }, function(event)
+				{
+					listen()
+				})
+			},
+			uploading_text_minimum_width: 230,
 			uploading_screen_size: function(element)
 			{
 				var size =
@@ -553,18 +564,7 @@
 	
 		Режим.при_переходе({ в: 'правка' }, function(event)
 		{
-			//info('Вы можете сменить картинку (120 на 120), нажав на неё.')
-	
-			// avatar
-	
-			var file_chooser = $('.upload_new_picture')
-			
-			avatar.on('click.режим_правка', function(event)
-			{
-				event.preventDefault()
-				page.avatar_uploader.choose()
-			})
-			
+
 			page.photo.find('> img').on('click.режим_правка', function(event)
 			{
 				event.preventDefault()

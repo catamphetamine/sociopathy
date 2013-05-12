@@ -17,26 +17,26 @@ var Uploader = new Class
 		}
 	},
 	
-	initialize: function(input, options)
+	initialize: function(options)
 	{
 		this.setOptions(options)
 	
 		if (!this.options.Ajax)
 			return alert('Uploader needs an Ajax option')
 		
+		/*
+		if (this.options.auto_upload)
+			input.onchange = this.upload_input
+		*/
+	},
+
+	upload_input: function(input)
+	{
 		if (input instanceof jQuery)
 			input = input[0]
 			
-		this.input = input
-	
-		if (this.options.auto_upload)
-			this.input.onchange = this.send
-	},
-
-	send: function()
-	{
 		// Make sure there is at least one file selected
-		if (this.input.files.length < 1)
+		if (input.files.length < 1)
 		{
 			if (this.options.error)
 				this.options.error('Must select a file to upload')
@@ -45,7 +45,7 @@ var Uploader = new Class
 		}
 		
 		// Don't allow multiple file uploads if not specified
-		if (this.options.multiple === false && this.input.files.length > 1)
+		if (this.options.multiple === false && input.files.length > 1)
 		{
 			if (this.options.error)
 				this.options.error('Can only upload one file at a time')
@@ -54,19 +54,19 @@ var Uploader = new Class
 		}
 		
 		if (this.options.multiple) 
-			this.multiSend(this.input.files)
+			this.upload(input.files)
 		else 
-			this.singleSend(this.input.files[0])
+			this.upload_batch(input.files[0])
 	},
 
-	singleSend: function(file)
+	upload: function(file)
 	{
 		var data = new FormData()
 		data.append(String(this.options.prefix), file)
-		this.upload(data)
+		this.upload_data(data)
 	},
 
-	multiSend: function(files)
+	upload_batch: function(files)
 	{
 		var data = new FormData()
 		
@@ -75,10 +75,10 @@ var Uploader = new Class
 			data.append(this.options.prefix + i, file)
 		})
 		
-		this.upload(data)
+		this.upload_data(data)
 	},
 
-	upload: function(data)
+	upload_data: function(data)
 	{
 		var url = this.options.url
 		
@@ -111,7 +111,6 @@ var Uploader = new Class
 		})
 		.ok(function(data)
 		{
-			uploader.input.value = ''
 			uploader.options.success(data)
 		})
 		.ошибка(function(error)

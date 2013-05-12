@@ -228,12 +228,29 @@ body[mode="правка"]
 				.picture
 				{
 					cursor: pointer;
+			
+					.css_transition_duration(200ms);
+					
+					&.drag_over
+					{
+						.beautiful_shadow_5 (0, 0, 6px, 12px, 16px, 20px, 30px, 0.15, 0, 72, 105);
+					}
 				}
 			}
 			
-			.photo img
+			.photo
 			{
-				cursor: pointer;
+				.css_transition_duration(200ms);
+				
+				&.drag_over
+				{
+					.beautiful_shadow_5 (0, 0, 10px, 15px, 20px, 40px, 60px, 0.25, 0, 72, 105);
+				}
+				
+				img
+				{
+					cursor: pointer;
+				}
 			}
 			
 			> .miscellaneous
@@ -261,6 +278,8 @@ body[mode="правка"]
 	
 	margin-top: 80px;
 	
+	border-radius: 10px;
+					
 	> img, > .picture_uploading_screen
 	{
 		border-width: 1px;

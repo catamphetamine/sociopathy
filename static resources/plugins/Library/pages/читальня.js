@@ -32,13 +32,24 @@
 
 		page.category_icon_uploader = new Picture_uploader
 		({
-			namespace: '.режим_правка',
 			max_size: 0.5,
 			max_size_text: '500 килобайтов',
 			url: '/сеть/читальня/раздел/картинка',
 			element: function()
 			{
 				return this.category
+			},
+			on_choose: function(category)
+			{
+				this.category = category
+			},
+			namespace: 'режим_правка',
+			listener: function(listen)
+			{
+				Режим.при_переходе({ в: 'правка' }, function(event)
+				{
+					listen()
+				})
 			},
 			ok: function(data, element)
 			{
@@ -140,14 +151,6 @@
 		//$('.on_the_right_side_of_the_panel').css('right', on_the_right_side_of_the_panel_right)
 	}
 	
-	function choose_category_icon()
-	{
-		var category = $(this)
-			
-		page.category_icon_uploader.category = category
-		page.category_icon_uploader.choose()
-	}
-	
 	function add_category()
 	{
 		var category = $('<li/>').append($.tmpl('раздел читальни (правка)', { название: 'Название раздела' }))
@@ -161,7 +164,10 @@
 			category.unbind('.initial_keypress')
 		})
 		
-		category.on('clicked.режим_правка', choose_category_icon)
+		category.on('clicked.режим_правка', function()
+		{
+			page.category_icon_uploader.choose(this)
+		})
 		
 		page.category_dragger.refresh()
 	}
@@ -175,8 +181,6 @@
 		Режим.при_переходе({ в: 'правка' }, function()
 		{
 			page.get('.empty').hide()
-			
-			page.category_icon_uploader.activate()
 		})
 		
 		//page.get('.breadcrumbs > span:last').attr('editable', true)

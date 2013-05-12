@@ -378,7 +378,19 @@ http.post '/сеть/управление/хранилище/заполнить'
 	# всё
 	
 	вывод.send { ok: 'хранилище заполнено' }
-			
+
+http.get '/хранилище/создано ли', (ввод, вывод) ->
+	count = null
+	
+	try
+		count = db('people')._.count({})
+	catch ошибка
+		if ошибка.message != 'ns not found'
+			console.error ошибка
+			throw ошибка
+		
+	вывод.send(создано: count > 0)
+
 http.post '/хранилище/создать', (ввод, вывод) ->
 	человек = null
 	
@@ -400,7 +412,7 @@ http.post '/хранилище/создать', (ввод, вывод) ->
 			console.error ошибка
 			throw ошибка
 		
-	if count != 0
+	if count > 0
 		чистое_хранилище = no
 		
 	if not чистое_хранилище

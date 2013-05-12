@@ -12,4 +12,9 @@
 		font-size: 28px;
 		padding: 10px;
 	}
+	
+	.already_initialized
+	{
+		display: none;
+	}
 }

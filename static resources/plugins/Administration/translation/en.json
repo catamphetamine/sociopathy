@@ -19,7 +19,9 @@
 				
 				"submit": "Create the database",
 				
-				"administrator user info": "{ \"name\": \"Michael Jackson\", \"description\": \"the man in charge\", \"gender\": \"male\", \"origin\": \"USA\", \"password\": \"123\", \"email\": \"destination@unreachable.com\" }"
+				"administrator user info": "{ \"name\": \"Michael Jackson\", \"description\": \"the man in charge\", \"gender\": \"male\", \"origin\": \"USA\", \"password\": \"123\", \"email\": \"destination@unreachable.com\" }",
+				
+				"already_initialized": "The database has already been created. The application should be working now."
 			}
 		}
 	}

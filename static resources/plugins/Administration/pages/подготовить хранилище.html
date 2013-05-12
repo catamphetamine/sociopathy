@@ -1,7 +1,13 @@
 <section id="content">
-	<div class="data" contenteditable="true">${text('pages.administration.initialize.administrator user info')}</div>
+	<div class="initialize">
+		<div class="data" contenteditable="true">${text('pages.administration.initialize.administrator user info')}</div>
+		
+		<br/>
+		
+		<button>${text('pages.administration.initialize.submit')}</button>
+	</div>
 	
-	<br/>
-	
-	<button>${text('pages.administration.initialize.submit')}</button>
+	<div class="already_initialized">
+		${text('pages.administration.initialize.already_initialized')}
+	</div>
 </section>
