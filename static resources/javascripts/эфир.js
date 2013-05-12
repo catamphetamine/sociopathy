@@ -12,7 +12,7 @@ $(document).on('panel_loaded', function()
 
 	panel.loading.show()
 
-	(function()
+	;(function()
 	{
 		var эфир
 		
