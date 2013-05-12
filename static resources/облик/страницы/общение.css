@@ -31,15 +31,7 @@
 	{
 		.rich_formatting
 		{
-			font-family: @messaging_font;
-			font-size: @messaging_font_size;
-			line-height: @messaging_font_line_height;
-			
-			> p
-			{
-				margin: 0;
-				text-indent: 0;
-			}
+			margin-left: 100px;
 		}
 	}
 }
