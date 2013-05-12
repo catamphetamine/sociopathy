@@ -20,8 +20,8 @@ initialization_data = (ввод) ->
 	
 	data.языки = locales.languages()
 	
-	if Options.Websocket_server?
-		data.websocket_server = Options.Websocket_server
+	if Options.Host?
+		data.host = Options.Host
 	
 	return data
 

@@ -352,7 +352,7 @@ var Interactive_messages = function(options)
 			var накопленные_сообщения = []
 			var пропущенные_сообщения_учтены = false
 			
-			var connection = io.connect('http://' + Configuration.Websocket_server + options.path, { transports: ['websocket'], 'force new connection': true })
+			var connection = io.connect('http://' + Configuration.Websocket_server() + options.path, { transports: ['websocket'], 'force new connection': true })
 			connection.is_ready = false
 			
 			var pending_messages = []

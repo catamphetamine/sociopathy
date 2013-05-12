@@ -13,7 +13,7 @@ Configuration = Object.x_over_y
 	Host: host,
 	Port: port,
 	Upload_server_port: 8091,
-	Websocket_server: host + ':8080',
+	Websocket_server: function() { return Configuration.Host + ':8080' },
 	User_is_online_for: 8 * 60,
 	Book_shelf_size: 6,
 	Minimum_book_shelves: 3,

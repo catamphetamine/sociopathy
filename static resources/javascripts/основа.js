@@ -443,7 +443,7 @@ function initialize(next)
 	Configuration.Plugins = data.plugins
 	
 	if (data.websocket_server)
-		Configuration.Websocket_server = data.websocket_server
+		Configuration.Host = data.host
 	
 	Configuration.Locale =
 	{
