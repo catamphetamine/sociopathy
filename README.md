@@ -108,8 +108,6 @@ Yes it is.
 
 This software is distributed under the terms of "GNU General Public License" whatever it means.
 
-You can refer to the "license.txt" file for the licence itself.
-
 
 Contributing
 =============
