@@ -33,7 +33,7 @@
 				height: 48px;
 				
 				background-position: 0 0;
-				background-image: url('/картинки/audio player/download.png');
+				/* background-image: url('/картинки/audio player/download.png'); */
 			}
 			
 			> .jouele-name 
