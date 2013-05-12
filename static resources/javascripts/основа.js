@@ -442,6 +442,9 @@ function initialize(next)
 	Configuration.Core_modules = data.core_modules
 	Configuration.Plugins = data.plugins
 	
+	if (data.websocket_server)
+		Configuration.Websocket_server = data.websocket_server
+	
 	Configuration.Locale =
 	{
 		Default_language: 'en',
