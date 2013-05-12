@@ -6,7 +6,7 @@
 
 	page.load = function()
 	{
-		title(text('pages.books.title') + '. ' + page.data.адресное_имя)
+		title(text('pages.books.title') + '. ' + page.data.пользователь_сети.id)
 
 		text_button.new(page.get('.add_book')).does(function()
 		{
@@ -23,7 +23,7 @@
 					return false
 				}
 				
-				if (пользователь['адресное имя'] !== page.data.пользователь_сети['адресное имя'])
+				if (пользователь.id !== page.data.пользователь_сети.id)
 				{
 					info('Это не ваши личные данные, и вы не можете их править.')
 					return false
@@ -46,15 +46,15 @@
 		new  Data_loader
 		({
 			url: '/человек/книги',
-			parameters: { 'адресное имя': page.data.адресное_имя },
+			parameters: { id: page.data.пользователь_сети.id },
 			before_done: books_loaded,
 			done: books_shown,
 			get_data: function(data)
 			{
 				breadcrumbs
 				([
-					{ title: data.пользователь.имя, link: link_to('user', page.data.адресное_имя) },
-					{ title: text('pages.bookshelf.title'), link: link_to('user.bookshelf', page.data.адресное_имя) }
+					{ title: data.пользователь.имя, link: link_to('user', page.data.пользователь_сети.id) },
+					{ title: text('pages.bookshelf.title'), link: link_to('user.bookshelf', page.data.пользователь_сети.id) }
 				])
 				
 				var books = data.книги

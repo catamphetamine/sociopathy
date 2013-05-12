@@ -21,7 +21,7 @@
 		new  Data_loader
 		({
 			url: '/человек/картинки/альбомы',
-			parameters: { 'адресное имя': page.data.адресное_имя },
+			parameters: { id: page.data.пользователь_сети.id },
 			before_done: albums_loaded,
 			done: function()
 			{
@@ -34,8 +34,8 @@
 
 				breadcrumbs
 				([
-					{ title: data.пользователь.имя, link: link_to('user', page.data.адресное_имя) },
-					{ title: text('pages.picture albums.title'), link: link_to('user.pictures', page.data.адресное_имя) }
+					{ title: data.пользователь.имя, link: link_to('user', page.data.пользователь_сети.id) },
+					{ title: text('pages.picture albums.title'), link: link_to('user.pictures', page.data.пользователь_сети.id) }
 				])
 				
 				return data.альбомы

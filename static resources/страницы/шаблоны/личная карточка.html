@@ -4,13 +4,13 @@
 	
 	<section class="personal_info">
 		<!-- who is -->
-		<div class="name"><a href="${link_to('user', $data['адресное имя'])}" inactive_in_edit_mode="true">${имя}</a></div>
+		<div class="name"><a href="${link_to('user', id)}" inactive_in_edit_mode="true">${имя}</a></div>
 		<div class="description">{{if описание}}${описание}{{else}}участник{{/if}}</div>
 		
 		<!-- avatar -->
 		<div class="picture">
 			<div>
-				<img {{if !$data.avatar_version}} style="display: none" {{/if}} class="real_picture" {{if $data.avatar_version}} src="/загруженное/люди/${escape_id($data['адресное имя'])}/картинка/большая.jpg?version=${avatar_version}" {{/if}}/>
+				<img {{if !$data.avatar_version}} style="display: none" {{/if}} class="real_picture" {{if $data.avatar_version}} src="/загруженное/люди/${id}/картинка/большая.jpg?version=${avatar_version}" {{/if}}/>
 			</div>
 		</div>
 	</section>
@@ -48,7 +48,7 @@
 			<div class="offline"></div>
 			<div class="was_here non_selectable">
 				<span class="line">{{if пол === 'мужской'}} Был {{else}} Была {{/if}} в сети <span class="last_action_time"></span>.</span>
-				<a href="/люди/${escape_id($data['адресное имя'])}">Перепроверить</a>
+				<a href="/люди/${id}">Перепроверить</a>
 			</div>
 		</div>	
 	

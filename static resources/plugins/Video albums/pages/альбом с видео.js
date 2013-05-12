@@ -17,7 +17,7 @@
 		new  Data_loader
 		({
 			url: '/человек/видео/альбом',
-			parameters: { 'адресное имя': page.data.адресное_имя, альбом: page.data.альбом },
+			parameters: { id: page.data.пользователь_сети.id, альбом: page.data.альбом },
 			before_done: videos_loaded,
 			done: function()
 			{
@@ -35,9 +35,9 @@
 				
 				breadcrumbs
 				([
-					{ title: data.пользователь.имя, link: link_to('user', page.data.адресное_имя) },
-					{ title: text('pages.video albums.title'), link: link_to('user.videos', page.data.адресное_имя) },
-					{ title: data.альбом.название, link: link_to('user.videos.album', page.data.адресное_имя, page.data.альбом) }
+					{ title: data.пользователь.имя, link: link_to('user', page.data.пользователь_сети.id) },
+					{ title: text('pages.video albums.title'), link: link_to('user.videos', page.data.пользователь_сети.id) },
+					{ title: data.альбом.название, link: link_to('user.videos.album', page.data.пользователь_сети.id, page.data.альбом) }
 				])
 				
 				return data.альбом.видео
@@ -137,7 +137,7 @@
 				
 		function show_video_file(image, options)
 		{
-			set_url(link_to('user.videos.album', page.data.адресное_имя, page.data.альбом) + '/' + image.attr('video_id'))
+			set_url(link_to('user.videos.album', page.data.пользователь_сети.id, page.data.альбом) + '/' + image.attr('video_id'))
 		
 			options = options || {}
 		
@@ -206,7 +206,7 @@
 		
 		function hide_video()
 		{
-			set_url(link_to('user.videos.album', page.data.адресное_имя, page.data.альбом))
+			set_url(link_to('user.videos.album', page.data.пользователь_сети.id, page.data.альбом))
 
 			scroll_navigation.deactivate()
 			$(document).unbind(namespace)

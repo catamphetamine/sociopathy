@@ -613,7 +613,7 @@ var Interactive_messages = function(options)
 		
 		if (user._id !== пользователь._id)
 		{
-			var link = $('<a/>').attr('href', '/люди/' + user['адресное имя'])
+			var link = $('<a/>').attr('href', '/люди/' + user.id)
 			link.attr('title', user.имя).append(icon).appendTo(container)
 		}
 		else

@@ -7,7 +7,7 @@
 		{{each(index, член) члены}}
 			<li class="member">
 				{{tmpl(член) 'маленький аватар'}}
-				<a href="/люди/${escape_id(член['адресное имя'])}" class="name">${член.имя}</a>
+				<a href="/люди/${член.id}" class="name">${член.имя}</a>
 			</li>
 		{{/each}}
 	{{/if}}

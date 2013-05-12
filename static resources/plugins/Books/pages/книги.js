@@ -257,7 +257,7 @@
 			{
 				page.Ajax.put('/сеть/книжный шкаф', { _id: _id }).ok(function()
 				{
-					info(text('pages.books.added to bookshelf', { 'user id': пользователь['адресное имя'] }))
+					info(text('pages.books.added to bookshelf', { 'user id': пользователь.id }))
 				})
 			}
 		}]

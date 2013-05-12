@@ -528,13 +528,6 @@ function error(error)
 		show_error(ошибка, url, line)
 	}
 
-// no longer relevant. now escaping on the server side
-function escape_id(id)
-{
-	return id
-	//return id.replace_all('?', '%3F').replace_all('/', '%2F')
-}
-
 function есть_ли_полномочия(какие)
 {
 	return пользователь && пользователь.полномочия && пользователь.полномочия.contains(какие)

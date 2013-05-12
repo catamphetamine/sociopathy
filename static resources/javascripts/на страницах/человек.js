@@ -50,7 +50,7 @@
 		new  Data_loader
 		({
 			url: '/человек',
-			parameters: { адресное_имя: page.data.адресное_имя },
+			parameters: { id: page.data.пользователь_сети.id },
 			get_data: function(data)
 			{
 				if (data['когда был здесь'])
@@ -107,7 +107,7 @@
 		{
 			var link = $(this)
 			if (link.attr('href').starts_with(text('pages.people.url') + '//'))
-				link.attr('href', link.attr('href').replace('//', '/' + page.data.пользователь_сети['адресное имя'] + '/')).removeAttr('dummy')
+				link.attr('href', link.attr('href').replace('//', '/' + page.data.пользователь_сети.id + '/')).removeAttr('dummy')
 		})
 		
 		if (page.data.пользователь_сети['есть ли картинки?'])
@@ -229,7 +229,7 @@
 		}
 	
 		var image = $('<img/>')
-		image.attr('src', '/загруженное/люди/' + page.data.пользователь_сети['адресное имя'] + '/фотография.jpg' + '?version=' + page.data.пользователь_сети.photo_version)
+		image.attr('src', '/загруженное/люди/' + page.data.пользователь_сети.id + '/фотография.jpg' + '?version=' + page.data.пользователь_сети.photo_version)
 	
 		page.photo.empty().append(image)
 	}

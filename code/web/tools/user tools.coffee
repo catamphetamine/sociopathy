@@ -110,7 +110,7 @@ exports.взять = (_id, настройки, возврат) ->
 			example = _id
 			options = настройки.options || {}
 			
-			if example['адресное имя']? && typeof(example['адресное имя']) == 'string'
+			if example.id? && typeof(example.id) == 'string'
 				single = true
 			else if example['имя']? && typeof(example['имя']) == 'string'
 				single = true		
@@ -180,7 +180,7 @@ exports.подставить = (куда, переменная, возврат) 
 	возврат(null, куда)
 			
 exports.поля = (поля, пользователь) ->
-	поля_по_умолчанию = ['имя', 'адресное имя', 'пол', 'avatar_version']
+	поля_по_умолчанию = ['имя', 'id', 'пол', 'avatar_version']
 		
 	if not (поля instanceof Array)
 		пользователь = поля
@@ -262,12 +262,10 @@ exports.создать = (человек) ->
 	человек['когда пришёл'] = new Date()
 	
 	проверка = (id) ->
-		found = db('people')._.find_one({ 'адресное имя': id })
+		found = db('people')._.find_one({ id: id })
 		return not found?
 	
-	адресное_имя = снасти.generate_unique_id(человек.имя, проверка)
-	
-	человек['адресное имя'] = адресное_имя
+	человек.id = снасти.generate_unique_id(человек.имя, проверка)
 			
 	пользователь = db('people')._.save(человек)
 

@@ -5,7 +5,7 @@
 
 	<!-- {{if is_online(отправитель._id)}}online{{/if}} -->
 	<div class="author no_word_carrying">
-		<a href="${link_to('user', отправитель['адресное имя'])}">
+		<a href="${link_to('user', отправитель.id)}">
 			<span class="name" title="${отправитель.имя}">
 				${отправитель.имя}
 			</span>
