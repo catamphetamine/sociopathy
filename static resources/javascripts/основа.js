@@ -442,8 +442,11 @@ function initialize(next)
 	Configuration.Core_modules = data.core_modules
 	Configuration.Plugins = data.plugins
 	
-	if (data.websocket_server)
+	if (data.host)
 		Configuration.Host = data.host
+	
+	if (data.port)
+		Configuration.Port = data.port
 	
 	Configuration.Locale =
 	{

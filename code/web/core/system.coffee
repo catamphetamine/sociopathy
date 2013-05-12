@@ -23,6 +23,9 @@ initialization_data = (ввод) ->
 	if Options.Host?
 		data.host = Options.Host
 	
+	if Options.Port?
+		data.port = Options.Port
+	
 	return data
 
 user_data = (ввод) ->
