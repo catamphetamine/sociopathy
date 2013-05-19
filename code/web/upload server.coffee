@@ -78,6 +78,10 @@ global.resize = (что, во_что, настройки, возврат) ->
 
 	options.customArgs = []
 	
+	# gravitate to center (must precede the -extent setting)
+	options.customArgs.add('-gravity')
+	options.customArgs.add('center')
+	
 	if настройки.наибольший_размер?
 		# уменьшить, если слишком большое
 		options.width = настройки.наибольший_размер
@@ -97,10 +101,6 @@ global.resize = (что, во_что, настройки, возврат) ->
 			options.height = настройки.высота + '>'
 		else	
 			options.height = настройки.высота + '^'
-		
-	# gravitate to center
-	options.customArgs.add('-gravity')
-	options.customArgs.add('center')
 	
 	image_magick.resize(options, возврат) #(error, output, errors_output) ->
 	

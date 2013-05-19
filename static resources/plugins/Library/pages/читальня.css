@@ -59,7 +59,7 @@
 		
 		padding-left: 0;
 		
-		> li.selected
+		> li.selected, > li.drag_over
 		{
 			.beautiful_shadow_5 (0, 0, 10px, 15px, 20px, 40px, 60px, 0.25, 0, 72, 105);
 					

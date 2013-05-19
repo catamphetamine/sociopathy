@@ -217,7 +217,10 @@ nginx_configuration=/etc/nginx/nginx.conf
 
 # currently not working
 nginx_configuration_already_patched=
-#nginx_configuration_already_patched=`cat $nginx_configuration | grep "\"/home/sociopathy/repository/configuration/$configuration_name/enginex.conf\";"`
+
+if grep --quiet sociopathy $nginx_configuration; then
+	nginx_configuration_already_patched=yes
+fi
 
 if [[ "$nginx_configuration_already_patched" == "" ]]; then
 echo $sociopathy_user_password | sudo sed -i -n "H;\${x;s/include \/etc\/nginx\/sites-enabled\/\*;\n/include \"\/home\/sociopathy\/repository\/configuration\/$configuration_name\/enginex.conf\";\n\t\

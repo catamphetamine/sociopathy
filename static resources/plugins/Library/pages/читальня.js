@@ -9,6 +9,33 @@
 	page.query('#categories', 'categories')
 	page.query('#articles', 'articles')
 	
+	function uploadable_icon(category)
+	{
+		var uploader = new Picture_uploader
+		({
+			max_size: 0.5,
+			max_size_text: '500 килобайтов',
+			url: '/сеть/читальня/раздел/картинка',
+			element: category,
+			namespace: 'режим_правка',
+			listener: function(listen)
+			{
+				Режим.при_переходе({ в: 'правка' }, function(event)
+				{
+					listen()
+				})
+			},
+			click_event: 'clicked',
+			ok: function(data, element)
+			{
+				element.find('.title').css('background-image', 'url(' + encodeURI(data.адрес) + ')')
+				element.data('icon', data)
+			}
+		})
+		
+		category.data('uploader', uploader)
+	}
+	
 	page.load = function()
 	{
 		if (!page.data.раздел)
@@ -28,36 +55,6 @@
 		if (match)
 			путь_к_разделу = match[1]
 			
-		var conditional = initialize_conditional($('.main_conditional'), { immediate: true })
-
-		page.category_icon_uploader = new Picture_uploader
-		({
-			max_size: 0.5,
-			max_size_text: '500 килобайтов',
-			url: '/сеть/читальня/раздел/картинка',
-			element: function()
-			{
-				return this.category
-			},
-			on_choose: function(category)
-			{
-				this.category = category
-			},
-			namespace: 'режим_правка',
-			listener: function(listen)
-			{
-				Режим.при_переходе({ в: 'правка' }, function(event)
-				{
-					listen()
-				})
-			},
-			ok: function(data, element)
-			{
-				element.find('.title').css('background-image', 'url(' + encodeURI(data.адрес) + ')')
-				element.data('icon', data)
-			}
-		})
-		
 		function show_content()
 		{
 			new Data_templater
@@ -71,6 +68,7 @@
 						postprocess_item: function(data)
 						{
 							this.attr('_id', data._id).empty()
+							uploadable_icon(this)
 						}
 					},
 					заметки:
@@ -83,7 +81,7 @@
 						}
 					}
 				},
-				conditional: conditional
+				
 			},
 			new  Data_loader
 			({
@@ -156,6 +154,8 @@
 		var category = $('<li/>').append($.tmpl('раздел читальни (правка)', { название: 'Название раздела' }))
 		category.appendTo(page.categories)
 		
+		uploadable_icon(category)
+		
 		category.find('.title > span').focus().on('keypress.initial_keypress', function()
 		{
 			if ($(this).text() === 'Название раздела')
@@ -166,7 +166,7 @@
 		
 		category.on('clicked.режим_правка', function()
 		{
-			page.category_icon_uploader.choose(this)
+			category.data('uploader').choose(this)
 		})
 		
 		page.category_dragger.refresh()
@@ -494,11 +494,6 @@
 				dont_start_dragging_on: '.title > span',
 				sortable: true,
 				throwable: true
-			})
-			
-			page.categories.children().each(function()
-			{
-				$(this).on('clicked.режим_правка', choose_category_icon)
 			})
 			
 			page.article_dragger = new List_dragger(page.articles,

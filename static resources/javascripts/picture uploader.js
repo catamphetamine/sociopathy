@@ -13,7 +13,8 @@ var Picture_uploader = new Class
 		error: "Не удалось загрузить картинку",
 		
 		uploading_text_minimum_width: 0,
-		on_choose: function(element) {}
+		on_choose: function(element) {},
+		click_event: 'click'
 	},
 	
 	initialize: function(options)
@@ -170,7 +171,7 @@ var Picture_uploader = new Class
 		
 		var uploader = this
 		
-		this.element().on('click.' + this.options.namespace, function(event)
+		this.element().on(this.options.click_event + '.' + this.options.namespace, function(event)
 		{
 			event.preventDefault()
 			uploader.choose(this)
