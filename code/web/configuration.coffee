@@ -18,8 +18,11 @@ module.exports =
 		Picture:
 			Generic:
 				Size: 120
-			Chat:
+			Small:
 				Size: 48
+			Tiny:
+				Width: 38
+				Height: 38
 		Photo:
 			Size: 1024
 	Library:

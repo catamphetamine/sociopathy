@@ -5,7 +5,9 @@
 		{
 			"url": "/people",
 			
-			"title": "People"
+			"title": "People",
+			
+			"not found": "We couldn't find a user named «{query}»"
 		}
 	}
 }

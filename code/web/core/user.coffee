@@ -106,7 +106,12 @@ http.put '/сеть/человек/картинка', (ввод, вывод, п�
 		временное_название: ввод.данные.имя
 		место: '/люди/' + пользователь.id.to_unix_file_name() + '/картинка'
 		название: 'большая'
-		extra_sizes: { 'маленькая': { размер: Options.User.Picture.Chat.Size } }
+		extra_sizes:
+			'маленькая':
+				размер: Options.User.Picture.Small.Size
+			'крошечная':
+				ширина: Options.User.Picture.Tiny.Width
+				высота: Options.User.Picture.Tiny.Height
 	
 	finish_picture_upload(options)
 			

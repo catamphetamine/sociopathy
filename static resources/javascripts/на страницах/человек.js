@@ -49,7 +49,7 @@
 		new  Data_loader
 		({
 			url: '/человек',
-			parameters: { id: page.data.пользователь_сети.id },
+			parameters: { id: page.data.пользователь_сети.id, подробно: true },
 			get_data: function(data)
 			{
 				if (data['когда был здесь'])
