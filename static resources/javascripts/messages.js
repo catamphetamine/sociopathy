@@ -706,6 +706,7 @@ var Messages = new Class
 			return
 			
 		this.options.container.css('margin-bottom', how_much + 'px')
+		this.options.container.next('.typing').css('margin-top', -how_much + 'px')
 	},
 	
 	adjust_listing_margin: function()

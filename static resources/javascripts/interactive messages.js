@@ -56,6 +56,7 @@ var Interactive_messages = function(options)
 				if (!can_signal_typing)
 					return
 				
+				// можно слать такие сообщения максимум раз в пол-секунды
 				can_signal_typing = false
 				var unlocker = function()
 				{
@@ -270,6 +271,13 @@ var Interactive_messages = function(options)
 			
 			old_on_load()
 		})
+		
+		var typing = $('<div/>').addClass('typing')
+		
+		messages.typing_info = $('<div/>')
+		typing.append(messages.typing_info)
+		
+		typing.insert_after(messages.options.container)
 	}
 	
 	function new_message_channel(options)
@@ -568,7 +576,8 @@ var Interactive_messages = function(options)
 			
 			connection.on('пишет', function(пользователь)
 			{
-				set_status(пользователь._id, 'пишет', { изтекает: 1000 })
+				messages.typing(пользователь.имя)
+				//set_status(пользователь._id, 'пишет', { изтекает: 1000 })
 			})
 			
 			connection.on('error', function(ошибка)
@@ -595,6 +604,55 @@ var Interactive_messages = function(options)
 			
 			messages.connection = connection
 		}
+	}
+	
+	var who_is_typing = []
+	
+	var not_typing_timers = {}
+	
+	function get_typing_text(who_is_typing)
+	{
+		if (who_is_typing.пусто())
+			return
+		
+		if (who_is_typing.length === 1)
+			return who_is_typing.first() + ' пишет'
+		
+		var temporary = Array.clone(who_is_typing)
+		var last = temporary.pop()
+		return temporary.join(', ') + ' и ' + last + ' пишут'
+	}
+	
+	function refresh_typing_text()
+	{
+		var text = get_typing_text(who_is_typing)
+		
+		if (text)
+		{
+			messages.typing_info.parent().fade_in(0.5)
+			return messages.typing_info.text(text)
+		}
+		
+		messages.typing_info.parent().fade_out(0.5)
+	}
+	
+	messages.typing = function(имя)
+	{
+		if (!who_is_typing.has(имя))
+			who_is_typing.add(имя)
+		
+		if (not_typing_timers[имя])
+			clearTimeout(not_typing_timers[имя])
+			
+		not_typing_timers[имя] = (function()
+		{
+			who_is_typing.remove(имя)
+			delete not_typing_timers[имя]
+			refresh_typing_text()
+		})
+		.delay(1000)
+		
+		refresh_typing_text()
 	}
 
 	messages.внести_пользователя_в_список_вверху = function(user, options)

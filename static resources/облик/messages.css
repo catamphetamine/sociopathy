@@ -23,8 +23,8 @@
 
 .messages_framework
 {
+	/* чтобы не схлопывались margin-ы */
 	padding-bottom: 30px;
-	margin-bottom: 30px;
 	
 	> .older
 	{
@@ -52,8 +52,10 @@
 		}
 	}
 	
-	> ul
+	ul.messages_container
 	{
+		margin-bottom: 30px;
+		
 		> .content_wrapper
 		{
 			> .content
@@ -69,6 +71,25 @@
 		}
 	}
 	
+	.typing
+	{
+		position: absolute;
+		left: 4px;
+
+		margin-left: 380px;
+		padding-top: 8px;
+		
+		background-image: url('/картинки/пишет.gif');
+		background-repeat: no-repeat;
+		background-position: 0 11px;
+		
+		> div
+		{
+			font-size: 16px;
+			color: #7f7f7f;
+			margin-left: 24px;
+		}
+	}
 		
 	#compose_message
 	{
