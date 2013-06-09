@@ -10,3 +10,4 @@ static resources/compressed/*
 node_modules/sync
 node_modules/mongodb
 node_modules/forever
+node_modules/socket.io-client
