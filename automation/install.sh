@@ -17,8 +17,6 @@ apt-get install nodejs
 # install some of the required Node.js packages
 #
 npm install coffee-script --global
-npm install sync
-npm install forever --global
 #
 # install NginX
 #
@@ -126,6 +124,12 @@ else
 	exit 1
 fi
 #
+# install some of the required Node.js packages
+#
+npm install sync
+npm install forever
+npm install mongodb
+#
 # maybe redirect all the logs to this folder
 #
 mkdir logs
@@ -145,16 +149,16 @@ mkdir processes
 # it needs to be backed up daily
 #
 backup_script=/etc/cron.daily/backup_sociopathy_database.sh
-echo $sociopathy_user_password | sudo -S ln --symbolic repository/automation/backup.sh $backup_script
-echo $sociopathy_user_password | sudo -S chmod +x repository/automation/backup.sh
+echo $sociopathy_user_password | sudo -S cp repository/automation/backup.sh $backup_script
+echo $sociopathy_user_password | sudo -S chmod +x $backup_script
 #
 monitor_script=monitor.sh
-echo $sociopathy_user_password | sudo -S ln --symbolic repository/automation/monitor.sh $monitor_script
-echo $sociopathy_user_password | sudo -S chmod +x repository/automation/monitor.sh
+echo $sociopathy_user_password | sudo -S cp repository/automation/monitor.sh $monitor_script
+echo $sociopathy_user_password | sudo -S chmod +x $monitor_script
 #
 update_script=update.sh
-ln --symbolic repository/automation/update.sh $update_script
-echo $sociopathy_user_password | sudo chmod +x repository/automation/update.sh
+cp repository/automation/update.sh $update_script
+echo $sociopathy_user_password | sudo chmod +x $update_script
 #
 # now you need to create your own configuration files (default settings will do for Ubuntu)
 #

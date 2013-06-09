@@ -56,7 +56,7 @@ fiber ->
 	
 	global.application_tools = require('./connect/express')()
 	
-	global.websocket = require('socket.io').listen приложение
+	global.websocket = require('socket.io').listen(http_server)
 	
 	global.image_magick = require 'imagemagick'
 	global.image_magick.convert.path = Options.ImageMagick.Convert.Path
@@ -100,7 +100,7 @@ fiber ->
 	web_server_domain = require('domain').create()
 	
 	web_server_domain.on 'error', (error) ->
-		ошибка(ошибка: error)
+		#ошибка(ошибка: error)
 		
 	web_server_domain.run ->
-		global.приложение.listen(Options.Web_server.Port, '0.0.0.0')
+		http_server.listen(Options.Web_server.Port, '0.0.0.0')

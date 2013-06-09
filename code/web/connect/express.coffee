@@ -11,7 +11,8 @@ access_logger = (ввод, вывод, следующий) ->
 	return if not ввод.session?
 	
 	когда_был_здесь = new Date()
-	db('people_sessions').update({ пользователь: ввод.пользователь._id }, { $set: { 'когда был здесь': когда_был_здесь }}) #, online: yes
+	# { w: 0 } = write concern "off"
+	db('people_sessions').update({ пользователь: ввод.пользователь._id }, { $set: { 'когда был здесь': когда_был_здесь }}, { w: 0 }) #, online: yes
 
 	check_online_status = ->
 		fiber ->
@@ -61,9 +62,11 @@ is_internal_url = (url) ->
 			return yes
 			
 module.exports = (приложение) ->
-	if not приложение?
-		приложение = express.createServer()
+	if not приложение?  
+		приложение = express()
 		global.приложение = приложение
+		
+		global.http_server = require('http').createServer(приложение)
 
 		приложение.configure ->
 			приложение.use express.bodyParser()

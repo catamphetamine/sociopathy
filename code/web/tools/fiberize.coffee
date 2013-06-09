@@ -13,7 +13,7 @@ Function.prototype.bind_await = (binding) ->
 		# add binding as a first argument
 		parameters.unshift(binding)
 		@sync.apply(@, parameters)
-	
+
 exports.express_action = (action, url, input, output) ->
 	action(input, output)
 
@@ -38,6 +38,8 @@ exports.express = (application) ->
 					try
 						exports.express_action(action, url, input, output)
 					catch error
+						console.log('Http action error:')
+						console.log(error)
 						output.send(error: parse_error(error), debug: error.stack)
 						
 			application[method](encodeURI(url), enhanced_action)
