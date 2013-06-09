@@ -2,6 +2,6 @@ echo "Updating application"
 cd repository
 git pull origin
 cd ..
-echo "Restarting application"
-./stop.sh
-./start.sh
+echo "Now restart the application manually"
+#./stop.sh
+#./start.sh
