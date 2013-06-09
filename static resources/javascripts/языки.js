@@ -15,7 +15,10 @@ function load_relevant_translation(path, options)
 		$.ajax(add_version(path.replace('${language}', language), settings))
 		.success(function(translation)
 		{
-			success(language, JSON.parse(translation))
+			if (typeof translation !== 'object')
+				translation = JSON.parse(translation)
+				
+			success(language, translation)
 		})
 		.error(error)
 	}

@@ -3,14 +3,19 @@
 On Ubuntu Linux:
 
 Download the interactive installation script: 'automation/install.sh'.
-Run it as root.
+It is supposed to be run as root.
+I suggest you execute it by smaller portions (it's not polished yet).
 It will download this repository to your machine and will set it up.
 
 If it doesn't work, look at the /home/sociopathy/repository folder.
-If the cyrillic filenames are seen as question marks there then you need to turn on utf-8 support.
-On russian Ubuntu Server it's made like this:
-sudo update-locale LANG=ru_RU.utf8 LC_MESSAGES=POSIX
-(for this command to take effect you should exit from the OS and log in again)
+If the cyrillic filenames are seen as question marks there then you need to turn on utf-8 support (the script says how to do it).
+
+After the installation run the application by executing the 'start.sh' script in your /home/sociopathy directory.
+To stop the application use the 'stop.sh' script.
+You can update the application with the 'update.sh' script and monitor the resource usage with the 'monitor.sh' script.
+
+You can view the screens with this command (example): 'screen -r sociopathy.node.js' (Press Ctrl + A + D to detach from the screen)
+To scroll back the screen, press «Ctrl + A» then «Esc» and then use the cursor keys (up/down). Press «Esc» again to exit the navigation mode.
 
 On Windows:
 

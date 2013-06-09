@@ -14,6 +14,12 @@ add-apt-repository ppa:chris-lea/node.js
 apt-get update
 apt-get install nodejs
 #
+# install some of the required Node.js packages
+#
+npm install coffee-script --global
+npm install sync
+npm install forever --global
+#
 # install NginX
 #
 nginx=stable # use nginx=development for latest development version
@@ -30,7 +36,7 @@ apt-get install imagemagick
 apt-key adv --keyserver keyserver.ubuntu.com --recv 7F0CEB10
 echo "deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen" >> /etc/apt/sources.list
 apt-get update
-apt-get install mongodb-10gen=2.2.3
+apt-get install mongodb-10gen
 #
 # install Redis
 #
@@ -57,8 +63,6 @@ useradd -m sociopathy -p=$sociopathy_user_password
 usermod -s /bin/bash sociopathy
 #
 adduser sociopathy sudo
-sudo su sociopathy
-cd ~
 #
 echo "Default port usage:"
 #
@@ -71,11 +75,8 @@ netstat -antp | grep 8081
 echo "8091 (upload server):"
 netstat -antp | grep 8091
 #
-# install some of the required Node.js packages
-#
-npm install coffee-script --global
-npm install sync
-npm install forever --global
+sudo su sociopathy
+cd ~
 #
 # copy the files
 #
@@ -116,7 +117,9 @@ else
 	echo ""
 	echo "For English language it might look like this:"
 	echo "sudo update-locale LANG=en_US.utf8 LC_MESSAGES=POSIX"
-	echo "(though I've never tried this command because my Linux is in Russian)"
+	echo "(it should work in the newer Ubuntu versions, but it may require some hacking on ancient Linuxes)"
+	echo ""
+	echo "(for this command to take effect you should exit from the OS and log in again)"
 	echo ""
 	echo "If the command above doesn't work contact me on github and I'll find another solution"
 	#
@@ -143,15 +146,15 @@ mkdir processes
 #
 backup_script=/etc/cron.daily/backup_sociopathy_database.sh
 echo $sociopathy_user_password | sudo -S ln --symbolic repository/automation/backup.sh $backup_script
-echo $sociopathy_user_password | sudo -S chmod +x $backup_script
+echo $sociopathy_user_password | sudo -S chmod +x repository/automation/backup.sh
 #
 monitor_script=monitor.sh
 echo $sociopathy_user_password | sudo -S ln --symbolic repository/automation/monitor.sh $monitor_script
-echo $sociopathy_user_password | sudo -S chmod +x $monitor_script
+echo $sociopathy_user_password | sudo -S chmod +x repository/automation/monitor.sh
 #
 update_script=update.sh
 ln --symbolic repository/automation/update.sh $update_script
-echo $sociopathy_user_password | sudo chmod +x $update_script
+echo $sociopathy_user_password | sudo chmod +x repository/automation/update.sh
 #
 # now you need to create your own configuration files (default settings will do for Ubuntu)
 #
@@ -194,14 +197,14 @@ fi
 start_script=start.sh
 cp repository/automation/start.sh $start_script
 echo $sociopathy_user_password | sudo chmod +x $start_script
-sed "s/{configuration_name}/$configuration_name/g" $start_script
+sed --in-place "s/{configuration_name}/$configuration_name/g" $start_script
 #
 # To stop the application
 #
 stop_script=stop.sh
 cp repository/automation/stop.sh $stop_script
 echo $sociopathy_user_password | sudo chmod +x $stop_script
-sed "s/{configuration_name}/$configuration_name/g" $stop_script
+sed --in-place "s/{configuration_name}/$configuration_name/g" $stop_script
 #
 # now you need to tell NginX to include your enginex.conf file from you configuration folder
 #
@@ -223,7 +226,7 @@ if grep --quiet sociopathy $nginx_configuration; then
 fi
 
 if [[ "$nginx_configuration_already_patched" == "" ]]; then
-echo $sociopathy_user_password | sudo sed -i -n "H;\${x;s/include \/etc\/nginx\/sites-enabled\/\*;\n/include \"\/home\/sociopathy\/repository\/configuration\/$configuration_name\/enginex.conf\";\n\t\
+echo $sociopathy_user_password | sudo sed --in-place "H;\${x;s/include \/etc\/nginx\/sites-enabled\/\*;\n/include \"\/home\/sociopathy\/repository\/configuration\/$configuration_name\/enginex.conf\";\n\t\
 &/;p;}" $nginx_configuration
 else
 	echo "NginX configuration already patched"
