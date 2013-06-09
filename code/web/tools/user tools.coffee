@@ -113,7 +113,7 @@ exports.взять = (_id, настройки, возврат) ->
 			if example.id? && typeof(example.id) == 'string'
 				single = true
 			else if example['имя']? && typeof(example['имя']) == 'string'
-				single = true		
+				single = true
 	else if (typeof(_id) == 'string')
 		example = { _id: db('people').id(_id) }
 		single = true

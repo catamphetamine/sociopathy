@@ -92,7 +92,7 @@ file_system = require 'fs'
 	result
 
 снасти.данные = (ввод) ->
-	if (ввод.body)
+	if ввод.body? && not Object.пусто(ввод.body)
 		return ввод.body
 	
 	данные = адрес.parse(ввод.url, true).query
