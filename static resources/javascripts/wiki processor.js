@@ -447,7 +447,7 @@ var Wiki_processor = new (new Class
 		if (syntax.is_dummy)
 			if (syntax.is_dummy(element))
 				return
-			
+		
 		var wiki_element
 		if (!syntax.translation)
 			wiki_element = $('<' + syntax.tag + '/>')

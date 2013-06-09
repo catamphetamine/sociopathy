@@ -673,10 +673,14 @@ function get_function(variable)
 
 $.fn.is_empty = function()
 {
+	// if it has no child nodes
 	if (this.node().childNodes.length === 0)
 		return true
-	
-	return this.text().trim() == ''
+
+	// if the only child is text, and it's empty
+	if (this.node().childNodes.length === 1)
+		if (Dom_tools.is_text_node(this.node().firstChild))
+			return this.node().firstChild.nodeValue.trim() == ''
 }
 
 /*
