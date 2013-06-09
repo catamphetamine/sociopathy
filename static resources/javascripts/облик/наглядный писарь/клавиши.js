@@ -58,6 +58,17 @@ Visual_editor.implement
 			},
 			'p': function(container)
 			{
+				// delete extra new lines (and other whitespace characters, though they were not the cause)
+				var last_child = container.node().lastChild
+				var html = last_child.innerHTML || last_child.nodeValue
+				if (html.trim().length < html.length)
+					last_child.innerHTML = html.trim()
+				
+				if (this.editor.caret.is_in_the_beginning_of_container())
+				{
+					return visual_editor.new_paragraph({ before: true })
+				}
+				
 				if (this.editor.caret.is_in_the_end_of_container())
 				{
 					return visual_editor.new_paragraph()
@@ -248,7 +259,7 @@ Visual_editor.implement
 			{
 				var focused = editor.caret.container()
 				
-				if (focused.hasClass('hint'))
+				if (focused && focused.hasClass('hint'))
 				{
 					focused.removeClass('hint').text('')
 					return false
@@ -261,7 +272,7 @@ Visual_editor.implement
 			{
 				var focused = editor.caret.container()
 				
-				if (focused.hasClass('hint'))
+				if (focused && focused.hasClass('hint'))
 				{
 					var previous = focused.prev()
 					var next = focused.next()

@@ -29,6 +29,7 @@ var Dom_tools =
 	{
 		node = this.normalize(node)
 		
+		console.log(node)
 		var text_node = Dom_tools.down_to_text_node(node)
 			
 		if (text_node)
@@ -401,10 +402,17 @@ var Dom_tools =
 		return where.replaceChild(with_what, what)
 	},
 	
-	text: function(element, text)
+	text: function(element, text, options)
 	{
+		options = options || {}
+		
 		text = document.createTextNode(text)
-		element.appendChild(text)
+		
+		if (options.before)
+			element.insertBefore(text, options.before)
+		else
+			element.appendChild(text)
+		
 		return text
 	},
 	

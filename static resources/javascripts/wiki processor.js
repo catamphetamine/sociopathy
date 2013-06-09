@@ -355,7 +355,7 @@ var Wiki_processor = new (new Class
 		if (typeof(xml) === 'string')
 			xml = $('<xml/>').html(xml)
 		
-		xml.find('.hint').remove()
+		//xml.find('.hint').remove()
 		xml = xml.node()
 		
 		var processor = this
@@ -444,6 +444,10 @@ var Wiki_processor = new (new Class
 		if (!syntax)
 			return Dom_tools.append_text(Dom_tools.to_text(node), target)
 	
+		if (syntax.is_dummy)
+			if (syntax.is_dummy(element))
+				return
+			
 		var wiki_element
 		if (!syntax.translation)
 			wiki_element = $('<' + syntax.tag + '/>')
@@ -461,7 +465,7 @@ var Wiki_processor = new (new Class
 			options.process_element(wiki_element, element)
 		
 		if (syntax.content_required)
-			if (node.childNodes.length === 0)
+			if (element.is_empty())
 				return
 		
 		wiki_element.appendTo(target)
@@ -559,6 +563,12 @@ Wiki_processor.Syntax =
 		html_tag: 'p',
 		content_required: true,
 		
+		is_dummy: function(element)
+		{
+			if (element.hasClass('hint'))
+				return true
+		},
+		
 		decorate: function(from, to)
 		{
 			var alignment
@@ -620,6 +630,15 @@ Wiki_processor.Syntax =
 		translation: 'citation',
 		selector: 'div.citation',
 		html_tag: 'div',
+		
+		is_dummy: function(element)
+		{
+			if (element.find('> .text').hasClass('hint'))
+				return true
+			
+			if (element.find('> .text').is_empty())
+				return true
+		},
 	
 		decorate: function(from, to)
 		{
@@ -658,7 +677,13 @@ Wiki_processor.Syntax =
 		translation: 'header_2',
 		selector: 'h2',
 		html_tag: 'h2',
-		content_required: true
+		content_required: true,
+		
+		is_dummy: function(element)
+		{
+			if (element.hasClass('hint'))
+				return true
+		}
 	},
 	жирный:
 	{
@@ -678,13 +703,29 @@ Wiki_processor.Syntax =
 	{
 		translation: 'list',
 		selector: 'ul',
-		html_tag: 'ul'
+		html_tag: 'ul',
+		
+		is_dummy: function(element)
+		{
+			if ($(element.node().firstChild).hasClass('hint'))
+				return true
+		}
 	},
 	пункт:
 	{
 		translation: 'item',
 		selector: 'li',
 		html_tag: 'li',
+		content_required: true,
+		
+		is_dummy: function(element)
+		{
+			if (element.hasClass('hint'))
+				return true
+			
+			if (element.html().trim() === '')
+				return true
+		},
 	
 		simplify: function(from, info)
 		{
@@ -707,6 +748,16 @@ Wiki_processor.Syntax =
 		},
 		selector: 'a[type="hyperlink"]',
 		html_tag: 'a',
+		content_required: true,
+		
+		is_dummy: function(element)
+		{
+			if (element.hasClass('hint'))
+				return true
+			
+			if (element.html().trim() === '')
+				return true
+		},
 		
 		decorate: function(from, to)
 		{
@@ -865,28 +916,52 @@ Wiki_processor.Syntax =
 		translation: 'subscript',
 		selector: 'sub',
 		html_tag: 'sub',
-		content_required: true
+		content_required: true,
+		
+		is_dummy: function(element)
+		{
+			if (element.hasClass('hint'))
+				return true
+		}
 	},
 	сверху:
 	{
 		translation: 'superscript',
 		selector: 'sup',
 		html_tag: 'sup',
-		content_required: true
+		content_required: true,
+		
+		is_dummy: function(element)
+		{
+			if (element.hasClass('hint'))
+				return true
+		}
 	},
 	код:
 	{
 		translation: 'code',
 		selector: 'code',
 		html_tag: 'code',
-		content_required: true
+		content_required: true,
+		
+		is_dummy: function(element)
+		{
+			if (element.hasClass('hint'))
+				return true
+		}
 	},
 	многострочный_код:
 	{
 		translation: 'multiline_code',
 		selector: 'pre',
 		html_tag: 'pre',
-		content_required: true
+		content_required: true,
+		
+		is_dummy: function(element)
+		{
+			if (element.hasClass('hint'))
+				return true
+		}
 	},
 	перевод_строки:
 	{

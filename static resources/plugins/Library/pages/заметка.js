@@ -240,6 +240,9 @@
 				if (data.путь)
 					return go_to(text('pages.library.url') + '/' + data.путь)
 			
+				page.refresh()
+			
+				/*
 				page.Data_store.unmodified_data =
 				{
 					название: data.название,
@@ -248,6 +251,7 @@
 				
 				set_title(data.название)
 				visual_editor.editor.set_content(Wiki_processor.decorate(data.содержимое))
+				*/
 			}
 		})
 	}

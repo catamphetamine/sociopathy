@@ -524,6 +524,11 @@ var Page = new Class
 		refresh_page()
 	},
 	
+	reload: function()
+	{
+		this.refresh()
+	},
+	
 	get: function(selector)
 	{
 		return this.content.find(selector)

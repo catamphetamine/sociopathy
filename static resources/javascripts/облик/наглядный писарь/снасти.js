@@ -552,7 +552,7 @@ Visual_editor.implement
 			{
 				activate_all_toolable_elements()
 				//this.activate(picture)
-				editor.caret.move_to(picture)
+				editor.caret.move_to(picture, { after: true })
 			},
 			
 			on_element_click: function()

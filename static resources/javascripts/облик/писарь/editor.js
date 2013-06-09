@@ -367,23 +367,34 @@ var Editor = new Class
 		if (!Dom_tools.is_text_node(container))
 		{
 			var offset = caret_offset
-			
-			if ($.browser.webkit)
-				offset--
+		
+			//if ($.browser.webkit)
+			//	offset--
 				
-			if (container.childNodes.length === 0 || offset < 0)
+			var text_container = container.childNodes[offset]
+			
+			if (!text_container || !Dom_tools.is_text_node(text_container))
 			{
-				text_container = Dom_tools.text(container, inserted_text)
+				var options = {}
+				
+				if (text_container)
+					options.before = text_container
+				
+				text_container = Dom_tools.text(container, inserted_text, options)
 				return this.caret.create(text_container, inserted_text.length)
 			}
 			
-			var text_container = Dom_tools.find_text_node(container.childNodes[offset], this.content)
+			//var text_container = Dom_tools.find_text_node(container.childNodes[offset], container)
+			
+			//text_container = Dom_tools.find_text_node(container.childNodes[offset], this.content)
 		
+			/*
 			if (!text_container)
 			{
 				text_container = Dom_tools.text(container, inserted_text)
 				return this.caret.create(text_container, inserted_text.length)
 			}
+			*/
 		
 			if (!options.replace)
 				text_container.nodeValue = inserted_text + text_container.nodeValue

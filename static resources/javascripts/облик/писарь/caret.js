@@ -35,6 +35,13 @@ Editor.Caret = new Class
 	container: function(filter)
 	{
 		var container = this.node()
+		
+		if (!Dom_tools.is_text_node(container))
+		{
+			if ($(container).is(filter))
+				return $(container)
+		}
+		
 		return $(container).find_parent(filter, this.editor.content)
 	},
 	
@@ -137,6 +144,7 @@ Editor.Caret = new Class
 		if (!offset)
 			offset = 0
 		
+		/*
 		if (!Dom_tools.is_text_node(element))
 			element = Dom_tools.find_text_node(element, this.editor.content)
 		
@@ -145,12 +153,27 @@ Editor.Caret = new Class
 			element = document.createTextNode(' ')
 			the_element.parentNode.appendChild(element)
 		}
+		*/
 		
 		if (options.to_the_end)
-			offset = element.nodeValue.length
+		{
+			if (Dom_tools.is_text_node(element))
+				offset = element.nodeValue.length
+			else
+				offset = element.childNodes.length
+		}
 		
-		if (!element.nodeValue)
-			element.nodeValue = ' '
+		if (options.after)
+		{
+			if (!Dom_tools.is_text_node(element))
+			{
+				offset = Dom_tools.get_child_index(element) + 1
+				element = element.parentNode
+			}
+		}
+				
+		//if (!element.nodeValue)
+		//	element.nodeValue = ' '
 			
 		if ($.browser.webkit)
 		{
@@ -198,11 +221,19 @@ Editor.Caret = new Class
 		
 		if (!caret.collapsed)
 			return false
+
+		var container = this.container(filter).get(0)
 		
-		if (!Dom_tools.is_first_element(caret.startContainer, this.container(filter)))
+		if (!Dom_tools.is_first_element(caret.startContainer, container))
 			return false
 		
-		if (this.offset(caret) > 0)
+		var offset = this.offset(caret)
+		
+		// chrome bug
+		if ($.browser.webkit)
+			offset--
+		
+		if (offset !== 0)
 			return false
 			
 		return true
@@ -215,14 +246,25 @@ Editor.Caret = new Class
 		if (!caret.collapsed)
 			return false
 
-		if (!Dom_tools.is_last_element(caret.startContainer, this.container(filter).get(0)))
+		var container = this.container(filter).get(0)
+			
+		if (!Dom_tools.is_last_element(caret.startContainer, container))
 			return false
 			
 		var range = caret.cloneRange()
-		range.selectNodeContents(Dom_tools.get_last_descendant(this.container().get(0)))
+		range.selectNodeContents(Dom_tools.get_last_descendant(container))
 		
 		if (this.offset(caret) < range.endOffset)
-			return false
+		{
+			// chrome bug
+			if ($.browser.chrome &&
+				this.offset(caret) + 1 === range.endOffset)
+			{
+				// then skip
+			}
+			else
+				return false
+		}
 			
 		return true
 	},
