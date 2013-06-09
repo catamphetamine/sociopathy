@@ -129,6 +129,7 @@ fi
 npm install sync
 npm install forever
 npm install mongodb
+npm install socket.io-client@0.9.16
 #
 # maybe redirect all the logs to this folder
 #
