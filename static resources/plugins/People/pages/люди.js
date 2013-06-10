@@ -92,7 +92,10 @@ title(text('pages.people.title'));
 			choice: function(_id)
 			{
 				page.data.loader.destroy()
-				
+			
+				go_to(text('pages.people.url') + '/' + this.id)
+			
+				/*	
 				page.Ajax.get('/человек', { _id: _id }).ok(function(человек)
 				{
 					var card = $.tmpl('личная карточка', человек)
@@ -103,6 +106,7 @@ title(text('pages.people.title'));
 					
 					ajaxify_internal_links(page.people)
 				})
+				*/
 			},
 			nothing_found: function(query)
 			{

@@ -1,6 +1,6 @@
 #enter_window
 {
-	input[type="text"]
+	input[type="text"], input[type="password"]
 	{
 		width: 500px;
 		display: block;

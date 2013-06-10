@@ -58,20 +58,81 @@ Visual_editor.implement
 			},
 			'p': function(container)
 			{
-				// delete extra new lines (and other whitespace characters, though they were not the cause)
-				var last_child = container.node().lastChild
-				var html = last_child.innerHTML || last_child.nodeValue
-				if (html.trim().length < html.length)
-					last_child.innerHTML = html.trim()
+				function trim_paragraph(paragraph)
+				{
+					function is_br(node)
+					{
+						return !Dom_tools.is_text_node(node) && $(node).is('br')
+					}
+					
+					function remove(node)
+					{
+						paragraph.node().removeChild(node)
+					}
+					
+					function remove_brs(generator)
+					{
+						var node = paragraph.node()[generator]
+							
+						if (is_br(node))
+						{
+							remove(node)
+							remove_brs(generator)
+						}
+					}
+					
+					function remove_whitespace_characters(generator, trimmer)
+					{
+						var node = paragraph.node()[generator]
+						
+						if (!Dom_tools.is_text_node(node))
+							return
+						
+						if (node.nodeValue.is_empty())
+							return
+						
+						trimmer.bind(trimmer)(node)
+					}
+					
+					// delete all leading <br/>s
+					remove_brs('firstChild')
+					
+					// delete all leading whitespace characters
+					
+					remove_whitespace_characters('firstChild', function(node)
+					{
+						if (/\s/.test(node.nodeValue.first()))
+						{
+							node.nodeValue = node.nodeValue.substring(1)
+							return this(node)
+						}
+					})
+					
+					// delete all trailing <br/>s
+					remove_brs('lastChild')
+					
+					// delete all trailing whitespace characters
+					
+					remove_whitespace_characters('lastChild', function(node)
+					{
+						if (/\s/.test(node.nodeValue.last()))
+						{
+							node.nodeValue = node.nodeValue.substring(0, node.nodeValue.length - 1)
+							return this(node)
+						}
+					})
+				}
 				
 				if (this.editor.caret.is_in_the_beginning_of_container())
 				{
-					return visual_editor.new_paragraph({ before: true })
+					visual_editor.new_paragraph({ before: true })
+					return trim_paragraph(container)
 				}
 				
 				if (this.editor.caret.is_in_the_end_of_container())
 				{
-					return visual_editor.new_paragraph()
+					visual_editor.new_paragraph()
+					return trim_paragraph(container)
 				}
 				
 				this.editor.insert_html('</p><p ' + this.editor.get_marker_html() + '>')

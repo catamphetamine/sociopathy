@@ -100,7 +100,7 @@ fiber ->
 	web_server_domain = require('domain').create()
 	
 	web_server_domain.on 'error', (error) ->
-		#ошибка(ошибка: error)
+		ошибка(ошибка: error)
 		
 	web_server_domain.run ->
 		http_server.listen(Options.Web_server.Port, '0.0.0.0')

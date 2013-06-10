@@ -18,6 +18,27 @@ String.prototype.set_character_at = function(index, character)
 	return this.substr(0, index) + character + this.substr(index + 1)
 }
 
+String.prototype.first = function()
+{
+	if (!this.length)
+		return
+	
+	return this[0]
+}
+
+String.prototype.last = function()
+{
+	if (!this.length)
+		return
+	
+	return this[this.length - 1]
+}
+
+String.prototype.is_empty = function()
+{
+	return this.length === 0
+}
+
 String.prototype.beautify = function()
 {
 	var string = this + ''

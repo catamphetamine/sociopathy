@@ -374,7 +374,7 @@ label.error
 
 .authenticated_user
 {
-	margin-top: 2px;
+	margin-top: 0px;
 	
 	.info
 	{
@@ -400,7 +400,7 @@ label.error
 		{
 			display: inline-block;
 
-			margin-top: 7px;
+			margin-top: 6px;
 			
 			border-color: #4a798f;
 			border: 0;
@@ -414,8 +414,8 @@ label.error
 	
 	display: inline-block;
 	
-	margin-right: 26px;
-	margin-top: 21px !important;
+	margin-right: 21px;
+	margin-top: 19px !important;
 	
 	position: relative;
 	z-index: 2;
