@@ -34,10 +34,17 @@ file_map = (path, options) ->
 			title = entry.substring(0, dot_position)
 			extension = entry.substring(dot_position + 1)
 			
-			if extension + '' == options.type + ''
-				if map[title]?
-					throw 'Both file and folder are named «' + title + '»'
-				map[title] = yes
+			if not options.types?
+				if options.type?
+					options.types = [options.type]
+				else
+					options.types = []
+			
+			for type in options.types
+				if extension + '' == type + ''
+					if map[title]?
+						throw 'Both file and folder are named «' + title + '»'
+					map[title] = yes
 	
 	return map
 			

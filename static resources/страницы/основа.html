@@ -331,7 +331,6 @@
 								var script = scripts[i]
 								
 								var id = script.getAttribute('for')
-								script.removeAttribute('for')
 								//var content = script.firstChild.nodeValue
 								
 								console.log('got javascript for ' + id)
@@ -344,6 +343,8 @@
 								i++
 							}
 							
+							window.Optimization.Styles = {}
+							
 							var styles = find('html > head > style')
 							
 							var i = 0
@@ -352,14 +353,18 @@
 								var style = styles[i]
 								
 								var id = style.getAttribute('for')
-								var content = style.firstChild.nodeValue
+								var content = style.innerHTML
 								
-								console.log('inserting style for ' + id)
+								console.log('got style for ' + id)
 								//console.log('content: ' + content)
 								
+								/*
 								style = document.createElement('style')
 								style.innerHTML = content
 								head.appendChild(style)
+								*/
+								
+								window.Optimization.Styles[id] = content
 								
 								i++
 							}
@@ -402,7 +407,7 @@
 								var html = base64_to_utf8(template.innerHTML)
 								
 								console.log('storing html template for ' + id)
-								console.log('content: ' + html)
+								//console.log('content: ' + html)
 								
 								window.Optimization.Templates[id] = html
 								

@@ -286,16 +286,28 @@ var styles =
 
 function insert_style(path)
 {
+	var id = path
+	
 	if (path.indexOf('/') !== 0)
 		path = '/облик/' + path
 	
-	var has_extension = false
-	if (path.lastIndexOf('.less') === path.length - '.less'.length)
-		has_extension = true
-	else if (path.lastIndexOf('.css') === path.length - '.css'.length)
-		has_extension = true
+	if (id.starts_with('/облик/'))
+		id = id.substring('/облик/'.length)
 		
-	path = has_extension ? path : path + '.css'
+	console.log('loading style: ' + path)
+	
+	if (Configuration.Optimize && Optimization.Styles[id])
+	{
+		console.log('is cached')
+		
+		var style = document.createElement('style')
+		style.type = 'text/less'
+		style.innerHTML = Optimization.Styles[id]
+		return head.appendChild(style)
+	}
+	
+	if (!path.ends_with('.less') && !path.ends_with('.css'))
+		path = path + '.css'
 		
 	var link = document.createElement('link')
 	link.rel = 'stylesheet/less'

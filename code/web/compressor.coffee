@@ -1,7 +1,5 @@
-clean_css = require './tools/clean-css.js'
-
 css_minifier = (value) ->
-	clean_css.process(value)
+	return value
 
 html_encoder = (value) ->
 	new Buffer(value, 'utf8').toString('base64')
