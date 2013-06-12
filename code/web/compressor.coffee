@@ -1,14 +1,24 @@
+less = require 'less'
+
+root = __dirname + '/../..'
+statics = root + '/static resources'
+
 css_minifier = (value) ->
-	return value
+	options =
+		paths: [statics] # Specify search paths for @import directives
+		#filename: 'style.less' # Specify a filename, for better error messages
+		
+	parser = new less.Parser(options)
+	syntax_tree = parser.parse.bind_await(parser)(value)
+	return syntax_tree.toCSS(compress: yes) # Minify CSS output
+	
+#console.log(css_minifier('.class { width: (1 + 1) }'))
 
 html_encoder = (value) ->
 	new Buffer(value, 'utf8').toString('base64')
 
 javascript_minifier = (value) ->
 	require('uglify-js').minify(value, { fromString: yes }).code
-
-root = __dirname + '/../..'
-statics = root + '/static resources'
 
 version_path = statics + '/compressed/version.txt'
 
@@ -86,7 +96,7 @@ write_everything = (everything) ->
 	
 if disk_tools.exists(version_path)
 	if disk_tools.read(version_path) == Options.Version
-		console.log('Up to date')
+		console.log('Everything file has already been generated for this version')
 		return
 
 console.log('Generating compressed "Everything" static file')

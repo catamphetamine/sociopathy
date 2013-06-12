@@ -47,6 +47,9 @@ var Interactive_messages = function(options)
 		on_message_bottom_appears: options.on_message_bottom_appears,
 		set_up_visual_editor: function(visual_editor)
 		{
+			if (options.set_up_visual_editor)
+				options.set_up_visual_editor.bind(this)(visual_editor)
+			
 			var messages = this
 			
 			var can_signal_typing = true

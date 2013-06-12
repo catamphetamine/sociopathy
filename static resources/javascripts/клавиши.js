@@ -180,7 +180,31 @@ var Клавиши =
 	{
 		if (typeof code !== 'number')
 		{
-			code = code.which || code.keyCode
+			var event = code
+			code = event.which || event.keyCode
+			
+			switch (key)
+			{
+				case 'Ctrl':
+					if (event.ctrlKey)
+						return true
+					break
+					
+				case 'Alt':
+					if (event.altKey)
+						return true
+					break
+					
+				case 'Shift':
+					if (event.shiftKey)
+						return true
+					break
+					
+				case 'Command':
+					if (event.cmdKey)
+						return true
+					break
+			}
 		}
 		
 		if (this[key] instanceof Array)

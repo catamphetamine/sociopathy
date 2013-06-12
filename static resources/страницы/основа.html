@@ -149,6 +149,10 @@
 				},
 				10 * 1000)
 			}
+
+			// to prevent recursive errors,
+			// e.g. if POST request to '/error' outputs 'Bad Gateway' then it'll keep reporting this error infinitely
+			var previous_error_data
 			
 			function report_error(тип, ошибка)
 			{
@@ -161,7 +165,7 @@
 					ошибка: ошибка,
 					адрес: uri
 				}
-				
+
 				if (тип)
 					data.тип = тип
 				
@@ -169,6 +173,17 @@
 				{
 					data.пользователь = пользователь._id
 				}
+				
+				// to prevent recursive errors,
+				// e.g. if POST request to '/error' outputs 'Bad Gateway' then it'll keep reporting this error infinitely
+				if (previous_error_data)
+				{
+					if (previous_error_data.error === data.error &&
+						previous_error_data.url === data.url)
+						return
+				}
+				
+				previous_error_data = data
 				
 				ajax
 				({

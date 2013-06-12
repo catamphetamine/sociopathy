@@ -171,6 +171,11 @@ Visual_editor.implement
 		
 			event.preventDefault()
 			
+			if (!Клавиши.has('Shift', event))
+				if (visual_editor.intercept_enter)
+					if (visual_editor.intercept_enter() !== false)
+						return
+			
 			var container = editor.caret.container()
 			var container_tag = container.node().tagName.toLowerCase()
 			

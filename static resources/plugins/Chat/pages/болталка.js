@@ -49,6 +49,14 @@
 				[
 					'.chat > li[author="{id}"] .author'
 				]
+			},
+			set_up_visual_editor: function(visual_editor)
+			{
+				visual_editor.intercept_enter = (function()
+				{
+					this.send_message()
+				})
+				.bind(this)
 			}
 		})
 		

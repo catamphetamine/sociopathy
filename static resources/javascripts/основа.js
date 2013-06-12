@@ -301,7 +301,7 @@ function insert_style(path)
 		console.log('is cached')
 		
 		var style = document.createElement('style')
-		style.type = 'text/less'
+		//style.type = 'text/less'
 		style.innerHTML = Optimization.Styles[id]
 		return head.appendChild(style)
 	}

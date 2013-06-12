@@ -23,33 +23,34 @@ global.Options.Version = require "./version"
 global.disk_tools = require './tools/disk'
 require './tools/date'
 
-if Options.Optimize
-	require './compressor'
-
-global.redis = require 'redis'
-	
-# memcache
-memcache = require('memcache')
-global.memcache = new memcache.Client(Options.Memcache.Port, 'localhost')
-
-mongo_db = require './tools/mongo db'
-
-mongo_db_options =
-	server:
-		host: 'localhost'
-		port: Options.MongoDB.Port
-		auto_reconnect: yes
-	database:
-		name: Options.MongoDB.Database
-		safe: yes
-	
-global.хранилище = mongo_db.open(mongo_db_options)
-
 global.fiberize = require './tools/fiberize'
-global.снасти = require './tools/tools'
-global.пользовательское = require './tools/user tools'
 
 fiber ->
+	if Options.Optimize
+		require './compressor'
+	
+	global.redis = require 'redis'
+		
+	# memcache
+	memcache = require('memcache')
+	global.memcache = new memcache.Client(Options.Memcache.Port, 'localhost')
+	
+	mongo_db = require './tools/mongo db'
+	
+	mongo_db_options =
+		server:
+			host: 'localhost'
+			port: Options.MongoDB.Port
+			auto_reconnect: yes
+		database:
+			name: Options.MongoDB.Database
+			safe: yes
+		
+	global.хранилище = mongo_db.open(mongo_db_options)
+
+	global.снасти = require './tools/tools'
+	global.пользовательское = require './tools/user tools'
+
 	global.хранилище.create = global.хранилище.createCollection.bind_await(global.хранилище)
 	
 	global.either_way_loading = require './tools/either way loading'

@@ -1,0 +1,97 @@
+0 info it worked if it ends with ok
+1 verbose cli [ 'C:\\Program Files\\nodejs\\\\node.exe',
+1 verbose cli   'C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js',
+1 verbose cli   'install',
+1 verbose cli   'less.js' ]
+2 info using npm@1.2.25
+3 info using node@v0.10.10
+4 verbose node symlink C:\Program Files\nodejs\\node.exe
+5 verbose read json d:\work\sociopathy\package.json
+6 verbose read json d:\work\sociopathy\node_modules\async\package.json
+7 verbose read json d:\work\sociopathy\node_modules\coffee-script\package.json
+8 verbose read json d:\work\sociopathy\node_modules\coffee-trace\package.json
+9 verbose read json d:\work\sociopathy\node_modules\colors\package.json
+10 verbose read json d:\work\sociopathy\node_modules\connect\package.json
+11 verbose read json d:\work\sociopathy\node_modules\express\package.json
+12 verbose read json d:\work\sociopathy\node_modules\formidable\package.json
+13 verbose read json d:\work\sociopathy\node_modules\http-agent\package.json
+14 verbose read json d:\work\sociopathy\node_modules\http-proxy\package.json
+15 verbose read json d:\work\sociopathy\node_modules\imagemagick\package.json
+16 verbose read json d:\work\sociopathy\node_modules\jqtpl\package.json
+17 verbose read json d:\work\sociopathy\node_modules\less\package.json
+18 verbose read json d:\work\sociopathy\node_modules\mailer\package.json
+19 verbose read json d:\work\sociopathy\node_modules\memcache\package.json
+20 verbose read json d:\work\sociopathy\node_modules\mime\package.json
+21 verbose read json d:\work\sociopathy\node_modules\mongodb\package.json
+22 verbose read json d:\work\sociopathy\node_modules\mongoskin\package.json
+23 verbose read json d:\work\sociopathy\node_modules\npm-debug.log\package.json
+24 verbose read json d:\work\sociopathy\node_modules\optimist\package.json
+25 verbose read json d:\work\sociopathy\node_modules\pkginfo\package.json
+26 verbose read json d:\work\sociopathy\node_modules\qs\package.json
+27 verbose read json d:\work\sociopathy\node_modules\redis\package.json
+28 verbose read json d:\work\sociopathy\node_modules\request\package.json
+29 verbose read json d:\work\sociopathy\node_modules\socket.io\package.json
+30 verbose read json d:\work\sociopathy\node_modules\socket.io-client\package.json
+31 verbose read json d:\work\sociopathy\node_modules\source-map\package.json
+32 verbose read json d:\work\sociopathy\node_modules\sync\package.json
+33 verbose read json d:\work\sociopathy\node_modules\uglify-js\package.json
+34 verbose read json d:\work\sociopathy\node_modules\validator\package.json
+35 verbose read json d:\work\sociopathy\node_modules\websocket.io\package.json
+36 verbose read json d:\work\sociopathy\node_modules\ws\package.json
+37 warn package.json coffee-trace@1.3.1 No repository field.
+38 warn package.json sync@0.2.2 No repository field.
+39 warn package.json formidable@1.0.8 No repository field.
+40 warn package.json mime@1.2.4 contributers should probably be contributors.
+41 warn package.json websocket.io@0.1.2 No repository field.
+42 verbose read json d:\work\sociopathy\package.json
+43 verbose cache add [ 'less.js', null ]
+44 verbose cache add name=undefined spec="less.js" args=["less.js",null]
+45 verbose parsed url { protocol: null,
+45 verbose parsed url   slashes: null,
+45 verbose parsed url   auth: null,
+45 verbose parsed url   host: null,
+45 verbose parsed url   port: null,
+45 verbose parsed url   hostname: null,
+45 verbose parsed url   hash: null,
+45 verbose parsed url   search: null,
+45 verbose parsed url   query: null,
+45 verbose parsed url   pathname: 'less.js',
+45 verbose parsed url   path: 'less.js',
+45 verbose parsed url   href: 'less.js' }
+46 silly lockFile 0b7d85e7-less-js less.js
+47 verbose lock less.js C:\Users\kuchumovn\AppData\Roaming\npm-cache\0b7d85e7-less-js.lock
+48 silly lockFile 0b7d85e7-less-js less.js
+49 silly lockFile 0b7d85e7-less-js less.js
+50 verbose addNamed [ 'less.js', '' ]
+51 verbose addNamed [ null, '' ]
+52 silly lockFile 0d6a7063-less-js less.js@
+53 verbose lock less.js@ C:\Users\kuchumovn\AppData\Roaming\npm-cache\0d6a7063-less-js.lock
+54 silly addNameRange { name: 'less.js', range: '', hasData: false }
+55 verbose url raw less.js
+56 verbose url resolving [ 'https://registry.npmjs.org/', './less.js' ]
+57 verbose url resolved https://registry.npmjs.org/less.js
+58 info trying registry request attempt 1 at 22:06:51
+59 http GET https://registry.npmjs.org/less.js
+60 http 404 https://registry.npmjs.org/less.js
+61 silly registry.get cb [ 404,
+61 silly registry.get   { server: 'CouchDB/1.3.0 (Erlang OTP/R15B03)',
+61 silly registry.get     date: 'Wed, 12 Jun 2013 18:06:58 GMT',
+61 silly registry.get     'content-type': 'application/json',
+61 silly registry.get     'content-length': '52',
+61 silly registry.get     'cache-control': 'must-revalidate' } ]
+62 silly lockFile 0d6a7063-less-js less.js@
+63 silly lockFile 0d6a7063-less-js less.js@
+64 error 404 'less.js' is not in the npm registry.
+64 error 404 You should bug the author to publish it
+64 error 404
+64 error 404 Maybe try 'npm search less'
+64 error 404
+64 error 404 Note that you can also install from a
+64 error 404 tarball, folder, or http url, or git url.
+65 error System Windows_NT 6.1.7601
+66 error command "C:\\Program Files\\nodejs\\\\node.exe" "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js" "install" "less.js"
+67 error cwd d:\work\sociopathy
+68 error node -v v0.10.10
+69 error npm -v 1.2.25
+70 error code E404
+71 verbose exit [ 1, true ]

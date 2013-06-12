@@ -119,7 +119,7 @@ file_system = require 'fs'
 		
 снасти.создать_путь = (path, callback) ->
 	# default foder mode
-	mode = 0777
+	mode = 0o777
 	
 	# change windows slashes to unix
 	path =  path.replace(/\\/g, '/')

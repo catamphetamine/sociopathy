@@ -584,6 +584,8 @@ var Messages = new Class
 			messages.adjust_listing_margin()
 		}
 		
+		messages.send_message = send_message
+		
 		visual_editor.ctrl_enter_pressed_in_container = function()
 		{
 			if (!send_message())
