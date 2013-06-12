@@ -27,8 +27,8 @@ generate_everything = ->
 	
 	javascripts = javascripts.filter((javascript) -> !javascript.starts_with('на страницах/'))
 	
-	console.log('Scripts:')
-	console.log(javascripts)
+	#console.log('Scripts:')
+	#console.log(javascripts)
 
 	for script in javascripts
 		$ += '<script for="' + script + '">' + javascript_minifier(disk_tools.read(javascripts_path + '/' + script + '.js')) + '</script>'
@@ -40,8 +40,8 @@ generate_everything = ->
 	
 	css = css.filter((css) -> !css.starts_with('страницы/'))
 	
-	console.log('Styles:')
-	console.log(css)
+	#console.log('Styles:')
+	#console.log(css)
 	
 	# ещё нужно будет подгружать файлы .less и заставлять Less использовать именно подгруженные, когда include()
 	
