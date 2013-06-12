@@ -50,5 +50,5 @@ module.exports =
 			Port: 465 # 587 #
 	Invites: yes
 	Plugins: ['Library', 'People', 'Help', 'News', 'Chat', 'Talks', 'Discussions', 'Bookshelf', 'Settings', 'Trash', 'Administration', 'Errors', 'Picture albums', 'Video albums'] # 'Diary', 'Journal', 'Books', 'Circles'
-	Optimize: no
+	Optimize: yes
 	Language: 'ru' # possible values: 'ru', 'en'

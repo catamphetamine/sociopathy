@@ -2,7 +2,7 @@
 logs/*.log
 configuration/windows/configuration.private.coffee
 code/scala/classes/*
-static resources/compressed/*
+static resources/compressed
 загруженное/книги/*
 загруженное/читальня/разделы/*
 загруженное/временное/*

@@ -1,5 +1,3 @@
-var first_time_page_loading = true
-			
 var panel
 var content
 
@@ -46,7 +44,7 @@ $(document).on('scripts_loaded', function()
 	loading_page({ immediate: true })
 
 	Page.element = $('#page')
-
+	
 	подгрузить_статику(function(ошибка)
 	{
 		if (ошибка)

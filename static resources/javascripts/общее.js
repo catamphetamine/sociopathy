@@ -48,6 +48,8 @@ function get_scroll_position()
 	return scroll_position
 }
 
+var first_time_page_loading = true
+
 /**
  * show loading screen
  */

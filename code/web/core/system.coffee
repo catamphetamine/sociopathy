@@ -37,6 +37,7 @@ http.get '/initialize', (ввод, вывод) ->
 	data =
 		site_version: Options.Version
 		development: Options.Development
+		optimize: Options.Optimize
 		initialization_data: initialization_data(ввод)
 	
 	if пользовательское.пользователь_ли(ввод)

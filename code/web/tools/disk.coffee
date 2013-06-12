@@ -87,5 +87,14 @@ disk_tools.map_files = (path, options) ->
 
 disk_tools.read = (file) ->
 	disk.readFileSync(file, 'utf8')
+
+disk_tools.write = (file, content) ->
+	disk.writeFileSync(file, content, 'utf8')
+
+disk_tools.exists = (file) ->
+	disk.existsSync(file)
+	
+disk_tools.new_folder = (folder) ->
+	disk.mkdirSync(folder)
 	
 module.exports = disk_tools

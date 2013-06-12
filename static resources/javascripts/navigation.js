@@ -2,7 +2,7 @@ var navigate_to_page
 var navigating = false
 
 var get_page_less_style_link
-
+			
 ;(function()
 {
 	var страницы_плагинов = {}

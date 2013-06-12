@@ -48,7 +48,8 @@ var вставить_содержимое
 			шаблоны.push
 			({
 				name: шаблон,
-				url: '/plugins/' + plugin + '/templates/' + шаблон + '.html'
+				url: '/plugins/' + plugin + '/templates/' + шаблон + '.html',
+				plugin: true
 			})
 		})
 	})
@@ -62,9 +63,12 @@ var вставить_содержимое
 			if (counter === 0)
 				возврат()
 		}
-		
-		шаблоны.forEach(function(шаблон)
-		{
+	
+		function get(шаблон, got)
+		{			
+			if (Configuration.Optimize && !шаблон.plugin)
+				return got(Optimization.Templates[шаблон.name])
+			
 			Ajax.get(add_version(шаблон.url), {}, { type: 'html' })
 			.ошибка(function()
 			{
@@ -73,12 +77,32 @@ var вставить_содержимое
 			})
 			.ok(function(template) 
 			{
+				got(template)
+			})
+		}
+		
+		шаблоны.forEach(function(шаблон)
+		{
+			get(шаблон, function(template)
+			{
 				$.template(шаблон.name, template)
 				callback()
 			})
 		})
 	}
 
+	function вставить_кусочек(кусочек, данные, возврат)
+	{
+		if (Configuration.Optimize && Optimization.Кусочки[кусочек])
+		{
+			$.template('кусочки/' + кусочек, Optimization.Кусочки[кусочек])
+			 $('body').append($.tmpl('кусочки/' + кусочек, данные))
+			 return возврат()
+		}
+		
+		вставить_содержимое('/страницы/кусочки/' + кусочек + '.html', данные, { куда: $('body') }, возврат)
+	}
+	
 	function вставить_кусочки(возврат)
 	{
 		var counter = кусочки.length
@@ -91,7 +115,7 @@ var вставить_содержимое
 		
 		кусочки.forEach(function(кусочек)
 		{
-			вставить_содержимое('/страницы/кусочки/' + кусочек + '.html', {}, { куда: $('body') }, callback)
+			вставить_кусочек(кусочек, {}, callback)
 		})
 	}
 	
@@ -228,12 +252,12 @@ var вставить_содержимое
 	{
 		function вставить_пользовательское_содержимое(возврат)
 		{
-			вставить_содержимое('/страницы/кусочки/user content.html', данные_пользователя, { куда: $('body') }, возврат)
+			вставить_кусочек('user content', данные_пользователя, возврат)
 		}
 		
 		function вставить_гостевое_содержимое(возврат)
 		{
-			вставить_содержимое('/страницы/кусочки/guest content.html', {}, { куда: $('body') }, возврат)
+			вставить_кусочек('guest content', {}, возврат)
 		}
 		
 		if (пользователь)

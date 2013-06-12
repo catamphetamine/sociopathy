@@ -23,7 +23,7 @@ global.Options.Version = require "./version"
 global.disk_tools = require './tools/disk'
 require './tools/date'
 
-if Options.Optimize? && Options.Optimize
+if Options.Optimize
 	require './compressor'
 
 global.redis = require 'redis'

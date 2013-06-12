@@ -71,6 +71,7 @@
 				}
 				
 				var request = new XMLHttpRequest()
+				
 				request.open(options.method, options.url, true)
 				
 				var on_success = function(data)
@@ -241,6 +242,26 @@
 				
 				console.log('loading script: ' + path)
 				
+				var id = path.substring('/javascripts/'.length)
+				id = id.substring(0, id.length - '.js'.length)
+				
+				if (Configuration.Optimize && Optimization.Scripts[id])
+				{
+					console.log('is cached')
+					
+					var head = document.getElementsByTagName("head")[0]
+					
+					var script   = document.createElement("script")
+					script.text  = Optimization.Scripts[id]
+					
+					document.body.appendChild(script)
+					
+					if (callback)
+						callback()
+						
+					return
+				}
+				
 				load_script(add_version(path), callback)
 			}
 			
@@ -274,37 +295,33 @@
 				
 				Version = data.site_version
 				
+				Configuration.Optimize = data.optimize
+				
 				if (data.development)
 				{
 					window.development_mode = true
-					Configuration.Optimized = false
-				}
-				else
-				{
-					// optimization code is not finished yet
-					// and currently is suspended,
-					// but you can finish it if you like
-					
-					//Configuration.Optimized = true
+					Configuration.Optimize = false
 				}
 				
-				// not finished writing this code yet
-				// what is left is to insert the javascripts, styles and html templates on the page
-				if (Configuration.Optimized)
+				if (Configuration.Optimize)
 				{
-					// здесь версия подставляется автоматически
-					/* version → */ Version = "0.0.0.10-beta" /* ← version */
+					window.Optimization = {}
 					
 					ajax
 					({
 						url: add_version('/compressed/everything.html'),
-						dataType: 'xml',
+						dataType: 'html',
 						success: function(everything)
 						{
 							var find = function(selector)
 							{
 								return everything.querySelectorAll(selector)
 							}
+							
+							window.Optimization.Scripts = {}
+							
+							var body = document.querySelectorAll('body')[0]
+							var head = document.querySelectorAll('head')[0]
 							
 							var scripts = find('html > head > script')
 							
@@ -314,12 +331,15 @@
 								var script = scripts[i]
 								
 								var id = script.getAttribute('for')
-								var content = script.firstChild.nodeValue
+								script.removeAttribute('for')
+								//var content = script.firstChild.nodeValue
 								
-								console.log('inserting javascript for ' + id)
-								console.log('content: ' + content)
+								console.log('got javascript for ' + id)
+								//console.log('content: ' + content)
 								
-								$('head').append($('<script/>').html(content))
+								window.Optimization.Scripts[id] = script.innerHTML
+								
+								//$('head').append($('<script/>').html(content))
 								
 								i++
 							}
@@ -335,9 +355,11 @@
 								var content = style.firstChild.nodeValue
 								
 								console.log('inserting style for ' + id)
-								console.log('content: ' + content)
+								//console.log('content: ' + content)
 								
-								$('head').append($('<style/>').html(content))
+								style = document.createElement('style')
+								style.innerHTML = content
+								head.appendChild(style)
 								
 								i++
 							}
@@ -349,25 +371,87 @@
 								return dummy_container.innerHTML
 							}
 							
-							var templates = find('html > body > div')
+							function utf8_to_base64(text)
+							{
+								return window.btoa(unescape(encodeURIComponent(text)))
+							}
+							
+							function base64_to_utf8(cipher)
+							{
+								return decodeURIComponent(escape(window.atob(cipher)))
+							}
+
+							window.Optimization.Templates = {}
+							
+							var templates = find('html > body > div.template')
 							
 							var i = 0
 							while (i < templates.length)
 							{
 								var template = templates[i]
 								
+								var id = template.getAttribute('for')
+								
+								/*
 								var xml = xml_to_text(template)
 								
-								var id = template.getAttribute('for')
 								var html = xml.substring(xml.indexOf('>') + 1, xml.lastIndexOf('</div>'))
+								*/
 								
-								console.log('inserting html templates for ' + id)
+								// decode from base64
+								var html = base64_to_utf8(template.innerHTML)
+								
+								console.log('storing html template for ' + id)
 								console.log('content: ' + html)
 								
-								$('body').append($(html))
+								window.Optimization.Templates[id] = html
 								
 								i++
 							}
+							
+							window.Optimization.Кусочки = {}
+							
+							var pieces = find('html > body > div.piece')
+							
+							var i = 0
+							while (i < pieces.length)
+							{
+								var piece = pieces[i]
+								
+								var id = piece.getAttribute('for')
+								
+								/*
+								var xml = xml_to_text(piece)
+								
+								var html = xml.substring(xml.indexOf('>') + 1, xml.lastIndexOf('</div>'))
+								*/
+								
+								// decode from base64
+								var html = base64_to_utf8(piece.innerHTML)
+								
+								console.log('inserting html piece ' + id)
+								//console.log('content: ' + html)
+								
+								window.Optimization.Кусочки[id] = html
+								
+								/*
+								var dummy = document.createElement('div')
+								dummy.innerHTML = html
+								var piece_elements = dummy.childNodes
+								
+								var j = 0
+								while (j < piece_elements.length)
+								{
+									body.appendChild(piece_elements[j])
+									j++
+								}
+								*/
+								
+								i++
+							}
+							
+							// finished
+							insert_script('/javascripts/основа')
 						},
 						error: function()
 						{
