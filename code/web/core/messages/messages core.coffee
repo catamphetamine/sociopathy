@@ -324,7 +324,7 @@ global.prepare_messages = (options) ->
 			setter = {}
 			setter['последние_сообщения.' + options.path(environment)] = _id
 			
-			db('people_sessions').update(query, { $set: setter }, { multi: yes })
+			db('people_sessions')._.update(query, { $set: setter }, { multi: yes })
 			
 			users = users.map((_id) -> _id.toString())
 		else
