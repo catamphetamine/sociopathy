@@ -32,7 +32,7 @@ var Picture_uploader = new Class
 		
 		this.input = input
 		
-		this.on_choice()
+		//this.on_choice()
 		this.initialize_uploader()
 		
 		if (this.options.listener)

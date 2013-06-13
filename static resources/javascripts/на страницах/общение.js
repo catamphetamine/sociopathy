@@ -25,7 +25,7 @@
 	
 		visual_editor.keep_cursor_on_screen()
 	
-		visual_editor.ctrl_enter_pressed_in_container = function()
+		visual_editor.submit = function()
 		{
 			var title = page.get('form .title').val().trim()
 			

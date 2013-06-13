@@ -561,16 +561,6 @@
 			},
 			error: "Не удалось загрузить фотографию"
 		})
-	
-		Режим.при_переходе({ в: 'правка' }, function(event)
-		{
-
-			page.photo.find('> img').on('click.режим_правка', function(event)
-			{
-				event.preventDefault()
-				page.photo_uploader.choose()
-			})
-		})
 	}
 	
 	var editable_info =

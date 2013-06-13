@@ -115,7 +115,7 @@ http.post '/сеть/читальня/заметка', (ввод, вывод, п
 	
 	result = db('library_articles')._.update(query, { $set: { название: название, содержимое: содержимое }, $inc: { версия: 1 } })
 	
-	if result != 1
+	if result[0] != 1
 		return вывод.send({ старая_версия: yes })
 	
 	заметка = db('library_articles')._.find_one({ _id: _id })

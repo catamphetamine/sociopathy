@@ -101,6 +101,10 @@ global.resize = (что, во_что, настройки, возврат) ->
 			options.height = настройки.высота + '>'
 		else	
 			options.height = настройки.высота + '^'
+		
+		# протяжённость, для выравнивания по высоте по середине
+		options.customArgs.add('-extent')
+		options.customArgs.add(настройки.ширина + 'x' + настройки.высота)
 	
 	image_magick.resize(options, возврат) #(error, output, errors_output) ->
 	

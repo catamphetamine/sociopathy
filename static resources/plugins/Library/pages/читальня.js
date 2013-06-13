@@ -18,13 +18,6 @@
 			url: '/сеть/читальня/раздел/картинка',
 			element: category,
 			namespace: 'режим_правка',
-			listener: function(listen)
-			{
-				Режим.при_переходе({ в: 'правка' }, function(event)
-				{
-					listen()
-				})
-			},
 			click_event: 'clicked',
 			ok: function(data, element)
 			{
@@ -68,7 +61,6 @@
 						postprocess_item: function(data)
 						{
 							this.attr('_id', data._id).empty()
-							uploadable_icon(this)
 						}
 					},
 					заметки:
@@ -500,6 +492,11 @@
 			{
 				sortable: true,
 				throwable: true
+			})
+			
+			page.categories.find('> li').each(function()
+			{
+				uploadable_icon($(this))
 			})
 		},
 		

@@ -586,7 +586,7 @@ var Messages = new Class
 		
 		messages.send_message = send_message
 		
-		visual_editor.ctrl_enter_pressed_in_container = function()
+		visual_editor.submit = function()
 		{
 			if (!send_message())
 				return

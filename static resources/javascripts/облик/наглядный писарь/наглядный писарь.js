@@ -276,5 +276,10 @@ var Visual_editor = new Class
 			$(current_paragraph).after(new_paragraph)
 		
 		this.editor.caret.move_to(new_paragraph)
+	},
+	
+	is_submission_key_combination: function(event)
+	{
+		return Клавиши.is('Ctrl', 'Enter', event)
 	}
 })

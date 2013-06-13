@@ -170,11 +170,14 @@ Visual_editor.implement
 				return
 		
 			event.preventDefault()
+			event.stopPropagation()
 			
+			/*
 			if (!Клавиши.has('Shift', event))
 				if (visual_editor.intercept_enter)
 					if (visual_editor.intercept_enter() !== false)
 						return
+			*/
 			
 			var container = editor.caret.container()
 			var container_tag = container.node().tagName.toLowerCase()
@@ -227,10 +230,10 @@ Visual_editor.implement
 		
 		editor.on('keydown', function(event)
 		{
-			if (Клавиши.is('Ctrl', 'Enter', event))
+			if (visual_editor.is_submission_key_combination(event))
 			{
-				if (visual_editor.ctrl_enter_pressed_in_container)
-					return visual_editor.ctrl_enter_pressed_in_container()
+				if (visual_editor.submit())
+					return visual_editor.submit()
 			}
 		})
 	},
