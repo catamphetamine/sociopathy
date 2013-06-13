@@ -156,11 +156,6 @@
 			category.unbind('.initial_keypress')
 		})
 		
-		category.on('clicked.режим_правка', function()
-		{
-			category.data('uploader').choose(this)
-		})
-		
 		page.category_dragger.refresh()
 	}
 	
