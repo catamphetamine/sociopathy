@@ -45,6 +45,11 @@ exports.express = (application) ->
 			application[method](encodeURI(url), enhanced_action)
 			
 exports.websocket = (socket) ->
+	if socket.fiber_injected?
+		return
+		
+	socket.fiber_injected = yes
+	
 	socket.old_on = socket.on
 	
 	socket.on = (message_type, action) ->
