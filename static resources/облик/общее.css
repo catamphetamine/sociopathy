@@ -785,12 +785,6 @@ body[mode="правка"] .rich_formatting a
 		}
 	}
 	
-	.picture
-	{
-		/* .beautiful_shadow_5(0px, 4px, 20px, 8px, 12px, 8px, 0px, 0.1); */
-		/*.beautiful_shadow_5(0px, 0px, 4px, 4px, 4px, 4px, 0px, 1, 0, 120, 255); */
-	}
-	
 	.tex
 	{
 		/* display: inline-block; */
@@ -918,8 +912,27 @@ body[mode="правка"] .rich_formatting a
 		border-width: 1px;
 		
 		border-radius: 4px;
-
+		
 		.beautiful_shadow_3(0px, 0px, 8px, 3px, 4px, 0.18);
+	}
+
+	[type="picture"]
+	{
+		margin-top: 16px;
+	}
+}
+
+ul > li:first-child
+{
+	.rich_formatting
+	{
+		p:first-child
+		{
+			[type="picture"]:first-child
+			{
+				margin-top: 0;
+			}
+		}
 	}
 }
 

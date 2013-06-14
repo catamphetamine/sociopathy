@@ -136,9 +136,9 @@
 		})
 	}
 	
-	function discussions_loaded()
+	function discussions_loaded(elements)
 	{
-		if (page.discussions.is_empty())
+		if (elements.is_empty())
 		{
 			page.discussions.remove()
 			page.get('.main_content').find('> .empty').show()

@@ -171,7 +171,7 @@ var Batch_loader = new Class
 			var elements = []
 			список.for_each(function()
 			{
-				var element = loader.options.show(this)
+				var element = loader.options.render(this)
 				if (element)
 					elements.push(element)
 			})
@@ -200,6 +200,11 @@ var Batch_loader = new Class
 			
 			loader.options.before_output_async.bind(loader)(elements, function()
 			{
+				elements.for_each(function()
+				{
+					loader.options.show(this)
+				})
+				
 				if (!loader.есть_ли_ещё)
 					loader.options.finished(список)
 				
@@ -313,6 +318,7 @@ var Data_loader = new Class
 		parameters: {},
 		get_data: loader_get_data,
 		done: function() {},
+		render: function() {},
 		show: function() {},
 		before_done: function() {},
 		each: function() {},
@@ -376,7 +382,7 @@ var Data_loader = new Class
 			var elements = []
 			список.for_each(function()
 			{
-				elements.push(loader.options.show(this))
+				elements.push(loader.options.render(this))
 			})
 			
 			loader.options.before_done(список)
@@ -386,6 +392,11 @@ var Data_loader = new Class
 				
 			loader.options.callback(null, function()
 			{
+				elements.for_each(function()
+				{
+					loader.options.show(this)
+				})
+				
 				if (loader.options.after_output)
 					loader.options.after_output(elements)
 				
@@ -424,43 +435,50 @@ var Data_templater = new Class
 		if (!options.postprocess_item)
 			options.postprocess_item = $.noop
 	
-		var show_item
-		if (options.show)
-			show_item = options.show
-		else
-			show_item = function(data, options)
+		var global_options = options
+		
+		options.render = options.render || function(data, options)
+		{
+			options = options || global_options
+			
+			var item
+			
+			if (options.template)
 			{
-				var item
-				
-				if (options.template)
-				{
-					if (typeof options.template === 'string')
-						item = $.tmpl(options.template, data)
-					else
-						item = $.tmpl(options.template, data)
-				}
+				if (typeof options.template === 'string')
+					item = $.tmpl(options.template, data)
 				else
-					item = $.tmpl(options.template_url, data)
-					
-				if (options.table)
-				{
-					if (!item.is('tr'))
-					{
-						if (!item.is('td'))
-						{
-							item = $('<td/>').append(item)
-						}
-						
-						item = $('<tr/>').append(item)
-					}
-				}
-				else if (!item.is('li') && !options.single)
-					item = $('<li/>').append(item)
-					
-				item = options.postprocess_item.bind(item)(data) || item
-				
-				return item.appendTo(options.container)
+					item = $.tmpl(options.template, data)
 			}
+			else
+				item = $.tmpl(options.template_url, data)
+				
+			if (options.table)
+			{
+				if (!item.is('tr'))
+				{
+					if (!item.is('td'))
+					{
+						item = $('<td/>').append(item)
+					}
+					
+					item = $('<tr/>').append(item)
+				}
+			}
+			else if (!item.is('li') && !options.single)
+				item = $('<li/>').append(item)
+				
+			item = options.postprocess_item.bind(item)(data) || item
+			
+			return item
+		}
+			
+		options.show = options.show || function(item, options)
+		{
+			options = options || global_options
+			
+			item.appendTo(options.container)
+		}
 		
 		if (!options.process_data)
 			options.process_data = function(data) { return data }
@@ -468,30 +486,59 @@ var Data_templater = new Class
 		if (options.after_output)
 			loader.options.after_output = options.after_output
 		
-		loader.options.show = function(item)
+		loader.options.render = function(item)
 		{
-			if (options.data_structure)
+			item = options.process_data(item)
+			
+			if (!options.data_structure)
+				return options.render(item)
+		
+			var items = item
+			var elements = {}
+			Object.for_each(options.data_structure, function(property, property_options)
 			{
-				var items = item
-				for (var property in options.data_structure)
-					if (options.data_structure.hasOwnProperty(property))
-						if (items[property])
-						{
-							if (items[property].constructor === Array)
-							{
-								items[property].for_each(function()
-								{
-									show_item(this, options.process_data(options.data_structure[property]))
-								})
-							}
-							else
-							{
-								show_item(items[property], options.process_data(options.data_structure[property]))
-							}
-						}
-			}
-			else
-				return show_item(item, options)
+				var value = items[property]
+				
+				if (!value)
+					return
+			
+				if (value.constructor === Array)
+				{
+					return elements[property] = value._map(function()
+					{
+						return options.render(this, property_options)
+					})
+				}
+				
+				return elements[property] = options.render(value, property_options)
+			})
+			
+			return elements
+		}
+		
+		loader.options.show = function(element)
+		{
+			if (!options.data_structure)
+				return options.show(element)
+		
+			var elements = element
+			Object.for_each(options.data_structure, function(property, property_options)
+			{
+				var element = elements[property]
+						
+				if (!element)
+					return
+			
+				if (element.constructor === Array)
+				{
+					return element.for_each(function()
+					{
+						options.show(this, property_options)
+					})
+				}
+				
+				return options.show(element, property_options)
+			})
 		}
 		
 		loader.options.Ajax = options.Ajax
@@ -566,6 +613,7 @@ function load_content(options)
 	
 	new Data_templater
 	({
+		render: function() {},
 		show: function() {}
 	},
 	loader)

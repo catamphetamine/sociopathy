@@ -72,8 +72,7 @@
 							this.attr('_id', data._id).empty()
 						}
 					}
-				},
-				
+				}
 			},
 			new  Data_loader
 			({

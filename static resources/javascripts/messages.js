@@ -68,7 +68,7 @@ var Messages = new Class
 			messages.indicate_no_new_messages()
 		})
 		
-		this.options.output_message = this.options.output_message.bind(this)
+		this.options.render_message = this.options.render_message.bind(this)
 		this.options.after_append = this.options.after_append.bind(this)
 		this.options.decorate_message = this.options.decorate_message.bind(this)
 		this.options.send_message = this.options.send_message.bind(this)
@@ -171,87 +171,90 @@ var Messages = new Class
 						messages.process_message_element($(this))
 					})
 				},
-				prepend: function(data)
+				render: function(data)
 				{
 					if (messages.options.container.find('> li[message_id="' + data._id + '"]').exists())
 						return
-				
-					function prepend(message)
-					{
-						//if (messages.options.container.find('> li[message_id="' + message.attr('message_id') + '"]').exists())
-						//	return
 					
-						var next_in_time = messages.options.container.find('> li.new_author:first')
-						
-						if (next_in_time.attr('author') === data.отправитель._id)
-						{
-							next_in_time.find('.author').children().remove()
-							next_in_time.find('.message').css('padding-top', 0)
-							
-							next_in_time.removeClass('new_author')
-							
-							message.addClass('new_author')
-							
-							if (next_in_time.hasClass('odd'))
-								message.addClass('odd')
-							else
-								message.addClass('even')
-						}
-						else
-						{
-							message.addClass('new_author')
-							
-							if (next_in_time.hasClass('odd'))
-								message.addClass('even')
-							else
-								message.addClass('odd')
-						}
+					var message = messages.options.render_message(data)
 					
-						message.attr('message_id', data._id)
-						
-						messages.options.container.prepend(message)
-					}
+					message.attr('message_id', data._id)
 					
-					return messages.options.output_message(data, prepend)
+					return message
 				},
-				append: function(data)
+				prepend: function(message)
 				{
-					if (messages.options.container.find('> li[message_id="' + data._id + '"]').exists())
-						return
+					if (options.before_output)	
+						options.before_output(message)
+						
+					//if (messages.options.container.find('> li[message_id="' + message.attr('message_id') + '"]').exists())
+					//	return
+				
+					var next_in_time = messages.options.container.find('> li.new_author:first')
 					
-					function append(message)
+					if (next_in_time.attr('author') === message.attr('author'))
 					{
-						//if (messages.options.container.find('> li[message_id="' + message.attr('message_id') + '"]').exists())
-						//	return
-					
-						var previous_in_time = messages.options.container.find('> li.new_author:last')
+						next_in_time.find('.author').children().remove()
+						next_in_time.find('.message').css('padding-top', 0)
 						
-						if (previous_in_time.attr('author') === data.отправитель._id)
-						{
-							message.find('.author').children().remove()
-							message.find('.message').css('padding-top', 0)
-							
-							if (previous_in_time.hasClass('odd'))
-								message.addClass('odd')
-							else
-								message.addClass('even')
-						}
+						next_in_time.removeClass('new_author')
+						
+						message.addClass('new_author')
+						
+						if (next_in_time.hasClass('odd'))
+							message.addClass('odd')
 						else
-						{
-							message.addClass('new_author')
-							
-							if (previous_in_time.hasClass('odd'))
-								message.addClass('even')
-							else
-								message.addClass('odd')
-						}
-					
-						message.attr('message_id', data._id)
+							message.addClass('even')
+					}
+					else
+					{
+						message.addClass('new_author')
 						
-						messages.options.container.append(message)
+						if (next_in_time.hasClass('odd'))
+							message.addClass('even')
+						else
+							message.addClass('odd')
 					}
 					
-					return messages.options.output_message(data, append)
+					messages.options.container.prepend(message)
+					
+					if (messages.options.after_output)
+						messages.options.after_output(message)
+				},
+				append: function(message)
+				{
+					if (options.before_output)	
+						options.before_output(message)
+						
+					//if (messages.options.container.find('> li[message_id="' + message.attr('message_id') + '"]').exists())
+					//	return
+				
+					var previous_in_time = messages.options.container.find('> li.new_author:last')
+					
+					if (previous_in_time.attr('author') === message.attr('author'))
+					{
+						message.find('.author').children().remove()
+						message.find('.message').css('padding-top', 0)
+						
+						if (previous_in_time.hasClass('odd'))
+							message.addClass('odd')
+						else
+							message.addClass('even')
+					}
+					else
+					{
+						message.addClass('new_author')
+						
+						if (previous_in_time.hasClass('odd'))
+							message.addClass('even')
+						else
+							message.addClass('odd')
+					}
+					
+					messages.options.container.append(message)
+					
+					if (messages.options.after_output)
+						messages.options.after_output(message)
 				}
 			},
 			container: messages.options.container,

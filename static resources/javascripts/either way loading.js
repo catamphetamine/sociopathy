@@ -83,7 +83,6 @@ function either_way_loading(options)
 		latest_first: options.data.latest_first,
 		batch_size: options.data.batch_size,
 		editable: options.editable,
-		before_output: options.data.before_output,
 		before_output_async: options.data.before_output_async
 	}
 	
@@ -94,6 +93,11 @@ function either_way_loading(options)
 	}
 
 	// загрузчик вверху
+	
+	function container_height()
+	{
+		return options.container.outerHeight(true)
+	}
 	
 	var previous_link = previous_block.find('.previous > a')
 	
@@ -114,19 +118,24 @@ function either_way_loading(options)
 			
 			return data
 		},
-		before_done_more: function()
+		before_output: function(elements)
 		{
-			ajaxify_internal_links(page.content)
-		
-			//set_page_number(this.page.number)
-			
-			if (this.есть_ли_ещё)
-				previous_link.fade_in(0.2)
+			if (options.data.before_output)
+				options.data.before_output(elements)
+				
+			page.data.container_height_before_loaded_previous = container_height()
 		},
 		done_more: function()
 		{
+			прокрутчик.scroll_by(container_height() - page.data.container_height_before_loaded_previous)
+			
 			if (options.progress_bar)
 				update_progress_bar({ skipped: this.skipped() })
+				
+			ajaxify_internal_links(page.content)
+			
+			if (this.есть_ли_ещё)
+				previous_link.fade_in(0.2)
 		},
 		after_output: after_output,
 		finished: function()
@@ -201,29 +210,28 @@ function either_way_loading(options)
 		return item
 	}
 	
-	function prepend_item(data)
+	function prepend_item(item)
 	{
 		if (options.data.prepend)
-			return options.data.prepend(data)
+			return options.data.prepend(item)
 		
-		var item = create_item_from_template(data)
 		options.container.prepend(item)
-		return item
 	}
 	
-	function append_item(data)
+	function append_item(item)
 	{
 		if (options.data.append)
-			return options.data.append(data)
+			return options.data.append(item)
 		
-		var item = create_item_from_template(data)
 		options.container.append(item)
-		return item
 	}
 	
-	function show_item(data, inserter)
+	function render_item(data)
 	{
-		var item = inserter(data)
+		if (options.data.render)
+			return options.data.render(data)
+			
+		var item = create_item_from_template(data)
 	
 		if (!item)
 			return
@@ -245,7 +253,8 @@ function either_way_loading(options)
 	({
 		template: options.template,
 		container: options.container,
-		show: function(data) { return show_item(data, prepend_item) },
+		render: function(data) { return render_item(data) },
+		show: function(element) { prepend_item(element) },
 		conditional: previous_conditional,
 		load_data_immediately: false
 	},
@@ -277,17 +286,14 @@ function either_way_loading(options)
 			
 			return data
 		},
-		before_done: function()
+		before_output: function(elements)
 		{
-			ajaxify_internal_links(page.content)
-		
+			if (options.data.before_output)
+				options.data.before_output(elements)
+				
 			top_loader.index++
 			top_loader.latest = bottom_loader.earliest
-			previous_conditional.callback()
-		},
-		before_done_more: function()
-		{
-			ajaxify_internal_links(page.content)
+			previous_conditional.callback()	
 		},
 		after_output: function(elements)
 		{
@@ -303,6 +309,8 @@ function either_way_loading(options)
 			
 			if (options.progress_bar)
 				update_progress_bar()
+			
+			ajaxify_internal_links(page.content)
 		},
 		finished: function()
 		{
@@ -317,7 +325,8 @@ function either_way_loading(options)
 	new Data_templater
 	({
 		container: options.container,
-		show: function(data) { return show_item(data, append_item) },
+		render: function(data) { return render_item(data) },
+		show: function(element) { append_item(element) },
 		conditional: main_conditional
 	},
 	bottom_loader)

@@ -11,7 +11,7 @@ var Interactive_messages = function(options)
 	var messages = new Messages
 	({
 		data_source: options.data_source,
-		output_message: function(data, output)
+		render_message: function(data)
 		{
 			var message = this.render(data)
 			
@@ -25,19 +25,10 @@ var Interactive_messages = function(options)
 			
 			if (away_users[data.отправитель._id])
 				message.find('.author').addClass('is_away')
-				
-			if (options.before_output)	
-				options.before_output(message)
-				
-			output(message)
-
-			// после preprend, т.к. стили				
-			if (data.отправитель._id !== пользователь._id)
-				this.initialize_user_actions(message, message.attr('author'), 'of_message_author', function()
-				{
-					return message.find('.author').hasClass('online')
-				})
 			
+			if (data.отправитель._id !== пользователь._id)
+				message.attr('another_author', true)
+				
 			return message
 		},
 		more_link: options.more_link,
@@ -85,6 +76,17 @@ var Interactive_messages = function(options)
 		
 			this.connection.emit('сообщение', message)
 			return true
+		},
+		after_output: function(message, data)
+		{
+			// после output, т.к. стили				
+			if (message.attr('another_author') == true)
+			{
+				messages.initialize_user_actions(message, message.attr('author'), 'of_message_author', function()
+				{
+					return message.find('.author').hasClass('online')
+				})
+			}
 		},
 		after_append: function(message, data)
 		{

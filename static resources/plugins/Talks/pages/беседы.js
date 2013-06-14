@@ -118,9 +118,9 @@
 		})
 	}
 	
-	function talks_loaded()
+	function talks_loaded(elements)
 	{
-		if (page.talks.is_empty())
+		if (elements.is_empty())
 		{
 			page.talks.remove()
 			page.get('.main_content').find('> .empty').show()
