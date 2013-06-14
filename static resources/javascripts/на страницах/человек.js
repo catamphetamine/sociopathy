@@ -158,7 +158,6 @@
 		}
 		
 		show_photo()
-		show_online_status()
 		show_minor_info()
 		//show_links()
 		
@@ -216,6 +215,8 @@
 	
 	function id_card_loaded()
 	{
+		show_online_status()
+		
 		page.content_ready()
 	}
 	
