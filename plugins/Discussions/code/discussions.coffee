@@ -1,6 +1,8 @@
 хранилище.create_collection('discussions', [['подписчики', no], ['обновлено_по_порядку', yes], ['id', yes]])
 хранилище.create_collection('discussions_messages', [['общение', no]])
 
+эфир.соединения.обсуждение = {}
+
 Уведомления (пользователь, session, новости, tools) ->
 	tools.общение('обсуждения')
 

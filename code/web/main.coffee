@@ -1,5 +1,7 @@
 require 'coffee-script'
 
+global.Started_at = new Date()
+
 require './tools/language'
 
 global.mode = 'development'

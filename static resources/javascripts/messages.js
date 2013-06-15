@@ -536,9 +536,6 @@ var Messages = new Class
 
 		if (this.options.set_up_visual_editor)
 			this.options.set_up_visual_editor.bind(this)(visual_editor)
-		
-		// глючит новая версия этого обозревателя
-		var Firefox_hack_character = '⋆'
 			
 		function reset_editor_content(options)
 		{
@@ -548,14 +545,7 @@ var Messages = new Class
 			
 			var hint = $('<p/>').appendTo(visual_editor.editor.content)
 				
-			if (options.not_initial && $.browser.mozilla && Firefox_hack_character)
-			{
-				visual_editor.hint(hint, Firefox_hack_character)
-			}
-			else
-			{
-				visual_editor.hint(hint, text('visual editor.enter your text here'))
-			}
+			visual_editor.hint(hint, text('visual editor.enter your text here'))
 		}
 		
 		reset_editor_content()
@@ -563,10 +553,6 @@ var Messages = new Class
 		function send_message()
 		{
 			var html = visual_editor.html()
-			
-			if ($.browser.mozilla && Firefox_hack_character)
-				if (html.ends_with(Firefox_hack_character + '</p>'))
-					html = html.replace(Firefox_hack_character + '</p>', '</p>')
 			
 			var message = Wiki_processor.parse_and_validate(html)
 			

@@ -214,9 +214,18 @@ var Interactive_messages = function(options)
 	messages.read_message = function(_id)
 	{
 		if (options.info)
+		{
 			if (options.info.что)
-				Inter_tab_communication.send('новости_прочитано', { что: options.info.что, сообщения_чего: options.info.общение(), _id: _id.toString() })
-
+			{
+				var info = { что: options.info.что, _id: _id.toString() }
+				
+				if (options.info.общение)
+					info.сообщения_чего = options.info.общение()
+				
+				Inter_tab_communication.send('новости_прочитано', info)
+			}
+		}
+				
 		this.connection.emit('прочитано', _id)
 	}
 	.bind(messages)

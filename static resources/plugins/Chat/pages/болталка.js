@@ -18,6 +18,10 @@
 		
 		messages = Interactive_messages
 		({
+			info:
+			{
+				что: 'болталка'
+			},
 			data_source:
 			{
 				url: '/приложение/сеть/болталка/сообщения'

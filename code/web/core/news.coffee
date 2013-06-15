@@ -1,7 +1,9 @@
 api = {}
 		
 уведомления = []
-		
+
+эфир.соединения.новости = {}
+			
 global.Уведомления = (gather_notifications) ->
 	уведомления.add(gather_notifications)
 			

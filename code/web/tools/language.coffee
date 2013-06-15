@@ -210,3 +210,11 @@ String.prototype.after = (what) ->
 
 String.prototype.contains = (what) ->
 	return @indexOf(what) >= 0
+
+Object.size = (object) ->
+	size = 0
+	
+	for key, value of object
+		size++
+	
+	return size

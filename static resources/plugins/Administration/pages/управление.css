@@ -1,4 +1,62 @@
 #content
 {
 	padding: 40px;
+	
+	.stats
+	{
+		ul
+		{
+			padding: 0;
+			
+			li
+			{
+				list-style-type: none;
+				
+				display: -webkit-flex;
+				-webkit-flex-direction: row;
+				
+				display: flex;
+				flex-direction: row;
+				
+				padding-top: 10px;
+				padding-bottom: 10px;
+				
+				padding-left: 14px;
+				padding-right: 14px;
+				  
+				&:nth-child(odd)
+				{
+					background-color: #efefef;
+				}
+				  
+				.title
+				{
+					-webkit-flex-grow: 0;
+					-webkit-flex-shrink: 1;
+					-webkit-flex-basis: 30%;
+										
+					flex-grow: 1;
+					flex-shrink: 1;
+					flex-basis: auto;
+					
+					-webkit-order: 1;
+					order: 1;
+				}
+				
+				.value
+				{
+					-webkit-flex-grow: 1;
+					-webkit-flex-shrink: 1;
+					-webkit-flex-basis: 30%;
+										
+					flex-grow: 0;
+					flex-shrink: 1;
+					flex-basis: auto;
+					
+					-webkit-order: 2;
+					order: 2;
+				}
+			}
+		}
+	}
 }

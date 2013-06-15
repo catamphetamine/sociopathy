@@ -22,6 +22,18 @@
 				"administrator user info": "{ \"имя\": \"Владимир Владимирович\", \"описание\": \"управляющий\", \"пол\": \"мужской\", \"откуда\": \"Кремль\", \"пароль\": \"123\", \"почта\": \"destination@unreachable.com\" }",
 				
 				"already_initialized": "Хранилище уже создано. Приложение уже должно работать."
+			},
+			
+			"stats":
+			{
+				"version": "Version",
+				"uptime": "Uptime",
+				"cpu": "CPU load",
+				"memory": "Memory used",
+				"ether_connections": "Ether connections",
+				"temporary_storage_for_upload_size": "Temporary folder size",
+				"uploaded": "Uploaded files size",
+				"database_size": "Database size"
 			}
 		}
 	}

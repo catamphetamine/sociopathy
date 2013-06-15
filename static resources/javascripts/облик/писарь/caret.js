@@ -429,7 +429,12 @@ Editor.Caret = new Class
 	
 	text: function()
 	{
-		return this.node().nodeValue.substring(0, this.offset())
+		var node = this.node()
+		
+		if (!Dom_tools.is_text_node(node))
+			return
+		
+		return node.nodeValue.substring(0, this.offset())
 	},
 	
 	collapse_recent_characters: function(how_much, into)
