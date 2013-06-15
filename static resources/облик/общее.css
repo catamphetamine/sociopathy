@@ -795,7 +795,7 @@ body[mode="правка"] .rich_formatting a
 	.video_player
 	{
 		text-align: center;
-		margin-bottom: 50px;
+		margin-bottom: 28px;
 	}
 	
 	p
@@ -920,6 +920,11 @@ body[mode="правка"] .rich_formatting a
 	{
 		margin-top: 16px;
 	}
+	
+	.video_player
+	{
+		margin-top: 36px;
+	}
 }
 
 ul > li:first-child
@@ -930,8 +935,13 @@ ul > li:first-child
 		{
 			[type="picture"]:first-child
 			{
-				margin-top: 0;
+				margin-top: 10px;
 			}
+		}
+		
+		.video_player:first-child
+		{
+			margin-top: 10px;
 		}
 	}
 }
