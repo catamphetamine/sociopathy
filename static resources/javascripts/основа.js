@@ -470,7 +470,7 @@ function initialize(next)
 		],
 		
 		Предпочитаемый_язык: data.язык,
-		Предпочитаемые_языки: data.языки,
+		//Предпочитаемые_языки: data.языки,
 		
 		Fixed: data.language_is_fixed,
 		

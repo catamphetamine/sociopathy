@@ -23,11 +23,16 @@ function load_relevant_translation(path, options)
 		.error(error)
 	}
 	
+	// закрепляем единственный язык
+	var языки = [Configuration.Locale.Предпочитаемый_язык]
+	
+	/*
 	var языки = []
 	Configuration.Locale.Предпочитаемые_языки.forEach(function(язык)
 	{
 		языки.push(язык)
 	})
+	*/
 	
 	// testing english translation
 	//языки = ['en']
