@@ -31,7 +31,7 @@ CPU_watcher.watch = () ->
 		finish = ->
 			ended_with = get_usage()
 			delta = ended_with - started_with
-			load_percentage = 100 * (delta / (measuring_interval * 100))
+			load_percentage = 100 * (delta / (measuring_interval * 1000))
 			
 			global.CPU_usage = load_percentage
 			
