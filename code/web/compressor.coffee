@@ -1,6 +1,6 @@
 less = require 'less'
 
-root = __dirname + '/../..'
+root = Root_folder
 statics = root + '/static resources'
 
 css_minifier = (value) ->

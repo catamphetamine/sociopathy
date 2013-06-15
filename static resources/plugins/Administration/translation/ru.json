@@ -30,7 +30,7 @@
 				"uptime": "Uptime",
 				"cpu": "CPU load",
 				"memory": "Memory used",
-				"ether_connections": "Ether connections",
+				"websocket_connections": "Websocket connections",
 				"temporary_storage_for_upload_size": "Temporary folder size",
 				"uploaded": "Uploaded files size",
 				"database_size": "Database size"

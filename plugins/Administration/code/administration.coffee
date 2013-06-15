@@ -7,10 +7,10 @@ http.get '/сеть/управление/сводка', (ввод, вывод, �
 		version += ' (development)'
 
 	memory_stats = process.memoryUsage()
-	memory = {}
-
-	memory.Available = Math.round(memory_stats.heapTotal / (1024 * 1024)) + ' MB'
-	memory.Used = Math.round(memory_stats.heapTotal / (1024 * 1024)) + ' MB'
+	
+	#memory = {}
+	#memory.Available = Math.round(memory_stats.heapTotal / (1024 * 1024)) + ' MB'
+	#memory.Used = Math.round(memory_stats.heapUsed / (1024 * 1024)) + ' MB'
 
 	date_interval = (interval) ->
 		one_hour = 1000 * 60 * 60
@@ -31,15 +31,49 @@ http.get '/сеть/управление/сводка', (ввод, вывод, �
 		
 		return text
 	
+	all_uploads_folder = Root_folder + '/загруженное'
+	
+	temporary_uploads_folder = all_uploads_folder + '/временное'
+	temporary_uploads_size = null
+	
+	if disk_tools.exists(temporary_uploads_folder)
+		temporary_uploads_size = disk_tools.size(temporary_uploads_folder)
+		
+	uploads_folder_size = disk_tools.size(all_uploads_folder) - temporary_uploads_size
+
+	database_folder = Root_folder + '/../database'
+	
+	print_size = (size) ->
+		Math.round(size / (1024 * 1024)) + ' MB'
+
+	folder_size = (path) ->
+		if not disk_tools.exists(path)
+			return
+		
+		disk_tools.size(path)
+
+	print_folder_size = (path) ->
+		size = folder_size(path)
+		
+		if not size?
+			return '«' + path + '» folder not found'
+		
+		return print_size(size)
+
+	cpu = 'not measured'
+	
+	if global.CPU_usage?
+		cpu = global.CPU_usage + '%'
+
 	stats =
 		version: version
 		uptime: date_interval(new Date() - Started_at)
-		cpu: '(fake) 10%'
-		memory: memory.Used # 'Available: ' + memory.Available + ', Used: ' + memory.Used
-		ether_connections: [Object.size(эфир.соединения.эфир) + ' ether', Object.size(эфир.соединения.болталка) + ' chat', Object.size(эфир.соединения.беседы) + ' talks', Object.size(эфир.соединения.обсуждения) + ' discussions', Object.size(эфир.соединения.новости) + ' news'].join(', ')
-		temporary_storage_for_upload_size: '(fake) 200MB'
-		uploaded: '(fake) 100MB'
-		database_size: '(fake) 100MB'
+		cpu: cpu
+		memory: print_size(memory_stats.heapUsed)
+		websocket_connections: [Object.size(эфир.соединения.эфир) + ' ether', Object.size(эфир.соединения.болталка) + ' chat', Object.size(эфир.соединения.беседы) + ' talks', Object.size(эфир.соединения.обсуждения) + ' discussions', Object.size(эфир.соединения.новости) + ' news'].join(', ')
+		temporary_storage_for_upload_size: print_folder_size(temporary_uploads_folder)
+		uploaded: print_size(uploads_folder_size)
+		database_size: print_folder_size(database_folder)
 
 	вывод.send(stats: stats)
 

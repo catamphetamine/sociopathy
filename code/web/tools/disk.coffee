@@ -1,5 +1,10 @@
 disk = require 'fs'
 
+file_system =
+	exists: (file, callback) ->
+		disk.exists file, (exists) ->
+			callback(no, exists)
+
 disk_tools = {}
 
 remove_empty_objects = (map) ->
@@ -17,11 +22,11 @@ file_map = (path, options) ->
 	
 	map = {}
 	
-	for entry in disk.readdirSync(path)
+	for entry in disk.readdir.await(path)
 		if options.exclude? && options.exclude.has((path + '/' + entry).after(options.path).substring(1))
 			continue
 		
-		if disk.statSync(path + '/' + entry).isDirectory()
+		if disk.stat.await(path + '/' + entry).isDirectory()
 			if map[entry]?
 				throw 'Both file and folder are named «' + entry + '»'
 			map[entry] = file_map(path + '/' + entry, options)
@@ -68,7 +73,7 @@ flatten = (map) ->
 	flat
 
 disk_tools.list_files = (path, options) ->
-	if not disk.existsSync(path)
+	if not file_system.exists.await(path)
 		return []
 
 	options.path = path
@@ -86,22 +91,32 @@ map_to_array_map = (map) ->
 	return array
 
 disk_tools.map_files = (path, options) ->
-	if not disk.existsSync(path)
+	if not file_system.exists.await(path)
 		return []
 
 	options.path = path
 	map_to_array_map(file_map(options))
 
 disk_tools.read = (file) ->
-	disk.readFileSync(file, 'utf8')
+	disk.readFile.await(file, 'utf8')
 
 disk_tools.write = (file, content) ->
-	disk.writeFileSync(file, content, 'utf8')
+	disk.writeFile.await(file, content, 'utf8')
 
 disk_tools.exists = (file) ->
-	disk.existsSync(file)
+	file_system.exists.await(file)
 	
 disk_tools.new_folder = (folder) ->
-	disk.mkdirSync(folder)
+	disk.mkdir.await(folder)
 	
+disk_tools.size = (folder) ->
+	stats = disk.lstat.await(folder)
+	total = stats.size
+
+	if stats.isDirectory()
+		for item in disk.readdir.await(folder)
+			total += disk_tools.size(require('path').join(folder, item))
+		
+	return total
+
 module.exports = disk_tools

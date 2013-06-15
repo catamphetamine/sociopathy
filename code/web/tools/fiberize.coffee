@@ -1,4 +1,5 @@
 # requires 'node-sync' and 'node-fibers'
+global.Fiber = require 'fibers'
 global.fiber = require 'sync'
 
 fiber = global.fiber

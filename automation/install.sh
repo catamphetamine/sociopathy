@@ -126,6 +126,7 @@ fi
 #
 # install some of the required Node.js packages
 #
+npm install fibers
 npm install sync
 cd repository
 npm install forever

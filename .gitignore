@@ -7,6 +7,7 @@ static resources/compressed
 загруженное/читальня/разделы/*
 загруженное/временное/*
 загруженное/люди/*
+node_modules/fibers
 node_modules/sync
 node_modules/mongodb
 node_modules/forever
