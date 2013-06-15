@@ -220,4 +220,10 @@ Object.size = (object) ->
 	return size
 
 Function.prototype.delay = (delay) ->
-	setTimeout(@, delay)
+	it = @
+	
+	fiberized = ->
+		fiber ->
+			it()
+			
+	setTimeout(fiberized, delay)
