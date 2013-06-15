@@ -3,7 +3,7 @@ disk = require 'fs'
 CPU_watcher = {}
 
 CPU_watcher.watch = () ->
-	if not disk.exists.await('/proc')
+	if not disk_tools.exists('/proc')
 		return console.log 'We are running not on a Linux machine. CPU load won\'t be monitored'
 
 	if @watching?
