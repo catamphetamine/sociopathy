@@ -218,3 +218,6 @@ Object.size = (object) ->
 		size++
 	
 	return size
+
+Function.prototype.delay = (delay) ->
+	setTimeout(@, delay)
