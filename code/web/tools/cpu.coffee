@@ -33,11 +33,11 @@ CPU_watcher.watch = () ->
 			delta = ended_with - started_with
 			load_percentage = 100 * (delta / (measuring_interval * 1000))
 			
-			global.CPU_usage = load_percentage
+			global.CPU_usage = Math.round(load_percentage)
 			
 		finish.delay(measuring_interval * 1000)
 		
-		if not @watching.watch
+		if @watching.watch
 			measure.delay(repeat_interval * 1000)
 		
 	measure()
