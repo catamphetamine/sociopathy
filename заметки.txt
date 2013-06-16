@@ -888,18 +888,23 @@ https://www.facebook.com/events/125022041031568/?fref=ts
 					
 
 при навигации иконка загорается не сразу
-когда меняешь разные вкладки, зависает "отошёл"
 
 
 
 
-всем ссылкам ставить target="_blank"
+
 
 
 
 
 http://www.youtube.com/watch?feature=player_embedded&v=mcw6j-QWGMo
 не парсит как ютуб
+
+проверить ещё
+http://www.youtube.com/watch?feature=player_embedded&v=mcw6j-QWGMo#!
+
+
+
 
 
 

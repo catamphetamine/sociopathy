@@ -63,7 +63,7 @@ var Visual_editor = new Class
 		this.editor.on('content_changed.editor', function()
 		{
 			var current_paragraph = visual_editor.editor.caret.container('p')
-			if (!current_paragraph)
+			if (!current_paragraph.exists())
 				return
 			
 			var top_bar_height = 0

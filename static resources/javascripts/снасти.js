@@ -1052,3 +1052,80 @@ function left_mouse_button(event)
 {
 	return event.which === 1
 }
+
+var User_online_status = new Class
+({
+	Binds: ['update_online_status'],
+	
+	initialize: function(id_card)
+	{
+		this.id_card = id_card
+	},
+	
+	show: function(когда_был_здесь)
+	{
+		if (!когда_был_здесь)
+			return
+		
+		//if (когда_был_здесь.constructor !== 'Date')
+		//	когда_был_здесь = new Date(когда_был_здесь)
+		
+		this.когда_был_здесь = когда_был_здесь
+		
+		this.id_card.find('.last_action_time')
+			.attr('date', this.когда_был_здесь.getTime())
+			.addClass('intelligent_date')
+			.text(неточное_время(this.когда_был_здесь))
+		
+		var maximum_opacity = this.id_card.find('.was_here').css('opacity')
+		
+		var online_status = this.id_card.find('.online_status')
+		
+		online_status.on('mouseenter', (function()
+		{
+			this.id_card.find('.was_here').fade_in(0.3, { maximum_opacity: maximum_opacity, hide: true })
+		})
+		.bind(this))
+		
+		online_status.on('mouseleave', (function()
+		{
+			this.id_card.find('.was_here').fade_out(0.3)
+		})
+		.bind(this))
+		
+		this.launch_online_status_updater()
+	},
+
+	launch_online_status_updater: function()
+	{
+		var status = this.id_card.find('.online_status')
+			
+		this.online_status =
+		{
+			online_halo: status.find('> .halo'),
+			
+			online: status.find('> .online'),
+			offline: status.find('> .offline') 
+		}
+		
+		page.ticking(this.update_online_status, 5 * 1000)
+	},
+	
+	update_online_status: function()
+	{
+		var секунд_прошло = (new Date().getTime() - this.когда_был_здесь.getTime()) / 1000
+		var горячесть = Math.pow(1.000053302001358, -секунд_прошло)
+		
+		var precision = 1000
+		горячесть = Math.round(горячесть * precision) / precision
+		
+		var остылость_свечения = секунд_прошло / Configuration.User_is_online_for
+		if (остылость_свечения > 1)
+			остылость_свечения = 1
+		
+		this.online_status.online_halo.css({ opacity: 1 - остылость_свечения })
+		
+		this.online_status.online.css({ opacity: горячесть })
+		this.online_status.offline.css({ opacity: 1 - горячесть })
+	}
+})

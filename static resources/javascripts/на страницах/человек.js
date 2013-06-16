@@ -1,7 +1,6 @@
 (function()
 {
 	var id_card
-	var online_status
 	var content
 
 	page.query('.photo', 'photo')
@@ -149,24 +148,6 @@
 			actions.show()
 		}
 	
-		page.avatar = id_card.find('.picture')
-	
-		online_status =
-		{
-			online: id_card.find('.online_status .online'),
-			offline: id_card.find('.online_status .offline') 
-		}
-		
-		show_photo()
-		show_minor_info()
-		//show_links()
-		
-		initialize_editables()
-		initialize_edit_mode_effects()
-		
-		//Режим.activate_edit_actions({ on_save: save_changes })
-		Режим.разрешить('правка')
-		
 		/*
 		actions.find('.start_conversation').click(function(event)
 		{
@@ -215,6 +196,18 @@
 	
 	function id_card_loaded()
 	{
+		page.avatar = id_card.find('.picture')
+		
+		show_photo()
+		show_minor_info()
+		//show_links()
+		
+		initialize_editables()
+		initialize_edit_mode_effects()
+		
+		//Режим.activate_edit_actions({ on_save: save_changes })
+		Режим.разрешить('правка')
+		
 		show_online_status()
 		
 		page.content_ready()
@@ -246,7 +239,7 @@
 				return
 			}
 		}
-		
+	
 		if (!когда_был_здесь)
 			когда_был_здесь = page.data.пользователь_сети['когда был здесь']
 			
@@ -255,42 +248,7 @@
 		
 		когда_был_здесь = new Date(когда_был_здесь)
 	
-		id_card.find('.last_action_time')
-			.attr('date', когда_был_здесь.getTime())
-			.addClass('intelligent_date')
-			.text(неточное_время(когда_был_здесь))
-		
-		var maximum_opacity = id_card.find('.was_here').css('opacity')
-		
-		var online_status = id_card.find('.online_status')
-		online_status.on('mouseenter', function()
-		{
-			id_card.find('.was_here').fade_in(0.3, { maximum_opacity: maximum_opacity, hide: true })
-		})
-		online_status.on('mouseleave', function()
-		{
-			id_card.find('.was_here').fade_out(0.3)
-		})
-	
-		page.ticking(update_online_status, 2 * 1000)
-	}
-	
-	function update_online_status()
-	{
-		var остылость = (new Date().getTime() - когда_был_здесь.getTime()) / (Configuration.User_is_online_for * 1000)
-		
-		if (offline)
-			остылость = 1
-		
-		if (остылость >= 1)
-		{
-			online_status.online.css({ opacity: 0 })
-			online_status.offline.css({ opacity: 1 })
-			return false
-		}
-		
-		online_status.online.css({ opacity: 1 - остылость })
-		online_status.offline.css({ opacity: остылость })
+		new User_online_status(id_card).show(когда_был_здесь)
 	}
 	
 	function initialize_edit_mode_effects()

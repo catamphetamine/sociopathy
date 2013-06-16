@@ -223,7 +223,7 @@
 	.miscellaneous
 	{
 		position: absolute;
-		left: 540px;
+		left: 510px;
 		
 		.small_logo_placeholder
 		{
@@ -253,13 +253,30 @@
 		.online_status
 		{
 			position: relative;
-			margin-top: 100px;
+			margin-top: 40px;
 		
 			margin-left: auto;
 			margin-right: auto;
+			
+			width: 180px;
+			height: 180px;
+			
+			.halo
+			{
+				width: 100%;
+				height: 100%;
+				
+				opacity: 0;
+				
+				.css_transition_property(opacity);
+				.css_transition_duration(1s);
+				.css_transition_easing(ease-in-out);
+				
+				background-image: url('/картинки/business card/online halo.png');
+			}
 		}
 		
-		.online_status, .online_status .online, .online_status .offline
+		.online_status .online, .online_status .offline
 		{
 			width: 88px;
 			height: 88px;
@@ -268,8 +285,8 @@
 		.online_status .online, .online_status .offline
 		{
 			position: absolute;
-			top: 0;
-			left: 0;
+			left: 46px;
+			top: 49px;
 			
 			background-repeat: no-repeat;
 			background-color: transparent;
@@ -296,8 +313,9 @@
 			.was_here
 			{
 				position: absolute;
-				top: 50px;
-				left: 40px;
+				
+				top: 96px;
+				left: 90px;
 				
 				font-size: 20px;
 				

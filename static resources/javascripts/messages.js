@@ -257,6 +257,7 @@ var Messages = new Class
 						messages.options.after_output(message)
 				}
 			},
+			editable: true, 
 			container: messages.options.container,
 			error: 'Не удалось загрузить список сообщений',
 			//progress_bar: true

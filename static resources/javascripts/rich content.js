@@ -140,9 +140,7 @@ function postprocess_rich_content(content, callback)
 				return
 			
 			if (clicked.audio_player('is_control'))
-			{
 				return
-			}
 			
 			event.preventDefault()
 			event.stopPropagation()

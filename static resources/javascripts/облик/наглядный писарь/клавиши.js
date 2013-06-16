@@ -328,7 +328,7 @@ Visual_editor.implement
 			{
 				var focused = editor.caret.container()
 				
-				if (focused && focused.hasClass('hint'))
+				if (focused.exists() && focused.hasClass('hint'))
 				{
 					focused.removeClass('hint').text('')
 					return false
@@ -341,7 +341,7 @@ Visual_editor.implement
 			{
 				var focused = editor.caret.container()
 				
-				if (focused && focused.hasClass('hint'))
+				if (focused.exists() && focused.hasClass('hint'))
 				{
 					var previous = focused.prev()
 					var next = focused.next()
@@ -411,7 +411,7 @@ Visual_editor.implement
 		editor.on('keypress', (function(event)
 		{
 			// disable editing keys and audio_playes
-			if (editor.caret.container('.tex') || editor.caret.container('.audio_player'))
+			if (editor.caret.container('.tex').exists() || editor.caret.container('.audio_player').exists())
 			{
 				if (!Клавиши.navigating(event))
 				{

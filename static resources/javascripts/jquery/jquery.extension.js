@@ -441,18 +441,24 @@ $.fn.boundary_html = function()
 
 $.fn.find_parent = function(filter, boundary)
 {
+	var nothing = $()
+	
+	if (!this.exists())
+		return nothing
+	
 	var parent = this.parents(filter).filter(':first')
 	if (!parent.exists())
-		return false
+		return nothing
 	
 	if (parent.find(boundary).exists())
-		return false
+		return nothing
 	
 	//parent.node() === boundary.node() || 
 	
 	return parent
 }
 
+/*
 $.fn.search_upwards = function(filter)
 {
 	if (this.is(filter))
@@ -460,6 +466,7 @@ $.fn.search_upwards = function(filter)
 	
 	return this.find_parent(filter)
 }
+*/
 
 $.fn.exists = function() { return this.length > 0 }
 
@@ -790,7 +797,7 @@ $.fn.audio_player = function(action, options)
 			return this.find('.jouele-name')
 		
 		case 'is_control':
-			return this.find_parent('.jouele-play-control')
+			return this.find_parent('.jouele-play-control').exists()
 		
 		case 'link':
 			var link = $('<a/>')

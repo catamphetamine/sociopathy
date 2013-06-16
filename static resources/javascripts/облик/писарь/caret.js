@@ -28,8 +28,7 @@ Editor.Caret = new Class
 	
 	has_container: function(filter)
 	{
-		var container = this.container(filter)
-		return container
+		return this.container(filter).exists()
 	},
 	
 	container: function(filter)
@@ -198,7 +197,7 @@ Editor.Caret = new Class
 	move_to_container_end: function(filter)
 	{
 		var range = this.editor.create_range()
-		range.setStartAfter(this.container(filter).get(0))
+		range.setStartAfter(this.container(filter).node())
 		this.editor.collapse(range)
 		
 		this.editor.apply_range(range)
@@ -222,7 +221,7 @@ Editor.Caret = new Class
 		if (!caret.collapsed)
 			return false
 
-		var container = this.container(filter).get(0)
+		var container = this.container(filter).node()
 		
 		if (!Dom_tools.is_first_element(caret.startContainer, container))
 			return false
@@ -246,7 +245,7 @@ Editor.Caret = new Class
 		if (!caret.collapsed)
 			return false
 
-		var container = this.container(filter).get(0)
+		var container = this.container(filter).node()
 			
 		if (!Dom_tools.is_last_element(caret.startContainer, container))
 			return false

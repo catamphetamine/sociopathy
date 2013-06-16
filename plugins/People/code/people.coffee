@@ -15,8 +15,10 @@ http.get '/люди', (ввод, вывод) ->
 		
 	result = either_way_loading(ввод, options)
 	
-	for man in result.data
-		man = пользовательское.скрыть(man)
+	for человек in result.data
+		пользовательское.скрыть(человек)
+		session = db('people_sessions')._.find_one({ пользователь: человек._id })
+		человек['когда был здесь'] = session['когда был здесь']
 		
 	ответ = 
 		люди: result.data
@@ -114,5 +116,5 @@ http.get '/люди/поиск', (ввод, вывод) ->
 	люди = db('people')._.find({ имя: { $regex: шаблон, $options: 'i' } }, { limit: ввод.данные.max })
 	
 	Object.выбрать(['_id', 'id', 'имя', 'avatar_version'], люди)
-	
+		
 	вывод.send(люди: люди)

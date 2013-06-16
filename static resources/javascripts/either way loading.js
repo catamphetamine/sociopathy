@@ -174,8 +174,8 @@ function either_way_loading(options)
 		event.preventDefault()
 		
 		if (disabled())
-			return
-		
+			return info(text('loader.either way.can\'t load more while in edit mode'))
+	
 		top_loader.deactivate()
 		var indicate_loading = top_loader.load_more()
 		

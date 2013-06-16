@@ -19,11 +19,23 @@ title(text('pages.people.title'));
 				loaded: function(people)
 				{
 					parse_dates(people, 'время рождения')
+					
+					people.for_each(function()
+					{
+						if (this['когда был здесь'])
+							parse_date(this, 'когда был здесь')
+							
+						this.with_online_status = true
+					})
 				},
 				on_first_output: function()
 				{
 					initialize_search()
 					page.content_ready()
+				},
+				postprocess_item: function(data)
+				{
+					new User_online_status(this).show(data['когда был здесь'])
 				}
 			},
 			container: page.people,

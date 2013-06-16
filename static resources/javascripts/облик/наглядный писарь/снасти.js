@@ -123,7 +123,7 @@ Visual_editor.implement
 				
 				var paragraph = editor.caret.container('p')
 				
-				if (!paragraph)
+				if (!paragraph.exists())
 				{
 					throw new Error('Встаньте внутрь абзаца, чтобы воспользоваться этим инструментом')
 				}
@@ -149,7 +149,7 @@ Visual_editor.implement
 				
 				var paragraph = editor.caret.container('p')
 				
-				if (!paragraph)
+				if (!paragraph.exists())
 				{
 					throw new Error('Встаньте внутрь абзаца, чтобы воспользоваться этим инструментом')
 				}
@@ -175,7 +175,7 @@ Visual_editor.implement
 				
 				var paragraph = editor.caret.container('p')
 				
-				if (!paragraph)
+				if (!paragraph.exists())
 				{
 					throw new Error('Встаньте внутрь абзаца, чтобы воспользоваться этим инструментом')
 				}
@@ -201,7 +201,7 @@ Visual_editor.implement
 				
 				var paragraph = editor.caret.container('p')
 				
-				if (!paragraph)
+				if (!paragraph.exists())
 				{
 					throw new Error('Встаньте внутрь абзаца, чтобы воспользоваться этим инструментом')
 				}

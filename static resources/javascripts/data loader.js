@@ -291,7 +291,7 @@ var Batch_loader_with_infinite_scroll = new Class
 		this.options.scroll_detector.on('appears_on_bottom.scroller', function(event)
 		{
 			if (loader.disabled())
-				return
+				return info(text('loader.either way.can\'t load more while in edit mode'))
 			
 			loader.load_more()
 			event.stopPropagation()

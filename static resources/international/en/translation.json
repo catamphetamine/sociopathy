@@ -184,5 +184,13 @@
 			"password": "password",
 			"email": "email"
 		}
+	},
+	
+	"loader":
+	{
+		"either way":
+		{
+			"can't load more while in edit mode": "Can't load more while in Edit mode. To load extra data switch to Generic mode"
+		}
 	}
 }

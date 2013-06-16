@@ -764,6 +764,7 @@ Wiki_processor.Syntax =
 			return to.attr
 			({
 				type: 'hyperlink',
+				target: '_blank',
 				href: from.attr('at')
 			})
 		},
