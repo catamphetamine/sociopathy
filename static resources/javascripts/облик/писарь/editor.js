@@ -231,37 +231,44 @@ var Editor = new Class
 	insert: function(what, options)
 	{
 		options = options || {}
-
-		var caret_position = this.caret.caret_position()
-		var container = caret_position.container
 		
-		//var unwrapped = (container.node() === this.content.node())
+		var container
 		
-		if (container.hasClass('hint'))
-		{
-			container.removeClass('hint')
-			options.replace = true
+		if (this.caret.get())
+		{		
+			var caret_position = this.caret.caret_position()
+			container = caret_position.container
+			
+			if (container.hasClass('hint'))
+			{
+				container.removeClass('hint')
+				options.replace = true
+			}
 		}
-		/*
-		else if (container.hasClass('tagged_hint'))
-		{
-			container.removeClass('tagged_hint')
-			options.replace_tag = true
-		}
-		*/
 		
 		if (typeof(what) === 'string')
 		{
 			if (this.time_machine.can_snapshot_typing())
 				this.time_machine.snapshot()
 			
-			this.insert_text(what, options)
-			
-			if ($.browser.webkit)
+			if (container)
 			{
-				if (!Dom_tools.is_text_node(container.node().firstChild))
-					if ($(container.node().firstChild).is('br'))
-						$(container.node().firstChild).remove()
+				this.insert_text(what, options)
+			
+				if ($.browser.webkit)
+				{
+					if (!Dom_tools.is_text_node(container.node().firstChild))
+						if ($(container.node().firstChild).is('br'))
+							$(container.node().firstChild).remove()
+				}
+			}
+			else
+			{
+				this.load_content('<p></p>')
+				var paragraph = $(this.get_content().children()[0])
+				
+				paragraph.text(what)
+				this.caret.move_to(paragraph)
 			}
 			
 			this.content_changed()
@@ -274,61 +281,64 @@ var Editor = new Class
 			
 		if (what instanceof jQuery)
 		{
-			this.time_machine.snapshot()
-			
-			var container_tag = container.node().tagName.toLowerCase()
-			
-			this.mark(what)
-			
-			/*if (options.replace_tag)
+			if (container)
 			{
-				var node = caret_position.node
-				var parent_container = node.parentNode
-				Dom_tools.replace(parent_container, what.node())
+				this.time_machine.snapshot()
 				
-				this.sanitize()
+				var container_tag = container.node().tagName.toLowerCase()
 				
-				return this.unmark()
-			}
-			else*/ if (options.replace)
-			{
-				var node = caret_position.node
-				Dom_tools.replace(node, what.node())
+				this.mark(what)
 				
-				this.sanitize()
-				
-				return this.unmark()
-			}
-			
-			var html
-			if (options.break_container && container.node() !== this.content.node())
-				html = '</' + container_tag + '>' + what.outer_html() + '<' + container_tag + '>'
-			else
-				html = what.outer_html()
-			
- 			this.insert_html(html)
-				
-			this.checkpoint()
-			var element = this.unmark()
-			
-			if ($.browser.webkit)
-			{
-				if (element.parent().node() === this.content.node())
+				if (options.replace)
 				{
-					if (!this.doesnt_need_to_be_wrapped(element))
+					var node = caret_position.node
+					Dom_tools.replace(node, what.node())
+					
+					this.sanitize()
+					
+					return this.unmark()
+				}
+				
+				var html
+				if (options.break_container && container.node() !== this.content.node())
+					html = '</' + container_tag + '>' + what.outer_html() + '<' + container_tag + '>'
+				else
+					html = what.outer_html()
+				
+				this.insert_html(html)
+					
+				this.checkpoint()
+				var element = this.unmark()
+				
+				if ($.browser.webkit)
+				{
+					if (element.parent().node() === this.content.node())
 					{
-						container = $('<p/>').appendTo(this.content)
-						element.appendTo(container)
-						//this.caret.move_to(element)
-						
-						this.content.find('> br').remove()
+						if (!this.doesnt_need_to_be_wrapped(element))
+						{
+							container = $('<p/>').appendTo(this.content)
+							element.appendTo(container)
+							
+							this.content.find('> br').remove()
+						}
 					}
 				}
-			}
+					
+				this.sanitize()
 				
-			this.sanitize()
-			
-			return element
+				return element
+			}
+			else
+			{
+				this.load_content('<p>' + what.outer_html() + '</p>')
+				var paragraph = $(this.get_content().children()[0])
+				
+				this.caret.move_to(paragraph)
+				
+				this.sanitize()
+				
+				return element
+			}
 		}
 		
 		throw 'Unexpected argument type'
@@ -336,17 +346,6 @@ var Editor = new Class
 	
 	insert_text: function(inserted_text, options)
 	{
-		/*
-		if (options.replace_tag)
-		{
-			var container = this.caret.node()
-			var parent_container = container.parentNode
-			var super_parent_container = parent_container.parentNode
-			Dom_tools.replace(parent_container, inserted_text)
-			return this.caret.move_to(super_parent_container, inserted_text.length)
-		}
-		*/
-		
 		var caret_position = this.caret.caret_position()
 		var caret_offset = caret_position.offset
 		if (options.replace)
@@ -359,17 +358,12 @@ var Editor = new Class
 			container = $('<p/>').appendTo(this.content)
 			container.text(inserted_text)
 			this.caret.move_to_the_end_of(container)
-			//this.caret.move_to(container, 1)
 			return
-			//container = container.node()
 		}
 		
 		if (!Dom_tools.is_text_node(container))
 		{
 			var offset = caret_offset
-		
-			//if ($.browser.webkit)
-			//	offset--
 				
 			var text_container = container.childNodes[offset]
 			
@@ -384,18 +378,6 @@ var Editor = new Class
 				return this.caret.create(text_container, inserted_text.length)
 			}
 			
-			//var text_container = Dom_tools.find_text_node(container.childNodes[offset], container)
-			
-			//text_container = Dom_tools.find_text_node(container.childNodes[offset], this.content)
-		
-			/*
-			if (!text_container)
-			{
-				text_container = Dom_tools.text(container, inserted_text)
-				return this.caret.create(text_container, inserted_text.length)
-			}
-			*/
-		
 			if (!options.replace)
 				text_container.nodeValue = inserted_text + text_container.nodeValue
 			else

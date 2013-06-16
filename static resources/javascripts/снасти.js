@@ -1114,7 +1114,10 @@ var User_online_status = new Class
 	update_online_status: function()
 	{
 		var секунд_прошло = (new Date().getTime() - this.когда_был_здесь.getTime()) / 1000
-		var горячесть = Math.pow(1.000053302001358, -секунд_прошло)
+		
+		секунд_прошло = 60 * 60 * 24
+		
+		var горячесть = Math.pow(1.00002, -секунд_прошло)
 		
 		var precision = 1000
 		горячесть = Math.round(горячесть * precision) / precision

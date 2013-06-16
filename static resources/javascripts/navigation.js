@@ -81,30 +81,34 @@ var get_page_less_style_link
 		
 		navigating = true
 				
+		var old_page_javascript_link
+		var old_page_stylesheet_link
+				
 		function clear_previous_page_data()
 		{
 			if (!Страница.эта())
+			{
+				//page = new Page()
 				return
+			}
 	
 			page.navigating_away = true
 	
 			page.full_unload()
+				
+			var old_page_javascript_link = add_version(get_page_javascript_link())
+			var old_page_stylesheet_link = add_version(get_page_less_style_link(Страница.эта()))
 			
-			if (options.set_new_url)
-				set_new_url(url)
+			if (old_page_javascript_link.contains('"'))
+				throw 'Page javascript file can\'t contain double quotes'
 			
 			$(document).trigger('page_unloaded')
 		
 			Page.element.empty()
-			
-			if (add_version(get_page_javascript_link()).contains('"'))
-				throw 'Page javascript file can\'t contain double quotes'
-			
-			$('head').find('> script[src="' + add_version(get_page_javascript_link()) + '"]').remove()
-			Less.unload_style(add_version(get_page_less_style_link(Страница.эта())))
 		}
 		
 		clear_previous_page_data()
+		
 		page = new Page()
 		
 		page.proceed = function(ошибка)
@@ -144,15 +148,27 @@ var get_page_less_style_link
 		}
 		
 		Страница.определить(url)
+	
+		if (options.set_new_url)
+			set_new_url(url)
+		
+		// вызывается здесь, чтобы не было видимой задержки смены иконки
+		
+		if (!first_time_page_loading)
+			panel.highlight_current_page()
+			
+		// clearing here, because the icon changes as soon as possible
+		if (!first_time_page_loading)
+		{
+			$('head').find('> script[src="' + old_page_javascript_link + '"]').remove()
+			Less.unload_style(old_page_stylesheet_link)
+		}
 		
 		page.data.данные_для_страницы = данные_пользователя
 		
 		if (!Configuration.Locale.Fixed)
 			if (Язык !== данные_пользователя.язык)
 				page.Ajax.put('/сеть/пользователь/язык', { язык: Язык })
-		
-		if (!first_time_page_loading)
-			panel.highlight_current_page(page)
 			
 		if (!page.data.proceed_manually)
 			page.proceed()

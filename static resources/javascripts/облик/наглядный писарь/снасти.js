@@ -332,6 +332,7 @@ Visual_editor.implement
 						link.attr('href', url)
 						
 						editor.selection.restore()
+						
 						if (editor.selection.exists() && editor.selection.is_valid())
 						{
 							link.text(editor.selection.text())
