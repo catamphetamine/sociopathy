@@ -7,7 +7,7 @@
 
 	function раздел_или_заметка(путь, resume)
 	{
-		page.Ajax.get('/приложение/раздел или заметка', { путь: путь })
+		between_pages.Ajax.get('/приложение/раздел или заметка', { путь: путь })
 		.ошибка(function(ошибка, options)
 		{
 			if (ошибка === 'not found')
@@ -59,7 +59,7 @@
 						{
 							'*': function(value, rest)
 							{
-								page.data.раздел = value
+								page_data('раздел', value)
 								tools.page('написать заметку')
 							}
 						})
@@ -77,10 +77,16 @@
 					{
 						var путь = initial_url.substring(initial_url.indexOf('/') + 1)
 						
-						page.data.путь = путь
-						раздел_или_заметка(путь, tools.wait())
+						// для иконки
+						//Страница.эта('Library/loading')
 						
 						tools.icon()
+						
+						if (panel)
+							panel.highlight_current_page()
+							
+						page_data('путь', путь)
+						раздел_или_заметка(путь, tools.wait())
 					}
 				})
 			}

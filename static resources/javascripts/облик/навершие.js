@@ -38,7 +38,7 @@ var match_page = function(options)
 var get_page_button = function()
 {
 	if (Страница.эта() === '_wait_')
-		return page.data._icon
+		return page_data('_icon')
 		
 	var i = 0
 	while (i < Page_icons.length)

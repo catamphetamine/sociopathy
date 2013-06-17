@@ -51,11 +51,11 @@ var Страница =
 					{
 						страница_человека = true
 						
-						page.data.пользователь_сети = { id: value }
+						page_data('пользователь_сети', { id: value })
 						
 						if (пользователь)
 							if (пользователь.id === value)
-								page.data.этот_пользователь = true
+								page_data('этот_пользователь', true)
 					}
 				})
 			}
@@ -80,13 +80,16 @@ var Страница =
 					if (!icon)
 						icon = this.id
 					
-					page.data._icon = icon
+					page_data('_icon', icon)
 				},
 				wait: function()
 				{
 					страница = '_wait_'
-					page.data.proceed_manually = true
-					return page.proceed
+					page_data('proceed_manually', true)
+					return function()
+					{
+						page.proceed()
+					}
 				},
 				match: better_match
 			}
@@ -115,13 +118,13 @@ var Страница =
 				'*': function(value, rest)
 				{
 					страница = 'общение'
-					page.data.общение = value
+					page_data('общение', value)
 					
 					match_url(rest,
 					{
 						'*': function(value, rest)
 						{
-							page.data.кому = value
+							page_data('кому', value)
 						}
 					})
 				}

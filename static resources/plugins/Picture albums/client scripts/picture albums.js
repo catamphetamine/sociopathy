@@ -25,8 +25,8 @@ url_matcher(function(url)
 							{
 								'*': function(value, rest)
 								{
-									page.data.альбом = value
-									page.data.картинка = rest
+									page_data('альбом', value)
+									page_data('картинка', rest)
 									
 									tools.page('альбом с картинками')
 								}

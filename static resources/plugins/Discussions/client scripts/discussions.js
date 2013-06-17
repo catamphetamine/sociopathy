@@ -32,7 +32,7 @@
 			убрать_уведомления_о_сообщениях(data.общение, data.сообщение)
 	})
 	
-	Page_icon({ page: 'общение', when: function() { return page.data.общение === 'обсуждение' }, icon: 'Discussions' })
+	Page_icon({ page: 'общение', when: function() { return page_data('общение') === 'обсуждение' }, icon: 'Discussions' })
 	
 	В_эфире.add
 	({
@@ -185,7 +185,7 @@
 						{
 							'*': function(value, rest)
 							{
-								page.data.общение = { id: value }
+								page_data('общение') = { id: value }
 								tools.page('обсуждение')
 							}
 						})
