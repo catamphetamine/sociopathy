@@ -1115,7 +1115,8 @@ var User_online_status = new Class
 	{
 		var секунд_прошло = (new Date().getTime() - this.когда_был_здесь.getTime()) / 1000
 		
-		секунд_прошло = 60 * 60 * 24
+		// 24h offline testing
+		// секунд_прошло = 60 * 60 * 24
 		
 		var горячесть = Math.pow(1.00002, -секунд_прошло)
 		
