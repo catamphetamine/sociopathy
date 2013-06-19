@@ -185,7 +185,7 @@
 						{
 							'*': function(value, rest)
 							{
-								page_data('общение') = { id: value }
+								page_data('общение', { id: value })
 								tools.page('обсуждение')
 							}
 						})
