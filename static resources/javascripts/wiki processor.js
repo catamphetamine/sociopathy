@@ -442,7 +442,7 @@ var Wiki_processor = new (new Class
 		//console.log(syntax)
 		
 		if (!syntax)
-			return Dom_tools.append_text(Dom_tools.to_text(node), target)
+			return Dom_tools.append_text(this.parse_text(Dom_tools.to_text(node)), target)
 	
 		if (syntax.is_dummy)
 			if (syntax.is_dummy(element))
@@ -481,6 +481,19 @@ var Wiki_processor = new (new Class
 		{
 			processor.parse_node(this, wiki_element.node(), element)
 		})
+	},
+	
+	parse_text: function(text)
+	{
+		// detect hyperlinks
+		
+		if (text.contains('.') || text.contains('/'))
+		{
+			var match_hyperlink = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig
+			text = text.replace(match_hyperlink,'<ссылка на="' +  + '$1">$1</ссылка>')
+		}
+		
+		return text
 	},
 	
 	test: function()
