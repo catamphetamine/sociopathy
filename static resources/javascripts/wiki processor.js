@@ -442,7 +442,7 @@ var Wiki_processor = new (new Class
 		//console.log(syntax)
 		
 		if (!syntax)
-			return Dom_tools.append_text(this.parse_text(Dom_tools.to_text(node)), target)
+			return this.append_text(Dom_tools.to_text(node), target)
 	
 		if (syntax.is_dummy)
 			if (syntax.is_dummy(element))
@@ -483,17 +483,84 @@ var Wiki_processor = new (new Class
 		})
 	},
 	
-	parse_text: function(text)
+	append_text: function(text, to)
 	{
-		// detect hyperlinks
-		
-		if (text.contains('.') || text.contains('/'))
+		// если это текст внутри абзаца
+		if (to.tagName && to.tagName.toLowerCase() === Object.key(Wiki_processor.Syntax.абзац.translation))
 		{
-			var match_hyperlink = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig
-			text = text.replace(match_hyperlink,'<ссылка на="' +  + '$1">$1</ссылка>')
+			// detect hyperlinks
+			if (text.contains('http://') || text.contains('https://') || text.contains('ftp://'))
+			{
+				var first_text_append = true
+				
+				function append(what)
+				{
+					if (first_text_append)
+						first_text_append = false
+					else
+						Dom_tools.append_text(' ', to)
+						
+					if (typeof what === 'string')
+						return Dom_tools.append_text(what, to)
+						
+					to.appendChild(what)
+				}
+				
+				var pure_text_blocks = []
+				
+				function append_pure_text()
+				{
+					if (pure_text_blocks.is_empty())
+						return
+					
+					var node = append(pure_text_blocks.join(' '))
+					
+					pure_text_blocks = []
+					
+					return node
+				}
+				
+				text.split(' ').for_each(function()
+				{
+					if (!this.contains('http://') && !this.contains('https://') && !this.contains('ftp://'))
+						return pure_text_blocks.add(this)
+					
+					var uri = Uri.parse(this)
+					
+					var ссылка = false
+					
+					if (uri.protocol === 'ftp')
+					{
+						ссылка = true
+					}
+					else if (uri.protocol === 'http' || uri.protocol === 'https')
+					{
+						//if (проверить ссылку)
+						ссылка = true
+					}
+					
+					if (ссылка)
+					{
+						append_pure_text()
+						
+						var tag = Object.key(Wiki_processor.Syntax.ссылка.translation)
+						var at = Wiki_processor.Syntax.ссылка.translation[tag].на
+						
+						var link = $('<' + tag + '/>')
+						link.attr(at, this)
+						link.text(decodeURI(this))
+							
+						append(link.node())
+					}
+					else
+						pure_text_blocks.add(this)
+				})
+		
+				return append_pure_text()
+			}
 		}
 		
-		return text
+		Dom_tools.append_text(text, to)
 	},
 	
 	test: function()
@@ -1103,3 +1170,29 @@ Wiki_processor.Syntax =
 //Wiki_processor.validate(xml)
 
 //alert(Wiki_processor.parse('<p></p><div class="audio_player"><a href="test">abc</a></div><p></p>'))
+
+/*
+function test_hyperlink_parser(text, expected_result)
+{
+	var paragraph = document.createElement('paragraph')
+	Wiki_processor.append_text(text, paragraph)
+	
+	console.log('input: ' + text)
+	console.log('parsed: ' + paragraph.innerHTML)
+	
+	if (paragraph.innerHTML != expected_result)
+	{
+		console.log('expected: ' + expected_result)
+		throw "Hyperlink parser malfunction"
+	}
+}
+
+test_hyperlink_parser('Blah blah blah', 'Blah blah blah')
+//test_hyperlink_parser('Blah blah blah google.ru blah blah', 'Blah blah blah <hyperlink at="http://google.ru">google.ru</hyperlink> blah blah')
+//test_hyperlink_parser('Blah blah blah google/internal/resource blah blah', 'Blah blah blah <hyperlink at="http://google/internal/resource">google/internal/resource</hyperlink> blah blah')
+test_hyperlink_parser('http://google.ru/banana', '<hyperlink at="http://google.ru/banana">http://google.ru/banana</hyperlink>')
+test_hyperlink_parser('http://google.ru/banana blah blah', '<hyperlink at="http://google.ru/banana">http://google.ru/banana</hyperlink> blah blah')
+test_hyperlink_parser('Blah blah blah http://google.ru/banana blah blah', 'Blah blah blah <hyperlink at="http://google.ru/banana">http://google.ru/banana</hyperlink> blah blah')
+test_hyperlink_parser('Blah blah blah https://google.ru/banana blah blah', 'Blah blah blah <hyperlink at="https://google.ru/banana">https://google.ru/banana</hyperlink> blah blah')
+test_hyperlink_parser('Blah blah blah ftp://google.ru/banana blah blah', 'Blah blah blah <hyperlink at="ftp://google.ru/banana">ftp://google.ru/banana</hyperlink> blah blah')
+*/

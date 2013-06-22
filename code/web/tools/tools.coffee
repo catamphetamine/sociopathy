@@ -381,3 +381,62 @@ global.ошибка = (data) ->
 	console.log '=============================================================='
 
 	data.когда = new Date()
+	
+require './uri'
+	
+проверить_ссылку = (ссылка) ->
+	uri = null
+	
+	try
+		uri = Uri.parse(ссылка)
+	catch error
+		console.log error
+		return no
+	
+	protocol = null
+
+	#console.log uri.protocol
+
+	if uri.protocol == 'http'
+		protocol = require 'http'
+		uri.port = uri.port || 80
+	else if uri.protocol == 'https'
+		protocol = require 'https'
+		uri.port = uri.port || 443
+	else
+		return
+	
+	options =
+		host: uri.host
+		port: uri.port
+		path: uri.path + '?' + uri.parameters_raw
+		method: 'GET'
+	
+	console.log options
+	
+	request = (options, callback) ->
+		request = protocol.request options, (response) ->
+			#response.on 'data', (chunk) ->
+			#	data += chunk
+			
+			#response.on 'end', ->
+			#	console.log(data)
+			
+			callback(null, { request: request, response: response })
+	
+		request.on 'error', (error) ->
+			callback(error.message)
+	
+		request.end()
+	
+	response = request.await(options).response
+	
+	#console.log response.statusCode
+	
+	#if (response.statusCode + '').starts_with('3')
+	#	return no
+	
+	if (response.statusCode + '').starts_with('4')
+		return no
+	
+	return yes

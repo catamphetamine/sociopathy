@@ -544,26 +544,7 @@ var Page = new Class
 	
 	hotkey: function(name, режим, action)
 	{
-		if (typeof режим === 'function')
-		{
-			action = режим
-			режим = null
-		}
-		
-		eval('var hotkey = Настройки.Клавиши.' + name)
-		
-		$(document).on_page('keydown', function(event)
-		{
-			if (Клавиши.is(hotkey, event))
-			{
-				if (режим)
-					if (!Режим[режим + '_ли']())
-						return
-				
-				Клавиши.поймано(event)
-				action()
-			}
-		})
+		hotkey.bind(this)(name, режим, action)
 	},
 	
 	needs_to_load_content: true,
@@ -588,7 +569,7 @@ var Page = new Class
 		this.ticking(update_intelligent_dates, 60 * 1000)
 
 		this.queries.empty()
-		
+					
 		this.load()
 		
 		Режим.initialize_page()

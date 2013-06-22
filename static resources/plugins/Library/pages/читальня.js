@@ -162,7 +162,7 @@
 	{
 		text_button.new('.main_content > .add > .button').does(add_category)
 		
-		page.hotkey('Действия.Добавить', 'правка', add_category)
+		page.hotkey('Действия.Добавить', { режим: 'правка' }, add_category)
 		
 		Режим.при_переходе({ в: 'правка' }, function()
 		{

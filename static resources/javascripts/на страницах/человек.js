@@ -302,7 +302,7 @@
 		}
 		
 		text_button.new($('.minor_info .add .button')).does(action)
-		page.hotkey('Действия.Добавить', 'правка', action)
+		page.hotkey('Действия.Добавить', { режим: 'правка' }, action)
 		
 		var container = $('.minor_info')
 		var left = container.find('> .left')

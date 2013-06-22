@@ -91,7 +91,7 @@ Visual_editor.implement
 						if (node.nodeValue.is_empty())
 							return
 						
-						trimmer.bind(trimmer)(node)
+						trimmer(node, trimmer)
 					}
 					
 					// delete all leading <br/>s
@@ -99,12 +99,12 @@ Visual_editor.implement
 					
 					// delete all leading whitespace characters
 					
-					remove_whitespace_characters('firstChild', function(node)
+					remove_whitespace_characters('firstChild', function(node, itself)
 					{
 						if (/\s/.test(node.nodeValue.first()))
 						{
 							node.nodeValue = node.nodeValue.substring(1)
-							return this(node)
+							return itself(node, itself)
 						}
 					})
 					
@@ -113,12 +113,12 @@ Visual_editor.implement
 					
 					// delete all trailing whitespace characters
 					
-					remove_whitespace_characters('lastChild', function(node)
+					remove_whitespace_characters('lastChild', function(node, itself)
 					{
 						if (/\s/.test(node.nodeValue.last()))
 						{
 							node.nodeValue = node.nodeValue.substring(0, node.nodeValue.length - 1)
-							return this(node)
+							return itself(node, itself)
 						}
 					})
 				}

@@ -48,3 +48,6 @@ http.get '/initialize', (ввод, вывод) ->
 			data.user_data = { error: error }
 		
 	вывод.send(data)
+	
+http.get '/проверить ссылку', (ввод, вывод) ->
+	вывод.send('верная ссылка': проверить_ссылку(ввод.данные.url))

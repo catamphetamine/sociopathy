@@ -227,3 +227,7 @@ Function.prototype.delay = (delay) ->
 			it()
 			
 	setTimeout(fiberized, delay)
+	
+Object.for_each = (object, action) ->
+	for key, value of object
+		action.bind(value)(key, value)

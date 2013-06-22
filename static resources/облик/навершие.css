@@ -25,6 +25,11 @@
 	width: 100%;	
 }
 
+nav, #panel
+{
+	height: 54px;
+}
+
 #panel
 {
 	display: none;
@@ -32,7 +37,7 @@
 	margin: 0;
 	padding: 0;
 
-	height: 54px;
+	width: 100%;
 	
 	background-image: url('/картинки/навершие/background.png');
 	background-repeat: repeat-x;
@@ -40,6 +45,13 @@
 	box-shadow: 0px 1px 2px #7f7f7f;
 	
 	.user_select(none);
+}
+
+#panel.sticky
+{
+	position: fixed;
+	top: 0;
+	left: 0;
 }
 
 #panel_menu

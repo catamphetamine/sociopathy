@@ -124,6 +124,6 @@ var Uri =
 		alert(Uri.correct(uri))
 	}
 	
-	test('http://google.ru')
+	test('http://гугл.рф')
 	test('google.ru')
 })//()

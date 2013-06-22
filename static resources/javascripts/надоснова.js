@@ -70,6 +70,23 @@ $(document).on('page_content_ready', function()
 	})
 })
 
+hotkey('Консоль', function()
+{
+	info('Console')
+})
+
+hotkey('Показать_навершие',
+{
+	on_release: function()
+	{
+		$('#panel').removeClass('sticky')
+	}
+},
+function()
+{
+	$('#panel').addClass('sticky')
+})
+
 var can_navigate_to_page = false
 
 $(document).on('page_initialized', function()

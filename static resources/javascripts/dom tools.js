@@ -123,7 +123,10 @@ var Dom_tools =
 	append_text: function(text, to)
 	{
 		if (this.is_text_node(to))
-			return to.nodeValue += text
+		{
+			to.nodeValue += text
+			return to
+		}
 		
 		var last_node = this.get_last_child(to)
 		if (last_node && this.is_text_node(last_node))
