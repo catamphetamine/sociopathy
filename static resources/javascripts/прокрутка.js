@@ -219,6 +219,11 @@ var Scroller = new Class
 		}
 	},
 	
+	scrolled: function()
+	{
+		return $(window).scrollTop()
+	},
+	
 	scroll_to_position: function(y)
 	{
 		var scroller
@@ -234,7 +239,7 @@ var Scroller = new Class
 	
 	scroll_to: function(element, options, callback)
 	{
-		if (typeof element === 'number')
+		if (typeof element === 'number' || element instanceof Number)
 			return this.scroll_to_position(element)
 		
 		options = options || {}

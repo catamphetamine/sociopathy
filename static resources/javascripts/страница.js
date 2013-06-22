@@ -430,13 +430,7 @@ var Page = new Class
 					})
 				})
 				
-				Режим.activate_edit_actions({ on_save: function()
-				{
-					if (Режим.правка_ли())
-						data_store.edited_data = data_store.collect_edited()
-					
-					page.save(data_store.edited_data)
-				},
+				Режим.activate_edit_actions({ on_save: this.save_changes.bind(this),
 				on_discard: function()
 				{
 					data_store.edited_data = data_store.unmodified_data
@@ -472,6 +466,16 @@ var Page = new Class
 					})
 				else
 					return возврат()
+			},
+			
+			save_changes: function()
+			{
+				if (Режим.правка_ли())
+					this.edited_data = this.collect_edited()
+				
+				page.unsaved_changes = false
+			
+				page.save(this.edited_data)
 			},
 			
 			new_data_loaded: function(updater)

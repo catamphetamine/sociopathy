@@ -6,6 +6,8 @@ var between_pages
 var get_page_less_style_link
 var page_data
 
+var next_page_data
+
 ;(function()
 {	
 	var old_page_javascript_link
@@ -157,6 +159,16 @@ var page_data
 		})
 		
 		new_page_data = null
+		
+		if (!first_time_page_loading)
+		{
+			Object.for_each(next_page_data, function(key)
+			{
+				page.data[key] = this
+			})
+		}
+		
+		next_page_data = {}
 		
 		page.proceed = function(ошибка)
 		{

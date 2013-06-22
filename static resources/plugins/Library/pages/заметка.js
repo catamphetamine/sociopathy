@@ -68,7 +68,16 @@
 				return data.заметка
 			},
 			before_done: article_loaded,
-			done: page.content_ready
+			done: function()
+			{
+				if (page.data.scroll_to_view_edited)
+				{
+					прокрутчик.scroll_to(page.data.scroll_to_view_edited)
+					delete page.data.scroll_to_view_edited
+				}
+				
+				page.content_ready()
+			}
 		})
 	}
 	
@@ -99,6 +108,11 @@
 		{
 			$(this).parent().css('position', 'relative')
 		})
+		
+		visual_editor.submit = function()
+		{
+			page.Data_store.save_changes()
+		}
 		
 		visual_editor.can_edit = function() { return Режим.правка_ли() }
 		
@@ -239,6 +253,8 @@
 			
 				if (data.путь)
 					return go_to(text('pages.library.url') + '/' + data.путь)
+			
+				next_page_data.scroll_to_view_edited = прокрутчик.scrolled() - $('.visual_editor_tools_container').height()
 			
 				page.refresh()
 			
