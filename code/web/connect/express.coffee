@@ -6,33 +6,57 @@ session = require './connect session'
 	ввод.данные = снасти.данные(ввод)
 	следующий()
 	
-access_logger = (ввод, вывод, следующий) ->
-	следующий()
-	return if not ввод.session?
+global.Activity = {}
 	
-	когда_был_здесь = new Date()
-	# { w: 0 } = write concern "off"
-	db('people_sessions').update({ пользователь: ввод.пользователь._id }, { $set: { 'когда был здесь': когда_был_здесь }}, { w: 0 }) #, online: yes
-
-	check_online_status = ->
-		fiber ->
-			session = db('people_sessions')._.find_one({ пользователь: ввод.пользователь._id })
+activity = (ввод, вывод, следующий) ->
+	_id = ввод.пользователь._id
+	user_id = ввод.пользователь._id + ''
 	
-			когда_был_здесь_в_последний_раз = session['когда был здесь']
-			
-			if когда_был_здесь_в_последний_раз?
-				if когда_был_здесь_в_последний_раз.getTime() == когда_был_здесь.getTime()
-					эфир.offline(ввод.пользователь)
-					#db('people_sessions').update({ пользователь: ввод.пользователь._id }, { $set: { online: no } })
-				ввод.session.delete('online_timeout')
-
-	fiber ->
-		online_timeout = ввод.session.get.await('online_timeout')
-			
-		if online_timeout?
-			clearTimeout(online_timeout)
+	if global.Activity[user_id]?
+		return следующий()
+		
+	activity = 
+		когда_был_здесь: new Date()
+		
+		detected: ->
+			@когда_был_здесь = new Date()
+		
+		update: =>
+			if @когда_был_здесь_в_последний_раз == @когда_был_здесь
+				return
 				
-		ввод.session.set({ online_timeout: setTimeout(check_online_status, Options.User.Online.Timeout) })
+			когда_был_здесь = @когда_был_здесь
+			@когда_был_здесь_в_последний_раз = @когда_был_здесь
+			
+			# { w: 0 } = write concern "off"
+			db('people_sessions').update({ пользователь: _id }, { $set: { 'когда был здесь': когда_был_здесь }}, { w: 0 }) #, online: yes
+		
+			check_for_expiration = ->
+				fiber ->
+					session = db('people_sessions')._.find_one({ пользователь: _id })
+		
+					когда_был_здесь_в_последний_раз = session['когда был здесь']
+		
+					if когда_был_здесь_в_последний_раз?
+						if когда_был_здесь_в_последний_раз.getTime() == когда_был_здесь.getTime()
+							эфир.offline(пользователь)
+							#notifier.offline(_id)
+									
+			if @expiration_check?
+				clearTimeout(@expiration_check)
+	
+			@expiration_check = check_for_expiration.delay(Options.User.Activity.Online_timeout)
+			
+			@run()
+		
+		run: ->
+			@update.delay(Options.User.Activity.Update_interval)
+	
+	global.Activity[user_id] = activity
+		
+	activity.run()
+	
+	следующий()
 	
 remember_me = (ввод, вывод, следующий) ->
 	тайный_ключ = ввод.cookies.user
@@ -75,7 +99,7 @@ module.exports = (приложение) ->
 			приложение.use session
 			приложение.use получатель_данных
 			приложение.use remember_me
-			приложение.use access_logger
+			приложение.use activity
 			#приложение.use require('./../tools/locale').middleware
 			приложение.use приложение.router
 	
