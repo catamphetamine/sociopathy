@@ -20,7 +20,7 @@ if (пользователь)
 			
 			console.log('Reporting activity on ' + new Date())
 				
-			Ajax.post('/пользователь/присутствие', {})
+			Ajax.post('/сеть/пользователь/присутствие', {})
 		},
 	
 		detected: function()
