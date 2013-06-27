@@ -5,6 +5,8 @@ listeners = {}
 
 online = redis.createClient()
 
+api = {}
+
 эфир = websocket
 	.of('/эфир')
 	.on 'connection', (соединение) ->
@@ -75,11 +77,11 @@ online = redis.createClient()
 			
 			listener.online = (user) =>
 				#if _id != user._id.toString()
-				соединение.emit('online', Object.выбрать(['_id'], user))
+				api.отправить('пользователи', 'online', Object.выбрать(['_id'], user))
 					
 			listener.offline = (user) ->
 				#if _id != user._id.toString()
-				соединение.emit('offline', Object.выбрать(['_id'], user))
+				api.отправить('пользователи', 'offline', Object.выбрать(['_id'], user))
 			
 			listener.пользователь = _id
 			listeners[соединение.id] = listener
@@ -95,8 +97,6 @@ online = redis.createClient()
 		соединение.emit 'поехали'
 		соединение.emit 'version', Options.Version
 						
-api = {}
-			
 api.offline = (пользователь) ->
 	for id, listener of listeners
 		listener.offline(пользователь)
