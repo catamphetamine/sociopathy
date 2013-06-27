@@ -1,6 +1,6 @@
 Configuration = Object.x_over_y(Configuration,
 {
-  Host: host,
+	Host: host,
 	Port: port,
 	Upload_server_port: 8091,
 	Websocket_server: function() { return Configuration.Host + ':8080' },
@@ -26,5 +26,9 @@ Configuration = Object.x_over_y(Configuration,
 	{
 		Fade_in: 0.1,
 		Fade_out: 0.1
+	},
+	Activity:
+	{
+		Interval: 5
 	}
 })
