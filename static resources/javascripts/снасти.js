@@ -1133,3 +1133,15 @@ var User_online_status = new Class
 		this.online_status.offline.css({ opacity: 1 - горячесть })
 	}
 })
+
+function is_node_editable(node)
+{
+	if (node.getAttribute('contenteditable') == 'true')
+		return true
+
+	if (node instanceof HTMLDocument)
+		return false
+
+	if (!(node.parentNode instanceof HTMLDocument))
+		return is_node_editable(node.parentNode)
+}
