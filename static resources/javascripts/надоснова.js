@@ -46,12 +46,27 @@ hotkey('Консоль', function()
 
 hotkey('Показать_навершие',
 {
+	check: function()
+	{
+		if (event.target instanceof HTMLInputElement
+			|| event.target instanceof HTMLTextAreaElement)
+			return false
+		
+		if (is_node_editable(event.target))
+			return false
+		
+		if (!event.target)
+			return false
+			
+		return true
+			
+	},
 	on_release: function()
 	{
 		$('#panel').removeClass('sticky')
 	}
 },
-function()
+function(event)
 {
 	$('#panel').addClass('sticky')
 })
