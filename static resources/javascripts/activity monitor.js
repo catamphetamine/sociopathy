@@ -1,6 +1,6 @@
 var Activity = new (new Class
 ({
-  Binds: ['report'],
+	Binds: ['report'],
 
 	active: true,
 
@@ -15,12 +15,16 @@ var Activity = new (new Class
 			return
 			
 		this.active = false
+		
+		console.log('Reporting activity on ' + new Date())
 			
 		Ajax.post('/пользователь/присутствие', {})
 	},
 
 	detected: function()
 	{
+		console.log('Activity detected on ' + new Date())
+		
 		this.active = true
 	}
 }))();
