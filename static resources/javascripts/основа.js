@@ -153,6 +153,10 @@ var scripts =
 	
 	'navigation',
 	
+	'configuration',
+	
+	'activity monitor',
+	
 	'надоснова',
 		
 	'здесь или не здесь',

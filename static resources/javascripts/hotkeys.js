@@ -62,23 +62,39 @@ function hotkey(name, options, action)
 			if (!mode_check())
 				return
 			
+			if (options.check)
+				if (!options.check())
+					return
+			
 			Клавиши.поймано(event)
 			action()
+			
+			var namespace = $.unique_namespace()
+			
+			if (options.on_release)
+			{
+				var unbind = $(document)[method]('keyup.' + namespace, function(event)
+				{
+					if (Клавиши.is(hotkey, event))
+					{
+						if (method === 'on_page')
+						{
+							unbind()
+						}
+						else
+						{
+							$(document).unbind('keyup.' + namespace)
+							$.free_namespace(namespace)
+						}
+						
+						if (!mode_check())
+							return
+						
+						Клавиши.поймано(event)
+						options.on_release()
+					}
+				})
+			}
 		}
 	})
-	
-	if (options.on_release)
-	{
-		$(document)[method]('keyup', function(event)
-		{
-			if (Клавиши.is(hotkey, event))
-			{
-				if (!mode_check())
-					return
-				
-				Клавиши.поймано(event)
-				options.on_release()
-			}
-		})
-	}
 }

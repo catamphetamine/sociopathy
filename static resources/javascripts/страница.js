@@ -735,12 +735,19 @@ var Page = new Class
 			namespace = $.unique_namespace()
 			event += '.' + namespace
 		}
+		
+		var info = { element: element, event: event }
 			
-		this.event_handlers.push({ element: element, event: event })
+		this.event_handlers.add(info)
 		element.on(event, action)
 		
 		return (function()
 		{
+			if (!this.event_handlers.has(info))
+				return
+				
+			this.event_handlers.remove(info)
+			
 			element.unbind(event)
 			
 			if (namespace)

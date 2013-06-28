@@ -6,37 +6,6 @@ var page
 var host = Uri.parse().host
 var port = Uri.parse().port
 
-Configuration = Object.x_over_y(Configuration,
-{
-	Host: host,
-	Port: port,
-	Upload_server_port: 8091,
-	Websocket_server: function() { return Configuration.Host + ':8080' },
-	User_is_online_for: 8 * 60,
-	Book_shelf_size: 6,
-	Minimum_book_shelves: 3,
-	Video:
-	{
-		Icon:
-		{
-			Size:
-			{
-				Width: 640
-			}
-		},
-		Size:
-		{
-			Width: 560,
-			Height: 315
-		}
-	},
-	Loading_screen:
-	{
-		Fade_in: 0.1,
-		Fade_out: 0.1
-	}
-})
-
 проверить_доступ(Uri.parse().path)
 
 $(document).on('scripts_loaded', function()
@@ -77,12 +46,27 @@ hotkey('Консоль', function()
 
 hotkey('Показать_навершие',
 {
+	check: function()
+	{
+		if (event.target instanceof HTMLInputElement
+			|| event.target instanceof HTMLTextAreaElement)
+			return false
+		
+		if (is_node_editable(event.target))
+			return false
+		
+		if (!event.target)
+			return false
+			
+		return true
+			
+	},
 	on_release: function()
 	{
 		$('#panel').removeClass('sticky')
 	}
 },
-function()
+function(event)
 {
 	$('#panel').addClass('sticky')
 })

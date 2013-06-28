@@ -240,18 +240,6 @@ Visual_editor.implement
 	
 	add_global_hotkey: function()
 	{
-		function is_node_editable(node)
-		{
-			if (node.getAttribute('contenteditable') == 'true')
-				return true
-			
-			if (node instanceof HTMLDocument)
-				return false
-			
-			if (!(node.parentNode instanceof HTMLDocument))
-				return is_node_editable(node.parentNode)
-		}
-		
 		var visual_editor = this
 		
 		$(document).on('keydown', function(event)
