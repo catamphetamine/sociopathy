@@ -311,12 +311,9 @@ function неточное_время(время)
 	var точные_сутки = точные_часы / 24
 	var сутки = Math.floor(точные_сутки)
 	if (сутки < 1.5)
-		return text('human readable time.yesterday')
+		return text('human readable time.a day ago')
 		
-	if (сутки < 2.5)
-		return text('human readable time.the day before yesterday')
-		
-	var количество_суток = 3
+	var количество_суток = 2
 	while (количество_суток <= 6)
 	{
 		if (сутки < количество_суток + 0.5)
@@ -332,7 +329,7 @@ function неточное_время(время)
 	
 	var недели = Math.floor(точные_сутки / 7)
 	if (недели < 1.5)
-		return text('human readable time.last week')
+		return text('human readable time.a week ago')
 		
 	if (недели < 2.5)
 		return text('human readable time.2 weeks ago')
@@ -342,7 +339,7 @@ function неточное_время(время)
 		
 	var месяцы = Math.floor(точные_сутки / 30)
 	if (месяцы < 1.5)
-		return text('human readable time.last month')
+		return text('human readable time.a month ago')
 
 	if (месяцы < 2.5)
 		return text('human readable time.2 months ago')

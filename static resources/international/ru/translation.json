@@ -107,13 +107,11 @@
 		"an hour ago": "часом ранее",
 		"one and a half an hour ago": "полутора часами ранее",
 		
-		"yesterday": "вчера",
-		"the day before yesterday": "позавчера",
-		"last week": "на прошлой неделе",
-		"2 weeks ago": "на позапрошлой неделе",
-		"3 weeks ago": "3-мя неделями ранее",
-		"last month": "в прошлом месяце",
-		"2 months ago": "в позапрошлом месяце",
+		"a day ago": "днём ранее",
+		"a week ago": "неделей ранее",
+		"2 weeks ago": "двумя неделями ранее",
+		"3 weeks ago": "тремя неделями ранее",
+		"a month ago": "месяцем ранее",
 		"half a year ago": "полугодом ранее",
 		"a year ago": "годом ранее",
 		"one and a half years ago": "полутора годами ранее"
