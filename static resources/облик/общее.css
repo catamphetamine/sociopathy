@@ -1435,44 +1435,6 @@ label.in-place_input_label
 	margin-bottom: 20px;
 }
 
-.either_way_loading
-{
-	.previous_conditional
-	{		
-		font-size: 26px;
-				
-		[type=loading], [type=loading_more], [type=error], [type=loading_more_error]
-		{
-			text-align: center;
-			margin-bottom: 50px;
-		}
-		
-		[type=loading_more], [type=loading_more_error]
-		{
-			margin-top: 0px;
-		}
-		
-		.previous
-		{
-			text-align: center;
-			height: 44px;
-			
-			.more_container
-			{
-				position: absolute;
-				width: 100%;
-				text-align: center;
-			}
-			
-			> a
-			{
-				position: relative;
-				top: 0px;
-			}
-		}
-	}
-}
-
 .picture_uploading_screen
 {
 	display: none;

@@ -5,57 +5,19 @@ session = require './connect session'
 получатель_данных = (ввод, вывод, следующий) ->
 	ввод.данные = снасти.данные(ввод)
 	следующий()
-	
-global.Activity = {}
-	
+			
 activity = (ввод, вывод, следующий) ->
+	if not ввод.пользователь?
+		return следующий()
+		
 	_id = ввод.пользователь._id
 	user_id = ввод.пользователь._id + ''
 	
-	if global.Activity[user_id]?
+	if Activity[user_id]?
 		return следующий()
-		
-	activity = 
-		когда_был_здесь: new Date()
-		
-		detected: ->
-			@когда_был_здесь = new Date()
-		
-		update: =>
-			if @когда_был_здесь_в_последний_раз == @когда_был_здесь
-				return
-				
-			когда_был_здесь = @когда_был_здесь
-			@когда_был_здесь_в_последний_раз = @когда_был_здесь
-			
-			# { w: 0 } = write concern "off"
-			db('people_sessions').update({ пользователь: _id }, { $set: { 'когда был здесь': когда_был_здесь }}, { w: 0 }) #, online: yes
-		
-			check_for_expiration = ->
-				fiber ->
-					session = db('people_sessions')._.find_one({ пользователь: _id })
-		
-					когда_был_здесь_в_последний_раз = session['когда был здесь']
-		
-					if когда_был_здесь_в_последний_раз?
-						if когда_был_здесь_в_последний_раз.getTime() == когда_был_здесь.getTime()
-							эфир.offline(пользователь)
-							#notifier.offline(_id)
-									
-			if @expiration_check?
-				clearTimeout(@expiration_check)
 	
-			@expiration_check = check_for_expiration.delay(Options.User.Activity.Online_timeout)
-			
-			@run()
-		
-		run: ->
-			@update.delay(Options.User.Activity.Update_interval)
-	
-	global.Activity[user_id] = activity
-		
-	activity.run()
-	
+	Activity.monitor(_id)
+	Activity[user_id].detected()
 	следующий()
 	
 remember_me = (ввод, вывод, следующий) ->

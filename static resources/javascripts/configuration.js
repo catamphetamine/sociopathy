@@ -1,3 +1,6 @@
+var host = Uri.parse().host
+var port = Uri.parse().port
+
 Configuration = Object.x_over_y(Configuration,
 {
 	Host: host,

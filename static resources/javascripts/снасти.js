@@ -1142,3 +1142,9 @@ function is_node_editable(node)
 	if (!(node.parentNode instanceof HTMLDocument))
 		return is_node_editable(node.parentNode)
 }
+
+function is_node_untabbable(node)
+{
+	if (node.getAttribute('untabbable') == 'true')
+		return true
+}

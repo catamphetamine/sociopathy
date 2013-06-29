@@ -3,9 +3,6 @@ var content
 
 var page
 
-var host = Uri.parse().host
-var port = Uri.parse().port
-
 проверить_доступ(Uri.parse().path)
 
 $(document).on('scripts_loaded', function()
@@ -44,32 +41,44 @@ hotkey('Консоль', function()
 	info('Console')
 })
 
+/*
 hotkey('Показать_навершие',
 {
-	check: function()
+	check: function(event)
 	{
-		if (event.target instanceof HTMLInputElement
-			|| event.target instanceof HTMLTextAreaElement)
-			return false
-		
-		if (is_node_editable(event.target))
-			return false
-		
 		if (!event.target)
 			return false
+		
+		if (!прокрутчик.scrolled())
+			return false
+		
+		if (event.target instanceof HTMLInputElement
+			|| event.target instanceof HTMLTextAreaElement
+			|| is_node_editable(event.target))
+		{
+			if (Клавиши.is('Tab') && is_node_untabbable(event.target))
+			{
+				// can show panel
+			}
+			else
+				return true
+		}
 			
 		return true
 			
 	},
 	on_release: function()
 	{
+		$('.on_the_right_side_of_the_panel').show()
 		$('#panel').removeClass('sticky')
 	}
 },
 function(event)
 {
+	$('.on_the_right_side_of_the_panel').hide()
 	$('#panel').addClass('sticky')
 })
+*/
 
 var can_navigate_to_page = false
 

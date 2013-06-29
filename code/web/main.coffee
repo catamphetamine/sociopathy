@@ -62,6 +62,8 @@ fiber ->
 		
 		global.either_way_loading = require './tools/either way loading'
 		
+		global.Activity = require './core/activity'
+		
 		global.application_tools = require('./connect/express')()
 		
 		global.websocket = require('socket.io').listen(http_server)

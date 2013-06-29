@@ -757,7 +757,7 @@ $.validate_xml = function(xml)
 
 		var text_node = Dom_tools.child_text_node(document.firstChild)
 		
-		if (text_node)
+		if (text_node && text_node.nodeValue.trim())
 			return { cause: 'text node in root', explanation: text_node.nodeValue }
 			
 		return document
@@ -937,6 +937,11 @@ $.fn.lies_after = function(that)
 		throw 'The passed element doesn\'t have the same parent as this element'
 	
 	return this_index > that_index
+}
+
+$.fn.trim = function()
+{
+	this.html(this.html().trim())
 }
 
 window.event_namespaces = {}

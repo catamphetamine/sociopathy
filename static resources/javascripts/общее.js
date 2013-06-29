@@ -386,27 +386,6 @@ function random_id()
 	return Math.random() + '@' + new Date().getTime()
 }
 
-$.fn.on_page = function(event, action)
-{
-	if (!page)
-		throw 'Page hasn\'t been initialized yet'
-	
-	return page.on(this, event, action)
-}
-
-$.fn.on_page_once = function(event, action)
-{
-	var cancel
-	
-	var new_action = function(event, data)
-	{
-		action(event, data)
-		cancel()
-	}
-	
-	cancel = this.on_page(event, new_action)
-}
-
 /*
 function anti_cache_postfix(url)
 {

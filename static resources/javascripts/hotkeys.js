@@ -43,7 +43,7 @@ function hotkey(name, options, action)
 	var method = 'on'
 	
 	// if this === current page
-	if (this.Data_store)
+	if (page)
 		method = 'on_page'
 	
 	function mode_check()
@@ -55,15 +55,22 @@ function hotkey(name, options, action)
 		return true
 	}
 	
+	var unpressed = true
+			
+	//console.log('method for ' + hotkey + ': ' + method)
+			
 	$(document)[method]('keydown', function(event)
 	{
 		if (Клавиши.is(hotkey, event))
 		{
+			if (!unpressed)
+				return Клавиши.поймано(event)
+			
 			if (!mode_check())
 				return
 			
 			if (options.check)
-				if (!options.check())
+				if (!options.check(event))
 					return
 			
 			Клавиши.поймано(event)
@@ -71,11 +78,21 @@ function hotkey(name, options, action)
 			
 			var namespace = $.unique_namespace()
 			
-			if (options.on_release)
+			//console.log('Caught: ' + hotkey)
+			
+			unpressed = false
+			
+			var unbind = $(document)[method]('keyup.' + namespace, function(event)
 			{
-				var unbind = $(document)[method]('keyup.' + namespace, function(event)
+				//console.log('on key up: ' + hotkey)
+					
+				if (Клавиши.is(hotkey, event))
 				{
-					if (Клавиши.is(hotkey, event))
+					//console.log('key up: ' + hotkey)
+					
+					unpressed = true
+					
+					if (options.on_release)
 					{
 						if (method === 'on_page')
 						{
@@ -93,8 +110,15 @@ function hotkey(name, options, action)
 						Клавиши.поймано(event)
 						options.on_release()
 					}
-				})
-			}
+				}
+			},
+			{
+				terminate: function()
+				{
+					if (options.on_release)
+						options.on_release()
+				}
+			})
 		}
 	})
 }

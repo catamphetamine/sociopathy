@@ -77,11 +77,13 @@ api = {}
 			
 			listener.online = (user) =>
 				#if _id != user._id.toString()
-				api.отправить('пользователи', 'online', Object.выбрать(['_id'], user))
+				
+				#api.отправить('пользователи', 'online', Object.выбрать(['_id'], user))
 					
 			listener.offline = (user) ->
 				#if _id != user._id.toString()
-				api.отправить('пользователи', 'offline', Object.выбрать(['_id'], user))
+				
+				#api.отправить('пользователи', 'offline', Object.выбрать(['_id'], user))
 			
 			listener.пользователь = _id
 			listeners[соединение.id] = listener

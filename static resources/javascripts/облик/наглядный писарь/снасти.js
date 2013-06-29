@@ -946,8 +946,8 @@ Visual_editor.implement
 						video_player.append(video)
 					
 						video_player = editor.insert(video_player, { break_container: true })
-									
-						if (!editor.caret.move_to_the_next_element(video, editor.content.node()))
+						
+						if (!editor.caret.move_to_the_next_element(video_player, editor.content.node()))
 						{
 							var paragraph = visual_editor.create_paragraph()
 							paragraph.appendTo(editor.content)
@@ -1132,7 +1132,6 @@ Visual_editor.implement
 					},
 					when_closed: function()
 					{
-						console.log(this)
 						this.xml_editor.toTextArea()
 					},
 					ok: function(xml)

@@ -286,7 +286,12 @@ var Wiki_processor = new (new Class
 		//console.log(syntax)
 		
 		if (!syntax)
+		{
+			if (target.tagName.toLowerCase() === 'xml')
+				return
+			
 			return Dom_tools.append_text(Dom_tools.to_text(node), target)
+		}
 	
 		//console.log('syntax found')
 		
@@ -427,7 +432,7 @@ var Wiki_processor = new (new Class
 		{
 			element = $(node)
 			
-			if (element.is('br') && element.parent().is('p'))
+			if (element.is('br')) // && element.parent().is('p'))
 				return
 		}
 	
@@ -442,7 +447,12 @@ var Wiki_processor = new (new Class
 		//console.log(syntax)
 		
 		if (!syntax)
+		{
+			if (target.tagName.toLowerCase() === 'wiki')
+				return
+			
 			return this.append_text(Dom_tools.to_text(node), target)
+		}
 	
 		if (syntax.is_dummy)
 			if (syntax.is_dummy(element))
@@ -481,6 +491,9 @@ var Wiki_processor = new (new Class
 		{
 			processor.parse_node(this, wiki_element.node(), element)
 		})
+		
+		if (syntax.finish)
+			syntax.finish(wiki_element)
 	},
 	
 	append_text: function(text, to)
@@ -852,6 +865,11 @@ Wiki_processor.Syntax =
 		parse: function(from, to)
 		{
 			return to.attr('at', from.attr('href'))
+		},
+		
+		finish: function(to)
+		{
+			to.trim()
 		}
 	},
 	картинка:

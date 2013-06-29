@@ -18,14 +18,14 @@ if (пользователь)
 				
 			this.active = false
 			
-			console.log('Reporting activity on ' + new Date())
+			//console.log('Reporting activity on ' + new Date())
 				
 			Ajax.post('/сеть/пользователь/присутствие', {})
 		},
 	
 		detected: function()
 		{
-			console.log('Activity detected on ' + new Date())
+			//console.log('Activity detected on ' + new Date())
 			
 			this.active = true
 		}

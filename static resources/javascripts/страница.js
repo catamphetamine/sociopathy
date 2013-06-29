@@ -604,6 +604,9 @@ var Page = new Class
 		this.event_handlers.for_each(function()
 		{
 			this.element.unbind(this.event)
+			
+			if (this.options.terminate)
+				this.options.terminate()
 		})
 		
 		this.ajaxes.for_each(function()
@@ -719,14 +722,18 @@ var Page = new Class
 		})
 	},
 	
-	on: function(element, event, action)
+	on: function(element, event, action, options)
 	{
 		if (typeof element === 'string')
 		{
+			options = action
 			action = event
 			event = element
+			
 			element = $(document)
 		}
+		
+		options = options || {}
 		
 		var namespace
 		
@@ -736,7 +743,7 @@ var Page = new Class
 			event += '.' + namespace
 		}
 		
-		var info = { element: element, event: event }
+		var info = { element: element, event: event, options: options }
 			
 		this.event_handlers.add(info)
 		element.on(event, action)
@@ -814,3 +821,24 @@ var Page = new Class
 		Клавиши.убрать_по_нажатию(id)
 	}
 })
+
+$.fn.on_page = function(event, action, options)
+{
+	if (!page)
+		throw 'Page hasn\'t been initialized yet'
+	
+	return page.on(this, event, action, options)
+}
+
+$.fn.on_page_once = function(event, action, options)
+{
+	var cancel
+	
+	var new_action = function(event, data)
+	{
+		action(event, data)
+		cancel()
+	}
+	
+	cancel = this.on_page(event, new_action, options)
+}

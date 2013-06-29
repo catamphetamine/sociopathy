@@ -72,6 +72,13 @@ var Dom_tools =
 		node = this.normalize(node)
 		highest_parent = this.normalize(highest_parent)
 		
+		console.log('node')
+		console.log(node)
+		console.log('node.parentNode')
+		console.log(node.parentNode)
+		console.log('highest_parent')
+		console.log(highest_parent)
+		
 		if (this.is_text_node(node))
 			return node
 		
@@ -79,6 +86,9 @@ var Dom_tools =
 			return null
 		
 		var next = this.next(node)
+		
+		console.log('next')
+		console.log(next)
 		
 		if (!next)
 			return this.find_next_text_node(node.parentNode, highest_parent)
