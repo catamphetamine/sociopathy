@@ -1148,3 +1148,24 @@ function is_node_untabbable(node)
 	if (node.getAttribute('untabbable') == 'true')
 		return true
 }
+
+function Countdown(count, callback)
+{
+	function is_done()
+	{
+		if (count === 0)
+		{
+			callback()
+			return true
+		}
+	}
+	
+	if (is_done())
+		return
+	
+	return function()
+	{
+		count--
+		is_done()
+	}
+}

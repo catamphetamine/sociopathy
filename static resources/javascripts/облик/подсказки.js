@@ -1,74 +1,29 @@
-var Подсказки = (function()
+var Подсказки =
 {
-	var включены = false
-	
-	$(function()
+	закрыть: function(id)
 	{
-		$(document).keydown(function(event) 
-		{
-			if (Клавиши.is(Настройки.Клавиши.Подсказки, event))
-			{
-				// disable hints
-				return
-				
-				включены = !включены
-				if (включены)
-				{
-					if (подсказка)
-						info(подсказка)
-					else
-						info('Пока нет подсказок')
-				}
-			}
-		})
-	})				
+		$('.popup_panel[hint="' + id + '"]').trigger('contextmenu')
+	}
+}
 
-	var подсказка
-	
-	var назначить_подсказку = function(сообщение)
-	{
-		if (включены)
-			if (сообщение)
-				info(сообщение)
-
-		var предыдущая_подсказка = подсказка
-		подсказка = сообщение
-		return предыдущая_подсказка
-	}
-	
-	var дополнить_подсказку = function(дополнение)
-	{
-		подсказка += '\n\n' + дополнение
-	}
-	
-	var запомненные_подсказки = {}
-	var запомнить = function(название)
-	{
-		запомненные_подсказки[название] = подсказка
-	}
-	
-	var возстановить = function(название)
-	{
-		return запомненные_подсказки[название]
-	}
-
-	var result =
-	{
-		подсказка: назначить_подсказку,
-		ещё_подсказка: дополнить_подсказку,
-		запомнить: запомнить,
-		возстановить: возстановить
-	}
-	
-	return result
-})()
-
-function Подсказка(id, текст)
+function Подсказка(id, текст, options)
 {
+	options = options || {}
+	
 	if (!пользователь)
 		return
 	
 	if (пользователь.session.не_показывать_подсказки.has(id))
+		return
+	
+	var already_shown = false
+	$('.popup_panel[hint="' + id + '"]').each(function()
+	{
+		if (!$(this).attr('closing'))
+			already_shown = true
+	})
+	
+	if (already_shown)
 		return
 	
 	info(текст, { postprocess: function(container)
@@ -83,6 +38,11 @@ function Подсказка(id, текст)
 		$('<br/>').appendTo(this)
 		dismiss.appendTo(this)
 		$('<div style="clear: both"/>').appendTo(this)
+		
+		this.attr('hint', id)
 	},
+	on_vanish: options.on_vanish,
 	sticky: false })
+	
+	return true
 }

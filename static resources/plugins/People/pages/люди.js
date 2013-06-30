@@ -24,8 +24,12 @@ title(text('pages.people.title'));
 					{
 						if (this['когда был здесь'])
 							parse_date(this, 'когда был здесь')
-							
+						
 						this.with_online_status = true
+						
+						if (пользователь)
+							if (пользователь._id == this._id)
+								this.with_online_status = false
 					})
 				},
 				on_first_output: function()

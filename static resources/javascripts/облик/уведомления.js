@@ -17,8 +17,6 @@ var Message =
 
 	bubble_after: function($element)
 	{
-	//alert('bubble scheduled')
-	//alert(Message.state_machine.states.map(function (element) { return element.state }).join(', '))
 		Message.state_machine.transit_to('bubble', (function()
 		{
 			var free_space = $element.height()
@@ -44,15 +42,6 @@ var Message =
 			
 			$element.remove()
 			setTimeout(function() { Message.state_machine.next() }, 1000)
-			
-			/*
-			$element.css('opacity', 0)
-			$element.animate({ marginBottom: -free_space }, 1000, 'easeInOutQuad', function()
-			{
-				$element.remove()
-				Message.state_machine.next()
-			})
-			*/
 		})
 		.bind(this))
 	},
@@ -90,11 +79,7 @@ var Message =
 			if (this.messages.length === 0)
 				return
 
-			//Message.state_machine.transit_to('vanishing', (function()
-			//{
-				this.vanish(this.messages[0])
-			//})
-			//.bind(this))
+			this.vanish(this.messages[0])
 		},
 	
 		vanish: function($element)
@@ -105,21 +90,32 @@ var Message =
 				return
 			}
 			
-			var disappearance_duration = $element.data('dissapearance_duration') || Message.disappearance_duration
-				
+			var disappearance_duration = $element.data('disappearance_duration') || Message.disappearance_duration
+			
 			var self = this
-			animator.fade_out($element, 
+				
+			function try_to_fade_out()
 			{
-				duration: disappearance_duration, 
-				callback: function() 
+				if ($element.data('mouse_overed'))
+					return try_to_fade_out.delay(200)
+				
+				animator.fade_out($element, 
 				{
-					$element.hide()
-					Message.bubble_after($element)
-					self.remove($element)
-					
-					//Message.state_machine.next()
-				} 
-			})
+					duration: disappearance_duration, 
+					callback: function() 
+					{
+						var on_vanish = $element.data('on_vanish') || function() {}
+						
+						$element.hide()
+						Message.bubble_after($element)
+						self.remove($element)
+						
+						on_vanish()
+					} 
+				})
+			}
+			
+			try_to_fade_out()
 		},
 	},
 	
@@ -146,7 +142,6 @@ var Message =
 				return
 			
 			var state = this.states[0]
-			//alert(state.state)
 			state.action()
 		}
 	},
@@ -231,44 +226,34 @@ var Message =
 			
 			closing = true
 			
-			message_container.data('dissapearance_duration', 0.25)
+			message_itself.attr('closing', true)
+		
+			message_container.data('disappearance_duration', 0.25)
 			Message.vanisher.schedule(message_container)
 			
 			if (options.on_close)
 				options.on_close.bind(message_itself)(message)
 		})
 		
-		//var message = $('<div class="' + type + '"/>').html(text)
-		
-		//var close_button = $('<span></span>')
-		//close_button.addClass('close')
-		//close_button.prependTo(message_itself)
-		
 		message_container.append(message).appendTo('body')
 		message_container.css('top', top)
 
 		var opacity = message.css('opacity')
 		message.css('opacity', 0)
-
-		/*
-		var messages_container = $('body > .messages_container')
-		if (!messages_container.exists())
-		{
-			messages_container = $('<div/>').addClass('messages_container')
-			messages_container.appendTo('body')
-		}
 		
-		message_container.appendTo(messages_container)
-		*/
-		
-		/*
-		new image_button(close_button).does(function()
+		if (options.on_vanish)
+			message_container.data('on_vanish', options.on_vanish)
+			
+		message_container.on('mouseenter', function()
 		{
-			message_container.data('dissapearance_duration', 0.25)
-			Message.vanisher.schedule(message_container)
+			$(this).data('mouse_overed', true)
 		})
-		*/
 		
+		message_container.on('mouseleave', function()
+		{
+			$(this).data('mouse_overed', false)
+		})
+			
 		animator.fade_in(message, 
 		{ 
 			duration: this.appearance_duration, 

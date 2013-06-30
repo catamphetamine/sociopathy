@@ -17,24 +17,27 @@
 	
 		visual_editor.keep_cursor_on_screen()
 	
-		text_button.new(page.get('.save .button')).does(function()
+		visual_editor.submit = function()
 		{
-			var content = Wiki_processor.parse_and_validate(visual_editor.editor.html())
-			
-			if (!content)
-				return
-				
-			page.Ajax.put('/приложение/сеть/читальня/заметка',
-			{
-				название: page.get('form .title').val(),
-				содержимое: content,
-				раздел: page.data.раздел
+			Wiki_processor.parse_and_validate(visual_editor.editor.html(), function(content)
+			{			
+				if (!content)
+					return
+					
+				page.Ajax.put('/приложение/сеть/читальня/заметка',
+				{
+					название: page.get('form .title').val(),
+					содержимое: content,
+					раздел: page.data.раздел
+				})
+				.ok(function(data)
+				{
+					go_to('/читальня/' + data.путь)
+				})
 			})
-			.ok(function(data)
-			{
-				go_to('/читальня/' + data.путь)
-			})
-		})
+		}
+	
+		text_button.new(page.get('.save .button')).does(visual_editor.submit)
 		
 		visual_editor.initialize_tools_container()
 		visual_editor.tools_element.floating_top_bar()

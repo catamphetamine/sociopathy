@@ -551,43 +551,50 @@ var Messages = new Class
 		
 		reset_editor_content()
 
-		function send_message()
+		function send_message(callback)
 		{
 			var html = visual_editor.html()
 			
-			var message = Wiki_processor.parse_and_validate(html)
-			
-			//console.log('message:')
-			//console.log(message)
-			
-			if (!message)
-				return
-				
-			if (messages.options.send_message(message) === false)
+			Wiki_processor.parse_and_validate(html, function(message)
 			{
-				return warning('Потеряно соединение с сервером')
-			}
-			
-			reset_editor_content({ not_initial: true })
-			visual_editor.focus()
-			
-			messages.adjust_listing_margin()
+				//console.log('message:')
+				//console.log(message)
+				
+				if (!message)
+					return callback(false)
+					
+				if (messages.options.send_message(message) === false)
+				{
+					warning('Потеряно соединение с сервером')
+					return  callback(false)
+				}
+				
+				reset_editor_content({ not_initial: true })
+				visual_editor.focus()
+				
+				messages.adjust_listing_margin()
+				
+				callback(true)
+			})
 		}
 		
 		messages.send_message = send_message
 		
 		visual_editor.submit = function()
 		{
-			if (!send_message())
-				return
+			send_message(function(succeeded)
+			{
+				if (!succeeded)
+					return
 			
-			// если непрочитанное сообщение было скрыто писарем,
-			// и отправили своё сообщение, тем самым уменьшив высоту писаря,
-			// то проверить, не видны ли теперь полностью какие-то из ранее непрочитанных сообщений
-			$(document).trigger('focused')
-			
-			// и мб убрать табличку "Прокрутите вниз, чтобы увидеть новые сообщения"
-			messages.check_if_there_are_still_unread_messages()
+				// если непрочитанное сообщение было скрыто писарем,
+				// и отправили своё сообщение, тем самым уменьшив высоту писаря,
+				// то проверить, не видны ли теперь полностью какие-то из ранее непрочитанных сообщений
+				$(document).trigger('focused')
+				
+				// и мб убрать табличку "Прокрутите вниз, чтобы увидеть новые сообщения"
+				messages.check_if_there_are_still_unread_messages()
+			})
 		}
 		
 		/*

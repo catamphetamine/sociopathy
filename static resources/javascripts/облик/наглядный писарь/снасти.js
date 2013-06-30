@@ -228,33 +228,24 @@ Visual_editor.implement
 				
 				var subheading = $('<h2/>')
 				
+				// если выделено - сделать подзаголовком
 				if (editor.selection.exists() && editor.selection.is_valid())
 				{
-					/*
-					if (!editor.selection.paragraph())
-					{
-						this.restore_caret()
-						throw new Error('Подзаголовок можно помещать только на верхнем уровне или непосредственно в абзаце')
-					}
-					*/
-					
 					subheading.text(editor.selection.text())
 					editor.selection.cut()
 					
 					this.restore_caret()
 					subheading = editor.insert(subheading, { break_container: true })
 					editor.caret.move_to(subheading.next())
-					return
-				}
-				else
-				{
-					visual_editor.hint(subheading, 'Введите текст подзаголовка')
 					
-					this.restore_caret()
-					subheading = editor.insert(subheading, { break_container: true })
-					editor.caret.move_to(subheading)
 					return
 				}
+				
+				visual_editor.hint(subheading, 'Введите текст подзаголовка')
+				
+				this.restore_caret()
+				subheading = editor.insert(subheading, { break_container: true })
+				editor.caret.move_to(subheading)
 			},
 			
 			on_success: function(subheading)
@@ -266,7 +257,7 @@ Visual_editor.implement
 		{
 			selector: '.bold',
 			
-			apply: function()
+			apply: function(callback)
 			{
 				this.backup_caret()
 				
@@ -276,7 +267,7 @@ Visual_editor.implement
 					throw new Error('Выделите текст')
 				}
 								
-				return editor.selection.wrap($('<b/>'))
+				return callback(editor.selection.wrap($('<b/>')))
 			},
 			
 			on_success: function(element)
@@ -289,7 +280,7 @@ Visual_editor.implement
 		{
 			selector: '.italic',
 			
-			apply: function()
+			apply: function(callback)
 			{
 				this.backup_caret()
 				
@@ -299,7 +290,7 @@ Visual_editor.implement
 					throw new Error('Выделите текст')
 				}
 								
-				return editor.selection.wrap($('<i/>'))
+				return callback(editor.selection.wrap($('<i/>')))
 			},
 			
 			on_success: function(element)
@@ -368,7 +359,6 @@ Visual_editor.implement
 					editor.selection.store()
 				
 				this.open_dialog_window()
-				return false
 			},
 			
 			on_success: function(link)
@@ -395,7 +385,7 @@ Visual_editor.implement
 		{
 			selector: '.citation',
 			
-			apply: function()
+			apply: function(callback)
 			{
 				this.backup_caret()
 				
@@ -431,7 +421,7 @@ Visual_editor.implement
 				
 				author.appendTo(citation)
 				
-				return editor.insert(citation, { break_container: true })
+				return callback(editor.insert(citation, { break_container: true }))
 			},
 			
 			on_success: function(citation)
@@ -444,7 +434,7 @@ Visual_editor.implement
 		{
 			button: new image_button(tools.find('.list > *')),
 			
-			apply: function()
+			apply: function(callback)
 			{
 				if (!editor.caret.root() && !editor.caret.container().is('p'))
 				{
@@ -464,7 +454,7 @@ Visual_editor.implement
 					
 				list_item.appendTo(list)
 				
-				return editor.insert(list, { break_container: true })
+				return callback(editor.insert(list, { break_container: true }))
 			},
 			
 			on_success: function(list)
@@ -528,6 +518,8 @@ Visual_editor.implement
 					
 					open: function()
 					{
+						page.подсказка('быстрая вставка картинки', 'Также вы можете вставлять картинки «быстрым» способом — просто скопировав и вставив ссылку на картинку прямо в сообщении')
+
 						editor.caret.store()
 					},
 					
@@ -546,7 +538,6 @@ Visual_editor.implement
 				this.dialog_window.content.find('.float > [value="none"]').click()
 			
 				this.open_dialog_window()
-				return false
 			},
 			
 			on_success: function(picture)
@@ -720,18 +711,19 @@ Visual_editor.implement
 					throw new Error('Формулу можно помещать только непосредственно в абзаце')
 				}
 				
+				// если выделено - формулу из выделения
 				if (editor.selection.exists() && editor.selection.is_valid())
 				{
 					var text = editor.selection.text()
 					editor.selection.cut()
 					this.insert_formula(text)
-					return false
+					
+					return
 				}
 				
 				this.dialog_window.content.find('.display > [value="inline"]').click()
 				
 				this.open_dialog_window()
-				return false
 					
 				//var formula = '\\[ f(x,y,z) = 3y^2 z \\left( 3 + \\frac{7x+5}{1 + y^2} \\right).\\]'
 				// \[ \left( \sum_{k=1}^n a_k b_k \right)^2 \leq \left( \sum_{k=1}^n a_k^2 \right) \left( \sum_{k=1}^n b_k^2 \right) \]
@@ -761,6 +753,7 @@ Visual_editor.implement
 			{
 				var element = $('<sub/>')
 				
+				// если выделено - нижний индекс из выделения
 				if (editor.selection.exists() && editor.selection.is_valid())
 				{
 					element.text(editor.selection.text())
@@ -770,18 +763,18 @@ Visual_editor.implement
 						
 					var text = Dom_tools.append_text_next_to(element, ' ')
 					editor.caret.move_to_the_end(text)
-				}
-				else
-				{
-					visual_editor.hint(element, 'Введите текст')
-					element = editor.insert(element)
-				
-					// иначе в хроме будет курсор в начале, но как бы перед самим элементом
-					if ($.browser.webkit)
-						return editor.caret.move_to(element, 1)
 					
-					return editor.caret.move_to(element)			
+					return
 				}
+				
+				visual_editor.hint(element, 'Введите текст')
+				element = editor.insert(element)
+			
+				// иначе в хроме будет курсор в начале, но как бы перед самим элементом
+				if ($.browser.webkit)
+					return editor.caret.move_to(element, 1)
+				
+				return editor.caret.move_to(element)
 			},
 			
 			on_success: function(subscript)
@@ -797,6 +790,7 @@ Visual_editor.implement
 			{
 				var element = $('<sup/>')
 				
+				// если выделено - верхний индекс из выделения
 				if (editor.selection.exists() && editor.selection.is_valid())
 				{
 					element.text(editor.selection.text())
@@ -806,18 +800,18 @@ Visual_editor.implement
 						
 					var text = Dom_tools.append_text_next_to(element, ' ')
 					editor.caret.move_to_the_end(text)
-				}
-				else
-				{
-					visual_editor.hint(element, 'Введите текст')
-					element = editor.insert(element)
-				
-					// иначе в хроме будет курсор в начале, но как бы перед самим элементом
-					if ($.browser.webkit)
-						return editor.caret.move_to(element, 1)
 					
-					return editor.caret.move_to(element)			
+					return
 				}
+			
+				visual_editor.hint(element, 'Введите текст')
+				element = editor.insert(element)
+			
+				// иначе в хроме будет курсор в начале, но как бы перед самим элементом
+				if ($.browser.webkit)
+					return editor.caret.move_to(element, 1)
+				
+				return editor.caret.move_to(element)
 			},
 			
 			on_success: function(superscript)
@@ -833,6 +827,7 @@ Visual_editor.implement
 			{
 				var element = $('<code/>')
 				
+				// если выделено - код из выделенного
 				if (editor.selection.exists() && editor.selection.is_valid())
 				{
 					element.text(editor.selection.text())
@@ -842,18 +837,18 @@ Visual_editor.implement
 						
 					var text = Dom_tools.append_text_next_to(element, ' ')
 					editor.caret.move_to_the_end(text)
-				}
-				else
-				{
-					visual_editor.hint(element, 'Введите код')
-					element = editor.insert(element, { break_container: true })
-				
-					// иначе в хроме будет курсор в начале, но как бы перед самим элементом
-					if ($.browser.webkit)
-						return editor.caret.move_to(element, 1)
 					
-					return editor.caret.move_to(element)			
+					return
 				}
+				
+				visual_editor.hint(element, 'Введите код')
+				element = editor.insert(element, { break_container: true })
+			
+				// иначе в хроме будет курсор в начале, но как бы перед самим элементом
+				if ($.browser.webkit)
+					return editor.caret.move_to(element, 1)
+				
+				return editor.caret.move_to(element)	
 			},
 			
 			on_success: function(result)
@@ -878,6 +873,7 @@ Visual_editor.implement
 				
 				var element = $('<pre/>')
 				
+				// если выделено - многострочный код из выделенного
 				if (editor.selection.exists() && editor.selection.is_valid())
 				{
 					element.text(editor.selection.text())
@@ -885,12 +881,10 @@ Visual_editor.implement
 					element = editor.insert(element)
 					editor.caret.move_to_the_next_element(element)
 				}
-				else
-				{
-					visual_editor.hint(element, 'Введите код')	
-					element = editor.insert(element)
-					return editor.caret.move_to(element)
-				}
+			
+				visual_editor.hint(element, 'Введите код')	
+				element = editor.insert(element)
+				return editor.caret.move_to(element)
 			},
 			
 			on_success: function(result)
@@ -957,7 +951,9 @@ Visual_editor.implement
 						tool.on_success()
 					},
 					on_open: function()
-					{	
+					{
+						page.подсказка('быстрая вставка видеозаписи', 'Также вы можете вставлять видеозаписи «быстрым» способом — просто скопировав и вставив ссылку на видеозапись прямо в сообщении')
+
 						editor.caret.store()
 					},
 					on_cancel: function()
@@ -983,7 +979,6 @@ Visual_editor.implement
 					throw new Error('Снимите выделение')
 				
 				this.open_dialog_window()
-				return false
 			},
 			
 			on_success: function()
@@ -1073,7 +1068,6 @@ Visual_editor.implement
 					throw new Error('Снимите выделение')
 				
 				this.open_dialog_window()
-				return false
 			},
 			
 			on_success: function(element)
@@ -1159,17 +1153,20 @@ Visual_editor.implement
 				if (editor.selection.exists() && editor.selection.is_valid())
 					throw new Error('Снимите выделение')
 				
-				this.open_dialog_window({ source: Wiki_processor.parse(editor.get_content().html()) })
-				
-				//this.dialog_window.content.appendTo('#page')
-
-				this.dialog_window.xml_editor = CodeMirror.fromTextArea(this.dialog_window.content.find('textarea').node(),
+				Wiki_processor.parse(editor.get_content().html(), (function(source)
 				{
-					mode: { name: 'xml', alignCDATA: true },
-					indentWithTabs: true,
-					lineWrapping: true
+					this.open_dialog_window({ source: source })
+					
+					//this.dialog_window.content.appendTo('#page')
+	
+					this.dialog_window.xml_editor = CodeMirror.fromTextArea(this.dialog_window.content.find('textarea').node(),
+					{
+						mode: { name: 'xml', alignCDATA: true },
+						indentWithTabs: true,
+						lineWrapping: true
+					})
 				})
-				return false
+				.bind(this))
 			},
 			
 			on_success: function()
@@ -1217,9 +1214,11 @@ Visual_editor.implement
 			{
 				try
 				{
-					var result = tool.apply()
-					if (result)
-						tool.on_success(result)
+					tool.apply(function(result)
+					{
+						if (result)
+							tool.on_success(result)
+					})
 				}
 				catch (error)
 				{

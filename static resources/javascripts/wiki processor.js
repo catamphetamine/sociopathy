@@ -333,28 +333,54 @@ var Wiki_processor = new (new Class
 		//console.log('finished processing children')
 	},
 	
-	parse_and_validate: function(xml, options)
+	parse_and_validate: function(xml, options, callback)
 	{
+		if (typeof options === 'function')
+		{
+			callback = options
+			options = null
+		}
+		
+		options = options || {}
+		
 		xml = xml.replace_all('&nbsp;', ' ')
 		
-		var wiki = this.parse(xml, options)
+		function finish(wiki)
+		{
+			try
+			{
+				this.validate(wiki)
+				
+				if (callback)
+					callback(wiki)
+				else
+					return wiki
+			}
+			catch (ошибка)
+			{
+				show_error(ошибка)
+				//console.log(ошибка)
+				//throw get_error_message(ошибка) //{ error: 'Invalid xml: ' + wiki }
+				throw dont_show_error(ошибка)
+			}
+		}
 		
-		try
-		{
-			this.validate(wiki)
-			return wiki
-		}
-		catch (ошибка)
-		{
-			show_error(ошибка)
-			//console.log(ошибка)
-			//throw get_error_message(ошибка) //{ error: 'Invalid xml: ' + wiki }
-			throw dont_show_error(ошибка)
-		}
+		finish = finish.bind(this)
+		
+		if (callback)
+			this.parse(xml, options, finish)
+		else
+			return finish(this.parse(xml, options))
 	},
 	
-	parse: function(xml, options)
+	parse: function(xml, options, callback)
 	{
+		if (typeof options === 'function')
+		{
+			callback = options
+			options = null
+		}
+		
 		options = options || {}
 		
 		if (typeof(xml) === 'string')
@@ -366,55 +392,77 @@ var Wiki_processor = new (new Class
 		var processor = this
 		var output = $('<wiki/>')
 		
-		Array.for_each(xml.childNodes, function()
+		function finish()
 		{
-			processor.parse_node(this, output.node(), options)
-		})
-		
-		var xml = output.html()
-		
-//		xml = xml.replace_all('<br>', '\n')
-//		xml = xml.replace_all('<br/>', '\n')
-
-		//xml = xml.replace_all('&lt;br&gt;', '')
-		//xml = xml.replace_all('&lt;br/&gt;', '')
-	
-		Object.for_each(this.Syntax, function(tag, syntax)
-		{
-			var translation = syntax.translation
-			
-			if (!translation)
-				return
-			
-			if (typeof translation === 'string')
-			{
-				xml = xml.replace_all('<' + translation + '>', '<' + tag + '>')
-				xml = xml.replace_all('<' + translation + ' ', '<' + tag + ' ')
-				xml = xml.replace_all('</' + translation + '>', '</' + tag + '>')
-			}
-			else
-			{
-				var tag_translation = Object.key(translation)
-				translation = translation[Object.key(translation)]
-			
-				xml = xml.replace_all('<' + tag_translation + '>', '<' + tag + '>')
-				xml = xml.replace_all('<' + tag_translation + ' ', '<' + tag + ' ')
-				xml = xml.replace_all('</' + tag_translation + '>', '</' + tag + '>')
+			var xml = output.html()
 				
-				Object.for_each(translation, function(attribute, translation)
-				{
-					var regexp = RegExp.escape('<' + tag) + ' ([^>]*)' + RegExp.escape(translation + '=')
-					var replace_with = '<' + tag + ' $1' + attribute + '='
-					
-					xml = xml.replace(new RegExp(regexp, 'g'), replace_with)
-				})
-			}
-		})
+	//		xml = xml.replace_all('<br>', '\n')
+	//		xml = xml.replace_all('<br/>', '\n')
+	
+			//xml = xml.replace_all('&lt;br&gt;', '')
+			//xml = xml.replace_all('&lt;br/&gt;', '')
 		
-		return xml.trim()
+			Object.for_each(this.Syntax, function(tag, syntax)
+			{
+				var translation = syntax.translation
+				
+				if (!translation)
+					return
+				
+				if (typeof translation === 'string')
+				{
+					xml = xml.replace_all('<' + translation + '>', '<' + tag + '>')
+					xml = xml.replace_all('<' + translation + ' ', '<' + tag + ' ')
+					xml = xml.replace_all('</' + translation + '>', '</' + tag + '>')
+				}
+				else
+				{
+					var tag_translation = Object.key(translation)
+					translation = translation[Object.key(translation)]
+				
+					xml = xml.replace_all('<' + tag_translation + '>', '<' + tag + '>')
+					xml = xml.replace_all('<' + tag_translation + ' ', '<' + tag + ' ')
+					xml = xml.replace_all('</' + tag_translation + '>', '</' + tag + '>')
+					
+					Object.for_each(translation, function(attribute, translation)
+					{
+						var regexp = RegExp.escape('<' + tag) + ' ([^>]*)' + RegExp.escape(translation + '=')
+						var replace_with = '<' + tag + ' $1' + attribute + '='
+						
+						xml = xml.replace(new RegExp(regexp, 'g'), replace_with)
+					})
+				}
+			})
+			
+			return xml.trim()
+		}
+		
+		function iterate()
+		{
+			Array.for_each(xml.childNodes, function()
+			{
+				processor.parse_node(this, output.node(), options, countdown, callback)
+			})
+		}
+		
+		if (callback)
+		{
+			var countdown = Countdown(xml.childNodes.length, function()
+			{
+				return callback(finish())
+			})
+			
+			iterate()
+		}
+		else
+		{
+			iterate()
+			
+			return finish()
+		}
 	},
 			
-	parse_node: function(node, target, options)
+	parse_node: function(node, target, options, callback)
 	{
 		//if (this.timer < new Date().getTime())
 		//	return
@@ -451,7 +499,7 @@ var Wiki_processor = new (new Class
 			if (target.tagName.toLowerCase() === 'wiki')
 				return
 			
-			return this.append_text(Dom_tools.to_text(node), target)
+			return this.append_text(Dom_tools.to_text(node), target, callback)
 		}
 	
 		if (syntax.is_dummy)
@@ -487,93 +535,199 @@ var Wiki_processor = new (new Class
 		//console.log('process children')
 		//console.log(node.childNodes)
 		
-		Array.for_each(node.childNodes, function()
+		function finish()
 		{
-			processor.parse_node(this, wiki_element.node(), element)
-		})
-		
-		if (syntax.finish)
-			syntax.finish(wiki_element)
-	},
-	
-	append_text: function(text, to)
-	{
-		// если это текст внутри абзаца
-		if (to.tagName && to.tagName.toLowerCase() === Object.key(Wiki_processor.Syntax.абзац.translation))
-		{
-			// detect hyperlinks
-			if (text.contains('http://') || text.contains('https://') || text.contains('ftp://'))
-			{
-				var first_text_append = true
-				
-				function append(what)
-				{
-					if (first_text_append)
-						first_text_append = false
-					else
-						Dom_tools.append_text(' ', to)
-						
-					if (typeof what === 'string')
-						return Dom_tools.append_text(what, to)
-						
-					to.appendChild(what)
-				}
-				
-				var pure_text_blocks = []
-				
-				function append_pure_text()
-				{
-					if (pure_text_blocks.is_empty())
-						return
-					
-					var node = append(pure_text_blocks.join(' '))
-					
-					pure_text_blocks = []
-					
-					return node
-				}
-				
-				text.split(' ').for_each(function()
-				{
-					if (!this.contains('http://') && !this.contains('https://') && !this.contains('ftp://'))
-						return pure_text_blocks.add(this)
-					
-					var uri = Uri.parse(this)
-					
-					var ссылка = false
-					
-					if (uri.protocol === 'ftp')
-					{
-						ссылка = true
-					}
-					else if (uri.protocol === 'http' || uri.protocol === 'https')
-					{
-						//if (проверить ссылку)
-						ссылка = true
-					}
-					
-					if (ссылка)
-					{
-						append_pure_text()
-						
-						var tag = Object.key(Wiki_processor.Syntax.ссылка.translation)
-						var at = Wiki_processor.Syntax.ссылка.translation[tag].на
-						
-						var link = $('<' + tag + '/>')
-						link.attr(at, this)
-						link.text(decodeURI(this))
-							
-						append(link.node())
-					}
-					else
-						pure_text_blocks.add(this)
-				})
-		
-				return append_pure_text()
-			}
+			if (syntax.finish)
+				syntax.finish(wiki_element)
 		}
 		
-		Dom_tools.append_text(text, to)
+		function iterate(callback)
+		{
+			Array.for_each(node.childNodes, function()
+			{
+				processor.parse_node(this, wiki_element.node(), element, callback)
+			})
+		}
+		
+		if (callback)
+		{
+			var countdown = Countdown(node.childNodes.length, function()
+			{
+				finish()
+				callback()
+			})
+			
+			iterate(countdown)
+		}
+		else
+		{
+			iterate()
+			finish()
+		}
+	},
+	
+	append_text: function(text, to, callback)
+	{
+		// если не парсить текст "умным" образом, то просто текст будет
+		if (!callback)
+			return Dom_tools.append_text(text, to)
+			
+		function just_append_text()
+		{
+			Dom_tools.append_text(text, to)
+			callback()
+		}
+	
+		function can_contain_hyperlinks()
+		{
+			return text.contains('http://') || text.contains('https://') || text.contains('ftp://')
+		}
+		
+		function is_inside_paragraph()
+		{
+			return to.tagName && to.tagName.toLowerCase() === Object.key(Wiki_processor.Syntax.абзац.translation)
+		}
+		
+		var process = is_inside_paragraph() && can_contain_hyperlinks()
+		
+		if (!process)
+			return just_append_text()
+	
+		var first_text_append = true
+		
+		function append(what)
+		{
+			if (first_text_append)
+				first_text_append = false
+			else
+				Dom_tools.append_text(' ', to)
+				
+			if (typeof what === 'string')
+				return Dom_tools.append_text(what, to)
+				
+			to.appendChild(what)
+		}
+		
+		var pure_text_blocks = []
+		
+		function append_pure_text()
+		{
+			if (pure_text_blocks.is_empty())
+				return
+			
+			var node = append(pure_text_blocks.join(' '))
+			
+			pure_text_blocks = []
+			
+			return node
+		}
+		
+		var fragments = text.split(' ')
+		
+		var countdown = Countdown(fragments.length, function()
+		{
+			append_pure_text()
+			callback()
+		})
+		
+		fragments.for_each(function()
+		{
+			if (!this.contains('http://') && !this.contains('https://') && !this.contains('ftp://'))
+				return pure_text_blocks.add(this)
+			
+			var uri = Uri.parse(this)
+			
+			var ссылка = false
+			
+			if (uri.protocol === 'ftp')
+			{
+				ссылка = true
+			}
+			else if (uri.protocol === 'http' || uri.protocol === 'https')
+			{
+				//if (проверить ссылку)
+				ссылка = true
+			}
+			
+			if (!ссылка)
+				return pure_text_blocks.add(this)
+		
+			append_pure_text()
+			
+			function ссылка_на_картинку(url, callback)
+			{
+				get_image_size(url, callback)
+			}
+			
+			function ссылка_на_видео_на_youtube(url)
+			{
+				if (Youtube.Video.id(url))
+					return true
+			}
+			
+			function ссылка_на_видео_на_vimeo(url)
+			{
+				if (Vimeo.Video.id(url))
+					return true
+			}
+			
+			ссылка_на_картинку(this, (function(result)
+			{
+				if (!result.error)
+				{
+					var tag = Object.key(Wiki_processor.Syntax.картинка.translation)
+					
+					var width = Wiki_processor.Syntax.картинка.translation[tag].ширина
+					var height = Wiki_processor.Syntax.картинка.translation[tag].высота
+					
+					var picture = $('<' + tag + '/>')
+					
+					picture.attr(width, result.width)
+					picture.attr(height, result.height)
+					
+					picture.text(decodeURI(this))
+						
+					append(picture.node())
+					return countdown()
+				}
+				
+				if (ссылка_на_видео_на_youtube(this))
+				{
+					var tag = 'youtube'
+					
+					var video = $('<' + tag + '/>')
+					video.html(Youtube.Video.id(this))
+						
+					append(video.node())
+					return countdown()
+				}
+				
+				if (ссылка_на_видео_на_vimeo(this))
+				{
+					var tag = 'vimeo'
+					
+					var video = $('<' + tag + '/>')
+					video.html(Vimeo.Video.id(this))
+						
+					append(video.node())
+					return countdown()
+				}
+			
+				// просто ссылка
+				
+				var tag = Object.key(Wiki_processor.Syntax.ссылка.translation)
+				var at = Wiki_processor.Syntax.ссылка.translation[tag].на
+				
+				var link = $('<' + tag + '/>')
+				link.attr(at, this)
+				link.text(decodeURI(this))
+					
+				append(link.node())
+				
+				return countdown()
+			})
+			.bind(this))
+		})
 	},
 	
 	test: function()
@@ -614,16 +768,18 @@ var Wiki_processor = new (new Class
 		
 		//console.log('*** parsing html ***')
 		
-		var same_wiki = this.parse(html)
-		same_wiki = same_wiki.replace_all('&lt;', '<').replace_all('&gt;', '>')
-		
-		//console.log('*** wiki ***')
-		//console.log(same_wiki)
-		
-		$('<pre/>').text(same_wiki).appendTo('body')
-		
-		if (same_wiki != wiki)
-			throw 'Wiki processor malfunction'
+		this.parse(html, function(same_wiki)
+		{
+			same_wiki = same_wiki.replace_all('&lt;', '<').replace_all('&gt;', '>')
+			
+			//console.log('*** wiki ***')
+			//console.log(same_wiki)
+			
+			$('<pre/>').text(same_wiki).appendTo('body')
+			
+			if (same_wiki != wiki)
+				throw 'Wiki processor malfunction'
+		})
 	}
 }))
 

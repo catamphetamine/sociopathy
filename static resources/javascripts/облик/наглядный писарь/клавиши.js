@@ -232,7 +232,7 @@ Visual_editor.implement
 		{
 			if (visual_editor.is_submission_key_combination(event))
 			{
-				if (visual_editor.submit())
+				if (visual_editor.submit)
 					return visual_editor.submit()
 			}
 		})

@@ -197,16 +197,18 @@
 	
 	page.Data_store.collect_edited = function()
 	{
+		var content = Wiki_processor.parse_and_validate(visual_editor.editor.html(),
+		{
+			/*process_element: function(wiki, decorated)
+			{
+				wiki.attr('author', decorated.attr('author') || пользователь._id)
+			}*/
+		})
+		
 		var data =
 		{
 			название: get_title(),
-			содержимое: Wiki_processor.parse_and_validate(visual_editor.editor.html(),
-			{
-				/*process_element: function(wiki, decorated)
-				{
-					wiki.attr('author', decorated.attr('author') || пользователь._id)
-				}*/
-			})
+			содержимое: content
 		}
 		
 		return data

@@ -6,13 +6,15 @@
 	{
 		Communication_types.for_each(function()
 		{
-			if (page.data.общение === text('pages.' + this.type + '.communication type'))
+			if (page.data.общение == text('pages.' + this.type + '.communication type'))
 			{
 				page.data.communication_type = this
 				title(text('pages.' + this.type + '.new'))
 			}
 		})
 		
+		page.подсказка('отправка нового общения', 'После того, как вы заполните название и текст, нажимите клавиши «Ctrl + Enter»')
+
 		var visual_editor = new Visual_editor('#content > .compose_message > article')
 
 		Клавиши.on(page.get('form .title'), 'Enter', function()
@@ -32,20 +34,21 @@
 			if (!title)
 				return info(text('pages.new communication.title is absent'))
 			
-			var message = Wiki_processor.parse_and_validate(visual_editor.editor.html())
-			
-			if (!message)
-				return info(text('pages.new communication.message is absent'))
-				
-			page.Ajax.put('/сеть/' + page.data.communication_type.options['new communication type'],
+			Wiki_processor.parse_and_validate(visual_editor.editor.html(), function(message)
 			{
-				название: title,
-				сообщение: message,
-				кому: page.data.кому
-			})
-			.ok(function(data)
-			{
-				go_to(link_to('communication', page.data.communication_type.type, data.id))
+				if (!message)
+					return info(text('pages.new communication.message is absent'))
+					
+				page.Ajax.put('/сеть/' + page.data.communication_type.options['new communication type'],
+				{
+					название: title,
+					сообщение: message,
+					кому: page.data.кому
+				})
+				.ok(function(data)
+				{
+					go_to(link_to('communication', page.data.communication_type.type, data.id))
+				})
 			})
 		}
 		

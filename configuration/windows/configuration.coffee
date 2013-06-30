@@ -5,6 +5,6 @@ module.exports =
 		File_path: Upload_server_file_path
 	ImageMagick:
 		Convert:
-			Path: 'c:/Program Files/ImageMagick-6.8.0-Q16/convert'
+			Path: 'c:/Program Files (x86)/ImageMagick-6.8.6-Q16/convert'
 	Development: yes
 	Invites: no

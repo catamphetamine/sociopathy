@@ -601,6 +601,11 @@ var Page = new Class
 	
 		this.unload()
 		
+		this.показывать_подсказки = false
+	
+		if (this.показанная_подсказка)
+			Подсказки.закрыть(this.показанная_подсказка.id)
+		
 		this.event_handlers.for_each(function()
 		{
 			this.element.unbind(this.event)
@@ -819,6 +824,45 @@ var Page = new Class
 	{
 		this.по_нажатию_ids.remove(id)
 		Клавиши.убрать_по_нажатию(id)
+	},
+	
+	очередь_подсказок: [],
+	
+	показывать_подсказки: true,
+	
+	показать_следующую_подсказку: function()
+	{
+		if (!this.показывать_подсказки)
+			return
+		
+		if (this.показанная_подсказка)
+			return
+		
+		if (this.очередь_подсказок.is_empty())
+			return
+		
+		var подсказка = this.очередь_подсказок.shift()
+		
+		this.показанная_подсказка = подсказка
+		
+		var страница = this
+		
+		function next()
+		{
+			страница.показанная_подсказка = null
+			страница.показать_следующую_подсказку()
+		}
+		
+		var result = Подсказка(подсказка.id, подсказка.text, { on_vanish: next })
+		
+		if (!result)
+			next()
+	},
+	
+	подсказка: function(id, text)
+	{
+		this.очередь_подсказок.add({ id: id, text: text })
+		this.показать_следующую_подсказку()
 	}
 })
 

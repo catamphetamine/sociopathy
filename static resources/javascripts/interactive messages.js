@@ -7,7 +7,10 @@ var Interactive_messages = function(options)
 	
 	var получить_пропущенные_сообщения
 	var получить_пропущенные_сообщения_when_finished = false
-	
+
+	page.подсказка('написание сообщения', 'Для того, чтобы написать сообщение, нажмите клавишу <a href=\'/сеть/настройки\'>«' + Настройки.Клавиши.Писарь.Показать + '»</a>, и внизу появится поле ввода сообщения. Для отправки сообщения нажмите клавиши «Ctrl + Enter» (в болталке — можно просто «Enter»).')
+	page.подсказка('правка сообщений', 'Вы можете править свои сообщения, перейдя в <a href=\'/помощь/режимы#Режим правки\'>«режим правки»</a> (клавиша «' + Настройки.Клавиши.Режимы.Правка + '»)')
+
 	var messages = new Messages
 	({
 		data_source: options.data_source,
@@ -743,27 +746,40 @@ var Interactive_messages = function(options)
 				
 				if (own_messages[_id] && own_messages[_id] != new_content)
 				{
-					edited_messages.push({ _id: _id, content: Wiki_processor.parse_and_validate(new_content) })
+					edited_messages.push({ _id: _id, content: new_content })
 				}
 			})
 			
-			Режим.save_changes_to_server
-			({
-				continues: typeof options.save_changes !== 'undefined',
-				
-				anything_changed: function()
+			var countdown = Countdown(edited_messages.length, function()
+			{
+				Режим.save_changes_to_server
+				({
+					continues: typeof options.save_changes !== 'undefined',
+					
+					anything_changed: function()
+					{
+						return !edited_messages.пусто()
+					},
+					
+					data:
+					{
+						messages: JSON.stringify(edited_messages)
+					},
+					
+					url: '/приложение/сеть/' + path + '/сообщения/правка',
+					
+					ok: options.save_changes
+				})
+			})
+			
+			edited_messages.for_each(function()
+			{
+				Wiki_processor.parse_and_validate(this.content, (function(content)
 				{
-					return !edited_messages.пусто()
-				},
-				
-				data:
-				{
-					messages: JSON.stringify(edited_messages)
-				},
-				
-				url: '/приложение/сеть/' + path + '/сообщения/правка',
-				
-				ok: options.save_changes
+				      this.content = content
+				      countdown()
+				})
+				.bind(this))
 			})
 		}
 		

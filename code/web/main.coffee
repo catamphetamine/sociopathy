@@ -14,22 +14,28 @@ get_launch_options = ->
 		return JSON.parse(process.argv[index + 1])
 
 launch_options = get_launch_options()
-
-# configuration
-global.Options = require "./configuration"
-Object.merge_recursive(global.Options, require "./../../configuration/#{launch_options.server}/configuration")
-require "./../../configuration/#{launch_options.server}/configuration.private"
-
-global.Options.Upload_server.Temporary_file_path = global.Options.Upload_server.File_path + '/временное'
-
-global.Options.Version = require "./version"
-
-global.disk_tools = require './tools/disk'
-require './tools/date'
  
 global.fiberize = require './tools/fiberize'
 
+global.disk_tools = require './tools/disk'
+
 fiber ->
+	# configuration
+	global.Options = require "./configuration"
+	
+	Object.merge_recursive(global.Options, require "./../../configuration/#{launch_options.server}/configuration")
+	
+	private_configuration = "./../../configuration/#{launch_options.server}/configuration.private"
+	
+	if global.disk_tools.exists(private_configuration)
+		require private_configuration
+	
+	global.Options.Upload_server.Temporary_file_path = global.Options.Upload_server.File_path + '/временное'
+	
+	global.Options.Version = require "./version"
+	
+	require './tools/date'
+
 	try
 		require('./tools/cpu').watch()
 		
