@@ -41,10 +41,22 @@ function hotkey(name, options, action)
 	eval('var hotkey = Настройки.Клавиши.' + name)
 	
 	var method = 'on'
+	var keyup_options
 	
 	// if this === current page
 	if (page)
+	{
 		method = 'on_page'
+		
+		keyup_options =
+		{
+			terminate: function()
+			{
+				if (options.on_release)
+					options.on_release()
+			}
+		}
+	}
 	
 	function mode_check()
 	{
@@ -86,39 +98,33 @@ function hotkey(name, options, action)
 			{
 				//console.log('on key up: ' + hotkey)
 					
-				if (Клавиши.is(hotkey, event))
+				if (!Клавиши.is(hotkey, event))
+					return
+				
+				//console.log('key up: ' + hotkey)
+				
+				unpressed = true
+				
+				if (options.on_release)
 				{
-					//console.log('key up: ' + hotkey)
-					
-					unpressed = true
-					
-					if (options.on_release)
+					if (method === 'on_page')
 					{
-						if (method === 'on_page')
-						{
-							unbind()
-						}
-						else
-						{
-							$(document).unbind('keyup.' + namespace)
-							$.free_namespace(namespace)
-						}
-						
-						if (!mode_check())
-							return
-						
-						Клавиши.поймано(event)
-						options.on_release()
+						unbind()
 					}
+					else
+					{
+						$(document).unbind('keyup.' + namespace)
+						$.free_namespace(namespace)
+					}
+					
+					if (!mode_check())
+						return
+					
+					Клавиши.поймано(event)
+					options.on_release()
 				}
 			},
-			{
-				terminate: function()
-				{
-					if (options.on_release)
-						options.on_release()
-				}
-			})
+			keyup_options)
 		}
 	})
 }
