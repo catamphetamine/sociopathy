@@ -45,8 +45,9 @@ fiber ->
 		global.redis = require 'redis'
 	
 		# clear all the presence user lists (if the application was terminated the corresponding redis keys weren't updated)
-		clear_connected_users_lists = global.redis.createClient()
-		clear_connected_users_lists.del.bind_await(clear_connected_users_lists)('*:connected')
+		redis = global.redis.createClient()
+		for presence_list in redis.keys.bind_await(redis)('*:connected')
+			redis.del.bind_await(redis)(presence_list)
 		
 		# memcache
 		memcache = require('memcache')
