@@ -42,6 +42,14 @@ generate_everything = ->
 		$ += '<script for="' + script + '">' + javascript_minifier(disk_tools.read(javascripts_path + '/' + script + '.js')) + '</script>'
 
 	##################
+	
+	plugins_javascripts_path = statics + '/plugins'
+	plugins_javascripts = disk_tools.list_files(plugins_javascripts_path, { type: 'js' })
+	
+	for script in plugins_javascripts
+		$ += '<script type="plugin" for="' + script + '">' + javascript_minifier(disk_tools.read(plugins_javascripts_path + '/' + script + '.js')) + '</script>'
+	
+	##################
 
 	css_path = statics + '/облик'
 	css = disk_tools.list_files(css_path, { type: 'css' })
@@ -57,6 +65,14 @@ generate_everything = ->
 		$ += '<style for="' + style + '">' + css_minifier(disk_tools.read(css_path + '/' + style + '.css')) + '</style>'
 		
 	##################
+
+	plugins_css_path = statics + '/plugins'
+	plugins_css = disk_tools.list_files(plugins_css_path, { type: 'css' })
+	
+	for style in plugins_css
+		$ += '<style type="plugin" for="' + style + '">' + css_minifier(disk_tools.read(plugins_css_path + '/' + style + '.css')) + '</style>'
+		
+	##################
 	
 	$ += '</head>'
 	
@@ -69,6 +85,14 @@ generate_everything = ->
 	
 	for template in templates
 		$ += '<div class="template" for="' + template + '">' + html_encoder(disk_tools.read(templates_path + '/' + template + '.html')) + '</div>'
+	
+	##################
+	
+	plugins_templates_path = statics + '/plugins'
+	plugins_templates = disk_tools.list_files(plugins_templates_path, { type: 'html' })
+	
+	for template in plugins_templates
+		$ += '<div type="plugin" class="template" for="' + template + '">' + html_encoder(disk_tools.read(plugins_templates_path + '/' + template + '.html')) + '</div>'
 	
 	##################
 	

@@ -231,6 +231,8 @@
 			}
 		})
 		
+		page.register_dialog_window(add_user_to_talk.window)
+		
 		function add_person(options)
 		{
 			add_user_to_talk.window.open(options)

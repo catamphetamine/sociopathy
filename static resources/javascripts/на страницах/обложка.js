@@ -6,7 +6,7 @@
 
 	var gender_chooser
 	
-	page.query('#join_dialog', 'dialog_window')
+	page.query('#join_dialog', 'join_dialog')
 	
 	var step_by_step
 	
@@ -26,9 +26,9 @@
 	{
 		gender_chooser = new image_chooser
 		(
-			page.dialog_window.find('[name=gender] .chooser'),
+			page.join_dialog.find('[name=gender] .chooser'),
 			{
-				target: page.dialog_window.find('[name=gender] input[type=hidden]'),
+				target: page.join_dialog.find('[name=gender] input[type=hidden]'),
 				on_choice: function()
 				{
 					step_by_step.slider.next()
@@ -41,7 +41,7 @@
 	{
 		step_by_step = new Step_by_step_dialog_window
 		({
-			dialog_window: page.dialog_window,
+			dialog_window: page.join_dialog,
 		
 			fields:
 			{
@@ -65,6 +65,8 @@
 			
 			done: join_submission
 		})
+		
+		page.register_dialog_window(step_by_step.dialog_window)
 	}
 	
 	function activate_registration()

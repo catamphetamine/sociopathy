@@ -38,6 +38,15 @@ Visual_editor.implement
 			{
 				this.editor.insert('\n')
 			},
+			'a': function(container)
+			{
+				if (this.editor.caret.is_in_the_beginning_of_container())
+				{
+					return visual_editor.new_paragraph({ before: true })
+				}
+				
+				visual_editor.new_paragraph()
+			},
 			'h1, h2, h3, h4, h5, h6': function(container)
 			{
 				if (this.editor.caret.is_in_the_beginning_of_container())
@@ -155,9 +164,6 @@ Visual_editor.implement
 	
 	insert_line_break_on_enter: function()
 	{
-		var tags_with_prohibited_line_break = ['a']
-		// , 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'
-		
 		var visual_editor = this
 		var editor = this.editor
 		
@@ -184,20 +190,6 @@ Visual_editor.implement
 			
 			var process_enter_key = function()
 			{
-				var error
-				
-				var i = 0
-				while (i < tags_with_prohibited_line_break.length)
-				{
-					if (tags_with_prohibited_line_break[i] === container_tag)
-					{
-						if (container_tag === 'a')
-							error = 'Нельзя вставлять разрывы строк в ссылках'
-						return { prohibited: error }
-					}
-					i++
-				}
-				
 				var captured = false
 				Object.each(visual_editor.line_break_handlers, function(action, selector)
 				{
@@ -435,6 +427,7 @@ Visual_editor.implement
 			
 			var options = {}
 			
+			// delete leading <br/> (browser bug)
 			if (editor.content[0].firstChild)
 				if (editor.content[0].firstChild.tagName)
 					if (editor.content[0].firstChild.tagName.toLowerCase() === 'br')
@@ -455,13 +448,22 @@ Visual_editor.implement
 			{
 				var left_quotes = editor.content.html().count('«')
 				var right_quotes = editor.content.html().count('»')
-				if (left_quotes === 0)
+				
+				var left = editor.caret.left_symbol()
+				var right = editor.caret.right_symbol()
+				
+				if (!left || left === ' ')
+					character = '«'
+				else if (!right || right === ' ')
+					character = '»'
+				else if (left_quotes === 0)
 					character = '«'
 				else if (left_quotes === right_quotes)
 					character = '«'
 				else if (left_quotes === right_quotes + 1)
 					character = '»'
-				else alert('Quote parser error')
+				else
+					alert('Quote parser error')
 				
 				return editor.insert(character, options)
 			}

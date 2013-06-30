@@ -1232,6 +1232,9 @@ Visual_editor.implement
 			if (tool.initialize)
 				tool.initialize()
 			
+			if (tool.dialog_window)
+				page.register_dialog_window(tool.dialog_window)
+			
 			tool.activate_all = function()
 			{
 				if (!this.type_attribute)

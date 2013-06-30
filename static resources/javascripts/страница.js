@@ -221,6 +221,9 @@ var Page = new Class
 	tracked: {},
 	tracked_collectors: {},
 	
+	dialog_windows: [],
+	context_menus: [],
+	
 	when_loaded: function(action)
 	{
 		if (this.status === 'loaded')
@@ -657,6 +660,35 @@ var Page = new Class
 		this.when_unloaded_actions.empty()
 		
 		this.Available_actions.destroy()
+		
+		this.dialog_windows.for_each(function()
+		{
+			this.destroy()
+		})
+		
+		this.context_menus.for_each(function()
+		{
+			this.destroy()
+		})
+	},
+	
+	context_menu: function(element, options)
+	{
+		var menu = new Context_menu(element, options)
+		this.context_menus.add(menu)
+		return menu
+	},
+	
+	dialog_window: function(element, options)
+	{
+		var window = element.dialog_window(options)
+		this.dialog_windows.add(window)
+		return window
+	},
+	
+	register_dialog_window: function(dialog_window)
+	{
+		this.dialog_windows.add(dialog_window)
 	},
 	
 	create_actions_list: function()

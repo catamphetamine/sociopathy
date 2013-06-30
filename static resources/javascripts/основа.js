@@ -290,25 +290,49 @@ var styles =
 
 function insert_style(path)
 {
-	var id = path
-	
 	if (path.indexOf('/') !== 0)
 		path = '/облик/' + path
 	
-	if (id.starts_with('/облик/'))
-		id = id.substring('/облик/'.length)
-		
 	console.log('loading style: ' + path)
 	
-	if (Configuration.Optimize && Optimization.Styles[id])
+	if (Configuration.Optimize)
 	{
-		console.log('is cached')
+		var stylesheet
 		
-		var style = document.createElement('style')
-		//style.type = 'text/less'
-		style.innerHTML = Optimization.Styles[id]
-		return head.appendChild(style)
+		if (path.indexOf('/plugins/') === 0)
+		{
+			var id = path.substring('/plugins/'.length)
+			id = id.substring(0, id.length - '.css'.length)
+			
+			console.log('looking for plugin style with id = ' + id)
+			
+			stylesheet = Optimization.Plugins.Styles[id]
+		}
+		else
+		{
+			var id = path.substring('/облик/'.length)
+			id = id.substring(0, id.length)
+			
+			console.log('looking for style with id = ' + id)
+			
+			stylesheet = Optimization.Styles[id]
+		}
+		
+		if (stylesheet)
+		{
+			console.log('is cached')
+			
+			var style = document.createElement('style')
+			//style.type = 'text/less'
+			style.innerHTML = stylesheet
+			
+			style.setAttribute('for', add_version(path))
+			
+			return head.appendChild(style)
+		}
 	}
+	
+	console.log('not cached')
 	
 	if (!path.ends_with('.less') && !path.ends_with('.css'))
 		path = path + '.css'

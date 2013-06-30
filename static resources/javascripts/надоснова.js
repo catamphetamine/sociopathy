@@ -168,6 +168,9 @@ $(document).on('page_initialized', function()
 	}
 	else
 	{
-		Less.load_style(add_version(get_page_less_style_link()), after_styles)
+		if (Configuration.Optimize)
+			after_styles()
+		else
+			Less.load_style(add_version(get_page_less_style_link()), after_styles)
 	}
 })

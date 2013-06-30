@@ -105,6 +105,8 @@
 			}
 		})
 		
+		page.register_dialog_window(add_book.window)
+		
 		function add_a_book(options)
 		{
 			add_book.window.open(options)

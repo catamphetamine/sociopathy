@@ -17,7 +17,7 @@
 			{
 				var item = this
 				
-				var menu = new Context_menu(this,
+				var menu = page.context_menu(this,
 				{
 					items:
 					[

@@ -289,6 +289,8 @@
 			}
 		})
 		
+		page.register_dialog_window(page.move_category.window)
+		
 		page.move_article = simple_value_dialog_window
 		({
 			class: 'move_category_window',
@@ -316,6 +318,8 @@
 				})
 			}
 		})
+		
+		page.register_dialog_window(page.move_article.window)
 		
 		// в корне не создают заметок
 		if (page.data.раздел)

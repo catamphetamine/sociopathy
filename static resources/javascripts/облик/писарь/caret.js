@@ -467,7 +467,7 @@ Editor.Caret = new Class
 	{
 		var caret = this.editor.data.caret
 		if (!caret)
-			return// console.error('Nothing to restore')
+			return
 
 		if ($.browser.mozilla)
 			this.editor.content.focus()
@@ -484,5 +484,27 @@ Editor.Caret = new Class
 			return true
 		
 		return this.container().node() === this.editor.content.node()
+	},
+	
+	left_symbol: function()
+	{
+		var container = this.node()
+		var offset = this.offset()
+		
+		if (offset === 0)
+			return
+		
+		return container.nodeValue[offset - 1]
+	},
+	
+	right_symbol: function()
+	{
+		var container = this.node()
+		var offset = this.offset()
+		
+		if (offset === container.nodeValue.length)
+			return
+		
+		return container.nodeValue[offset]
 	}
 })

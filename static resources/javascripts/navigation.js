@@ -254,11 +254,20 @@ var next_page_data
 		
 		if (Страница.эта() !== предыдущая_страница)
 		{
-			Less.unload_style(old_page_stylesheet_link)
+			console.log(old_page_stylesheet_link)
+			
+			if (Configuration.Optimize)
+				$('head').find('> style[for="' + old_page_stylesheet_link + '"]').remove()
+			else
+				Less.unload_style(old_page_stylesheet_link)
+				
 			insert_style(get_page_less_style_link())
 		}
 		
-		$('head').find('> script[src="' + old_page_javascript_link + '"]').remove()
+		if (Configuration.Optimize)
+			$('head').find('> script[for="' + old_page_javascript_link + '"]').remove()
+		else
+			$('head').find('> script[src="' + old_page_javascript_link + '"]').remove()
 		
 		insert_script(get_page_javascript_link(), callback)
 	}

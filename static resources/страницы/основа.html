@@ -257,24 +257,43 @@
 				
 				console.log('loading script: ' + path)
 				
-				var id = path.substring('/javascripts/'.length)
-				id = id.substring(0, id.length - '.js'.length)
-				
-				if (Configuration.Optimize && Optimization.Scripts[id])
+				if (Configuration.Optimize)
 				{
-					console.log('is cached')
+					var javascript
 					
-					var head = document.getElementsByTagName("head")[0]
-					
-					var script   = document.createElement("script")
-					script.text  = Optimization.Scripts[id]
-					
-					document.body.appendChild(script)
-					
-					if (callback)
-						callback()
+					if (path.indexOf('/plugins/') === 0)
+					{
+						var id = path.substring('/plugins/'.length)
+						id = id.substring(0, id.length - '.js'.length)
 						
-					return
+						javascript = Optimization.Plugins.Scripts[id]
+					}
+					else
+					{
+						var id = path.substring('/javascripts/'.length)
+						id = id.substring(0, id.length - '.js'.length)
+						
+						javascript = Optimization.Scripts[id]
+					}
+					
+					if (javascript)
+					{
+						console.log('is cached')
+						
+						var head = document.getElementsByTagName('head')[0]
+						
+						var script = document.createElement('script')
+						script.text = javascript
+						
+						script.setAttribute('for', add_version(path))
+						
+						head.appendChild(script)
+						
+						if (callback)
+							callback()
+							
+						return
+					}
 				}
 				
 				load_script(add_version(path), callback)
@@ -321,6 +340,7 @@
 				if (Configuration.Optimize)
 				{
 					window.Optimization = {}
+					window.Optimization.Plugins = {}
 					
 					ajax
 					({
@@ -334,6 +354,7 @@
 							}
 							
 							window.Optimization.Scripts = {}
+							window.Optimization.Plugins.Scripts = {}
 							
 							var body = document.querySelectorAll('body')[0]
 							var head = document.querySelectorAll('head')[0]
@@ -351,7 +372,10 @@
 								console.log('got javascript for ' + id)
 								//console.log('content: ' + content)
 								
-								window.Optimization.Scripts[id] = script.innerHTML
+								if (script.getAttribute('type') === 'plugin')
+									window.Optimization.Plugins.Scripts[id] = script.innerHTML
+								else
+									window.Optimization.Scripts[id] = script.innerHTML
 								
 								//$('head').append($('<script/>').html(content))
 								
@@ -359,6 +383,7 @@
 							}
 							
 							window.Optimization.Styles = {}
+							window.Optimization.Plugins.Styles = {}
 							
 							var styles = find('html > head > style')
 							
@@ -379,7 +404,10 @@
 								head.appendChild(style)
 								*/
 								
-								window.Optimization.Styles[id] = content
+								if (style.getAttribute('type') === 'plugin')
+									window.Optimization.Plugins.Styles[id] = content
+								else
+									window.Optimization.Styles[id] = content
 								
 								i++
 							}
@@ -402,6 +430,7 @@
 							}
 
 							window.Optimization.Templates = {}
+							window.Optimization.Plugins.Templates = {}
 							
 							var templates = find('html > body > div.template')
 							
@@ -424,7 +453,10 @@
 								console.log('storing html template for ' + id)
 								//console.log('content: ' + html)
 								
-								window.Optimization.Templates[id] = html
+								if (template.getAttribute('type') === 'plugin')
+									window.Optimization.Plugins.Templates[id] = html
+								else
+									window.Optimization.Templates[id] = html
 								
 								i++
 							}
