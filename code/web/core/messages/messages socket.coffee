@@ -2,8 +2,6 @@ global.prepare_messages_socket = (options) ->
 	fiber ->
 		connected = redis.createClient()
 		
-		connected.del.bind_await(connected)(options.id + ':connected')
-	
 		collection = db(options.messages_collection)
 									
 		соединения = {}

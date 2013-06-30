@@ -437,11 +437,11 @@ var Wiki_processor = new (new Class
 			return xml.trim()
 		}
 		
-		function iterate()
+		function iterate(callback)
 		{
 			Array.for_each(xml.childNodes, function()
 			{
-				processor.parse_node(this, output.node(), options, countdown, callback)
+				processor.parse_node(this, output.node(), options, callback)
 			})
 		}
 		
@@ -452,7 +452,7 @@ var Wiki_processor = new (new Class
 				return callback(finish())
 			})
 			
-			iterate()
+			iterate(countdown)
 		}
 		else
 		{
@@ -464,6 +464,12 @@ var Wiki_processor = new (new Class
 			
 	parse_node: function(node, target, options, callback)
 	{
+		function finished()
+		{
+			if (callback)
+				return callback()
+		}
+		
 		//if (this.timer < new Date().getTime())
 		//	return
 		
@@ -481,7 +487,7 @@ var Wiki_processor = new (new Class
 			element = $(node)
 			
 			if (element.is('br')) // && element.parent().is('p'))
-				return
+				return finished()
 		}
 	
 		var syntax
@@ -497,14 +503,14 @@ var Wiki_processor = new (new Class
 		if (!syntax)
 		{
 			if (target.tagName.toLowerCase() === 'wiki')
-				return
+				return finished()
 			
 			return this.append_text(Dom_tools.to_text(node), target, callback)
 		}
 	
 		if (syntax.is_dummy)
 			if (syntax.is_dummy(element))
-				return
+				return finished()
 		
 		var wiki_element
 		if (!syntax.translation)
@@ -524,12 +530,12 @@ var Wiki_processor = new (new Class
 		
 		if (syntax.content_required)
 			if (element.is_empty())
-				return
+				return finished()
 		
 		wiki_element.appendTo(target)
 		
 		if (syntax.break_parsing)
-			return
+			return finished()
 		
 		//console.log(wiki_element)
 		//console.log('process children')
@@ -568,6 +574,8 @@ var Wiki_processor = new (new Class
 	
 	append_text: function(text, to, callback)
 	{
+		text = text.trim()
+		
 		// если не парсить текст "умным" образом, то просто текст будет
 		if (!callback)
 			return Dom_tools.append_text(text, to)
@@ -975,7 +983,7 @@ Wiki_processor.Syntax =
 			if (element.html().trim() === '')
 				return true
 		},
-	
+		
 		simplify: function(from, info)
 		{
 			var text = from.text()

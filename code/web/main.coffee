@@ -44,6 +44,10 @@ fiber ->
 		
 		global.redis = require 'redis'
 	
+		# clear all the presence user lists (if the application was terminated the corresponding redis keys weren't updated)
+		clear_connected_users_lists = global.redis.createClient()
+		clear_connected_users_lists.del.bind_await(clear_connected_users_lists)('*:connected')
+		
 		# memcache
 		memcache = require('memcache')
 		global.memcache = new memcache.Client(Options.Memcache.Port, 'localhost')
