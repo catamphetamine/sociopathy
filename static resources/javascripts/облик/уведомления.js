@@ -96,8 +96,9 @@ var Message =
 				
 			function try_to_fade_out()
 			{
-				if ($element.data('mouse_overed'))
-					return try_to_fade_out.delay(200)
+				if (!$element.data('force_closing'))
+					if ($element.data('mouse_overed'))
+						return try_to_fade_out.delay(200)
 				
 				animator.fade_out($element, 
 				{
@@ -220,6 +221,8 @@ var Message =
 		message.on('contextmenu', function(event)
 		{
 			event.preventDefault()
+			
+			message_container.data('force_closing', true)
 			
 			if (closing)
 				return
