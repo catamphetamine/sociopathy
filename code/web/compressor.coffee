@@ -33,7 +33,7 @@ generate_everything = ->
 	javascripts_path = statics + '/javascripts'
 	javascripts = disk_tools.list_files(javascripts_path, { type: 'js', exclude: ['codemirror/lib/util'] })
 	
-	javascripts = javascripts.filter((javascript) -> !javascript.starts_with('на страницах/'))
+	#javascripts = javascripts.filter((javascript) -> !javascript.starts_with('на страницах/'))
 	
 	#console.log('Scripts:')
 	#console.log(javascripts)
@@ -54,7 +54,7 @@ generate_everything = ->
 	css_path = statics + '/облик'
 	css = disk_tools.list_files(css_path, { type: 'css' })
 	
-	css = css.filter((css) -> !css.starts_with('страницы/'))
+	#css = css.filter((css) -> !css.starts_with('страницы/'))
 	
 	#console.log('Styles:')
 	#console.log(css)
@@ -101,6 +101,19 @@ generate_everything = ->
 	
 	for template in templates
 		$ += '<div class="piece" for="' + template + '">' + html_encoder(disk_tools.read(templates_path + '/' + template + '.html')) + '</div>'
+	
+	##################
+	
+	page_templates_path = statics + '/страницы'
+	page_templates = disk_tools.list_files(page_templates_path, { type: 'html' })
+	
+	page_templates = page_templates.filter((template) -> !template.starts_with('шаблоны/') && !template.starts_with('кусочки/'))
+	
+	#console.log('Page templates:')
+	#console.log(page_templates)
+	
+	for template in page_templates
+		$ += '<div class="page_template" for="' + template + '">' + html_encoder(disk_tools.read(page_templates_path + '/' + template + '.html')) + '</div>'
 	
 	##################
 	
