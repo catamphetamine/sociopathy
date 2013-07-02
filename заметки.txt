@@ -956,14 +956,17 @@ less: css for http://localhost:8081/%D0%BE%D0%B1%D0%BB%D0%B8%D0%BA/user%20icon.l
 		
 уменьшить who_is_connected (мб х 2/3)
 
-включать в everything только используемые плагины
-	
-
-	
-	
 
 
 	
+
+замерить, что ест время при переключении страниц
+	
+	
+	
+	
+	
+// совать в everything скрипты и стили только выбранных плагинов
 	
 сделать math jax нормально (статически кешируемо)
 после этого раскомментировать: //warning(text('math.temporarily unavailable'))
