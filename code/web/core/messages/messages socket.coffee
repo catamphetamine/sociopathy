@@ -143,11 +143,16 @@ global.prepare_messages_socket = (options) ->
 																				
 						соединение.on 'прочитано', (_id) ->
 							options.message_read.await(collection.id(_id), environment)
-								
-							сообщения_чего = null
+							
+							data =
+								общение: options.общение
+								_id: _id
+							
 							if environment.сообщения_чего?
-								сообщения_чего = environment.сообщения_чего._id.toString()
-
+								data._id_общения = environment.сообщения_чего._id.toString()
+							
+							эфир.отправить.await('новости', 'прочитано', data, { кому: пользователь._id })
+							
 						connected.hset.bind_await(connected)(connected_data_source(), пользователь._id.toString(), JSON.stringify(пользовательское.поля(пользователь)))
 							
 						broadcast('подцепился', пользовательское.поля(пользователь))
