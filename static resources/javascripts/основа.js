@@ -311,7 +311,9 @@ function insert_style(path)
 		else
 		{
 			var id = path.substring('/облик/'.length)
-			id = id.substring(0, id.length)
+			
+			if (id.ends_with('.css'))
+				id = id.substring(0, id.length - '.css'.length)
 			
 			console.log('looking for style with id = ' + id)
 			
