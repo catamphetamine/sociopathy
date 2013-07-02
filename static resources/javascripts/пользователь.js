@@ -66,7 +66,6 @@ var данные_пользователя = {}
 		возврат()
 	}
 	
-	//$(document).on('authenticated', function(event, данные)
 	function user_authenticated(данные)
 	{
 		if (данные.session.настройки)

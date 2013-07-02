@@ -377,7 +377,11 @@ function extra_markup(what, where, callback)
 		dataType: 'text',
 		success: function(html)
 		{
+			$.set_ajax_to_non_caching_mode()
+			
 			where.append(html)
+			
+			$.restore_initial_ajax()
 			
 			callback()
 		},

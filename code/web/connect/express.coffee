@@ -55,6 +55,7 @@ module.exports = (приложение) ->
 		global.http_server = require('http').createServer(приложение)
 
 		приложение.configure ->
+			#приложение.use express.compress()
 			приложение.use express.bodyParser()
 			приложение.use express.methodOverride()
 			приложение.use express.cookieParser()

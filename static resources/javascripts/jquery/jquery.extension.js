@@ -967,3 +967,23 @@ function cookie(name, value)
 {
 	$.cookie(name, value, { path: '/', expires: { toUTCString: function() { 'max-age' } }})
 }
+
+$.set_ajax_to_non_caching_mode = function()
+{
+	 // later you should reset $.ajax to the original.
+	$.initial_ajax = $.ajax
+	
+	$.ajax = function(settings)
+	{
+		// wrap the old $.ajax so set cache to true...
+		settings.cache = true
+		$.initial_ajax(settings) // call old $.ajax
+	}
+}
+
+$.restore_initial_ajax = function()
+{
+	 // reset $.ajax to the original.
+	$.ajax = $.initial_ajax
+	$.initial_ajax = null
+}

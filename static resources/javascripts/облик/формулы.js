@@ -11,7 +11,7 @@ function refresh_formulae(options, callback)
 	
 	if (!window.MathJax)
 	{
-		warning(text('math.temporarily unavailable'))
+		//warning(text('math.temporarily unavailable'))
 		return callback()
 	}
 	

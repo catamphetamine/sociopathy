@@ -54,8 +54,8 @@ var Ajax =
 			timeout: 15000
 		}
 		
-		if (window.development_mode)
-			jQuery_options.cache = false
+		//if (window.development_mode)
+		//	jQuery_options.cache = false
 		
 		if (options.jQuery)
 			$.extend(jQuery_options, options.jQuery)
