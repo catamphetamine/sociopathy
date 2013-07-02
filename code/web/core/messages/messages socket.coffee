@@ -145,11 +145,11 @@ global.prepare_messages_socket = (options) ->
 							options.message_read.await(collection.id(_id), environment)
 							
 							data =
-								общение: options.общение
+								что: options.общение
 								_id: _id
 							
 							if environment.сообщения_чего?
-								data._id_общения = environment.сообщения_чего._id.toString()
+								data.сообщения_чего = environment.сообщения_чего._id.toString()
 							
 							эфир.отправить.await('новости', 'прочитано', data, { кому: пользователь._id })
 							

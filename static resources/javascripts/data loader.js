@@ -598,7 +598,7 @@ var Data_templater = new Class
 			})
 			.ok(function(template) 
 			{
-				$.template(template_url, template)
+				$.compile_template(template_url, template)
 				deferred.resolve()
 			})
 			

@@ -485,26 +485,6 @@ function update_intelligent_dates()
 	})
 }
 
-/*
-function получить_шаблон(options, callback)
-{
-	Ajax.get(options.url, {}, { type: 'html' })
-	.ошибка(function()
-	{
-		if (options.error)
-			return options.error('Не удалось загрузить страницу')
-			
-		error('Не удалось загрузить страницу')
-	})
-	.ok(function(template) 
-	{
-		$.template(options.id, template)
-		
-		callback()
-	})
-}
-*/
-
 function get_image(url, callback)
 {
 	var image = new Image()
@@ -836,7 +816,7 @@ function load_template(url, name, callback)
 	})
 	.ok(function(template) 
 	{
-		$.template(name, template)
+		$.compile_template(name, template)
 		callback()
 	})
 }

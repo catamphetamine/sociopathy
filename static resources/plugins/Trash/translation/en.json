@@ -7,8 +7,6 @@
 			
 			"title": "Trash",
 			
-			"description": "You can restore accidentially deleted data from trashbin",
-			
 			"table":
 			{
 				"what": "What",

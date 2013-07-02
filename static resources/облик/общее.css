@@ -1523,6 +1523,7 @@ body
 			.popup_panel
 			{
 				max-height: 50px;
+				overflow: hidden;
 				
 				> .text
 				{
@@ -1538,6 +1539,7 @@ body
 					white-space: nowrap;
 					overflow: hidden;
 					text-overflow: ellipsis;
+					overflow-y: hidden;
 				}
 			}
 		}

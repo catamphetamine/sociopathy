@@ -987,3 +987,11 @@ $.restore_initial_ajax = function()
 	$.ajax = $.initial_ajax
 	$.initial_ajax = null
 }
+
+$.compile_template = function(name, data)
+{
+	if ($.template[name])
+		return
+	
+	$.template(name, data)
+}

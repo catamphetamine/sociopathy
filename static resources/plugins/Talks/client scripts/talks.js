@@ -111,6 +111,17 @@
 		}
 	})
 	
+	В_эфире.add
+	({
+		id: 'новости',
+		type: 'прочитано',
+		action: function(data)
+		{
+			if (data.что === 'беседа')
+				Новости.прочитано({ беседа: data.сообщения_чего, сообщение: data._id })
+		}
+	})
+	
 	Inter_tab_communication.on('новости_прочитано', function(data)
 	{
 		if (data.что === 'беседа')

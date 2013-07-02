@@ -47,6 +47,17 @@
 			postprocess_rich_content(message)
 		}
 	})
+
+	В_эфире.add
+	({
+		id: 'новости',
+		type: 'прочитано',
+		action: function(data)
+		{
+			if (data.что === 'болталка')
+				Новости.прочитано({ болталка: data._id })
+		}
+	})
 	
 	Inter_tab_communication.on('новости_прочитано', function(data)
 	{

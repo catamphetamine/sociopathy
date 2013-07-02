@@ -18,6 +18,7 @@ html_encoder = (value) ->
 	new Buffer(value, 'utf8').toString('base64')
 
 javascript_minifier = (value) ->
+#	return value
 	require('uglify-js').minify(value, { fromString: yes }).code
 
 version_path = statics + '/compressed/version.txt'
@@ -88,14 +89,6 @@ generate_everything = ->
 	
 	##################
 	
-	plugins_templates_path = statics + '/plugins'
-	plugins_templates = disk_tools.list_files(plugins_templates_path, { type: 'html' })
-	
-	for template in plugins_templates
-		$ += '<div type="plugin" class="template" for="' + template + '">' + html_encoder(disk_tools.read(plugins_templates_path + '/' + template + '.html')) + '</div>'
-	
-	##################
-	
 	templates_path = statics + '/страницы/кусочки'
 	templates = disk_tools.list_files(templates_path, { type: 'html' })
 	
@@ -109,12 +102,31 @@ generate_everything = ->
 	
 	page_templates = page_templates.filter((template) -> !template.starts_with('шаблоны/') && !template.starts_with('кусочки/'))
 	
-	#console.log('Page templates:')
-	#console.log(page_templates)
-	
 	for template in page_templates
 		$ += '<div class="page_template" for="' + template + '">' + html_encoder(disk_tools.read(page_templates_path + '/' + template + '.html')) + '</div>'
 	
+	##################
+	
+	plugins_templates_path = statics + '/plugins'
+	
+	for plugin in Options.Plugins
+		plugin_templates_path = plugins_templates_path + '/' + plugin + '/templates'
+		plugin_templates = disk_tools.list_files(plugin_templates_path, { type: 'html' })
+		
+		for template in plugin_templates
+			$ += '<div type="plugin" class="template" for="' + template + '">' + html_encoder(disk_tools.read(plugin_templates_path + '/' + template + '.html')) + '</div>'
+		
+	##################
+	
+	plugins_pages_path = statics + '/plugins'
+	
+	for plugin in Options.Plugins
+		plugin_pages_path = plugins_pages_path + '/' + plugin + '/pages'
+		plugin_pages = disk_tools.list_files(plugin_pages_path, { type: 'html' })
+		
+		for page in plugin_pages
+			$ += '<div type="plugin" class="page_template" for="' + '/plugins/' + plugin + '/pages/' + page + '">' + html_encoder(disk_tools.read(plugin_pages_path + '/' + page + '.html')) + '</div>'
+		
 	##################
 	
 	$ += '</body>'

@@ -66,8 +66,13 @@ var вставить_содержимое
 	
 		function get(шаблон, got)
 		{			
-			if (Configuration.Optimize && !шаблон.plugin)
-				return got(Optimization.Templates[шаблон.name])
+			if (Configuration.Optimize)
+			{
+				if (шаблон.plugin)
+					return got(Optimization.Plugins.Templates[шаблон.name])
+				else
+					return got(Optimization.Templates[шаблон.name])
+			}
 			
 			Ajax.get(add_version(шаблон.url), {}, { type: 'html' })
 			.ошибка(function()
@@ -85,7 +90,7 @@ var вставить_содержимое
 		{
 			get(шаблон, function(template)
 			{
-				$.template(шаблон.name, template)
+				$.compile_template(шаблон.name, template)
 				callback()
 			})
 		})
@@ -95,7 +100,7 @@ var вставить_содержимое
 	{
 		if (Configuration.Optimize && Optimization.Кусочки[кусочек])
 		{
-			$.template('кусочки/' + кусочек, Optimization.Кусочки[кусочек])
+			$.compile_template('кусочки/' + кусочек, Optimization.Кусочки[кусочек])
 			 $('body').append($.tmpl('кусочки/' + кусочек, данные))
 			 return возврат()
 		}
@@ -268,8 +273,6 @@ var вставить_содержимое
 	
 	вставить_содержимое = function(url, данные, options, возврат)
 	{
-		url = add_version(url)
-		
 		options = options || {}
 		
 		var ajax = Ajax
@@ -294,7 +297,30 @@ var вставить_содержимое
 				after()
 		}
 		
-		ajax.get(url, {}, { type: 'html' })
+		function finish(template)
+		{
+			$.compile_template(add_version(url), template)
+			вставить(add_version(url))
+		}
+		
+		if (Configuration.Optimize)
+		{
+			var id = url
+			
+			if (id.ends_with('.html'))
+				id = id.substring(0, id.length - '.html'.length)
+			
+			if (Optimization.Plugins.Page_templates[id])
+				return finish(Optimization.Plugins.Page_templates[id])
+			
+			if (id.starts_with('/страницы/'))
+				id = id.substring('/страницы/'.length)
+			
+			if (Optimization.Page_templates[id])
+				return finish(Optimization.Page_templates[id])
+		}
+		
+		ajax.get(add_version(url), {}, { type: 'html' })
 		.ошибка(function()
 		{
 			if (options.on_error)
@@ -304,9 +330,7 @@ var вставить_содержимое
 		})
 		.ok(function(template) 
 		{
-			$.template(url, template)
-			
-			вставить(url)
+			finish(template)
 		})
 	}
 })()

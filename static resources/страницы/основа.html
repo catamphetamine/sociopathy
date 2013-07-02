@@ -202,6 +202,31 @@
 		</script>
 		
 		<script>
+			var isOpera = !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
+			// Opera 8.0+ (UA detection to detect Blink/v8-powered Opera)
+			var isFirefox = typeof InstallTrigger !== 'undefined';   // Firefox 1.0+
+			var isSafari = Object.prototype.toString.call(window.HTMLElement).indexOf('Constructor') > 0;
+			// At least Safari 3+: "[object HTMLElementConstructor]"
+			var isChrome = !!window.chrome && !isOpera;              // Chrome 1+
+			var isIE = /*@cc_on!@*/false || document.documentMode;   // At least IE6
+			
+			var unsupported_browser
+			
+			if (isIE)
+				unsupported_browser = 'Internet Explorer'
+			
+			if (isOpera)
+				unsupported_browser = 'Opera'
+			
+			if (unsupported_browser)
+			{
+				alert(unsupported_browser + ' не поддерживается нашим сайтом. \nВоспользуйтесь Chrome\'ом или FireFox\'ом')
+				
+				window.location = 'http://chrome.google.ru'
+			}
+		</script>
+		
+		<script>
 			var Configuration = {}
 			
 			var Version // ex. '1.0.0.0-aplha'
@@ -225,11 +250,11 @@
 			
 			function load_script(url, callback)
 			{
-				var head	= document.getElementsByTagName("head")[0]
-				var script	= document.createElement("script")
-				var done 	= false // Handle Script loading
+				var head = document.getElementsByTagName("head")[0]
+				var script = document.createElement("script")
+				var done = false // Handle Script loading
 				
-				script.src	= url
+				script.src = url
 				script.onload = script.onreadystatechange = function()
 				{
 					// Attach handlers for all browsers
@@ -243,7 +268,7 @@
 						script.onload = script.onreadystatechange = null // Handle memory leak in IE
 					}
 				}
-		 
+
 				head.appendChild(script)
 			}
 			
@@ -330,7 +355,7 @@
 				Version = data.site_version
 				
 				Configuration.Optimize = data.optimize
-				
+
 				if (data.development)
 				{
 					window.development_mode = true
@@ -428,6 +453,8 @@
 							{
 								return decodeURIComponent(escape(window.atob(cipher)))
 							}
+							
+							//
 
 							window.Optimization.Templates = {}
 							window.Optimization.Plugins.Templates = {}
@@ -440,12 +467,6 @@
 								var template = templates[i]
 								
 								var id = template.getAttribute('for')
-								
-								/*
-								var xml = xml_to_text(template)
-								
-								var html = xml.substring(xml.indexOf('>') + 1, xml.lastIndexOf('</div>'))
-								*/
 								
 								// decode from base64
 								var html = base64_to_utf8(template.innerHTML)
@@ -460,6 +481,36 @@
 								
 								i++
 							}
+							
+							//
+							
+							window.Optimization.Page_templates = {}
+							window.Optimization.Plugins.Page_templates = {}
+							
+							var templates = find('html > body > div.page_template')
+							
+							var i = 0
+							while (i < templates.length)
+							{
+								var template = templates[i]
+								
+								var id = template.getAttribute('for')
+								
+								// decode from base64
+								var html = base64_to_utf8(template.innerHTML)
+								
+								console.log('storing page template for ' + id)
+								//console.log('content: ' + html)
+								
+								if (template.getAttribute('type') === 'plugin')
+									window.Optimization.Plugins.Page_templates[id] = html
+								else
+									window.Optimization.Page_templates[id] = html
+								
+								i++
+							}
+							
+							//
 							
 							window.Optimization.Кусочки = {}
 							

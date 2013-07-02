@@ -7,8 +7,6 @@
 			
 			"title": "Errors",
 			
-			"description": "Global error log",
-			
 			"table":
 			{
 				"type": "Type",

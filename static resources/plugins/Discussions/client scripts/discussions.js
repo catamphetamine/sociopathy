@@ -83,12 +83,22 @@
 		}
 	})
 	
+	В_эфире.add
+	({
+		id: 'новости',
+		type: 'прочитано',
+		action: function(data)
+		{
+			if (data.что === 'обсуждение')
+				Новости.прочитано({ обсуждение: data.сообщения_чего, сообщение: data._id })
+		}
+	})
+	
 	Inter_tab_communication.on('новости_прочитано', function(data)
 	{
 		if (data.что === 'обсуждение')
 			Новости.прочитано({ обсуждение: data.сообщения_чего, сообщение: data._id })
 	})
-	
 	
 	$(document).on('panel_loaded', function()
 	{
