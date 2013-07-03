@@ -269,7 +269,6 @@ var styles =
 	]},
 	
 	'навершие',
-	'user icon.less',
 	
 	'slider',
 	
