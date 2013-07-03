@@ -282,7 +282,8 @@
 				
 				console.log('loading script: ' + path)
 				
-				if (Configuration.Optimize)
+				// сам скрипт load statics.js загружается здесь, поэтому вторая проверка
+				if (Configuration.Optimize && window.Optimization)
 				{
 					var javascript
 					
