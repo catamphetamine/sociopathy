@@ -95,7 +95,15 @@ api = {}
 				соединение.emit('новости' + ':' + 'уведомления', уведомления)
 					
 			соединение.emit 'готов'
-					
+		
+		соединение.on 'присутствие', ->
+			activity = Activity[пользователь._id + '']
+			
+			if not activity?
+				throw 'No activity monitor for user ' + пользователь.имя
+			else
+				activity.detected()
+
 		соединение.emit 'поехали'
 		соединение.emit 'version', Options.Version
 						

@@ -22,6 +22,7 @@
 					data.ошибки.for_each(function()
 					{
 						parse_date(this, 'когда')
+						this.когда_примерно = неточное_время(this.когда, { blank_if_just_now: true })
 					})
 					
 					return data.ошибки

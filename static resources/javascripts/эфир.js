@@ -46,6 +46,8 @@ $(document).on('panel_loaded', function()
 		эфир = io.connect('http://' + Configuration.Websocket_server() + '/эфир', { transports: ['websocket'] })
 		эфир.is_ready = false
 		
+		Эфир.канал = эфир
+			
 		var on = function(group, name, handler)
 		{
 			эфир.on(group + ':' + name, handler)

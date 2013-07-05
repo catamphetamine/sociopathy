@@ -180,13 +180,3 @@ http.get '/сеть/пароль', (ввод, вывод, пользовател
 http.put '/сеть/пользователь/язык', (ввод, вывод, пользователь) ->
 	db('people')._.update({ _id: пользователь._id }, { $set: { язык: ввод.данные.язык } })
 	вывод.send({})
-
-http.post '/сеть/пользователь/присутствие', (ввод, вывод, пользователь) ->
-	activity = Activity[пользователь._id + '']
-	
-	if not activity?
-		console.log('Error: no activity monitor for user')
-	else
-		activity.detected()
-		
-	вывод.send({})

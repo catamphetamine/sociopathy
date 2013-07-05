@@ -221,8 +221,10 @@ function получить_настройку_запроса(name, url)
 до двух лет с половиной - два года
 ...
 */
-function неточное_время(время)
+function неточное_время(время, options)
 {
+	options = options || {}
+	
 	var time
 	
 	if (typeof время === 'string')
@@ -262,7 +264,14 @@ function неточное_время(время)
 	var точные_минуты = разница / 60
 	var минуты = Math.floor(точные_минуты)
 	if (минуты < 1)
-		return text('human readable time.just now')
+	{
+		if (options.blank_if_just_now)
+			return
+		
+		var just_now = text('human readable time.just now')
+		just_now.just_now = true
+		return just_now
+	}
 		
 	if (минуты <= 25)
 	{
@@ -415,11 +424,11 @@ function number_ending(число, настройки)
 					if (настройки.род === 'мужской')
 					{
 						if (настройки.число === 'множественное')
-							return 'ними'
-						return 'ним'
+							return 'ими'
+						return 'им'
 					}
 					else
-						return 'ной'
+						return 'ой'
 				case 2:
 				case 3:
 				case 4:
@@ -480,7 +489,7 @@ function update_intelligent_dates()
 		else
 			updated_at = new Number(updated_at_value)
 	
-		element.text(неточное_время(date + (now - updated_at)))
+		element.text(неточное_время(date + (now - updated_at), { blank_if_just_now: true }))
 		element.attr('updated_at', now)
 	})
 }
@@ -1148,4 +1157,69 @@ function Countdown(count, callback)
 		count--
 		is_done()
 	}
+}
+
+function trim_element(element)
+{
+	function is_br(node)
+	{
+		return !Dom_tools.is_text_node(node) && $(node).is('br')
+	}
+	
+	function remove(node)
+	{
+		element.node().removeChild(node)
+	}
+	
+	function remove_brs(generator)
+	{
+		var node = element.node()[generator]
+			
+		if (is_br(node))
+		{
+			remove(node)
+			remove_brs(generator)
+		}
+	}
+	
+	function remove_whitespace_characters(generator, trimmer)
+	{
+		var node = element.node()[generator]
+		
+		if (!Dom_tools.is_text_node(node))
+			return
+		
+		if (node.nodeValue.is_empty())
+			return
+		
+		trimmer(node, trimmer)
+	}
+	
+	// delete all leading <br/>s
+	remove_brs('firstChild')
+	
+	// delete all leading whitespace characters
+	
+	remove_whitespace_characters('firstChild', function(node, itself)
+	{
+		if (/\s/.test(node.nodeValue.first()))
+		{
+			node.nodeValue = node.nodeValue.substring(1)
+			return itself(node, itself)
+		}
+	})
+	
+	// delete all trailing <br/>s
+	remove_brs('lastChild')
+	
+	// delete all trailing whitespace characters
+	
+	remove_whitespace_characters('lastChild', function(node, itself)
+	{
+		if (/\s/.test(node.nodeValue.last()))
+		{
+			node.nodeValue = node.nodeValue.substring(0, node.nodeValue.length - 1)
+			return itself(node, itself)
+		}
+	})
 }

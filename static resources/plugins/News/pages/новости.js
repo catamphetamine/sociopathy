@@ -21,6 +21,12 @@
 				get_data: function(data)
 				{
 					parse_dates(data.новости, 'когда')
+					
+					data.новости.for_each(function()
+					{
+						this.когда_примерно = неточное_время(this.когда, { blank_if_just_now: true })
+					})
+					
 					return data.новости
 				}
 			})

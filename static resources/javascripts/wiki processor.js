@@ -543,6 +543,8 @@ var Wiki_processor = new (new Class
 		
 		function finish()
 		{
+			trim_element(wiki_element)
+			
 			if (syntax.finish)
 				syntax.finish(wiki_element)
 		}
@@ -574,7 +576,7 @@ var Wiki_processor = new (new Class
 	
 	append_text: function(text, to, callback)
 	{
-		text = text.trim()
+		//text = text.trim()
 		
 		// если не парсить текст "умным" образом, то просто текст будет
 		if (!callback)
@@ -1029,11 +1031,6 @@ Wiki_processor.Syntax =
 		parse: function(from, to)
 		{
 			return to.attr('at', from.attr('href'))
-		},
-		
-		finish: function(to)
-		{
-			to.trim()
 		}
 	},
 	картинка:

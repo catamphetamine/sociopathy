@@ -52,6 +52,7 @@
 					data.trash.for_each(function()
 					{
 						parse_date(this, 'когда_выброшено')
+						this.когда_примерно_выброшено = неточное_время(this.когда_выброшено, { blank_if_just_now: true })
 						
 						var data = {}
 						

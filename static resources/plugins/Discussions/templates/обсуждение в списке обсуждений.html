@@ -3,7 +3,7 @@
 		{{if последнее_сообщение}}
 			{{tmpl(Object.x_over_y({ no_link: true }, последнее_сообщение.отправитель)) 'маленький аватар'}}
 		
-			<div class="when no_word_carrying intelligent_date" date="${последнее_сообщение.когда.getTime()}">${последнее_сообщение.когда_примерно}</div>
+			<div class="when no_word_carrying intelligent_date blank_if_just_now" date="${последнее_сообщение.когда.getTime()}">${последнее_сообщение.когда_примерно}</div>
 		{{/if}}
 			
 		<span class="title">${название}</span>

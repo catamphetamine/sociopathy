@@ -37,7 +37,7 @@ var Messages = new Class
 		
 	create_message_element: function(data)
 	{
-		data.когда_примерно = неточное_время(data.когда)
+		data.когда_примерно = неточное_время(data.когда, { blank_if_just_now: true })
 		var message = $.tmpl('сообщение в болталке', data)
 		
 		if (data.новое)

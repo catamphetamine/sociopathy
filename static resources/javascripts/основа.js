@@ -155,8 +155,6 @@ var scripts =
 	
 	'configuration',
 	
-	'activity monitor',
-	
 	'надоснова',
 		
 	'здесь или не здесь',
@@ -183,6 +181,8 @@ var scripts =
 	
 	'эфир',
 	'новости',
+	
+	'activity monitor',
 	
 	//'tinycon',
 	'window notification',

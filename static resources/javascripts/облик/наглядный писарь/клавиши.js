@@ -67,70 +67,7 @@ Visual_editor.implement
 			},
 			'p': function(container)
 			{
-				function trim_paragraph(paragraph)
-				{
-					function is_br(node)
-					{
-						return !Dom_tools.is_text_node(node) && $(node).is('br')
-					}
-					
-					function remove(node)
-					{
-						paragraph.node().removeChild(node)
-					}
-					
-					function remove_brs(generator)
-					{
-						var node = paragraph.node()[generator]
-							
-						if (is_br(node))
-						{
-							remove(node)
-							remove_brs(generator)
-						}
-					}
-					
-					function remove_whitespace_characters(generator, trimmer)
-					{
-						var node = paragraph.node()[generator]
-						
-						if (!Dom_tools.is_text_node(node))
-							return
-						
-						if (node.nodeValue.is_empty())
-							return
-						
-						trimmer(node, trimmer)
-					}
-					
-					// delete all leading <br/>s
-					remove_brs('firstChild')
-					
-					// delete all leading whitespace characters
-					
-					remove_whitespace_characters('firstChild', function(node, itself)
-					{
-						if (/\s/.test(node.nodeValue.first()))
-						{
-							node.nodeValue = node.nodeValue.substring(1)
-							return itself(node, itself)
-						}
-					})
-					
-					// delete all trailing <br/>s
-					remove_brs('lastChild')
-					
-					// delete all trailing whitespace characters
-					
-					remove_whitespace_characters('lastChild', function(node, itself)
-					{
-						if (/\s/.test(node.nodeValue.last()))
-						{
-							node.nodeValue = node.nodeValue.substring(0, node.nodeValue.length - 1)
-							return itself(node, itself)
-						}
-					})
-				}
+				var trim_paragraph = trim_element
 				
 				if (this.editor.caret.is_in_the_beginning_of_container())
 				{

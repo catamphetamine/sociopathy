@@ -20,7 +20,10 @@ if (пользователь)
 			
 			//console.log('Reporting activity on ' + new Date())
 				
-			Ajax.post('/сеть/пользователь/присутствие', {})
+			//Ajax.post('/сеть/пользователь/присутствие', {})
+			
+			if (Эфир)
+				Эфир.канал.emit('присутствие', {})
 		},
 	
 		detected: function()
