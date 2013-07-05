@@ -377,7 +377,7 @@ var Interactive_messages = function(options)
 			var накопленные_сообщения = []
 			var пропущенные_сообщения_учтены = false
 			
-			var connection = io.connect('http://' + Configuration.Websocket_server() + options.path, { transports: ['websocket'], 'force new connection': true })
+			var connection = io.connect('http://' + Configuration.Host + '/websocket' + options.path, { transports: ['websocket'], 'force new connection': true })
 			connection.is_ready = false
 			
 			var pending_messages = []
@@ -501,6 +501,14 @@ var Interactive_messages = function(options)
 					return
 					
 				connection.is_ready = true
+				
+				function ping()
+				{
+					if (connection.is_ready)
+						connection.emit('ping')
+				}
+	
+				ping.ticking(Configuration.Websocket_ping_interval * 1000)
 				
 				messages.when_can_read_messages_actions.for_each(function() { this() })
 				messages.when_can_read_messages_actions = []

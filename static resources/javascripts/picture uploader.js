@@ -89,7 +89,7 @@ var Picture_uploader = new Class
 		
 		this.uploader = new Uploader
 		({
-			url: 'http://' + Configuration.Host + ':' + Configuration.Upload_server_port + this.options.url,
+			url: 'http://' + Configuration.Host + '/upload' + this.options.url,
 			parameter: { name: 'user', value: $.cookie('user') },
 			success: function(data)
 			{

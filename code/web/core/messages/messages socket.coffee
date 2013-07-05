@@ -162,5 +162,8 @@ global.prepare_messages_socket = (options) ->
 						options.authorize.await(environment)
 					
 					finish()
-						
+				
+				соединение.on 'ping', ->		
+					соединение.emit('pong')
+				
 				соединение.emit 'поехали'
