@@ -104,6 +104,14 @@ $(document).on('panel_loaded', function()
 			
 			if (first_time_page_loading)
 				$(document).trigger('ether_is_online')
+				
+			function ping()
+			{
+				if (эфир.is_ready)
+					эфир.emit('ping')
+			}
+			
+			ping.ticking(Configuration.Websocket_ping_interval * 1000)
 		})
 		
 		эфир.on('error', function(ошибка)
