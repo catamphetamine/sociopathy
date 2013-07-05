@@ -502,6 +502,14 @@ var Interactive_messages = function(options)
 					
 				connection.is_ready = true
 				
+				function ping()
+				{
+					if (connection.is_ready)
+						connection.emit('ping')
+				}
+	
+				ping.ticking(Configuration.Websocket_ping_interval * 1000)
+				
 				messages.when_can_read_messages_actions.for_each(function() { this() })
 				messages.when_can_read_messages_actions = []
 				
