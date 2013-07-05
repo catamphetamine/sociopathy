@@ -5,6 +5,7 @@ Configuration = Object.x_over_y(Configuration,
 {
 	Host: host,
 	Port: port,
+	Websocket_ping_interval: 240,
 	User_is_online_for: 8 * 60,
 	Book_shelf_size: 6,
 	Minimum_book_shelves: 3,
