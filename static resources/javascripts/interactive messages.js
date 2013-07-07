@@ -53,6 +53,9 @@ var Interactive_messages = function(options)
 				if (!can_signal_typing)
 					return
 				
+				if (visual_editor.editor.is_empty() || visual_editor.is_dummy_content())
+					return
+				
 				// можно слать такие сообщения максимум раз в пол-секунды
 				can_signal_typing = false
 				var unlocker = function()
@@ -310,7 +313,6 @@ var Interactive_messages = function(options)
 		{
 			'смотрит': 'is_idle',
 			'не смотрит': 'is_away',
-			'пишет': 'is_typing',
 		}
 		
 		var status_expires_timer
@@ -377,7 +379,7 @@ var Interactive_messages = function(options)
 			var накопленные_сообщения = []
 			var пропущенные_сообщения_учтены = false
 			
-			var connection = io.connect('http://' + Configuration.Host + '/websocket' + options.path, { transports: ['websocket'], 'force new connection': true })
+			var connection = io.connect('http://' + Configuration.Host + ':' + Configuration.Port + options.path, { transports: ['websocket'], 'force new connection': true })
 			connection.is_ready = false
 			
 			var pending_messages = []
@@ -501,14 +503,6 @@ var Interactive_messages = function(options)
 					return
 					
 				connection.is_ready = true
-				
-				function ping()
-				{
-					if (connection.is_ready)
-						connection.emit('ping')
-				}
-	
-				ping.ticking(Configuration.Websocket_ping_interval * 1000)
 				
 				messages.when_can_read_messages_actions.for_each(function() { this() })
 				messages.when_can_read_messages_actions = []
@@ -692,7 +686,7 @@ var Interactive_messages = function(options)
 		var container = $('<li user="' + user._id + '"></li>')
 		container.addClass('online')
 		
-		var icon = $.tmpl('message user icon', { отправитель: user })
+		var icon = $.tmpl('user icon', Object.x_over_y(user, { smaller: true }))
 		
 		if (user._id !== пользователь._id)
 		{

@@ -1744,3 +1744,19 @@ form.picture_uploader
 		display: none;
 	}
 }
+
+.news_indicating_stripe
+{
+	position: fixed;
+	top: 0;
+	
+	height: 1px;
+	width: 100%;
+	
+	z-index: 100;
+	
+	background-color: #fd0042;
+	opacity: 0.9;
+	
+	display: none;
+}

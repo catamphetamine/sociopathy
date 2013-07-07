@@ -83,7 +83,8 @@
 		.previous
 		{
 			text-align: center;
-			height: 44px;
+			padding-top: 5px;
+			height: 39px;
 			
 			.more_container
 			{

@@ -38,7 +38,7 @@ var Messages = new Class
 	create_message_element: function(data)
 	{
 		data.когда_примерно = неточное_время(data.когда, { blank_if_just_now: true })
-		var message = $.tmpl('сообщение в болталке', data)
+		var message = $.tmpl('сообщение общения', data)
 		
 		if (data.новое)
 			message.addClass('new')
@@ -544,9 +544,7 @@ var Messages = new Class
 			
 			visual_editor.editor.content.empty()
 			
-			var hint = $('<p/>').appendTo(visual_editor.editor.content)
-				
-			visual_editor.hint(hint, text('visual editor.enter your text here'))
+			visual_editor.editor.load_content(visual_editor.dummy_content())
 		}
 		
 		reset_editor_content()

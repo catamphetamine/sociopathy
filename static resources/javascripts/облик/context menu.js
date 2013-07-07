@@ -50,6 +50,8 @@ var Context_menu = new Class
 				item.action.bind(this)(this.data)
 				
 				this.menu.fade_out(0.2)
+				
+				this.options.selectable_element.removeClass('selected')
 			})
 			.bind(this))
 			

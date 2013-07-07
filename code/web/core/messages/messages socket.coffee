@@ -163,7 +163,4 @@ global.prepare_messages_socket = (options) ->
 					
 					finish()
 				
-				соединение.on 'ping', ->		
-					соединение.emit('pong')
-				
 				соединение.emit 'поехали'

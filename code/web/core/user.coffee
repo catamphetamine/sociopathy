@@ -109,6 +109,8 @@ http.put '/сеть/человек/картинка', (ввод, вывод, п�
 		extra_sizes:
 			'маленькая':
 				размер: Options.User.Picture.Small.Size
+			'мелкая':
+				размер: Options.User.Picture.Smaller.Size
 			'крошечная':
 				ширина: Options.User.Picture.Tiny.Width
 				высота: Options.User.Picture.Tiny.Height

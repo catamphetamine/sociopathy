@@ -89,7 +89,7 @@ var Picture_uploader = new Class
 		
 		this.uploader = new Uploader
 		({
-			url: 'http://' + Configuration.Host + '/upload' + this.options.url,
+			url: '/upload' + this.options.url,
 			parameter: { name: 'user', value: $.cookie('user') },
 			success: function(data)
 			{
@@ -147,6 +147,8 @@ var Picture_uploader = new Class
 				target = target.find(this.options.uploading_screen_target)
 			
 			uploading_screen.appendTo(target)
+			
+			target.css('position', 'relative')
 		}
 			
 		if (this.element().width() < this.options.uploading_text_minimum_width)

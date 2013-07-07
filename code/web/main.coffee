@@ -74,11 +74,19 @@ fiber ->
 		global.either_way_loading = require './tools/either way loading'
 		
 		global.Activity = require './core/activity'
-		
+
 		global.application_tools = require('./connect/express')()
 		
 		global.websocket = require('socket.io').listen(http_server)
 		
+		if not Options.Development
+			global.websocket.enable('browser client minification')  # send minified client
+			global.websocket.enable('browser client etag')          # apply etag caching logic based on version number
+			global.websocket.enable('browser client gzip')          # gzip the file
+			global.websocket.set('log level', 1)                    # reduce logging
+		
+		global.websocket.set('transports', [ 'websocket' ])
+
 		global.image_magick = require 'imagemagick'
 		global.image_magick.convert.path = Options.ImageMagick.Convert.Path
 		

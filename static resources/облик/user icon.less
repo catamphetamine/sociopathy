@@ -1,8 +1,9 @@
 @import "/облик/вспомогательный.less";
 
 @small_user_icon_size: 48px;
+@smaller_user_icon_size: 32px;
 
-.user_icon.small
+.user_icon
 {
 	display: inline-block;
 	position: relative;
@@ -12,9 +13,6 @@
 	> .picture, > .picture > .real_picture,
 	.user_offline_picture_glow, .user_online_picture_glow
 	{
-		width: @small_user_icon_size;
-		height: @small_user_icon_size;
-		
 		border-radius: 4px;
 	}
 	
@@ -34,6 +32,22 @@
 		position: absolute;
 		top: 0;
 		left: 0;
+	}
+	
+	.away
+	{
+		position: absolute;
+		z-index: 1;
+		
+		right: 1px;
+		bottom: 1px;
+		
+		width: 12px;
+		height: 12px;
+		
+		background-image: url('/картинки/avatar/away.png');
+		
+		opacity: 0;
 	}
 	
 	.user_online_picture_glow, .user_offline_picture_glow
@@ -66,7 +80,27 @@
 	}
 }
 
-.user_icon.with_away_status
+.user_icon.small
+{
+	> .picture, > .picture > .real_picture,
+	.user_offline_picture_glow, .user_online_picture_glow
+	{
+		width: @small_user_icon_size;
+		height: @small_user_icon_size;
+	}
+}
+
+.user_icon.smaller
+{
+	> .picture, > .picture > .real_picture,
+	.user_offline_picture_glow, .user_online_picture_glow
+	{
+		width: @smaller_user_icon_size;
+		height: @smaller_user_icon_size;
+	}
+}
+
+.user_icon
 {	
 	.real_picture
 	{
@@ -92,27 +126,15 @@
 		}
 	}
 	
-	.away, .typing, .erased
+	.away
 	{
-		font-size: 10px;
-		position: absolute;
-		bottom: 0;
-		color: white;
-		background-color: black;
-		opacity: 0;
-		width: 100%;
-		text-align: center;
-		padding-bottom: 2px;
-		font-family: Verdana;
-					
 		.css_transition_property(opacity);
-		.css_transition_duration(500ms);
+		.css_transition_duration(200ms);
 		.css_transition_easing(ease-in-out);
 	}
 }
 	
-.is_away .user_icon.with_away_status .away,
-.is_typing .user_icon.with_away_status .typing
+.is_away .user_icon .away
 {
-	opacity: 0.8;
+	opacity: 1;
 }

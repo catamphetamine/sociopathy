@@ -27,26 +27,28 @@ api = {}
 				if listener.пользователь == id
 					still_online = true
 					
-			finish_disconnection = () ->
-				disconnected = true
-				return соединение.disconnect()
-					
 			# don't go offline if has another ether connections
-			return finish_disconnection() if still_online
-				
-			if пользователь?
-				online.hdel.bind_await(online)('ether:online', пользователь._id)
-						
-				for id, listener of listeners
-					listener.offline(пользователь)
-						
-			finish_disconnection()
+			if not still_online
+				if пользователь?
+					online.hdel.bind_await(online)('ether:online', пользователь._id)
+					
+					for id, listener of listeners
+						listener.offline(пользователь)
+					
+					# пользователь offline
+			
+			disconnected = true
+			return соединение.disconnect()
 
 		соединение.on 'выход', ->
 			if not disconnected
 				выход()
 			
 		соединение.on 'disconnect', ->
+			if not disconnected
+				выход()
+			
+		соединение.on 'close', ->
 			if not disconnected
 				выход()
 		
@@ -94,9 +96,6 @@ api = {}
 				уведомления = новости.уведомления(соединение.пользователь)		
 				соединение.emit('новости' + ':' + 'уведомления', уведомления)
 			
-			соединение.on 'ping', ->		
-				соединение.emit('pong')
-					
 			соединение.emit 'готов'
 		
 		соединение.on 'присутствие', ->

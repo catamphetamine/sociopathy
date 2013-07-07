@@ -23,10 +23,10 @@ var вставить_содержимое
 		'маленький аватар',
 		'user icon',
 		'linked user icon',
-		'message user icon',
 		'breadcrumbs',
 		'either way loading',
 		'личная карточка',
+		'сообщение общения',
 		'пошаговое окошко'
 	]
 	

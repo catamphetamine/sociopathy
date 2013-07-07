@@ -1,7 +1,7 @@
 @import "/облик/user icon.less";
 @import "/облик/author_content_date.less";
 
-@user_icon_size: @small_user_icon_size;
+@user_icon_size: @smaller_user_icon_size;
 
 @user_picture_top: @AuthorContentDate_user_picture_top;
 @user_picture_left: @AuthorContentDate_user_picture_left;
@@ -15,10 +15,8 @@
 @time_column_padding: @AuthorContentDate_time_column_padding;
 @time_column_width: @AuthorContentDate_time_column_width;
 
-@user_icon_size: @AuthorContentDate_user_icon_size;
-
-@top_padding: 5px;
-@bottom_padding: 5px;
+@top_padding: 0px;
+@bottom_padding: 0px;
 @user_icon_margin: 8px;
 
 .messages_framework
@@ -82,6 +80,8 @@
 		background-image: url('/картинки/пишет.gif');
 		background-repeat: no-repeat;
 		background-position: 0 11px;
+		
+		opacity: 0;
 		
 		> div
 		{
@@ -169,10 +169,10 @@
 	.who_is_connected_container
 	{
 		overflow: hidden;
-		height: @top_padding + @user_icon_size + 2 * @user_icon_margin + @bottom_padding;
+		height: @top_padding + @user_icon_size + 2 * @user_icon_margin + 2 * 1 + @bottom_padding;
 	
-		margin-bottom: 20px;
-		margin-top: 20px;
+		margin-bottom: 10px;
+		margin-top: 10px;
 				
 		> .who_is_connected_bar
 		{
@@ -200,10 +200,16 @@
 					}
 				}
 				
-				> li, a
+				> li
 				{
-					width: @user_icon_size;
-					height: @user_icon_size;
+					width: 32px + 2 * 1;
+					height: 32px + 2 * 1;
+				
+					> a
+					{
+						width: 100%;
+						height: 100%;
+					}
 				}
 			}
 				
@@ -214,7 +220,7 @@
 				z-index: 0;
 				
 				width: 100%;
-				height: @user_icon_size + @top_padding + @bottom_padding + 2 * @user_icon_margin;
+				height: @user_icon_size + 2 * 5 + 2 * 1;
 				
 				background-color: #ffffff;
 				
@@ -234,8 +240,8 @@
 				margin-bottom: @top_padding;
 				
 				padding: 0;
-				padding-left: 20px;
-				padding-right: 20px;
+				padding-left: 10px;
+				padding-right: 10px;
 				
 				overflow: hidden;
 			
@@ -251,16 +257,17 @@
 					background-image: url('/картинки/avatar/картинка с навершия.jpg');
 				}
 				
-				
 				li
 				{
 					display: inline-block;
 					margin: @user_icon_margin;
 						
+					/*
 					.user_offline_picture_glow
 					{
 						opacity: 1 !important;
 					}
+					*/
 					
 					a
 					{
@@ -281,17 +288,23 @@
 				.who_is_connected
 				{
 					margin: 0;
+					padding: 0;
 					
-					padding-left: @top_padding;
-					padding-right: @top_padding;
-					padding-top: @top_padding;
-					padding-bottom: @bottom_padding;
-					
-					li .picture
+					li
 					{
-						border-width: 1px;
-						border-style: solid;
-						border-color: black;
+						margin: 5px;
+						
+						.user_offline_picture_glow
+						{
+							display: none;
+						}
+						
+						.picture
+						{
+							border-width: 1px;
+							border-style: solid;
+							border-color: #6f6f6f;
+						}
 					}
 				}
 				

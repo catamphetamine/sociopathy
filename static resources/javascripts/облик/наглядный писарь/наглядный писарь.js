@@ -161,6 +161,26 @@ var Visual_editor = new Class
 			.text(text('visual editor.enter your text here'))
 	},
 	
+	dummy_content: function()
+	{
+		return $('<p/>')
+			.addClass('hint')
+			.text(text('visual editor.enter your text here'))
+	},
+	
+	is_dummy_content: function()
+	{
+		var is_dummy = true
+		
+		this.editor.content.find('p').each(function()
+		{
+		     if (!this.hasClass('hint'))
+			     is_dummy = false
+		})
+		
+		return is_dummy
+	},
+	
 	insert_paragraph: function()
 	{
 		var new_paragraph = this.create_paragraph()

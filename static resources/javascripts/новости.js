@@ -13,6 +13,8 @@ var Новости = new (new Class
 		if (!this.есть_новости)
 			window_notification.something_new()
 		
+		$('.news_indicating_stripe').fade_in({ maximum_opacity: 0.9 })
+		
 		this.есть_новости = true
 	},
 	
@@ -32,8 +34,15 @@ var Новости = new (new Class
 			this.reset()
 		})
 		
+		this.ничего_нового()
+	},
+	
+	ничего_нового: function()
+	{
+		$('.news_indicating_stripe').fade_out(0.3)
+		
 		window_notification.nothing_new()
-		this.есть_новости = false
+		this.есть_новости = false	
 	},
 	
 	общение: function(options, последнее_сообщение)
@@ -142,9 +151,8 @@ var Новости = new (new Class
 		})
 		
 		if (!anything_new)
-		{	
-			window_notification.nothing_new()
-			this.есть_новости = false
+		{
+			this.ничего_нового()
 		}
 	}
 }))()

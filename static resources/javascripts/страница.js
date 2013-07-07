@@ -496,7 +496,7 @@ var Page = new Class
 				if (!this.что)
 					return возврат()
 				
-				page.Ajax.get('/приложение/сеть/черновик', Object.x_over_y(data_store.query, { что: this.что }))
+				page.Ajax.get('/сеть/черновик', Object.x_over_y(data_store.query, { что: this.что }))
 				.ok(function(data)
 				{
 					возврат(data.черновик)
@@ -515,7 +515,7 @@ var Page = new Class
 				if (!this.что)
 					return возврат()
 				
-				page.Ajax.put('/приложение/сеть/черновик', Object.x_over_y(data_store.query, { что: this.что }))
+				page.Ajax.put('/сеть/черновик', Object.x_over_y(data_store.query, { что: this.что }))
 				.ok(function(data)
 				{
 					возврат()
@@ -893,6 +893,9 @@ var Page = new Class
 	
 	подсказка: function(id, text)
 	{
+		if (!this.очередь_подсказок.filter(function(подсказка) { return подсказка.id === id }).is_empty())
+			return
+	
 		this.очередь_подсказок.add({ id: id, text: text })
 		this.показать_следующую_подсказку()
 	}

@@ -21,6 +21,8 @@ module.exports =
 				Size: 120
 			Small:
 				Size: 48
+			Smaller:
+				Size: 32
 			Tiny:
 				Width: 38
 				Height: 38
@@ -52,4 +54,5 @@ module.exports =
 	Invites: yes
 	Plugins: ['Library', 'People', 'Help', 'News', 'Chat', 'Talks', 'Discussions', 'Bookshelf', 'Settings', 'Trash', 'Administration', 'Errors', 'Picture albums', 'Video albums'] # 'Diary', 'Journal', 'Books', 'Circles'
 	Optimize: yes
+	Development: no,
 	Language: 'ru' # possible values: 'ru', 'en'
