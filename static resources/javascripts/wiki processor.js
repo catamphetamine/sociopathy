@@ -1022,6 +1022,9 @@ Wiki_processor.Syntax =
 		{
 			var url = from.attr('at')
 			
+			if (is_external_internal_url(url))
+				url = is_external_internal_url(url)
+			
 			to.attr
 			({
 				type: 'hyperlink',
