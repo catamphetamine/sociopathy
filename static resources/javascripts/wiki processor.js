@@ -1028,7 +1028,7 @@ Wiki_processor.Syntax =
 				href: url
 			})
 			
-			if (!url.starts_with('/'))
+			if (!is_internal_url(url))
 				to.attr('target', '_blank')
 			
 			return to
