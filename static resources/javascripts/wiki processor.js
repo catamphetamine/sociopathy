@@ -728,9 +728,14 @@ var Wiki_processor = new (new Class
 				var tag = Object.key(Wiki_processor.Syntax.ссылка.translation)
 				var at = Wiki_processor.Syntax.ссылка.translation[tag].на
 				
+				var url = decodeURI(this)
+				
+				if (is_external_internal_url(url))
+					url = is_external_internal_url(url)
+				
 				var link = $('<' + tag + '/>')
-				link.attr(at, this)
-				link.text(decodeURI(this))
+				link.attr(at, url)
+				link.text(url)
 					
 				append(link.node())
 				
@@ -1022,9 +1027,6 @@ Wiki_processor.Syntax =
 		{
 			var url = from.attr('at')
 			
-			if (is_external_internal_url(url))
-				url = is_external_internal_url(url)
-			
 			to.attr
 			({
 				type: 'hyperlink',
@@ -1039,7 +1041,14 @@ Wiki_processor.Syntax =
 		
 		parse: function(from, to)
 		{
-			return to.attr('at', from.attr('href'))
+			var url = decodeURI(from.attr('href'))
+			
+			if (is_external_internal_url(url))
+				url = is_external_internal_url(url)
+				
+			to.attr('at', url)
+			
+			return to
 		}
 	},
 	картинка:
