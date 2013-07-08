@@ -1020,12 +1020,18 @@ Wiki_processor.Syntax =
 		
 		decorate: function(from, to)
 		{
-			return to.attr
+			var url = from.attr('at')
+			
+			to.attr
 			({
 				type: 'hyperlink',
-				target: '_blank',
-				href: from.attr('at')
+				href: url
 			})
+			
+			if (!url.starts_with('/'))
+				to.attr('target', '_blank')
+			
+			return to
 		},
 		
 		parse: function(from, to)
