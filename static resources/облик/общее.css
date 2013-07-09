@@ -1760,3 +1760,16 @@ form.picture_uploader
 	
 	display: none;
 }
+
+#jump_to_top 
+{
+	position: fixed;
+	
+	width: 4px;
+	height: 100%;
+	
+	z-index: 2;
+	
+	cursor: pointer;
+	background-color: #005CAD;
+}
