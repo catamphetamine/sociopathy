@@ -1,6 +1,6 @@
 (function()
 {
-	var jump_to_top = $('#jump_to_top')
+	var jump_to_top = $('#jump_to_top').disableTextSelect()
 	
 	function show()
 	{
