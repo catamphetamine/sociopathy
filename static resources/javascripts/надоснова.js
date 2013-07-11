@@ -41,6 +41,7 @@ hotkey('Консоль', function()
 	info('Console')
 })
 
+/*
 hotkey('Показать_навершие',
 {
 	check: function(event)
@@ -77,6 +78,7 @@ function(event)
 	$('.on_the_right_side_of_the_panel').hide()
 	$('#panel').addClass('sticky')
 })
+*/
 
 var can_navigate_to_page = false
 

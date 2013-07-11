@@ -854,13 +854,6 @@ page_url_pattern('url.network')
 page_url_pattern('url.error')
 page_url_pattern('url.login required')
 
-function correct_url(url)
-{
-	var parts = Uri.parse(url)
-	if (parts.host === Configuration.Host && parts.port === Configuration.Port)
-		
-}
-
 function is_external_internal_url(url)
 {
 	var url_parts = Uri.parse(url)

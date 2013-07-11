@@ -1495,6 +1495,13 @@ label.in-place_input_label
 	.visual_editor_tools
 	{
 		position: absolute;
+		
+		z-index: 0;
+			
+		&.sticky
+		{
+			z-index: 1;
+		}
 	}
 }
 
@@ -1768,8 +1775,15 @@ form.picture_uploader
 	width: 4px;
 	height: 100%;
 	
-	z-index: 2;
+	z-index: 1;
+		
+	opacity: 0.6;
+		
+	.css_transition(all, 200ms);
 	
-	cursor: pointer;
-	background-color: #005CAD;
+	&.mouse_over
+	{
+		cursor: pointer;
+		background-color: #3171a9;
+	}
 }
