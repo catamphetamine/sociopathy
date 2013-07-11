@@ -348,11 +348,6 @@ function set_new_url(url, title, data)
 	history_stacked = true
 }
 
-function reload_page()
-{
-	navigate_to_page(Uri.parse().to_relative_url())
-}
-
 function reload_web_page()
 {
 	document.location.reload(true)

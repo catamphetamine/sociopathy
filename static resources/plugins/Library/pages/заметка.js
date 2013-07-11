@@ -70,12 +70,6 @@
 			before_done: article_loaded,
 			done: function()
 			{
-				if (page.data.scroll_to_view_edited)
-				{
-					прокрутчик.scroll_to(page.data.scroll_to_view_edited)
-					delete page.data.scroll_to_view_edited
-				}
-				
 				page.content_ready()
 			}
 		})
@@ -256,7 +250,7 @@
 				if (data.путь)
 					return go_to(text('pages.library.url') + '/' + data.путь)
 			
-				next_page_data.scroll_to_view_edited = прокрутчик.scrolled() - $('.visual_editor_tools_container').height()
+				next_page_data.scrolled_before_refresh = прокрутчик.scrolled() - $('.visual_editor_tools_container').height()
 			
 				page.refresh()
 			
@@ -277,7 +271,7 @@
 	/*
 	page.discard = function()
 	{
-		return reload_page()
+		return page.reload()
 	
 		// for later use
 	

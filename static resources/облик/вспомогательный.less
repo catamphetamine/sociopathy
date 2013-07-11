@@ -65,6 +65,15 @@
 	box-shadow: none;
 }
 
+.css_animation(@name, @duration, @type, @time)
+{
+	@value: @name @duration @type @time;
+		
+	-webkit-animation: @value;
+	-moz-animation: @value;
+	animation: @value;
+}
+
 .beautiful_shadow_5 (@left: 0px, @top: 0px, @first_radius, @second_radius, @third_radius, @fourth_radius, @fifth_radius, @opacity: 0.1, @red: 0, @green: 0, @blue: 0)
 {
 	@value: @left @top @first_radius rgba(@red, @green, @blue, @opacity), @left @top @second_radius rgba(@red, @green, @blue, @opacity), @left @top @third_radius rgba(@red, @green, @blue, @opacity), @left @top @fourth_radius rgba(@red, @green, @blue, @opacity), @left @top @fifth_radius rgba(@red, @green, @blue, @opacity);

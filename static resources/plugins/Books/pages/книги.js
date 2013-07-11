@@ -456,7 +456,7 @@
 			
 			ok: function()
 			{
-				reload_page()
+				page.reload()
 			}
 		})
 	}

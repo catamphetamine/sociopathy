@@ -107,7 +107,6 @@ var войти
 					return window.location = page.data.go_to_after_login
 					
 				reload_web_page()
-				//reload_page()
 			})
 		})
 	}

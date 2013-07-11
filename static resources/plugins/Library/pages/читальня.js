@@ -724,7 +724,7 @@
 			
 			ok: function(data)
 			{
-				reload_page()
+				page.reload()
 			}
 		})
 	}

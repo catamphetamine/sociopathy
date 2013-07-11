@@ -86,13 +86,13 @@ var dialog_window = new Class
 		$(document).on('keydown.' + this.namespace, function(event) 
 		{
 			// close on escape key
-			if (self.options['close on escape'] && event.keyCode &&
-				event.keyCode === Клавиши.Escape) 
+			if (self.options['close on escape'] && Клавиши.is('Escape', event)) 
 			{
-				event.preventDefault()
-				
 				if (self.is_open)
+				{
+					Клавиши.поймано('Escape', event)
 					self.cancel()
+				}
 			}
 		})
 		

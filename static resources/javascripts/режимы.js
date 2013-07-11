@@ -200,6 +200,12 @@ var Режим = (function()
 							return false
 					})
 			})
+			
+			$(document).on_page('keydown.режим_правка', function(event)
+			{
+				if (Клавиши.поймано('Escape', event))
+					page.refresh()
+			})
 		}
 		
 		$(document).trigger('режим', mode)
@@ -374,7 +380,7 @@ var Режим = (function()
 		var on_discard = options.on_discard || function()
 		{
 			//var загрузка = loading_indicator.show()
-			reload_page()
+			page.reload()
 		}
 	
 		actions = $('.edit_mode_actions').clone().addClass('destroyable')

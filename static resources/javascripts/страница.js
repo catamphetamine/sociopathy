@@ -383,7 +383,7 @@ var Page = new Class
 
 			reset_changes: function()
 			{
-				reload_page()
+				page.reload()
 			},
 			
 			collect_edited: function() { return {} },
@@ -531,7 +531,10 @@ var Page = new Class
 	
 	refresh: function()
 	{
-		refresh_page()
+		if (!next_page_data.scrolled_before_refresh)
+			next_page_data.scrolled_before_refresh = прокрутчик.scrolled()
+
+		navigate_to_page(Uri.parse().to_relative_url())
 	},
 	
 	reload: function()
@@ -560,6 +563,12 @@ var Page = new Class
 	{
 		// actions may need some extra info about the current page (e.g. is the user the author of the discussion, etc)
 		page.create_actions_list()
+		
+		if (page.data.scrolled_before_refresh)
+		{
+			прокрутчик.scroll_to(page.data.scrolled_before_refresh)
+			delete page.data.scrolled_before_refresh
+		}
 		
 		$(document).trigger('page_content_ready')
 	},
