@@ -14,7 +14,7 @@
 		//jump_to_top.fade_out(0.2)
 	}
 	
-	jump_to_top.on('click', function()
+	jump_to_top.on('mousedown', function()
 	{
 		if (jump_to_top .data('previous_scroll_position'))
 		{

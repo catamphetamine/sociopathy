@@ -1783,7 +1783,7 @@ form.picture_uploader
 {
 	position: fixed;
 	
-	width: 5px;
+	width: 15px;
 	height: 100%;
 	
 	z-index: 1;
