@@ -896,12 +896,22 @@ $.fn.once_on = function(event, action)
 
 $.fn.insert_after = function(element)
 {
+	if (element instanceof HTMLElement)
+		element = $(element)
+	
 	element.after(this)
+	
+	return this
 }
 
 $.fn.insert_before = function(element)
 {
+	if (element instanceof HTMLElement)
+		element = $(element)
+		
 	element.before(this)
+	
+	return this
 }
 
 $.fn.move_by = function(how_much)

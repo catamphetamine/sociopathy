@@ -905,10 +905,8 @@ body[mode="правка"] .rich_formatting a
 		border-width: 1px;
 
 		background-color: black;
-		
-		border-radius: 4px;
 
-		.beautiful_shadow_3(0px, 0px, 16px, 10px, 4px, 0.3);
+		.beautiful_shadow_3(0px, 0px, 16px, 10px, 4px, 0.1);
 	}
 	
 	[type="picture"]
@@ -917,9 +915,7 @@ body[mode="правка"] .rich_formatting a
 		border-color: #7F7F7F;
 		border-width: 1px;
 		
-		border-radius: 4px;
-		
-		.beautiful_shadow_3(0px, 0px, 8px, 3px, 4px, 0.18);
+		.beautiful_shadow_3(0px, 0px, 8px, 3px, 4px, 0.1);
 	}
 
 	[type="picture"]
@@ -941,13 +937,13 @@ ul > li:first-child
 		{
 			[type="picture"]:first-child
 			{
-				margin-top: 10px;
+				margin-top: 0;
 			}
 		}
 		
 		.video_player:first-child
 		{
-			margin-top: 10px;
+			margin-top: 8px;
 		}
 	}
 }

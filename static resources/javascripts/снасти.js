@@ -1199,7 +1199,7 @@ function trim_element(element)
 	function remove_brs(generator)
 	{
 		var node = element.node()[generator]
-			
+		
 		if (is_br(node))
 		{
 			remove(node)
@@ -1219,6 +1219,9 @@ function trim_element(element)
 		
 		trimmer(node, trimmer)
 	}
+	
+	if (element.node().childNodes.length === 0)
+		return
 	
 	// delete all leading <br/>s
 	remove_brs('firstChild')

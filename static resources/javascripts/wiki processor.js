@@ -394,6 +394,16 @@ var Wiki_processor = new (new Class
 		
 		function finish()
 		{
+			output.find('paragraph').each(function()
+			{
+				var paragraph = $(this)
+				
+				trim_element(paragraph)
+				
+				if (paragraph.is_empty())
+					paragraph.remove()
+			})
+			
 			var xml = output.html()
 				
 	//		xml = xml.replace_all('<br>', '\n')
@@ -551,9 +561,18 @@ var Wiki_processor = new (new Class
 		
 		function iterate(callback)
 		{
+			var wiki_node = wiki_element.node()
+			
 			Array.for_each(node.childNodes, function()
 			{
-				processor.parse_node(this, wiki_element.node(), element, callback)
+				processor.parse_node(this, wiki_node, element, function(result)
+				{
+					if (result)
+						wiki_node = result
+					
+					if (callback)
+						callback()
+				})
 			})
 		}
 		
@@ -574,18 +593,23 @@ var Wiki_processor = new (new Class
 		}
 	},
 	
-	append_text: function(text, to, callback)
+	append_text: function(text, target, callback)
 	{
+		function to()
+		{
+			return target
+		}
+		
 		//text = text.trim()
 		
 		// если не парсить текст "умным" образом, то просто текст будет
 		if (!callback)
-			return Dom_tools.append_text(text, to)
+			return Dom_tools.append_text(text, to())
 			
 		function just_append_text()
 		{
-			Dom_tools.append_text(text, to)
-			callback()
+			Dom_tools.append_text(text, to())
+			callback(to())
 		}
 	
 		function can_contain_hyperlinks()
@@ -595,7 +619,7 @@ var Wiki_processor = new (new Class
 		
 		function is_inside_paragraph()
 		{
-			return to.tagName && to.tagName.toLowerCase() === Object.key(Wiki_processor.Syntax.абзац.translation)
+			return to().tagName && to().tagName.toLowerCase() === Object.key(Wiki_processor.Syntax.абзац.translation)
 		}
 		
 		var process = is_inside_paragraph() && can_contain_hyperlinks()
@@ -610,12 +634,12 @@ var Wiki_processor = new (new Class
 			if (first_text_append)
 				first_text_append = false
 			else
-				Dom_tools.append_text(' ', to)
+				Dom_tools.append_text(' ', to())
 				
 			if (typeof what === 'string')
-				return Dom_tools.append_text(what, to)
+				return Dom_tools.append_text(what, to())
 				
-			to.appendChild(what)
+			to().appendChild(what)
 		}
 		
 		var pure_text_blocks = []
@@ -634,16 +658,24 @@ var Wiki_processor = new (new Class
 		
 		var fragments = text.split(' ')
 		
+		console.log(fragments)
+		
 		var countdown = Countdown(fragments.length, function()
 		{
 			append_pure_text()
-			callback()
+			callback(to())
 		})
+		
+		function is_pure_text_block(pure_text_block)
+		{
+			pure_text_blocks.add(pure_text_block)
+			countdown()
+		}
 		
 		fragments.for_each(function()
 		{
 			if (!this.contains('http://') && !this.contains('https://') && !this.contains('ftp://'))
-				return pure_text_blocks.add(this)
+				return is_pure_text_block(this)
 			
 			var uri = Uri.parse(this)
 			
@@ -660,7 +692,7 @@ var Wiki_processor = new (new Class
 			}
 			
 			if (!ссылка)
-				return pure_text_blocks.add(this)
+				return is_pure_text_block(this)
 		
 			append_pure_text()
 			
@@ -701,25 +733,31 @@ var Wiki_processor = new (new Class
 					return countdown()
 				}
 				
-				if (ссылка_на_видео_на_youtube(this))
+				if (ссылка_на_видео_на_youtube(this)
+				    && to().tagName.toLowerCase() === 'paragraph')
 				{
 					var tag = 'youtube'
 					
 					var video = $('<' + tag + '/>')
 					video.html(Youtube.Video.id(this))
 						
-					append(video.node())
+					video.insert_after(to())
+					target = $('<paragraph/>').appendTo(to().parentNode).node()
+					
 					return countdown()
 				}
 				
-				if (ссылка_на_видео_на_vimeo(this))
+				if (ссылка_на_видео_на_vimeo(this)
+				    && to().tagName.toLowerCase() === 'paragraph')
 				{
 					var tag = 'vimeo'
 					
 					var video = $('<' + tag + '/>')
 					video.html(Vimeo.Video.id(this))
 						
-					append(video.node())
+					video.insert_after(to())
+					target = $('<paragraph/>').appendTo(to().parentNode).node()
+					
 					return countdown()
 				}
 			
