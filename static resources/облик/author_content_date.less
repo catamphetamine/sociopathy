@@ -2,8 +2,8 @@
 
 @AuthorContentDate_inter_column_padding: 25px;
 @AuthorContentDate_author_column_left_padding: 30px;
-@AuthorContentDate_author_column_right_padding: 26px;
-@AuthorContentDate_author_column_width: 250px;
+@AuthorContentDate_author_column_right_padding: 27px;
+@AuthorContentDate_author_column_width: 275px;
 @AuthorContentDate_message_bottom_padding: 0px;
 @AuthorContentDate_author_icon_margin_left: 20px;
 @AuthorContentDate_time_column_padding: 20px;
@@ -88,30 +88,33 @@
 			.exact_width(@AuthorContentDate_author_column_width);
 			.exact_height(2 * @AuthorContentDate_user_picture_top + @AuthorContentDate_user_icon_size);
 			
-			> a
+			.name
 			{
-				display: inline-block;
-				border: 0;
+				font-face: Tahoma, Arial, Helvetica;
+				font-size: 26px;
 				
-				.name
+				display: inline-block;
+				margin-top: 14px;
+				vertical-align: top;
+				
+				> a
 				{
-					font-face: Tahoma, Arial, Helvetica;
-					font-size: 26px;
-					
-					display: inline-block;
-					margin-top: 14px;
-					vertical-align: top;
-					
 					max-width: @AuthorContentDate_author_column_width - @AuthorContentDate_user_icon_size - @AuthorContentDate_author_icon_margin_left;
 					overflow: hidden;
 					text-overflow: ellipsis;
 				}
-				
-				.user_icon
-				{
-					top: @AuthorContentDate_user_picture_top;
-					left: @AuthorContentDate_user_picture_left;
-				}
+			}
+			
+			.user_icon
+			{
+				margin-top: @AuthorContentDate_user_picture_top;
+				margin-left: @AuthorContentDate_user_picture_left;
+			}
+			
+			a
+			{
+				display: inline-block;
+				border: 0;
 			}
 			
 			> a:after
@@ -139,7 +142,7 @@
 			padding-left: @AuthorContentDate_inter_column_padding;
 			padding-right: @AuthorContentDate_inter_column_padding;
 			
-			.three_column_layout_center(@AuthorContentDate_author_column_left_padding + @AuthorContentDate_author_column_width + @AuthorContentDate_author_column_right_padding, @AuthorContentDate_inter_column_padding + @AuthorContentDate_time_column_width + @AuthorContentDate_time_column_padding);
+			.three_column_layout_center(@AuthorContentDate_author_column_left_padding + @AuthorContentDate_author_column_width, @AuthorContentDate_inter_column_padding + @AuthorContentDate_time_column_width + @AuthorContentDate_time_column_padding);
 		}
 			
 		.when

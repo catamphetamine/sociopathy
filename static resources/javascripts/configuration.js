@@ -32,5 +32,6 @@ Configuration = Object.x_over_y(Configuration,
 	Activity:
 	{
 		Interval: 5
-	}
+	},
+	Message_date_format: 'dd.MM.yyyy в HH:mm:ss'
 })

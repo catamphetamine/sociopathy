@@ -5,13 +5,16 @@
 
 	<!-- {{if is_online(отправитель._id)}}online{{/if}} -->
 	<div class="author no_word_carrying">
-		<a href="${link_to('user', отправитель.id)}">
-			<span class="name" title="${отправитель.имя}">
+		<div class="name" title="${отправитель.имя}">
+			<a href="${link_to('user', отправитель.id)}">
 				${отправитель.имя}
-			</span>
+			</a>
+		</div>
+		
+		<a href="${link_to('user', отправитель.id)}">
 			{{tmpl(отправитель) "user icon"}}
 		</a>
 	</div>
 	
-	<div class="when no_word_carrying intelligent_date blank_if_just_now" date="${когда.getTime()}" title="${когда.toString('dd.MM.yyyy в HH:mm:ss')}">${когда_примерно}</div>
+	<div class="when no_word_carrying intelligent_date blank_if_just_now" date="${когда.getTime()}" title="${когда.toString(Configuration.Message_date_format)}">${когда_примерно}</div>
 </li>
