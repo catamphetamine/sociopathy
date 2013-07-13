@@ -10,12 +10,16 @@
 			{{/if}}
 		/>
 		
-		<div class="away"></div>
+		{{if interactive}}
+			<div class="away"></div>
+		{{/if}}
 	</div>
 </div>
 
-<div class="popup_menu_container popup_panel_container">
-	<div class="popup_menu popup_panel">
-		<!--<span class="call">Позвать</span>-->
+{{if interactive}}
+	<div class="popup_menu_container popup_panel_container">
+		<div class="popup_menu popup_panel">
+			<!--<span class="call">Позвать</span>-->
+		</div>
 	</div>
-</div>
+{{/if}}

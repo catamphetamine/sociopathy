@@ -260,7 +260,7 @@ function either_way_loading(options)
 	},
 	top_loader)
 	
-	previous_block.hide()
+	previous_block.invisible()
 	
 	// загрузчик внизу
 	
@@ -272,7 +272,7 @@ function either_way_loading(options)
 		{
 			if (data['есть ли предыдущие?'])
 			{
-				previous_block.show()
+				previous_block.visible()
 				top_loader.activate()
 			}
 			

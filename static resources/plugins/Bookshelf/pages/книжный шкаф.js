@@ -81,7 +81,7 @@
 	
 	function books_loaded()
 	{
-		$('.bookshelf_container .book_place').invisible()
+		$('.bookshelf_container .book_place').transparent()
 	}
 	
 	function books_shown()

@@ -152,7 +152,7 @@ var moo_tools_animator = new Class
 		{
 			$element.removeData('animation_effect')
 		
-			if (options.hide)			
+			if (options.hide)
 				$element.hide()
 			
 			if (options.callback)

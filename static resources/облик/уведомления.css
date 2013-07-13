@@ -75,59 +75,70 @@ body
 		position: fixed;
 		right: 0;
 		top: 0;
-	
+		
 		.info
 		{
+			.shadow(0, 0, 12px, 0.2);
+			
 			> div
 			{
 				/* .message(); */
 				
+				text-shadow: none;
+				
 				color: #303030;
-				text-shadow: 1px 1px 0px #ffffff;
 				
 				border-color: #7f7f7f;
 				
 				background-color: #eef2f4;
-				.top_to_bottom_gradient(#eef2f4, #d6dde0);
+				
+				box-shadow: none;
+				
+				border-width: 1px;
+				border-color: #c7d6de;
 			}
 		}
 	
 		.error
 		{
-			padding: 2px;
-			border-width: 1px;
-				
+			.shadow(0, 0, 12px, 0.4);
+			
 			> div
 			{
-				color: #faefef;
-				text-shadow: 1px 1px 0px #000000;
+				text-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
+				
+				color: #f5f5f5;
+				
+				background-color: #a52d32;
+				
+				box-shadow: none;
 				
 				border-width: 1px;
-				border-color: #400500;
-				
-				background-color: #a42e2e;
-				.top_to_bottom_gradient(#a42e2e, #742b2b);
-				
-				.close
-				{
-					background-image: url('/картинки/уведомления/закрыть ошибку.png');	
-				}
+				border-color: #8c252a;
 			}
 		}
 	
 		.warning
 		{
+			.shadow(0, 0, 12px, 0.22);
+				
 			> div
 			{
-				/* .message(); */
+				text-shadow: none;
 				
 				color: #281b00;
-				text-shadow: 1px 1px 0px #f3e69f;
-				
-				border-color: #918658;
 				
 				background-color: #f7dc72;
-				.top_to_bottom_gradient(#f7dc72, #d6b52f);
+				
+				.popup_panel
+				{
+					box-shadow: none;
+				}
+				
+				box-shadow: none;
+				
+				border-width: 1px;
+				border-color: #d1b856;
 			}
 		}
 	}

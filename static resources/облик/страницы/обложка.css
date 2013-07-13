@@ -208,3 +208,51 @@
 {
 	margin-bottom: 60px;
 }
+
+.authenticated_user
+{
+	.info
+	{
+		margin-top: 5px;
+		margin-left: 4px;
+		margin-right: 8px;
+
+		> .picture
+		{
+			display: none;
+		}
+		
+		> .name
+		{
+			display: block;
+			
+			color: #5f5f5f;
+			
+			border: 0;
+		}
+
+		> .logout
+		{
+			display: inline-block;
+
+			margin-top: 6px;
+			
+			border-color: #4a798f;
+			border: 0;
+		}
+	}
+}
+
+.firefox
+{
+	.authenticated_user
+	{
+		.info
+		{
+			> .logout
+			{
+				margin-top: 5px;
+			}
+		}
+	}
+}

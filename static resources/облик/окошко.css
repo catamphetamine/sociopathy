@@ -18,8 +18,8 @@ body.osx .popup .top_bar
 
 .popup .top_bar
 {
-	padding-top: 5px;
-	padding-bottom: 4px;
+	padding-top: 7px;
+	padding-bottom: 6px;
 }
  
 .popup_veil.shown
@@ -162,9 +162,6 @@ body.osx .popup .top_bar
 		
 		border: 1px solid #6b6b6b;
 		border-bottom-color: #6b6b6b;
-			
-		border-top-left-radius: 10px;
-		border-top-right-radius: 10px;
 	
 		background-image: url('/картинки/window/top bar.png'); 
 		background-repeat: repeat-x;  
@@ -174,7 +171,9 @@ body.osx .popup .top_bar
 		padding-left: 30px;
 		padding-right: 30px;
 		
-		font-size: 28px;
+		font-size: 25px;
+		font-family: "Messe Univers";
+
 		line-height: normal;
 		
 		color: #3f3f3f;
@@ -254,11 +253,14 @@ body.osx .popup .top_bar
 		clear: both;
 	}
 	
-	.content > :last-child
+	.content, .content > :last-child
 	{
 		border-bottom-left-radius: 10px;
 		border-bottom-right-radius: 10px;
-		
+	}
+	
+	.content > :last-child
+	{
 		border-left-width: 1px;
 		border-right-width: 1px;
 		border-bottom-width: 1px;

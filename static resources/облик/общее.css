@@ -383,27 +383,27 @@ label.error
 		line-height: 16px;
 		
 		text-align: right;
-		margin-top: 5px;
-		margin-left: 4px;
-		margin-right: 8px;
+		
+		margin-top: -1px;
 
-		.name
+		> .picture
 		{
 			display: block;
 			
-			color: #5f5f5f;
-			
-			border: 0;
+			.picture, .real_picture
+			{
+				border-radius: 0;
+			}
+		}
+		
+		> .name
+		{
+			display: none;
 		}
 
-		.logout
+		> .logout
 		{
-			display: inline-block;
-
-			margin-top: 6px;
-			
-			border-color: #4a798f;
-			border: 0;
+			display: none;
 		}
 	}
 }
@@ -423,6 +423,14 @@ label.error
 	margin-top: 7px;
 }
 
+.firefox
+{
+	#panel .enter
+	{
+		margin-top: 18px !important;
+	}
+}
+
 .small_avatar
 {
 	@picture_size: 48px;
@@ -431,8 +439,6 @@ label.error
 	{
 		width: @picture_size;
 		height: @picture_size;
-		
-		border-radius: 4px;
 	}
 			
 	.picture
@@ -447,7 +453,7 @@ label.error
 		border-color: #7f7f7f;
 		border-width: 1px;
 		
-		.beautiful_shadow_3(0px, 1px, 2px, 3px, 4px, 0.2);
+		.beautiful_shadow_3(0px, 1px, 2px, 3px, 4px, 0.1);
 		
 		.real_picture
 		{
@@ -1176,6 +1182,11 @@ ul > li:first-child
 {
 	margin-left: 80px;
 	margin-right: 80px;
+	
+	.arrow
+	{
+		color: #7f7f7f;
+	}
 }
 
 .veil
@@ -1785,5 +1796,20 @@ form.picture_uploader
 	{
 		cursor: pointer;
 		background-color: #3171a9;
+	}
+}
+
+.breadcrumbs
+{
+	a
+	{
+		color: black;
+		
+		.css_transition(120ms, color);
+		
+		&:hover
+		{
+			color: @link_color;
+		}
 	}
 }

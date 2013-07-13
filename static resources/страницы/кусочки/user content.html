@@ -12,7 +12,12 @@
 <div class="on_the_right_side_of_the_panel">
 	<div class="authenticated_user non_selectable">
 		<div class="info">
+			<a href="${link_to('user', пользователь.id)}" class="picture">
+				{{tmpl(пользователь) 'user icon'}}
+			</a>
+			
 			<a href="${link_to('user', пользователь.id)}" class="name">${пользователь.имя}</a>
+			
 			<a href="#" class="logout">${text('top panel.log out')}</a>
 		</div>
 		

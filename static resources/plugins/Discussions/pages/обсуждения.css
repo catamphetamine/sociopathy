@@ -40,8 +40,6 @@
 			{
 				position: relative;
 				.css_transition(500ms, background-color);
-			
-				border-radius: 6px;
 				
 				border-width: 1px;
 				border-style: solid;
@@ -51,7 +49,6 @@
 				{
 					background-color: #F0FBFF;
 					box-shadow: 0 0 4px #F0FBFF;
-					border-radius: 6px;
 				}
 				
 				> a

@@ -600,7 +600,12 @@ $.fn.transition_duration = function()
 
 $.fn.invisible = function()
 {
-	return this.css({ opacity: 0 })
+	return this.css({ visibility: 'hidden' })
+}
+
+$.fn.visible = function()
+{
+	return this.css({ visibility: 'visible' })
 }
 
 // get current time
