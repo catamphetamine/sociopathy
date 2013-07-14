@@ -7,7 +7,7 @@ Validation.прописка =
 		имя = имя.trim()
 		
 		if (!имя)
-			return callback({ error: 'Вам нужно представиться' })
+			return callback({ error: 'Вам нужно выбрать себе имя пользвателя' })
 			
 		if (!isNaN(parseInt(имя[0])))
 			return callback({ error: 'Имя не может начинаться с цифры' })

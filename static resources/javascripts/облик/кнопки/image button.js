@@ -50,8 +50,6 @@ var image_button = new Class
 
 		this.options.skin = element.css('background-image') //element.attr('skin')
 		
-		button.physics.fast(this)
-		
 		this.parent(id_or_element, options)
 	},
 	

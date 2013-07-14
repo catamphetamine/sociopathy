@@ -1,16 +1,5 @@
 @import "/облик/вспомогательный.less";
 
-/**
- * Dialog Window script styling
- * 
- * Copyright (c) 2010 Nikolay Kuchumov
- * Licensed under MIT (http://en.wikipedia.org/wiki/MIT_License)
- * 
- * @author Kuchumov Nikolay
- * @email kuchumovn@gmail.com
- * @github kuchumovn
- */
-
 body.osx .popup .top_bar
 {
 	padding-top: 7px;
@@ -38,8 +27,6 @@ body.osx .popup .top_bar
 
 	z-index: -1;
 	
-	/* background-color: rgba(0, 0, 0, 0.5); */
-	
 	background: -webkit-radial-gradient(rgba(127, 127, 127, 0.5), rgba(127, 127, 127, 0.5) 35%, rgba(0, 0, 0, 0.7));
 	background: -moz-radial-gradient(rgba(127, 127, 127, 0.5), rgba(127, 127, 127, 0.5) 35%, rgba(0, 0, 0, 0.7));
 }
@@ -58,80 +45,6 @@ body.osx .popup .top_bar
 		width: 100%;
 		height: 100%;
 		
-		left: 0px;
-		top: 0px;
-		
-		/*		
-		margin-left: -48px;
-		margin-top: -27px;
-		
-		table
-		{
-			width: 100%;
-			height: 100%;
-		
-			.corner
-			{
-				width: 100px;
-				height: 100px;
-				
-				background-image: url('/картинки/окошко/тень/вся.png');
-				background-repeat: no-repeat;
-			}
-			
-			.left_top.corner
-			{
-				background-position: left top;
-			}
-			
-			.right_top.corner
-			{
-				background-position: right top;
-			}
-			
-			.left_bottom.corner
-			{
-				background-position: left bottom;
-			}
-			
-			.right_bottom.corner
-			{
-				background-position: right bottom;
-			}
-			
-			.left
-			{
-				width: 48px;
-				background-image: url('/картинки/окошко/тень/левая.png');
-				height: 100%;
-				background-repeat: repeat-y;
-			}
-			
-			.top
-			{
-				height: 26px;
-				background-image: url('/картинки/окошко/тень/верхняя.png');
-				background-repeat: repeat-x;
-			}
-			
-			.right
-			{
-				width: 48px;
-				background-image: url('/картинки/окошко/тень/правая.png');
-				height: 100%;
-				background-repeat: repeat-y;
-			}
-			
-			.bottom
-			{
-				height: 70px;
-				background-image: url('/картинки/окошко/тень/нижняя.png');
-				background-repeat: repeat-x;
-				background-position: left bottom;
-			}
-		}
-		*/
-			
 		left: -120px;
 		top: -120px;
 		
@@ -160,19 +73,20 @@ body.osx .popup .top_bar
 	{
 		display: block;
 		
-		border: 1px solid #6b6b6b;
-		border-bottom-color: #6b6b6b;
+		border-width: 1px;
+		border-style: solid;
+		border-color: #9f9f9f;
 	
-		background-image: url('/картинки/window/top bar.png'); 
-		background-repeat: repeat-x;  
+		.top_to_bottom_gradient(#e3e3e3, #d0d0d0);
 		
-		margin: 0;	
+		margin: 0;
 	
 		padding-left: 30px;
 		padding-right: 30px;
 		
-		font-size: 25px;
 		font-family: "Messe Univers";
+		font-size: 25px;
+		font-weight: normal;
 
 		line-height: normal;
 		
@@ -183,29 +97,6 @@ body.osx .popup .top_bar
 		white-space: nowrap;
 		
 		cursor: default;
-	}
-		
-	div.pre_buttons
-	{
-		height: 2px;
-		
-		background-image: url('/картинки/window/pre buttons.png'); 
-		background-repeat: repeat-x;
-		
-		margin-left: 1px;
-		margin-right: 1px;
-	}
-	
-	div.pre_buttons:before
-	{
-		content: '';
-		height: 2px;
-		width: 100%;
-		position: absolute;
-		z-index: -1;
-		left: 0px;
-		
-		background-color: #7B7B7B;
 	}
 	
 	.content
@@ -227,10 +118,12 @@ body.osx .popup .top_bar
 		border-left-style: solid;
 		border-right-style: solid;
 		
-		border-left-color: #7b7b7b;
-		border-right-color: #7b7b7b;
+		border-color: #9f9f9f;
 		
-		padding: 40px;	
+		padding-left: 40px;
+		padding-right: 40px;
+		padding-top: 28px;
+		padding-bottom: 22px;
 		
 		cursor: default;
 	}
@@ -239,10 +132,17 @@ body.osx .popup .top_bar
 	{
 		background-color: #e5e5e5;
 		
-		background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#E5E5E5), color-stop(36%,#D8D8D8), color-stop(58%,#CCCCCC), color-stop(100%,#A8A8A8));
-		background: -moz-linear-gradient(top, #E5E5E5 0%, #D8D8D8 36%, #CCCCCC 58%, #A8A8A8 100%);
-	
-		padding: 10px;	
+		.top_to_bottom_gradient(#e3e3e3, #c7c7c7);
+		
+		border-width: 1px;
+		border-style: solid;
+		border-color: #9f9f9f;
+		border-top-color: #cfcfcf;
+		
+		padding-left: 10px;
+		padding-right: 10px;
+		padding-top: 8px;
+		padding-bottom: 8px;
 	}
 	
 	.buttons:after
@@ -257,21 +157,6 @@ body.osx .popup .top_bar
 	{
 		border-bottom-left-radius: 10px;
 		border-bottom-right-radius: 10px;
-	}
-	
-	.content > :last-child
-	{
-		border-left-width: 1px;
-		border-right-width: 1px;
-		border-bottom-width: 1px;
-		
-		border-left-style: solid;
-		border-right-style: solid;
-		border-bottom-style: solid;
-		
-		border-left-color: #7b7b7b;
-		border-right-color: #7b7b7b;
-		border-bottom-color: #525252;
 	}
 }
 

@@ -132,7 +132,7 @@ var Step_by_step_dialog_window = new Class
 	{
 		var buttons = this.options.dialog_window.find('.buttons')
 		
-		this.buttons.cancel = text_button.new(buttons.find('.cancel'), { 'prevent double submission': true, physics: 'fast' })
+		this.buttons.cancel = text_button.new(buttons.find('.cancel'), { 'prevent double submission': true })
 		.does(function()
 		{
 			this.dialog_window.close()

@@ -77,7 +77,7 @@
 		"unsaved changes":
 		{
 			"title": "Discard your edits?",
-			"text": "There are unsaved edits on this page.\n\nAre you sure you want to navigate away and discard these edits you've made?",
+			"text": "There are unsaved edits on this page.\nAre you sure you want to navigate away and discard these edits you've made?",
 			
 			"yes": "Discard my edits",
 			"no": "Stay on this page"
@@ -190,5 +190,10 @@
 		{
 			"can't load more while in edit mode": "Can't load more while in Edit mode. To load extra data switch to Generic mode"
 		}
+	},
+	
+	"user actions":
+	{
+		"log out": "Log out"
 	}
 }

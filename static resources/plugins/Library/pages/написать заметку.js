@@ -44,6 +44,8 @@
 		visual_editor.show_tools()
 		
 		page.get('form .title').focus()
+		
+		page.get('.save').fade_in(0.3)
 	}
 	
 	page.needs_to_load_content = false

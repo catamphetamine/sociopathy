@@ -98,7 +98,7 @@
 	display: inline-block;
 	font-size: 0;
 	
-	.beautiful_shadow_4(0px, 10px, 5px, 14px, 26px, 42px, 0.20);
+	.beautiful_shadow_4(0px, 10px, 5px, 14px, 26px, 42px, 0.10);
 	
 	.middle
 	{

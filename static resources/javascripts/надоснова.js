@@ -86,6 +86,8 @@ $(document).on('page_initialized', function()
 {
 	var after_styles = function()
 	{
+		$(document).trigger('styles_loaded')
+		
 		if (!пользователь)
 		{
 			if (путь_страницы() === '')

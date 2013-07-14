@@ -261,6 +261,7 @@
 			class: 'move_category_window',
 			title: 'Перенести раздел',
 			no_ok_button: true,
+			icon: false,
 			fields: [autocomplete_field({ include_root: true, ok: function() { page.move_category.ok() } })],
 			ok: function(_id)
 			{
@@ -296,6 +297,7 @@
 			class: 'move_category_window',
 			title: 'Перенести заметку',
 			no_ok_button: true,
+			icon: false,
 			fields: [autocomplete_field({ ok: function() { page.move_article.ok() } })],
 			ok: function(_id)
 			{

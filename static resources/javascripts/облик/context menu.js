@@ -63,17 +63,33 @@ var Context_menu = new Class
 		this.menu.list.addClass('popup_panel')
 		
 		this.menu.hide().appendTo('body')
-			
+		
+		var width = this.menu.outerWidth()
+		var height = this.menu.outerHeight()
+		
+		var screen_width = $(window).width()
+		var screen_height = $(window).height()
+		
 		element.on('contextmenu' + this.namespace, (function(event)
 		{
 			event.preventDefault()
 			
-			this.menu.fade_in(0.2)
+			var left = event.pageX
+			var top = event.pageY
+			
+			if (left + width > screen_width)
+				left = left - width
+			
+			if (top + height > screen_height)
+				top = top - height
+			
 			this.menu.move_to
 			({
-				left: event.pageX,
-				top: event.pageY
+				left: left,
+				top: top
 			})
+			
+			this.menu.fade_in(0.2)
 			
 			this.options.selectable_element.addClass('selected')
 			

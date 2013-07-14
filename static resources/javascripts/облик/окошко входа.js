@@ -2,6 +2,25 @@ var enter_window
 
 var войти
 
+function выйти()
+{
+	var loading = loading_indicator.show()
+	page.Ajax.post('/выход')
+	.ошибка(function(ошибка)
+	{
+		loading.hide()
+		error(ошибка)
+	})
+	.ok(function(данные)
+	{ 
+		loading.hide()
+		loading_page({ full: true }, function()
+		{
+			window.location = '/'
+		})
+	})
+}
+
 (function()
 {
 	var кнопка_отмены
@@ -31,7 +50,7 @@ var войти
 		
 		login_form = new Form(enter_window.content.find('form').eq(0))
 		
-		кнопка_отмены = text_button.new('#enter_window .buttons .cancel', { 'prevent double submission': true, physics: 'fast' })
+		кнопка_отмены = text_button.new('#enter_window .buttons .cancel', { 'prevent double submission': true })
 		.does(function() { enter_window.close() })	
 		
 		кнопка_входа = text_button.new('#enter_window .buttons .enter', { 'prevent double submission': true })
@@ -107,25 +126,6 @@ var войти
 					return window.location = page.data.go_to_after_login
 					
 				reload_web_page()
-			})
-		})
-	}
-	
-	function выйти()
-	{
-		var loading = loading_indicator.show()
-		page.Ajax.post('/приложение/выход')
-		.ошибка(function(ошибка)
-		{
-			loading.hide()
-			error(ошибка)
-		})
-		.ok(function(данные)
-		{ 
-			loading.hide()
-			loading_page({ full: true }, function()
-			{
-				window.location = '/'
 			})
 		})
 	}

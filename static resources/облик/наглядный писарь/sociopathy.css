@@ -378,12 +378,14 @@
 		height: 128px;
 
 		background-image: url('/картинки/писарь/снасти/формула.png');
+		
+		margin-top: 0;
 	}
 	
 	textarea[name="formula"]
 	{
 		height: 110px;
-		width: 430px;
+		width: 440px;
 	}
 	
 	.display
@@ -425,6 +427,8 @@
 		height: 128px;
 
 		background-image: url('/картинки/писарь/снасти/видео.png');
+		
+		margin-top: -4px !important;
 	}
 	
 	.main_content form input[type="text"]

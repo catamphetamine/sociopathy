@@ -116,7 +116,6 @@ var scripts =
 		[
 			'кнопка',
 			'text button',
-			'text button skins',
 			'image button',
 			'image chooser'
 		]},

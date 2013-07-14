@@ -234,19 +234,18 @@ textarea.multiline, input.field
 	padding-right: 10px;
 	
 	.include_padding_in_width();
+	
+	box-shadow: 0 0 2px rgba(0, 0, 0, 0.15);
 
 	border-top-color: #afafaf;
 	border-left-color: #bfbfbf;
 	border-right-color: #bfbfbf;
 	border-bottom-color: #cfcfcf;
 	
-	border-width: 2px;
+	border-width: 1px;
 	border-style: solid;
 	
-	background-color: white;
-	background-image: url('/картинки/поле ввода/фон.png');
-	background-repeat: repeat-x;
-	background-position: top;
+	background-color: #fcfcfc;
 
 	-webkit-border-radius: 5px; 
 	-moz-border-radius: 5px; 
@@ -383,7 +382,7 @@ label.error
 		
 		text-align: right;
 		
-		margin-top: -1px;
+		margin-top: -2px;
 
 		> .picture
 		{
@@ -429,7 +428,7 @@ label.error
 	display: inline-block;
 	
 	margin-right: 21px;
-	margin-top: 19px !important;
+	margin-top: 15px !important;
 	
 	position: relative;
 	z-index: 2;
@@ -439,15 +438,28 @@ label.error
 
 .firefox
 {
-	#panel .enter
+	#panel
 	{
-		margin-top: 18px !important;
+		.enter
+		{
+			margin-top: 14px !important;
+		}
+		
+		.logout
+		{
+			margin-top: 5px;
+		}
 	}
 }
 
 .small_avatar
 {
 	@picture_size: 48px;
+	
+	display: inline-block;
+	border: 0;
+	
+	font-size: 0;
 	
 	.picture, .real_picture
 	{
@@ -464,7 +476,7 @@ label.error
 		background-repeat: no-repeat;
 
 		border-style: solid;
-		border-color: #7f7f7f;
+		border-color: #afafaf;
 		border-width: 1px;
 		
 		.beautiful_shadow_3(0px, 1px, 2px, 3px, 4px, 0.1);
@@ -475,6 +487,14 @@ label.error
 			top: 0;
 			left: 0;
 		}
+	}
+}
+
+.authenticated_user
+{	
+	.small_avatar
+	{
+		display: none;
 	}
 }
 
@@ -565,48 +585,6 @@ h1, h2, h3, h4, h5, h6
 	background-repeat: no-repeat;
 }
 
-#edit_mode_actions
-{
-	display: none;
-	
-	width: 100%;
-	
-	background-color: #d2d2d2;
-	background: -webkit-gradient(linear, center top, center bottom, from(#eaeaea), to(#cfcfcf));
-	background-image: -moz-linear-gradient(top, #eaeaea, #cfcfcf);
-	
-	border-top-width: 1px;
-	border-top-style: solid;
-	border-top-color: #cfcfcf;
-
-	.shadow(0px, 0px, 4px, 0.20);
-	
-	position: fixed;
-	bottom: 0;
-	left: 0;
-	
-	overflow: hidden;
-	padding-top: 6px;
-	
-	text-align: center;
-	
-	.cancel, .done
-	{
-		display: inline-block;
-	}
-	
-	.cancel
-	{
-		margin-right: 50px;
-	}
-}
-
-#edit_mode_actions, #edit_mode_actions_placeholder
-{
-	height: 65px;
-	overflow: hidden;
-}
-
 code
 {
 	margin: 0 2px;
@@ -690,37 +668,26 @@ pre, code
 
 .popup_panel_container
 {
-	padding: 2px;
-	background-color: #cfcfcf;
-	
-	border-width: 1px;
-	border-style: solid;
-	border-color: #6f6f6f;
-
-	.shadow(0, 0, 8px, 0.5);
+	.shadow(0, 0, 8px, 0.2);
 	
 	opacity: 0.91;
 	border-radius: 8px;
 
 	.popup_panel
 	{
+		border-width: 1px;
+		border-style: solid;
+		border-color: #3f3f3f;
+		
 		color: white;
 		background-color: #2F2F2F;
 		
-		text-shadow: black 1px 1px 4px;
-		
-		border-radius: 6px;
+		border-radius: 8px;
 		
 		padding-left: 14px;
 		padding-right: 14px;
 		padding-top: 9px;
 		padding-bottom: 9px;
-		
-		border-width: 1px;
-		border-style: solid;
-		border-color: #1f1f1f;
-		
-		box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.7);
 	}
 }
 
@@ -1191,9 +1158,9 @@ ul > li:first-child
 	margin-left: 80px;
 	margin-right: 80px;
 	
-	.arrow
+	.divider
 	{
-		color: #7f7f7f;
+		color: #cfcfcf;
 	}
 }
 
@@ -1325,25 +1292,21 @@ ul > li:first-child
 
 	width: 100%;
 	
-	background-color: #d2d2d2;
-	box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
-		
-	background: -moz-linear-gradient(top,  rgba(221,221,221,1) 0%, rgba(193,193,193,1) 100%); /* FF3.6+ */
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(221,221,221,1)), color-stop(100%,rgba(193,193,193,1))); /* Chrome,Safari4+ */
-	background: -webkit-linear-gradient(top,  rgba(221,221,221,1) 0%,rgba(193,193,193,1) 100%); /* Chrome10+,Safari5.1+ */
-	background: -o-linear-gradient(top,  rgba(221,221,221,1) 0%,rgba(193,193,193,1) 100%); /* Opera 11.10+ */
-	background: -ms-linear-gradient(top,  rgba(221,221,221,1) 0%,rgba(193,193,193,1) 100%); /* IE10+ */
-	background: linear-gradient(to bottom,  rgba(221,221,221,1) 0%,rgba(193,193,193,1) 100%); /* W3C */
+	background-color: #efefef;
+	box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+	
+	opacity: 0.98;
 
 	position: fixed;
 	bottom: 0;
 	left: 0;
 	
+	padding-top: 3px;
+	padding-bottom: 3px;
+
 	overflow: hidden;
 	
 	text-align: center;
-	
-	padding-bottom: 1px;
 	
 	.cancel, .done
 	{
@@ -1625,6 +1588,11 @@ form.picture_uploader
 .context_menu
 {
 	position: absolute;
+	z-index: 1;
+
+	font-size: 25px;
+	font-family: "Messe Univers";
+	line-height: normal;
 
 	> ul.popup_panel
 	{
@@ -1633,19 +1601,24 @@ form.picture_uploader
 		margin: 0;
 		padding: 0;
 		
+		border-color: #7f7f7f;
+		
 		> li
 		{
 			cursor: pointer;
 			
-			padding-left: 18px;
-			padding-right: 18px;
+			padding-left: 14px;
+			padding-right: 12px;
 			
 			padding-top: 6px;
 			padding-bottom: 6px;
 			
+			color: black;
+			background-color: white;
+			
 			&:first-child
 			{
-				padding-top: 12px;
+				padding-top: 4px;
 				
 				border-top-left-radius: 6px;
 				border-top-right-radius: 6px;
@@ -1653,7 +1626,7 @@ form.picture_uploader
 			
 			&:last-child
 			{
-				padding-bottom: 13px;
+				padding-bottom: 5px;
 				
 				border-bottom-left-radius: 6px;
 				border-bottom-right-radius: 6px;
@@ -1661,21 +1634,18 @@ form.picture_uploader
 			
 			&:hover
 			{
-				/*
-				border-width: 1px;
-				border-style: solid;
-				border-color: #4867ea;
+				.top_to_bottom_gradient(#4680ae, #3e7bab);
 				
-				.include_padding_in_width();
-				*/
-				
-				background: -moz-linear-gradient(top,  #528cb9 0%, #1e5799 100%); /* FF3.6+ */
-				background: -webkit-linear-gradient(top,  #528cb9 0%, #1e5799 100%); /* Chrome10+,Safari5.1+ */
+				color: white;
+				text-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
 			}
 			
 			&:active
 			{
-				background: #1e5799;
+				.top_to_bottom_gradient(#3875a5, #2e6fa2);
+				
+				color: white;
+				text-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
 			}
 		}
 	}
@@ -1754,20 +1724,6 @@ form.picture_uploader
 	.main_content
 	{
 		white-space: pre-wrap;
-	}
-}
-
-.small_avatar
-{
-	display: inline-block;
-	border: 0;
-}
-
-.authenticated_user
-{	
-	.small_avatar
-	{
-		display: none;
 	}
 }
 
@@ -1852,5 +1808,13 @@ form.picture_uploader
 		{
 			color: @link_color;
 		}
+	}
+}
+
+.available_actions
+{
+	.main_content
+	{
+		padding-bottom: 28px;
 	}
 }

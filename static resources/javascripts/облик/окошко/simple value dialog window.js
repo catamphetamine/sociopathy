@@ -152,7 +152,7 @@ function simple_value_dialog_window(options)
 		})
 	}
 
-	var cancel = text_button.new(dialog_window.content.find('.buttons .cancel'), { 'prevent double submission': true, physics: 'immediate' })
+	var cancel = text_button.new(dialog_window.content.find('.buttons .cancel'), { 'prevent double submission': true })
 	.does(dialog_window.cancel)
 	
 	var validating_form = new Form(form)
@@ -214,7 +214,6 @@ function simple_value_dialog_window(options)
 	
 	if (options.no_ok_button)
 	{
-		button.physics.immediate(ok)
 		ok.hide()
 	}
 	

@@ -408,9 +408,9 @@ var button = new Class
 	{
 //		animator.stop(this.frames.ready)
 
-		if (this.options.css3)
-			this.$element.addClass('ready')
-		else if (this.options.overlay === false)
+		this.$element.addClass('ready')
+		
+		if (this.options.overlay === false)
 		{
 			this.fade_out('idle')
 			this.fade_in('ready') 
@@ -423,9 +423,9 @@ var button = new Class
 	{
 //		animator.stop(this.frames.ready)
 
-		if (this.options.css3)
-			this.$element.removeClass('ready')
-		else if (this.options.overlay === false)
+		this.$element.removeClass('ready')
+		
+		if (this.options.overlay === false)
 		{
 			this.fade_out('ready')
 			this.fade_in('idle') 
@@ -438,9 +438,9 @@ var button = new Class
 	{
 //		animator.stop(this.frames.ready)
 
-		if (this.options.css3)
-			this.$element.removeClass('ready')
-		else if (this.options.overlay === false)
+		this.$element.removeClass('ready')
+			
+		if (this.options.overlay === false)
 		{
 		}
 		else
@@ -461,10 +461,12 @@ var button = new Class
 		}.
 		bind(this)
 		
+		this.$element.removeClass('ready')
+		this.$element.addClass('pushed')
+			
 		if (this.options.css3)
 		{
 			var delay = this.$element.css('transition-duration')
-			this.$element.addClass('pushed')
 			on_action.delay(delay)
 		}
 		else if (this.options.overlay === false)
@@ -479,28 +481,15 @@ var button = new Class
 	after_pushed: function() 
 	{
 //		animator.stop(this.frames.ready)
-
-		return
-
-		/*
-		if (this.options.css3)
-			this.$element.removeClass('ready')
-		else if (this.options.overlay === false)
-		{
-			this.fade_out('ready')
-			this.fade_in('idle') 
-		}
-		else
-			this.fade_out('ready')
-		*/
 	},
 	
 	unpush: function()
 	{
+		this.$element.removeClass('pushed')
+			
 		if (this.options.css3)
 		{
 			var delay = this.$element.css('transition-duration')
-			this.$element.removeClass('pushed')
 			this.can_unlock_the_pushing_lock.delay(delay)
 		}
 		else if (this.options.overlay === false)

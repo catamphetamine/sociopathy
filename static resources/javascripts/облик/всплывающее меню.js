@@ -130,10 +130,10 @@ function activate_popup(options)
 		popup.appendTo('body')
 		var offset = popup_container.offset()
 		
-		popup.css
+		popup.move_to
 		({
-			left: offset.left + popup_offset.left + 'px',
-			top: offset.top + popup_offset.top + 'px'
+			left: offset.left + popup_offset.left,
+			top: offset.top + popup_offset.top
 		})
 		
 		if (options.style_class)

@@ -1,5 +1,23 @@
 $(document).on('panel_loaded', function()
 {
+	var zero_margin = true
+	
+	function set_margin_top(margin)
+	{
+		if (margin === 0)
+		{
+			if (zero_margin)
+				return
+			
+			zero_margin = true
+			jump_to_top.css('margin-top', 0)	
+			return
+		}
+		
+		zero_margin = false
+		jump_to_top.css('margin-top', margin + 'px')
+	}
+	
 	var jump_to_top = $('#jump_to_top').disableTextSelect()
 	
 	function show()
@@ -29,7 +47,7 @@ $(document).on('panel_loaded', function()
 	
 		jump_to_top.addClass('jumped_to_top')
 		
-		jump_to_top.css('margin-top', 0)
+		set_margin_top(0)
 			
 		jump_to_top.data('previous_scroll_position', прокрутчик.scrolled())
 		прокрутчик.scroll_to(0)
@@ -74,8 +92,8 @@ $(document).on('panel_loaded', function()
 			var delta = panel_height - scrolled
 			if (delta < 0)
 				delta = 0
-				
-			jump_to_top.css('margin-top', delta + 'px')
+			
+			set_margin_top(delta)
 			
 			jump_to_top.removeClass('jumped_to_top')
 			jump_to_top.removeData('previous_scroll_position')

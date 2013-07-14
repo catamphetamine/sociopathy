@@ -1,13 +1,4 @@
-/**
- * Button
- * 
- * This script styles generic buttons. 
- * You can edit this file to style to buttons.
- * 
- * @author Kuchumov Nikolay
- * @email kuchumovn@gmail.com
- * @github kuchumovn
- */
+@import "/облик/вспомогательный.less";
 
 .button.locked *
 {
@@ -21,35 +12,72 @@
  
 body.osx .generic_button label
 {
-	padding-top: 5px;
+	padding-top: 6px;
 }
 
 .generic_button *
 {
 	cursor: pointer;
-	margin-top: 1px;
 }
  
-.generic_button_idle .button_contents, .generic_button_ready .button_contents
+.generic_button
 {
-	padding-top: 7px;
 }
 
-.generic_button_pushed .button_contents
+.generic_button_ready, .generic_button_pushed
 {
-	padding-top: 8px;
+	visibility: hidden;
 }
 
-.generic_button .button_contents
+.generic_button
 {
 	font-size: 25px;
 	font-family: "Messe Univers";
 	line-height: normal;
 	
-	color: #4f4f4f;
+	.top_to_bottom_gradient(#ffffff, #f2f2f2);
+	
+	border-width: 1px;
+	border-style: solid;
+	border-color: #d4d4d4;
+	
+	border-radius: 4px;
+	
+	padding-right: 15px;
+	padding-left: 18px;
+	padding-top: 4px;
+	padding-bottom: 5px;
+	
+	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.065);
+	
+	color: #3f3f3f;
+	
+	.css_transition(120ms, all);
 	
 	label
 	{
 		padding-top: 0;
 	}
 }
+
+.button[type="generic"].ready
+{
+	.generic_button
+	{
+		border-color: #c2d1d9;
+	
+		.top_to_bottom_gradient(#f9fdff, #edf4f9);
+	}
+}
+
+/*
+.button[type="generic"].pushed
+{
+	.generic_button
+	{
+		border-color: #9dbaca;
+	
+		.top_to_bottom_gradient(#e9f4f9, #deedf7);
+	}
+}
+*/

@@ -9,17 +9,17 @@
  * @github kuchumovn
  */
 
-.caution_button_ready .button_contents, .caution_button_pushed .button_contents
+.caution_button_ready, .caution_button_pushed
 {
 	overflow: hidden;
 }
 
-.caution_button_ready .button_contents
+.caution_button_ready
 {
 	/*text-shadow: rgba(255, 0, 0, 0.5) 0 0 4px; */
 }
 
-.caution_button_pushed .button_contents
+.caution_button_pushed
 {
 	/* text-shadow: rgba(255, 0, 0, 0.6) 0 0 4px; */
 	/* color: #d02202; */

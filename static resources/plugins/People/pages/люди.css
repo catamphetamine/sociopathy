@@ -11,7 +11,7 @@
 
 #content
 {
-	padding-top: 100px;
+	padding-top: 80px;
 	padding-bottom: 0;
 
 	margin-bottom: 100px;
@@ -24,6 +24,8 @@
 #id_cards
 {
 	list-style-type: none;
+	
+	margin-top: 0;
 }
 	
 #id_cards li
@@ -37,7 +39,7 @@
 .search_container
 {
 	text-align: center;
-	margin-bottom: 80px;
+	margin-bottom: 40px;
 	
 	> .search
 	{

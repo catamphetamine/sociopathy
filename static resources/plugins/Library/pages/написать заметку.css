@@ -39,23 +39,6 @@
 	
 	.save
 	{
-		width: 100%;
-		
-		position: fixed;
-		bottom: 0;
-		
-		background-color: #d2d2d2;
-		background: -webkit-gradient(linear, center top, center bottom, from(#eaeaea), to(#cfcfcf));
-		background-image: -moz-linear-gradient(top, #eaeaea, #cfcfcf);
-		
-		border-top-width: 1px;
-		border-top-style: solid;
-		border-top-color: #cfcfcf;
-	
-		.shadow(0px, 0px, 4px, 0.20);
-		
-		overflow: hidden;
-		
-		text-align: center;
+		opacity: 0;
 	}
 }

@@ -23,7 +23,7 @@
 		
 		#talks
 		{
-			margin-top: 60px;
+			margin-top: 40px;
 			
 			list-style-type: none;
 			padding: 0;
@@ -63,13 +63,8 @@
 				{
 					display: block;
 
-					margin-bottom: 8px;
-					margin-top: 4px;
-					
 					padding-top: 10px;
-					padding-left: 10px;
-					padding-right: 10px;
-					padding-bottom: 2px;
+					padding-bottom: 10px;
 				}
 				
 				> .left
@@ -91,7 +86,7 @@
 					> .small_avatar
 					{
 						display: inline-block;
-						vertical-align: bottom;
+						vertical-align: top;
 						
 						margin-right: 5px;
 					}
@@ -99,8 +94,8 @@
 					> .title
 					{
 						display: inline-block;
-						margin-bottom: 12px;
-						margin-left: 8px;
+						margin-top: 6px;
+						margin-left: 10px;
 					}
 								
 					.when
