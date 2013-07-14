@@ -38,6 +38,11 @@ $(document).on('panel_loaded', function()
 				{
 					Эфир.следить_за_пользователем(this)
 				})
+			},
+			
+			работает: function()
+			{
+				return эфир.is_ready
 			}
 		}
 			
@@ -94,18 +99,13 @@ $(document).on('panel_loaded', function()
 		эфир.on('готов', function()
 		{
 			эфир.is_ready = true
-				
-			if (!reconnected)
-			{
-				эфир.emit('уведомления')
-			}
-			else
-			{
-				эфир.emit('уведомления')
-			}
+			
+			эфир.emit('уведомления')
+			
+			start_activity_monitor()
 			
 			if (first_time_page_loading)
-				$(document).trigger('ether_is_online')				
+				$(document).trigger('ether_is_online')
 		})
 		
 		эфир.on('error', function(ошибка)

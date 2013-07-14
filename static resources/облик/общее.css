@@ -308,8 +308,7 @@ label.error
 	right: 0;
 	
 	margin: 0;
-	margin-top: 4px;
-	margin-right: 2px;
+	margin-top: 2px;
 	
 	z-index: 1;
 }
@@ -390,9 +389,24 @@ label.error
 		{
 			display: block;
 			
+			.user_offline_picture_glow
+			{
+				top: 0;
+				right: 0;
+				
+				display: none;
+			}
+			
 			.picture, .real_picture
 			{
 				border-radius: 0;
+				border-width: 0;
+			}
+			
+			.picture
+			{
+				border-left-width: 1px;
+				border-color: #C5C5C5;
 			}
 		}
 		
@@ -504,7 +518,7 @@ h1, h2, h3, h4, h5, h6
 h1, h2, h3, h4, h5, h6
 {
 	font-family: @headings_font;
-	font-weight: normal;
+	font-weight: bold;
 }
 
 .collapsed
@@ -785,7 +799,6 @@ body[mode="правка"] .rich_formatting a
 			white-space: pre-wrap;
 			text-overflow: ellipsis;
 			
-			/* font-family: @headings_font; */
 			font-size: 27px;
 			line-height: 40px;
 		}
@@ -855,11 +868,6 @@ body[mode="правка"] .rich_formatting a
 		
 		margin-top: 50px;
 		margin-bottom: 50px;
-	}
-	
-	h1, h2, h3, h4, h5, h6
-	{
-		/* font-family: @headings_font; */
 	}
 	
 	a.reference
@@ -1783,20 +1791,53 @@ form.picture_uploader
 {
 	position: fixed;
 	
-	width: 15px;
+	width: 19px;
 	height: 100%;
 	
 	z-index: 1;
 		
 	opacity: 0.6;
 		
-	.css_transition(all, 200ms);
+	.css_transition(opacity, 200ms);
 	
 	&.mouse_over
 	{
 		cursor: pointer;
 		background-color: #3171a9;
 	}
+	
+	.up
+	{
+		position: absolute;
+		top: 6px;
+		left: 2px;
+	}
+	
+	.down
+	{
+		display: none;
+	
+		position: absolute;
+		top: 58px;
+		left: 2px;
+	}
+}
+
+#jump_to_top.jumped_to_top
+{
+	.up
+	{
+		display: none;
+	}
+	
+	.down
+	{
+		display: inline;
+	}
+}
+
+#jump_to_top.jumped_to_bottom
+{
 }
 
 .breadcrumbs

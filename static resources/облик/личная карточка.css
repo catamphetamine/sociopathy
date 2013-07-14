@@ -38,7 +38,7 @@
 	/* .beautiful_shadow_4(0px, 4px, 20px, 8px, 12px, 8px, 0.1); */
 	/* в хроме тормозит */
 	/* можно заменить border-image'ем */
-	.shadow(0px, 3px, 11px, 0.20);
+	.shadow(0px, 3px, 11px, 0.1);
 
 	border-style: solid;
 	border-width: 1px;
@@ -55,16 +55,6 @@
 
 	.personal_info
 	{
-		.picture
-		{
-			background-repeat: no-repeat;
-			
-			margin-top: 30px;
-			margin-right: 50px;
-			
-			.beautiful_shadow_5(0px, 1px, 3px, 3px, 5px, 3px, 7px, 0.12);
-		}
-
 		.picture, .real_picture
 		{
 			background-repeat: no-repeat;
@@ -88,8 +78,9 @@
 			
 			margin-top: 30px;
 			margin-left: 15px;
+			margin-right: 50px;
 			
-			.beautiful_shadow_5(0px, 1px, 3px, 3px, 5px, 3px, 7px, 0.12);
+			.beautiful_shadow_5(0px, 1px, 3px, 3px, 5px, 3px, 7px, 0.1);
 		}
 
 		.name

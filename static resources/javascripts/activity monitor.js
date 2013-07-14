@@ -1,4 +1,4 @@
-if (пользователь)
+function start_activity_monitor()
 {
 	var Activity = new (new Class
 	({
@@ -15,15 +15,16 @@ if (пользователь)
 		{
 			if (!this.active)
 				return
-				
-			this.active = false
 			
+			if (!Эфир.работает())
+				return
+				
 			//console.log('Reporting activity on ' + new Date())
 				
 			//Ajax.post('/сеть/пользователь/присутствие', {})
 			
-			if (Эфир && Эфир.is_ready)
-				Эфир.канал.emit('присутствие', {})
+			Эфир.канал.emit('присутствие', {})
+			this.active = false
 		},
 	
 		detected: function()

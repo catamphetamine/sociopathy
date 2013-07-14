@@ -102,9 +102,13 @@
 			&.subheading
 			{
 				font-family: @headings_font;
+				font-weight: bold;
+				font-size: 23px;
+				line-height: 20px;
+
 				border-bottom-style: solid;
 				border-bottom-width: 1px;
-				border-bottom-color: white;
+				border-bottom-color: #afafaf;
 			}
 			
 			&.paragraph
