@@ -66,7 +66,7 @@ body.osx .generic_button label
 	{
 		border-color: #c2d1d9;
 	
-		.top_to_bottom_gradient(#f9fdff, #edf4f9);
+		.top_to_bottom_gradient(#f1fafe, #e6f0f8);
 	}
 }
 

@@ -123,7 +123,9 @@ $.fn.context_menu = function(options)
 	var menu = new Context_menu(this, options)
 	this.data('context_menu', menu)
 	
-	Режим.data('context_menus', menu, { add: true })
+	if (page)
+		if (page.content.contains_or_is(this))
+			Режим.data('context_menus', menu, { add: true })
 	
 	return menu
 }

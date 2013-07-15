@@ -176,8 +176,8 @@
 		overflow: hidden;
 		height: @top_padding + @user_icon_size + 2 * @user_icon_margin + 2 * 1 + @bottom_padding;
 	
-		margin-bottom: 10px;
-		margin-top: 10px;
+		margin-bottom: 5px;
+		margin-top: 5px;
 				
 		> .who_is_connected_bar
 		{
@@ -243,8 +243,8 @@
 				margin-bottom: @top_padding;
 				
 				padding: 0;
-				padding-left: 10px;
-				padding-right: 10px;
+				padding-left: 5px;
+				padding-right: 5px;
 				
 				overflow: hidden;
 			

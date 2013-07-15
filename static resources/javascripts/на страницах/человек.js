@@ -9,6 +9,9 @@
 
 	function is_my_profile()
 	{
+		if (!пользователь)
+			return
+		
 		return пользователь._id === page.data.пользователь_сети._id
 	}
 	

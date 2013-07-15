@@ -398,6 +398,9 @@
 	
 	function create_context_menus()
 	{
+		if (!пользователь)
+			return
+				
 		page.categories.children().each(function()
 		{
 			var _id = $(this).attr('_id')

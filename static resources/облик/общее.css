@@ -1155,8 +1155,8 @@ ul > li:first-child
 
 .breadcrumbs_container
 {
-	margin-left: 80px;
-	margin-right: 80px;
+	margin-left: 60px;
+	margin-right: 60px;
 	
 	.divider
 	{
@@ -1292,7 +1292,7 @@ ul > li:first-child
 
 	width: 100%;
 	
-	background-color: #efefef;
+	background-color: #f7f7f7;
 	box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
 	
 	opacity: 0.98;

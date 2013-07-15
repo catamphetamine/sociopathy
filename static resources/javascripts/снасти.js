@@ -350,10 +350,7 @@ function неточное_время(время, options)
 	if (месяцы < 1.5)
 		return text('human readable time.a month ago')
 
-	if (месяцы < 2.5)
-		return text('human readable time.2 months ago')
-
-	var количество_месяцев = 3
+	var количество_месяцев = 2
 	while (количество_месяцев <= 5)
 	{
 		if (last_digit(количество_месяцев) == 1 && количество_месяцев !== 11)

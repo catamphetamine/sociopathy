@@ -32,6 +32,8 @@
 		{
 			> .content
 			{
+				margin-top: 7px;
+				
 				> .video_uploaded
 				{
 					img
@@ -85,7 +87,7 @@
 {
 	> li:nth-child(even)
 	{
-		background-color: #f2f2f2;
+		background-color: #f7f7f7;
 	}
 }
 

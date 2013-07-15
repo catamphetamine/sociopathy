@@ -562,7 +562,8 @@ var Page = new Class
 	content_ready: function()
 	{
 		// actions may need some extra info about the current page (e.g. is the user the author of the discussion, etc)
-		page.create_actions_list()
+		if (пользователь)
+			page.create_actions_list()
 		
 		if (page.data.scrolled_before_refresh)
 		{

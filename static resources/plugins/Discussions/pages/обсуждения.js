@@ -40,97 +40,57 @@
 				discussion.find('.title').text(data.как)
 		})
 		
-		function postprocess_data(data)
-		{
-			parse_dates(data.обсуждения, 'создано')
-			
-			data.обсуждения.for_each(function()
-			{
-				var обсуждение = this
-				
-				this.подписчики = this.подписчики || []
-				
-				if (this.подписчики.contains(пользователь._id))
-				{
-					обсуждение.подписан = true
-					
-					page.data.подписан_на_обсуждения.add(обсуждение._id)
-				}
-				
-				if (this.последнее_сообщение)
-				{
-					parse_date(this.последнее_сообщение, 'когда')
-					this.последнее_сообщение.когда_примерно = неточное_время(this.последнее_сообщение.когда, {  blank_if_just_now: true })
-				}
-			})
-			
-			return data.обсуждения
-		}
-		
 		new Data_templater
 		({
 			template: 'обсуждение в списке обсуждений',
 			to: page.discussions,
 			loader: new  Data_loader
 			({
-				url: '/сеть/обсуждения/непрочитанные',
+				url: '/сеть/обсуждения',
+				batch_size: 12,
+				get_item_locator: function(data)
+				{
+					return data.обновлено_по_порядку
+				},
+				scroll_detector: page.get('#scroll_detector'),
+				before_done: discussions_loaded,
+				before_done_more: function() { ajaxify_internal_links(page.discussions) },
+				done: page.content_ready,
 				before_output: function(elements)
 				{
 					elements.for_each(function()
 					{
 						var discussion = $(this)
 						
-						discussion.addClass('new')
+						if (Новости.news['Discussions'].обсуждения[discussion.attr('_id')])
+							discussion.addClass('new')
 					})
 				},
 				data: function(data)
 				{
-					page.data.unread_discussions = data.обсуждения.map(function(discussion) { return discussion._id })
-					
-					return postprocess_data(data)
-				},
-				before_done: function()
-				{
-					ajaxify_internal_links(page.discussions)
-				
-					new Data_templater
-					({
-						template: 'обсуждение в списке обсуждений',
-						to: page.discussions,
-						loader: new  Batch_data_loader_with_infinite_scroll
-						({
-							url: '/сеть/обсуждения',
-							batch_size: 12,
-							get_item_locator: function(data)
-							{
-								return data.обновлено_по_порядку
-							},
-							scroll_detector: page.get('#scroll_detector'),
-							before_done: discussions_loaded,
-							before_done_more: function()
-							{
-								ajaxify_internal_links(page.discussions)
-							},
-							done: page.content_ready,
-							before_output: function(elements)
-							{
-								elements.for_each(function()
-								{
-									var discussion = this
-									
-									var _id = discussion.attr('_id')
-									if (page.data.unread_discussions.contains(_id))
-										return discussion.remove()
-									
-									if (Новости.news['Discussions'].обсуждения[discussion.attr('_id')])
-										discussion.addClass('new')
-										
-									create_context_menu(discussion)
-								})
-							},
-							data: postprocess_data
-						})
+					parse_dates(data.обсуждения, 'создано')
+			
+					data.обсуждения.for_each(function()
+					{
+						var обсуждение = this
+						
+						this.подписчики = this.подписчики || []
+						
+						if (this.подписчики.contains(пользователь._id))
+						{
+							обсуждение.подписан = true
+							
+							page.data.подписан_на_обсуждения.add(обсуждение._id)
+						}
+						
+						if (this.последнее_сообщение)
+						{
+							parse_date(this.последнее_сообщение, 'когда')
+							this.последнее_сообщение.когда_примерно = неточное_время(this.последнее_сообщение.когда, {  blank_if_just_now: true })
+						}
 					})
+					
+					return data.обсуждения
 				}
 			})
 		})
