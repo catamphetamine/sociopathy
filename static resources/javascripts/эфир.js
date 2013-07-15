@@ -48,7 +48,7 @@ $(document).on('panel_loaded', function()
 			
 		Эфир.следить_за_пользователем(пользователь)
 		
-		эфир = io.connect('http://' + Configuration.Host + ':' + Configuration.Port + '/эфир', { transports: ['websocket'] })
+		эфир = io.connect('http://' + Configuration.Host + ':' + Configuration.Port + '/эфир')
 		эфир.is_ready = false
 		
 		Эфир.канал = эфир
