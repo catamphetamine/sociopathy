@@ -39,6 +39,7 @@ http.get '/initialize', (ввод, вывод) ->
 		development: Options.Development
 		optimize: Options.Optimize
 		initialization_data: initialization_data(ввод)
+		port: Options.Web_server.Port
 	
 	if пользовательское.пользователь_ли(ввод)
 		try
