@@ -11,6 +11,8 @@
  * @github kuchumovn
  */
 
+var Icons_version = 1
+
 var Page_icons = []
 
 function Page_icon(data)
@@ -104,7 +106,7 @@ var Panel = new Class
 			(
 				$hyperlink, 
 				{
-					skin: 'url(\'' + picture + '.png' + '\')',
+					skin: 'url(\'' + picture + '.png' + '?version=' + Icons_version + '\')',
 					width: panel.icon_size,
 					height: panel.icon_size
 				}
