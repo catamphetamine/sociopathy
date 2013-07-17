@@ -20,7 +20,7 @@ $(document).on('scripts_loaded', function()
 		{
 			navigate_to_page()
 		
-			check_browser_support()
+			//check_browser_support()
 		})
 	})
 })
