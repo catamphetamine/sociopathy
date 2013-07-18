@@ -287,13 +287,21 @@ var Visual_editor = new Class
 		var new_paragraph = this.create_paragraph()
 		
 		var current_paragraph = Dom_tools.find_parent_by_tag(container, 'p')
+		
 		if (!current_paragraph)
 			current_paragraph = Dom_tools.uppest_before(container, this.editor.content[0])
-			
-		if (options.before)
-			$(current_paragraph).before(new_paragraph)
+		
+		if (current_paragraph)
+		{
+			if (options.before)
+				$(current_paragraph).before(new_paragraph)
+			else
+				$(current_paragraph).after(new_paragraph)
+		}
 		else
-			$(current_paragraph).after(new_paragraph)
+		{
+			this.editor.content.append(new_paragraph)
+		}
 		
 		this.editor.caret.move_to(new_paragraph)
 	},

@@ -223,7 +223,7 @@ Visual_editor.implement
 				if (!editor.caret.root() && !editor.caret.container().is('p'))
 				{
 					this.restore_caret()
-					throw new Error('Подзаголовок можно помещать только на верхнем уровне или непосредственно в абзаце')
+					throw new Error('Подзаголовок можно помещать только в отдельном абзаце')
 				}
 				
 				var subheading = $('<h2/>')
@@ -393,7 +393,7 @@ Visual_editor.implement
 				{	
 					this.restore_caret()
 					
-					throw new Error('Выдержку можно помещать только на верхнем уровне или непосредственно в абзаце')
+					throw new Error('Выдержку можно помещать только в отдельном абзаце')
 				}
 				
 				var citation = $('<div/>')
@@ -438,7 +438,7 @@ Visual_editor.implement
 			{
 				if (!editor.caret.root() && !editor.caret.container().is('p'))
 				{
-					throw new Error('Список можно помещать только на верхнем уровне или непосредственно в абзаце')
+					throw new Error('Список можно помещать только в отдельном абзаце')
 				}
 				
 				var list = $('<ul/>')
@@ -708,7 +708,7 @@ Visual_editor.implement
 				{	
 					this.restore_caret()
 					
-					throw new Error('Формулу можно помещать только непосредственно в абзаце')
+					throw new Error('Формулу можно помещать только среди обычного текста')
 				}
 				
 				// если выделено - формулу из выделения
@@ -868,7 +868,7 @@ Visual_editor.implement
 				{	
 					this.restore_caret()
 					
-					throw new Error('Многострочный код можно помещать только на верхнем уровне или непосредственно в абзаце')
+					throw new Error('Многострочный код можно помещать только в отдельном абзаце')
 				}
 				
 				var element = $('<pre/>')
@@ -972,7 +972,7 @@ Visual_editor.implement
 				{	
 					this.restore_caret()
 							
-					throw new Error('Видео можно помещать только на верхнем уровне или непосредственно в абзаце')
+					throw new Error('Видео можно помещать только в отдельном абзаце')
 				}
 				
 				if (editor.selection.exists() && editor.selection.is_valid())
@@ -1061,7 +1061,7 @@ Visual_editor.implement
 				if (!editor.caret.root() && !editor.caret.container().is('p'))
 				{
 					this.restore_caret()
-					throw new Error('Аудиозапись можно помещать только на верхнем уровне или непосредственно в абзаце')
+					throw new Error('Аудиозапись можно помещать только в отдельном абзаце')
 				}
 				
 				if (editor.selection.exists() && editor.selection.is_valid())

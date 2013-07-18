@@ -85,7 +85,7 @@ fiber ->
 			global.websocket.enable('browser client gzip')          # gzip the file
 			global.websocket.set('log level', 1)                    # reduce logging
 		
-		global.websocket.set('transports', [ 'websocket' ])
+		global.websocket.set('transports', [ 'websocket', 'xhr-polling' ])
 
 		global.image_magick = require 'imagemagick'
 		global.image_magick.convert.path = Options.ImageMagick.Convert.Path

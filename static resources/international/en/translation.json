@@ -195,5 +195,14 @@
 	"user actions":
 	{
 		"log out": "Log out"
+	},
+	
+	"log in":
+	{
+		"error":
+		{
+			"user not found": "User not found",
+			"incorrect password": "Incorrect password"
+		}
 	}
 }

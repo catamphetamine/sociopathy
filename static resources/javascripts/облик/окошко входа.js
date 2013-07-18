@@ -108,8 +108,14 @@ function выйти()
 		.ошибка(function(ошибка)
 		{
 			loading.hide()
-			error(ошибка)
-			поле_пароля.focus()
+			
+			if (ошибка == 'user not found')
+				поле_имени.focus()
+			if (ошибка == 'incorrect password')
+				поле_пароля.focus()
+				
+			error(text('log in.error.' + ошибка))
+				
 			кнопка_входа.unlock({ force: true })
 		})
 		.ok(function(данные)

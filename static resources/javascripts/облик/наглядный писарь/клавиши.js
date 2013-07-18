@@ -27,6 +27,23 @@ Visual_editor.implement
 		{
 			'li': function(container)
 			{
+				if (container.is('li') && container.is_empty())
+				{
+					var list = container.parent()
+					
+					var next_paragraph = list.next('p')
+					
+					container.remove()
+					
+					if (list.is_empty())
+						list.remove()
+					
+					if (next_paragraph.exists())
+						return this.editor.caret.move_to(next_paragraph)
+					
+					return visual_editor.new_paragraph()
+				}
+				
 				var list_item = $('<li/>')
 				this.hint(list_item, 'Введите текст')
 				

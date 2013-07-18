@@ -33,5 +33,13 @@ Configuration = Object.x_over_y(Configuration,
 	{
 		Interval: 5
 	},
-	Message_date_format: 'dd.MM.yyyy в HH:mm:ss'
+	Message_date_format: 'dd.MM.yyyy в HH:mm:ss',
+	Later_messages_timeout:
+	{
+		A_little_later: 5 * 60,
+		Some_time_later: 15 * 60,
+		Later: 60 * 60,
+		More_later: 6 * 60 * 60,
+		Reasonably_later: 24 * 60 * 60
+	}
 })

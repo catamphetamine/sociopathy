@@ -432,12 +432,12 @@ var Dom_tools =
 	uppest_before: function(node, ceiling)
 	{
 		if (node === ceiling)
-			throw 'The node is ceiling'
+			//throw 'The node is ceiling'
+			return null
 	
 		while (node.parentNode !== ceiling)
-		{
 			node = node.parentNode
-		}
+		
 		return node
 	},
 	

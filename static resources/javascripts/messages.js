@@ -91,6 +91,22 @@ var Messages = new Class
 			this.bottom_loader.deactivate()
 	},
 	
+	add_later_class: function(message, time)
+	{
+		if (time < Configuration.Later_messages_timeout.A_little_later)
+			message.addClass('a_little_later')
+		else if (time < Configuration.Later_messages_timeout.Some_time_later)
+			message.addClass('some_time_later')
+		else if (time < Configuration.Later_messages_timeout.Later)
+			message.addClass('later')
+		else if (time < Configuration.Later_messages_timeout.More_later)
+			message.addClass('more_later')
+		else if (time < Configuration.Later_messages_timeout.Reasonably_ater)
+			message.addClass('reasonably_later')
+		else
+			message.addClass('much_later')
+	},
+	
 	initialize_loaders: function()
 	{
 		var messages = this
@@ -190,18 +206,18 @@ var Messages = new Class
 					//if (messages.options.container.find('> li[message_id="' + message.attr('message_id') + '"]').exists())
 					//	return
 				
-					var next_in_time = messages.options.container.find('> li.new_author:first')
+					var next_new_author_in_time = messages.options.container.find('> li.new_author:first')
 					
-					if (next_in_time.attr('author') === message.attr('author'))
+					if (next_new_author_in_time.exists() && next_new_author_in_time.attr('author') === message.attr('author'))
 					{
-						next_in_time.find('.author').children().remove()
-						next_in_time.find('.message').css('padding-top', 0)
+						next_new_author_in_time.find('.author').children().remove()
+						next_new_author_in_time.find('.message').css('padding-top', 0)
 						
-						next_in_time.removeClass('new_author')
+						next_new_author_in_time.removeClass('new_author')
 						
 						message.addClass('new_author')
 						
-						if (next_in_time.hasClass('odd'))
+						if (next_new_author_in_time.hasClass('odd'))
 							message.addClass('odd')
 						else
 							message.addClass('even')
@@ -210,10 +226,18 @@ var Messages = new Class
 					{
 						message.addClass('new_author')
 						
-						if (next_in_time.hasClass('odd'))
+						if (next_new_author_in_time.hasClass('odd'))
 							message.addClass('even')
 						else
 							message.addClass('odd')
+					}
+					
+					var next_in_time = messages.options.container.find('> li:first')
+					if (next_in_time.exists())
+					{
+						var time = (next_in_time.find('.when').attr('date') - message.find('.when').attr('date')) /  1000
+							
+						messages.add_later_class(next_in_time, time)
 					}
 					
 					messages.options.container.prepend(message)
@@ -229,14 +253,14 @@ var Messages = new Class
 					//if (messages.options.container.find('> li[message_id="' + message.attr('message_id') + '"]').exists())
 					//	return
 				
-					var previous_in_time = messages.options.container.find('> li.new_author:last')
-					
-					if (previous_in_time.attr('author') === message.attr('author'))
+					var previous_new_author_in_time = messages.options.container.find('> li.new_author:last')
+				
+					if (previous_new_author_in_time.exists() && previous_new_author_in_time.attr('author') === message.attr('author'))
 					{
 						message.find('.author').children().remove()
 						message.find('.message').css('padding-top', 0)
 						
-						if (previous_in_time.hasClass('odd'))
+						if (previous_new_author_in_time.hasClass('odd'))
 							message.addClass('odd')
 						else
 							message.addClass('even')
@@ -245,10 +269,18 @@ var Messages = new Class
 					{
 						message.addClass('new_author')
 						
-						if (previous_in_time.hasClass('odd'))
+						if (previous_new_author_in_time.hasClass('odd'))
 							message.addClass('even')
 						else
 							message.addClass('odd')
+					}
+						
+					var previous_in_time = messages.options.container.find('> li:last')
+					if (previous_in_time.exists())
+					{
+						var time = (message.find('.when').attr('date') - previous_in_time.find('.when').attr('date')) / 1000
+						
+						messages.add_later_class(message, time)
 					}
 					
 					messages.options.container.append(message)

@@ -59,16 +59,57 @@
 	{
 		margin-bottom: 30px;
 		
-		> .content_wrapper
+		> li
 		{
-			> .content
-			{		
-				white-space: pre-wrap;
-				word-wrap: break-word;
-				
-				p
+			&.a_little_later
+			{
+				margin-top: 12px;
+			}
+			
+			&.some_time_later
+			{
+				margin-top: 22px;
+			}
+			
+			&.later
+			{
+				margin-top: 32px;
+			}
+			
+			&.more_later
+			{
+				margin-top: 42px;
+			}
+			
+			&.reasonably_later
+			{
+				margin-top: 62px;
+			}
+			
+			&.much_later
+			{
+				margin-top: 100px;
+			}
+			
+			&.a_little_later, &.some_time_later, &.later, &.more_later, &.reasonably_later, &.much_later
+			{
+				&:first-child
 				{
-					text-indent: 0;
+					margin-top: 0;
+				}
+			}
+			
+			> .content_wrapper
+			{
+				> .content
+				{		
+					white-space: pre-wrap;
+					word-wrap: break-word;
+					
+					p
+					{
+						text-indent: 0;
+					}
 				}
 			}
 		}

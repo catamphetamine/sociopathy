@@ -190,5 +190,14 @@
 	"user actions":
 	{
 		"log out": "Выйти"
+	},
+	
+	"log in":
+	{
+		"error":
+		{
+			"user not found": "Такого пользователя нет в нашей сети",
+			"incorrect password": "Неверный пароль"
+		}
 	}
 }
