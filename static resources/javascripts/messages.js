@@ -93,15 +93,17 @@ var Messages = new Class
 	
 	add_later_class: function(message, time)
 	{
-		if (time < Configuration.Later_messages_timeout.A_little_later)
+		if (time < Configuration.Later_messages_timing.A_little_later)
+			return
+		else if (time < Configuration.Later_messages_timing.Some_time_later)
 			message.addClass('a_little_later')
-		else if (time < Configuration.Later_messages_timeout.Some_time_later)
+		else if (time < Configuration.Later_messages_timing.Later)
 			message.addClass('some_time_later')
-		else if (time < Configuration.Later_messages_timeout.Later)
+		else if (time < Configuration.Later_messages_timing.More_later)
 			message.addClass('later')
-		else if (time < Configuration.Later_messages_timeout.More_later)
+		else if (time < Configuration.Later_messages_timing.Reasonably_ater)
 			message.addClass('more_later')
-		else if (time < Configuration.Later_messages_timeout.Reasonably_ater)
+		else if (time < Configuration.Later_messages_timing.Much_later)
 			message.addClass('reasonably_later')
 		else
 			message.addClass('much_later')
@@ -249,7 +251,7 @@ var Messages = new Class
 				{
 					if (options.before_output)	
 						options.before_output(message)
-						
+					
 					//if (messages.options.container.find('> li[message_id="' + message.attr('message_id') + '"]').exists())
 					//	return
 				
@@ -473,9 +475,16 @@ var Messages = new Class
 		
 		if (!after || !after.exists())
 			after = this.options.container.find('> li:last')
-			
+		
 		var message = this.prepare_message_for_insertion(after, data)
 	
+		if (after.exists())
+		{
+			var time = (message.find('.when').attr('date') - after.find('.when').attr('date')) /  1000
+			
+			this.add_later_class(message, time)
+		}
+		
 		// убрать сверху лишние сообщения
 		var remove_old_messages = function()
 		{
