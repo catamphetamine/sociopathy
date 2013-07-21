@@ -45,7 +45,6 @@
 			},
 			connection:
 			{
-				path: '/болталка',
 				away_aware_elements:
 				[
 					'.chat > li[author="{id}"] .author'

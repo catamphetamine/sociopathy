@@ -39,16 +39,12 @@
 		if (!пользователь)
 			return
 		
-		news_indication = panel.toggle_buttons
+		news_indication = panel.menu_item_button_switcher
 		({
 			type: 'Talks',
 			fade_in_duration: 1,
 			fade_out_duration: 1.5,
-			show:
-			{
-				button: { new: true }
-			},
-			initialize: true
+			show: { has_news: true }
 		})
 	})
 	
@@ -122,11 +118,13 @@
 		}
 	})
 	
+	/*
 	Inter_tab_communication.on('новости_прочитано', function(data)
 	{
 		if (data.что === 'беседа')
 			Новости.прочитано({ беседа: data.сообщения_чего, сообщение: data._id })
 	})
+	*/
 	
 	News('Talks',
 	{

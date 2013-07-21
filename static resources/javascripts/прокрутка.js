@@ -132,7 +132,7 @@ var Scroller = new Class
 			bottom_was_visible = previous_top_offset_in_window + height >= 0 && previous_top_offset_in_window + height < window_height
 		}
 		
-		// the element is moving up or down?
+		// is the element moving up or down?
 		var upwards
 		var downwards
 		if (!first_time)

@@ -37,7 +37,7 @@ var match_page = function(options)
 			return true
 }
 
-var get_page_button = function()
+function get_page_button_type()
 {
 	if (Страница.эта() === '_wait_')
 		return page_data('_icon')
@@ -132,12 +132,16 @@ var Panel = new Class
 			var id = title
 			if (id.indexOf(' (') >= 0)
 				id = id.substring(0, id.indexOf(' ('))
-				
+			
+			button.element.css
+			({
+				position: 'absolute'
+			})
+			
 			if (id !== title)
 			{
 				button.element.css
 				({
-					position: 'absolute',
 					'z-index': -1,
 					opacity: 0
 				})
@@ -171,180 +175,159 @@ var Panel = new Class
 	{
 		var panel = this
 		
-		var previously_highlighted_menu_item = panel.highlighted_menu_item
+		var previously_highlighted_page_button_type = panel.highlighted_page_button_type
 		
-		var page_button = get_page_button()
+		var page_button_type = get_page_button_type()
 		
-		function highlight_current_page_button(page_button)
+		if (previously_highlighted_page_button_type)
 		{
-			if (previously_highlighted_menu_item && page_button === previously_highlighted_menu_item)
+			if (page_button_type === previously_highlighted_page_button_type)
 				return
-			
-			if (previously_highlighted_menu_item)
-			{
-				panel.toggle_buttons
-				({
-					type: previously_highlighted_menu_item,
-					fade_in_duration: 0,
-					fade_out_duration: 0,
-					hide: { button: { current: true } }
-				})
-			}
-			
-			if (!page_button)
-				return
-			
-			panel.toggle_buttons
+		
+			panel.menu_item_button_switcher
 			({
-				type: page_button,
-				fade_in_duration: 0,
-				fade_out_duration: 0,
-				show: { button: { current: true } }
+				type: previously_highlighted_page_button_type,
+				show: { is_current_page: true }
 			})
-			
-			panel.highlighted_menu_item = page_button
-				
-			return true
+			.off()
 		}
 		
-		highlight_current_page_button(page_button)
+		panel.menu_item_button_switcher
+		({
+			type: page_button_type,
+			show: { is_current_page: true }
+		})
+		.on()
+		
+		panel.highlighted_page_button_type = page_button_type
 	},
 
-	toggle_buttons: function(options)
+	menu_item_button_switcher: function(options)
 	{
+		var default_options =
+		{
+			fade_in_duration: 0,
+			fade_out_duration: 0
+		}
+		
+		options = Object.merge(default_options, options)
+
 		var type = options.type
 		
 		var get_button = function(options)
 		{
 			options = options || {}
 			
-			var news = false
-			var current = false
+			var has_news = false
+			var is_current_page = false
 			
-			if (options.new || (Новости.news[type] && Новости.news[type].anything_new()))
-				news = true
+			if (options.has_news || (Новости.news[type] && Новости.news[type].anything_new()))
+				has_news = true
 				
-			if (options.current || get_page_button() === type)
-				current = true
+			if (options.is_current_page || get_page_button_type() === type)
+				is_current_page = true
 				
+			var modificator
+				
+			if (has_news && is_current_page)
+			{
+				modificator = 'выбрано и непрочитанные'
+			}
+			else if (has_news)
+			{
+				modificator = 'непрочитанные'
+			}
+			else if (is_current_page)
+			{
+				modificator = 'выбрано'
+			}
+			
 			var postfix = ''
-				
-			if (news)
-			{
-				if (current)
-					postfix = ' (выбрано и непрочитанные)'
-				else
-					postfix = ' (непрочитанные)'
-			}
-			else if (current)
-				postfix = ' (выбрано)'
+			if (modificator)
+				postfix = ' (' + modificator + ')'
 			
-			if (!this.buttons[type + postfix])
-			{
-				console.log('button not found: ' + type + postfix)
-				return
-			}
+			var button = this.buttons[type + postfix]
 			
-			return this.buttons[type + postfix].element
+			if (!button)
+				throw 'button not found: ' + type + postfix
+			
+			return button.element
 		}
 		.bind(this)
 		
-		var get_hidden_button = function () { return get_button(options.hide ? options.hide.button : {}) }
-		var get_shown_button = function () { return get_button(options.show ? options.show.button : {}) }
+		/*
+		var menu_item = this.buttons[type].element.parent()
 		
-		var get_buttons_to_hide = function()
+		function get_shown_button()
 		{
-			var hidden = get_hidden_button()
+			var shown_button
 			
-			if (!hidden)
-				return []
+			menu_item.children().each(function()
+			{
+				var button = $(this)
+				
+				if (button.css('z-index') === 0)
+					shown_button = button
+			})
 			
+			return shown_button
+		}
+		*/
+		
+		function get_button_to_show() { get_button(options.show) }
+		function get_button_to_hide() { get_button(options.hide) }
+
+		/*		
+		function get_buttons_to_hide()
+		{
 			var hide_buttons = []
 			
-			hidden.parent().children().each(function()
+			var button_to_show = get_button_to_show().node()
+			
+			menu_item.children().each(function()
 			{
-				if (this !== get_shown_button().node())
+				if (this !== button_to_show)
 					hide_buttons.push($(this))
 			})
 			
 			return hide_buttons
 		}
+		*/
 			
-		var activate = function(these_options)
+		var on = function(these_options)
 		{
-			//if (get_hidden_button().node() === get_shown_button().node())
-			//	return
-			
 			options = Object.merge(options, these_options)
-				
-			var shown = get_shown_button()
 			
-			if (shown)
-				shown.css('z-index', 0)
+			if (get_button_to_show().node() === get_button_to_hide().node())
+				return
 			
-			if (options.immediate)
-			{
-				get_buttons_to_hide().for_each(function()
-				{
-					this.hide()
-				})
-				
-				if (shown)
-					shown.show().css('opacity', 1)
-			}
-			else
-			{
-				if (shown)
-					shown.fade_in(options.fade_in_duration)
-				
-				get_buttons_to_hide().for_each(function()
-				{
-					this.fade_out(options.fade_out_duration)
-				})
-			}
-		
-			//panel.buttons[options.type].tooltip.update_position()
+			get_button_to_show()
+				.css('z-index', 0)
+				.fade_in(options.fade_in_duration)
+			
+			get_button_to_hide()
+				.css('z-index', -1)
+				.fade_out(options.fade_out_duration)
 		}
 		.bind(this)
 		
-		var deactivate = function(these_options)
+		var off = function(these_options)
 		{
-			if (get_hidden_button().node() === get_shown_button().node())
+			options = Object.merge(options, these_options)
+			
+			if (get_button_to_show().node() === get_button_to_hide().node())
 				return
 			
-			options = Object.merge(options, these_options)
-		
-			get_shown_button().css('z-index', -1)
+			get_button_to_show()
+				.css('z-index', -1)
+				.fade_out(options.fade_out_duration)
 			
-			if (options.immediate)
-			{
-				get_shown_button().hide()
-				get_hidden_button().show().css('opacity', 1)
-			}
-			else
-			{
-				get_hidden_button().fade_in(options.fade_in_duration)
-				get_shown_button().fade_out(options.fade_out_duration)
-			}
+			get_button_to_hide()
+				.css('z-index', 0)
+				.fade_in(options.fade_in_duration)
 		}
 		
-		if (options.initialize)
-		{
-			var result =
-			{
-				on: activate,
-				off: deactivate
-			}
-			
-			return result
-		}
-		else
-		{
-			//if (!options.fade)
-			//	options.immediate = true
-				
-			activate()
-		}
+		return { on: on, off: off }
 	}
 })
 

@@ -63,7 +63,6 @@
 			},
 			connection:
 			{
-				path: '/обсуждение',
 				away_aware_elements:
 				[
 					'#discussion > li[author="{id}"] .author'

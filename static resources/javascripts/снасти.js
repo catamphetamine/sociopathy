@@ -273,6 +273,10 @@ function неточное_время(время, options)
 		return just_now
 	}
 		
+	if (минуты == 1)
+		if (has_text('human readable time.a minute ago'))
+			return text('human readable time.a minute ago')
+	
 	if (минуты <= 25)
 	{
 		if (last_digit(минуты) == 1 && минуты !== 11)

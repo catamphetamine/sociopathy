@@ -81,13 +81,13 @@ var Новости = new (new Class
 			if (message.exists() && !message.hasClass('new'))
 				return
 		}
-			
+		
 		var indicate = false
 		if (!this.news[options.communication_id].anything_new())
 			indicate = true
-			
+		
 		this.news[options.communication_id].new_message(options.общение, последнее_сообщение)
-			
+		
 		if (indicate)
 		{
 			options.indication()

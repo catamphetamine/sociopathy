@@ -17,7 +17,7 @@
 
 @top_padding: 0px;
 @bottom_padding: 0px;
-@user_icon_margin: 8px;
+@user_icon_margin: 5px;
 
 .breadcrumbs
 {
@@ -120,7 +120,7 @@
 		position: absolute;
 		left: 4px;
 
-		margin-left: 380px;
+		margin-left: 330px;
 		padding-top: 8px;
 		
 		background-image: url('/картинки/пишет.gif');
@@ -232,6 +232,8 @@
 	
 			> .who_is_connected 
 			{
+				margin-left: 25px;
+				
 				> li
 				{
 					position: relative;
@@ -284,17 +286,11 @@
 				margin-bottom: @top_padding;
 				
 				padding: 0;
-				padding-left: 5px;
-				padding-right: 5px;
 				
 				overflow: hidden;
 			
 				list-style: none;
 				text-indent: 0;
-				
-				.css_transition_property(padding-left, padding-right);
-				.css_transition_duration(200ms);
-				.css_transition_easing(ease-in-out);
 				
 				.picture
 				{

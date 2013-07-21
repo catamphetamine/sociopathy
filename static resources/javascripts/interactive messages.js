@@ -1,5 +1,7 @@
 var Interactive_messages = function(options)
 {
+	var interactive_messages_options = options
+	
 	var Who_is_connected_bar_fade_in_duration = 0.8
 	var Who_is_connected_bar_fade_out_duration = 0.5
 	
@@ -219,6 +221,7 @@ var Interactive_messages = function(options)
 	
 	messages.read_message = function(_id)
 	{
+		/*
 		if (options.info)
 		{
 			if (options.info.что)
@@ -231,6 +234,7 @@ var Interactive_messages = function(options)
 				Inter_tab_communication.send('новости_прочитано', info)
 			}
 		}
+		*/
 				
 		this.connection.emit('прочитано', _id)
 	}
@@ -270,9 +274,7 @@ var Interactive_messages = function(options)
 			
 			if (messages.connection)
 			{
-				messages.connection.emit('выход')
-				//alert(messages.connection.websocket.disconnectSync)
-				//messages.connection.websocket.disconnectSync()
+				messages.connection.disconnect()
 			}
 		}
 		
@@ -302,13 +304,6 @@ var Interactive_messages = function(options)
 	
 	function new_message_channel(options)
 	{
-		var connected = false
-		var disconnected = false
-		var reconnected = false
-		
-		// handle reconnect
-		//var first_connection = true
-		
 		var status_classes =
 		{
 			'смотрит': 'is_idle',
@@ -379,11 +374,19 @@ var Interactive_messages = function(options)
 			var накопленные_сообщения = []
 			var пропущенные_сообщения_учтены = false
 			
-			var connection = io.connect('http://' + Configuration.Host + ':' + Configuration.Port + options.path, { 'force new connection': true })
-			connection.is_ready = false
-			
 			var pending_messages = []
+			
+			var что = interactive_messages_options.info.что
+			
+			var _id
+			if (interactive_messages_options.info.общение)
+				_id = interactive_messages_options.info.общение()
 				
+			console.log(что)
+			console.log(_id)
+				
+			var connection = Эфир.общение(что, _id, messages.options.environment)
+			
 			получить_пропущенные_сообщения = function()
 			{
 				var latest_message = messages.options.container.find('> li:last').attr('message_id')
@@ -422,37 +425,8 @@ var Interactive_messages = function(options)
 					try_to_append_pending_messages()
 			}
 			
-			connection.on('connect', function()
-			{
-				connected = true
-				
-				if (disconnected)
-				{
-					disconnected = false
-					reconnected = true
-				}
-			})
-			
-			connection.on('поехали', function()
-			{
-				connection.emit('пользователь', $.cookie('user'))
-			})
-			
-			connection.on('пользователь подтверждён', function()
-			{
-				connection.emit('environment', messages.options.environment)
-			})
-			
-			connection.on('environment received', function()
-			{
-				connection.emit('finish')
-			})
-			
 			connection.on('disconnect', function()
 			{
-				connected = false
-				disconnected = true
-				
 				connection.is_ready = false
 				
 				накопленные_сообщения = []
@@ -507,7 +481,7 @@ var Interactive_messages = function(options)
 				messages.when_can_read_messages_actions.for_each(function() { this() })
 				messages.when_can_read_messages_actions = []
 				
-				if (!reconnected)
+				if (!connection.reconnected)
 				{
 					if (options.on_ready)
 						options.on_ready()
@@ -599,6 +573,7 @@ var Interactive_messages = function(options)
 				//set_status(пользователь._id, 'пишет', { изтекает: 1000 })
 			})
 			
+			/*
 			connection.on('error', function(ошибка)
 			{
 				var debug = ошибка.debug
@@ -620,6 +595,9 @@ var Interactive_messages = function(options)
 				console.log(ошибка)
 				error(ошибка, options)
 			})
+			*/
+			
+			connection.connect()
 			
 			messages.connection = connection
 		}

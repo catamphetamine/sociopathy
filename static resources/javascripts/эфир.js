@@ -43,6 +43,79 @@ $(document).on('panel_loaded', function()
 			работает: function()
 			{
 				return эфир.is_ready
+			},
+			
+			общение: function(type, _id)
+			{
+				var общение =
+				{
+					id:
+					{
+						type: type,
+						_id: _id
+					},
+					
+					connect: function()
+					{
+						if (!эфир.is_ready)
+							throw text('websocket.error.connection lost')
+						
+						эфир.emit('общение:connect', this.id)
+					},
+					
+					disconnect: function()
+					{
+						эфир.emit('общение:disconnect', this.id)
+						
+						Эфир.общения.remove(общение)
+					},
+					
+					emit: function(what, data)
+					{
+						эфир.emit('общение:emit', { id: this.id, data: data })
+					},
+					
+					on: function(what, action)
+					{
+						if (what === 'disconnect')
+							return this.disconnected = action
+						
+						this.listeners[what] = action
+					}
+				}
+				
+				Эфир.общения.add(общение)
+				
+				return общение
+			},
+			
+			общение_по_id: function(id)
+			{
+				function matches(общение)
+				{
+					var another_id = общение.id
+					
+					if (id.type !== another_id.type)
+						return false
+					
+					if (!id._id && another_id._id)
+						throw 'Incorrect communication id'
+					
+					if (!id._id)
+						return true
+					
+					return id._id === another_id._id
+				}
+				
+				var общения = Эфир.общения.filter(function(общение) { return matches(общение) })
+				
+				if (общения.is_empty())
+					return
+				
+				if (общения.length > 1)
+					throw 'Illegal state'
+				
+				return общения[0]
 			}
 		}
 			
@@ -93,6 +166,12 @@ $(document).on('panel_loaded', function()
 			
 			эфир.is_ready = false
 			
+			Эфир.общения.for_each(function()
+			{
+				if (this.disconnected)
+					this.disconnected()
+			})
+			
 			panel.loading.show()
 		})
 		
@@ -100,12 +179,36 @@ $(document).on('panel_loaded', function()
 		{
 			эфир.is_ready = true
 			
+			if (reconnected)
+			{
+				Эфир.общения.for_each(function()
+				{
+					this.reconnected = true
+					this.connect()
+				})
+			}
+			
 			эфир.emit('уведомления')
 			
 			start_activity_monitor()
 			
 			if (first_time_page_loading)
 				$(document).trigger('ether_is_online')
+		})
+		
+		эфир.on('общение', function(message)
+		{
+			var общение = Эфир.общение_по_id(message.id)
+			
+			if (!общение)
+				return
+			
+			var listener = общение.listeners[message.name]
+			
+			if (!listener)
+				return
+			
+			listener(message.data)
 		})
 		
 		эфир.on('error', function(ошибка)
@@ -116,12 +219,15 @@ $(document).on('panel_loaded', function()
 			var options = { sticky: true }
 	
 			report_error('эфир', debug || ошибка)
-			
-			if (ошибка === true)
-				return error('Ошибка связи с сервером', options)
 	
 			if (!ошибка)
 				return
+			
+			if (ошибка === true)
+				return error('Ошибка связи с сервером', options)
+		
+			if (ошибка === 'Слишком много сообщений пропущено')
+				return error('Не удалось догрузить сообщения. Обновите страницу', { sticky: true })
 			
 			error(ошибка, options)
 		})

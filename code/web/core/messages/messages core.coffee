@@ -115,7 +115,7 @@ global.prepare_messages = (options) ->
 		options.messages_collection = options.id
 		options.path = (environment) -> options.общение
 		
-	options.uri = '/' + options.общение
+	#options.uri = '/' + options.общение
 	options.data_uri = '/сеть/' + options.общение + '/сообщения'
 
 	save = options.save

@@ -103,6 +103,7 @@
 	"human readable time":
 	{
 		"just now": "только что",
+		"a minute ago": "минутой ранее",
 		"half an hour ago": "получасом ранее",
 		"an hour ago": "часом ранее",
 		"one and a half an hour ago": "полутора часами ранее",
@@ -198,6 +199,14 @@
 		{
 			"user not found": "Такого пользователя нет в нашей сети",
 			"incorrect password": "Неверный пароль"
+		}
+	},
+	
+	"websocket":
+	{
+		"error":
+		{
+			"connection lost": "Потеряна связь с сервером"
 		}
 	}
 }

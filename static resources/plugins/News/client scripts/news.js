@@ -63,27 +63,24 @@
 		}
 	})
 	
+	/*
 	Inter_tab_communication.on('новости_прочитано', function(data)
 	{
 		if (data.что === 'новости')
 			Новости.прочитано({ новость: data._id })
 	})
+	*/
 	
 	$(document).on('panel_loaded', function()
 	{
 		if (!пользователь)
 			return
 		
-		news_indication = panel.toggle_buttons
+		news_indication = panel.menu_item_button_switcher
 		({
 			type: 'News',
 			fade_in_duration: 2,
-			fade_out_duration: 3,
-			show:
-			{
-				button: { new: true }
-			},
-			initialize: true
+			fade_out_duration: 3
 		})
 	})
 	

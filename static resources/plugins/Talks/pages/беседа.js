@@ -79,7 +79,6 @@
 			},
 			connection:
 			{
-				path: '/беседа',
 				away_aware_elements:
 				[
 					'#talk > li[author="{id}"] .author'

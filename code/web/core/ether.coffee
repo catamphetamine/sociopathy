@@ -7,6 +7,8 @@ online = redis.createClient()
 
 api = {}
 
+общения = {}
+
 эфир = websocket
 	.of('/эфир')
 	.on 'connection', (соединение) ->
@@ -102,6 +104,17 @@ api = {}
 			else
 				activity.detected()
 
+		соединение.on 'общение', (id) ->
+			общение = общения[id.type]
+			
+			if not общение?
+				throw 'communication type not found'
+			
+			environment =
+				пользователь: пользователь
+			
+			общение.logic(environment)
+			
 		соединение.emit 'поехали'
 		соединение.emit 'version', Options.Version
 						
@@ -140,7 +153,7 @@ api.отправить = (group, name, data, options, возврат) ->
 			connection.emit(group + ':' + name, data)
 			
 	return возврат(null, yes)
-    
+
 api.соединение_с = (вид, options) ->
 	if Object.пусто(соединения[вид])
 		return false
@@ -205,5 +218,8 @@ api.в_сети_ли = (_id, возврат) ->
 	возврат(null, is_online)
 			
 api.соединения = соединения
+
+api.общение = (общение, logic) ->
+	общения[общение] = logic
 
 global.эфир = api

@@ -104,6 +104,7 @@
 	"human readable time":
 	{
 		"just now": "just now",
+		"a minute ago": "a minute ago",
 		"half an hour ago": "half an hour ago",
 		"an hour ago": "an hour ago",
 		
@@ -203,6 +204,14 @@
 		{
 			"user not found": "User not found",
 			"incorrect password": "Incorrect password"
+		}
+	},
+	
+	"websocket":
+	{
+		"error":
+		{
+			"connection lost": "Server connection lost"
 		}
 	}
 }

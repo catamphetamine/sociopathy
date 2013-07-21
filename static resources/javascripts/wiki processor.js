@@ -658,8 +658,6 @@ var Wiki_processor = new (new Class
 		
 		var fragments = text.split(' ')
 		
-		console.log(fragments)
-		
 		var countdown = Countdown(fragments.length, function()
 		{
 			append_pure_text()
