@@ -45,7 +45,7 @@ $(document).on('panel_loaded', function()
 				return эфир.is_ready
 			},
 			
-			общение: function(type, _id)
+			общение: function(type, _id, environment)
 			{
 				var общение =
 				{
@@ -55,12 +55,14 @@ $(document).on('panel_loaded', function()
 						_id: _id
 					},
 					
+					environment: environment,
+					
 					connect: function()
 					{
 						if (!эфир.is_ready)
 							throw text('websocket.error.connection lost')
 						
-						эфир.emit('общение:connect', this.id)
+						эфир.emit('общение:connect', { id: this.id, environment: environment })
 					},
 					
 					disconnect: function()
@@ -72,7 +74,7 @@ $(document).on('panel_loaded', function()
 					
 					emit: function(what, data)
 					{
-						эфир.emit('общение:emit', { id: this.id, data: data })
+						эфир.emit('общение:emit', { id: this.id, message: what, data: data })
 					},
 					
 					on: function(what, action)
@@ -121,7 +123,7 @@ $(document).on('panel_loaded', function()
 			
 		Эфир.следить_за_пользователем(пользователь)
 		
-		эфир = io.connect('http://' + Configuration.Host + ':' + Configuration.Port + '/эфир', { 'force new connection': true })
+		эфир = io.connect('http://' + Configuration.Host + ':' + Configuration.Port + '/эфир', { 'force new connection': true, 'connection timeout': 3000 })
 		эфир.is_ready = false
 		
 		Эфир.канал = эфир
@@ -156,7 +158,7 @@ $(document).on('panel_loaded', function()
 		эфир.on('version', function(data)
 		{
 			if (Version != data)
-				warning('Сайт обновился. Обновите страницу', { sticky: true })
+				info('Сайт обновился. Обновите страницу', { sticky: true })
 		})
 		
 		эфир.on('disconnect', function()
@@ -196,21 +198,6 @@ $(document).on('panel_loaded', function()
 				$(document).trigger('ether_is_online')
 		})
 		
-		эфир.on('общение', function(message)
-		{
-			var общение = Эфир.общение_по_id(message.id)
-			
-			if (!общение)
-				return
-			
-			var listener = общение.listeners[message.name]
-			
-			if (!listener)
-				return
-			
-			listener(message.data)
-		})
-		
 		эфир.on('error', function(ошибка)
 		{
 			var debug = ошибка.debug
@@ -230,6 +217,29 @@ $(document).on('panel_loaded', function()
 				return error('Не удалось догрузить сообщения. Обновите страницу', { sticky: true })
 			
 			error(ошибка, options)
+		})
+		
+		on('общение', 'emit', function(data)
+		{
+			общение = Эфир.общение_по_id(data.id)
+			
+			if (!общение)
+			{
+				console.log('Общение не найдено:')
+				console.log(data.id)
+				return
+			}
+			
+			var listener = общение.listeners[data.message]
+			
+			if (!listener)
+			{
+				console.log('Слушатель не найден:')
+				console.log(data.message)
+				return
+			}
+			
+			listener(data.data)
 		})
 		
 		on('пользователи', 'кто здесь', function(пользователи)

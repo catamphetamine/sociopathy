@@ -113,14 +113,25 @@ api.общения = {}
 				throw 'No activity monitor for user ' + пользователь.имя
 			else
 				activity.detected()
-
-		соединение.on 'общение:on', (data) ->
-			общение = null
+		
+		общение_по_id = (collection, id) ->
+			if not id?
+				id = collection
+				collection = connections
 			
-			if not data.id._id?
-				общение = connections[data.id.type]
-			else
-				общение = connections[data.id.type][data.id._id]
+			if not id._id?
+				return collection[id.type]
+			
+			if collection[id.type]?
+				return collection[id.type][id._id]
+
+		соединение.on 'общение:emit', (data) ->
+			общение = общение_по_id(data.id)
+			
+			if not общение?
+				console.log('Communication not found:')
+				console.log(id)
+				return
 				
 			listener = общение.listeners[data.message]
 			
@@ -130,21 +141,21 @@ api.общения = {}
 				
 			listener(data.data)
 
-		соединение.on 'общение:disconnect', (data) ->
-			общение = null
+		соединение.on 'общение:disconnect', (id) ->
+			общение = общение_по_id(id)
 			
-			if not data.id._id?
-				общение = connections[data.id.type]
-			else
-				общение = connections[data.id.type][data.id._id]
-				
+			if not общение?
+				console.log('Communication not found:')
+				console.log(id)
+				return
+			
 			общение.disconnect()
 			
-			if not data.id._id?
-				delete connections[data.id.type]
+			if not id._id?
+				delete connections[id.type]
 			else
-				delete connections[data.id.type][data.id._id]
-				
+				delete connections[id.type][id._id]
+		
 		соединение.on 'общение:connect', (data) ->
 			id = data.id
 			
@@ -160,18 +171,20 @@ api.общения = {}
 			общение = общение(environment)
 			
 			общение.broadcast = (message, data) ->
-				for connection_id, соединение of соединения
-					общение = null
-				
-					if not id._id?
-						общение = соединение.connections[id.type]
-					else
-						if соединение.connections[id.type]?
-							общение = соединение.connections[id.type][id._id]
+				for unused, connection of соединения
+					# кроме самого себя
+					if connection == соединение
+						continue
+					
+					общение = общение_по_id(connection.connections, id)
 				
 					if общение?
 						общение.on(message, data)
-				
+			
+			communication = общение_по_id(id)
+			if communication?
+				throw 'Already connected'
+			
 			if not id._id?
 				connections[id.type] = общение
 			else
