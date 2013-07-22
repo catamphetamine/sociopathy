@@ -4,63 +4,27 @@ global.prepare_messages_socket = (options) ->
 		
 		collection = db(options.messages_collection)
 	
-		эфир.общение options.общение, (environment) ->
+		communication = (environment) ->
+			environment.сообщения_чего = options.сообщения_чего_from_string(environment.сообщения_чего)
+	
 			connected_data_source = ->
 				if not environment.сообщения_чего?
 					return options.id + ':connected'
 				options.id + ':' + environment.сообщения_чего._id + ':connected'
-	
-			broadcast = (id, content) ->
-				if not environment.сообщения_чего?
-					if соединение?
-						return соединение.broadcast.emit(id, content)
+			
+			пользователь = @environment.пользователь
 					
-				connected_clients = соединение.manager.rooms[options.uri + '/' + environment.сообщения_чего._id + '']
-				if connected_clients?
-					for connection_id in connected_clients
-						соединения = эфир.соединения[options.общение]
-						if соединения[connection_id]?
-							if соединения[connection_id] != соединение
-								соединения[connection_id].emit(id, content)
-	
-			disconnected = false
-			
-			пользователь = environment.пользователь
-			
-			выход = ->
-				delete эфир.соединения[options.общение][соединение.id]
-			
-				finish_disconnection = ->
-					disconnected = true
-					соединение.disconnect()
-			
-				if пользователь?
-					connected.hdel.bind_await(connected)(connected_data_source(), пользователь._id)
-					broadcast('отцепился', пользовательское.поля([], пользователь))
-					
-				finish_disconnection()
-					
-			соединение.on 'выход', () ->
-				if not disconnected
-					выход()
+			общение = 
+				disconnect: ->
+					if пользователь?
+						connected.hdel.bind_await(connected)(connected_data_source(), пользователь._id)
+						@broadcast('отцепился', пользовательское.поля([], пользователь))
+						
+				connect: ->
+					if options.authorize?
+						options.authorize.await(environment)
 				
-			соединение.on 'disconnect', () ->
-				if not disconnected
-					выход()
-			
-			соединение.on 'environment', (environment_data) ->
-				if environment_data.сообщения_чего?
-					соединение.join(environment_data.сообщения_чего._id + '')
-					if not соединение.custom_data?
-						соединение.custom_data = {}
-					соединение.custom_data._id = environment_data.сообщения_чего._id + ''
-					environment.сообщения_чего = options.сообщения_чего_from_string(environment_data.сообщения_чего)
-
-				соединение.emit 'environment received'
-				
-			соединение.on 'finish', ->
-				finish = ->
-					соединение.on 'кто здесь?', ->
+					@on 'кто здесь?', ->
 						who_is_connected = connected.hgetall.bind_await(connected)(connected_data_source())
 						
 						who_is_connected_info = []
@@ -70,7 +34,7 @@ global.prepare_messages_socket = (options) ->
 								
 						соединение.emit 'кто здесь', who_is_connected_info
 					
-					соединение.on 'получить пропущенные сообщения', (с_какого) ->
+					@on 'получить пропущенные сообщения', (с_какого) ->
 						Max_lost_messages = 100
 						
 						query = options.these_messages_query({ _id: { $gte: collection.id(с_какого._id) } }, environment)
@@ -84,20 +48,20 @@ global.prepare_messages_socket = (options) ->
 						
 						соединение.emit('пропущенные сообщения', сообщения)
 							
-					соединение.on 'смотрит', () ->
-						broadcast('смотрит', пользовательское.поля(пользователь))
+					@on 'смотрит', () ->
+						@broadcast('смотрит', пользовательское.поля(пользователь))
 							
-					соединение.on 'не смотрит', () ->
-						broadcast('не смотрит', пользовательское.поля(пользователь))
+					@on 'не смотрит', () ->
+						@broadcast('не смотрит', пользовательское.поля(пользователь))
 					
-					соединение.on 'вызов', (_id) ->
+					@on 'вызов', (_id) ->
 						if not эфир.отправить('общее', 'вызов', пользовательское.поля(пользователь), { кому: _id })
 							соединение.emit('ошибка', 'Вызываемый пользователь недоступен')
 					
-					соединение.on 'пишет', ->
-						broadcast('пишет', пользовательское.поля(['имя'], пользователь))
+					@on 'пишет', ->
+						@broadcast('пишет', пользовательское.поля(['имя'], пользователь))
 					
-					соединение.on 'сообщение', (сообщение) ->
+					@on 'сообщение', (сообщение) ->
 						сообщение = options.save.await(сообщение, environment)
 						
 						options.message_read.await(сообщение._id, environment)
@@ -119,9 +83,9 @@ global.prepare_messages_socket = (options) ->
 							данные_сообщения.предыдущее = предыдущие_сообщения[0]._id.toString()
 						
 						соединение.emit('сообщение', данные_сообщения)
-						broadcast('сообщение', данные_сообщения)
+						@broadcast('сообщение', данные_сообщения)
 																			
-					соединение.on 'прочитано', (_id) ->
+					@on 'прочитано', (_id) ->
 						options.message_read.await(collection.id(_id), environment)
 						
 						data =
@@ -135,12 +99,8 @@ global.prepare_messages_socket = (options) ->
 						
 					connected.hset.bind_await(connected)(connected_data_source(), пользователь._id.toString(), JSON.stringify(пользовательское.поля(пользователь)))
 						
-					broadcast('подцепился', пользовательское.поля(пользователь))
-					соединение.emit 'готов'
-						
-				if options.authorize?
-					options.authorize.await(environment)
-				
-				finish()
+					@broadcast('подцепился', пользовательское.поля(пользователь))
 			
-			соединение.emit 'поехали'
+			return общение
+			
+		эфир.общения[options.общение] = communication
