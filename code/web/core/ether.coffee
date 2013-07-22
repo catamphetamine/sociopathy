@@ -1,58 +1,66 @@
-соединения =
-	эфир: {}
-	
+соединения = {}
 listeners = {}
 
 online = redis.createClient()
 
 api = {}
 
-общения = {}
+api.общения = {}
 
 эфир = websocket
 	.of('/эфир')
 	.on 'connection', (соединение) ->
 		fiberize.websocket(соединение)
-		
-		соединение.вид = 'эфир'
 	
 		пользователь = null
 		
 		disconnected = false
 		
-		выход = ->
-			delete соединения.эфир[соединение.id]
+		connections = {}
+		
+		disconnect = ->
+			delete соединения[соединение.id]
 			delete listeners[соединение.id]
 	
-			still_online = false
-			for id, listener of listeners
-				if listener.пользователь == id
-					still_online = true
-					
-			# don't go offline if has another ether connections
-			if not still_online
-				if пользователь?
-					online.hdel.bind_await(online)('ether:online', пользователь._id)
-					
-					for id, listener of listeners
-						listener.offline(пользователь)
-					
-					# пользователь offline
+			# disconnect communications
+			for type, connection of connections
+				if not connection.multiple?
+					connection.disconnect()
+				else
+					for _id, subconnection of connection
+						subconnection.disconnect()
+			
+			if пользователь?
+				still_online = false
+				for id, connection of соединения
+					if connection.пользователь._id + '' == пользователь._id + ''
+						still_online = true
+	
+				# don't go offline if has another ether connections
+				if not still_online
+					if пользователь?
+						online.hdel.bind_await(online)('ether:online', пользователь._id)
+						
+						for id, listener of listeners
+							listener.offline(пользователь)
+	
+						
+						# пользователь offline
 			
 			disconnected = true
 			return соединение.disconnect()
 
 		соединение.on 'выход', ->
 			if not disconnected
-				выход()
+				disconnect()
 			
 		соединение.on 'disconnect', ->
 			if not disconnected
-				выход()
+				disconnect()
 			
 		соединение.on 'close', ->
 			if not disconnected
-				выход()
+				disconnect()
 		
 		соединение.on 'пользователь', (тайный_ключ) ->
 			пользователь = пользовательское.опознать.await(тайный_ключ)
@@ -61,7 +69,9 @@ api = {}
 				throw 'Пользователь не найден: ' + тайный_ключ
 					
 			соединение.пользователь = { _id: пользователь._id }
-			соединения.эфир[соединение.id] = соединение
+			соединение.connections = connections
+			
+			соединения[соединение.id] = соединение
 						
 			пользователь = пользовательское.поля(пользователь)
 
@@ -104,16 +114,82 @@ api = {}
 			else
 				activity.detected()
 
-		соединение.on 'общение', (id) ->
-			общение = общения[id.type]
+		соединение.on 'общение:on', (data) ->
+			общение = null
+			
+			if not data.id._id?
+				общение = connections[data.id.type]
+			else
+				общение = connections[data.id.type][data.id._id]
+				
+			listener = общение.listeners[data.message]
+			
+			if not listener?
+				console.log 'ERROR: Listener not found for message ' + data.message
+				return
+				
+			listener(data.data)
+
+		соединение.on 'общение:disconnect', (data) ->
+			общение = null
+			
+			if not data.id._id?
+				общение = connections[data.id.type]
+			else
+				общение = connections[data.id.type][data.id._id]
+				
+			общение.disconnect()
+			
+			if not data.id._id?
+				delete connections[data.id.type]
+			else
+				delete connections[data.id.type][data.id._id]
+				
+		соединение.on 'общение:connect', (data) ->
+			id = data.id
+			
+			общение = api.общения[id.type]
 			
 			if not общение?
-				throw 'communication type not found'
+				throw 'communication type not defined: ' + id.type
+		
+			environment = data.environment
+				
+			environment.пользователь = пользователь
 			
-			environment =
-				пользователь: пользователь
+			общение = общение(environment)
 			
-			общение.logic(environment)
+			общение.broadcast = (message, data) ->
+				for connection_id, соединение of соединения
+					общение = null
+				
+					if not id._id?
+						общение = соединение.connections[id.type]
+					else
+						if соединение.connections[id.type]?
+							общение = соединение.connections[id.type][id._id]
+				
+					if общение?
+						общение.on(message, data)
+				
+			if not id._id?
+				connections[id.type] = общение
+			else
+				if not connections[id.type]?
+					connections[id.type] = {}
+					connections[id.type].multiple = yes
+					
+				connections[id.type][id._id] = общение
+				
+			общение.listeners = {}
+			
+			общение.on = (message, action) ->
+				общение.listeners[message] = action
+				
+			общение.emit = (message, data) ->
+				соединение.emit('общение:emit', { id: id, message: message, data: data })
+				
+			общение.connect()
 			
 		соединение.emit 'поехали'
 		соединение.emit 'version', Options.Version
@@ -130,7 +206,7 @@ api.отправить = (group, name, data, options, возврат) ->
 	options = options || {}
 	возврат = возврат || (() ->)
 	
-	connections = соединения.эфир
+	connections = соединения
 	
 	if options.кому?
 		for id, connection of connections
@@ -154,25 +230,10 @@ api.отправить = (group, name, data, options, возврат) ->
 			
 	return возврат(null, yes)
 
-api.соединение_с = (вид, options) ->
-	if Object.пусто(соединения[вид])
-		return false
-	
-	for id, connection of соединения[вид]
-		if connection.пользователь?
-			if connection.пользователь._id + '' == options.пользователь
-				if not options._id?
-					return connection
-				if connection.custom_data?
-					if connection.custom_data._id == options._id + ''
-						return connection
-		
-	return false
-    
 api.пользователи = () ->
 	пользователи = {}
 	
-	for id, connection of соединения.эфир
+	for id, connection of соединения
 		пользователи[connection.пользователь._id + ''] = yes
 		
 	return Object.get_keys(пользователи)
@@ -180,7 +241,7 @@ api.пользователи = () ->
 api.отправить_одному_соединению = (group, name, data, options, возврат) ->
 	возврат = возврат || (() ->)
 	
-	connections = соединения.эфир
+	connections = соединения
 		
 	if options.кому?
 		user_connections = []
