@@ -381,10 +381,7 @@ var Interactive_messages = function(options)
 			var _id
 			if (interactive_messages_options.info.общение)
 				_id = interactive_messages_options.info.общение()
-				
-			console.log(что)
-			console.log(_id)
-				
+			
 			var connection = Эфир.общение(что, _id, messages.options.environment)
 			
 			получить_пропущенные_сообщения = function()
@@ -596,8 +593,6 @@ var Interactive_messages = function(options)
 				error(ошибка, options)
 			})
 			*/
-			
-			connection.connect()
 			
 			messages.connection = connection
 		}

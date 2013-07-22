@@ -192,12 +192,15 @@ var Panel = new Class
 			.off()
 		}
 		
-		panel.menu_item_button_switcher
-		({
-			type: page_button_type,
-			show: { is_current_page: true }
-		})
-		.on()
+		if (page_button_type)
+		{
+			panel.menu_item_button_switcher
+			({
+				type: page_button_type,
+				show: { is_current_page: true }
+			})
+			.on()
+		}
 		
 		panel.highlighted_page_button_type = page_button_type
 	},
@@ -274,8 +277,8 @@ var Panel = new Class
 		}
 		*/
 		
-		function get_button_to_show() { get_button(options.show) }
-		function get_button_to_hide() { get_button(options.hide) }
+		function get_button_to_show() { return get_button(options.show) }
+		function get_button_to_hide() { return get_button(options.hide) }
 
 		/*		
 		function get_buttons_to_hide()
@@ -298,16 +301,16 @@ var Panel = new Class
 		{
 			options = Object.merge(options, these_options)
 			
-			if (get_button_to_show().node() === get_button_to_hide().node())
-				return
-			
-			get_button_to_show()
-				.css('z-index', 0)
-				.fade_in(options.fade_in_duration)
+			//if (get_button_to_show().node() === get_button_to_hide().node())
+			//	return
 			
 			get_button_to_hide()
 				.css('z-index', -1)
 				.fade_out(options.fade_out_duration)
+			
+			get_button_to_show()
+				.css('z-index', 0)
+				.fade_in(options.fade_in_duration)
 		}
 		.bind(this)
 		
@@ -315,8 +318,8 @@ var Panel = new Class
 		{
 			options = Object.merge(options, these_options)
 			
-			if (get_button_to_show().node() === get_button_to_hide().node())
-				return
+			//if (get_button_to_show().node() === get_button_to_hide().node())
+			//	return
 			
 			get_button_to_show()
 				.css('z-index', -1)

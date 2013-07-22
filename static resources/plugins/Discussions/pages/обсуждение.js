@@ -26,7 +26,6 @@
 				title(data.название)
 				
 				page.data.общение._id = data._id
-				
 				page.discussion.attr('_id', data._id)
 				
 				breadcrumbs

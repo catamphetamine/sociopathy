@@ -144,13 +144,13 @@ var Messages = new Class
 			
 					messages.new_messages_smooth_border.css('width', '100%')
 					
-					messages.options.on_load.bind(messages)()
-					messages.on_load()
-					
 					//
 						
 					if (options.on_first_time_data)
 						options.on_first_time_data(data)
+					
+					messages.options.on_load.bind(messages)()
+					messages.on_load()
 				},
 				on_first_output: function()
 				{	

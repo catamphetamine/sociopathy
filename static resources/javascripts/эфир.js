@@ -45,6 +45,8 @@ $(document).on('panel_loaded', function()
 				return эфир.is_ready
 			},
 			
+			общения: [],
+			
 			общение: function(type, _id, environment)
 			{
 				var общение =
@@ -62,27 +64,30 @@ $(document).on('panel_loaded', function()
 						if (!эфир.is_ready)
 							throw text('websocket.error.connection lost')
 						
-						эфир.emit('общение:connect', { id: this.id, environment: environment })
+						эфир.emit('общение:connect', { id: общение.id, environment: environment })
 					},
 					
 					disconnect: function()
 					{
-						эфир.emit('общение:disconnect', this.id)
+						эфир.emit('общение:disconnect', общение.id)
 						
 						Эфир.общения.remove(общение)
 					},
 					
 					emit: function(what, data)
 					{
-						эфир.emit('общение:emit', { id: this.id, message: what, data: data })
+						эфир.emit('общение:emit', { id: общение.id, message: what, data: data })
 					},
 					
 					on: function(what, action)
 					{
 						if (what === 'disconnect')
-							return this.disconnected = action
+							return общение.disconnected = action
 						
-						this.listeners[what] = action
+						if (!общение.listeners)
+							общение.listeners = {}
+						
+						общение.listeners[what] = action
 					}
 				}
 				

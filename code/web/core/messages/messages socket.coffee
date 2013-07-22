@@ -5,14 +5,15 @@ global.prepare_messages_socket = (options) ->
 		collection = db(options.messages_collection)
 	
 		communication = (environment) ->
-			environment.сообщения_чего = options.сообщения_чего_from_string(environment.сообщения_чего)
+			if options.сообщения_чего_from_string?
+				environment.сообщения_чего = options.сообщения_чего_from_string(environment.сообщения_чего)
 	
 			connected_data_source = ->
 				if not environment.сообщения_чего?
 					return options.id + ':connected'
 				options.id + ':' + environment.сообщения_чего._id + ':connected'
 			
-			пользователь = @environment.пользователь
+			пользователь = environment.пользователь
 					
 			общение = 
 				disconnect: ->
@@ -100,6 +101,7 @@ global.prepare_messages_socket = (options) ->
 					connected.hset.bind_await(connected)(connected_data_source(), пользователь._id.toString(), JSON.stringify(пользовательское.поля(пользователь)))
 						
 					@broadcast('подцепился', пользовательское.поля(пользователь))
+					@emit('готов')
 			
 			return общение
 			
