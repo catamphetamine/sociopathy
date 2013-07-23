@@ -2,6 +2,12 @@
 #                Install the required software
 #######################################
 #
+echo "====================== WARNING ====================="
+echo "This script is not intended to be run as a whole"
+echo "Is is rather a step by step installation instruction"
+echo "===================================================="
+exit 0
+#
 # install Git
 #
 apt-get install git
