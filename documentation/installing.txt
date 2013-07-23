@@ -40,3 +40,20 @@ It will initialize the database and redirect you to the login screen.
 
 Now log in with your username and password.
 Done.
+
+========================
+Backup
+========================
+
+On Ubuntu Linux:
+
+(as sociopathy user)
+
+cd ~
+cp repository/automation/backup.sh database_backup/
+chmod a+x database_backup/backup.sh
+
+crontab -e
+
+MAILTO="kuchumovn@gmail.com"
+2 4 * * * ~/database_backup/backup.sh >~/database_backup/info.log 2>~/database_backup/errors.log ; if [ -s ~/database_backup/errors.log ]; then mail -s "Sociopathy database backup error" $MAILTO -- -r "robot@sociopathy.info" < ~/database_backup/errors.log ; fi backup
