@@ -1,4 +1,4 @@
-sudo su sociopathy
+#!/bin/bash
 #
 Now=$(date +"%d.%m.%Y")
 Archive="database_($Now).tar.gz"
