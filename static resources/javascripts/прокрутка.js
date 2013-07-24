@@ -327,12 +327,14 @@ var Scroller = new Class
 	
 	scroll_duration: function(x)
 	{
-		var value = -Math.log(x)
+		x = Math.abs(x)
 		
-		if (value < 0)
-			value = 0
+		if (x > Math.E)
+			value = Math.log(x) // 1 ... Infinity
+		else
+			value = 0.5 + (x / Math.E) / 2 // 0.5 ... 1
 			
-		return 1000 * value + 700
+		return 30 * value + 700
 	},
 	
 	in_the_end: function()

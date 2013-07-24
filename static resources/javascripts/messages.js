@@ -2,7 +2,7 @@ var Messages = new Class
 ({
 	Implements: [Options],
 	
-	Binds: ['check_if_there_are_still_unread_messages', 'on_load', 'adjust_listing_margin', 'new_messages_notification', 'dismiss_new_messages_notifications'],
+	Binds: ['on_load', 'check_composed_message_height', 'new_messages_notification', 'dismiss_new_messages_notifications'],
 
 	messages_to_add: [],
 	
@@ -18,8 +18,7 @@ var Messages = new Class
 	{
 		max_messages: 200,
 		new_message_sound: new Audio("/звуки/пук.ogg"),
-		messages_batch_size: 18,
-		check_if_there_are_still_unread_messages_interval: 1000,
+		messages_batch_size: 18
 	},
 	
 	initialize: function(options)
@@ -64,6 +63,7 @@ var Messages = new Class
 		this.scroll_down_to_new_messages.on('click', function(event)
 		{
 			event.preventDefault()
+			
 			messages.options.прокрутчик.scroll_to_bottom()
 			messages.indicate_no_new_messages()
 		})
@@ -74,15 +74,6 @@ var Messages = new Class
 		this.options.send_message = this.options.send_message.bind(this)
 		
 		this.initialize_loaders()
-		
-		$(window).on_page('scroll.messages', function()
-		{
-			messages.check_if_there_are_still_unread_messages()
-		})
-
-		// таким образом мы исправим случай, когда поле ввода было большим при скролле,
-		// но потом уменьшилось при удалении всего, и табличка о новых сообщениях осталась висеть
-		page.ticking(this.check_if_there_are_still_unread_messages, this.options.check_if_there_are_still_unread_messages_interval)
 	},
 	
 	unload: function()
@@ -298,23 +289,19 @@ var Messages = new Class
 		})
 	},
 	
-	// этот метод убирает (или не убирает) табличку "Прокрутите вниз, чтобы увидеть новые сообщения"
-	check_if_there_are_still_unread_messages: function()
+	compose_message_height: 0,
+	
+	adjust_scroll_to_new_messages_popup_position: function()
 	{
-		var messages = this
-		iterate_removing(messages.new_messages, function(message)
-		{
-			return message.is_visible_on_screen({ fully: true })
-		},
-		function()
-		{
-			if (messages.new_messages.is_empty())
-				messages.indicate_no_new_messages()
-		})
+		if (this.compose_message.displayed())
+			this.compose_message_height = this.compose_message.height()
+		
+		this.scroll_down_to_new_messages.css('margin-bottom', this.compose_message_height + 'px')
 	},
 	
 	indicate_new_messages: function()
 	{
+		this.adjust_scroll_to_new_messages_popup_position()
 		this.scroll_down_to_new_messages.fade_in(0.3, { maximum_opacity: this.scroll_down_to_new_messages_opacity })
 	},
 	
@@ -421,6 +408,10 @@ var Messages = new Class
 	
 			message.removeClass('new')
 			message.prev().removeClass('new')
+		
+			var last = message.parent().children().last()
+			if (!last.hasClass('new'))
+				this.indicate_no_new_messages()
 		
 			read = true
 		})
@@ -611,7 +602,7 @@ var Messages = new Class
 				reset_editor_content({ not_initial: true })
 				visual_editor.focus()
 				
-				messages.adjust_listing_margin()
+				messages.check_composed_message_height()
 				
 				callback(true)
 			})
@@ -630,25 +621,14 @@ var Messages = new Class
 				// и отправили своё сообщение, тем самым уменьшив высоту писаря,
 				// то проверить, не видны ли теперь полностью какие-то из ранее непрочитанных сообщений
 				$(document).trigger('focused')
-				
-				// и мб убрать табличку "Прокрутите вниз, чтобы увидеть новые сообщения"
-				messages.check_if_there_are_still_unread_messages()
 			})
 		}
-		
-		/*
-		visual_editor.enter_pressed = function(result)
-		{
-			send_message()
-			messages.check_if_there_are_still_unread_messages()
-		}
-		*/
 		
 		//visual_editor.Tools.Subheading.turn_off()
 		visual_editor.initialize_tools_container()
 		
-		visual_editor.tools_element.on('more.visual_editor_tools', this.adjust_listing_margin)
-		visual_editor.tools_element.on('less.visual_editor_tools', this.adjust_listing_margin)
+		visual_editor.tools_element.on('more.visual_editor_tools', this.check_composed_message_height)
+		visual_editor.tools_element.on('less.visual_editor_tools', this.check_composed_message_height)
 		
 		page.when_unloaded(function()
 		{
@@ -693,7 +673,7 @@ var Messages = new Class
 		
 		this.visual_editor.show_tools()
 		
-		page.ticking(this.adjust_listing_margin, 500)
+		page.ticking(this.check_composed_message_height, 500)
 		
 		this.compose_message.fadeIn()
 		
@@ -713,12 +693,11 @@ var Messages = new Class
 		if ($.browser.mozilla)
 			amendment = 1
 		
-		var compose_message_height = 0
 		if (this.compose_message.displayed())
-			compose_message_height = this.compose_message.height()
+			this.compose_message_height = this.compose_message.height()
 		
 		// если нижний край сообщений ушёл за пределы окна (до добавления сообщения) - не прокручивать
-		if (this.container_top_offset + (this.options.container.outerHeight() - message.outerHeight()) - amendment > $(window).scrollTop() + $(window).height() - compose_message_height)
+		if (this.container_top_offset + (this.options.container.outerHeight() - message.outerHeight()) - amendment > $(window).scrollTop() + $(window).height() - this.compose_message_height)
 			return false
 		
 		// если непрочитанные при этом уедут за верх - не прокручивать
@@ -747,7 +726,7 @@ var Messages = new Class
 		this.options.container.next('.typing').css('margin-top', -how_much + 'px')
 	},
 	
-	adjust_listing_margin: function()
+	check_composed_message_height: function()
 	{
 		var scroll = false
 		if (прокрутчик.in_the_end())
@@ -761,6 +740,8 @@ var Messages = new Class
 		{
 			прокрутчик.to_the_end()
 		}
+
+		this.adjust_scroll_to_new_messages_popup_position()
 	},
 	
 	new_messages_notification: function()

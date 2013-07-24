@@ -25,7 +25,7 @@ global.prepare_messages_socket = (options) ->
 					if options.authorize?
 						options.authorize.await(environment)
 				
-					@on 'кто здесь?', ->
+					@on 'кто здесь?', =>
 						who_is_connected = connected.hgetall.bind_await(connected)(connected_data_source())
 						
 						who_is_connected_info = []
@@ -35,7 +35,7 @@ global.prepare_messages_socket = (options) ->
 								
 						@emit('кто здесь', who_is_connected_info)
 					
-					@on 'получить пропущенные сообщения', (с_какого) ->
+					@on 'получить пропущенные сообщения', (с_какого) =>
 						Max_lost_messages = 100
 						
 						query = options.these_messages_query({ _id: { $gte: collection.id(с_какого._id) } }, environment)
@@ -44,25 +44,25 @@ global.prepare_messages_socket = (options) ->
 							throw 'Слишком много сообщений пропущено'
 						 
 						сообщения = collection._.find(query, { sort: [['_id', 1]] })
-					
+						
 						пользовательское.подставить.await(сообщения, 'отправитель')
 						
 						@emit('пропущенные сообщения', сообщения)
 							
-					@on 'смотрит', () ->
+					@on 'смотрит', =>
 						@broadcast('смотрит', пользовательское.поля(пользователь))
 							
-					@on 'не смотрит', () ->
+					@on 'не смотрит', =>
 						@broadcast('не смотрит', пользовательское.поля(пользователь))
 					
-					@on 'вызов', (_id) ->
+					@on 'вызов', (_id) =>
 						if not эфир.отправить('общее', 'вызов', пользовательское.поля(пользователь), { кому: _id })
 							@emit('ошибка', 'Вызываемый пользователь недоступен')
 					
-					@on 'пишет', ->
+					@on 'пишет', =>
 						@broadcast('пишет', пользовательское.поля(['имя'], пользователь))
 					
-					@on 'сообщение', (сообщение) ->
+					@on 'сообщение', (сообщение) =>
 						сообщение = options.save.await(сообщение, environment)
 						
 						options.message_read.await(сообщение._id, environment)
@@ -102,7 +102,10 @@ global.prepare_messages_socket = (options) ->
 						
 					@broadcast('подцепился', пользовательское.поля(пользователь))
 					@emit('готов')
-			
+							
 			return общение
+			
+		if options.общение_во_множественном_числе?
+			communication.multiple = yes
 			
 		эфир.общения[options.общение] = communication

@@ -278,8 +278,6 @@ global.prepare_messages = (options) ->
 		query = { пользователь: environment.пользователь._id }
 		
 		query.$or = []
-			
-		query.$or.add({ последние_прочитанные_сообщения: { $exists: 0 } })
 		
 		less_than = {}
 		less_than[path] = { $lt: _id }
@@ -361,7 +359,10 @@ global.prepare_messages = (options) ->
 				if !users.пусто() && !users.has(пользователь)
 					continue
 				
-				criteria = { пользователь: пользователь }
+				criteria =
+					type: options.общение
+					пользователь: пользователь
+					
 				if environment.сообщения_чего?
 					criteria._id = environment.сообщения_чего._id.toString()
 					

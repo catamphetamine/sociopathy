@@ -100,6 +100,8 @@ var Новости = new (new Class
 		{
 			var text = Wiki_processor.simplify(options.text)
 			
+			text = text.just_one_line()
+			
 			Message.message('new_message_in_communication new_message_in_' + options.english, text,
 			{
 				postprocess: function(container)

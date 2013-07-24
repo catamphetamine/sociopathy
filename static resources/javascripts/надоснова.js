@@ -118,6 +118,9 @@ $(document).on('page_initialized', function()
 					go_to_anchor()
 			})
 
+			if (first_time_page_loading)
+				$('#loading_screen').removeClass('first_time_page_loading')
+			
 			page_initialized()
 			
 			can_navigate_to_page = true

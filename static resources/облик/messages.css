@@ -121,7 +121,7 @@
 		left: 4px;
 
 		margin-left: 330px;
-		padding-top: 8px;
+		padding-top: 7px;
 		
 		background-image: url('/картинки/пишет.gif');
 		background-repeat: no-repeat;
@@ -232,7 +232,7 @@
 	
 			> .who_is_connected 
 			{
-				margin-left: 25px;
+				margin-left: 5px;
 				
 				> li
 				{
@@ -327,9 +327,6 @@
 				
 				.who_is_connected
 				{
-					margin: 0;
-					padding: 0;
-					
 					li
 					{
 						margin: 5px;
@@ -387,4 +384,15 @@
 body[mode="правка"] .messages_framework > .older a
 {
 	cursor: not-allowed;
+}
+
+body.jump_to_top_mouse_over
+{	
+	.messages_framework
+	{
+		.who_is_connected
+		{
+			margin-left: 25px !important;
+		}
+	}
 }

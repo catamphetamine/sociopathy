@@ -80,10 +80,8 @@ fiber ->
 		global.websocket = require('socket.io').listen(http_server)
 		
 		if not Options.Development
-			global.websocket.enable('browser client minification')  # send minified client
-			global.websocket.enable('browser client etag')          # apply etag caching logic based on version number
-			global.websocket.enable('browser client gzip')          # gzip the file
-			global.websocket.set('log level', 1)                    # reduce logging
+			global.websocket.set('log level', 1)
+			global.websocket.set('browser client', false)
 		
 		global.websocket.set('transports', [ 'websocket', 'xhr-polling' ])
 

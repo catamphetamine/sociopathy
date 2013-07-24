@@ -70,7 +70,7 @@ http.get '/сеть/управление/сводка', (ввод, вывод, �
 		uptime: date_interval(new Date() - Started_at)
 		cpu: cpu
 		memory: print_size(memory_stats.heapUsed)
-		websocket_connections: [Object.size(эфир.соединения.эфир) + ' ether', Object.size(эфир.соединения.болталка) + ' chat', Object.size(эфир.соединения.беседы) + ' talks', Object.size(эфир.соединения.обсуждения) + ' discussions', Object.size(эфир.соединения.новости) + ' news'].join(', ')
+		websocket_connections: Object.size(эфир.соединения)
 		temporary_storage_for_upload_size: print_folder_size(temporary_uploads_folder)
 		uploaded: print_size(uploads_folder_size)
 		database_size: print_folder_size(database_folder)

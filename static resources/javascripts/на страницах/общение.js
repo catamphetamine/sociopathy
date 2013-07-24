@@ -23,7 +23,7 @@
 		})
 				
 		var hint = $('<p/>').appendTo(visual_editor.editor.content)
-		visual_editor.hint(hint, text('visual editor.enter your text here'))
+		visual_editor.hint(hint, ' ')
 	
 		visual_editor.keep_cursor_on_screen()
 	

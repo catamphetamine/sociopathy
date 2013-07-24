@@ -1,5 +1,3 @@
-эфир.соединения.болталка = {}
-
 if not хранилище.collection('chat_info').exists()
 	хранилище.create_collection('chat_info')
 	db('chat_info')._.save({})

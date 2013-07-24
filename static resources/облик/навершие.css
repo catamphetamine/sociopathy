@@ -174,8 +174,6 @@ a.image
 
 #panel_menu > li > .loading
 {
-	display: none;
-	
 	width: 16px;
 	height: 16px;
 	
@@ -184,7 +182,15 @@ a.image
 	margin-top: 24px;
 	margin-left: 24px;
 	
-	opacity: 0.3;
+	opacity: 0;
 	
-	.css_transition(300ms, opacity);
+	&.shown
+	{
+		opacity: 0.3;
+	}
+	
+	&, &.shown
+	{
+		.css_transition(300ms, opacity);
+	}
 }

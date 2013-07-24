@@ -450,3 +450,12 @@ Object.is_empty = function(object)
 }
 
 Array.prototype.add = Array.prototype.push
+
+String.prototype.just_one_line = function()
+{
+	 var new_line = this.indexOf('\n')
+	 if (new_line < 0)
+		return this
+	
+	return this.substring(0, new_line)
+}

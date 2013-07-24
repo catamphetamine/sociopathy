@@ -158,14 +158,14 @@ var Visual_editor = new Class
 	{
 		return $('<p/>')
 			.addClass('hint')
-			.text(text('visual editor.enter your text here'))
+			.text(' ')
 	},
 	
 	dummy_content: function()
 	{
 		return $('<p/>')
 			.addClass('hint')
-			.text(text('visual editor.enter your text here'))
+			.text(' ')
 	},
 	
 	is_dummy_content: function()

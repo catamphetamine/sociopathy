@@ -10,8 +10,6 @@ $(document).on('panel_loaded', function()
 	if (!пользователь)
 		return
 
-	panel.loading.show()
-
 	;(function()
 	{
 		var эфир
@@ -62,7 +60,7 @@ $(document).on('panel_loaded', function()
 					connect: function()
 					{
 						if (!эфир.is_ready)
-							throw text('websocket.error.connection lost')
+							return warning(text('websocket.error.connection lost'))
 						
 						эфир.emit('общение:connect', { id: общение.id, environment: environment })
 					},
@@ -128,7 +126,14 @@ $(document).on('panel_loaded', function()
 			
 		Эфир.следить_за_пользователем(пользователь)
 		
-		эфир = io.connect('http://' + Configuration.Host + ':' + Configuration.Port + '/эфир', { 'force new connection': true, 'connection timeout': 3000 })
+		эфир = io.connect('http://' + Configuration.Host + ':' + Configuration.Port + '/эфир',
+		{
+			'force new connection': true,
+			'connection timeout': 3000,
+			'reconnection limit': 3000,
+			'max reconnection attempts': Infinity
+		})
+		
 		эфир.is_ready = false
 		
 		Эфир.канал = эфир
@@ -179,12 +184,14 @@ $(document).on('panel_loaded', function()
 					this.disconnected()
 			})
 			
-			panel.loading.show()
+			$('#panel .loading').addClass('shown')
 		})
 		
 		эфир.on('готов', function()
 		{
 			эфир.is_ready = true
+			
+			$('#panel .loading').removeClass('shown')
 			
 			if (reconnected)
 			{
@@ -302,8 +309,6 @@ $(document).on('panel_loaded', function()
 			{
 				this.notifications(data)
 			})
-			
-			panel.loading.hide()
 		})
 		
 		on('пользователь', 'смена имени', function(имя)

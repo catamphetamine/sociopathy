@@ -594,6 +594,8 @@ var Interactive_messages = function(options)
 			})
 			*/
 			
+			connection.connect()
+			
 			messages.connection = connection
 		}
 	}

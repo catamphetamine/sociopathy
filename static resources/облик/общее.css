@@ -33,7 +33,7 @@ html, body
 aside
 {
 	position: relative;
-	z-index: 1;
+	z-index: 2;
 }
 
 body.loading
@@ -899,31 +899,12 @@ body[mode="правка"] .rich_formatting a
 
 	[type="picture"]
 	{
-		margin-top: 16px;
+		margin-top: 0;
 	}
 	
 	.video_player
 	{
-		margin-top: 36px;
-	}
-}
-
-ul > li:first-child
-{
-	.rich_formatting
-	{
-		p:first-child
-		{
-			[type="picture"]:first-child
-			{
-				margin-top: 0;
-			}
-		}
-		
-		.video_player:first-child
-		{
-			margin-top: 8px;
-		}
+		margin-top: 8px;
 	}
 }
 
@@ -1752,18 +1733,13 @@ form.picture_uploader
 	
 	z-index: 2;
 		
-	opacity: 0.6;
-	
-	visibility: hidden;
-		
-	.css_transition(opacity, 200ms);
+	opacity: 0;
 	
 	&.mouse_over
 	{
-		visibility: visible;
-	
 		cursor: pointer;
 		background-color: #3171a9;
+		opacity: 0.6;
 	}
 	
 	.up
@@ -1821,4 +1797,9 @@ form.picture_uploader
 	{
 		padding-bottom: 28px;
 	}
+}
+
+#loading_screen.first_time_page_loading
+{
+	z-index: 100;
 }
