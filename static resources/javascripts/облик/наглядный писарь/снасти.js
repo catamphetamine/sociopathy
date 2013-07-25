@@ -257,6 +257,8 @@ Visual_editor.implement
 		{
 			selector: '.bold',
 			
+			hotkey: 'Жирный',
+			
 			apply: function(callback)
 			{
 				this.backup_caret()
@@ -266,7 +268,7 @@ Visual_editor.implement
 					this.restore_caret()
 					throw new Error('Выделите текст')
 				}
-								
+
 				return callback(editor.selection.wrap($('<b/>')))
 			},
 			
@@ -279,6 +281,8 @@ Visual_editor.implement
 		Tools.Italic =
 		{
 			selector: '.italic',
+			
+			hotkey: 'Курсив',
 			
 			apply: function(callback)
 			{
@@ -1177,6 +1181,8 @@ Visual_editor.implement
 		
 		// helpers
 		
+		var hotkeys = {}
+		
 		Object.each(Tools, function(tool, key)
 		{
 			var element
@@ -1312,6 +1318,8 @@ Visual_editor.implement
 				editor.caret.set(this.caret)
 			}
 			
+			tool.action = action
+			
 			if (tool.selector)
 			{
 				element.on('click', function(event)
@@ -1346,7 +1354,24 @@ Visual_editor.implement
 					if (tool.button)
 						tool.button.enable()
 				}
+				
+			if (tool.hotkey)
+				hotkeys[tool.hotkey] = tool
 		})
+		
+		var visual_editor = this
+		
+		this.destroyables.add({ destroy: $(document).on_page('keydown', function(event)
+		{
+			if (!visual_editor.enabled)
+				return
+			
+			Object.for_each(hotkeys, function(key, tool)
+			{
+				if (Клавиши.поймано(Настройки.Клавиши.Писарь[key], event))
+					tool.action()
+			})
+		})})
 		
 		this.Tools = Tools
 	},
@@ -1430,14 +1455,14 @@ $(document).on('page_initialized', function()
 		{
 			//visual_editor.editor.caret.restore()
 			if (event.target !== visual_editor.editor.content.get(0))
-				visual_editor.disable_tools()
+				visual_editor.disable()
 		})
 		
 		// enable this editor
 		page.data.visual_editors.forEach(function(visual_editor)
 		{
 			if (event.target === visual_editor.editor.content.get(0))
-				visual_editor.enable_tools()
+				visual_editor.enable()
 		})
 	})
 })

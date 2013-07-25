@@ -1010,3 +1010,21 @@ $.compile_template = function(name, data)
 	
 	$.template(name, data)
 }
+
+$.fn.on_event = function(event, action)
+{
+	var namespace = $.unique_namespace()
+	var element = this
+	
+	element.on(event + '.' + namespace, action)
+	
+	var result =
+	{
+		cancel: function()
+		{
+			element.unbind('.' + namespace)
+		}
+	}
+	
+	return result
+}

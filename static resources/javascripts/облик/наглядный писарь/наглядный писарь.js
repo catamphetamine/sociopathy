@@ -43,8 +43,29 @@ var Visual_editor = new Class
 		//visual_editor.editor.on('blur', function() { console.log(visual_editor.editor.caret.get()) })
 	},
 	
+	enabled: false,
+	
+	disable: function()
+	{
+		this.enabled = false
+		this.disable_tools()
+	},
+	
+	enable: function()
+	{
+		this.enabled = true
+		this.enable_tools()
+	},
+	
+	destroyables: [],
+	
 	unload: function()
 	{
+		this.destroyables.for_each(function()
+		{
+			this.destroy()
+		})
+		
 		this.unload_tools()
 	},
 	

@@ -459,3 +459,12 @@ String.prototype.just_one_line = function()
 	
 	return this.substring(0, new_line)
 }
+
+String.prototype.in = function()
+{
+	var candidates = Array.prototype.slice.call(arguments)
+	
+	var string = this
+	
+	return !candidates.filter(function(candidate) { return string == candidate }).is_empty()
+}

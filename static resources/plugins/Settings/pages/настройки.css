@@ -135,6 +135,16 @@
 			> span
 			{
 			}
+			
+			&.space_before
+			{
+				margin-top: 36px;
+			}
+			
+			&.space_after
+			{
+				margin-bottom: 36px;
+			}
 		}
 	}
 }

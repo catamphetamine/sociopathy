@@ -72,12 +72,14 @@ var Dom_tools =
 		node = this.normalize(node)
 		highest_parent = this.normalize(highest_parent)
 		
+		/*
 		console.log('node')
 		console.log(node)
 		console.log('node.parentNode')
 		console.log(node.parentNode)
 		console.log('highest_parent')
 		console.log(highest_parent)
+		*/
 		
 		if (this.is_text_node(node))
 			return node

@@ -211,5 +211,7 @@
 		{
 			"connection lost": "Server connection lost"
 		}
-	}
+	},
+	
+	"unsupported browser": "Your web browser, which appears to be {browser}, is not supported by our web site.\n\nConsider using [link to https://www.google.com/intl/en/chrome/browser/index.html]Google Chrome[/link] or [link to https://www.mozilla.org/firefox/]FireFox[/link]"
 }

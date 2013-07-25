@@ -41,6 +41,8 @@ var Новости = new (new Class
 	{
 		$('.news_indicating_stripe').fade_out(0.3)
 		
+		console.log('nothing new @ ' + new Date())
+		
 		window_notification.nothing_new()
 		this.есть_новости = false	
 	},

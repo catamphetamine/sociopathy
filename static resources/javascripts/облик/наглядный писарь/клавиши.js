@@ -408,6 +408,8 @@ Visual_editor.implement
 				
 				if (!left || left === ' ')
 					character = '«'
+				else if (left && right.in(',', '.', ':', ';', '!', '*', '-', '+', '=', '/', '\\'))
+					character = '»'
 				else if (!right || right === ' ')
 					character = '»'
 				else if (left_quotes === 0)

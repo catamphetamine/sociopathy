@@ -14,6 +14,16 @@ var Режим = (function()
 	var переходы_разрешены
 	var запреты_переходов
 	
+	var on_ctrl_enter
+	
+	function unbind_edit_mode_key_listeners()
+	{
+		if (on_ctrl_enter)
+			on_ctrl_enter.cancel()
+			
+		on_ctrl_enter = null
+	}
+	
 	function destroy_context_menus()
 	{
 		(Режим.data('context_menus') || []).for_each(function()
@@ -47,6 +57,8 @@ var Режим = (function()
 		
 		if (actions)
 			actions.remove()
+			
+		unbind_edit_mode_key_listeners()
 	}
 	
 	режимы.push
@@ -353,6 +365,8 @@ var Режим = (function()
 		})
 		
 		$('body').removeClass('with_actions_on_bottom')
+		
+		unbind_edit_mode_key_listeners()
 	}
 	
 	result.изменения_отменены = function()
@@ -366,6 +380,8 @@ var Режим = (function()
 		})
 		
 		$('body').removeClass('with_actions_on_bottom')
+		
+		unbind_edit_mode_key_listeners()
 	}
 	
 	result.ошибка_правки = function()
@@ -417,6 +433,15 @@ var Режим = (function()
 				$('body').addClass('with_actions_on_bottom')
 				
 				page.unsaved_changes = true
+				
+				if (!on_ctrl_enter)
+				{
+					on_ctrl_enter = $(document).on_event('keydown', function(event)
+					{
+						if (Клавиши.поймано('Ctrl', 'Enter', event))
+							return save_changes_button.push()
+					})
+				}
 			}
 		})
 	}

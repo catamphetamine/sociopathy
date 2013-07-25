@@ -7,12 +7,12 @@
 		<meta name="copyright" content="2010-2012 Николай Кучумов"/>
 		<meta name="description" content="Собрание - общественная сеть"/>
 		
-		<title></title>
+		<title>Сообщество</title>
 		
 		<meta charset="utf-8" />
 		
 		<style>
-			#error
+			#error, #unsupported_browser
 			{
 				position: fixed;
 				top: 0;
@@ -28,7 +28,7 @@
 				text-align: center;
 			}
 		
-			#error > div
+			#error > div, #unsupported_browser > div
 			{
 				position: relative;
 				top: 50%;
@@ -200,187 +200,200 @@
 				report_error('начало', ошибка)
 			}
 		</script>
-		
-		<script>
-			var isOpera = !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
-			// Opera 8.0+ (UA detection to detect Blink/v8-powered Opera)
-			var isFirefox = typeof InstallTrigger !== 'undefined';   // Firefox 1.0+
-			var isSafari = Object.prototype.toString.call(window.HTMLElement).indexOf('Constructor') > 0;
-			// At least Safari 3+: "[object HTMLElementConstructor]"
-			var isChrome = !!window.chrome && !isOpera;              // Chrome 1+
-			var isIE = /*@cc_on!@*/false || document.documentMode;   // At least IE6
-			
-			var unsupported_browser
-			
-			if (isIE)
-				unsupported_browser = 'Internet Explorer'
-			
-			if (isSafari)
-				unsupported_browser = 'Safari'
-			
-			if (isOpera)
-				unsupported_browser = 'Opera'
-			
-			if (unsupported_browser)
-			{
-				alert(unsupported_browser + ' не поддерживается нашим сайтом. \nВоспользуйтесь Chrome\'ом или FireFox\'ом')
-				
-				window.location = 'http://chrome.google.ru'
-			}
-		</script>
-		
-		<script>
-			var Configuration = {}
-			
-			var Version // ex. '1.0.0.0-aplha'
-			
-			function add_version(url)
-			{
-				if (!Version)
-					throw 'Version not initialized'
-				
-				 return url + '?version=' + Version
-			}
-
-			if (!console)
-			{
-				console = 
-				{
-					log: function(message) {},
-					error: function(message) {}
-				}
-			}
-			
-			function load_script(url, callback)
-			{
-				var head = document.getElementsByTagName("head")[0]
-				var script = document.createElement("script")
-				var done = false // Handle Script loading
-				
-				script.src = url
-				script.onload = script.onreadystatechange = function()
-				{
-					// Attach handlers for all browsers
-					if (!done && (!this.readyState || this.readyState === "loaded" || this.readyState === "complete"))
-					{
-						done = true
-						
-						if (callback)
-							callback()
-							
-						script.onload = script.onreadystatechange = null // Handle memory leak in IE
-					}
-				}
-
-				head.appendChild(script)
-			}
-			
-			function insert_script(path, callback)
-			{
-				var has_extension = false
-				if (path.lastIndexOf('.js') === path.length - '.js'.length)
-					has_extension = true
-					
-				path = has_extension ? path : path + '.js'
-				
-				console.log('loading script: ' + path)
-				
-				// сам скрипт load statics.js загружается здесь, поэтому вторая проверка
-				if (Configuration.Optimize && window.Optimization)
-				{
-					var javascript
-					
-					if (path.indexOf('/plugins/') === 0)
-					{
-						var id = path.substring('/plugins/'.length)
-						id = id.substring(0, id.length - '.js'.length)
-						
-						javascript = Optimization.Plugins.Scripts[id]
-					}
-					else
-					{
-						var id = path.substring('/javascripts/'.length)
-						id = id.substring(0, id.length - '.js'.length)
-						
-						javascript = Optimization.Scripts[id]
-					}
-					
-					if (javascript)
-					{
-						console.log('is cached')
-						
-						var head = document.getElementsByTagName('head')[0]
-						
-						var script = document.createElement('script')
-						script.text = javascript
-						
-						script.setAttribute('for', add_version(path))
-						
-						head.appendChild(script)
-						
-						if (callback)
-							callback()
-							
-						return
-					}
-				}
-				
-				load_script(add_version(path), callback)
-			}
-			
-			function webpage_loading_error(error)
-			{
-				var find = function(selector)
-				{
-					return document.querySelector(selector)
-				}
-				
-				if (error)
-					find('#error > div').firstChild.nodeValue = error
-					
-				find('#error').style.display = 'block'
-			}
-		</script>
 	</head>
 
 	<body>
 		<div id="error"><div>Нет связи с сервером</div></div>
+		
+		<div id="unsupported_browser">
+			<div>
+				Ваш обозреватель (мы определили, что это <span class="browser">...</span>) не поддерживается нашей сетью.
+				<br/>
+				<br/>
+				Можете воспользоваться <a href='http://chrome.google.com'>Google Chrome</a>'ом или <a href='https://www.mozilla.org/firefox/'>FireFox</a>'ом
+			</div>
+		</div>
 	</body>
 	
 	<script>
-		ajax
-		({
-			url: '/приложение/initialize',
-			success: function(data)
-			{
-				window.initialization_data = data.initialization_data
-				window.user_data = data.user_data
+		var isOpera = !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
+		// Opera 8.0+ (UA detection to detect Blink/v8-powered Opera)
+		var isFirefox = typeof InstallTrigger !== 'undefined';   // Firefox 1.0+
+		var isSafari = Object.prototype.toString.call(window.HTMLElement).indexOf('Constructor') > 0;
+		// At least Safari 3+: "[object HTMLElementConstructor]"
+		var isChrome = !!window.chrome && !isOpera;              // Chrome 1+
+		var isIE = /*@cc_on!@*/false || document.documentMode;   // At least IE6
+		
+		var unsupported_browser
+		
+		if (isIE)
+			unsupported_browser = 'Internet Explorer'
+		
+		if (isSafari)
+			unsupported_browser = 'Safari'
+		
+		if (isOpera)
+			unsupported_browser = 'Opera'
+		
+		function unsupported_browser_error(browser)
+		{
+			document.getElementById('unsupported_browser').getElementsByClassName('browser')[0].firstChild.nodeValue = browser
 				
-				Version = data.site_version
-				
-				Configuration.Optimize = data.optimize
+			document.getElementById('unsupported_browser').style.display = 'block'
+		}
+		
+		if (unsupported_browser)
+			unsupported_browser_error(unsupported_browser)
+	</script>
+	
+	<script>
+		var Configuration = {}
+		
+		var Version // ex. '1.0.0.0-aplha'
+		
+		function add_version(url)
+		{
+			if (!Version)
+				throw 'Version not initialized'
+			
+			 return url + '?version=' + Version
+		}
 
-				if (data.development)
-				{
-					window.development_mode = true
-					Configuration.Optimize = false
-				}
-				
-				window.run_scripts = function()
-				{
-					insert_script('/javascripts/основа')	
-				}
-				
-				if (Configuration.Optimize)
-					insert_script('/javascripts/load statics')
-				else
-					window.run_scripts()
-			},
-			error: function()
+		if (!console)
+		{
+			console = 
 			{
-				console.error('Ошибка при получении настроек сайта')
-				webpage_loading_error()
+				log: function(message) {},
+				error: function(message) {}
 			}
-		})
+		}
+		
+		function load_script(url, callback)
+		{
+			var head = document.getElementsByTagName("head")[0]
+			var script = document.createElement("script")
+			var done = false // Handle Script loading
+			
+			script.src = url
+			script.onload = script.onreadystatechange = function()
+			{
+				// Attach handlers for all browsers
+				if (!done && (!this.readyState || this.readyState === "loaded" || this.readyState === "complete"))
+				{
+					done = true
+					
+					if (callback)
+						callback()
+						
+					script.onload = script.onreadystatechange = null // Handle memory leak in IE
+				}
+			}
+
+			head.appendChild(script)
+		}
+		
+		function insert_script(path, callback)
+		{
+			var has_extension = false
+			if (path.lastIndexOf('.js') === path.length - '.js'.length)
+				has_extension = true
+				
+			path = has_extension ? path : path + '.js'
+			
+			console.log('loading script: ' + path)
+			
+			// сам скрипт load statics.js загружается здесь, поэтому вторая проверка
+			if (Configuration.Optimize && window.Optimization)
+			{
+				var javascript
+				
+				if (path.indexOf('/plugins/') === 0)
+				{
+					var id = path.substring('/plugins/'.length)
+					id = id.substring(0, id.length - '.js'.length)
+					
+					javascript = Optimization.Plugins.Scripts[id]
+				}
+				else
+				{
+					var id = path.substring('/javascripts/'.length)
+					id = id.substring(0, id.length - '.js'.length)
+					
+					javascript = Optimization.Scripts[id]
+				}
+				
+				if (javascript)
+				{
+					console.log('is cached')
+					
+					var head = document.getElementsByTagName('head')[0]
+					
+					var script = document.createElement('script')
+					script.text = javascript
+					
+					script.setAttribute('for', add_version(path))
+					
+					head.appendChild(script)
+					
+					if (callback)
+						callback()
+						
+					return
+				}
+			}
+			
+			load_script(add_version(path), callback)
+		}
+		
+		function webpage_loading_error(error)
+		{
+			var find = function(selector)
+			{
+				return document.querySelector(selector)
+			}
+			
+			if (error)
+				find('#error > div').firstChild.nodeValue = error
+				
+			find('#error').style.display = 'block'
+		}
+	</script>
+	
+	<script>
+		if (!unsupported_browser)
+			ajax
+			({
+				url: '/приложение/initialize',
+				success: function(data)
+				{
+					window.initialization_data = data.initialization_data
+					window.user_data = data.user_data
+					
+					Version = data.site_version
+					
+					Configuration.Optimize = data.optimize
+	
+					if (data.development)
+					{
+						window.development_mode = true
+						Configuration.Optimize = false
+					}
+					
+					window.run_scripts = function()
+					{
+						insert_script('/javascripts/основа')	
+					}
+					
+					if (Configuration.Optimize)
+						insert_script('/javascripts/load statics')
+					else
+						window.run_scripts()
+				},
+				error: function()
+				{
+					console.error('Ошибка при получении настроек сайта')
+					webpage_loading_error()
+				}
+			})
 	</script>
 </html>

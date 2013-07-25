@@ -106,7 +106,7 @@
 		
 		anything_new: function()
 		{
-			this.latest_unread_message !== null
+			return this.latest_unread_message !== null
 		},
 		
 		notifications: function(data)

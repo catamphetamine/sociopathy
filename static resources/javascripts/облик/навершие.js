@@ -248,6 +248,8 @@ var Panel = new Class
 			var postfix = ''
 			if (modificator)
 				postfix = ' (' + modificator + ')'
+				
+			//console.log(type + postfix)
 			
 			var button = this.buttons[type + postfix]
 			
@@ -258,51 +260,35 @@ var Panel = new Class
 		}
 		.bind(this)
 		
-		/*
-		var menu_item = this.buttons[type].element.parent()
-		
-		function get_shown_button()
+		function get_button_to_show()
 		{
-			var shown_button
-			
-			menu_item.children().each(function()
-			{
-				var button = $(this)
-				
-				if (button.css('z-index') === 0)
-					shown_button = button
-			})
-			
-			return shown_button
+			//console.log('show: ')
+			return get_button(options.show)
 		}
-		*/
 		
-		function get_button_to_show() { return get_button(options.show) }
-		function get_button_to_hide() { return get_button(options.hide) }
+		function get_button_to_hide()
+		{
+			//console.log('hide: ')
+			return get_button(options.hide)
+		}
+		
+		function hide_all_other_buttons()
+		{
+			var to_show = get_button_to_show()
+			var to_hide = get_button_to_hide()
+			
+			to_show.parent().children().each(function()
+			{
+				if (this !== to_show.node() && this !== to_hide.node())
+					$(this)
+						.css('z-index', -1)
+						.fade_out(0)
+			})
+		}
 
-		/*		
-		function get_buttons_to_hide()
-		{
-			var hide_buttons = []
-			
-			var button_to_show = get_button_to_show().node()
-			
-			menu_item.children().each(function()
-			{
-				if (this !== button_to_show)
-					hide_buttons.push($(this))
-			})
-			
-			return hide_buttons
-		}
-		*/
-			
-		var on = function(these_options)
-		{
-			options = Object.merge(options, these_options)
-			
-			//if (get_button_to_show().node() === get_button_to_hide().node())
-			//	return
+		function on()
+		{	
+			hide_all_other_buttons()
 			
 			get_button_to_hide()
 				.css('z-index', -1)
@@ -312,14 +298,10 @@ var Panel = new Class
 				.css('z-index', 0)
 				.fade_in(options.fade_in_duration)
 		}
-		.bind(this)
 		
-		var off = function(these_options)
+		function off()
 		{
-			options = Object.merge(options, these_options)
-			
-			//if (get_button_to_show().node() === get_button_to_hide().node())
-			//	return
+			hide_all_other_buttons()
 			
 			get_button_to_show()
 				.css('z-index', -1)

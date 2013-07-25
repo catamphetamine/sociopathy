@@ -525,11 +525,11 @@ var Клавиши =
 		delete this.при_нажатии[id]
 	},
 	
-	поймано: function(что, event)
+	поймано: function()
 	{
-		if (!event)
+		if (arguments.length === 1)
 		{
-			event = что
+			event = arguments[0]
 			
 			event.preventDefault()
 			event.stopImmediatePropagation()
@@ -537,7 +537,7 @@ var Клавиши =
 			return
 		}
 		
-		if (Клавиши.is(что, event))
+		if (Клавиши.is.apply(this, arguments))
 		{
 			event.preventDefault()
 			event.stopImmediatePropagation()

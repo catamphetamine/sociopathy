@@ -782,18 +782,18 @@ var Interactive_messages = function(options)
 				if (messages.show_visual_editor_next_time)
 					messages.show_editor()
 			})
+			
+			$(document).on_page('режим_изменения_отменены', function()
+			{
+				can_show_editor = true
+			
+				if (messages.show_visual_editor_next_time)
+					messages.show_editor()
+			})
 		
 			Режим.при_переходе({ из: 'правка' }, function(options)
 			{
 				can_show_earlier_messages = true
-				
-				if (options.saved || options.discarded)
-				{
-					can_show_editor = true
-				
-					if (messages.show_visual_editor_next_time)
-						messages.show_editor()
-				}
 				
 				messages.options.container.find('>li[author="' + пользователь._id + '"]').find('.content').removeAttr('contenteditable')
 			})
