@@ -47,6 +47,19 @@
 		-->
 
 		<script>
+			var show_error = function(error)
+			{
+				var find = function(selector)
+				{
+					return document.querySelector(selector)
+				}
+				
+				if (error)
+					find('#error > div').firstChild.nodeValue = error
+					
+				find('#error').style.display = 'block'
+			}
+			
 			function ajax(options)
 			{
 				options.data = options.data || {}
@@ -89,6 +102,8 @@
 						options.error(error)
 						
 					report_error('ajax', error)
+				
+					show_error(error)
 				}
 				
 				request.onreadystatechange = function()
@@ -198,6 +213,8 @@
 				console.error('**** Error in ' + url + ' at line ' + line + ': ' + ошибка)
 				
 				report_error('начало', ошибка)
+				
+				show_error(ошибка)
 			}
 		</script>
 	</head>
@@ -392,7 +409,7 @@
 				error: function()
 				{
 					console.error('Ошибка при получении настроек сайта')
-					webpage_loading_error()
+					show_error('Нет связи с сервером')
 				}
 			})
 	</script>

@@ -396,7 +396,7 @@ function dont_show_error(ошибка)
 	return '[don\'t show this error] ' + ошибка
 }
 
-function show_error(выпавшая_ошибка, url, line)
+show_error = function(выпавшая_ошибка, url, line)
 {
 	if ((выпавшая_ошибка + '').indexOf('[don\'t show this error] ') >= 0)
 		return
