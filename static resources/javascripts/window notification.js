@@ -342,7 +342,6 @@ var Minimalistic_window_notification = new Class
 			})
 			
 			this.delayed = []
-			return
 		}
 		
 		if (!this.notifying)
