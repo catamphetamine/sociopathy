@@ -4,40 +4,41 @@ global.messages_api = (options) ->
 		
 		return возврат() if not session?
 		return возврат(null, options.latest_read(session, environment))
-			
+	
 	http.get options.data_uri, (ввод, вывод, пользователь) ->
 		environment =
 			пользователь: пользователь
-			
+		
 		loading_options =
 			collection: options.messages_collection
-					
+		
 		if options.сообщения_чего?
 			сообщения_чего = options.сообщения_чего.await(ввод)
 			environment.сообщения_чего = сообщения_чего
-				
+		
 		if options.authorize?
 			options.authorize.await(environment)
 		
 		if not ввод.данные.после?
-			loading_options.с = show_from.await(environment)
-			
+			if not ввод.данные.с_начала?
+				loading_options.с = show_from.await(environment)
+		
 		loading_options.query = options.these_messages_query({}, environment)
 
 		result = either_way_loading(ввод, loading_options)
 		
 		$ = {}
-				
+		
 		$.сообщения = result.data
 		$['есть ещё?'] = result['есть ещё?']
 		$['есть ли предыдущие?'] = result['есть ли предыдущие?']
 		
 		пользовательское.подставить.await($.сообщения, 'отправитель')
-								
-		if options.extra_get?
-			options.extra_get.await($, environment)
 		
 		if ввод.данные.первый_раз?
+			if options.extra_get?
+				options.extra_get.await($, environment)
+				
 			if result.data.пусто()
 				$.всего = 0
 				$.пропущено = 0
@@ -63,9 +64,10 @@ global.messages_api = (options) ->
 		if options.mark_new?
 			options.mark_new.await($.сообщения, environment)
 		
-		$.environment =
-			пользователь: пользовательское.поля(['_id'], пользователь)
-			сообщения_чего: environment.сообщения_чего
+		if ввод.данные.первый_раз?
+			$.environment =
+				пользователь: пользовательское.поля(['_id'], пользователь)
+				сообщения_чего: environment.сообщения_чего
 				
 		for сообщение in $.сообщения
 			сообщение._id = сообщение._id.toString()

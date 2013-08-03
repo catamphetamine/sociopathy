@@ -213,5 +213,19 @@
 		}
 	},
 	
-	"unsupported browser": "Your web browser, which appears to be {browser}, is not supported by our web site.\n\nConsider using [link to https://www.google.com/intl/en/chrome/browser/index.html]Google Chrome[/link] or [link to https://www.mozilla.org/firefox/]FireFox[/link]"
+	"unsupported browser": "Your web browser, which appears to be {browser}, is not supported by our web site.\n\nConsider using [link to https://www.google.com/intl/en/chrome/browser/index.html]Google Chrome[/link] or [link to https://www.mozilla.org/firefox/]FireFox[/link]",
+	
+	"notifications":
+	{
+		"set up an avatar": "You can upload an avatar on [link to user(user id)]your personal page[/link]"
+	},
+	
+	"messages":
+	{
+		"error":
+		{
+			"unable to send message while browsing": "Unable to send message while browsing history",
+			"message read status update failed": "Message read status update failed"
+		}
+	}
 }

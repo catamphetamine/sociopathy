@@ -206,5 +206,19 @@
 		{
 			"connection lost": "Потеряна связь с сервером"
 		}
+	},
+	
+	"notifications":
+	{
+		"set up an avatar": "Вы можете сменить «аватарку» на [link to user(user id)]своей странице[/link]"
+	},
+	
+	"messages":
+	{
+		"error":
+		{
+			"unable to send message while browsing": "Нельзя писать сообщения пока вы не докрутили до самого конца",
+			"message read status update failed": "Не удалось отметить сообщение как прочитанное"
+		}
 	}
 }

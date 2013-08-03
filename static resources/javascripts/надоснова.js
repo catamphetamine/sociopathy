@@ -86,7 +86,8 @@ $(document).on('page_initialized', function()
 {
 	var after_styles = function()
 	{
-		$(document).trigger('styles_loaded')
+		if (first_time_page_loading)
+			$(document).trigger('styles_loaded')
 		
 		if (!пользователь)
 		{

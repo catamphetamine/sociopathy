@@ -10,7 +10,7 @@
 		({
 			template: 'новость',
 			container: page.news,
-			loader: new  Batch_data_loader_with_infinite_scroll
+			loader: new  Scroll_loader
 			({
 				url: '/сеть/новости',
 				batch_size: 10,

@@ -468,3 +468,8 @@ String.prototype.in = function()
 	
 	return !candidates.filter(function(candidate) { return string == candidate }).is_empty()
 }
+
+Object.combine = function(one, two, three)
+{
+	return jQuery.extend({}, one, two, three)
+}

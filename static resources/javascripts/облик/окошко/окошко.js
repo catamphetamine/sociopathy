@@ -228,7 +228,7 @@ var dialog_window = new Class
 			this.state = state
 		
 		if (this.options.modal)
-			$('body').addClass('no_scrollbar')
+			this.container.disable_scroll()
 			
 		if (this.options['on open'])
 			this.options['on open'].bind(this.content)()
@@ -320,7 +320,7 @@ var dialog_window = new Class
 			this.container.removeClass('shown').addClass('collapsed')
 		
 			if (this.options.modal && !options.leave_modal)
-				$('body').removeClass('no_scrollbar')
+				this.container.enable_scroll()
 				
 			if (this.options['on close'])
 				this.options['on close'].bind(this.content)()

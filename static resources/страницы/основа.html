@@ -7,7 +7,7 @@
 		<meta name="copyright" content="2010-2012 Николай Кучумов"/>
 		<meta name="description" content="Собрание - общественная сеть"/>
 		
-		<title>Сообщество</title>
+		<title>Социопатия</title>
 		
 		<meta charset="utf-8" />
 		
@@ -49,6 +49,9 @@
 		<script>
 			var show_error = function(error)
 			{
+				if (error === 'Bad Gateway')
+					error = 'Нет связи с сервером'
+					
 				var find = function(selector)
 				{
 					return document.querySelector(selector)

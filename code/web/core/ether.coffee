@@ -7,6 +7,17 @@ api = {}
 
 api.общения = {}
 
+api.общение_по_id = (collection, id) ->
+	if not id?
+		id = collection
+		collection = connections
+	
+	if not id._id?
+		return collection[id.type]
+	
+	if collection[id.type]?
+		return collection[id.type][id._id]
+		
 эфир = websocket
 	.of('/эфир')
 	.on 'connection', (соединение) ->
@@ -103,18 +114,14 @@ api.общения = {}
 				throw 'No activity monitor for user ' + пользователь.имя
 			else
 				activity.detected()
-		
+
 		общение_по_id = (collection, id) ->
 			if not id?
 				id = collection
 				collection = connections
 			
-			if not id._id?
-				return collection[id.type]
-			
-			if collection[id.type]?
-				return collection[id.type][id._id]
-
+			return api.общение_по_id(collection, id)
+				
 		соединение.on 'общение:emit', (data) ->
 			общение = общение_по_id(data.id)
 			
@@ -171,8 +178,8 @@ api.общения = {}
 			
 			общение.broadcast = (message, data) ->
 				for unused, connection of соединения
-					# кроме самого себя
-					if connection.пользователь._id + '' == environment.пользователь._id + ''
+					# кроме этого же соединения у самого себя
+					if connection == соединение
 						continue
 					
 					общение = это_же_общение(connection.connections)
@@ -238,14 +245,6 @@ api.отправить = (group, name, data, options, возврат) ->
 			
 	return возврат(null, yes)
 
-api.пользователи = () ->
-	пользователи = {}
-	
-	for id, connection of соединения
-		пользователи[connection.пользователь._id + ''] = yes
-		
-	return Object.get_keys(пользователи)
-	        
 api.отправить_одному_соединению = (group, name, data, options, возврат) ->
 	возврат = возврат || (() ->)
 	
@@ -291,7 +290,7 @@ api.соединения = соединения
 api.общение = (общение, logic) ->
 	api.общения[общение] = logic
 
-api.соединение_с = (вид, options) ->
+api.соединение_с = (options) ->
 	for id, connection of соединения
 		if connection.пользователь?
 			if connection.пользователь._id + '' == options.пользователь
@@ -303,3 +302,18 @@ api.соединение_с = (вид, options) ->
 						return this_type_connection[options._id + '']
 
 global.эфир = api
+
+http.post '/сеть/эфир/сообщение прочитано', (ввод, вывод, пользователь) ->
+	console.log('Сообщение прочитано: ' + ввод.данные._id)
+	
+	общение = api.общения[ввод.данные.вид]
+	
+	environment =
+		пользователь: пользователь
+		
+	if ввод.данные.общение?
+		environment.сообщения_чего = общение.сообщения_чего(_id: ввод.данные.общение)
+		
+	общение.message_read(ввод.данные._id, environment)
+	
+	вывод.send {}

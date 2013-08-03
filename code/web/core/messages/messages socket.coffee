@@ -3,10 +3,23 @@ global.prepare_messages_socket = (options) ->
 		connected = redis.createClient()
 		
 		collection = db(options.messages_collection)
-	
+
+		message_read = (_id, environment) ->
+			console.log('*** message_read')
+			
+			if typeof _id == 'string'
+				_id = collection.id(_id)
+				
+			options.message_read.await(_id, environment)
+			
+		сообщения_чего = (чего) ->
+			if not options.сообщения_чего_from_string?
+				return чего
+				
+			return options.сообщения_чего_from_string(чего)
+			
 		communication = (environment) ->
-			if options.сообщения_чего_from_string?
-				environment.сообщения_чего = options.сообщения_чего_from_string(environment.сообщения_чего)
+			environment.сообщения_чего = сообщения_чего(environment.сообщения_чего)
 	
 			connected_data_source = ->
 				if not environment.сообщения_чего?
@@ -14,7 +27,7 @@ global.prepare_messages_socket = (options) ->
 				options.id + ':' + environment.сообщения_чего._id + ':connected'
 			
 			пользователь = environment.пользователь
-					
+	
 			общение = 
 				disconnect: ->
 					if пользователь?
@@ -65,7 +78,7 @@ global.prepare_messages_socket = (options) ->
 					@on 'сообщение', (сообщение) =>
 						сообщение = options.save.await(сообщение, environment)
 						
-						options.message_read.await(сообщение._id, environment)
+						message_read(сообщение._id, environment)
 						
 						if options.subscribe?
 							options.subscribe.await(environment)
@@ -87,7 +100,7 @@ global.prepare_messages_socket = (options) ->
 						@broadcast('сообщение', данные_сообщения)
 																			
 					@on 'прочитано', (_id) ->
-						options.message_read.await(collection.id(_id), environment)
+						message_read(_id, environment)
 						
 						data =
 							что: options.общение
@@ -102,10 +115,13 @@ global.prepare_messages_socket = (options) ->
 						
 					@broadcast('подцепился', пользовательское.поля(пользователь))
 					@emit('готов')
-							
+					
 			return общение
 			
 		if options.общение_во_множественном_числе?
 			communication.multiple = yes
+			
+		communication.message_read = message_read
+		communication.сообщения_чего = сообщения_чего
 			
 		эфир.общения[options.общение] = communication

@@ -1,3 +1,18 @@
+function data_loader_parameters(from)
+{
+	var parameters
+	
+	if (from)
+	{
+		if (typeof from === 'function')
+			parameters = from()
+		else
+			parameters = from
+	}
+
+	return parameters || {}
+}
+
 function loader_get_data(data)
 {
 	if (this.options.data)
@@ -25,7 +40,6 @@ var Batch_loader = new Class
 	
 	options:
 	{
-		parameters: {},
 		get_data: loader_get_data,
 		finished: function() {},
 		done: function() {},
@@ -44,7 +58,7 @@ var Batch_loader = new Class
 	есть_ли_ещё: true,
 	index: 1,
 	
-	page: { number: 0 },
+	pages_loaded: 0,
 	
 	counter: 0,
 	
@@ -61,7 +75,39 @@ var Batch_loader = new Class
 				this.options.Ajax = page.Ajax
 			
 		if (this.options.skip_pages)
-			this.page.number += this.options.skip_pages
+			this.skip_pages(this.options.skip_pages)
+	},
+	
+	reset: function(options)
+	{
+		this.set_skipped_before(0)
+		this.counter = 0
+		this.pages_loaded = 0
+		delete this.latest
+		this.deactivate()
+	},
+	
+	skip_pages: function(pages)
+	{
+		this.set_skipped_before(pages * this.options.batch_size)
+	},
+	
+	get_current_page: function(amendment)
+	{
+		amendment = amendment || 0
+		
+		/*
+		console.log('skipped_before')
+		console.log(this.options.skipped_before)
+		console.log('counter')
+		console.log(this.counter)
+		console.log('amendment')
+		console.log(amendment)
+		console.log('page')
+		console.log(Math.ceil((this.options.skipped_before + this.counter + amendment) / this.options.batch_size))
+		*/
+		
+		return Math.ceil((this.options.skipped_before + this.counter + amendment) / this.options.batch_size)
 	},
 	
 	set_skipped_before: function(skipped)
@@ -77,53 +123,76 @@ var Batch_loader = new Class
 	get: function(count, callback)
 	{
 		var loader = this
-			
-		var data = { сколько: count }
+		
+		var parameters = { сколько: count }
 		
 		if (this.latest)
-			data.после = this.options.get_item_locator(this.latest)
+			parameters.после = this.options.get_item_locator(this.latest)
 			
-		if (this.options.skip_pages)
-			data.пропустить = this.options.skip_pages * this.options.batch_size
-			
+		if (!parameters.после)
+		{
+			if (this.options.skipped_before)
+			{
+				parameters.пропустить = this.options.skipped_before
+			}
+		}
+		
+		var с_начала = false
+		
+		if (this.options.с_начала)
+		{
+			с_начала = true
+			parameters.с_начала = true
+			delete this.options.с_начала
+		}
+		
 		if (this.options.order)
-			data.порядок = this.options.order
+			parameters.порядок = this.options.order
 		
 		if (this.options.latest_first == true)
-			data.задом_наперёд = true
+			parameters.задом_наперёд = true
 			
 		if (this.options.parameters)
-			data = Object.x_over_y(this.options.parameters, data)
+			parameters = Object.combine(data_loader_parameters(this.options.parameters), parameters)
 		
 		if (this.первый_раз)
 		{
-			data.первый_раз = true
+			parameters.первый_раз = true
 			this.первый_раз = false
 		}
 		
-		this.options.Ajax.get(this.options.url, data)
+		console.log('Loading data with parameters:')
+		console.log(parameters)
+		
+		this.options.Ajax.get(this.options.url, parameters)
 		.ошибка(function(ошибка)
 		{
 			callback(ошибка)
 		})
 		.ok(function(data)
 		{
-			if (!data['есть ещё?'])
-				loader.есть_ли_ещё = false
+			console.log('Loaded data:')
+			console.log(data)
+		
+			loader.есть_ли_ещё = data['есть ещё?']
+			
+			if (с_начала && !loader.options.skipped_before)
+				data['есть ли предыдущие?'] = false
 				
 			var data_list = loader.options.get_data.bind(loader)(data)
-			loader.index += data_list.length
 			
 			if (!data_list.is_empty())
 			{
 				if (!loader.options.reverse)
 				{
-					loader.page.number++
-					
-					loader.counter = loader.options.skipped_before + (loader.page.number - 1) * loader.options.batch_size + data_list.length
+					loader.counter = loader.pages_loaded * loader.options.batch_size + data_list.length
 				}
 				else
-					loader.page.number--
+				{
+					loader.counter = - (loader.pages_loaded) * loader.options.batch_size - data_list.length
+				}
+				
+				loader.pages_loaded++
 			}
 
 			data_list.for_each(function()
@@ -137,7 +206,7 @@ var Batch_loader = new Class
 	
 	no_data_yet: function()
 	{
-		return this.index <= 1
+		return this.counter == 0
 	},
 	
 	уже_загружено: function()
@@ -150,7 +219,7 @@ var Batch_loader = new Class
 	
 	skipped: function()
 	{
-		return this.options.skipped_before + (this.page.number - 1) * this.options.batch_size
+		return this.options.skipped_before
 	},
 	
 	load: function()
@@ -162,20 +231,12 @@ var Batch_loader = new Class
 			заморозка = Режим.заморозить_переходы()
 		
 		var is_first_batch = loader.no_data_yet()
-			
+		
 		this.batch(function(ошибка, список)
 		{
 			if (ошибка)
 				return loader.options.callback(ошибка)
 		
-			var elements = []
-			список.for_each(function()
-			{
-				var element = loader.options.render(this)
-				if (element)
-					elements.push(element)
-			})
-			
 			if (!список.is_empty())
 			{
 				loader.earliest = список.first()
@@ -190,13 +251,21 @@ var Batch_loader = new Class
 				}
 			}
 			
+			var elements = []
+			список.for_each(function()
+			{
+				var element = loader.options.render(this)
+				if (element)
+					elements.push(element)
+			})
+			
 			if (is_first_batch)
 				loader.options.before_done.bind(loader)(список)
 			else
 				loader.options.before_done_more.bind(loader)(список)
 		
 			if (loader.options.before_output)
-				loader.options.before_output(elements)
+				loader.options.before_output.bind(loader)(elements)
 			
 			loader.options.before_output_async.bind(loader)(elements, function()
 			{
@@ -211,7 +280,7 @@ var Batch_loader = new Class
 				loader.options.callback(null, function()
 				{
 					if (loader.options.after_output)
-						loader.options.after_output(elements)
+						loader.options.after_output(elements, { first_time: is_first_batch })
 						
 					if (is_first_batch)
 						loader.options.done.bind(loader)(список)
@@ -223,12 +292,6 @@ var Batch_loader = new Class
 						
 					if (заморозка)
 						заморозка.разморозить()
-						
-					//else
-					//{
-					//	if (loader.options.finished)
-					//		loader.options.finished()
-					//}
 				})
 			})
 		})
@@ -251,9 +314,7 @@ var Batch_loader = new Class
 	}
 })
 
-var Batch_data_loader = Batch_loader
-
-var Batch_loader_with_infinite_scroll = new Class
+var Scroll_loader = new Class
 ({
 	Extends: Batch_loader,
 
@@ -264,7 +325,7 @@ var Batch_loader_with_infinite_scroll = new Class
 		var old = options.finished
 		options.finished = function()
 		{
-			this.options.scroll_detector.remove()
+			this.options.scroll_detector.hide()
 			
 			if (old)
 				old()
@@ -288,6 +349,8 @@ var Batch_loader_with_infinite_scroll = new Class
 	{
 		var loader = this
 		
+		this.options.scroll_detector.show()
+		
 		this.options.scroll_detector.on('appears_on_bottom.scroller', function(event)
 		{
 			if (loader.disabled())
@@ -302,12 +365,10 @@ var Batch_loader_with_infinite_scroll = new Class
 	
 	deactivate: function()
 	{
-		this.options.scroll_detector.unbind('.scroller')
+		this.options.scroll_detector.unbind('.scroller').hide()
 		прокрутчик.unwatch(this.options.scroll_detector)
 	}
 })
-
-var Batch_data_loader_with_infinite_scroll = Batch_loader_with_infinite_scroll
 
 var Data_loader = new Class
 ({
@@ -315,7 +376,6 @@ var Data_loader = new Class
 	
 	options:
 	{
-		parameters: {},
 		get_data: loader_get_data,
 		done: function() {},
 		render: function() {},
@@ -343,7 +403,7 @@ var Data_loader = new Class
 	{
 		var loader = this
 		
-		this.options.Ajax.get(this.options.url, this.options.parameters)
+		this.options.Ajax.get(this.options.url, data_loader_parameters(this.options.parameters))
 		.ошибка(function(ошибка)
 		{
 			callback(ошибка)
@@ -441,17 +501,7 @@ var Data_templater = new Class
 		{
 			options = options || global_options
 			
-			var item
-			
-			if (options.template)
-			{
-				if (typeof options.template === 'string')
-					item = $.tmpl(options.template, data)
-				else
-					item = $.tmpl(options.template, data)
-			}
-			else
-				item = $.tmpl(options.template_url, data)
+			var item = $.tmpl(options.template, data)
 				
 			if (options.table)
 			{
@@ -549,61 +599,13 @@ var Data_templater = new Class
 		if (options.before_done)
 			loader.options.before_done = options.before_done
 		
-		var load_data = function()
+		this.load = function()
 		{
-			if (options.load_data_immediately !== false)
-				loader.load()
+			loader.load()
 		}
 		
-		if (options.data_structure)
-		{
-			var latest_deferred
-			for (var property in options.data_structure)
-				if (options.data_structure.hasOwnProperty(property))
-				{
-					if (latest_deferred)
-					{
-						latest_deferred = latest_deferred.pipe(function()
-						{
-							return load_template(options.data_structure[property].template_url)
-						})
-					}
-					else
-					{
-						latest_deferred = load_template(options.data_structure[property].template_url)
-					}
-				}
-			
-			latest_deferred.done(load_data)
-		}
-		else
-		{
-			load_template(options.template_url).done(load_data)
-		}
-			
-		function load_template(template_url)
-		{
-			var deferred = $.Deferred()
-			
-			if (!template_url)
-			{
-				deferred.resolve()
-				return deferred
-			}
-			
-			options.Ajax.get(template_url, {}, { type: 'html' })
-			.ошибка(function()
-			{
-				conditional.callback('Не удалось загрузить страницу')
-			})
-			.ok(function(template) 
-			{
-				$.compile_template(template_url, template)
-				deferred.resolve()
-			})
-			
-			return deferred
-		}
+		if (options.load_data_immediately !== false)
+			this.load()
 	}
 })
 

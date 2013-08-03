@@ -7,9 +7,6 @@ var Interactive_messages = function(options)
 	
 	var away_users = {}
 	
-	var получить_пропущенные_сообщения
-	var получить_пропущенные_сообщения_when_finished = false
-
 	page.подсказка('написание сообщения', 'Для того, чтобы написать сообщение, нажмите клавишу <a href=\'/сеть/настройки\'>«' + Настройки.Клавиши.Писарь.Показать + '»</a>, и внизу появится поле ввода сообщения. Для отправки сообщения нажмите клавиши «Ctrl + Enter».')
 	page.подсказка('правка сообщений', 'Вы можете править свои сообщения, перейдя в <a href=\'/помощь/режимы#Режим правки\'>«режим правки»</a> (клавиша «' + Настройки.Клавиши.Режимы.Правка + '»)')
 
@@ -69,7 +66,8 @@ var Interactive_messages = function(options)
 				//if (visual_editor.editor.is_empty())
 				//	console.log ('стёр')
 				
-				messages.connection.emit('пишет')
+				if (messages.connected())
+					messages.connection.emit('пишет')
 			})
 		},
 		decorate_message: function(message, data)
@@ -79,8 +77,16 @@ var Interactive_messages = function(options)
 		},
 		send_message: function(message)
 		{
-			if (!this.connection || !this.connection.is_ready)
+			if (!this.connected())
+			{
+				if (!this.is_supposed_to_be_connected)
+					// never happens
+					info(text('messages.error.unable to send message while browsing'))
+				else
+					info(text('websocket.error.connection lost'))
+				
 				return false
+			}
 		
 			this.connection.emit('сообщение', message)
 			return true
@@ -112,14 +118,35 @@ var Interactive_messages = function(options)
 		},
 		show_editor: options.show_editor,
 		on_load: options.on_load,
-		on_first_output: options.on_first_output,
 		on_message_data: options.on_message_data,
 		on_first_time_data: options.on_first_time_data,
 		on_finished: function()
 		{
-			// все пропущенные сообщения - в конце, поэтому on_finished
-			if (получить_пропущенные_сообщения_when_finished)
-				получить_пропущенные_сообщения()
+			messages.connect(function()
+			{
+				$(window).on_page('focus.messages', function()
+				{
+					if (messages.connected())
+						messages.connection.emit('смотрит')
+				})
+				
+				$(window).on_page('blur.messages', function()
+				{
+					if (messages.connected())
+						messages.connection.emit('не смотрит')
+				})
+				
+				old_on_load()
+			})
+		},
+		on_go_to_page: function()
+		{
+			if (messages.connection)
+			{
+				messages.disconnect()
+				
+				page.get('.who_is_connected').empty()
+			}
 		}
 	})
 	
@@ -140,8 +167,8 @@ var Interactive_messages = function(options)
 		{
 			event.preventDefault()
 			
-			if (!this.connection || !this.connection.is_ready)
-				return error('Потеряна связь с сервером')
+			if (!messages.connected())
+				return warning(text('websocket.error.connection lost'))
 		
 			messages.connection.emit('вызов', user_id)
 		})
@@ -201,23 +228,11 @@ var Interactive_messages = function(options)
 		return last_message.attr('message_id')
 	}
 	
-	messages.can_read_messages = function()
+	messages.connected = (function()
 	{
-		if (!this.connection || !this.connection.is_ready)
-			return false
-		
-		return true
-	}
-	
-	messages.when_can_read_messages_actions = []
-	
-	messages.when_can_read_messages = function(action)
-	{
-		if (this.can_read_messages())
-			return action()
-		
-		this.when_can_read_messages_actions.push(action)
-	}
+		return this.connection && this.connection.is_ready
+	})
+	.bind(messages)
 	
 	messages.read_message = function(_id)
 	{
@@ -235,10 +250,68 @@ var Interactive_messages = function(options)
 			}
 		}
 		*/
-				
-		this.connection.emit('прочитано', _id)
+		
+		if (this.connected())	
+			this.connection.emit('прочитано', _id)
+		else
+			this.отметить_прочитанным(_id)
 	}
 	.bind(messages)
+	
+	messages.отметить_прочитанным = function(_id)
+	{
+		if (!this.какое_отметить_прочитанным)
+			return this.какое_отметить_прочитанным = _id
+		
+		if (_id > this.какое_отметить_прочитанным)
+			this.какое_отметить_прочитанным = _id
+	}
+	.bind(messages)
+	
+	var message_status_update_error_shown = false
+	
+	messages.отправить_уведомление_о_прочтении = function()
+	{
+		if (!this.какое_отметить_прочитанным)
+			return
+			
+		var finish = function()
+		{
+			delete this.какое_отметить_прочитанным
+		}
+		.bind(this)
+			
+		if (this.connected())
+		{
+			this.connection.emit('прочитано', this.какое_отметить_прочитанным)
+			return finish()
+		}
+		
+		var data =
+		{
+			_id: this.какое_отметить_прочитанным,
+			вид: options.info.что
+		}
+		
+		if (this.options.environment.сообщения_чего)
+		{
+			data.общение = this.options.environment.сообщения_чего._id
+		}
+		
+		page.Ajax.post('/сеть/эфир/сообщение прочитано', data).ok(finish).ошибка(function()
+		{
+			if (!message_status_update_error_shown)
+			{
+				warning(text('messages.error.message read status update failed'), { sticky: true })
+				message_status_update_error_shown = true
+			}
+			
+			finish()
+		})
+	}
+	.bind(messages)
+	
+	messages.ticking_message_read_poster = messages.отправить_уведомление_о_прочтении.ticking(1000)
 	
 	var old_on_load = messages.on_load
 	messages.on_load = function()
@@ -270,29 +343,15 @@ var Interactive_messages = function(options)
 		
 		messages.unload = function()
 		{
-			messages.who_is_connected_bar_list.parent().floating_top_bar('unload')
+			if (messages.who_is_connected_bar_list)
+				messages.who_is_connected_bar_list.parent().floating_top_bar('unload')
 			
 			if (messages.connection)
-			{
-				messages.connection.disconnect()
-			}
+				messages.disconnect()
+			
+			if (messages.ticking_message_read_poster)
+				messages.ticking_message_read_poster.stop()
 		}
-		
-		messages.connect(function()
-		{
-			$(window).on_page('focus.messages', function()
-			{
-				//messages.dismiss_new_messages_notifications()
-				messages.connection.emit('смотрит')
-			})
-			
-			$(window).on_page('blur.messages', function()
-			{
-				messages.connection.emit('не смотрит')
-			})
-			
-			old_on_load()
-		})
 		
 		var typing = $('<div/>').addClass('typing')
 		
@@ -382,9 +441,11 @@ var Interactive_messages = function(options)
 			if (interactive_messages_options.info.общение)
 				_id = interactive_messages_options.info.общение()
 			
+			this.is_supposed_to_be_connected = true
+			
 			var connection = Эфир.общение(что, _id, messages.options.environment)
 			
-			получить_пропущенные_сообщения = function()
+			var получить_пропущенные_сообщения = function()
 			{
 				var latest_message = messages.options.container.find('> li:last').attr('message_id')
 				if (!latest_message)
@@ -472,11 +533,8 @@ var Interactive_messages = function(options)
 			{
 				if (страница.void)
 					return
-					
-				connection.is_ready = true
 				
-				messages.when_can_read_messages_actions.for_each(function() { this() })
-				messages.when_can_read_messages_actions = []
+				connection.is_ready = true
 				
 				if (!connection.reconnected)
 				{
@@ -502,13 +560,6 @@ var Interactive_messages = function(options)
 
 				connection.emit('кто здесь?')
 
-				// все пропущенные сообщения - в конце, поэтому получать их только когда finished
-				if (!messages.finished_loading)
-				{
-					получить_пропущенные_сообщения_when_finished = true
-					return
-				}
-				
 				получить_пропущенные_сообщения()			
 			})
 			
@@ -532,9 +583,6 @@ var Interactive_messages = function(options)
 			
 			connection.on('сообщение', function(сообщение)
 			{
-				if (!messages.finished_loading)
-					return
-				
 				parse_date(сообщение, 'когда')
 				
 				if (сообщение.отправитель._id != пользователь._id)
@@ -597,6 +645,14 @@ var Interactive_messages = function(options)
 			connection.connect()
 			
 			messages.connection = connection
+		}
+		
+		messages.disconnect = function()
+		{
+			this.connection.disconnect()
+			delete this.connection
+			
+			this.is_supposed_to_be_connected = false
 		}
 	}
 	

@@ -32,14 +32,14 @@ module.exports = (ввод, options) ->
 		sort = -sort
 
 	$ = {}
-				
+	
 	$.sort = sort
 	
 	if options.total? && not ввод.данные.всего?
 		$.всего = db(options.collection)._.count(options.query)
-			
+	
 	check_for_earlier_elements = no
-			
+	
 	if с? || ввод.данные.пропустить?
 		if настройки.направление == 'вперёд'
 			check_for_earlier_elements = yes

@@ -32,7 +32,7 @@ function postprocess_rich_content(content, callback)
 	refresh_formulae({ where: content }, callback)
 }
 
-Режим.enable_in_place_editing_windows = function(container)
+Режим.enable_in_place_editing_tools = function(container)
 {
 	Режим.при_переходе({ в: 'правка' }, function()
 	{

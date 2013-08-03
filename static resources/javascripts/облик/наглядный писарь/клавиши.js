@@ -408,7 +408,7 @@ Visual_editor.implement
 				
 				if (!left || left === ' ')
 					character = '«'
-				else if (left && right.in(',', '.', ':', ';', '!', '*', '-', '+', '=', '/', '\\'))
+				else if (left && (!right || right.in(')', ',', '.', ':', ';', '!', '*', '-', '+', '=', '/', '\\')))
 					character = '»'
 				else if (!right || right === ' ')
 					character = '»'

@@ -19,7 +19,7 @@
 			data_source:
 			{
 				url: '/приложение/сеть/обсуждение/сообщения',
-				parameters: { _id: page.data.общение._id, id: page.data.общение.id }
+				parameters: { id: page.data.общение.id }
 			},
 			on_first_time_data: function(data)
 			{
@@ -45,7 +45,6 @@
 			//show_editor: true,
 			edit_path: 'обсуждения',
 			on_load: discussion_loaded,
-			on_first_output: page.content_ready,
 			on_message_bottom_appears: function(_id)
 			{
 				Новости.прочитано({ обсуждение: page.data.общение._id, сообщение: _id })

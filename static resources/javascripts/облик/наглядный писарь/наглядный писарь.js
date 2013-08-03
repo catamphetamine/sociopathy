@@ -330,5 +330,15 @@ var Visual_editor = new Class
 	is_submission_key_combination: function(event)
 	{
 		return Клавиши.is('Ctrl', 'Enter', event)
+	},
+	
+	deactivate: function()
+	{
+		this.inactive = true
+	},
+	
+	activate: function()
+	{
+		delete this.inactive
 	}
 })

@@ -10,8 +10,6 @@ var Messages = new Class
 	
 	away_users: {},
 	
-	on_load_actions: [],
-	
 	finished_loading: false,
 	
 	options:
@@ -121,12 +119,15 @@ var Messages = new Class
 			data:
 			{
 				url: data_source_url,
-				parameters: data_source_parameters,
+				parameters: function() { return data_source_parameters },
 				name: 'сообщения',
 				batch_size: options.messages_batch_size,
 				on_first_batch: function(data)
 				{
 					messages.options.environment = data.environment
+					
+					delete data_source_parameters.id
+					data_source_parameters._id = data._id
 					
 					if (data.последнее_прочитанное_сообщение)
 						messages.последнее_прочитанное_сообщение = data.последнее_прочитанное_сообщение
@@ -139,7 +140,7 @@ var Messages = new Class
 						
 					if (options.on_first_time_data)
 						options.on_first_time_data(data)
-					
+		
 					messages.options.on_load.bind(messages)()
 					messages.on_load()
 				},
@@ -147,18 +148,19 @@ var Messages = new Class
 				{	
 					messages.container_top_offset = messages.options.container.offset().top
 					
-					if (options.on_first_output)
-						options.on_first_output()
+					page.content_ready()
 				},
 				loaded: function(сообщения)
 				{
 					parse_dates(сообщения, 'когда')
 					
 					if (options.on_message_data)
+					{
 						сообщения.for_each(function()
 						{
 							options.on_message_data(this)
 						})
+					}
 						
 					return сообщения
 				},
@@ -280,11 +282,19 @@ var Messages = new Class
 					
 					if (messages.options.after_output)
 						messages.options.after_output(message)
+				},
+				on_go_to_page: options.on_go_to_page,
+				is_in_the_end: function(is_in_the_end)
+				{
+					console.log('In the end: ' + is_in_the_end)
+					messages.is_in_the_end = is_in_the_end
 				}
 			},
 			editable: true, 
 			container: messages.options.container,
 			error: 'Не удалось загрузить список сообщений',
+			с_номерами_страниц: true,
+			set_url: false,
 			//progress_bar: true
 		})
 	},
@@ -312,7 +322,6 @@ var Messages = new Class
 	
 	notify_new_message_recieved: function(message)
 	{
-		this.new_messages.push(message)
 		this.indicate_new_messages()
 	},
 	
@@ -394,24 +403,26 @@ var Messages = new Class
 				return
 			
 			this.options.прокрутчик.unwatch(message)
-		
-			if (!this.can_read_messages())
-				return this.when_can_read_messages(handler)
 			
 			if (this.options.on_message_bottom_appears)
 				this.options.on_message_bottom_appears(_id)
 			
 			this.read_message(_id)
-			
-			//if (this.options.on_message_read)
-			//	this.options.on_message_read(_id)
 	
 			message.removeClass('new')
 			message.prev().removeClass('new')
 		
-			var last = message.parent().children().last()
-			if (!last.hasClass('new'))
-				this.indicate_no_new_messages()
+			if (this.is_in_the_end)
+			{
+				var last = message.parent().children().last()
+				if (!last.hasClass('new'))
+				{
+					this.indicate_no_new_messages()
+				
+					if (!Новости.есть_новости)
+						this.dismiss_new_messages_notifications
+				}
+			}
 		
 			read = true
 		})
@@ -560,7 +571,14 @@ var Messages = new Class
 	{
 		var messages = this
 		
-		Режим.enable_in_place_editing_windows(this.options.container)
+		if (this.visual_editor)
+		{
+			this.visual_editor.activate()
+			this.show_editor()
+			return 
+		}
+		
+		Режим.enable_in_place_editing_tools(this.options.container)
 		
 		var visual_editor = new Visual_editor('#compose_message > article')
 		this.visual_editor = visual_editor
@@ -587,17 +605,13 @@ var Messages = new Class
 			
 			Wiki_processor.parse_and_validate(html, function(message)
 			{
-				//console.log('message:')
-				//console.log(message)
+				//console.log('Send message: ' + message)
 				
 				if (!message)
 					return callback(false)
 					
 				if (messages.options.send_message(message) === false)
-				{
-					warning('Потеряно соединение с сервером')
 					return  callback(false)
-				}
 				
 				reset_editor_content({ not_initial: true })
 				visual_editor.focus()
@@ -649,15 +663,22 @@ var Messages = new Class
 				if (messages.options.can_show_editor)
 					if (!messages.options.can_show_editor())
 						return
-					
+				
+				if (!messages.is_in_the_end)
+					return
+				
 				messages.show_editor()
 				$(document).unbind('show_visual_editor.on_demand')
 			})
 		}
-		
-		this.on_load_actions.for_each(function() { this.bind(messages)() })
 	},
-
+	
+	on_unload: function()
+	{
+		this.visual_editor.deactivate()
+		this.hide_editor()
+	},
+	
 	hide_editor: function()
 	{
 		this.visual_editor.hide_tools()
@@ -749,12 +770,12 @@ var Messages = new Class
 		if (!Focus.focused)
 			if (this.options.new_message_sound)
 				this.options.new_message_sound.play()
-					
+		
 		window_notification.something_new()
 	},
 	
 	dismiss_new_messages_notifications: function()
-	{	
+	{
 		window_notification.nothing_new()
 	}
 })

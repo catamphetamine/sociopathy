@@ -26,5 +26,7 @@ Inter_tab_communication.on = function(key, action)
 
 Inter_tab_communication.send = function(key, data)
 {
+	data = data || {}
+	
 	window.localStorage.setItem(key, JSON.stringify(data))
 }

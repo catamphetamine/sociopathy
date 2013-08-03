@@ -148,6 +148,8 @@ var Panel = new Class
 			
 				button.element.appendTo(panel.buttons[id].element.parent().node())
 			}
+			else
+				button.element.attr('always_shown', true)
 		})
 	},
 	
@@ -279,10 +281,17 @@ var Panel = new Class
 			
 			to_show.parent().children().each(function()
 			{
-				if (this !== to_show.node() && this !== to_hide.node())
-					$(this)
-						.css('z-index', -1)
-						.fade_out(0)
+				if (this === to_show.node() || this === to_hide.node())
+					return
+				
+				var another = $(this)
+				
+				if (another.attr('always_shown'))
+					return
+				
+				another
+					.css('z-index', -1)
+					.fade_out(0)
 			})
 		}
 
@@ -290,10 +299,13 @@ var Panel = new Class
 		{	
 			hide_all_other_buttons()
 			
-			get_button_to_hide()
-				.css('z-index', -1)
-				.fade_out(options.fade_out_duration)
+			var to_hide = get_button_to_hide()
 			
+			if (!to_hide.attr('always_shown'))
+				to_hide
+					.css('z-index', -1)
+					.fade_out(options.fade_out_duration)
+				
 			get_button_to_show()
 				.css('z-index', 0)
 				.fade_in(options.fade_in_duration)
@@ -303,9 +315,12 @@ var Panel = new Class
 		{
 			hide_all_other_buttons()
 			
-			get_button_to_show()
-				.css('z-index', -1)
-				.fade_out(options.fade_out_duration)
+			var to_show = get_button_to_show()
+			
+			if (!to_show.attr('always_shown'))
+				to_show
+					.css('z-index', -1)
+					.fade_out(options.fade_out_duration)
 			
 			get_button_to_hide()
 				.css('z-index', 0)

@@ -30,17 +30,19 @@ var Scroller = new Class
 		return contains
 	},
 	
-	watch: function(element)
+	watch: function(element, options)
 	{
 		if (this.watching(element))
 			return
-			
-		//if (typeof previous_top_offset_in_window === 'undefined')
-		//	previous_top_offset_in_window = $(window).height() + 1
+		
+		options = options || {}
 	
-		this.elements.push(element)
+		if (options.first)
+			this.elements.unshift(element)
+		else
+			this.elements.push(element)
+		
 		element.data('first_time_with_scroller', true)
-		//element.data('top_offset_in_window', previous_top_offset_in_window)
 		this.check_for_events(element)
 	},
 	
@@ -76,6 +78,9 @@ var Scroller = new Class
 	check_for_events: function(element, options)
 	{
 		options = options || {}
+	
+		if (!element.css('display') || element.css('display') === 'none')
+			return
 	
 		var top_offset_in_window = element.offset().top - $(window).scrollTop()
 		

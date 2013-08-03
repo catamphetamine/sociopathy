@@ -245,7 +245,7 @@ global.prepare_messages = (options) ->
 			сообщения_чего = null
 		
 			if ввод.данные._id?
-				сообщения_чего = db(options.collection)._.find_one({ _id: ввод.данные._id })
+				сообщения_чего = db(options.collection)._.find_one({ _id: db(options.collection).id(ввод.данные._id) })
 			else
 				сообщения_чего = db(options.collection)._.find_one({ id: ввод.данные.id })
 	
@@ -298,7 +298,7 @@ global.prepare_messages = (options) ->
 	options.notify = (сообщение, environment, возврат) ->
 		_id = сообщение._id
 
-		users = []
+		notify_users = []
 	
 		if options.общение_во_множественном_числе?
 			общение = db(options.collection)._.find_one({ _id: environment.сообщения_чего._id })
@@ -316,15 +316,15 @@ global.prepare_messages = (options) ->
 			query.$or.add(subquery)
 			
 			if options.notified_users?
-				users = options.notified_users(общение)
-				query.пользователь = { $in: users }
+				notify_users = options.notified_users(общение)
+				query.пользователь = { $in: notify_users }
 			
 			setter = {}
 			setter['последние_сообщения.' + options.path(environment)] = _id
 			
 			db('people_sessions')._.update(query, { $set: setter }, { multi: yes })
 			
-			users = users.map((_id) -> _id.toString())
+			notify_users = notify_users.map((_id) -> _id.toString()).filter((_id) -> _id != environment.пользователь._id + '')
 		else
 			if not options.info_collection?
 				options.info_collection = options.collection + '_info'
@@ -347,29 +347,23 @@ global.prepare_messages = (options) ->
 			data.id = общение.id
 			data.отправитель = environment.пользователь
 		
-		if not users.пусто()
-			for user in users
-				if user != environment.пользователь._id.toString()
-					эфир.отправить('новости', options.общение, data, { кому: user })
-		else
-			эфир.отправить('новости', options.общение, data, { кроме: environment.пользователь._id })
-
-		for пользователь in эфир.пользователи()
-			if пользователь != environment.пользователь._id + ''
-				if !users.пусто() && !users.has(пользователь)
-					continue
-				
+		if not notify_users.пусто()
+			for пользователь in notify_users
 				criteria =
 					type: options.общение
 					пользователь: пользователь
-					
+
 				if environment.сообщения_чего?
 					criteria._id = environment.сообщения_чего._id.toString()
 					
-				соединение_с_общением = эфир.соединение_с(options.общение, criteria)
-				if not соединение_с_общением
+				соединение_с_общением = эфир.соединение_с(criteria)
+				if not соединение_с_общением?
 					эфир.отправить_одному_соединению('новости', 'звуковое оповещение', { чего: options.общение }, { кому: пользователь })
-					
+				
+				эфир.отправить('новости', options.общение, data, { кому: пользователь })
+		else
+			эфир.отправить('новости', options.общение, data, { кроме: environment.пользователь._id })
+		
 		возврат()
 
 	options.mark_new = (сообщения, environment, возврат) ->

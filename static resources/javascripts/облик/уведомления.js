@@ -186,6 +186,15 @@ var Message =
 		
 		var message_itself = $('<div class="popup_panel"/>').html(text)
 		
+		message_itself.find('a').each(function()
+		{
+			var link = $(this)
+			var url = link.attr('href')
+			
+			if (!is_internal_url(url))
+				link.attr('target', '_blank')
+		})
+		
 		var message = $('<div class="popup_panel_container"/>')
 		message.addClass('popup_message')
 		message.addClass(type)
@@ -196,7 +205,8 @@ var Message =
 			link.css('display', 'block')
 			link.on('click', function()
 			{
-				link.trigger('contextmenu')
+				// close popup
+				//link.trigger('contextmenu')
 			})
 			
 			message_itself.appendTo(link)
@@ -212,16 +222,25 @@ var Message =
 			
 		ajaxify_internal_links(message)
 			
+		// dont't close popup
+		message_itself.find('a').on('click', function(event)
+		{
+			event.stopImmediatePropagation()
+		})
+		
+		// dont't close popup
 		message_itself.find('a').on('contextmenu', function(event)
 		{
 			event.stopImmediatePropagation()
 		})
 
 		var closing = false
-		message.on('contextmenu', function(event)
+		
+		// close popup
+		function close_popup(event)
 		{
 			event.preventDefault()
-			
+		
 			message_container.data('force_closing', true)
 			
 			if (closing)
@@ -236,7 +255,10 @@ var Message =
 			
 			if (options.on_close)
 				options.on_close.bind(message_itself)(message)
-		})
+		}
+		
+		message.on('click', close_popup)
+		message.on('contextmenu', close_popup)
 		
 		message_container.append(message).appendTo('body')
 		message_container.css('top', top)

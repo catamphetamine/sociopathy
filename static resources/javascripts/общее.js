@@ -63,12 +63,6 @@ function loading_page(options, callback)
 	else
 		options = options || {}
 	
-	if (!first_time_page_loading)
-	{
-		$('aside').css('z-index', 2)
-		$('.on_the_right_side_of_the_panel').css('z-index', 2)
-	}
-	
 	if (options.full)
 	{
 		$('aside').css('z-index', 1)
@@ -121,6 +115,7 @@ function hide_page_loading_screen()
 	})
 	
 	$('body').removeClass('loading')
+	$('body').removeClass('first_time_loading')
 }
 
 function web_page_still_loading()
@@ -546,3 +541,50 @@ function Communication_type(type, options)
 {
 	Communication_types.add({ type: type, options: options })
 }
+
+window.AudioContext = window.AudioContext || window.webkitAudioContext
+
+var Sound = new Class
+({
+	initialize: function(url, callback)
+	{
+		//this.url = url
+	
+		this.context = new AudioContext()
+	
+		var request = new XMLHttpRequest()
+		request.open('GET', url, true)
+		request.responseType = 'arraybuffer'
+		
+		var sound = this
+		
+		// Decode asynchronously
+		request.onload = function()
+		{
+			sound.context.decodeAudioData(request.response, function(data)
+			{
+				sound.data = data
+				
+				callback()
+			},
+			function(error)
+			{
+				console.error('Couldn\'t load sound: ' + url)
+				console.error(error)
+				
+				callback(error)
+			})
+		}
+		
+		request.send()
+	},
+	
+	play: function()
+	{
+		var source = this.context.createBufferSource()
+		source.buffer = this.buffer
+		source.connect(this.context.destination)
+		source.start(0)
+		// note: on older systems, may have to use deprecated noteOn(time);
+	}
+})

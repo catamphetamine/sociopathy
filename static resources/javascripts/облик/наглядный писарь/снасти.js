@@ -607,6 +607,8 @@ Visual_editor.implement
 					},
 					open: function()
 					{
+						info('Мы временно отключили формулы, в ближайшем будущем они будут снова включены')
+					
 						if (this.state && this.state.element)
 						{
 							var display = this.content.find('.display').hide()

@@ -2,7 +2,8 @@ var Подсказки =
 {
 	закрыть: function(id)
 	{
-		$('.popup_panel[hint="' + id + '"]').trigger('contextmenu')
+		// close popup
+		$('.popup_panel[hint="' + id + '"]').trigger('click')
 	}
 }
 
@@ -31,7 +32,11 @@ function Подсказка(id, текст, options)
 		var dismiss = $('<a/>').css('float', 'right').attr('href', '#').text('Больше не напоминать об этом').click(function(event)
 		{
 			event.preventDefault()
-			Ajax.delete('/приложение/сеть/подсказка', { подсказка: id }).ok(function() { container.trigger('contextmenu') })
+			Ajax.delete('/приложение/сеть/подсказка', { подсказка: id }).ok(function()
+			{
+				// close popup
+				container.trigger('click')
+			})
 		})
 		
 		$('<br/>').appendTo(this)

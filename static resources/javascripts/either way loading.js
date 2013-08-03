@@ -1,384 +1,685 @@
-function either_way_loading(options)
+var either_way_loading = function(options)
 {
-	parameters = options.data.parameters || {}
+	return new Either_way_loading(options)
+}
+
+var Pagination = new Class
+({
+	Implements: [Options],
+	
+	total: 0,
+	
+	options:
+	{
+		fade_duration: 0.2
+	},
+	
+	initialize: function(options)
+	{
+		this.setOptions(options)
 		
-	var overall_count
-	var skipped
-	
-	var progress_bar
-	
-	function set_page_number(number)
-	{
-		if (number > 1)
-			set_url(options.путь + '/' + number)
-		else 
-			set_url(options.путь)
-	}
-	
-	var skip_pages = (options.страница || 1) - 1
-	
-	var loader_markup = $.tmpl('either way loading', {})
-	
-	options.container = page.get(options.container)
-	
-	options.container.before(loader_markup)
-	
-	var ok_block = page.get('.main_conditional > [type=ok]')
-	
-	ok_block.find('> [type="placeholder"]').replaceWith(options.container)
-	
-	var previous_block = page.get('.previous_conditional')
-	
-	var main_conditional = initialize_conditional(page.get('.main_conditional'))
-	var previous_conditional = initialize_conditional(previous_block)
-	
-	previous_block.prependTo(ok_block)
-
-	page.get('[type="error"], [type="loading_more_error"]').text(options.error || "Во время загрузки данных произошла ошибка")
-	
-	// common
-
-	var first_batch = true
-	var first_output = true
-
-	var top_loader
-	var bottom_loader
-	
-	var on_data = function(data)
-	{
-		if (first_batch)
+		var pagination = page.get('.pagination')
+		
+		pagination.disableTextSelect()
+		
+		var whole = pagination.find('.whole')
+		var current = whole.find('.current')
+		
+		var start = pagination.find('.start')
+		var end = pagination.find('.end')
+		
+		whole.on_page('click', (function(event)
 		{
-			if (!overall_count)
-				overall_count = data.всего
+			var x = event.clientX - this.offset.left
 			
-			if (!skipped && data.пропущено)
-			{
-				skipped = data.пропущено
-				
-				top_loader.set_skipped_before(skipped)
-				bottom_loader.set_skipped_before(skipped)
-			}
-				
-			if (options.data.on_first_batch)
-				options.data.on_first_batch(data)
-
-			first_batch = false
+			this.options.go_to_page(this.sector_by_offset(x))
+		})
+		.bind(this))
+		
+		current.on_page('click', function(event)
+		{
+			event.preventDefault()
+			event.stopPropagation()
+		})
+		
+		start.on_page('click', (function()
+		{
+			this.options.go_to_page(1)
+		})
+		.bind(this))
+		
+		end.on_page('click', (function()
+		{
+			this.options.go_to_page(this.pages)
+		})
+		.bind(this))
+		
+		$(window).on_page('resize', (function()
+		{
+			this.calculate_dimensions()
+		})
+		.bind(this))
+		
+		this.whole = whole
+		this.current = current
+		this.pagination = pagination
+	},
+	
+	reset: function()
+	{
+		this.set_page(0)
+	},
+	
+	skip: function(skipped)
+	{
+		var page = Math.ceil(skipped / this.options.per_page)
+		
+		this.set_page(page)
+	},
+	
+	skip_pages: function(pages)
+	{
+		this.skip(pages * this.options.per_page)
+	},
+	
+	set_total: function(total)
+	{
+		this.total = total
+		
+		this.pages = Math.ceil(this.total / this.options.per_page)
+		
+		if (this.shown)
+			this.update_to_page_count()
+	},
+	
+	set_page: function(page)
+	{
+		if (this.page === page)
+			return
+		
+		this.page = page
+		
+		this.position_current_sector()
+		
+		//console.log('Set page ' + page)
+		
+		if (this.page === this.pages)
+			this.hide()
+		else
+			this.show()
+	},
+	
+	update_to_page_count: function()
+	{
+		this.sector_width = this.whole_width / this.pages
+		this.pixels_per_item = this.sector_width / this.options.per_page
+		
+		this.current.width(this.sector_width)
+		this.position_current_sector()
+	},
+	
+	calculate_dimensions: function()
+	{
+		this.whole_width = this.whole.width() + 1
+		
+		this.update_to_page_count()
+	},
+	
+	position_current_sector: function()
+	{
+		var current_sector_offset = (this.page - 1) * this.sector_width
+		
+		current_sector_offset -= 1
+		
+		this.current.css('left', current_sector_offset + 'px')
+	},
+	
+	sector_by_offset: function(x)
+	{
+		var item = Math.ceil(x / this.pixels_per_item)
+		var sector = Math.ceil(item / this.options.per_page)
+	
+		// if clicked on the border
+		if (sector > this.pages)
+			sector = this.pages
+	
+		return sector
+	},
+	
+	hide: function()
+	{
+		this.shown = false
+		this.pagination.fade_out(this.options.fade_duration)
+	},
+	
+	show: function()
+	{
+		if (this.shown)
+			return
+		
+		if (this.pages === 1)
+			return
+		
+		this.pagination.fade_in(this.options.fade_duration)
+		
+		if (!this.offset)
+		{
+			this.offset = this.whole.offset()
+			
+			this.calculate_dimensions()
+			
+			this.update_to_page_count()
+			
+			this.pagination.addClass('smooth')
 		}
 		
-		data = data[options.data.name]
-			
-		if (options.data.loaded)
+		this.shown = true
+	}
+})
+
+var Either_way_loading = new Class
+({
+	Implements: [Options],
+	
+	options:
+	{
+		Skip_for_pagination: 80,
+	
+		fade_in: 0.1,
+		fade_out: 0.1,
+		
+		previous_link:
 		{
-			var altered_data = options.data.loaded(data)
+			fade_in: 0.2,
+			fade_out: 0.2
+		}
+	},
+	
+	first_batch: true,
+	first_output: true,
+		
+	initialize: function(options)
+	{
+		this.setOptions(options)
+		
+		var loader_markup = $.tmpl('either way loading', {})
+		
+		options.container = page.get(options.container)
+		
+		options.container.before(loader_markup)
+		
+		var ok_block = page.get('.main_conditional > [type=ok]')
+		
+		ok_block.find('> [type="placeholder"]').replaceWith(options.container)
+		
+		this.previous_block = page.get('.previous_conditional')
+		
+		var main_conditional = initialize_conditional(page.get('.main_conditional'))
+		var previous_conditional = initialize_conditional(this.previous_block)
+		
+		this.previous_block.prependTo(ok_block)
+	
+		page.get('[type="error"], [type="loading_more_error"]').text(options.error || "Во время загрузки данных произошла ошибка")
+		
+		this.pagination = new Pagination
+		({
+			per_page: this.options.data.batch_size,
+			go_to_page: this.go_to_page.bind(this)
+		})
+		
+		var previous_link = this.previous_block.find('.previous > a')
+		this.previous_link = previous_link
+		
+		this.reset()
+		
+		var skip_pages = this.options.страница
+		
+		if (skip_pages)
+		{
+			this.pagination.skip_pages(skip_pages)
+			this.pagination.show()
+		}
+		
+		var common_loader_options =
+		{
+			url: this.options.data.url,
+			latest_first: this.options.data.latest_first,
+			batch_size: this.options.data.batch_size,
+			editable: this.options.editable,
+			before_output_async: this.options.data.before_output_async
+		}
+		
+		var either_way = this
+		options = this.options
+			
+		this.top_loader = new Batch_loader(Object.x_over_y(common_loader_options,
+		{
+			skip_pages: skip_pages + 1,
+			reverse: true,
+			parameters: function()
+			{
+				return Object.combine(data_loader_parameters(options.data.parameters), { раньше: true })
+			},
+			get_data: function (data)
+			{
+				data = either_way.on_data(data, this)
+				
+				if (data.is_empty())
+					return []
+				
+				var loader = this
+				var amendment = 0
+				data.for_each(function()
+				{
+					this.страница = loader.get_current_page(amendment)
+					amendment--
+				})
+				
+				return data
+			},
+			before_output: function(elements)
+			{
+				if (options.data.before_output)
+					options.data.before_output(elements)
+				
+				page.data.container_height_before_loaded_previous = either_way.container_height()
+			},
+			after_output: function(elements, options)
+			{
+				if (!options.first_time)
+				{
+					прокрутчик.scroll_by(either_way.container_height() - page.data.container_height_before_loaded_previous)
+					
+					ajaxify_internal_links(page.content)
+					
+					if (this.есть_ли_ещё)
+						previous_link.fade_in(either_way.options.previous_link.fade_in)
+				}
+			
+				elements.reverse()
+				either_way.after_output(elements, {})
+				elements.reverse()
+			},
+			finished: function()
+			{
+				previous_link.hide()
+			}
+		}))
+		
+		this.top_loader.activate = function()
+		{
+			previous_link.fade_in(0)
+			previous_link.on('click', either_way.show_previous.bind(either_way))
+			previous_link.removeClass('inactive')
+		}
+		
+		this.top_loader.deactivate = function()
+		{
+			previous_link.unbind()
+			previous_link.addClass('inactive')
+		}
+		
+		function create_item_from_template(data)
+		{
+			var item = $.tmpl(options.template, data)
+			
+			if (!item.is('li'))
+				item = $('<li/>').append(item)
+				
+			return item
+		}
+		
+		function prepend_item(item)
+		{
+			if (options.data.prepend)
+				return options.data.prepend(item)
+			
+			options.container.prepend(item)
+		}
+		
+		function append_item(item)
+		{
+			if (options.data.append)
+				return options.data.append(item)
+			
+			options.container.append(item)
+		}
+		
+		function activate_page_scrolling(data, element)
+		{
+			element.on('appears_on_bottom.scroller', function(event)
+			{
+				/*
+				console.log('appears_on_bottom.scroller')
+				console.log(element.node())
+				console.log(data.страница)
+				*/
+				
+				either_way.set_page_number(data.страница)
+				event.stopPropagation()
+			})
+			
+			element.on('fully_appears_on_top.scroller', function(event)
+			{
+				/*
+				console.log('fully_appears_on_top.scroller')
+				console.log(element.node())
+				console.log(data.страница)
+				*/
+				
+				either_way.set_page_number(data.страница)
+				event.stopPropagation()
+			})
+		}
+		
+		function render_item(data)
+		{
+			var item
+			
+			if (options.data.render)
+				item = options.data.render(data)
+			else
+				item = create_item_from_template(data)
+		
+			if (!item)
+				return
+			
+			if (options.с_номерами_страниц)
+				activate_page_scrolling(data, item)
+						
+			var postprocessed_item
+			if (options.data.postprocess_item)
+				postprocessed_item = options.data.postprocess_item.bind(item)(data)
+			
+			return postprocessed_item || item
+		}
+		
+		new Data_templater
+		({
+			template: this.options.template,
+			container: this.options.container,
+			render: function(data) { return render_item(data) },
+			show: function(element) { prepend_item(element) },
+			conditional: previous_conditional,
+			load_data_immediately: false
+		},
+		this.top_loader)
+		
+		// загрузчик внизу
+		
+		this.bottom_loader = new Scroll_loader(Object.x_over_y(common_loader_options,
+		{
+			skip_pages: skip_pages,
+			parameters: options.data.parameters,
+			get_data: function(data)
+			{
+				if (this.no_data_yet())
+				{
+					if (data['есть ли предыдущие?'])
+					{
+						either_way.previous_block.visible()
+						either_way.previous_link.fade_in(either_way.options.previous_link.fade_in)
+						either_way.top_loader.activate()
+						
+						if (data.пропущено > either_way.options.Skip_for_pagination)
+							either_way.pagination.show()					
+					}
+				
+					either_way.top_loader.первый_раз = false
+				}
+				
+				data = either_way.on_data(data, this)
+				
+				if (data.is_empty())
+					return []
+			
+				var loader = this
+				var amendment = 1
+				data.for_each(function()
+				{
+					this.страница = loader.get_current_page(amendment)
+					amendment++
+				})
+				
+				if (either_way.resetted)
+				{
+					options.container.empty()
+				}
+				
+				return data
+			},
+			before_output: function(elements)
+			{
+				if (options.data.before_output)
+					options.data.before_output(elements)
+			
+				if (options.data.is_in_the_end)
+					options.data.is_in_the_end(!this.есть_ли_ещё)
+			
+				if (either_way.resetted)
+				{
+					either_way.resetted = false
+					options.container.fade_in(either_way.options.fade_in)
+				}
+			
+				if (!either_way.top_loader.latest)
+					either_way.top_loader.latest = either_way.bottom_loader.earliest
+				
+				previous_conditional.callback()	
+			},
+			after_output: function(elements)
+			{
+				either_way.after_output(elements, { first: true })
+				
+				if (either_way.first_output)
+				{
+					either_way.first_output = false
+					
+					if (options.data.on_first_output)
+						options.data.on_first_output()
+				}
+				
+				//if (options.progress_bar)
+				//	update_progress_bar()
+				
+				ajaxify_internal_links(page.content)
+			},
+			finished: function()
+			{
+				//if (options.progress_bar)
+				//	update_progress_bar()
+					
+				if (options.data.finished)
+					options.data.finished()
+			}
+		}))
+		
+		new Data_templater
+		({
+			container: options.container,
+			render: function(data) { return render_item(data) },
+			show: function(element) { append_item(element) },
+			conditional: main_conditional
+		},
+		this.bottom_loader)
+		
+		/*
+		if (options.progress_bar)
+		{
+			progress_bar = $('.vertical_progress_bar').show()
+			progress_bar.appendTo('body')
+		}
+		
+		var progress
+		
+		function update_progress_bar(update_options)
+		{
+			if (!progress)
+			{
+				if (!skipped)
+					if (skip_pages)
+						skipped = skip_pages * options.data.batch_size
+				
+				progress = new Progress
+				({
+					element: $('.vertical_progress_bar .bar .progress'),
+					maximum: overall_count,
+					vertical: true,
+					skipped: skipped
+				})
+				
+				progress_bar.show()
+			}
+			
+			progress.update(bottom_loader.уже_загружено(), update_options)
+		}
+		*/
+	},
+	
+	destroy: function()
+	{
+		if (this.destroyed)
+			return
+		
+		this.destroyed = true
+		
+		this.top_loader.deactivate()
+		this.bottom_loader.deactivate()
+		
+		//if (this.options.progress_bar)
+		//	this.progress_bar.remove()
+	},
+	
+	go_to_page: function(page)
+	{
+		if (this.options.data.on_go_to_page)
+			this.options.data.on_go_to_page(page)
+	
+		this.resetted = true
+	
+		this.reset()
+		
+		this.pagination.set_page(page)
+		
+		var skip_pages = page - 1
+		
+		this.top_loader.skip_pages(skip_pages)
+		this.bottom_loader.skip_pages(skip_pages)
+		
+		this.bottom_loader.options.с_начала = true
+		this.bottom_loader.load_more()
+	},
+	
+	set_page_number: function(number)
+	{
+		if (this.options.set_url !== false)
+		{
+			if (number > 1)
+				set_url(this.options.путь + '/' + number)
+			else 
+				set_url(this.options.путь)
+		}
+		
+		this.pagination.set_page(number)
+	},
+	
+	reset: function()
+	{
+		this.pagination.reset()
+		
+		if (!this.top_loader)
+			this.previous_block.invisible()
+		
+		this.previous_link.fade_out(this.options.previous_link.fade_out)
+		
+		if (this.top_loader)
+			this.top_loader.reset()
+			
+		if (this.bottom_loader)
+			this.bottom_loader.reset()
+		
+		if (this.resetted)
+			this.options.container.fade_out(this.options.fade_out)
+	},
+	
+	on_data: function(data, loader)
+	{
+		if (this.first_batch)
+		{
+			this.pagination.set_total(data.всего)
+			
+			if (data.пропущено)
+			{
+				this.top_loader.set_skipped_before(data.пропущено)
+				this.bottom_loader.set_skipped_before(data.пропущено)
+			}
+				
+			if (this.options.data.on_first_batch)
+				this.options.data.on_first_batch(data)
+
+			this.pagination.set_page(loader.get_current_page())
+			
+			this.first_batch = false
+		}
+		
+		data = data[this.options.data.name]
+			
+		if (this.options.data.loaded)
+		{
+			var altered_data = this.options.data.loaded(data)
 			if (typeof altered_data !== 'undefined')
 				data = altered_data
 		}
 		
 		return data
-	}
+	},
 	
-	var common_loader_options =
+	after_output: function(elements, options)
 	{
-		url: options.data.url,
-		latest_first: options.data.latest_first,
-		batch_size: options.data.batch_size,
-		editable: options.editable,
-		before_output_async: options.data.before_output_async
-	}
-	
-	var after_output = function(elements)
-	{
-		if (options.data.after_output)
-			options.data.after_output(elements)
-	}
-
-	// загрузчик вверху
-	
-	function container_height()
-	{
-		return options.container.outerHeight(true)
-	}
-	
-	var previous_link = previous_block.find('.previous > a')
-	
-	top_loader = new Batch_loader(Object.x_over_y(common_loader_options,
-	{
-		skip_pages: skip_pages + 1,
-		reverse: true,
-		parameters: Object.x_over_y(parameters, { раньше: true, всего: overall_count }),
-		get_data: function (data)
+		if (this.options.data.after_output)
+			this.options.data.after_output(elements)
+		
+		if (this.options.с_номерами_страниц)
 		{
-			data = on_data(data)
-			
-			if (data.is_empty())
-				return []
-			
-			data.last().страница = this.page.number - 1
-			data.last().первый = true
-			
-			return data
-		},
-		before_output: function(elements)
-		{
-			if (options.data.before_output)
-				options.data.before_output(elements)
-				
-			page.data.container_height_before_loaded_previous = container_height()
-		},
-		done_more: function()
-		{
-			прокрутчик.scroll_by(container_height() - page.data.container_height_before_loaded_previous)
-			
-			if (options.progress_bar)
-				update_progress_bar({ skipped: this.skipped() })
-				
-			ajaxify_internal_links(page.content)
-			
-			if (this.есть_ли_ещё)
-				previous_link.fade_in(0.2)
-		},
-		after_output: after_output,
-		finished: function()
-		{
-			previous_link.hide()
+			elements.for_each(function()
+			{
+				прокрутчик.watch(this, options)
+			})
 		}
-	}))
-	
-	function activate_page_scrolling(data, element)
+	},
+
+	container_height: function()
 	{
-		if (!data.первый)
-			return
-		
-		element.on('appears_on_bottom.scroller', function(event)
-		{
-			set_page_number(data.страница)
-			event.stopPropagation()
-		})
-		
-		element.on('disappears_on_bottom.scroller', function(event)
-		{
-			set_page_number(data.страница - 1)
-			event.stopPropagation()
-		})
-	}
+		return this.options.container.outerHeight(true)
+	},
 	
-	function disabled()
+	disabled: function()
 	{
-		if (options.editable)
+		if (this.options.editable)
 			if (!Режим.обычный_ли())
 				return true
-	}
+	},
 
-	function show_previous(event)
+	show_previous: function(event)
 	{
 		event.preventDefault()
 		
-		if (disabled())
+		if (this.disabled())
 			return info(text('loader.either way.can\'t load more while in edit mode'))
 	
-		top_loader.deactivate()
-		var indicate_loading = top_loader.load_more()
+		this.top_loader.deactivate()
 		
+		var indicate_loading = this.top_loader.load_more()
+	
+		this.pagination.show()
+		
+		var top_loader = this.top_loader
 		var latest = top_loader.latest
-		previous_link.fade_out(0.2, function()
+		
+		this.previous_link.fade_out(this.options.previous_link.fade_out, function()
 		{
 			if (top_loader.latest === latest)
 				indicate_loading()
 		})
 	}
-	
-	top_loader.activate = function()
-	{
-		previous_link.fade_in(0)
-		previous_link.on('click', show_previous)
-		previous_link.removeClass('inactive')
-	}
-	
-	top_loader.deactivate = function()
-	{
-		previous_link.unbind()
-		previous_link.addClass('inactive')
-	}
-	
-	function create_item_from_template(data)
-	{
-		var item = $.tmpl(options.template, data)
-		
-		if (!item.is('li'))
-			item = $('<li/>').append(item)
-			
-		return item
-	}
-	
-	function prepend_item(item)
-	{
-		if (options.data.prepend)
-			return options.data.prepend(item)
-		
-		options.container.prepend(item)
-	}
-	
-	function append_item(item)
-	{
-		if (options.data.append)
-			return options.data.append(item)
-		
-		options.container.append(item)
-	}
-	
-	function render_item(data)
-	{
-		if (options.data.render)
-			return options.data.render(data)
-			
-		var item = create_item_from_template(data)
-	
-		if (!item)
-			return
-		
-		if (options.с_номерами_страниц)
-		{
-			activate_page_scrolling(data, item)
-			прокрутчик.watch(item)
-		}
-		
-		var postprocessed_item
-		if (options.data.postprocess_item)
-			postprocessed_item = options.data.postprocess_item.bind(item)(data)
-		
-		return postprocessed_item || item
-	}
-	
-	new Data_templater
-	({
-		template: options.template,
-		container: options.container,
-		render: function(data) { return render_item(data) },
-		show: function(element) { prepend_item(element) },
-		conditional: previous_conditional,
-		load_data_immediately: false
-	},
-	top_loader)
-	
-	previous_block.invisible()
-	
-	// загрузчик внизу
-	
-	bottom_loader = new Batch_loader_with_infinite_scroll(Object.x_over_y(common_loader_options,
-	{
-		skip_pages: skip_pages,
-		parameters: Object.x_over_y(parameters, { всего: overall_count }),
-		get_data: function(data)
-		{
-			if (data['есть ли предыдущие?'])
-			{
-				previous_block.visible()
-				top_loader.activate()
-			}
-			
-			data = on_data(data)
-				
-			if (data.is_empty())
-				return []
-		
-			data.first().страница = this.page.number + 1
-			data.first().первый = true
-			
-			return data
-		},
-		before_output: function(elements)
-		{
-			if (options.data.before_output)
-				options.data.before_output(elements)
-				
-			top_loader.index++
-			top_loader.latest = bottom_loader.earliest
-			previous_conditional.callback()	
-		},
-		after_output: function(elements)
-		{
-			after_output(elements)
-			
-			if (first_output)
-			{
-				first_output = false
-				
-				if (options.data.on_first_output)
-					options.data.on_first_output()
-			}
-			
-			if (options.progress_bar)
-				update_progress_bar()
-			
-			ajaxify_internal_links(page.content)
-		},
-		finished: function()
-		{
-			if (options.progress_bar)
-				update_progress_bar()
-				
-			if (options.data.finished)
-				options.data.finished()
-		}
-	}))
-	
-	new Data_templater
-	({
-		container: options.container,
-		render: function(data) { return render_item(data) },
-		show: function(element) { append_item(element) },
-		conditional: main_conditional
-	},
-	bottom_loader)
-	
-	if (options.progress_bar)
-	{
-		progress_bar = $('.vertical_progress_bar').show()
-		progress_bar.appendTo('body')
-	}
-	//}
-	
-	var progress
-	
-	function update_progress_bar(update_options)
-	{
-		if (!progress)
-		{
-			if (!skipped)
-				if (skip_pages)
-					skipped = skip_pages * options.data.batch_size
-			
-			progress = new Progress
-			({
-				element: $('.vertical_progress_bar .bar .progress'),
-				maximum: overall_count,
-				vertical: true,
-				skipped: skipped
-			})
-			
-			progress_bar.show()
-		}
-		
-		progress.update(bottom_loader.уже_загружено(), update_options)
-	}
-	
-	var destroyed = false
-	
-	var result =
-	{
-		destroy: function()
-		{
-			if (destroyed)
-				return
-			
-			destroyed = true
-			
-			bottom_loader.deactivate()
-			
-			if (options.progress_bar)
-				progress_bar.remove()
-		}
-	}
-	
-	return result
-}
+})

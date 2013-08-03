@@ -42,7 +42,7 @@
 		({
 			template: 'беседа в списке бесед',
 			to: page.talks,
-			loader: new  Batch_data_loader_with_infinite_scroll
+			loader: new  Scroll_loader
 			({
 				url: '/сеть/беседы',
 				batch_size: 12,

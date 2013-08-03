@@ -22,7 +22,7 @@
 			data_source:
 			{
 				url: '/приложение/сеть/беседа/сообщения',
-				parameters: { _id: page.data.общение._id, id: page.data.общение.id }
+				parameters: { id: page.data.общение.id }
 			},
 			on_first_time_data: function(data)
 			{
@@ -62,7 +62,6 @@
 			//show_editor: true,
 			edit_path: 'беседы',
 			on_load: talk_loaded,
-			on_first_output: page.content_ready,
 			on_message_bottom_appears: function(_id)
 			{
 				Новости.прочитано({ беседа: page.data.общение._id, сообщение: _id })

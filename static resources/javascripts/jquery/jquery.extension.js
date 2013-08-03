@@ -1028,3 +1028,17 @@ $.fn.on_event = function(event, action)
 	
 	return result
 }
+
+$.fn.disable_scroll = function()
+{
+	this.on('wheel.disabled_scroll', function(event)
+	{
+		event.preventDefault()
+		event.stopImmediatePropagation()
+	})
+}
+
+$.fn.enable_scroll = function()
+{
+	this.unbind('wheel.disabled_scroll')
+}

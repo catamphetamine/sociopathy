@@ -11,7 +11,10 @@ var Новости = new (new Class
 	появились_новости: function()
 	{
 		if (!this.есть_новости)
+		{
+			console.log('something new @ ' + new Date())
 			window_notification.something_new()
+		}
 		
 		$('.news_indicating_stripe').fade_in({ maximum_opacity: 0.9 })
 		
@@ -184,6 +187,7 @@ function close_popup(where, общение, последнее_прочитан�
 		
 		if (close)
 		{
+			// close popup
 			element.parent().parent().trigger('contextmenu')
 		}
 	})

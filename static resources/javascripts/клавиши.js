@@ -527,10 +527,10 @@ var Клавиши =
 	
 	поймано: function()
 	{
+		var event = arguments[arguments.length - 1]
+	
 		if (arguments.length === 1)
 		{
-			event = arguments[0]
-			
 			event.preventDefault()
 			event.stopImmediatePropagation()
 			

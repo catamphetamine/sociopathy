@@ -1,6 +1,16 @@
 # requires 'node-sync' and 'node-fibers'
 global.Fiber = require 'fibers'
-global.fiber = require 'sync'
+sync = require 'sync'
+
+global.fiber = (action) ->
+	wrapped_action = ->
+		try
+			action()
+		catch error
+			console.error(error)
+			throw error
+
+	sync(wrapped_action)
 
 fiber = global.fiber
 

@@ -13,7 +13,7 @@
 			template: 'ошибки',
 			to: page.errors,
 			table: true,
-			loader: new Batch_data_loader_with_infinite_scroll
+			loader: new Scroll_loader
 			({
 				url: '/приложение/сеть/ошибки',
 				batch_size: 10,
