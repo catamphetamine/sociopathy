@@ -22,4 +22,9 @@
 			}
 		}
 	}
+		
+	.breadcrumbs_container
+	{
+		margin-top: -4px;
+	}
 }

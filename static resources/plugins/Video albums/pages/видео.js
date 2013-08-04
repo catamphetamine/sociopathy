@@ -43,7 +43,7 @@
 	
 	function center_albums_list()
 	{
-		center_list($('#albums'), { space: $('#content'), item_width: 706, item_margin: 60 })
+		center_list($('#albums'), { space: $('#content'), item_width: 706, side_margin: 60 })
 	}
 	
 	function albums_loaded()

@@ -22,6 +22,11 @@
 			}
 		}
 	}
+		
+	.breadcrumbs_container
+	{
+		margin-top: -4px;
+	}
 }
 
 .add_user_to_talk_window

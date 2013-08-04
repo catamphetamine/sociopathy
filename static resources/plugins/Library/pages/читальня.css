@@ -2,8 +2,8 @@
 
 #content
 {
-	padding-top: 60px;
-	margin-bottom: 60px;
+	padding-top: @standard_breadcrumbs_top_margin;
+	margin-bottom: 30px;
 	
 	overflow: hidden;
 	
@@ -18,7 +18,7 @@
 		> .add
 		{
 			text-align: center;
-			margin-top: 40px;
+			margin-top: 20px;
 		}
 		
 		> .move
@@ -48,9 +48,6 @@
 {
 	ul#categories
 	{
-		margin-left: 40px;
-		margin-right: 40px;
-		
 		display: inline-block;
 		position: relative;
 		
@@ -82,8 +79,12 @@
 			border-style: solid;
 			border-color: #9f9f9f;
 			
+			margin-top: 26px;
+			margin-bottom: 26px;
+			
 			/* margin править также в читальня.js */
-			margin: 40px;
+			margin-left: 32px;
+			margin-right: 32px;
 			
 			background: -moz-linear-gradient(top,  rgba(232,232,232,1) 0%, rgba(216,216,216,1) 100%); /* FF3.6+ */
 			background: -webkit-linear-gradient(top,  rgba(232,232,232,1) 0%,rgba(216,216,216,1) 100%); /* Chrome10+,Safari5.1+ */
@@ -173,8 +174,8 @@
 	{
 		list-style-type: none;
 		
-		margin-top: 40px;
-		padding-left: 60px;
+		margin-top: 0px;
+		padding-left: @standard_breadcrumbs_left_margin;
 
 		> li.selected
 		{

@@ -4,6 +4,8 @@ Sociopathy
 
    необычная социальная сеть
    
+http://sociopathy.info
+   
 So what's different?
 =============
 

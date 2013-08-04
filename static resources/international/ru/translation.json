@@ -5,7 +5,7 @@
 	{
 		"main":
 		{
-			"title": "Сообщество"
+			"title": "Социопатия"
 		},
 		"registration":
 		{
@@ -122,7 +122,12 @@
 	{
 		"either way":
 		{
-			"earlier": "Раньше"
+			"earlier": "Раньше",
+			
+			"pagination":
+			{
+				"dont click on the slider": "Чтобы листать, жмите не на синем ползунке, а на полоске за ним"
+			}
 		},
 		
 		"loading more": "Загружаем ещё"

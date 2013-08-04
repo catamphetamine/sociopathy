@@ -574,7 +574,7 @@ var Messages = new Class
 		if (this.visual_editor)
 		{
 			this.visual_editor.activate()
-			this.show_editor()
+			//this.show_editor()
 			return 
 		}
 		

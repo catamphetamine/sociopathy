@@ -95,6 +95,9 @@ var Scroller = new Class
 		
 		var delta = top_offset_in_window - previous_top_offset_in_window
 		
+		if (delta === 0)
+			return
+		
 		var window_height = $(window).height()
 		
 		var get_bottom_margin = element.data('прокрутчик.get_bottom_margin')

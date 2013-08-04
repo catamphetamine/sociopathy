@@ -11,7 +11,7 @@
 
 #content
 {
-	padding-top: 80px;
+	padding-top: 60px;
 	padding-bottom: 0;
 
 	margin-bottom: 100px;
@@ -39,7 +39,7 @@
 .search_container
 {
 	text-align: center;
-	margin-bottom: 40px;
+	margin-bottom: 20px;
 	
 	> .search
 	{

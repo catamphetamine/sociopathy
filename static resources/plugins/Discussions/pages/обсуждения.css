@@ -1,13 +1,13 @@
-@import "/облик/user icon.less";
+@import "/облик/вспомогательный.less";
 
 #content
 {
 	.main_content
 	{
-		margin-top: 60px;
-		margin-bottom: 60px;
+		margin-top: @standard_breadcrumbs_top_margin;
+		margin-bottom: 50px;
 		
-		margin-left: 60px;
+		margin-left: @standard_breadcrumbs_left_margin;
 		margin-right: 20px;
 		
 		> .breadcrumbs_container
@@ -23,7 +23,7 @@
 		
 		.discussions
 		{
-			margin-top: 40px;
+			margin-top: 20px;
 		
 			list-style-type: none;
 			padding: 0;
@@ -39,8 +39,6 @@
 			> li
 			{
 				position: relative;
-		
-				margin-bottom: 8px;
 				
 				margin-left: -10px;
 				padding-left: 10px;

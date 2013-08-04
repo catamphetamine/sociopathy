@@ -49,7 +49,7 @@
 	
 	function center_pictures_list()
 	{
-		center_list($('#pictures'), { space: $('#content'), item_width: 400, item_margin: 40 })
+		center_list($('#pictures'), { space: $('#content'), item_width: 400, side_margin: 40 })
 	}
 	
 	var scroll_navigation = new Scroll_navigation()

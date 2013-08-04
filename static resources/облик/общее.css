@@ -114,9 +114,8 @@ html *::selection, html *::-moz-selection, html *::-webkit-selection
 
 html, input, textarea, select
 {
-	font-family: Whitney;
-	font-size: 30px;
-	font-weight: normal;
+	font-family: @messaging_font;
+	font-size: @messaging_font_size;
 }
 
 .multiline_text
@@ -423,8 +422,8 @@ label.error
 	
 	display: inline-block;
 	
-	margin-right: 21px;
-	margin-top: 15px !important;
+	margin-right: 9px;
+	margin-top: 7px !important;
 	
 	position: relative;
 	z-index: 2;
@@ -607,7 +606,7 @@ pre, code
 	
 	border-image: initial;
 	
-	font-family: 'Bitstream Vera Sans Mono', 'Courier', monospace;
+	font-family: Consolas;
 }
 
 .button
@@ -703,6 +702,11 @@ body[mode="правка"] .rich_formatting a
 	.hint
 	{
 		color: #7f7f7f !important;
+		
+		&.should_be_invisible
+		{
+			color: transparent !important;
+		}
 	}
 	
 	h1:focus
@@ -719,6 +723,8 @@ body[mode="правка"] .rich_formatting a
 	p
 	{
 		clear: both;
+		
+		min-height: @textual_font_line_height;
 	}
 	
 	p:first-child
@@ -1132,8 +1138,8 @@ body[mode="правка"] .rich_formatting a
 
 .breadcrumbs_container
 {
-	margin-left: 60px;
-	margin-right: 60px;
+	margin-left: @standard_breadcrumbs_left_margin;
+	margin-right: @standard_breadcrumbs_left_margin;
 	
 	.divider
 	{

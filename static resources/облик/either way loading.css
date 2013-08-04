@@ -67,7 +67,7 @@
 {
 	.previous_conditional
 	{		
-		font-size: 26px;
+		font-size: 22px;
 				
 		[type=loading], [type=loading_more], [type=error], [type=loading_more_error]
 		{
@@ -83,7 +83,7 @@
 		.previous
 		{
 			text-align: center;
-			height: 39px;
+			height: 30px;
 			
 			.more_container
 			{
@@ -96,6 +96,149 @@
 			{
 				position: relative;
 				top: 0px;
+			}
+		}
+	}
+}
+
+@jump_to_start_or_end_size: 16px;
+
+.either_way_loading
+{
+	.pagination
+	{
+		display: none;
+		
+		position: fixed;
+		
+		left: 0;
+		bottom: 0;
+		right: 0;
+		
+		margin-left: @jump_to_top_width + @jump_to_start_or_end_size + 1px + 1px + 1px;
+		margin-right: @jump_to_top_width + @jump_to_start_or_end_size;
+		
+		z-index: 1;
+		
+		.whole
+		{
+			position: absolute;
+			bottom: 0;
+			
+			height: @jump_to_start_or_end_size;
+			width: 100%;
+			
+			margin-left: -2px;
+			z-index: 1;
+			
+			border-top-width: 1px;
+			
+			border-left-width: 1px;
+			border-right-width: 1px;
+				
+			.current
+			{
+				position: absolute;
+				left: 0;
+				top: -1px;
+			
+				height: 100%;
+				
+				border-top-width: 1px;
+				border-bottom-width: 0;
+				
+				border-left-width: 1px;
+				border-right-width: 1px;
+				
+				border-color: #cacaca;
+				border-style: solid;
+				
+				cursor: default;
+			}
+		}
+		
+		.start, .end
+		{
+			width: @jump_to_start_or_end_size;
+			height: @jump_to_start_or_end_size;
+		}
+		
+		.whole, .start, .end
+		{
+			background-color: #efefef;
+			opacity: 0.8;
+			
+			border-color: #cacaca;
+			border-style: solid;
+			
+			border-bottom-width: 0px;
+			
+			cursor: pointer;
+			
+			.css_transition(opacity, 100ms);
+		}
+		
+		.whole.moused_over, .start:hover, .end:hover
+		{
+			opacity: 0.9;
+		
+			.css_transition(opacity, 0);
+		}
+			
+		.whole.active, .start:active, .end:active
+		{
+			opacity: 1;
+		
+			.css_transition(opacity, 0);
+		}
+		
+		.start, .end
+		{
+			position: absolute;
+			bottom: 0;
+		}
+		
+		.start
+		{
+			left: -@jump_to_start_or_end_size - 1px - 1px - 1px;
+			
+			border-top-width: 1px;
+			
+			border-left-width: 1px;
+			border-right-width: 0px;
+		}
+		
+		.end
+		{
+			right: -@jump_to_start_or_end_size - 1px;
+			
+			border-top-width: 1px;
+			
+			border-left-width: 0px;
+			border-right-width: 1px;
+		}
+		
+		
+		.whole .current, .start:hover, .end:hover
+		{
+			background-color: #99c7f1;
+		}
+		
+		.start:hover
+		{
+			background-image: url('/картинки/pagination/start.png')
+		}
+		
+		.end:hover
+		{
+			background-image: url('/картинки/pagination/end.png')
+		}
+		
+		&.smooth
+		{
+			.current
+			{
+				.css_transition(left, 300ms);
 			}
 		}
 	}

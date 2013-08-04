@@ -127,7 +127,12 @@
 	{
 		"either way":
 		{
-			"earlier": "Earlier"
+			"earlier": "Earlier",
+			
+			"pagination":
+			{
+				"dont click on the slider": "To navigate you should click not on the blue slider but on the grey bar behind it"
+			}
 		},
 		
 		"loading more": "Loading more"

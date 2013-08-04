@@ -13,7 +13,7 @@
 	<div class="authenticated_user non_selectable">
 		<div class="info">
 			<a href="${link_to('user', пользователь.id)}" class="picture">
-				{{tmpl(Object.x_over_y(пользователь, { smaller: false })) 'user icon'}}
+				{{tmpl(Object.x_over_y(пользователь, { smaller: true })) 'user icon'}}
 			</a>
 			
 			<a href="${link_to('user', пользователь.id)}" class="name">${пользователь.имя}</a>

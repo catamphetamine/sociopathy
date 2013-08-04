@@ -68,7 +68,7 @@ var Batch_loader = new Class
 	{
 		this.setOptions(options)
 
-		this.options.url = correct_internal_url(this.options.url)
+		this.options.url = correct_data_url(this.options.url)
 		
 		if (page)
 			if (!this.options.Ajax)
@@ -389,7 +389,7 @@ var Data_loader = new Class
 	{
 		this.setOptions(options)
 
-		this.options.url = correct_internal_url(this.options.url)
+		this.options.url = correct_data_url(this.options.url)
 		
 		if (this.options.conditional)
 			this.options.callback = this.options.conditional.callback

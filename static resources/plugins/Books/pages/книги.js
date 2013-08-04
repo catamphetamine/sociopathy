@@ -176,7 +176,7 @@
 	
 	function center_books()
 	{
-		center_list($('#books'), { space: $('#content'), item_width: 1 + 410 + 1, item_margin: 20 })
+		center_list($('#books'), { space: $('#content'), item_width: 1 + 410 + 1, side_margin: 20 })
 	}
 	
 	function initialize_search()

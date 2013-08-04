@@ -282,8 +282,8 @@ Visual_editor.implement
 						
 					if (!previous.exists() && !next.exists())
 					{
-						focused.removeClass('hint').text('')
-						editor.caret.move_to(focused)
+						focused.remove()
+						//editor.caret.move_to(focused)
 					}
 					else
 					{

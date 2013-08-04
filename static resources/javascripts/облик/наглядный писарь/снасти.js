@@ -241,7 +241,7 @@ Visual_editor.implement
 					return
 				}
 				
-				visual_editor.hint(subheading, 'Введите текст подзаголовка')
+				visual_editor.hint(subheading, 'Подзаголовок')
 				
 				this.restore_caret()
 				subheading = editor.insert(subheading, { break_container: true })
@@ -317,6 +317,8 @@ Visual_editor.implement
 				({
 					ok: function(url)
 					{
+						url = correct_url(url)
+					
 						if (tool.dialog_window.state.element)
 						{
 							tool.dialog_window.state.element.attr('href', url)
@@ -334,7 +336,7 @@ Visual_editor.implement
 							editor.selection.cut()
 						}
 						else
-							visual_editor.hint(link, 'Введите текст ссылки')
+							visual_editor.hint(link, 'Текст ссылки')
 						
 						tool.mark_type(link)
 						
@@ -412,7 +414,7 @@ Visual_editor.implement
 					editor.selection.cut()
 				}
 				else		
-					visual_editor.hint(text, 'Введите текст выдержки')
+					visual_editor.hint(text, 'Текст выдержки')
 					
 				//text.text('It is said that if you know your enemies and know yourself, you will not be imperiled in a hundred battles; if you do not know your enemies but do know yourself, you will win one and lose one; if you do not know your enemies nor yourself, you will be imperiled in every single battle.'.trim_trailing_comma())
 				
@@ -454,7 +456,7 @@ Visual_editor.implement
 					editor.selection.cut()
 				}
 				else
-					visual_editor.hint(list_item, 'Введите текст')
+					visual_editor.hint(list_item, '…')
 					
 				list_item.appendTo(list)
 				
@@ -773,7 +775,7 @@ Visual_editor.implement
 					return
 				}
 				
-				visual_editor.hint(element, 'Введите текст')
+				visual_editor.hint(element, '…')
 				element = editor.insert(element)
 			
 				// иначе в хроме будет курсор в начале, но как бы перед самим элементом
@@ -810,7 +812,7 @@ Visual_editor.implement
 					return
 				}
 			
-				visual_editor.hint(element, 'Введите текст')
+				visual_editor.hint(element, '…')
 				element = editor.insert(element)
 			
 				// иначе в хроме будет курсор в начале, но как бы перед самим элементом
@@ -847,7 +849,7 @@ Visual_editor.implement
 					return
 				}
 				
-				visual_editor.hint(element, 'Введите код')
+				visual_editor.hint(element, 'код')
 				element = editor.insert(element, { break_container: true })
 			
 				// иначе в хроме будет курсор в начале, но как бы перед самим элементом
@@ -888,7 +890,7 @@ Visual_editor.implement
 					editor.caret.move_to_the_next_element(element)
 				}
 			
-				visual_editor.hint(element, 'Введите код')	
+				visual_editor.hint(element, 'код')	
 				element = editor.insert(element)
 				return editor.caret.move_to(element)
 			},

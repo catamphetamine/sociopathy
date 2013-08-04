@@ -57,7 +57,7 @@
 	
 	function center_videos_list()
 	{
-		center_list($('#videos'), { space: page.content, item_width: Configuration.Video.Icon.Size.Width + 2 /* border */, item_margin: 40 })
+		center_list($('#videos'), { space: page.content, item_width: Configuration.Video.Icon.Size.Width + 2 /* border */, side_margin: 40 })
 	}
 	
 	function videos_loaded()

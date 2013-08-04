@@ -350,7 +350,7 @@
 	
 	function center_categories_list()
 	{
-		center_list($('#categories'), { space: $('#content'), item_width: 300, item_margin: 40 })
+		center_list($('#categories'), { space: $('#content'), item_width: 300, side_margin: 32 })
 	}
 
 	var populate_categories = function(template)

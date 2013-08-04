@@ -179,14 +179,13 @@ var Visual_editor = new Class
 	{
 		return $('<p/>')
 			.addClass('hint')
-			.text(' ')
+			.addClass('should_be_invisible')
+			.html('…')
 	},
 	
 	dummy_content: function()
 	{
-		return $('<p/>')
-			.addClass('hint')
-			.text(' ')
+		return this.create_paragraph()
 	},
 	
 	is_dummy_content: function()

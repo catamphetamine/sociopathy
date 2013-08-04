@@ -28,36 +28,73 @@ var Pagination = new Class
 		var start = pagination.find('.start')
 		var end = pagination.find('.end')
 		
-		whole.on_page('click', (function(event)
+		whole.on('click', function(event)
 		{
 			var x = event.clientX - this.offset.left
 			
 			this.options.go_to_page(this.sector_by_offset(x))
-		})
+		}
 		.bind(this))
 		
-		current.on_page('click', function(event)
+		whole.on('mousedown', function(event)
+		{
+			whole.addClass('active')
+		})
+		
+		whole.on('mouseup', function(event)
+		{
+			whole.removeClass('active')
+		})
+		
+		whole.on('mouseover', function()
+		{
+			whole.addClass('moused_over')
+		})
+		
+		whole.on('mouseout', function()
+		{
+			whole.removeClass('moused_over')
+			whole.removeClass('active')
+		})
+		
+		current.on('mouseover', function(event)
 		{
 			event.preventDefault()
-			event.stopPropagation()
+			event.stopImmediatePropagation()
+			
+			whole.removeClass('moused_over')
 		})
 		
-		start.on_page('click', (function()
+		current.on('mousedown', function(event)
+		{
+			event.preventDefault()
+			event.stopImmediatePropagation()
+		})
+		
+		current.on('click', function(event)
+		{
+			event.preventDefault()
+			event.stopImmediatePropagation()
+			
+			info(text('loading.either way.pagination.dont click on the slider'))
+		})
+		
+		start.on('click', function()
 		{
 			this.options.go_to_page(1)
-		})
+		}
 		.bind(this))
 		
-		end.on_page('click', (function()
+		end.on('click', function()
 		{
 			this.options.go_to_page(this.pages)
-		})
+		}
 		.bind(this))
 		
-		$(window).on_page('resize', (function()
+		$(window).on_page('resize', function()
 		{
 			this.calculate_dimensions()
-		})
+		}
 		.bind(this))
 		
 		this.whole = whole
@@ -286,15 +323,12 @@ var Either_way_loading = new Class
 			},
 			after_output: function(elements, options)
 			{
-				if (!options.first_time)
-				{
-					прокрутчик.scroll_by(either_way.container_height() - page.data.container_height_before_loaded_previous)
-					
-					ajaxify_internal_links(page.content)
-					
-					if (this.есть_ли_ещё)
-						previous_link.fade_in(either_way.options.previous_link.fade_in)
-				}
+				прокрутчик.scroll_by(either_way.container_height() - page.data.container_height_before_loaded_previous)
+				
+				ajaxify_internal_links(page.content)
+				
+				if (this.есть_ли_ещё)
+					previous_link.fade_in(either_way.options.previous_link.fade_in)
 			
 				elements.reverse()
 				either_way.after_output(elements, {})
@@ -670,8 +704,6 @@ var Either_way_loading = new Class
 		this.top_loader.deactivate()
 		
 		var indicate_loading = this.top_loader.load_more()
-	
-		this.pagination.show()
 		
 		var top_loader = this.top_loader
 		var latest = top_loader.latest

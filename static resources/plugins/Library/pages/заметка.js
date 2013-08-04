@@ -8,12 +8,12 @@
 	
 	function get_title()
 	{
-		return visual_editor.editor.content.parent().find('> h1').text().trim()
+		return page.title.text().trim()
 	}
 	
 	function set_title(title)
 	{
-		return visual_editor.editor.content.parent().find('> h1').text(title)
+		return page.title.text(title)
 	}
 	
 	page.load = function()
@@ -31,14 +31,15 @@
 				crumbs.push({ title: раздел_или_заметка , link: link })
 			})
 			
-			crumbs.pop()
-			crumbs.is_article = true
-			
 			return crumbs
 		}
 
 		breadcrumbs(get_breadcrumbs())
 		
+		page.title = page.get('.breadcrumbs > span:last')
+		
+		page.title.attr('editable', true)
+				
 		load_content
 		({
 			url: '/читальня/заметка',
@@ -54,8 +55,8 @@
 				}
 				
 				page.data.версия = data.заметка.версия
-
-				page.get('article > h1').text(data.заметка.название)
+				
+				set_title(data.заметка.название)
 				
 				page.get('article > section').html(Wiki_processor.decorate(data.заметка.содержимое,
 				{
@@ -152,7 +153,8 @@
 		})
 		
 		// при нажатии Ввода на основном заголовке - перейти к первому абзацу
-		$('article h1').on('keypress', function(event)
+		/*
+		page.title.on('keypress', function(event)
 		{
 			if (!Режим.правка_ли())
 				return
@@ -163,6 +165,7 @@
 				visual_editor.editor.move_caret_to(visual_editor.editor.content.find('p:first'))
 			}
 		})
+		*/
 	}
 	
 	function article_loaded()

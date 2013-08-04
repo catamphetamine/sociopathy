@@ -11,7 +11,7 @@ body[mode="правка"] #content
 	
 #content
 {
-	margin-top: 60px;
+	margin-top: @standard_breadcrumbs_top_margin;
 	margin-bottom: 60px;
 	
 	article

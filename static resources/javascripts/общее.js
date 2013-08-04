@@ -526,7 +526,7 @@ function animate(element, render)
 	})()
 }
 
-function correct_internal_url(url)
+function correct_data_url(url)
 {
 	if (url.starts_with('/'))
 		if (!url.starts_with('/приложение/') && !url.starts_with('/upload/'))

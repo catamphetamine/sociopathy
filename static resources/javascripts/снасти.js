@@ -27,7 +27,7 @@ var Ajax =
 		options.type = options.type || 'json'
 		
 		if (options.type === 'json')
-			url = correct_internal_url(url)
+			url = correct_data_url(url)
 		
 		//var id = Math.random() + '@' + new Date().getTime()
 		var result =
@@ -620,7 +620,7 @@ function center_list(list, options)
 	
 	function calculate_width(count)
 	{
-		return count * (options.item_width + (options.item_margin * 2))
+		return count * (options.item_width + (options.side_margin * 2))
 	}
 	
 	var margins = parseInt(list.css('margin-left')) + parseInt(list.css('margin-right'))
@@ -854,6 +854,16 @@ function page_url_pattern(url)
 page_url_pattern('url.network')
 page_url_pattern('url.error')
 page_url_pattern('url.login required')
+
+function correct_url(url)
+{
+	var corrected = is_external_internal_url(url)
+	
+	if (corrected)
+		url = corrected
+		
+	return url
+}
 
 function is_external_internal_url(url)
 {

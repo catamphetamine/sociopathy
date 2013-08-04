@@ -20,14 +20,14 @@
 	margin-left: auto;
 	margin-right: auto;
 	
-	margin-top: 15px;
-	margin-bottom: 15px;
+	margin-top: 10px;
+	margin-bottom: 10px;
 	
-	padding-top: 40px;
-	padding-bottom: 40px;
+	padding-top: 28px;
+	padding-bottom: 25px;
 
-	padding-left: 60px;
-	padding-right: 60px;
+	padding-left: 40px;
+	padding-right: 40px;
 	
 	border-radius: 10px;
 	
@@ -76,7 +76,7 @@
 			
 			background-image: url('/картинки/business card/картинка по умолчанию.jpg');
 			
-			margin-top: 30px;
+			margin-top: 24px;
 			margin-left: 15px;
 			margin-right: 50px;
 			
@@ -244,7 +244,7 @@
 		.online_status
 		{
 			position: relative;
-			margin-top: 40px;
+			margin-top: 20px;
 		
 			margin-left: auto;
 			margin-right: auto;
