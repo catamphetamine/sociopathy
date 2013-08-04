@@ -11,7 +11,7 @@
  * @github kuchumovn
  */
 
-var Icons_version = 1
+var Icons_version = 2
 
 var Page_icons = []
 
