@@ -854,7 +854,8 @@ function page_url_pattern(url)
 page_url_pattern('url.network')
 page_url_pattern('url.error')
 page_url_pattern('url.login required')
-
+page_url_pattern('url.registration')
+		
 function correct_url(url)
 {
 	var corrected = is_external_internal_url(url)

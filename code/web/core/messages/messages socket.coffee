@@ -5,8 +5,6 @@ global.prepare_messages_socket = (options) ->
 		collection = db(options.messages_collection)
 
 		message_read = (_id, environment) ->
-			console.log('*** message_read')
-			
 			if typeof _id == 'string'
 				_id = collection.id(_id)
 				

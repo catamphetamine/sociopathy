@@ -206,12 +206,13 @@ function link_to(key)
 {
 	var url = key
 	
-	var parameters = Array.prototype.slice.call(arguments)
+	var parameters = Array.prototype.slice.call(arguments).clean()
+	
 	parameters.shift()
 	
 	if (Url_map[key])
 	{
-		if (!parameters.пусто())
+		if (typeof Url_map[key] === 'function')
 			url = Url_map[key].apply(this, parameters)
 		else
 			url = Url_map[key]
@@ -222,6 +223,14 @@ function link_to(key)
 
 function add_some_standard_url_keys()
 {
+	Url_map['user.registration'] = function()
+	{
+		if (Configuration.Invites)
+			return Url_map['registration']
+		
+		return '/'
+	}
+	
 	Url_map['user.avatar.small'] = function(user_id) { return text('url.uploaded') + text('pages.people.url') + '/' + user_id + '/' + text('url.user avatar') + '/' + text('url.user avatars.small') + '.jpg' }
 	Url_map['user'] = function(id) { return text('pages.people.url') + '/' + id }
 	Url_map['new communication'] = function(type) { return text('url.network') + '/' + text('url.new communication') + '/' + type }

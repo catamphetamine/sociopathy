@@ -8,6 +8,10 @@ global.fiber = (action) ->
 			action()
 		catch error
 			console.error(error)
+			
+			if error.stack?
+				console.error(error.stack)
+				
 			throw error
 
 	sync(wrapped_action)
