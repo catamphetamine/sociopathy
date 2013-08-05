@@ -37,7 +37,7 @@ Activity.monitor = (_id, когда_был_здесь) ->
 					if когда_был_здесь_в_последний_раз?
 						if когда_был_здесь_в_последний_раз.getTime() == когда_был_здесь.getTime()
 							#console.log(db('people')._.find_one(_id).имя + ' is offline')
-							эфир.offline(пользователь)
+							эфир.offline(_id)
 							#notifier.offline(_id)
 									
 			if @expiration_check?
