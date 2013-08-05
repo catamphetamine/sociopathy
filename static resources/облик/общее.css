@@ -1778,3 +1778,14 @@ form.picture_uploader
 {
 	z-index: 100;
 }
+
+table.three_columns
+{
+	margin-left: auto;
+	margin-right: auto;
+	
+	td
+	{	
+		vertical-align: top;
+	}
+}

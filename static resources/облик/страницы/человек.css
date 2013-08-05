@@ -16,20 +16,21 @@
 	
 	.main_info
 	{
-		margin-top: 90px;
+		margin-top: 80px;
 		display: inline-block;
 		
 		text-align: left;
 		
-		@left_column: 300px;
-		@right_column: 300px;
-		
-		@side_columns_padding: 40px;
+		@side_columns_padding: 80px;
 		
 		#id_card
 		{
-			.three_column_layout_center(@left_column, @right_column);
-		}	
+		}
+		
+		.three_columns_left, .three_columns_right
+		{
+			width: 300px;
+		}
 		
 		#links, #actions
 		{
@@ -39,8 +40,6 @@
 		
 		#links
 		{
-			.three_column_layout_left(@left_column);
-			
 			text-align: right;
 			
 			.include_padding_in_width();
@@ -59,8 +58,6 @@
 		
 		#actions
 		{
-			.three_column_layout_right(@right_column);
-			
 			.include_padding_in_width();
 			padding-left: @side_columns_padding;
 			

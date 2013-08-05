@@ -11,7 +11,7 @@
 	
 	text-align: left;
 	
-	display: block;
+	display: inline-block;
 	
 	.exact_width(600px);
 	/* overflow: hidden; */

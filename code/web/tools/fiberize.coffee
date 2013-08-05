@@ -6,11 +6,11 @@ global.fiber = (action) ->
 	wrapped_action = ->
 		try
 			action()
-		catch error
-			console.error(error)
-			
+		catch error	
 			if error.stack?
 				console.error(error.stack)
+			else
+				console.error(error)
 				
 			throw error
 
