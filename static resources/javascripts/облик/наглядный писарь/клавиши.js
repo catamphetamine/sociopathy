@@ -45,7 +45,7 @@ Visual_editor.implement
 				}
 				
 				var list_item = $('<li/>')
-				this.hint(list_item, 'Введите текст')
+				this.hint(list_item, '…')
 				
 				this.editor.mark(list_item)
 				container.after(list_item)				

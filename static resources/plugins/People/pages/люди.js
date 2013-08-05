@@ -36,6 +36,21 @@ title(text('pages.people.title'));
 				{
 					initialize_search()
 					page.content_ready()
+					
+					if (page.people.children().length > 0)
+					{
+						page.people.css('position', 'relative')
+					
+						var id_card = $(page.people.children()[0])
+					
+						if (id_card.css('display') !== 'inline-block')
+							throw 'List item display must be "inline-block"'
+					
+						page.id_card_width = id_card.outerWidth()
+						page.id_card_side_margin = parseInt(id_card.css('margin-left'))
+					
+						center_people_list()
+					}
 				},
 				postprocess_item: function(data)
 				{
@@ -49,10 +64,20 @@ title(text('pages.people.title'));
 			error: 'Не удалось загрузить список людей',
 			progress_bar: true
 		})
+	
+		$(window).on_page('resize', center_people_list)
 	}
 	
 	page.unload = function()
 	{
+	}
+	
+	function center_people_list()
+	{
+		if (!page.id_card_width)
+			return
+			
+		center_list(page.people, { space: $('#content'), item_width: page.id_card_width, side_margin: page.id_card_side_margin })
 	}
 	
 	function initialize_search()

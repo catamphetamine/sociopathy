@@ -232,29 +232,13 @@ textarea.multiline, input.field
 	
 	box-shadow: 0 0 2px rgba(0, 0, 0, 0.15);
 
-	border-top-color: #afafaf;
-	border-left-color: #bfbfbf;
-	border-right-color: #bfbfbf;
-	border-bottom-color: #cfcfcf;
-	
 	border-width: 1px;
 	border-style: solid;
+	border-color: #d0d0d0;
 	
 	background-color: #fcfcfc;
-
-	-webkit-border-radius: 5px; 
-	-moz-border-radius: 5px; 
-	border-radius: 5px;
 	
-	-webkit-transition-property: border;
-	-moz-transition-property: border;
-	-o-transition-property: border;
-	transition-property: border;
-
-	-webkit-transition-duration: 0.5s;
-	-moz-transition-duration: 0.5s;
-	-o-transition-duration: 0.5s;
-	transition-duration: 0.5s;
+	.css_transition(border, 0.5s);
 }
 
 input 
@@ -263,7 +247,7 @@ input
 	
 	&.field
 	{
-		height: 50px;
+		height: 42px;
 	}
 
 	&.focusable_field:focus
@@ -271,9 +255,6 @@ input
 		background-color: #f2faff;
 		border-color: #96c0d8;
 		
-		-webkit-box-shadow: 0 0 5px rgba(0, 150, 255, 1.0);
-		-moz-box-shadow: 0 0 5px rgba(0, 150, 255, 1.0);
-		-o-box-shadow: 0 0 5px rgba(0, 150, 255, 1.0);
 		box-shadow: 0 0 5px rgba(0, 150, 255, 1.0);	
 	}
 }
@@ -400,7 +381,7 @@ label.error
 			.picture
 			{
 				border-left-width: 1px;
-				border-color: #C5C5C5;
+				border-color: #e3e3e3;
 			}
 		}
 		
@@ -503,8 +484,17 @@ label.error
 .textual_content
 {
 	margin-top: 60px;
-	padding-left: 40px;
+	padding-left: 60px;
 	padding-right: 40px;
+		
+	h1
+	{
+		margin-bottom: 40px;
+	}
+	
+	h2
+	{
+	}
 }
 
 h1
@@ -601,8 +591,6 @@ pre, code
 	border: 1px solid #CCC;
 	
 	border-radius: 3px;
-	-moz-border-radius: 3px;
-	-webkit-border-radius: 3px;
 	
 	border-image: initial;
 	
@@ -1245,22 +1233,7 @@ body[mode="правка"] .rich_formatting a
 	
 	.help_section
 	{
-		@indent: 40px;
-		
 		margin-bottom: 100px;
-		padding-left: @indent;
-		
-		h1
-		{
-			margin-top: 50px;
-			margin-left: 50px;
-			margin-bottom: 60px;
-		}
-		
-		h2
-		{
-			/* margin-left: -@indent; */
-		}
 	}
 }
 

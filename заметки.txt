@@ -1056,19 +1056,6 @@ https://github.com/LearnBoost/Socket.IO/wiki/Configuring-Socket.IO
 
 	
 			
-Версия 0.0.10, кодовое название: «миниатюризация».
-
-|| В очередной раз уменьшена верхняя панель и изменены некоторые значки
-|| В разных местах по-немногу изменены размер шрифта и отступы
-|| Временно поправлен баг редактора, вызванный багом Хрома (не создавался новый абзац по нажатию Энтера)
-|| Исправлено несколько мелких багов
-
-
-
-
-
-
-
 
 
 
@@ -1082,6 +1069,37 @@ https://github.com/LearnBoost/Socket.IO/wiki/Configuring-Socket.IO
 || Немного доработан дизайн кнопок
 || Теперь работает инструмент "кусочек кода"
 || Исправлено несколько мелких багов
+
+
+
+
+
+
+
+
+шарик - убрать
+вместо шарика теперь - орнамент
+
+
+http://img209.imageshack.us/img209/6710/autumnleavespattern.jpg
+http://static9.depositphotos.com/1040356/1187/v/950/depositphotos_11870736-Leaf-pattern.jpg
+http://thumbs.dreamstime.com/x/grey-leaves-ornament-17504200.jpg
+http://www.vectorfree.com/media/vectors/flowing-technology-background.jpg
+
+
+
+
+
+у всплывающего окошка online status делать position: absolute, иначе перекрывается соседним
+
+временный fix:
+
+#id_cards li:nth-child(odd)
+{
+	position: relative;
+	z-index: 1;
+}
+
 
 
 
@@ -1124,9 +1142,12 @@ enter в кусочке кода - новый абзац
 
 
 
+если зареган - на главной выводить, что-нибудь информативное
 
 
-чтобы листалка появлялась, когда есть много непрочитанных
+
+
+
 
 чтобы писарь убирался, когда появляется листалка
 

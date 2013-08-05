@@ -11,7 +11,7 @@
  * @github kuchumovn
  */
 
-var Icons_version = 2
+var Icons_version = 3
 
 var Page_icons = []
 
@@ -56,7 +56,7 @@ function get_page_button_type()
 
 var Panel = new Class
 ({
-	icon_size: 60,
+	icon_size: 32,
 	
 	buttons: {},
 	
