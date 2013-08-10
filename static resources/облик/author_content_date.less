@@ -1,17 +1,17 @@
 @import "/облик/user icon.less";
 
 @AuthorContentDate_inter_column_padding: 25px;
-@AuthorContentDate_author_column_left_padding: 30px;
+@AuthorContentDate_author_column_left_padding: 20px;
 @AuthorContentDate_author_column_right_padding: 27px;
-@AuthorContentDate_author_column_width: 275px;
+@AuthorContentDate_author_column_width: 250px;
 @AuthorContentDate_message_bottom_padding: 0px;
 @AuthorContentDate_author_icon_margin_left: 20px;
 @AuthorContentDate_time_column_padding: 20px;
 @AuthorContentDate_time_column_width: 220px;
-@AuthorContentDate_user_picture_top: 6px;
+@AuthorContentDate_user_picture_top: 5px;
 @AuthorContentDate_user_picture_left: 16px;
 
-@AuthorContentDate_user_icon_size: @small_user_icon_size;
+@AuthorContentDate_user_icon_size: @a_bit_smaller_user_icon_size;
 
 /*
 .online > a > .user_icon
@@ -70,7 +70,7 @@
 			}
 		}
 		
-		.author
+		> .author
 		{
 			padding-left: @AuthorContentDate_author_column_left_padding;
 			padding-right: @AuthorContentDate_author_column_right_padding;
@@ -90,11 +90,11 @@
 			
 			.name
 			{
-				font-face: Tahoma, Arial, Helvetica;
+				/* font-face: Tahoma, Arial, Helvetica; */
 				font-size: 24px;
 				
 				display: inline-block;
-				margin-top: 16px;
+				margin-top: 11px;
 				vertical-align: top;
 				
 				max-width: @AuthorContentDate_author_column_width - @AuthorContentDate_user_icon_size - @AuthorContentDate_author_icon_margin_left;
@@ -152,7 +152,7 @@
 			font-size: 20px;
 			
 			position: relative;
-			top: 17px;
+			top: 10px;
 			
 			.three_column_layout_right(@AuthorContentDate_inter_column_padding + @AuthorContentDate_time_column_width + @AuthorContentDate_time_column_padding);
 			

@@ -438,7 +438,7 @@ var Режим = (function()
 				{
 					on_ctrl_enter = $(document).on_event('keydown', function(event)
 					{
-						if (Клавиши.поймано('Ctrl', 'Enter', event))
+						if (Клавиши.поймано('Ctrl', 'Enter', event) || Клавиши.поймано('Command', 'Enter', event))
 							return save_changes_button.push()
 					})
 				}

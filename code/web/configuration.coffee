@@ -21,6 +21,8 @@ module.exports =
 				Size: 120
 			Small:
 				Size: 48
+			A_bit_smaller:
+				Size: 38
 			Smaller:
 				Size: 32
 			Tiny:

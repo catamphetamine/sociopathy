@@ -428,47 +428,9 @@ label.error
 	}
 }
 
-.small_avatar
-{
-	@picture_size: 48px;
-	
-	display: inline-block;
-	border: 0;
-	
-	font-size: 0;
-	
-	.picture, .real_picture
-	{
-		width: @picture_size;
-		height: @picture_size;
-	}
-			
-	.picture
-	{
-		position: relative;
-		display: inline-block;
-		
-		background-image: url('/картинки/avatar/картинка с навершия.jpg');
-		background-repeat: no-repeat;
-
-		border-style: solid;
-		border-color: #afafaf;
-		border-width: 1px;
-		
-		.beautiful_shadow_3(0px, 1px, 2px, 3px, 4px, 0.1);
-		
-		.real_picture
-		{
-			position: absolute;
-			top: 0;
-			left: 0;
-		}
-	}
-}
-
 .authenticated_user
 {	
-	.small_avatar
+	.user_icon
 	{
 		display: none;
 	}
@@ -1204,9 +1166,9 @@ body[mode="правка"] .rich_formatting a
 
 .margin_bug_fixer
 {
-	padding: 1px;
+	padding-top: 1px;
+	margin-bottom: -1px;
 	font-size: 0;
-	margin-top: -1px;
 }
 
 .collapsed

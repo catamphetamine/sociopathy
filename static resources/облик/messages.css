@@ -2,7 +2,7 @@
 @import "/облик/user icon.less";
 @import "/облик/author_content_date.less";
 
-@user_icon_size: @smaller_user_icon_size;
+@user_icon_size: @a_bit_smaller_user_icon_size;
 
 @user_picture_top: @AuthorContentDate_user_picture_top;
 @user_picture_left: @AuthorContentDate_user_picture_left;
@@ -156,12 +156,6 @@
 		}
 		*/
 		
-		article
-		{
-			margin-top: 15px;
-			margin-bottom: 12px;
-		}
-		
 		.visual_editor_tools .more
 		{
 			background-image: url('/картинки/писарь/снасти/кнопки/скрыть разширенное.png');
@@ -212,7 +206,7 @@
 	.who_is_connected_container
 	{
 		overflow: hidden;
-		height: @top_padding + @user_icon_size + 2 * @user_icon_margin + 2 * 1 + @bottom_padding;
+		height: @top_padding + @smaller_user_icon_size + 2 * @user_icon_margin + 2 * 1 + @bottom_padding;
 	
 		margin-bottom: 0px;
 		margin-top: 0px;
@@ -263,7 +257,7 @@
 				z-index: 0;
 				
 				width: 100%;
-				height: @user_icon_size + 2 * 5 + 2 * 1;
+				height: @smaller_user_icon_size + 2 * 5 + 2 * 1;
 				
 				background-color: #ffffff;
 				
@@ -291,7 +285,7 @@
 				
 				.picture
 				{
-					background-image: url('/картинки/avatar/картинка с навершия.jpg');
+					background-image: url('/картинки/avatar/маленькая.jpg');
 				}
 				
 				li
@@ -327,6 +321,12 @@
 					li
 					{
 						margin: 5px;
+						margin-left: 0;
+						
+						&:first-child
+						{
+							margin-left: 5px;
+						}
 						
 						.user_offline_picture_glow
 						{
@@ -366,8 +366,8 @@
 	
 	> p, > p:last-child, > p:first-child
 	{
-		margin-top: 9px;
-		margin-bottom: 9px;
+		margin-top: 5px;
+		margin-bottom: 5px;
 	}
 	
 	> p:first-child
@@ -392,6 +392,109 @@ body.jump_to_top_mouse_over
 		.who_is_connected
 		{
 			margin-left: 25px !important;
+		}
+	}
+}
+
+#content.communications
+{
+	.main_content
+	{
+		margin-top: @standard_breadcrumbs_top_margin;
+		margin-bottom: 50px;
+		
+		margin-left: @standard_breadcrumbs_left_margin;
+		margin-right: 20px;
+		
+		> .breadcrumbs_container
+		{
+			margin: 0;
+		}
+		
+		> h3
+		{
+			color: #7f7f7f;
+			margin-bottom: 60px;
+		}
+	}
+		
+	.empty
+	{
+		color: #7F7F7F;
+		margin-bottom: 60px;
+		margin-top: 120px;
+	}
+
+	.communications_list
+	{
+		margin-top: 20px;
+		
+		list-style-type: none;
+		padding: 0;
+	
+		> li.selected
+		{
+			border-color: #c1ebff;
+			background-color: #e3f6ff !important;
+			
+			.css_transition_duration(100ms);
+		}
+		
+		> li
+		{
+			position: relative;
+			
+			margin-left: -10px;
+			padding-left: 10px;
+	
+			.css_transition(500ms, background-color);
+			
+			border-width: 1px;
+			border-style: solid;
+			border-color: transparent;
+			
+			&.new
+			{
+				background-color: #F0FBFF;
+				box-shadow: 0 0 4px #F0FBFF;
+			}
+			
+			> a
+			{
+				display: block;
+	
+				padding-top: 5px;
+				padding-bottom: 5px;
+			
+				> .user_icon
+				{
+					display: inline-block;
+					vertical-align: top;
+					
+					margin-right: 5px;
+				}
+				
+				> .title
+				{
+					display: inline-block;
+					margin-top: 5px;
+					margin-left: 10px;
+				}
+							
+				.when
+				{
+					position: relative;
+					top: 11px;
+					
+					margin-right: 19px;
+					margin-left: 19px;
+					
+					float: right;
+					color: #afafaf;
+					
+					font-size: 20px;			
+				}
+			}
 		}
 	}
 }

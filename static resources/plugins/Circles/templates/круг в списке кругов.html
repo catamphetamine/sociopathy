@@ -6,7 +6,7 @@
 	{{else}}
 		{{each(index, член) члены}}
 			<li class="member">
-				{{tmpl(член) 'маленький аватар'}}
+				{{tmpl(Object.x_over_y({ smaller: true, link: true }, член)) 'user icon'}}
 				<a href="/люди/${член.id}" class="name">${член.имя}</a>
 			</li>
 		{{/each}}

@@ -117,7 +117,7 @@ var Новости = new (new Class
 					var text_container = $('<div/>').addClass('text')
 					this.wrapInner(text_container)
 					
-					var avatar = $.tmpl('маленький аватар', Object.x_over_y(options.отправитель, { no_link: true }))
+					var avatar = $.tmpl('user icon', Object.x_over_y({ smaller: true }, options.отправитель))
 					avatar.prependTo(this)
 				},
 				ссылка: '/' + options.url + '/' + options.id,

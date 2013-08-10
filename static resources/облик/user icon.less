@@ -1,6 +1,7 @@
 @import "/облик/вспомогательный.less";
 
 @small_user_icon_size: 48px;
+@a_bit_smaller_user_icon_size: 42px;
 @smaller_user_icon_size: 32px;
 
 .user_icon
@@ -69,12 +70,12 @@
 	
 	.user_offline_picture_glow
 	{
-		.beautiful_shadow_3(0px, 0px, 8px, 3px, 4px, 0.15);
+		/* .beautiful_shadow_3(0px, 0px, 8px, 3px, 4px, 0.15); */
 	}
 	
 	.picture
 	{
-		background-image: url('/картинки/avatar/картинка с навершия.jpg');
+		background-image: url('/картинки/avatar/маленькая.jpg');
 		background-repeat: no-repeat;
 	}
 }
@@ -96,6 +97,16 @@
 	{
 		width: @smaller_user_icon_size;
 		height: @smaller_user_icon_size;
+	}
+}
+
+.user_icon.a_bit_smaller
+{
+	> .picture, > .picture > .real_picture,
+	.user_offline_picture_glow, .user_online_picture_glow
+	{
+		width: @a_bit_smaller_user_icon_size;
+		height: @a_bit_smaller_user_icon_size;
 	}
 }
 

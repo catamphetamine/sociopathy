@@ -1,20 +1,33 @@
-<div class="user_icon {{if smaller}} smaller {{else}} small {{/if}}">
-	<div class="user_offline_picture_glow"></div>
-	<div class="user_online_picture_glow"></div>
-	<div class="picture" title="${имя}">
-		<img class="real_picture"
-			{{if avatar_version}}
-				src="/загруженное/люди/${id}/картинка/{{if smaller}}мелкая{{else}}маленькая{{/if}}.jpg?version=${avatar_version}"
-			{{else}}
-				src="/картинки/avatar/{{if smaller}}мелкая{{else}}картинка с навершия{{/if}}.jpg"
-			{{/if}}
-		/>
+{{if link}}
+	<a
+{{else}}
+	<div
+{{/if}}
+		class="user_icon {{if smaller}} smaller {{else}} {{if a_bit_smaller}} a_bit_smaller {{else}} small {{/if}} {{/if}}">
 		
 		{{if interactive}}
-			<div class="away"></div>
+			<div class="user_online_picture_glow"></div>
 		{{/if}}
+		
+		<div class="picture" title="${имя}">
+			<img class="real_picture"
+				{{if avatar_version}}
+					src="/загруженное/люди/${id}/картинка/{{if smaller}}мелкая{{else}}{{if a_bit_smaller}}чуть меньше{{else}}маленькая{{/if}}{{/if}}.jpg?version=${avatar_version}"
+				{{else}}
+					src="/картинки/avatar/{{if smaller}}мелкая{{else}}{{if a_bit_smaller}}чуть меньше{{else}}маленькая{{/if}}{{/if}}.jpg"
+				{{/if}}
+			/>
+					
+			{{if interactive}}
+				<div class="away"></div>
+			{{/if}}
+		</div>
+	
+{{if link}}
+	</a>
+{{else}}
 	</div>
-</div>
+{{/if}}
 
 {{if interactive}}
 	<div class="popup_menu_container popup_panel_container">

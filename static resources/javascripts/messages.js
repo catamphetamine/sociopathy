@@ -26,7 +26,7 @@ var Messages = new Class
 		//this.setOptions(options) // doesn't work - mootools bug
 		//this.load()
 		
-		page.on('focused.messages', function()
+		page.on('focused', function()
 		{
 			прокрутчик.process_scroll({ first_time: true })
 		})
@@ -393,6 +393,8 @@ var Messages = new Class
 		
 		var handler = (function()
 		{
+			console.log('handle ' + _id)
+			
 			if (read)
 				return
 			
@@ -602,19 +604,29 @@ var Messages = new Class
 		function send_message(callback)
 		{
 			var html = visual_editor.html()
+			visual_editor.empty()
+			
+			reset_editor_content({ not_initial: true })
+			visual_editor.focus()
+
+			function failed()
+			{
+				visual_editor.html(html)
+				callback(false)
+			}
 			
 			Wiki_processor.parse_and_validate(html, function(message)
 			{
 				//console.log('Send message: ' + message)
 				
 				if (!message)
-					return callback(false)
-					
-				if (messages.options.send_message(message) === false)
-					return  callback(false)
+					return failed()
 				
-				reset_editor_content({ not_initial: true })
-				visual_editor.focus()
+				if (messages.options.send_message(message) === false)
+					return failed()
+				
+				//reset_editor_content({ not_initial: true })
+				//visual_editor.focus()
 				
 				messages.check_composed_message_height()
 				

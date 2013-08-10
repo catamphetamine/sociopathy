@@ -48,15 +48,6 @@
 				[
 					'.chat > li[author="{id}"] .author'
 				]
-			},
-			set_up_visual_editor: function(visual_editor)
-			{
-				/*
-				visual_editor.is_submission_key_combination = function(event)
-				{
-					return Клавиши.is('Enter', event) || Клавиши.is('Ctrl', 'Enter', event)
-				}
-				*/
 			}
 		})
 		

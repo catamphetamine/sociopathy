@@ -247,7 +247,7 @@
 			if (пользователь._id === page.data.пользователь_сети._id)
 			{
 				$('.online_status .offline').css({ opacity: 0 })
-				$('.online_status .online').css({ opacity: 1 })
+				$('.online_status .recent').css({ opacity: 1 })
 				return
 			}
 		}

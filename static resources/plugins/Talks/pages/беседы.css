@@ -2,131 +2,31 @@
 
 #content
 {
-	.main_content
+	#talks
 	{
-		margin-top: @standard_breadcrumbs_top_margin;
-		margin-bottom: 50px;
-		
-		margin-left: @standard_breadcrumbs_left_margin;
-		margin-right: 20px;
-		
-		> .breadcrumbs_container
+		> li
 		{
-			margin: 0;
-		}
-		
-		> h3
-		{
-			color: #7f7f7f;
-			margin-bottom: 60px;
-		}
-		
-		#talks
-		{
-			margin-top: 20px;
-			
-			list-style-type: none;
-			padding: 0;
-		
-			> li.selected
+			.cancel_unparticipation
 			{
-				border-color: #c1ebff;
-				background-color: #e3f6ff !important;
-				
-				.css_transition_duration(100ms);
+				color: #6b8fa7;
 			}
 			
-			> li
+			> .left
 			{
-				position: relative;
+				padding-top: 5px;
+				padding-bottom: 5px;
+			
+				display: none;
+				min-height: 58px;
 				
-				margin-left: -10px;
-				padding-left: 10px;
-
-				.css_transition(500ms, background-color);
-				
-				border-width: 1px;
-				border-style: solid;
-				border-color: transparent;
-				
-				&.new
+				> span
 				{
-					background-color: #F0FBFF;
-					box-shadow: 0 0 4px #F0FBFF;
-				}
-				
-				.cancel_unparticipation
-				{
-					color: #6b8fa7;
-				}
-				
-				> a, > .left
-				{
-					display: block;
-
-					padding-top: 10px;
-					padding-bottom: 10px;
-				}
-				
-				> .left
-				{
-					display: none;
-					min-height: 58px;
-					
-					> span
-					{
-						display: inline-block;
-						margin-top: 8px;
-						margin-bottom: 12px;
-						color: #9f9f9f;
-					}
-				}
-				
-				> a
-				{
-					> .small_avatar
-					{
-						display: inline-block;
-						vertical-align: top;
-						
-						margin-right: 5px;
-					}
-					
-					> .title
-					{
-						display: inline-block;
-						margin-top: 6px;
-						margin-left: 10px;
-					}
-								
-					.when
-					{
-						position: relative;
-						top: 16px;
-						
-						margin-right: 19px;
-						margin-left: 19px;
-						
-						float: right;
-						color: #afafaf;
-						
-						font-size: 20px;			
-					}
+					display: inline-block;
+					margin-top: 8px;
+					margin-bottom: 12px;
+					color: #9f9f9f;
 				}
 			}
 		}
 	}
-}
-
-.empty
-{
-	color: #7F7F7F;
-	margin-bottom: 60px;
-	margin-top: 120px;
-}
-
-.new_talk
-{
-	float: right;
-	display: none;
 }

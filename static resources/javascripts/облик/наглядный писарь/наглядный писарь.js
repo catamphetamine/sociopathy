@@ -328,7 +328,7 @@ var Visual_editor = new Class
 	
 	is_submission_key_combination: function(event)
 	{
-		return Клавиши.is('Ctrl', 'Enter', event)
+		return Клавиши.поймано('Ctrl', 'Enter', event) || Клавиши.поймано('Command', 'Enter', event)
 	},
 	
 	deactivate: function()
@@ -339,5 +339,10 @@ var Visual_editor = new Class
 	activate: function()
 	{
 		delete this.inactive
+	},
+	
+	empty: function()
+	{
+		this.editor.content.empty()
 	}
 })

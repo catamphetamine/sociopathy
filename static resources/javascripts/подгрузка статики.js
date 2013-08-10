@@ -20,7 +20,6 @@ var вставить_содержимое
 	// компилируются
 	var шаблоны =
 	[
-		'маленький аватар',
 		'user icon',
 		'linked user icon',
 		'breadcrumbs',
