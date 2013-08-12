@@ -17,6 +17,7 @@ ul.chat
 		background-color: white;
 	}
 	
+	/*
 	> li.even
 	{
 		background-color: #f6f6f6;
@@ -26,6 +27,7 @@ ul.chat
 			background-color: #ececec;
 		}
 	}
+	*/
 }
 
 .main_conditional

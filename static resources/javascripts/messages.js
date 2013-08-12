@@ -734,7 +734,7 @@ var Messages = new Class
 			this.compose_message_height = this.compose_message.height()
 		
 		// если нижний край сообщений ушёл за пределы окна (до добавления сообщения) - не прокручивать
-		if (this.container_top_offset + (this.options.container.outerHeight() - message.outerHeight()) - amendment > $(window).scrollTop() + $(window).height() - this.compose_message_height)
+		if (this.container_top_offset + (this.options.container.outerHeight() - message.outerHeight(true)) - amendment > $(window).scrollTop() + $(window).height() - this.compose_message_height)
 			return false
 		
 		// если непрочитанные при этом уедут за верх - не прокручивать
@@ -747,7 +747,7 @@ var Messages = new Class
 			if (bar.exists())
 				free_space_on_top -= bar.height()
 				
-			if (free_space_on_top < message.outerHeight())
+			if (free_space_on_top < message.outerHeight(true))
 				return false
 		}
 		

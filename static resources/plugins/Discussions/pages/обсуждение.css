@@ -11,6 +11,7 @@
 		
 		#discussion.author_content_date
 		{
+			/*
 			> li.even
 			{
 				background-color: #f5ffee;
@@ -20,6 +21,7 @@
 					background-color: #e3fee2;
 				}
 			}
+			*/
 		}
 	}
 		
