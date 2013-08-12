@@ -253,7 +253,7 @@
 			
 			.online
 			{
-				background-image: url('/картинки/business card/status/online.png');
+				background-image: url('/картинки/business card/status/online.png?version=2');
 				
 				opacity: 0;
 				
@@ -262,7 +262,7 @@
 			
 			.recent
 			{
-				background-image: url('/картинки/business card/status/recent.png');
+				background-image: url('/картинки/business card/status/recent.png?version=2');
 				
 				opacity: 0;
 				
@@ -271,7 +271,7 @@
 		
 			.offline
 			{
-				background-image: url('/картинки/business card/status/offline.png');
+				background-image: url('/картинки/business card/status/offline.png?version=2');
 				
 				z-index: 0;
 			}

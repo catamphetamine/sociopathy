@@ -12,6 +12,7 @@ var Scroller = new Class
 		
 		$(document).on('focused', function()
 		{
+			console.log('Window focused. Processing pseudo scroll')
 			process_scroll({ first_time: true })
 		})
 		
@@ -77,6 +78,9 @@ var Scroller = new Class
 
 	check_for_events: function(element, options)
 	{
+		//console.log('Process scroll for:')
+		//console.log(element.node())
+		
 		options = options || {}
 	
 		if (!element.css('display') || element.css('display') === 'none')
@@ -95,7 +99,7 @@ var Scroller = new Class
 		
 		var delta = top_offset_in_window - previous_top_offset_in_window
 		
-		if (delta === 0)
+		if (!first_time && delta === 0)
 			return
 		
 		var window_height = $(window).height()

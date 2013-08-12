@@ -393,7 +393,7 @@ var Messages = new Class
 		
 		var handler = (function()
 		{
-			console.log('handle ' + _id)
+			console.log('handle message ' + _id)
 			
 			if (read)
 				return
@@ -401,8 +401,12 @@ var Messages = new Class
 			if (!message.hasClass('new'))
 				return
 		
+			console.log('Focus.focused: ' + Focus.focused)
+		
 			if (!Focus.focused)
 				return
+			
+			console.log('read and unwatch')
 			
 			this.options.прокрутчик.unwatch(message)
 			

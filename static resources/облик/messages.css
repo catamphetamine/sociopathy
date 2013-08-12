@@ -58,8 +58,6 @@
 	
 	ul.messages_container
 	{
-		margin-bottom: 30px;
-		
 		> li
 		{
 			&.a_little_later
@@ -121,7 +119,7 @@
 		position: absolute;
 		left: 4px;
 
-		margin-left: 330px;
+		margin-left: @author_column_left_padding + @author_column_width + @inter_column_padding;
 		padding-top: 7px;
 		
 		background-image: url('/картинки/пишет.gif');
@@ -291,7 +289,14 @@
 				li
 				{
 					display: inline-block;
+					
 					margin: @user_icon_margin;
+					margin-left: 0;
+					
+					&:first-child
+					{
+						margin-left: @user_icon_margin;
+					}
 						
 					/*
 					.user_offline_picture_glow
@@ -391,7 +396,7 @@ body.jump_to_top_mouse_over
 	{
 		.who_is_connected
 		{
-			margin-left: 25px !important;
+			margin-left: 20px !important;
 		}
 	}
 }

@@ -162,22 +162,22 @@
 			
 			&.text_align_left > *
 			{
-				background-image: url('/картинки/писарь/снасти/кнопки/выравнивание содержимого влево.png');
+				background-image: url('/картинки/писарь/снасти/кнопки/выравнивание содержимого влево.png?version=2');
 			}
 			
 			&.text_align_center > *
 			{
-				background-image: url('/картинки/писарь/снасти/кнопки/выравнивание содержимого по середине.png');
+				background-image: url('/картинки/писарь/снасти/кнопки/выравнивание содержимого по середине.png?version=2');
 			}
 			
 			&.text_align_right > *
 			{
-				background-image: url('/картинки/писарь/снасти/кнопки/выравнивание содержимого вправо.png');
+				background-image: url('/картинки/писарь/снасти/кнопки/выравнивание содержимого вправо.png?version=2');
 			}
 			
 			&.text_align_justify > *
 			{
-				background-image: url('/картинки/писарь/снасти/кнопки/выравнивание содержимого по ширине.png');
+				background-image: url('/картинки/писарь/снасти/кнопки/выравнивание содержимого по ширине.png?version=2');
 			}
 			
 			&.heading
@@ -243,7 +243,7 @@
 				
 				> *
 				{
-					background-image: url('/картинки/писарь/снасти/кнопки/список.png');
+					background-image: url('/картинки/писарь/снасти/кнопки/список.png?version=2');
 					width: 34px;
 					height: 34px;
 				}
@@ -255,7 +255,7 @@
 				
 				> *
 				{
-					background-image: url('/картинки/писарь/снасти/кнопки/картинка.png');
+					background-image: url('/картинки/писарь/снасти/кнопки/картинка.png?version=2');
 					width: 36px;
 					height: 36px;
 				}
@@ -277,7 +277,7 @@
 	
 			&.undo > *
 			{
-				background-image: url('/картинки/писарь/снасти/кнопки/undo.png');
+				background-image: url('/картинки/писарь/снасти/кнопки/undo.png?version=2');
 			}
 			
 			&.undo > *.disabled, &.redo > *.disabled
@@ -287,7 +287,7 @@
 	
 			&.redo > *
 			{
-				background-image: url('/картинки/писарь/снасти/кнопки/redo.png');
+				background-image: url('/картинки/писарь/снасти/кнопки/redo.png?version=2');
 			}
 			
 			&.undo
@@ -328,7 +328,7 @@
 			
 				> *
 				{
-					background-image: url('/картинки/писарь/снасти/кнопки/видео.png');
+					background-image: url('/картинки/писарь/снасти/кнопки/видео.png?version=2');
 					width: 36px;
 					height: 36px;
 				}
@@ -340,7 +340,7 @@
 				
 				> *
 				{
-					background-image: url('/картинки/писарь/снасти/кнопки/аудиозапись.png');
+					background-image: url('/картинки/писарь/снасти/кнопки/аудиозапись.png?version=2');
 					width: 36px;
 					height: 36px;
 				}
@@ -373,13 +373,13 @@
 	
 	.more
 	{
-		background-image: url('/картинки/писарь/снасти/кнопки/показать всё.png');
+		background-image: url('/картинки/писарь/снасти/кнопки/показать всё.png?version=2');
 	}
 
 	.less
 	{
 		display: none;
-		background-image: url('/картинки/писарь/снасти/кнопки/скрыть разширенное.png');
+		background-image: url('/картинки/писарь/снасти/кнопки/скрыть разширенное.png?version=2');
 	}
 }
 
