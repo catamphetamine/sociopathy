@@ -140,6 +140,13 @@ Visual_editor.implement
 			*/
 			
 			var container = editor.caret.container()
+			
+			console.log('container is	')
+			console.log(container)
+			
+			console.log('editor.content')
+			console.log(editor.content.node())
+			
 			var container_tag = container.node().tagName.toLowerCase()
 			
 			var process_enter_key = function()

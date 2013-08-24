@@ -35,6 +35,9 @@ Editor.Caret = new Class
 	{
 		var container = this.node()
 		
+		if (!filter)
+			return $(container)
+				
 		if (!Dom_tools.is_text_node(container))
 		{
 			if ($(container).is(filter))
@@ -129,6 +132,13 @@ Editor.Caret = new Class
 
 	move_to: function(the_element, offset, options)
 	{
+		//throw 'Test'
+		console.log('move to')
+		console.log(the_element)
+		
+		console.log('offset')
+		console.log(offset)
+	
 		if (typeof offset === 'object')
 		{
 			options = offset

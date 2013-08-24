@@ -186,6 +186,8 @@
 		
 		margin-top: @paragraph_margin;
 		margin-bottom: @paragraph_margin;
+		
+		min-height: @messaging_font_line_height;
 	}
 	
 	.scroll_down_to_new_messages

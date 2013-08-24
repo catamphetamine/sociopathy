@@ -719,12 +719,7 @@ var Messages = new Class
 		
 		this.compose_message.fadeIn()
 		
-		if ($.browser.mozilla)
-		{
-			this.visual_editor.editor.content.focus()
-		}
-		
-		this.visual_editor.editor.caret.move_to(this.visual_editor.editor.content.find('> *:first'))
+		this.visual_editor.focus()
 	},
 	
 	should_roll: function(message)

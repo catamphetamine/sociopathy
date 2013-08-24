@@ -235,7 +235,12 @@ var Visual_editor = new Class
 	focus: function()
 	{
 		this.editor.focus()
-		this.editor.caret.move_to(this.editor.content[0].firstChild)
+		
+		var move_to = this.editor.content.node().firstChild
+		if (!move_to)
+			move_to = this.editor.content.node()
+		
+		this.editor.caret.move_to(move_to)
 	},
 	
 	html: function()
