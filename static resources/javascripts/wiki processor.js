@@ -661,11 +661,11 @@ var Wiki_processor = new (new Class
 		var fragments = text.split(/(\s)/)
 		var fragments_and_separators = []
 		
-		var i = 1
+		var i = 0
 		while (i < fragments.length)
 		{
-			var fragment = fragments[i - 1]
-			var separator = fragments[i]
+			var fragment = fragments[i]
+			var separator = fragments[i + 1]
 		
 			if (fragment.trim().length === 0)
 			{
@@ -674,7 +674,7 @@ var Wiki_processor = new (new Class
 			}
 		
 			fragments_and_separators.push({ fragment: fragment, separator: separator })
-			fragments.remove_at(i)
+			fragments.remove_at(i + 1)
 			i++
 		}
 		
@@ -692,7 +692,6 @@ var Wiki_processor = new (new Class
 			countdown()
 		}
 		
-		var i = 0
 		fragments_and_separators.for_each(function()
 		{
 			if (!this.fragment.contains('http://') && !this.fragment.contains('https://') && !this.fragment.contains('ftp://'))
