@@ -35,12 +35,9 @@ Editor.Caret = new Class
 	{
 		var container = this.node()
 		
-		if (!filter)
-			return $(container)
-				
 		if (!Dom_tools.is_text_node(container))
 		{
-			if ($(container).is(filter))
+			if (!filter || filter && $(container).is(filter))
 				return $(container)
 		}
 		
