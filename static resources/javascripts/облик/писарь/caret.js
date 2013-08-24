@@ -491,6 +491,9 @@ Editor.Caret = new Class
 		var container = this.node()
 		var offset = this.offset()
 		
+		if (!container.nodeValue)
+			return
+			
 		if (offset === 0)
 			return
 		
@@ -501,6 +504,9 @@ Editor.Caret = new Class
 	{
 		var container = this.node()
 		var offset = this.offset()
+		
+		if (!container.nodeValue)
+			return
 		
 		if (offset === container.nodeValue.length)
 			return

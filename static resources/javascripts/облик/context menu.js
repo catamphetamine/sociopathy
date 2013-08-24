@@ -95,6 +95,8 @@ var Context_menu = new Class
 			
 			$('body').on('mousedown' + this.namespace, (function()
 			{
+				console.log('mousedown!')
+			
 				this.menu.hide()
 			
 				this.options.selectable_element.removeClass('selected')

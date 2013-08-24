@@ -111,6 +111,9 @@
 			@active_glow_color: #00659d;
 			@active_text_color: #ebf8ff;
 			
+			margin-left: 10px;
+			margin-right: 10px;
+			
 			&:hover
 			{
 				color: @hover_text_color !important;
@@ -145,8 +148,8 @@
 			{
 				top: -1px;
 			
-				margin-left: 5px;
-				margin-right: 5px;
+				margin-left: 0px;
+				margin-right: 0px;
 				
 				&.text_align_justify
 				{
@@ -158,6 +161,11 @@
 					width: 34px;
 					height: 34px;
 				 }
+			}
+			
+			&.text_align_justify
+			{
+				margin-right: 7px;
 			}
 			
 			&.text_align_left > *
@@ -241,6 +249,9 @@
 			{
 				top: -1px;
 				
+				margin-left: 5px;
+				margin-right: 5px;
+				
 				> *
 				{
 					background-image: url('/картинки/писарь/снасти/кнопки/список.png?version=2');
@@ -253,9 +264,27 @@
 			{
 				top: 0px;
 				
+				margin-left: 5px;
+				margin-right: 5px;
+
 				> *
 				{
 					background-image: url('/картинки/писарь/снасти/кнопки/картинка.png?version=2');
+					width: 36px;
+					height: 36px;
+				}
+			}
+						
+			&.video
+			{
+				top: -1px;
+				
+				margin-left: 5px;
+				margin-right: 5px;
+			
+				> *
+				{
+					background-image: url('/картинки/писарь/снасти/кнопки/видео.png?version=2');
 					width: 36px;
 					height: 36px;
 				}
@@ -320,18 +349,6 @@
 			&.subscript sub, &.superscript sup
 			{
 				font-size: 16px;
-			}
-						
-			&.video
-			{
-				top: -1px;
-			
-				> *
-				{
-					background-image: url('/картинки/писарь/снасти/кнопки/видео.png?version=2');
-					width: 36px;
-					height: 36px;
-				}
 			}
 			
 			&.audio

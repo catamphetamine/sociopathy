@@ -20,7 +20,7 @@
 
 nav, #panel
 {
-	height: 32px;
+	height: @navigation_panel_height;
 }
 
 #panel

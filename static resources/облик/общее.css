@@ -418,21 +418,13 @@ label.error
 	{
 		.enter
 		{
-			margin-top: 14px !important;
+			margin-top: 6px !important;
 		}
 		
 		.logout
 		{
 			margin-top: 5px;
 		}
-	}
-}
-
-.authenticated_user
-{	
-	.user_icon
-	{
-		display: none;
 	}
 }
 
@@ -1241,7 +1233,7 @@ label.in-place_input_label
 {
 	display: block;
 	position: relative;
-	margin-bottom: -58px;
+	margin-bottom: -52px;
 	margin-left: 13px;
 	cursor: text;
 	top: -4px;
@@ -1691,7 +1683,7 @@ form.picture_uploader
 		display: none;
 	
 		position: absolute;
-		top: 58px;
+		top: 6px + @navigation_panel_height;
 		left: 2px;
 	}
 }

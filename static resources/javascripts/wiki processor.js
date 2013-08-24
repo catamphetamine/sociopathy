@@ -627,19 +627,15 @@ var Wiki_processor = new (new Class
 		if (!process)
 			return just_append_text()
 	
-		var first_text_append = true
-		
-		function append(what)
+		function append(what, separator)
 		{
-			if (first_text_append)
-				first_text_append = false
-			else
-				Dom_tools.append_text(' ', to())
-				
 			if (typeof what === 'string')
-				return Dom_tools.append_text(what, to())
-				
-			to().appendChild(what)
+				Dom_tools.append_text(what, to())
+			else
+				to().appendChild(what)
+			
+			if (typeof separator !== 'undefined')
+				Dom_tools.append_text(separator, to())
 		}
 		
 		var pure_text_blocks = []
@@ -649,33 +645,60 @@ var Wiki_processor = new (new Class
 			if (pure_text_blocks.is_empty())
 				return
 			
-			var node = append(pure_text_blocks.join(' '))
+			var text = ''
+			pure_text_blocks.for_each(function()
+			{
+				text += this.fragment + this.separator
+			})
 			
 			pure_text_blocks = []
+			
+			var node = append(text)
 			
 			return node
 		}
 		
-		var fragments = text.split(' ')
+		var fragments = text.split(/(\s)/)
+		var fragments_and_separators = []
 		
-		var countdown = Countdown(fragments.length, function()
+		var i = 1
+		while (i < fragments.length)
+		{
+			var fragment = fragments[i - 1]
+			var separator = fragments[i]
+		
+			if (fragment.trim().length === 0)
+			{
+				i += 2
+				continue
+			}
+		
+			fragments_and_separators.push({ fragment: fragment, separator: separator })
+			fragments.remove_at(i)
+			i++
+		}
+		
+		//console.log(fragments_and_separators)
+		
+		var countdown = Countdown(fragments_and_separators.length, function()
 		{
 			append_pure_text()
 			callback(to())
 		})
 		
-		function is_pure_text_block(pure_text_block)
+		function is_pure_text_block(block)
 		{
-			pure_text_blocks.add(pure_text_block)
+			pure_text_blocks.add(block)
 			countdown()
 		}
 		
-		fragments.for_each(function()
+		var i = 0
+		fragments_and_separators.for_each(function()
 		{
-			if (!this.contains('http://') && !this.contains('https://') && !this.contains('ftp://'))
+			if (!this.fragment.contains('http://') && !this.fragment.contains('https://') && !this.fragment.contains('ftp://'))
 				return is_pure_text_block(this)
 			
-			var uri = Uri.parse(this)
+			var uri = Uri.parse(this.fragment)
 			
 			var ссылка = false
 			
@@ -711,7 +734,7 @@ var Wiki_processor = new (new Class
 					return true
 			}
 			
-			ссылка_на_картинку(this, (function(result)
+			ссылка_на_картинку(this.fragment, (function(result)
 			{
 				if (!result.error)
 				{
@@ -725,19 +748,19 @@ var Wiki_processor = new (new Class
 					picture.attr(width, result.width)
 					picture.attr(height, result.height)
 					
-					picture.text(decodeURI(this))
+					picture.text(decodeURI(this.fragment))
 						
-					append(picture.node())
+					append(picture.node(), this.separator)
 					return countdown()
 				}
 				
-				if (ссылка_на_видео_на_youtube(this)
+				if (ссылка_на_видео_на_youtube(this.fragment)
 				    && to().tagName.toLowerCase() === 'paragraph')
 				{
 					var tag = 'youtube'
 					
 					var video = $('<' + tag + '/>')
-					video.html(Youtube.Video.id(this))
+					video.html(Youtube.Video.id(this.fragment))
 						
 					video.insert_after(to())
 					target = $('<paragraph/>').appendTo(to().parentNode).node()
@@ -745,13 +768,13 @@ var Wiki_processor = new (new Class
 					return countdown()
 				}
 				
-				if (ссылка_на_видео_на_vimeo(this)
+				if (ссылка_на_видео_на_vimeo(this.fragment)
 				    && to().tagName.toLowerCase() === 'paragraph')
 				{
 					var tag = 'vimeo'
 					
 					var video = $('<' + tag + '/>')
-					video.html(Vimeo.Video.id(this))
+					video.html(Vimeo.Video.id(this.fragment))
 						
 					video.insert_after(to())
 					target = $('<paragraph/>').appendTo(to().parentNode).node()
@@ -764,7 +787,7 @@ var Wiki_processor = new (new Class
 				var tag = Object.key(Wiki_processor.Syntax.ссылка.translation)
 				var at = Wiki_processor.Syntax.ссылка.translation[tag].на
 				
-				var url = decodeURI(this)
+				var url = decodeURI(this.fragment)
 				
 				if (is_external_internal_url(url))
 					url = is_external_internal_url(url)
@@ -773,7 +796,7 @@ var Wiki_processor = new (new Class
 				link.attr(at, url)
 				link.text(url)
 					
-				append(link.node())
+				append(link.node(), this.separator)
 				
 				return countdown()
 			})
@@ -962,9 +985,20 @@ Wiki_processor.Syntax =
 		selector: 'div.citation > div.author',
 		html_tag: 'div',
 	
+		//break_parsing: true,
+	
 		simplify: function(from)
 		{
 			return ' (' + from.text() + ')'
+		},
+		
+		is_dummy: function(element)
+		{
+			if (element.hasClass('hint'))
+				return true
+			
+			if (element.is_empty())
+				return true
 		},
 		
 		decorate: function(from, to)

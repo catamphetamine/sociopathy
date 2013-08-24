@@ -14,7 +14,7 @@ var Messages = new Class
 	
 	options:
 	{
-		max_messages: 200,
+		max_messages: 42,
 		new_message_sound: new Audio("/звуки/пук.ogg"),
 		messages_batch_size: 18
 	},
@@ -114,7 +114,7 @@ var Messages = new Class
 				data_source_parameters = options.data_source.parameters
 		}
 		
-		page.either_way_loading
+		this.loader = page.either_way_loading
 		({
 			data:
 			{
@@ -504,9 +504,14 @@ var Messages = new Class
 			while (delta_messages > 0)
 			{
 				var message = messages.eq(i)
+	
+				if (message.hasClass('new'))
+					break
+					
 				delta_height += message.height()
 	
 				message.remove()
+				this.loader.removed_message_from_top()
 				
 				delta_messages--
 				i++
@@ -600,7 +605,7 @@ var Messages = new Class
 			
 			visual_editor.editor.content.empty()
 			
-			visual_editor.editor.load_content(visual_editor.dummy_content())
+			//visual_editor.editor.load_content(visual_editor.dummy_content())
 		}
 		
 		reset_editor_content()

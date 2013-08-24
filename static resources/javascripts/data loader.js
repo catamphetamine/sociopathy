@@ -322,13 +322,13 @@ var Scroll_loader = new Class
 	{
 		options = options || {}
 		
-		var old = options.finished
-		options.finished = function()
+		var old = options.after_output
+		options.after_output = function()
 		{
 			this.options.scroll_detector.hide()
-			
+
 			if (old)
-				old()
+				old.apply(this, arguments)
 		}
 		.bind(this)
 							

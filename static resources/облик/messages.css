@@ -20,6 +20,8 @@
 @bottom_padding: 0px;
 @user_icon_margin: 5px;
 
+@paragraph_margin: 5px;
+
 .breadcrumbs
 {
 	margin-bottom: 22px;
@@ -181,6 +183,9 @@
 	{
 		padding-left: @author_column_left_padding + @author_column_width + @inter_column_padding;
 		padding-right: @inter_column_padding + @time_column_width + @time_column_padding + @inter_column_padding;
+		
+		margin-top: @paragraph_margin;
+		margin-bottom: @paragraph_margin;
 	}
 	
 	.scroll_down_to_new_messages
@@ -371,8 +376,8 @@
 	
 	> p, > p:last-child, > p:first-child
 	{
-		margin-top: 5px;
-		margin-bottom: 5px;
+		margin-top: @paragraph_margin;
+		margin-bottom: @paragraph_margin;
 	}
 	
 	> p:first-child

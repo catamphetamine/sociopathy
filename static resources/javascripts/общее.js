@@ -1730,9 +1730,9 @@ var User_online_status = new Class
 		var секунд_прошло = (new Date().getTime() - this.когда_был_здесь.getTime()) / 1000
 		
 		// 24h offline testing
-		// секунд_прошло = 60 * 60 * 24
+		//секунд_прошло = 60 * 60 * 24
 		
-		var горячесть = Math.pow(1.00002, -секунд_прошло)
+		var горячесть = Math.pow(1.000005, -секунд_прошло)
 		
 		var precision = 1000
 		горячесть = Math.round(горячесть * precision) / precision

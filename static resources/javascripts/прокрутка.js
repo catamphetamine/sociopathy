@@ -3,6 +3,8 @@ var Scroller = new Class
 	Binds: ['process_scroll', 'reset'],
 	
 	elements: [],
+	
+	unwatched: [],
 
 	initialize: function()
 	{
@@ -49,6 +51,9 @@ var Scroller = new Class
 	
 	unwatch: function(element)
 	{
+		if (this.collect_unwatched)
+			return this.unwatched.add(element)
+	
 		var i = 0
 		while (i < this.elements.length)
 		{
@@ -68,12 +73,22 @@ var Scroller = new Class
 	
 	process_scroll: function(options)
 	{
+		this.collect_unwatched = true
+	
 		var scroller = this
 		this.elements.for_each(function()
 		{
 			scroller.check_for_events(this, options)
 		},
 		this)
+		
+		this.collect_unwatched = false
+		this.unwatched.forEach(function(element)
+		{
+			this.unwatch(element)
+		}
+		.bind(this))
+		this.unwatched = []
 	},
 
 	check_for_events: function(element, options)
@@ -99,6 +114,14 @@ var Scroller = new Class
 		
 		var delta = top_offset_in_window - previous_top_offset_in_window
 		
+		/*
+		console.log('first_time')
+		console.log(first_time)
+		
+		console.log('delta')
+		console.log(delta)
+		*/
+		
 		if (!first_time && delta === 0)
 			return
 		
@@ -109,8 +132,11 @@ var Scroller = new Class
 		{
 			window_height -= get_bottom_margin()
 			if (window_height < 0)
-				return window_height = 0
-		}	
+				return
+		}
+		
+		//console.log('window_height')
+		//console.log(window_height)
 		
 		var height = element.height()
 		
@@ -118,8 +144,6 @@ var Scroller = new Class
 		var bottom_is_visible = top_offset_in_window + height >= 0 && top_offset_in_window + height < window_height
 		
 		/*
-		console.log(element)
-		
 		console.log('window_height')
 		console.log(window_height)
 		
@@ -128,6 +152,9 @@ var Scroller = new Class
 		
 		console.log('height')
 		console.log(height)
+		
+		console.log('top_is_visible')
+		console.log(top_is_visible)
 		
 		console.log('bottom_is_visible')
 		console.log(bottom_is_visible)
@@ -152,6 +179,23 @@ var Scroller = new Class
 			upwards = top_offset_in_window < previous_top_offset_in_window
 			downwards = !upwards
 		}
+		
+		/*
+		console.log('top_was_visible')
+		console.log(top_was_visible)
+		
+		console.log('top_is_visible')
+		console.log(top_is_visible)
+		
+		console.log('bottom_was_visible')
+		console.log(bottom_was_visible)
+		
+		console.log('bottom_is_visible')
+		console.log(bottom_is_visible)
+		
+		console.log('downwards')
+		console.log(downwards)
+		*/
 		
 		if (bottom_is_visible && top_is_visible)
 			element.trigger('fully_visible')

@@ -93,7 +93,10 @@ var Pagination = new Class
 		
 		$(window).on_page('resize', function()
 		{
-			this.calculate_dimensions()
+			if (this.shown)
+				this.calculate_dimensions()
+			else
+				this.needs_recalculation = true
 		}
 		.bind(this))
 		
@@ -201,6 +204,13 @@ var Pagination = new Class
 		
 		if (!this.offset)
 		{
+			this.needs_recalculation = true
+		}
+		
+		if (this.needs_recalculation)
+		{
+			this.needs_recalculation = false
+			
 			this.offset = this.whole.offset()
 			
 			this.calculate_dimensions()
@@ -241,9 +251,11 @@ var Either_way_loading = new Class
 		
 		var loader_markup = $.tmpl('either way loading', {})
 		
-		options.container = page.get(options.container)
+		this.options.container = page.get(this.options.container)
 		
-		options.container.before(loader_markup)
+		this.options.container.before(loader_markup)
+		
+		options = this.options
 		
 		var ok_block = page.get('.main_conditional > [type=ok]')
 		
@@ -497,7 +509,10 @@ var Either_way_loading = new Class
 				}
 			
 				if (!either_way.top_loader.latest)
+				{
 					either_way.top_loader.latest = either_way.bottom_loader.earliest
+					options.container.fade_in(either_way.options.fade_in)
+				}
 				
 				previous_conditional.callback()	
 			},
@@ -713,5 +728,11 @@ var Either_way_loading = new Class
 			if (top_loader.latest === latest)
 				indicate_loading()
 		})
+	},
+	
+	removed_message_from_top: function()
+	{
+		var element = $(this.options.container.node().firstChild)
+		this.top_loader.latest = { _id: element.attr('message_id') }
 	}
 })

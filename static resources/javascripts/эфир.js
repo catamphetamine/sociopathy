@@ -204,7 +204,8 @@ $(document).on('panel_loaded', function()
 			
 			эфир.emit('уведомления')
 			
-			start_activity_monitor()
+			if (!reconnected)
+				start_activity_monitor()
 			
 			if (first_time_page_loading)
 				$(document).trigger('ether_is_online')

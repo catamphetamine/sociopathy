@@ -225,6 +225,11 @@ Array.prototype.remove = function(element)
 	}
 }
 
+Array.prototype.remove_at = function(index)
+{
+	this.splice(index, 1)
+}
+
 Array.prototype.debug = function()
 {
 	console.log('---')
