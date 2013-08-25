@@ -325,8 +325,6 @@ var Wiki_processor = new (new Class
 		
 		Array.for_each(node.childNodes, function()
 		{
-			//console.log(this)
-			//console.log(html_element.node())
 			processor.decorate_node(this, html_element.node(), options)
 		})
 		
@@ -515,7 +513,17 @@ var Wiki_processor = new (new Class
 			if (target.tagName.toLowerCase() === 'wiki')
 				return finished()
 			
-			return this.append_text(Dom_tools.to_text(node), target, callback)
+			function is(element)
+			{
+				var translation = Wiki_processor.Syntax[element].translation
+				
+				if (typeof translation === 'object')
+					translation = Object.key(translation)
+			
+				return target.tagName && target.tagName.toLowerCase() === translation
+			}
+			
+			return this.append_text(Dom_tools.to_text(node), target, { parse: is('абзац') || is('автор') || is('текст') }, callback)
 		}
 	
 		if (syntax.is_dummy)
@@ -593,7 +601,7 @@ var Wiki_processor = new (new Class
 		}
 	},
 	
-	append_text: function(text, target, callback)
+	append_text: function(text, target, options, callback)
 	{
 		function to()
 		{
@@ -617,14 +625,7 @@ var Wiki_processor = new (new Class
 			return text.contains('http://') || text.contains('https://') || text.contains('ftp://')
 		}
 		
-		function is_inside_paragraph()
-		{
-			return to().tagName && to().tagName.toLowerCase() === Object.key(Wiki_processor.Syntax.абзац.translation)
-		}
-		
-		var process = is_inside_paragraph() && can_contain_hyperlinks()
-		
-		if (!process)
+		if (!options.parse || !can_contain_hyperlinks())
 			return just_append_text()
 	
 		function append(what, separator)
@@ -648,7 +649,10 @@ var Wiki_processor = new (new Class
 			var text = ''
 			pure_text_blocks.for_each(function()
 			{
-				text += this.fragment + this.separator
+				text += this.fragment
+				
+				if (typeof this.separator !== 'undefined')
+					text += this.separator
 			})
 			
 			pure_text_blocks = []
@@ -694,46 +698,12 @@ var Wiki_processor = new (new Class
 		
 		fragments_and_separators.for_each(function()
 		{
-			if (!this.fragment.contains('http://') && !this.fragment.contains('https://') && !this.fragment.contains('ftp://'))
-				return is_pure_text_block(this)
-			
-			var uri = Uri.parse(this.fragment)
-			
-			var ссылка = false
-			
-			if (uri.protocol === 'ftp')
-			{
-				ссылка = true
-			}
-			else if (uri.protocol === 'http' || uri.protocol === 'https')
-			{
-				//if (проверить ссылку)
-				ссылка = true
-			}
-			
-			if (!ссылка)
+			if (!Smart_parser.is_a_link(this.fragment))
 				return is_pure_text_block(this)
 		
 			append_pure_text()
 			
-			function ссылка_на_картинку(url, callback)
-			{
-				get_image_size(url, callback)
-			}
-			
-			function ссылка_на_видео_на_youtube(url)
-			{
-				if (Youtube.Video.id(url))
-					return true
-			}
-			
-			function ссылка_на_видео_на_vimeo(url)
-			{
-				if (Vimeo.Video.id(url))
-					return true
-			}
-			
-			ссылка_на_картинку(this.fragment, (function(result)
+			Smart_parser.ссылка_на_картинку(this.fragment, (function(result)
 			{
 				if (!result.error)
 				{
@@ -753,7 +723,7 @@ var Wiki_processor = new (new Class
 					return countdown()
 				}
 				
-				if (ссылка_на_видео_на_youtube(this.fragment)
+				if (Smart_parser.ссылка_на_видео_на_youtube(this.fragment)
 				    && to().tagName.toLowerCase() === 'paragraph')
 				{
 					var tag = 'youtube'
@@ -767,7 +737,7 @@ var Wiki_processor = new (new Class
 					return countdown()
 				}
 				
-				if (ссылка_на_видео_на_vimeo(this.fragment)
+				if (Smart_parser.ссылка_на_видео_на_vimeo(this.fragment)
 				    && to().tagName.toLowerCase() === 'paragraph')
 				{
 					var tag = 'vimeo'
@@ -781,19 +751,7 @@ var Wiki_processor = new (new Class
 					return countdown()
 				}
 			
-				// просто ссылка
-				
-				var tag = Object.key(Wiki_processor.Syntax.ссылка.translation)
-				var at = Wiki_processor.Syntax.ссылка.translation[tag].на
-				
-				var url = decodeURI(this.fragment)
-				
-				if (is_external_internal_url(url))
-					url = is_external_internal_url(url)
-				
-				var link = $('<' + tag + '/>')
-				link.attr(at, url)
-				link.text(url)
+				var link = Smart_parser.просто_ссылка(this.fragment)
 					
 				append(link.node(), this.separator)
 				
@@ -970,8 +928,8 @@ Wiki_processor.Syntax =
 	текст:
 	{
 		translation: 'text',
-		selector: 'div.citation > span.text',
-		html_tag: 'span',
+		selector: '.citation > .text',
+		html_tag: 'div',
 		
 		decorate: function(from, to)
 		{
@@ -981,7 +939,7 @@ Wiki_processor.Syntax =
 	автор:
 	{
 		translation: 'author',
-		selector: 'div.citation > div.author',
+		selector: '.citation > .author',
 		html_tag: 'div',
 	
 		//break_parsing: true,
@@ -1432,6 +1390,61 @@ Wiki_processor.Syntax =
 	}
 }
 
+var Smart_parser = new (new Class
+({
+	is_a_link: function(text)
+	{
+		if (!text.contains('http://') && !text.contains('https://') && !text.contains('ftp://'))
+			return false
+				
+		var uri = Uri.parse(text)
+			
+		if (uri.protocol === 'ftp')
+		{
+			return true
+		}
+		else if (uri.protocol === 'http' || uri.protocol === 'https')
+		{
+			//if (проверить ссылку)
+			return true
+		}
+	},
+	
+	ссылка_на_картинку: function(url, callback)
+	{
+		get_image_size(url, callback)
+	},
+	
+	ссылка_на_видео_на_youtube: function(url)
+	{
+		if (Youtube.Video.id(url))
+			return true
+	},
+	
+	ссылка_на_видео_на_vimeo: function(url)
+	{
+		if (Vimeo.Video.id(url))
+			return true
+	},
+	
+	просто_ссылка: function(url)
+	{
+		var tag = Object.key(Wiki_processor.Syntax.ссылка.translation)
+		var at = Wiki_processor.Syntax.ссылка.translation[tag].на
+		
+		var url = decodeURI(url)
+		
+		if (is_external_internal_url(url))
+			url = is_external_internal_url(url)
+		
+		var link = $('<' + tag + '/>')
+		link.attr(at, url)
+		link.text(url)
+		
+		return link
+	}
+}))
+
 //var xml = '<paragraph>Материальная точка — объект, не имеющий размеров, но обладающий всеми остальными свойствами (массой, зарядом и т.п.).</paragraph><paragraph>Используется в физике <formula>(physics)</formula> в качестве <code>упрощённой модели</code> относительно малого объекта (относительно малого в рамках задачи). Например, при расчёте пути, пройденного поездом из Петрограда во Владивосток, можно пренебречь его очертаниями и размерами, поскольку они гораздо меньше протяжённости пути.</paragraph><citation><text>Война - это путь обмана. Поэтому, даже если [ты] способен, показывай противнику свою неспособность. Когда должен ввести в бой свои силы, притворись бездеятельным. Когда [цель] близко, показывай, будто она далеко; когда же она действительн далеко, создавай впечатление, что она близко</text><author>Cунь Цзы, «Искусство Войны»</author></citation><paragraph>Вставим-ка сюда картинку: <picture>http://cdn1.iconfinder.com/data/icons/49handdrawing/128x128/picture.png</picture>, вот так.</paragraph><paragraph><youtube>quYfLkJMN1g</youtube></paragraph><paragraph><vimeo>47387431</vimeo></paragraph><paragraph>Однако <bold>не всегда</bold> можно <italic>пользоваться</italic> материальными<superscript>1</superscript> точками<subscript>2</subscript> для решения задач. Например, при расчёте распределения энергии молекул в &lt;a type="hyperlink" href="/%D1%87%D0%B8%D1%82%D0%B0%D0%BB%D1%8C%D0%BD%D1%8F/%D1%85%D0%B8%D0%BC%D0%B8%D1%8F/%D0%B8%D0%BD%D0%B5%D1%80%D1%82%D0%BD%D1%8B%D0%B9%20%D0%B3%D0%B0%D0%B7"&gt;инертном газе&lt;/a&gt; можно представить молекулы материальными точками (шариками). Однако для других веществ начинает иметь значение строение молекулы, так как </paragraph><multiline_code>колебание и вращение</multiline_code> самой молекулы начинают запасать в себе значительную энергию.<paragraph></paragraph><header_2>Ссылки</header_2><list><item><hyperlink at="http://ru.wikipedia.org/wiki/%D0%9C%D0%B0%D1%82%D0%B5%D1%80%D0%B8%D0%B0%D0%BB%D1%8C%D0%BD%D0%B0%D1%8F_%D1%82%D0%BE%D1%87%D0%BA%D0%B0">WikiPedia</hyperlink></item><item><hyperlink at="http://phys.msu.ru/">ФизФак МГУ</hyperlink></item></list>'
 //Wiki_processor.validate(xml)
 
@@ -1441,7 +1454,7 @@ Wiki_processor.Syntax =
 function test_hyperlink_parser(text, expected_result)
 {
 	var paragraph = document.createElement('paragraph')
-	Wiki_processor.append_text(text, paragraph)
+	Wiki_processor.append_text(text, paragraph, {})
 	
 	console.log('input: ' + text)
 	console.log('parsed: ' + paragraph.innerHTML)

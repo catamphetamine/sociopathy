@@ -129,13 +129,6 @@ Editor.Caret = new Class
 
 	move_to: function(the_element, offset, options)
 	{
-		//throw 'Test'
-		console.log('move to')
-		console.log(the_element)
-		
-		console.log('offset')
-		console.log(offset)
-	
 		if (typeof offset === 'object')
 		{
 			options = offset

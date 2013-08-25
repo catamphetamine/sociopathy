@@ -330,7 +330,7 @@ var Either_way_loading = new Class
 			{
 				if (options.data.before_output)
 					options.data.before_output(elements)
-				
+					
 				page.data.container_height_before_loaded_previous = either_way.container_height()
 			},
 			after_output: function(elements, options)

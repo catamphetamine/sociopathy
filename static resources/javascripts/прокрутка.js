@@ -14,7 +14,7 @@ var Scroller = new Class
 		
 		$(document).on('focused', function()
 		{
-			console.log('Window focused. Processing pseudo scroll')
+			//console.log('Window focused. Processing pseudo scroll')
 			process_scroll({ first_time: true })
 		})
 		

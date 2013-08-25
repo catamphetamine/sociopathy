@@ -19,14 +19,14 @@ var Interactive_messages = function(options)
 			
 			message.find('.popup_menu_container').prependTo(message)
 			
-			var author = message.find('.author')
+			var author = message.find('> .author')
 			if (this.is_connected(author.attr('author')))
 				author.addClass('connected')
 			
-			message.find('.text').find('a').attr('target', '_blank')
+			message.find('> .content').find('a').attr('target', '_blank')
 			
 			if (away_users[data.отправитель._id])
-				message.find('.author').addClass('is_away')
+				message.find('> .author').addClass('is_away')
 			
 			if (data.отправитель._id !== пользователь._id)
 				message.attr('another_author', true)
@@ -38,6 +38,12 @@ var Interactive_messages = function(options)
 		can_show_editor: options.can_show_editor,
 		container: options.container,
 		on_message_bottom_appears: options.on_message_bottom_appears,
+		before_output: function(message)
+		{
+			var author = message.find('> .author')
+			if (Эфир.кто_в_сети.has(message.attr('author')))
+				author.addClass('online')
+		},
 		set_up_visual_editor: function(visual_editor)
 		{
 			if (options.set_up_visual_editor)
@@ -73,7 +79,7 @@ var Interactive_messages = function(options)
 		decorate_message: function(message, data)
 		{
 			if (away_users[data.отправитель._id])
-				message.find('.author').addClass('is_away')
+				message.find('> .author').addClass('is_away')
 		},
 		send_message: function(message)
 		{
@@ -98,7 +104,7 @@ var Interactive_messages = function(options)
 			{
 				messages.initialize_user_actions(message, message.attr('author'), 'of_message_author', function()
 				{
-					return message.find('.author').hasClass('online')
+					return message.find('> .author').hasClass('online')
 				})
 			}
 		},
@@ -113,7 +119,7 @@ var Interactive_messages = function(options)
 			if (is_another_users_message)
 				this.initialize_user_actions(message, message.attr('author'), 'of_message_author', function()
 				{
-					return message.find('.author').hasClass('online')
+					return message.find('> .author').hasClass('online')
 				})
 		},
 		show_editor: options.show_editor,

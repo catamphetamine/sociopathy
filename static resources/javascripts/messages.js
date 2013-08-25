@@ -35,8 +35,9 @@ var Messages = new Class
 	create_message_element: function(data)
 	{
 		data.когда_примерно = неточное_время(data.когда, { blank_if_just_now: true })
-		var message = $.tmpl('сообщение общения', data)
 		
+		var message = $.tmpl('сообщение общения', data)
+
 		if (data.новое)
 			message.addClass('new')
 			
@@ -205,8 +206,8 @@ var Messages = new Class
 					
 					if (next_new_author_in_time.exists() && next_new_author_in_time.attr('author') === message.attr('author'))
 					{
-						next_new_author_in_time.find('.author').children().remove()
-						next_new_author_in_time.find('.message').css('padding-top', 0)
+						next_new_author_in_time.find('> .author').children().remove()
+						next_new_author_in_time.find('> .message').css('padding-top', 0)
 						
 						next_new_author_in_time.removeClass('new_author')
 						
@@ -252,8 +253,8 @@ var Messages = new Class
 				
 					if (previous_new_author_in_time.exists() && previous_new_author_in_time.attr('author') === message.attr('author'))
 					{
-						message.find('.author').children().remove()
-						message.find('.message').css('padding-top', 0)
+						message.find('> .author').children().remove()
+						message.find('> .message').css('padding-top', 0)
 						
 						if (previous_new_author_in_time.hasClass('odd'))
 							message.addClass('odd')
@@ -345,8 +346,8 @@ var Messages = new Class
 		
 		if (same_author)
 		{
-			message.find('.author').children().remove()
-			message.find('.message').css('padding-top', 0)
+			message.find('> .author').children().remove()
+			message.find('> .message').css('padding-top', 0)
 			
 			if (previous.hasClass('odd'))
 				message.addClass('odd')

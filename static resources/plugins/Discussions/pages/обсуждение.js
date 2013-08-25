@@ -49,12 +49,6 @@
 			{
 				Новости.прочитано({ обсуждение: page.data.общение._id, сообщение: _id })
 			},
-			before_output: function(message)
-			{
-				var author = message.find('.author')
-				if (Эфир.кто_в_сети.has(message.attr('author')))
-					author.addClass('online')
-			},
 			on_message_data: function(data)
 			{
 				Эфир.следить_за_пользователем(data.отправитель)
@@ -63,7 +57,7 @@
 			{
 				away_aware_elements:
 				[
-					'#discussion > li[author="{id}"] .author'
+					'#discussion > li[author="{id}"] > .author'
 				]
 			},
 			save_changes: save_title,

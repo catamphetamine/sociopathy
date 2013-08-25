@@ -704,11 +704,11 @@ body[mode="правка"] .rich_formatting a
 		
 		.author
 		{
-			margin-left: 100px;
-			text-align: right;
-			/* white-space: nowrap; */
-			white-space: pre-wrap;
+			float: right;
+			white-space: nowrap;
+			overflow: hidden;
 			text-overflow: ellipsis;
+			max-width: 60%;
 			
 			font-size: 27px;
 			line-height: 40px;
