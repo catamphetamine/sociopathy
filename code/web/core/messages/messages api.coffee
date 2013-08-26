@@ -13,15 +13,15 @@ global.messages_api = (options) ->
 			collection: options.messages_collection
 		
 		if options.сообщения_чего?
-			сообщения_чего = options.сообщения_чего.await(ввод)
+			сообщения_чего = options.сообщения_чего.do(ввод)
 			environment.сообщения_чего = сообщения_чего
 		
 		if options.authorize?
-			options.authorize.await(environment)
+			options.authorize.do(environment)
 		
 		if not ввод.данные.после?
 			if not ввод.данные.с_начала?
-				loading_options.с = show_from.await(environment)
+				loading_options.с = show_from.do(environment)
 		
 		loading_options.query = options.these_messages_query({}, environment)
 
@@ -33,11 +33,11 @@ global.messages_api = (options) ->
 		$['есть ещё?'] = result['есть ещё?']
 		$['есть ли предыдущие?'] = result['есть ли предыдущие?']
 		
-		пользовательское.подставить.await($.сообщения, 'отправитель')
+		пользовательское.подставить.do($.сообщения, 'отправитель')
 		
 		if ввод.данные.первый_раз?
 			if options.extra_get?
-				options.extra_get.await($, environment)
+				options.extra_get.do($, environment)
 				
 			if result.data.пусто()
 				$.всего = 0
@@ -59,10 +59,10 @@ global.messages_api = (options) ->
 			
 			if options.создатель?
 				if environment.сообщения_чего?
-					$.создатель = options.создатель.await(environment.сообщения_чего._id)
+					$.создатель = options.создатель.do(environment.сообщения_чего._id)
 	
 		if options.mark_new?
-			options.mark_new.await($.сообщения, environment)
+			options.mark_new.do($.сообщения, environment)
 		
 		if ввод.данные.первый_раз?
 			$.environment =
@@ -79,7 +79,7 @@ global.messages_api = (options) ->
 			_id = db(options.collection).id(ввод.данные._id)
 			добавляемый = db('people').id(ввод.данные.пользователь)
 			
-			result = options.добавить_в_общение.await(_id, добавляемый, пользователь)
+			result = options.добавить_в_общение.do(_id, добавляемый, пользователь)
 			
 			if result? && result.уже_участвует?
 				return вывод.send { уже_участвует: yes }

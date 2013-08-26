@@ -1,5 +1,7 @@
 disk = require 'fs'
 
+require_client_code('translator')
+
 languages_path = __dirname + '/../../static resources/international'
 
 translations = disk_tools.list_files(languages_path, { type: 'json' })
@@ -17,5 +19,10 @@ for translation in translations
 		
 	global.Url_map[language] = texts.url
 	
-	global.International[language] = {}
+	global.International[language] = texts
+	
 	global.International[language].Database = texts.database
+	
+Translator.translation = global.International[Options.Language]
+
+# ввод.cookies.language

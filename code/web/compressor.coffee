@@ -9,7 +9,7 @@ css_minifier = (value) ->
 		#filename: 'style.less' # Specify a filename, for better error messages
 		
 	parser = new less.Parser(options)
-	syntax_tree = parser.parse.bind_await(parser)(value)
+	syntax_tree = parser.parse.fiberize(parser)(value)
 	return syntax_tree.toCSS(compress: yes) # Minify CSS output
 	
 #console.log(css_minifier('.class { width: (1 + 1) }'))

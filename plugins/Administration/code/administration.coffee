@@ -182,7 +182,7 @@ http.post '/хранилище/создать', (ввод, вывод) ->
 		else
 			administrator.gender = 'женский'
 	
-	database_schema = International[ввод.cookies.language].Database
+	database_schema = International[Configuration.Language].Database
 	
 	# это следует также вынести в translation
 	человек =

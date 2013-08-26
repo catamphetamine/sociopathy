@@ -566,7 +566,7 @@ var Editor = new Class
 	
 	html: function()
 	{
-		this.sanitize()
+		this.sanitize()	
 		return this.content.html()
 	}
 })

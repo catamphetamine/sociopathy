@@ -23,20 +23,18 @@ var Scroller = new Class
 	
 	watching: function(element)
 	{
-		var contains = false
-		this.elements.for_each(function()
+		var filtered = this.elements.filter(function(an_element)
 		{
-			if (this.node() === element.node())
-				contains = true
+			return an_element.node() === element.node()
 		})
 		
-		return contains
+		return !filtered.is_empty()
 	},
 	
 	watch: function(element, options)
 	{
 		if (this.watching(element))
-			return
+			return //console.log('already watching')
 		
 		options = options || {}
 	
@@ -59,8 +57,8 @@ var Scroller = new Class
 		{
 			if (this.elements[i].node() === element.node())
 			{
-				this.elements.splice(i, 1)
-				return this.unwatch(element)
+				return this.elements.remove_at(i)
+				//return this.unwatch(element)
 			}
 			
 			i++

@@ -27,7 +27,7 @@ global.prepare_messages = (options) ->
 			return []
 		
 		дополнить_общения = (общения) ->
-			пользовательское.подставить.await(общения, 'участники')
+			пользовательское.подставить.do(общения, 'участники')
 			
 			if options.bulk_get_extra?
 				options.bulk_get_extra(общения)
@@ -43,7 +43,7 @@ global.prepare_messages = (options) ->
 					сообщения.add(array[0])
 			
 			последние_сообщения = сообщения
-			последние_сообщения = пользовательское.подставить.await(последние_сообщения, 'отправитель')
+			последние_сообщения = пользовательское.подставить.do(последние_сообщения, 'отправитель')
 			
 			последние_сообщения.merge_into(общения, 'последнее_сообщение', (общение) -> @.общение + '' == общение._id + '')
 			
@@ -55,7 +55,7 @@ global.prepare_messages = (options) ->
 				пользователь: пользователь
 			
 			if options.authorize?
-				options.authorize.await(environment)
+				options.authorize.do(environment)
 			
 			непрочитанные = ->
 				session = пользовательское.session(пользователь)
@@ -238,7 +238,7 @@ global.prepare_messages = (options) ->
 				if not кому?
 					return возврат()
 				
-				options.добавить_в_общение.await(_id, db('people').id(кому), пользователь)
+				options.добавить_в_общение.do(_id, db('people').id(кому), пользователь)
 				возврат()
 
 		options.сообщения_чего = (ввод, возврат) ->
@@ -265,7 +265,7 @@ global.prepare_messages = (options) ->
 			data._id = environment.сообщения_чего._id
 			
 			if extra_get?
-				extra_get.await(data, environment)
+				extra_get.do(data, environment)
 				
 			возврат()
 					
@@ -300,9 +300,11 @@ global.prepare_messages = (options) ->
 
 		notify_users = []
 	
-		if options.общение_во_множественном_числе?
+		общение = null
+		if environment.сообщения_чего?
 			общение = db(options.collection)._.find_one({ _id: environment.сообщения_чего._id })
-			
+		
+		if options.общение_во_множественном_числе?
 			query = {}
 			
 			query.$or = []
@@ -341,9 +343,8 @@ global.prepare_messages = (options) ->
 			сообщение: _id.toString()
 			text: сообщение.сообщение
 
-		if environment.сообщения_чего?
-			data._id = environment.сообщения_чего._id.toString()
-			общение = db(options.collection)._.find_one({ _id: environment.сообщения_чего._id })
+		if общение?
+			data._id = общение._id.toString()
 			data.id = общение.id
 			data.отправитель = environment.пользователь
 		
@@ -363,6 +364,25 @@ global.prepare_messages = (options) ->
 				эфир.отправить('новости', options.общение, data, { кому: пользователь })
 		else
 			эфир.отправить('новости', options.общение, data, { кроме: environment.пользователь._id })
+		
+		# if this is a private communication of two people
+		if общение && notify_users.length == 1
+			user = пользовательское.взять.fiberize()(notify_users[0], { полностью: yes })
+			отправитель = environment.пользователь
+			
+			кому = user.имя + ' <' + user.почта + '>'
+			
+			message_key = 'mail.communication.new message'
+			
+			data = { name: отправитель.имя, message: сообщение.simplified }
+			письмо = Translator.text(message_key, data)
+			
+			try
+				console.log(кому: кому, тема: общение.название, сообщение: письмо)
+				почта.письмо(кому: кому, тема: общение.название, сообщение: письмо)
+			catch error
+				console.log('Mail delivery failed')
+				console.log(error)
 		
 		возврат()
 

@@ -13,7 +13,7 @@ CPU_watcher.watch = () ->
 		watch: yes
 	
 	get_usage = () ->
-		data = disk.readFile.await('/proc/' + process.pid + '/stat')
+		data = disk.readFile.do('/proc/' + process.pid + '/stat')
 		
 		chunks = data.toString().split(' ')
 		

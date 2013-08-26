@@ -9,16 +9,16 @@ upload_file = (ввод, возврат) ->
 		show_error('Не указан тайный ключ пользователя')
 	
 	pause = connect_utilities.pause(ввод)
-	пользовательское.опознать.await(тайный_ключ_пользователя)
-	снасти.создать_путь.await(Options.Upload_server.Temporary_file_path)
-	files = monitor_upload.await(ввод, pause)
+	пользовательское.опознать.do(тайный_ключ_пользователя)
+	снасти.создать_путь.do(Options.Upload_server.Temporary_file_path)
+	files = monitor_upload.do(ввод, pause)
 	file = files[0][1]
 	возврат(null, file)
 
 upload_image = (ввод, вывод, настройки) ->
-	file = upload_file.await(ввод)
-	test = global.resize.await(file.path, file.path, настройки)
-	снасти.переименовать.await(file.path, снасти.имя_файла(file.path) + '.jpg')
+	file = upload_file.do(ввод)
+	test = global.resize.do(file.path, file.path, настройки)
+	снасти.переименовать.do(file.path, снасти.имя_файла(file.path) + '.jpg')
 	адрес = file.path.to_unix_path().replace(Options.Upload_server.File_path, Options.Upload_server.File_url) + '.jpg'
 	вывод.send({ имя: снасти.имя_файла(file.path), адрес: адрес })
 
@@ -113,10 +113,10 @@ global.finish_picture_upload = (options) ->
 	путь = Options.Upload_server.Temporary_file_path + '/' + временное_название + '.jpg'
 
 	место = Options.Upload_server.File_path + options.место
-	снасти.создать_путь.await(место)
+	снасти.создать_путь.do(место)
 	
 	if options.extra_sizes?
 		for name, sizing of options.extra_sizes
-			resize.await(путь, место + '/' + name + '.jpg', sizing)
+			resize.do(путь, место + '/' + name + '.jpg', sizing)
 			
-	снасти.переместить_и_переименовать.await(путь, { место: место, имя: options.название + '.jpg' })
+	снасти.переместить_и_переименовать.do(путь, { место: место, имя: options.название + '.jpg' })

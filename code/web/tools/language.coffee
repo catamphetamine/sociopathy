@@ -1,3 +1,6 @@
+Array.prototype.clean = ->
+    @filter((item) -> return item != null)
+
 Array.prototype.is_empty = () ->
 	@length == 0
 	

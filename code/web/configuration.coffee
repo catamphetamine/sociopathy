@@ -48,11 +48,7 @@ module.exports =
 				Width: 100
 				Height: 150
 	Mail:
-		Box: 'sobranie.net@gmail.com'
-		Smtp:
-			Username: 'Собрание <sobranie.net@gmail.com>'
-			Host: 'smtp.gmail.com'
-			Port: 465 # 587 #
+		From: 'Sociopathy <news@sociopathy.info>'
 	Invites: yes
 	Plugins: ['Library', 'People', 'Help', 'News', 'Chat', 'Talks', 'Discussions', 'Bookshelf', 'Settings', 'Trash', 'Administration', 'Errors', 'Picture albums', 'Video albums'] # 'Diary', 'Journal', 'Books', 'Circles'
 	Optimize: yes

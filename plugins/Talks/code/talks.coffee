@@ -21,7 +21,7 @@ options.save = (сообщение, environment) ->
 	db(options.collection)._.update({ _id: environment.сообщения_чего._id }, { $addToSet: { участники: environment.пользователь._id } })	
 
 #options.bulk_get_extra = (беседы) ->
-#	пользовательское.подставить.await(беседы, 'участники')
+#	пользовательское.подставить.do(беседы, 'участники')
 
 result = messages.messages(options)
 

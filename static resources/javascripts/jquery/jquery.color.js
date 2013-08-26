@@ -562,7 +562,7 @@
 					var backgroundColor,
 						curElem = hook === "backgroundColor" ? elem.parentNode : elem;
 					do {
-						backgroundColor = jQuery.curCSS( curElem, "backgroundColor" );
+						backgroundColor = curElem.css("backgroundColor");
 					} while (
 						( backgroundColor === "" || backgroundColor === "transparent" ) &&
 						( curElem = curElem.parentNode ) &&

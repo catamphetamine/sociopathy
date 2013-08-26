@@ -22,11 +22,11 @@ file_map = (path, options) ->
 	
 	map = {}
 	
-	for entry in disk.readdir.await(path)
+	for entry in disk.readdir.do(path)
 		if options.exclude? && options.exclude.has((path + '/' + entry).after(options.path).substring(1))
 			continue
 		
-		if disk.stat.await(path + '/' + entry).isDirectory()
+		if disk.stat.do(path + '/' + entry).isDirectory()
 			if map[entry]?
 				throw 'Both file and folder are named «' + entry + '»'
 			map[entry] = file_map(path + '/' + entry, options)
@@ -73,7 +73,7 @@ flatten = (map) ->
 	flat
 
 disk_tools.list_files = (path, options) ->
-	if not file_system.exists.await(path)
+	if not file_system.exists.do(path)
 		return []
 
 	options.path = path
@@ -91,30 +91,30 @@ map_to_array_map = (map) ->
 	return array
 
 disk_tools.map_files = (path, options) ->
-	if not file_system.exists.await(path)
+	if not file_system.exists.do(path)
 		return []
 
 	options.path = path
 	map_to_array_map(file_map(options))
 
 disk_tools.read = (file) ->
-	disk.readFile.await(file, 'utf8')
+	disk.readFile.do(file, 'utf8')
 
 disk_tools.write = (file, content) ->
-	disk.writeFile.await(file, content, 'utf8')
+	disk.writeFile.do(file, content, 'utf8')
 
 disk_tools.exists = (file) ->
-	file_system.exists.await(file)
+	file_system.exists.do(file)
 	
 disk_tools.new_folder = (folder) ->
-	disk.mkdir.await(folder)
+	disk.mkdir.do(folder)
 	
 disk_tools.size = (folder) ->
-	stats = disk.lstat.await(folder)
+	stats = disk.lstat.do(folder)
 	total = stats.size
 
 	if stats.isDirectory()
-		for item in disk.readdir.await(folder)
+		for item in disk.readdir.do(folder)
 			total += disk_tools.size(require('path').join(folder, item))
 		
 	return total

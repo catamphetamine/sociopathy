@@ -1,5 +1,7 @@
 require 'coffee-script'
 
+require 'mootools'
+
 global.Started_at = new Date()
 
 global.Root_folder = __dirname + '/../..'
@@ -7,6 +9,9 @@ global.Root_folder = __dirname + '/../..'
 require './tools/language'
 
 global.mode = 'development'
+
+global.require_client_code = (path) ->
+	require __dirname + '/../../static resources/javascripts/' + path + '.js'
 
 get_launch_options = ->
 	index = process.argv.indexOf('options')
@@ -46,8 +51,8 @@ fiber ->
 	
 		# clear all the presence user lists (if the application was terminated the corresponding redis keys weren't updated)
 		redis = global.redis.createClient()
-		for presence_list in redis.keys.bind_await(redis)('*:connected')
-			redis.del.bind_await(redis)(presence_list)
+		for presence_list in redis.keys.fiberize(redis)('*:connected')
+			redis.del.fiberize(redis)(presence_list)
 		
 		# memcache
 		memcache = require('memcache')
@@ -69,7 +74,7 @@ fiber ->
 		global.снасти = require './tools/tools'
 		global.пользовательское = require './tools/user tools'
 	
-		global.хранилище.create = global.хранилище.createCollection.bind_await(global.хранилище)
+		global.хранилище.create = global.хранилище.createCollection.fiberize(global.хранилище)
 		
 		global.either_way_loading = require './tools/either way loading'
 		

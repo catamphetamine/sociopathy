@@ -54,7 +54,7 @@ api.общение_по_id = (collection, id) ->
 	
 				# don't go offline if has another ether connections
 				if not still_online
-					online.hdel.bind_await(online)('ether:online', пользователь._id)
+					online.hdel.fiberize(online)('ether:online', пользователь._id)
 					
 					for id, listener of listeners
 						listener.offline(пользователь)
@@ -68,7 +68,7 @@ api.общение_по_id = (collection, id) ->
 				disconnect()
 		
 		соединение.on 'пользователь', (тайный_ключ) ->
-			пользователь = пользовательское.опознать.await(тайный_ключ)
+			пользователь = пользовательское.опознать.do(тайный_ключ)
 		
 			if not пользователь?
 				throw 'Пользователь не найден: ' + тайный_ключ
@@ -80,7 +80,7 @@ api.общение_по_id = (collection, id) ->
 			user = пользователь
 			пользователь = пользовательское.поля(пользователь)
 
-			was_online = online.hget.bind_await(online)('ether:online', пользователь._id)
+			was_online = online.hget.fiberize(online)('ether:online', пользователь._id)
 			
 			if not was_online?
 				online.hset('ether:online', пользователь._id, JSON.stringify(пользователь))
@@ -277,7 +277,7 @@ api.отправить_одному_соединению = (group, name, data, o
 		return возврат(null, yes)
 	
 api.в_сети_ли = (_id, возврат) ->
-	user = online.hget.bind_await(online)('ether:online', _id + '')
+	user = online.hget.fiberize(online)('ether:online', _id + '')
 	
 	is_online = no
 	if user?

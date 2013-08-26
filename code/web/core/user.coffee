@@ -9,10 +9,10 @@ http.post '/вход', (ввод, вывод) ->
 	Temperature_half_life = 15 # minutes
 	Temperature_doubles_when_in_interval = 60 # minutes
 	
-	пользователь = пользовательское.взять.await({ имя: ввод.данные.имя }, { полностью: yes })
+	пользователь = пользовательское.взять.do({ имя: ввод.данные.имя }, { полностью: yes })
 
 	if not пользователь?
-		пользователь = пользовательское.взять.await({ имя: new RegExp('^' + RegExp.escape(ввод.данные.имя) + '$', 'i') }, { полностью: yes })[0]
+		пользователь = пользовательское.взять.do({ имя: new RegExp('^' + RegExp.escape(ввод.данные.имя) + '$', 'i') }, { полностью: yes })[0]
 
 		if not пользователь?
 			throw 'user not found'
@@ -53,7 +53,7 @@ http.post '/вход', (ввод, вывод) ->
 	
 	db('people_sessions')._.update({ пользователь: пользователь._id }, { $unset: { последний_неудавшийся_вход: yes } })
 	
-	пользовательское.войти.await(пользователь, ввод, вывод)
+	пользовательское.войти.do(пользователь, ввод, вывод)
 
 	вывод.send(пользователь: пользовательское.поля(пользователь))
 
@@ -70,7 +70,7 @@ http.put '/прописать', (ввод, вывод) ->
 		update = { $set: { использовано: yes } }
 		
 		collection = db('invites')
-		invite = collection.findAndModify.bind_await(collection)(query, [], update, {})
+		invite = collection.findAndModify.fiberize(collection)(query, [], update, {})
 	
 		if not invite?
 			throw 'No invite given'

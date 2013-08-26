@@ -6,12 +6,13 @@ var body = document.getElementsByTagName('body')[0]
 var initial_scripts =
 [
 	{ path: 'jquery/jquery' },
-	{ path: 'mootools/mootools-core-1.4.5-full-nocompat' },
+	{ path: 'mootools/core' },
 	{ path: 'язык' },
 	{ path: 'jquery/jquery.cookie' },
 	{ path: 'jquery/jquery.extension' },
 	{ path: 'hotkeys' },
 	{ path: 'пользователь', await: true },
+	{ path: 'translator' },
 	{ path: 'языки', await: true }
 ]
 
@@ -39,7 +40,7 @@ var scripts =
 	{mootools:
 	[
 		//'mootools-core-1.4.5-full-nocompat',
-		'mootools-more-1.4.0.1',
+		'more',
 	]},
 	
 	//'язык',
@@ -236,8 +237,12 @@ function script_insertion(all_scripts, root_path, finished)
 	return insert_scripts
 }
 
+var Wiki_processor
+
 var insert_scripts = script_insertion(scripts, '/javascripts', function()
 {
+	Wiki_processor = window.Wiki_processor
+
 	// к этому времени jQuery уже подгружен
 	$(document).trigger('scripts_loaded')
 })

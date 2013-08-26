@@ -6,7 +6,7 @@ exports.войти = (пользователь, ввод, вывод, возвр
 			return возврат(null, пользователь)
 				
 	ввод.пользователь = { _id: пользователь._id }
-	тайный_ключ = пользовательское.тайный_ключ.await(пользователь._id)
+	тайный_ключ = пользовательское.тайный_ключ.do(пользователь._id)
 
 	вывод.cookie('user', тайный_ключ, { expires: { toUTCString: -> 'max-age' }, httpOnly: false })
 	return возврат(null, пользователь)
@@ -20,7 +20,7 @@ exports.пользователь = (ввод) ->
 		return
 	if not ввод.пользователь?
 		return
-	return пользовательское.взять.await(ввод.пользователь._id)
+	return пользовательское.взять.do(ввод.пользователь._id)
 
 exports.пользователь_полностью = (ввод, возврат) ->
 	if not ввод.session?
@@ -56,7 +56,7 @@ exports.опознать = (тайный_ключ, возврат) ->
 	if not данные?
 		throw 'пользователь не опознан по ' + тайный_ключ
 	
-	возврат(null, пользовательское.взять.await(данные.пользователь))
+	возврат(null, пользовательское.взять.do(данные.пользователь))
 
 exports.сделать_тайный_ключ = (пользователь) ->
 	пользователь._id + '&' + Math.random()
@@ -70,11 +70,11 @@ exports.тайный_ключ = (_id, возврат) ->
 	возврат(null, тайный_ключ['тайный ключ'])
 
 exports.get_session_data = (тайный_ключ, возврат) ->
-	session_data = redis_session_store.get.bind_await(redis_session_store)(тайный_ключ)
+	session_data = redis_session_store.get.fiberize(redis_session_store)(тайный_ключ)
 	возврат(null, session_data)
 
 exports.set_session_data = (тайный_ключ, ключ, значение, возврат) ->
-	session_data = redis_session_store.get.bind_await(redis_session_store)(тайный_ключ)
+	session_data = redis_session_store.get.fiberize(redis_session_store)(тайный_ключ)
 	
 	if not session_data?
 		session_data = {}
@@ -157,7 +157,7 @@ exports.подставить = (куда, переменная, возврат) 
 
 	пользователи = []
 	for _id in _ids
-		пользователи.add(пользовательское.взять.await(_id))
+		пользователи.add(пользовательское.взять.do(_id))
 
 	users = {}
 	for пользователь in пользователи

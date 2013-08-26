@@ -9,7 +9,7 @@ global.messages_tools = (options) ->
 		http.post '/сеть/' + url + '/сообщения/правка', (ввод, вывод, пользователь) ->
 			for data in JSON.parse(ввод.данные.messages)
 				if options.update?
-					options.update.await(data._id, пользователь._id, data.content)
+					options.update.do(data._id, пользователь._id, data.content)
 				else
 					_id = db(initial_options.messages_collection).id(data._id)
 					db(initial_options.messages_collection)._.update({ _id: _id, отправитель: пользователь._id }, { $set: { сообщение: data.content } })
@@ -46,7 +46,7 @@ global.messages_tools = (options) ->
 			_id = ввод.данные._id
 			название = ввод.данные.название.trim()
 			
-			создатель = options.создатель.await(_id)
+			создатель = options.создатель.do(_id)
 		
 			if создатель + '' != пользователь._id + ''
 				throw "Вы не создатель этого общения, и не можете его переименовать"
@@ -79,12 +79,12 @@ global.messages_tools = (options) ->
 			
 			environment.сообщения_чего = { _id: общение._id }
 			
-			сообщение = options.save.await(сообщение, environment)
+			сообщение = options.save.do(сообщение, environment)
 		
-			options.message_read.await(сообщение._id, environment)
+			options.message_read.do(сообщение._id, environment)
 								
 			if options.creation_extra?
-				options.creation_extra.await(общение._id, пользователь, ввод)
+				options.creation_extra.do(общение._id, пользователь, ввод)
 			
 			вывод.send { id: id }
 

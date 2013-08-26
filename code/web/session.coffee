@@ -16,7 +16,7 @@ exports.get = (id, key, возврат) ->
 		возврат = key
 		key = null
 		
-	data = client.get.bind_await(client)(prefix + id)
+	data = client.get.fiberize(client)(prefix + id)
 	
 	if not data?
 		return возврат()
@@ -30,7 +30,7 @@ exports.get = (id, key, возврат) ->
 exports.set = (id, extra_data, возврат) ->
 	multi = client.multi()
 
-	data = multi.get.bind_await(multi)(prefix + id)
+	data = multi.get.fiberize(multi)(prefix + id)
 			
 	if data?
 		data = JSON.parse(data.toString())

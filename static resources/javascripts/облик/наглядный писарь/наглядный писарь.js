@@ -247,6 +247,11 @@ var Visual_editor = new Class
 	{
 		return this.editor.html()
 	},
+	
+	load_content: function(html)
+	{
+		this.editor.load_content(html)
+	},
 
 	can_edit: function()
 	{

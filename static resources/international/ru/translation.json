@@ -225,5 +225,13 @@
 			"unable to send message while browsing": "Нельзя писать сообщения пока вы не докрутили до самого конца",
 			"message read status update failed": "Не удалось отметить сообщение как прочитанное"
 		}
+	},
+	
+	"mail":
+	{
+		"communication":
+		{
+			"new message": "{name} пишет:\n\n {message}"
+		}
 	}
 }

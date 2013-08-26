@@ -8,7 +8,7 @@ file_system = require 'fs'
 снасти.отдать_страницу = (название, данные_для_страницы, ввод, вывод) ->
 	if memcache_available
 		try
-			данные = memcache.get.await(название)
+			данные = memcache.get.do(название)
 			
 			if данные?
 				return вывод.send(данные)
@@ -16,7 +16,7 @@ file_system = require 'fs'
 			# если memcache не сумел взять данные - не страшно
 			console.error error
 	
-	данные = снасти.получить_страницу.await(название, данные_для_страницы, ввод, вывод)
+	данные = снасти.получить_страницу.do(название, данные_для_страницы, ввод, вывод)
 
 	вывод.send(данные)
 		
@@ -429,7 +429,7 @@ require './uri'
 	
 		request.end()
 	
-	response = request.await(options).response
+	response = request.do(options).response
 	
 	#console.log response.statusCode
 	
@@ -440,3 +440,14 @@ require './uri'
 		return no
 	
 	return yes
+	
+global.gender = (пол) ->
+	if typeof пол != 'string'
+		пол = пол.пол
+		
+	switch пол
+		when 'женский'
+			return 'female'
+			
+		when 'мужской'
+			return 'male'

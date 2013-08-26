@@ -18,11 +18,11 @@ global.fiber = (action) ->
 
 fiber = global.fiber
 
-Function.prototype.await = ->
+Function.prototype.do = ->
 	parameters = Array.prototype.slice.call(arguments)
-	@bind_await(@).apply(@, parameters)
-	
-Function.prototype.bind_await = (binding) ->
+	@fiberize(@).apply(@, parameters)
+
+Function.prototype.fiberize = (binding) ->
 	return =>
 		parameters = Array.prototype.slice.call(arguments)
 		# add binding as a first argument
@@ -37,11 +37,7 @@ parse_error = (error) ->
 	console.log error.stack
 	console.log '=============================================================='
 	
-	if typeof error == 'object'
-		if JSON.stringify(error) == '{}'
-			error = error + ''
-	
-	error
+	return error.message
 		
 exports.express = (application) ->
 	global.http = {}

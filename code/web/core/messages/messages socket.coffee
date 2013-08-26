@@ -8,7 +8,7 @@ global.prepare_messages_socket = (options) ->
 			if typeof _id == 'string'
 				_id = collection.id(_id)
 				
-			options.message_read.await(_id, environment)
+			options.message_read.do(_id, environment)
 			
 		сообщения_чего = (чего) ->
 			if not options.сообщения_чего_from_string?
@@ -29,15 +29,15 @@ global.prepare_messages_socket = (options) ->
 			общение = 
 				disconnect: ->
 					if пользователь?
-						connected.hdel.bind_await(connected)(connected_data_source(), пользователь._id)
+						connected.hdel.fiberize(connected)(connected_data_source(), пользователь._id)
 						@broadcast('отцепился', пользовательское.поля([], пользователь))
 						
 				connect: ->
 					if options.authorize?
-						options.authorize.await(environment)
+						options.authorize.do(environment)
 				
 					@on 'кто здесь?', =>
-						who_is_connected = connected.hgetall.bind_await(connected)(connected_data_source())
+						who_is_connected = connected.hgetall.fiberize(connected)(connected_data_source())
 						
 						who_is_connected_info = []
 						for id, json of who_is_connected
@@ -56,7 +56,7 @@ global.prepare_messages_socket = (options) ->
 						 
 						сообщения = collection._.find(query, { sort: [['_id', 1]] })
 						
-						пользовательское.подставить.await(сообщения, 'отправитель')
+						пользовательское.подставить.do(сообщения, 'отправитель')
 						
 						@emit('пропущенные сообщения', сообщения)
 							
@@ -73,15 +73,19 @@ global.prepare_messages_socket = (options) ->
 					@on 'пишет', =>
 						@broadcast('пишет', пользовательское.поля(['имя'], пользователь))
 					
-					@on 'сообщение', (сообщение) =>
-						сообщение = options.save.await(сообщение, environment)
+					@on 'сообщение', (data) =>
+						сообщение = data.сообщение
+					
+						сообщение = options.save.do(сообщение, environment)
+						
+						сообщение.simplified = data.simplified
 						
 						message_read(сообщение._id, environment)
 						
 						if options.subscribe?
-							options.subscribe.await(environment)
+							options.subscribe.do(environment)
 						
-						options.notify.await(сообщение, environment)
+						options.notify.do(сообщение, environment)
 								
 						данные_сообщения =
 							_id: сообщение._id.toString()
@@ -107,9 +111,9 @@ global.prepare_messages_socket = (options) ->
 						if environment.сообщения_чего?
 							data.сообщения_чего = environment.сообщения_чего._id.toString()
 						
-						эфир.отправить.await('новости', 'прочитано', data, { кому: пользователь._id })
+						эфир.отправить.do('новости', 'прочитано', data, { кому: пользователь._id })
 						
-					connected.hset.bind_await(connected)(connected_data_source(), пользователь._id.toString(), JSON.stringify(пользовательское.поля(пользователь)))
+					connected.hset.fiberize(connected)(connected_data_source(), пользователь._id.toString(), JSON.stringify(пользовательское.поля(пользователь)))
 						
 					@broadcast('подцепился', пользовательское.поля(пользователь))
 					@emit('готов')

@@ -1,20 +1,20 @@
-mailer = require "mailer"
+nodemailer = require 'nodemailer'
 
-exports.письмо = (настройки) ->
-	options =
-		host: Options.Mail.Smtp.Host
-		port: Options.Mail.Smtp.Port
-		ssl: true
-		domain: "gmail.com"
-		to: настройки.кому
-		from: Options.Mail.Box
-		subject: настройки.тема
-		body: настройки.сообщение
-		#template: "../templates/sample.txt"
-		data: настройки.данные
-		authentication: "login"
-		username: Options.Mail.Smtp.Username
-		password: Options.Mail.Smtp.Password
+transport = nodemailer.createTransport("SMTP", { host: 'localhost' })
+
+console.log('SMTP Configured')
+
+exports.письмо = (настройки) ->	
+	message =
+		from: Options.Mail.From #'Sender Name <sender@example.com>'
+		to: настройки.кому #'"Receiver Name" <nodemailer@disposebox.com>'
+		subject: настройки.тема #'Nodemailer is unicode friendly ✔'
+		#headers: { 'X-Laziness-level': 1000 }
+		text: настройки.сообщение #'Hello to myself!'
+		#html:'<p><b>Hello</b> to myself <img src="cid:note@node"/></p>'+ '<p>Here\'s a nyan cat for you as an embedded attachment:<br/><img src="cid:nyan@node"/></p>'
 	
-	return
-	mailer.send(options)
+	console.log('Sending Mail')
+	transport.sendMail.do(message)
+	console.log('Message sent successfully!')
+
+#transport.close(); // close the connection pool

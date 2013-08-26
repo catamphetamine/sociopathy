@@ -1,4 +1,4 @@
-var Wiki_processor = new (new Class
+Wiki_processor = new (new Class
 ({
 	find_syntax_for: function(element)
 	{

@@ -15,7 +15,7 @@ global.db = (collection) ->
 		else if query.toHexString?
 			query = { _id: query }
 		
-		mongo.findOne.bind_await(mongo)(query, options)
+		mongo.findOne.fiberize(mongo)(query, options)
 	
 	api.find_just_one = (query, options) ->
 		query = query || {}
@@ -27,14 +27,14 @@ global.db = (collection) ->
 		if not found.пусто()
 			return found[0]
 	
-	api.count = mongo.count.bind_await(mongo)
+	api.count = mongo.count.fiberize(mongo)
 	
 	api.find = (query, options) ->
 		query = query || {}
 		options = options || {}
 		
 		object = mongo.find(query, options)
-		object.toArray.bind_await(object)()
+		object.toArray.fiberize(object)()
 
 	api.update = (query, data, options) ->
 		query = query || {}
@@ -47,7 +47,7 @@ global.db = (collection) ->
 		if query.toHexString?
 			query = { _id: query._id }
 		
-		mongo.update.bind_await(mongo)(query, data, options)
+		mongo.update.fiberize(mongo)(query, data, options)
 		
 	api.save = (data, options) ->
 		data = data || {}
@@ -56,18 +56,18 @@ global.db = (collection) ->
 		if not options.safe?
 			options.safe = yes
 		
-		mongo.save.bind_await(mongo)(data, options)
+		mongo.save.fiberize(mongo)(data, options)
 		
-	api.remove = mongo.remove.bind_await(mongo)
-	api.drop = mongo.drop.bind_await(mongo)
-	api.index = mongo.ensureIndex.bind_await(mongo)
+	api.remove = mongo.remove.fiberize(mongo)
+	api.drop = mongo.drop.fiberize(mongo)
+	api.index = mongo.ensureIndex.fiberize(mongo)
 	
 	mongo._ = api
 	mongo
 
 mongoskin.SkinCollection.prototype.exists = ->
 	db = @skinDb
-	find = db.collectionNames.bind_await(db)
+	find = db.collectionNames.fiberize(db)
 	collection = @collectionName	
 	return not find(collection).пусто()
 				

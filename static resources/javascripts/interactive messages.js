@@ -81,7 +81,7 @@ var Interactive_messages = function(options)
 			if (away_users[data.отправитель._id])
 				message.find('> .author').addClass('is_away')
 		},
-		send_message: function(message)
+		send_message: function(message, options)
 		{
 			if (!this.connected())
 			{
@@ -94,7 +94,7 @@ var Interactive_messages = function(options)
 				return false
 			}
 		
-			this.connection.emit('сообщение', message)
+			this.connection.emit('сообщение', { сообщение: message, simplified: options.simplified })
 			return true
 		},
 		after_output: function(message, data)

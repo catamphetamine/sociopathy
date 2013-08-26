@@ -394,7 +394,7 @@ var Messages = new Class
 		
 		var handler = (function()
 		{
-			console.log('handle message ' + _id)
+			//console.log('handle message ' + _id)
 			
 			if (read)
 				return
@@ -402,14 +402,14 @@ var Messages = new Class
 			if (!message.hasClass('new'))
 				return
 		
-			console.log('Focus.focused: ' + Focus.focused)
+			//console.log('Focus.focused: ' + Focus.focused)
 		
 			if (!Focus.focused)
 				return
 			
-			console.log('read and unwatch')
+			//console.log('read and unwatch')
 			
-			this.options.прокрутчик.unwatch(message)
+			//this.options.прокрутчик.unwatch(message)
 			
 			if (this.options.on_message_bottom_appears)
 				this.options.on_message_bottom_appears(_id)
@@ -427,7 +427,7 @@ var Messages = new Class
 					this.indicate_no_new_messages()
 				
 					if (!Новости.есть_новости)
-						this.dismiss_new_messages_notifications
+						this.dismiss_new_messages_notifications()
 				}
 			}
 		
@@ -611,18 +611,26 @@ var Messages = new Class
 		
 		reset_editor_content()
 
+		var sending_message = false
+		
 		function send_message(callback)
 		{
-			var html = visual_editor.html()
-			visual_editor.empty()
+			if (sending_message)
+				return
+				
+			sending_message = true
 			
-			reset_editor_content({ not_initial: true })
-			visual_editor.focus()
-
+			function finish(result)
+			{
+				sending_message = false
+				callback(result)
+			}
+			
+			var html = visual_editor.html()
+			
 			function failed()
 			{
-				visual_editor.html(html)
-				callback(false)
+				finish(false)
 			}
 			
 			Wiki_processor.parse_and_validate(html, function(message)
@@ -632,15 +640,17 @@ var Messages = new Class
 				if (!message)
 					return failed()
 				
-				if (messages.options.send_message(message) === false)
+				var simplified = Wiki_processor.simplify(message)
+				
+				if (messages.options.send_message(message, { simplified: simplified }) === false)
 					return failed()
 				
-				//reset_editor_content({ not_initial: true })
-				//visual_editor.focus()
+				reset_editor_content({ not_initial: true })
+				visual_editor.focus()
 				
 				messages.check_composed_message_height()
 				
-				callback(true)
+				finish(true)
 			})
 		}
 		
@@ -788,11 +798,15 @@ var Messages = new Class
 			if (this.options.new_message_sound)
 				this.options.new_message_sound.play()
 		
+		console.log('manual something new @ ' + new Date())
+			
 		window_notification.something_new()
 	},
 	
 	dismiss_new_messages_notifications: function()
 	{
+		console.log('manual nothing new @ ' + new Date())
+		
 		window_notification.nothing_new()
 	}
 })

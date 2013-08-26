@@ -232,5 +232,13 @@
 			"unable to send message while browsing": "Unable to send message while browsing history",
 			"message read status update failed": "Message read status update failed"
 		}
+	},
+	
+	"mail":
+	{
+		"communication":
+		{
+			"new message": "{name} says:\n\n {message}"
+		}
 	}
 }
