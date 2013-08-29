@@ -148,54 +148,19 @@
 				description: 'Кого добавим',
 				autocomplete:
 				{
-					mininum_query_length: 3,
-					search: function(query, callback)
-					{
-						var ajax = page.Ajax.get('/приложение/люди/найти',
-						{
-							query: query,
-							max: 5
-						})
-						.ok(function(data)
-						{
-							callback(data.люди)
-						})
-												
-						var search =
-						{
-							cancel: function()
-							{
-								ajax.abort()
-							}
-						}
-						
-						return search
-					},
-					decorate: function(user)
-					{
-						$.tmpl('user icon', user).appendTo(this)
-						
-						var name = $('<div/>').addClass('name').text(user.имя)
-						name.appendTo(this)
-					},
-					value: function(user)
-					{
-						return user._id + ''
-					},
-					title: function(user)
-					{
-						return user.имя
-					},
 					choice: function(_id)
 					{
 						add_user_to_talk.ok()
 					},
+					
 					nothing_found: function(query)
 					{
-						info('Пользователя «' + query + '» не существует в нашей сети')
-					}
-					//hide_input_after_selection: true
-				}
+						info(text('pages.people.not found', { query: query }))
+					},
+					
+					required: true
+				},
+				type: 'user'
 			}],
 			ok: function(_id)
 			{

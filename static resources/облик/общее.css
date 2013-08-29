@@ -1,5 +1,6 @@
 ﻿@import "/облик/вспомогательный.less";
 @import "/облик/начертания.less";
+@import "/облик/user icon.less";
 
 /* correct Html 5 element styling for old browsers 
 article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section 
@@ -61,7 +62,7 @@ html *::selection, html *::-moz-selection, html *::-webkit-selection
 	
 	cursor: default;
 	
-	color: #4f4f4f;
+	color: #3f3f3f;
 	font-size: 45px;	
 }
 
@@ -247,7 +248,7 @@ input
 	
 	&.field
 	{
-		height: 42px;
+		height: @input_field_height;
 	}
 
 	&.focusable_field:focus
@@ -463,21 +464,12 @@ h2
 
 h1, h2, h3, h4, h5, h6
 {
-	cursor: pointer;
-}
-
-.textual_content, .article article
-{
-	h1, h2, h3, h4, h5, h6
-	{
-		color: #4f4f4f;
-	}
-}
-
-h1, h2, h3, h4, h5, h6
-{
 	font-family: @headings_font;
 	font-weight: bold;
+	
+	color: #3f3f3f;
+	
+	cursor: pointer;
 }
 
 .collapsed
@@ -774,7 +766,7 @@ body[mode="правка"] .rich_formatting a
 		font-size: 40px;
 
 		border-bottom-width: 1px;
-		border-bottom-color: black;
+		border-bottom-color: #7f7f7f;
 		border-bottom-style: solid;
 		
 		margin-top: 50px;
@@ -1741,5 +1733,38 @@ table.three_columns
 	td
 	{	
 		vertical-align: top;
+	}
+}
+
+.autocomplete.users
+{
+	> ul
+	{
+		> li
+		{
+			max-height: @smaller_user_icon_size + 2px;
+		
+			> .icon
+			{
+				display: inline-block;
+				
+				width: @smaller_user_icon_size;
+				height: @smaller_user_icon_size;
+				
+				margin-right: 14px;
+				
+				vertical-align: top;
+							
+				border-style: solid;
+				border-color: #7f7f7f;
+				border-width: 1px;
+			}
+			
+			> .title
+			{
+				display: inline-block;
+				vertical-align: top;
+			}
+		}
 	}
 }

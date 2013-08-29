@@ -1854,3 +1854,59 @@ function trim_element(element)
 		}
 	})
 }
+
+function users_autocomplete(element, options)
+{
+	return element.autocomplete
+	({
+		mininum_query_length: 3,
+		search: function(query, callback)
+		{
+			var ajax = page.Ajax.get('/люди/поиск',
+			{
+				query: query,
+				max: 5
+			})
+			.ok(function(data)
+			{
+				callback(data.люди)
+			})
+									
+			var search =
+			{
+				cancel: function()
+				{
+					ajax.abort()
+				}
+			}
+			
+			return search
+		},
+		decorate: function(человек)
+		{
+			if (человек.avatar_version)
+			{
+				var icon = $('<div/>')
+					.addClass('icon')
+					.css('background-image', 'url("/загруженное/люди/' + человек.id + '/картинка/мелкая.jpg?version=' + человек.avatar_version + '")')
+					.appendTo(this)
+			}
+			
+			$('<div/>')
+				.addClass('title')
+				.text(человек.имя)
+				.appendTo(this)
+		},
+		value: function(человек)
+		{
+			return человек._id + ''
+		},
+		title: function(человек)
+		{
+			return человек.имя
+		},
+		choice: options.choice,
+		nothing_found: options.nothing_found,
+		required: options.required
+	})
+}

@@ -510,3 +510,11 @@ body.jump_to_top_mouse_over
 		}
 	}
 }
+
+.messages_framework
+{
+	.breadcrumbs_container
+	{
+		margin-top: -4px;
+	}
+}

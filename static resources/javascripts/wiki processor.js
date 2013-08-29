@@ -131,25 +131,23 @@ Wiki_processor = new (new Class
 		}
 		
 		var processor = this
-		var output = $('<xml/>')
+		
+		var text = ''
 		
 		Array.for_each(xml.childNodes, function()
 		{
-			processor.simplify_node(this, output.node(), options)
+			text += processor.simplify_node(this, options).trim()
 		})
 		
-		return output.html().trim()
+		return text
 	},
 			
-	simplify_node: function(node, target, options)
+	simplify_node: function(node, options)
 	{
 		var processor = this
 		
 		//console.log('simplify_node')
 		//console.log(node)
-		
-		//console.log('target')
-		//console.log(target)
 		
 		var element
 		if (!Dom_tools.is_text_node(node))
@@ -173,7 +171,7 @@ Wiki_processor = new (new Class
 		//console.log(syntax)
 		
 		if (!syntax)
-			return Dom_tools.append_text(Dom_tools.to_text(node), target)
+			return Dom_tools.to_text(node)
 	
 		//console.log('syntax found')
 		
@@ -185,7 +183,7 @@ Wiki_processor = new (new Class
 		var simplified
 		if (syntax.simplified)
 		{
-			simplified = syntax.simplify(element, { is_last: target.lastChild === node })
+			simplified = syntax.simplify(element, { is_last: node.parentNode.lastChild === node })
 		}
 		else if (is_root_node)
 		{
@@ -196,27 +194,23 @@ Wiki_processor = new (new Class
 		
 		if (is_root_node)
 		{
-			if (target.firstChild !== node)
+			if (node.parentNode.firstChild !== node)
 				simplified = '\n\n' + simplified
 		}
 		
 		//console.log('simplified')
 		//console.log(simplified)
 		
-		//target = $(target)
-		
 		//if (options.process_element)
 		//	options.process_element(html_element, element)
 		
 		//html_element.attr('author', element.attr('author'))
-		var simplified_node = document.createTextNode(simplified)
-		target.appendChild(simplified_node)
 		
 		//if (syntax.activate)
 		//	syntax.activate(html_element)
 		
 		if (syntax.break_simplification)
-			return
+			return simplified
 		
 		//console.log(html_element)
 		//console.log('process children')
@@ -226,10 +220,13 @@ Wiki_processor = new (new Class
 		{
 			//console.log(this)
 			//console.log(html_element.node())
-			processor.simplify_node(this, simplified_node, options)
+			
+			simplified += processor.simplify_node(this, options)
 		})
 		
 		//console.log('finished processing children')
+		
+		return simplified
 	},
 	
 	decorate: function(xml, options)

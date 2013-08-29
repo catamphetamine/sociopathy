@@ -82,78 +82,19 @@ title(text('pages.people.title'));
 	
 	function initialize_search()
 	{
-		search = page.get('.search').autocomplete
-		({
-			mininum_query_length: 3,
-			search: function(query, callback)
-			{
-				var ajax = page.Ajax.get('/люди/поиск',
-				{
-					query: query,
-					max: 5
-				})
-				.ok(function(data)
-				{
-					callback(data.люди)
-				})
-										
-				var search =
-				{
-					cancel: function()
-					{
-						ajax.abort()
-					}
-				}
-				
-				return search
-			},
-			decorate: function(человек)
-			{
-				if (человек.avatar_version)
-				{
-					var icon = $('<div/>')
-						.addClass('icon')
-						.css('background-image', 'url("/загруженное/люди/' + человек.id + '/картинка/крошечная.jpg?version=' + человек.avatar_version + '")')
-						.appendTo(this)
-				}
-				
-				$('<div/>')
-					.addClass('title')
-					.text(человек.имя)
-					.appendTo(this)
-			},
-			value: function(человек)
-			{
-				return человек._id + ''
-			},
-			title: function(человек)
-			{
-				return человек.имя
-			},
+		search = users_autocomplete(page.get('.search'),
+		{
 			choice: function(_id)
 			{
 				page.data.loader.destroy()
-			
+		
 				go_to(text('pages.people.url') + '/' + this.id)
-			
-				/*	
-				page.Ajax.get('/человек', { _id: _id }).ok(function(человек)
-				{
-					var card = $.tmpl('личная карточка', человек)
-					
-					card = $('<li/>').attr('_id', человек._id).append(card)
-					
-					page.people.empty().append(card)
-					
-					ajaxify_internal_links(page.people)
-				})
-				*/
 			},
+			
 			nothing_found: function(query)
 			{
 				info(text('pages.people.not found', { query: query }))
-			},
-			required: false
+			}
 		})
 		
 		;(function()

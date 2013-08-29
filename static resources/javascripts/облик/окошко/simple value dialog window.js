@@ -59,7 +59,15 @@ function simple_value_dialog_window(options)
 		else if (field.autocomplete)
 		{
 			var autocomplete = $('<div/>')
-			field.autocomplete = autocomplete.autocomplete(field.autocomplete)
+			
+			if (field.type === 'user')
+			{
+				autocomplete.addClass('users')
+				field.autocomplete = users_autocomplete(autocomplete, field.autocomplete)
+			}
+			else
+				field.autocomplete = autocomplete.autocomplete(field.autocomplete)
+				
 			autocomplete.appendTo(form)
 			
 			field.input = autocomplete.find('> input[type="hidden"]')
