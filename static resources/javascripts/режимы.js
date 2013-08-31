@@ -405,7 +405,7 @@ var Режим = (function()
 		var actions_height = actions.outerHeight()
 		$('footer').height(0)
 		
-		save_changes_button = text_button.new(actions.find('.done'), { 'prevent double submission': true })
+		save_changes_button = new text_button(actions.find('.done'), { 'prevent double submission': true })
 		.does(function()
 		{
 			page.unsaved_changes = false
@@ -413,7 +413,7 @@ var Режим = (function()
 			on_save()
 		})
 		
-		cancel_changes_button = text_button.new(actions.find('.cancel'), { 'prevent double submission': true })
+		cancel_changes_button = new text_button(actions.find('.cancel'), { 'prevent double submission': true })
 		.does(function()
 		{
 			page.unsaved_changes = false

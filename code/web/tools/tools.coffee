@@ -352,9 +352,6 @@ Digit_symbols = '☀★☄☆☭☮☯☢☤☣☁'
 
 module.exports = снасти
 
-global.show_error = (ошибка) ->
-	throw { error: ошибка, display_this_error: yes }
-
 global.ошибка = (data) ->
 	if not data?
 		console.log '======================= Unknown Error ========================'

@@ -11,13 +11,13 @@ $(document).on('page_initialized', function()
 	
 	var dialog_window = unsaved_changes.dialog_window({ 'close on escape': true })
 	
-	var cancel = text_button.new(unsaved_changes.find('.buttons .cancel'), { 'prevent double submission': true })
+	var cancel = new text_button(unsaved_changes.find('.buttons .cancel'), { 'prevent double submission': true })
 	.does(function()
 	{
 		dialog_window.close()
 	})	
 	
-	var discard = text_button.new(unsaved_changes.find('.buttons .discard'), { 'prevent double submission': true })
+	var discard = new text_button(unsaved_changes.find('.buttons .discard'), { 'prevent double submission': true })
 	
 	dialog_window.register_controls(cancel, discard)
 	

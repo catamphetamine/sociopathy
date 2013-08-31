@@ -50,10 +50,10 @@ function выйти()
 		
 		login_form = new Form(enter_window.content.find('form').eq(0))
 		
-		кнопка_отмены = text_button.new('#enter_window .buttons .cancel', { 'prevent double submission': true })
+		кнопка_отмены = new text_button('#enter_window .buttons .cancel', { 'prevent double submission': true })
 		.does(function() { enter_window.close() })	
 		
-		кнопка_входа = text_button.new('#enter_window .buttons .enter', { 'prevent double submission': true })
+		кнопка_входа = new text_button('#enter_window .buttons .enter', { 'prevent double submission': true })
 		.does(function() { войти({ имя: поле_имени.val(), пароль: поле_пароля.val() }) }).submits(login_form)
 		
 		enter_window.register_controls
@@ -111,12 +111,12 @@ function выйти()
 		{
 			loading.hide()
 			
-			if (ошибка == 'user not found')
+			if (ошибка == 'log in.error.user not found')
 				поле_имени.focus()
-			if (ошибка == 'incorrect password')
+			if (ошибка == 'log in.error.incorrect password')
 				поле_пароля.focus()
-				
-			error(text('log in.error.' + ошибка))
+			
+			error(text(ошибка))
 				
 			кнопка_входа.unlock({ force: true })
 		})

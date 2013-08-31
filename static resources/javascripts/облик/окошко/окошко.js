@@ -119,9 +119,9 @@ var dialog_window = new Class
 			
 		this.content.find('> .buttons').disableTextSelect()
 			
-		var shadow = $('<div class="shadow"><div class="shrunk_shadow"></div></div>')
-		//var shadow = $('<div class="shadow"><table><tr><td class="left_top corner"></td><td class="top"></td><td class="right_top corner"></td></tr><tr><td class="left"></td><td class="void"></td><td class="right"></td></tr><tr><td class="left_bottom corner"></td><td class="bottom"></td><td class="right_bottom corner"></td></tr></table></div>')
-		dialog_window.append(shadow)
+		//var shadow = $('<div class="shadow"><div class="shrunk_shadow"></div></div>')
+		// old: var shadow = $('<div class="shadow"><table><tr><td class="left_top corner"></td><td class="top"></td><td class="right_top corner"></td></tr><tr><td class="left"></td><td class="void"></td><td class="right"></td></tr><tr><td class="left_bottom corner"></td><td class="bottom"></td><td class="right_bottom corner"></td></tr></table></div>')
+		//dialog_window.append(shadow)
 		
 		this.element = dialog_window
 		

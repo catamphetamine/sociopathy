@@ -132,21 +132,21 @@ var Step_by_step_dialog_window = new Class
 	{
 		var buttons = this.options.dialog_window.find('.buttons')
 		
-		this.buttons.cancel = text_button.new(buttons.find('.cancel'), { 'prevent double submission': true })
+		this.buttons.cancel = new text_button(buttons.find('.cancel'), { 'prevent double submission': true })
 		.does(function()
 		{
 			this.dialog_window.close()
 		}
 		.bind(this))
 		
-		this.buttons.next = text_button.new(buttons.find('.next'))
+		this.buttons.next = new text_button(buttons.find('.next'))
 		.does(function()
 		{
 			this.slider.next()
 		}
 		.bind(this))
 		
-		this.buttons.done = text_button.new(buttons.find('.done'), { 'prevent double submission': true })
+		this.buttons.done = new text_button(buttons.find('.done'), { 'prevent double submission': true })
 		.does(function()
 		{
 			this.slider.done()

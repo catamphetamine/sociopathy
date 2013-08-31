@@ -37,7 +37,7 @@
 			})
 		}
 	
-		text_button.new(page.get('.save .button')).does(visual_editor.submit)
+		new text_button(page.get('.save .button')).does(visual_editor.submit)
 		
 		visual_editor.initialize_tools_container()
 		visual_editor.tools_element.floating_top_bar()

@@ -7,10 +7,10 @@ Validation.прописка =
 		имя = имя.trim()
 		
 		if (!имя)
-			return callback({ error: 'Вам нужно выбрать себе имя пользвателя' })
+			return callback({ error: text('pages.main.registration.error.choose a name') })
 			
 		if (!isNaN(parseInt(имя[0])))
-			return callback({ error: 'Имя не может начинаться с цифры' })
+			return callback({ error: text("pages.main.registration.error.a name can't start with a digit") })
 			
 		var form = this
 			
@@ -20,7 +20,7 @@ Validation.прописка =
 		})
 		.ok(function()
 		{
-			callback({ error: 'Это имя уже занято' })
+			callback({ error: text('pages.main.registration.error.name already reserved') })
 		})
 		.ошибка(function(error, options)
 		{
@@ -34,7 +34,7 @@ Validation.прописка =
 	пол: function(пол, callback)
 	{
 		if (!пол)
-			return callback({ error: 'Вам нужно указать свой пол' })
+			return callback({ error: text('pages.main.registration.error.tell us your gender') })
 			
 		callback()
 	},
@@ -44,7 +44,7 @@ Validation.прописка =
 		откуда = откуда.trim()
 		
 		if (!откуда)
-			return callback({ error: 'Даже Neverland сойдёт' })
+			return callback({ error: text('pages.main.registration.error.tell us your origin') })
 		
 		callback()
 	},
@@ -54,7 +54,7 @@ Validation.прописка =
 		почта = почта.trim()
 		
 		if (!почта)
-			return callback({ error: 'Ваша почта нам пригодится' })
+			return callback({ error: text('pages.main.registration.error.tell us your email') })
 		
 		var form = this
 			
@@ -64,7 +64,7 @@ Validation.прописка =
 		})
 		.ok(function(data)
 		{
-			callback({ error: 'Это почта пользователя ' + data.имя, bubble: true })
+			callback({ error: text('pages.main.registration.error.email already used', { user: data.имя }), bubble: true })
 		})
 		.ошибка(function(error, options)
 		{
@@ -78,7 +78,7 @@ Validation.прописка =
 	пароль: function(пароль, callback)
 	{
 		if (!пароль)
-			return callback({ error: 'Пароль будет нужен для входа' })
+			return callback({ error: text('pages.main.registration.error.choose a password') })
 			
 		callback()
 	}

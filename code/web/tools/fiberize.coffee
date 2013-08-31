@@ -34,10 +34,21 @@ exports.express_action = (action, url, input, output) ->
 
 parse_error = (error) ->
 	console.log '=========================== Error ============================'
-	console.log error.stack
+
+	if error.stack?
+		console.log error.stack
+	else
+		console.log error
+		
 	console.log '=============================================================='
 	
-	return error.message
+	if error.message?
+		return error.message
+	
+	if typeof error == 'string'
+		return error
+		
+	return JSON.stringify(error)
 		
 exports.express = (application) ->
 	global.http = {}
@@ -50,7 +61,6 @@ exports.express = (application) ->
 						exports.express_action(action, url, input, output)
 					catch error
 						console.log('Http action error:')
-						console.log(error)
 						output.send(error: parse_error(error), debug: error.stack)
 						
 			application[method](encodeURI(url), enhanced_action)

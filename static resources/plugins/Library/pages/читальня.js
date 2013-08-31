@@ -163,7 +163,7 @@
 	
 	function categories_loaded()
 	{
-		text_button.new('.main_content > .add > .button').does(add_category)
+		new text_button('.main_content > .add > .button').does(add_category)
 		
 		page.hotkey('Действия.Добавить', { режим: 'правка' }, add_category)
 		

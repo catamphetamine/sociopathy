@@ -11,6 +11,7 @@ body.osx .popup .top_bar
 	padding-bottom: 6px;
 }
  
+/*
 .popup_veil.shown
 {
 	visibility: visible;
@@ -34,9 +35,21 @@ body.osx .popup .top_bar
 .popup_veil.shown
 {
 }
+*/
+
+.popup_veil
+{
+	background-color: transparent;
+}
 
 .popup
 {
+	box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+
+	border-width: 1px;
+	border-style: solid;
+	border-color: #cfcfcf;
+	
 	> .shadow
 	{
 		position: absolute;
@@ -73,11 +86,12 @@ body.osx .popup .top_bar
 	{
 		display: block;
 		
-		border-width: 1px;
+		border-width: 0;
+		border-bottom-width: 1px;
 		border-style: solid;
-		border-color: #9f9f9f;
+		border-color: #cfcfcf;
 	
-		.top_to_bottom_gradient(#e3e3e3, #d0d0d0);
+		.top_to_bottom_gradient(#fafafa, #f5f5f5);
 		
 		margin: 0;
 	
@@ -109,16 +123,7 @@ body.osx .popup .top_bar
 	
 	.main_content
 	{
-		background-color: #ededed;
-		.top_to_bottom_gradient(#efefef, #ededed);
-	
-		border-left-width: 1px;
-		border-right-width: 1px;
-		
-		border-left-style: solid;
-		border-right-style: solid;
-		
-		border-color: #9f9f9f;
+		background-color: #ffffff;
 		
 		padding-left: 40px;
 		padding-right: 40px;
@@ -130,14 +135,12 @@ body.osx .popup .top_bar
 	
 	.buttons
 	{
-		background-color: #e5e5e5;
+		.top_to_bottom_gradient(#fafafa, #f5f5f5);
 		
-		.top_to_bottom_gradient(#e3e3e3, #c7c7c7);
-		
-		border-width: 1px;
+		border-width: 0;
+		border-top-width: 1px;
 		border-style: solid;
-		border-color: #9f9f9f;
-		border-top-color: #cfcfcf;
+		border-color: #cfcfcf;
 		
 		padding-left: 10px;
 		padding-right: 10px;
@@ -153,11 +156,13 @@ body.osx .popup .top_bar
 		clear: both;
 	}
 	
+	/*
 	.content, .content > :last-child
 	{
 		border-bottom-left-radius: 10px;
 		border-bottom-right-radius: 10px;
 	}
+	*/
 }
 
 /* прочее */

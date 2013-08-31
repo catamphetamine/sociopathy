@@ -195,10 +195,10 @@ Visual_editor.implement
 				|| event.target instanceof HTMLTextAreaElement)
 				return
 			
-			if (is_node_editable(event.target))
+			if (!event.target)
 				return
 			
-			if (!event.target)
+			if (is_node_editable(event.target))
 				return
 			
 			if (!Клавиши.поймано(Настройки.Клавиши.Писарь.Показать, event))

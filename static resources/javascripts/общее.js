@@ -653,14 +653,37 @@ var Ajax =
 			
 		var ajax = $.ajax(jQuery_options)
 		
-		result.abort = function() { ajax.abort() }
+		var error_handler
 		
-		var default_on_error = function(сообщение)
+		var on_error = function(сообщение, options)
 		{
-			error(сообщение)
+			options = options || {}
+			
+			if (сообщение === 'Internal Server Error')
+				сообщение = Default_ajax_error_message
+				
+			if (сообщение === 'abort')
+				if (page.navigating_away)
+					return
+			
+			if (error_handler)
+			{
+				if ($.isFunction(error_handler))
+				{
+					if (web_page_still_loading())
+						if (options.показать !== false)
+							error(сообщение, { sticky: true })
+				
+					return error_handler(сообщение, options)
+				}
+				else if (typeof error_handler === 'string')
+					return error(error_handler)
+			}
+			
+			error(text(сообщение))
 		}
 		
-		var on_error = default_on_error
+		result.abort = function() { ajax.abort() }
 		
 		result.ok = function(ok)
 		{
@@ -697,7 +720,7 @@ var Ajax =
 					if (data.уровень !== 'ничего страшного')
 						report_error('ajax', data.debug || сообщение)
 						
-					return on_error(сообщение, { уровень: data.error.уровень, показать: data.error.показать, data: data })
+					return on_error(сообщение, { уровень: data.error.уровень, data: data })
 				}
 				
 				on_ok(data)
@@ -710,36 +733,8 @@ var Ajax =
 		{
 			if (result.expired())
 				return
-				
-			on_error = function(сообщение, options)
-			{
-				options = options || {}
-				
-				if (сообщение === 'Internal Server Error')
-					сообщение = Default_ajax_error_message
-					
-				if (сообщение === 'abort')
-					if (page.navigating_away)
-						return
-				
-				if ($.isFunction(ошибка))
-				{
-					if (web_page_still_loading())
-						if (options.показать !== false)
-							error(сообщение, { sticky: true })
-				
-					ошибка(сообщение, options)
-				}
-				else if (сообщение && typeof сообщение === 'string')
-				{
-					if (options.показать !== false)
-						error(сообщение)
-				}
-				else if (typeof ошибка === 'string')
-					error(ошибка)
-				else
-					default_on_error()
-			}
+			
+			error_handler = ошибка
 			
 			ajax.error(function(jqXHR, textStatus, errorThrown)
 			{
@@ -1750,19 +1745,26 @@ var User_online_status = new Class
 
 function is_node_editable(node)
 {
-	if (node.getAttribute('contenteditable') == 'true')
+	if (!node)
+		return
+
+	if (node.getAttribute && node.getAttribute('contenteditable') == 'true')
 		return true
 
-	if (node instanceof HTMLDocument)
+	var html_document = window.HTMLDocument
+	if (typeof html_document === 'undefined')
+		html_document = window.Document
+
+	if (node instanceof html_document)
 		return false
 
-	if (!(node.parentNode instanceof HTMLDocument))
+	if (!(node.parentNode instanceof html_document))
 		return is_node_editable(node.parentNode)
 }
 
 function is_node_untabbable(node)
 {
-	if (node.getAttribute('untabbable') == 'true')
+	if (node.getAttribute && node.getAttribute('untabbable') == 'true')
 		return true
 }
 

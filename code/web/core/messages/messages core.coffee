@@ -163,10 +163,10 @@ global.prepare_messages = (options) ->
 				общение = хранилище.collection(options.collection)._.find_one({ _id: environment.сообщения_чего._id })
 						
 				if not общение.участники?
-					throw { error: 'Вы не участвуете в этом общении', display_this_error: yes }
+					throw 'communication.private.not participating'
 				
 				if not общение.участники.map((_id) -> _id + '').has(environment.пользователь._id + '')
-					throw { error: 'Вы не участвуете в этом общении', display_this_error: yes }
+					throw 'communication.private.not participating'
 				
 				возврат()
 						

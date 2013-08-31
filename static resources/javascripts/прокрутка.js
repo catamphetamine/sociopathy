@@ -285,8 +285,8 @@ var Scroller = new Class
 			scroller = $('body')
 		else if ($.browser.mozilla)
 			scroller = $('html')
-		else
-			throw 'Unsupported browser'
+		//else
+		//	throw 'Unsupported browser'
 			
 		scroller.scrollTop(y)
 	},
@@ -345,7 +345,9 @@ var Scroller = new Class
 		else if ($.browser.mozilla)
 			scroller = $('html')
 		else
-			throw 'Unsupported browser'
+			scroller = $('html')
+			
+		//	throw 'Unsupported browser'
 			
 		var namespace = '.scroller_' + new Date().getTime()
 		

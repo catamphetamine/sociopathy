@@ -16,7 +16,7 @@
 	
 	function initialize_join_button()
 	{
-		join_button = button.physics.classic(new image_button("#join_button").does(function() { step_by_step.open() }))
+		join_button = new text_button("#join_button").does(function() { step_by_step.open() })
 	}
 	
 	var прописан = false

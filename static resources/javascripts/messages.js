@@ -37,7 +37,7 @@ var Messages = new Class
 		data.когда_примерно = неточное_время(data.когда, { blank_if_just_now: true })
 		
 		var message = $.tmpl('сообщение общения', data)
-
+		
 		if (data.новое)
 			message.addClass('new')
 			

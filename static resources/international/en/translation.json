@@ -1,11 +1,43 @@
 {
 	"user language is not supported": "Your preferred language ({preferred language}) is not currently supported. You can change it in [link to user settings]your settings[/link]. Defaulting to {current language}",
 	
+	"loading": "Loading",
+	"error": "Error",
+	
 	"pages":
 	{
 		"main":
 		{
-			"title": "Sociopathy"
+			"title": "Sociopathy",
+			
+			"join": "Join",
+			
+			"invite":
+			{
+				"validating": "Validating your invite",
+				"validation failed": "Invite validation failed"
+			},
+			
+			"registration":
+			{
+				"name": "Choose a username",
+				"gender": "Tell us your gender",
+				"origin": "Where are you at?",
+				"mailbox": "Your mailbox",
+				"password": "Choose a password",
+				
+				"error":
+				{
+					"choose a name": "Choose a username",
+					"a name can't start with a digit": "A name can't start with a digit",
+					"name already reserved": "This username is already used",
+					"tell us your gender": "Tell us your gender",
+					"tell us your origin": "Tell us where are you at",
+					"tell us your email": "Tell us your email",
+					"email already used": "This email is used by {user}",
+					"choose a password": "You need a password"
+				}
+			}
 		},
 		"registration":
 		{
@@ -231,6 +263,14 @@
 		{
 			"unable to send message while browsing": "Unable to send message while browsing history",
 			"message read status update failed": "Message read status update failed"
+		}
+	},
+	
+	"communication":
+	{
+		"private":
+		{
+			"not participating": "You aren't participating in this conversation"
 		}
 	},
 	

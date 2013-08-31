@@ -226,8 +226,6 @@ exports.данные_пользователя = (ввод, вывод) ->
 		else
 			throw 'user.not authenticated'
 
-	database_schema = International[ввод.cookies.language].Database
-	
 	пользователь = db('people')._.find_one({ _id: ввод.пользователь._id })
 	session = db('people_sessions')._.find_one({ пользователь: пользователь._id })
 	

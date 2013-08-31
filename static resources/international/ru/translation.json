@@ -1,11 +1,43 @@
 {
 	"user language is not supported": "Выбранный вами язык ({preferred language}) пока не поддерживается. Вы можете изменить его в [link to user settings]своих настройках[/link]. Язык по умолчанию — {current language}",
+
+	"loading": "Загрузка",
+	"error": "Ошибка",
 	
 	"pages":
 	{
 		"main":
 		{
-			"title": "Социопатия"
+			"title": "Социопатия",
+			
+			"join": "Присоединиться",
+			
+			"invite":
+			{
+				"validating": "Ищем вас в списке приглашённых",
+				"validation failed": "Не удалось подтвердить подлинность вашего приглашения"
+			},
+			
+			"registration":
+			{
+				"name": "Выберите себе имя пользователя",
+				"gender": "Укажите свой пол",
+				"origin": "В какой местности вы проживаете?",
+				"mailbox": "Ваш почтовый ящик",
+				"password": "Придумайте себе пароль",
+				
+				"error":
+				{
+					"choose a name": "Вам нужно выбрать себе имя пользвателя",
+					"a name can't start with a digit": "Имя не может начинаться с цифры",
+					"name already reserved": "Это имя уже занято",
+					"tell us your gender": "Вам нужно указать свой пол",
+					"tell us your origin": "Даже Neverland сойдёт",
+					"tell us your email": "Ваша почта нам пригодится",
+					"email already used": "Это почта пользователя {user}",
+					"choose a password": "Пароль будет нужен для входа"
+				}
+			}
 		},
 		"registration":
 		{
@@ -224,6 +256,14 @@
 		{
 			"unable to send message while browsing": "Нельзя писать сообщения пока вы не докрутили до самого конца",
 			"message read status update failed": "Не удалось отметить сообщение как прочитанное"
+		}
+	},
+	
+	"communication":
+	{
+		"private":
+		{
+			"not participating": "Вы не участвуете в этом общении"
 		}
 	},
 	

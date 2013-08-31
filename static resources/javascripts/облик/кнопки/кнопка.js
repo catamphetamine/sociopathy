@@ -223,6 +223,9 @@ var button = new Class
 			this.on_push()
 		}.
 		bind(this))
+		
+		if (this.options.physics)
+			button.physics[this.options.physics](this)
 	},
 	
 	preprocess: function(element)

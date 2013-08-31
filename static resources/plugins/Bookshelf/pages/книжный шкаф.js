@@ -8,7 +8,7 @@
 	{
 		title(text('pages.books.title') + '. ' + page.data.пользователь_сети.id)
 
-		text_button.new(page.get('.add_book')).does(function()
+		new text_button(page.get('.add_book')).does(function()
 		{
 			go_to('/сеть/книги')
 		})

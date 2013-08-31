@@ -1,3 +1,4 @@
+/*
 #concept
 {
 	width: 400px;
@@ -20,6 +21,12 @@
 	background-image: url('/картинки/на страницах/welcome/join button.png');
 	
 	cursor: pointer;
+}
+*/
+
+#join_button
+{
+	margin-top: 20px;
 }
 
 #join_dialog

@@ -735,7 +735,7 @@ var Page = new Class
 				
 			$('<li/>').append(button).appendTo(actions_list)
 			
-			text_button.new(button).does(function()
+			new text_button(button).does(function()
 			{
 				if (options.immediate_transition_between_dialog_windows)
 				{

@@ -313,7 +313,7 @@
 			info.find('dt').focus()
 		}
 		
-		text_button.new($('.minor_info .add .button')).does(action)
+		new text_button($('.minor_info .add .button')).does(action)
 		page.hotkey('Действия.Добавить', { режим: 'правка' }, action)
 		
 		var container = $('.minor_info')

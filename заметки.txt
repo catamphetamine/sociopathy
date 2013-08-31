@@ -1082,7 +1082,10 @@ npm install mootools --save
 
 
 
-чтобы сайт работал в IE, Safari, Opera
+
+// перевести весь validation.js, throw'ы
+
+каменты к заметкам и разделам
 
 в выдержке в источнике убирать http://
 

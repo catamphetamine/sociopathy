@@ -4,20 +4,34 @@
 	
 	default_options:
 	{
+		physics: 'immediate',
+		'button type': 'generic'
 	},
 	
 	initialize: function(selector_or_element, options)
 	{
-		var element = button.get_element(selector_or_element)
+		options = options || {}
+		
+		var element
+		
+		if (typeof selector_or_element === 'string')
+		{
+			var selector = selector_or_element
+		
+			element = $(selector)
+			options.selector = selector
+		}
+		else
+			element = selector_or_element
+
+		element.attr('type', options['button type'])
 		
 		element.css
 		({
 			'display': 'inline-block'
 		})
 		
-		element.attr('type', options['button type'])
-		
-		this.parent(element, $.extend({}, this.default_options, options))		
+		this.parent(element, $.extend({ 'button type':  element.attr('type') }, this.default_options, options))
 	},
 	
 	prepare: function()
@@ -115,29 +129,3 @@
 		return $frame
 	}
 })
-
-text_button['new'] = function(selector, options)
-{
-	var element = $(selector)
-
-	options = options || {}
-	options.selector = selector
-
-	if (!options.physics)
-		options.physics = 'immediate'
-	
-	element.data('button_type', 'generic')
-	
-	return button.physics[options.physics](new text_button
-	(
-		element,
-		Object.append
-		(
-			{
-				// miscellaneous
-				'button type':  element.attr('type') || element.data('button_type'),
-			},
-			options
-		)
-	))
-}
