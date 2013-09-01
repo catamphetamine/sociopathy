@@ -1082,6 +1082,7 @@ npm install mootools --save
 
 
 
+embed.exe ttf
 
 // перевести весь validation.js, throw'ы
 

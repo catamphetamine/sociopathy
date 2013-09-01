@@ -14,7 +14,7 @@ var Messages = new Class
 	
 	options:
 	{
-		max_messages: 5,
+		max_messages: 42,
 		new_message_sound: new Audio("/звуки/пук.ogg"),
 		messages_batch_size: 18
 	},
