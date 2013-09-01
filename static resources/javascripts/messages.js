@@ -14,7 +14,7 @@ var Messages = new Class
 	
 	options:
 	{
-		max_messages: 42,
+		max_messages: 5,
 		new_message_sound: new Audio("/звуки/пук.ogg"),
 		messages_batch_size: 18
 	},
@@ -508,7 +508,12 @@ var Messages = new Class
 	
 				if (message.hasClass('new'))
 					break
-					
+				
+				var next = message.next()
+				
+				if (next.find('> .author').is_empty())
+					next.find('> .author').replaceWith(message.find('> .author'))
+				
 				delta_height += message.height()
 	
 				message.remove()

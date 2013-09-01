@@ -88,11 +88,26 @@ var Uri =
 		set_url(data.to_relative_url())
 	},
 	
-	assemble: function(parts)
+	assemble: function(parts, options)
 	{
+		options = options || {}
+	
 		var uri = ''
+	
+		if (parts.protocol)
+		{
+			var omit_protocol = false
+			
+			if (options.omit_common_protocols)
+				if (parts.protocol === 'http' || parts.protocol === 'https')
+					omit_protocol = true
+			
+			if (!omit_protocol)
+				uri += parts.protocol + '://'
+		}
+	
 		if (parts.host)
-			uri += (parts.protocol ? parts.protocol  + '://' : '') + parts.host + (parts.port ? ':' + parts.port : '')
+			uri += parts.host + (parts.port ? ':' + parts.port : '')
 			
 		uri += parts.path //encodeURI(parts.path)
 

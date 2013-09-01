@@ -278,7 +278,18 @@ Editor.Caret = new Class
 			if (!caret)
 				throw 'Caret is in invalid state'
 			
-			caret.setStart(caret.startContainer, offset)
+			var container = caret.startContainer
+			
+			if ($.browser.msie)
+			{
+				if (container.childNodes.length === 1)
+				{
+					if (Dom_tools.is_text_node(container.firstChild))
+						container = container.firstChild
+				}
+			}
+			
+			caret.setStart(container, offset)
 			this.editor.collapse(caret)
 			
 			this.editor.apply_range(caret)

@@ -690,9 +690,8 @@ $.fn.is_empty = function()
 		return true
 
 	// if the only child is text, and it's empty
-	if (this.node().childNodes.length === 1)
-		if (Dom_tools.is_text_node(this.node().firstChild))
-			return this.node().firstChild.nodeValue.trim() == ''
+	if (this.html().trim() === '')
+		return true
 }
 
 /*

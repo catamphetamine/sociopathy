@@ -646,7 +646,8 @@ var Ajax =
 		}
 		
 		//if (window.development_mode)
-		//	jQuery_options.cache = false
+		if (options.type === 'json')
+			jQuery_options.cache = false
 		
 		if (options.jQuery)
 			$.extend(jQuery_options, options.jQuery)

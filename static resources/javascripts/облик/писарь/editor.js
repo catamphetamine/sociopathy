@@ -350,7 +350,7 @@ var Editor = new Class
 		var caret_offset = caret_position.offset
 		if (options.replace)
 			caret_offset = 0
-		
+			
 		var container = caret_position.node
 		
 		if (container === this.content.node())

@@ -100,9 +100,12 @@
 				margin-top: 12px;
 				vertical-align: top;
 				
-				max-width: @AuthorContentDate_author_column_width - @AuthorContentDate_user_icon_size - @AuthorContentDate_author_icon_margin_left;
-				overflow: hidden;
-				text-overflow: ellipsis;
+				> a
+				{
+					max-width: @AuthorContentDate_author_column_width - @AuthorContentDate_user_icon_size - @AuthorContentDate_author_icon_margin_left;
+					overflow: hidden;
+					text-overflow: ellipsis;
+				}
 			}
 			
 			.user_icon

@@ -235,42 +235,6 @@
 		</div>
 	</body>
 	
-	<script>	
-		var unsupported_browser = false
-			
-		function check_browser()
-		{
-			var isOpera = !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
-			// Opera 8.0+ (UA detection to detect Blink/v8-powered Opera)
-			var isFirefox = typeof InstallTrigger !== 'undefined';   // Firefox 1.0+
-			var isSafari = Object.prototype.toString.call(window.HTMLElement).indexOf('Constructor') > 0;
-			// At least Safari 3+: "[object HTMLElementConstructor]"
-			var isChrome = !!window.chrome && !isOpera;              // Chrome 1+
-			var isIE = /*@cc_on!@*/false || document.documentMode;   // At least IE6
-			
-			//if (isIE)
-			//	unsupported_browser = 'Internet Explorer'
-			
-			//if (isSafari)
-			//	unsupported_browser = 'Safari'
-			
-			//if (isOpera)
-			//	unsupported_browser = 'Opera'
-			
-			function unsupported_browser_error(browser)
-			{
-				document.getElementById('unsupported_browser').getElementsByClassName('browser')[0].firstChild.nodeValue = browser
-					
-				document.getElementById('unsupported_browser').style.display = 'block'
-			}
-			
-			if (unsupported_browser)
-				unsupported_browser_error(unsupported_browser)
-		}
-		
-		check_browser()
-	</script>
-	
 	<script>
 		var Configuration = {}
 		
@@ -385,40 +349,39 @@
 	</script>
 	
 	<script>
-		if (!unsupported_browser)
-			ajax
-			({
-				url: '/приложение/initialize',
-				success: function(data)
+		ajax
+		({
+			url: '/приложение/initialize',
+			success: function(data)
+			{
+				window.initialization_data = data.initialization_data
+				window.user_data = data.user_data
+				
+				Version = data.site_version
+				
+				Configuration.Optimize = data.optimize
+
+				if (data.development)
 				{
-					window.initialization_data = data.initialization_data
-					window.user_data = data.user_data
-					
-					Version = data.site_version
-					
-					Configuration.Optimize = data.optimize
-	
-					if (data.development)
-					{
-						window.development_mode = true
-						Configuration.Optimize = false
-					}
-					
-					window.run_scripts = function()
-					{
-						insert_script('/javascripts/основа')	
-					}
-					
-					if (Configuration.Optimize)
-						insert_script('/javascripts/load statics')
-					else
-						window.run_scripts()
-				},
-				error: function()
-				{
-					console.error('Ошибка при получении настроек сайта')
-					show_error('Нет связи с сервером')
+					window.development_mode = true
+					Configuration.Optimize = false
 				}
-			})
+				
+				window.run_scripts = function()
+				{
+					insert_script('/javascripts/основа')	
+				}
+				
+				if (Configuration.Optimize)
+					insert_script('/javascripts/load statics')
+				else
+					window.run_scripts()
+			},
+			error: function()
+			{
+				console.error('Ошибка при получении настроек сайта')
+				show_error('Нет связи с сервером')
+			}
+		})
 	</script>
 </html>

@@ -1436,7 +1436,8 @@ var Smart_parser = new (new Class
 		
 		var link = $('<' + tag + '/>')
 		link.attr(at, url)
-		link.text(url)
+		
+		link.text(Uri.assemble(Uri.parse(url), { omit_common_protocols: true }))
 		
 		return link
 	}

@@ -13,7 +13,6 @@ function require(arg) {
     return window.less[arg.split('/')[1]];
 };
 
-
 // ecma-5.js
 //
 // -- kriskowal Kris Kowal Copyright (C) 2009-2010 MIT License
@@ -4191,23 +4190,29 @@ function loadStyleSheet(sheet, callback, reload, remaining) {
     });
 }
 
-function extractId(href) {
-    return href.replace(/^[a-z]+:\/\/?[^\/]+/, '' )  // Remove protocol & domain
-               .replace(/^\//,                 '' )  // Remove root /
-               .replace(/\.[a-zA-Z]+$/,        '' )  // Remove simple extension
-               .replace(/[^\.\w-]+/g,          '-')  // Replace illegal characters
-               .replace(/\./g,                 ':'); // Replace dots with colons(for valid id)
-}
-
 /**  Less custom changes begin */
+
+function extractId(href)
+{
+	href = encodeURI(decodeURI(href).translit())
+	
+	var escaped = href
+		.replace(/^[a-z]+:\/\/?[^\/]+/, '' )  // Remove protocol & domain
+		.replace(/^\//,                 '' )  // Remove root /
+		.replace(/\.[a-zA-Z]+$/,        '' )  // Remove simple extension
+		.replace(/[^\.\w-]+/g,          '-')  // Replace illegal characters
+		.replace(/\./g,                 ':') // Replace dots with colons(for valid id)
+	
+	return escaped
+}
 
 window.Less = {}
 var Less = window.Less
 
 Less.id = function(link)
 {
-	link = encodeURI(link)
-	link = link.replace(/ /g, '%20')
+	//link = encodeURI(link)
+	//link = link.replace(/ /g, '%20')
 	return get_sheet_id('', link)
 }
 
