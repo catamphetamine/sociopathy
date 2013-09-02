@@ -512,3 +512,19 @@ Object.combine = function(one, two, three)
 		return this.replace(regular_expression, transliterate)
 	}
 })()
+
+String.prototype.cut_in_the_start = function(what)
+{
+	if (!this.starts_with(what))
+		return this
+		
+	return this.substring(what.length)
+}
+
+String.prototype.cut_in_the_end = function(what)
+{
+	if (!this.ends_with(what))
+		return this
+		
+	return this.substring(0, this.length - what.length)
+}

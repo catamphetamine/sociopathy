@@ -115,9 +115,13 @@ var Image_sequence_icon = new Class
 	
 	something_new: function()
 	{
+		console.log('something_new()')
+		
 		if (this.animating)
 			return
 			
+		console.log('Starting animation')
+		
 		this.animating = true
 		
 		this.set('внимание 1')
@@ -136,6 +140,8 @@ var Image_sequence_icon = new Class
 		var site_icon = this
 		var change_icon = function()
 		{
+			console.log('Changing icon')
+			
 			site_icon.set(next_icon())
 			site_icon.animation_timeout = change_icon.delay(site_icon.time * 1000)
 		}
@@ -145,8 +151,12 @@ var Image_sequence_icon = new Class
 	
 	nothing_new: function()
 	{
+		console.log('nothing_new()')
+		
 		if (!this.animating)
 			return
+			
+		console.log('Resetting window icon')
 			
 		clearTimeout(this.animation_timeout)
 		this.animating = false

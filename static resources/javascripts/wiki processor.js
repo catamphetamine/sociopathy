@@ -1393,7 +1393,7 @@ var Smart_parser = new (new Class
 	{
 		if (!text.contains('http://') && !text.contains('https://') && !text.contains('ftp://'))
 			return false
-				
+		
 		var uri = Uri.parse(text)
 			
 		if (uri.protocol === 'ftp')
@@ -1437,7 +1437,12 @@ var Smart_parser = new (new Class
 		var link = $('<' + tag + '/>')
 		link.attr(at, url)
 		
-		link.text(Uri.assemble(Uri.parse(url), { omit_common_protocols: true }))
+		var uri = Uri.assemble(Uri.parse(url), { omit_common_protocols: true })
+		
+		uri = uri.cut_in_the_start('www.')
+		uri = uri.cut_in_the_end('/')
+		
+		link.text(uri)
 		
 		return link
 	}
