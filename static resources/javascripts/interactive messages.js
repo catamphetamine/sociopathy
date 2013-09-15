@@ -347,8 +347,12 @@ var Interactive_messages = function(options)
 		messages.who_is_connected_bar_list = page.get('.who_is_connected')
 		messages.who_is_connected_bar_list.parent().hide().transparent().floating_top_bar()
 		
+		var old_unload = messages.unload || $.noop
+		
 		messages.unload = function()
 		{
+			old_unload()
+		
 			if (messages.who_is_connected_bar_list)
 				messages.who_is_connected_bar_list.parent().floating_top_bar('unload')
 			

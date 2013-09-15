@@ -72,11 +72,13 @@ function hotkey(name, options, action)
 	}
 	
 	var unpressed = true
+
+	//console.log('method for hotkey ' + hotkey + ': ' + method)
 			
-	//console.log('method for ' + hotkey + ': ' + method)
-			
-	$(document)[method]('keydown', function(event)
+	$(document)[method]('keydown.hotkey', function(event)
 	{
+		console.log('checking for hotkey «' + hotkey + '»')
+		
 		if (Клавиши.is(hotkey, event))
 		{
 			if (!unpressed)
@@ -92,7 +94,7 @@ function hotkey(name, options, action)
 			Клавиши.поймано(event)
 			action()
 			
-			var namespace = $.unique_namespace()
+			var namespace = 'hotkey_' + $.unique_namespace()
 			
 			//console.log('Caught: ' + hotkey)
 			
@@ -101,6 +103,7 @@ function hotkey(name, options, action)
 			var unbind = $(document)[method]('keyup.' + namespace, function(event)
 			{
 				//console.log('on key up: ' + hotkey)
+				//console.log(event)
 					
 				if (!Клавиши.is(hotkey, event))
 					return
@@ -109,24 +112,23 @@ function hotkey(name, options, action)
 				
 				unpressed = true
 				
-				if (options.on_release)
+				if (method === 'on_page')
 				{
-					if (method === 'on_page')
-					{
-						unbind()
-					}
-					else
-					{
-						$(document).unbind('keyup.' + namespace)
-						$.free_namespace(namespace)
-					}
-					
-					if (!mode_check())
-						return
-					
-					Клавиши.поймано(event)
-					options.on_release()
+					unbind()
 				}
+				else
+				{
+					$(document).unbind('keyup.' + namespace)
+					$.free_namespace(namespace)
+				}
+				
+				if (!mode_check())
+					return
+				
+				Клавиши.поймано(event)
+				
+				if (options.on_release)
+					options.on_release()
 			},
 			keyup_options)
 		}

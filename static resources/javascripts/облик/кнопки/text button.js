@@ -2,15 +2,17 @@
 ({
 	Extends: button,
 	
-	default_options:
+	Implements: [Options],
+	
+	options:
 	{
 		physics: 'immediate',
-		'button type': 'generic'
+		type: 'generic'
 	},
 	
 	initialize: function(selector_or_element, options)
 	{
-		options = options || {}
+		this.setOptions(options)
 		
 		var element
 		
@@ -19,19 +21,19 @@
 			var selector = selector_or_element
 		
 			element = $(selector)
-			options.selector = selector
+			this.options.selector = selector
 		}
 		else
 			element = selector_or_element
 
-		element.attr('type', options['button type'])
+		element.attr('type', this.options.type)
 		
 		element.css
 		({
 			'display': 'inline-block'
 		})
 		
-		this.parent(element, $.extend({ 'button type':  element.attr('type') }, this.default_options, options))
+		this.parent(element, this.options)
 	},
 	
 	prepare: function()

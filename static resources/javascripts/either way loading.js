@@ -36,42 +36,53 @@ var Pagination = new Class
 		}
 		.bind(this))
 		
-		whole.on('mousedown', function(event)
+		whole.on('mousedown.pagination', function(event)
 		{
 			whole.addClass('active')
 		})
 		
-		whole.on('mouseup', function(event)
+		whole.on('mouseup.pagination', function(event)
 		{
 			whole.removeClass('active')
 		})
 		
-		whole.on('mouseover', function()
+		pagination.on('mouseenter.pagination', function()
+		{
+			pagination.addClass('moused_over')
+		})
+		
+		pagination.on('mouseleave.pagination', function()
+		{
+			pagination.removeClass('moused_over')
+		})
+		
+		whole.on('mouseover.pagination', function()
 		{
 			whole.addClass('moused_over')
 		})
 		
-		whole.on('mouseout', function()
+		whole.on('mouseout.pagination', function()
 		{
 			whole.removeClass('moused_over')
 			whole.removeClass('active')
 		})
 		
-		current.on('mouseover', function(event)
+		current.on('mouseover.pagination', function(event)
 		{
 			event.preventDefault()
 			event.stopImmediatePropagation()
 			
+			pagination.addClass('moused_over')
 			whole.removeClass('moused_over')
 		})
 		
-		current.on('mousedown', function(event)
+		current.on('mousedown.pagination', function(event)
 		{
 			event.preventDefault()
 			event.stopImmediatePropagation()
 		})
 		
-		current.on('click', function(event)
+		current.on('click.pagination', function(event)
 		{
 			event.preventDefault()
 			event.stopImmediatePropagation()
@@ -79,19 +90,19 @@ var Pagination = new Class
 			info(text('loading.either way.pagination.dont click on the slider'))
 		})
 		
-		start.on('click', function()
+		start.on('click.pagination', function()
 		{
 			this.options.go_to_page(1)
 		}
 		.bind(this))
 		
-		end.on('click', function()
+		end.on('click.pagination', function()
 		{
 			this.options.go_to_page(this.pages)
 		}
 		.bind(this))
 		
-		$(window).on_page('resize', function()
+		$(window).on_page('resize.pagination', function()
 		{
 			if (this.shown)
 				this.calculate_dimensions()
@@ -636,6 +647,11 @@ var Either_way_loading = new Class
 	{
 		this.pagination.reset()
 		
+		this.options.container.children().each(function()
+		{
+			page.unwatch(this)
+		})
+		
 		if (!this.top_loader)
 			this.previous_block.invisible()
 		
@@ -692,7 +708,7 @@ var Either_way_loading = new Class
 		{
 			elements.for_each(function()
 			{
-				прокрутчик.watch(this, options)
+				page.watch(this, options)
 			})
 		}
 	},

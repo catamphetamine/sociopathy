@@ -37,27 +37,27 @@ function start_activity_monitor()
 	
 	(function()
 	{
-		$(window).on('focus', function()
+		$(window).on('focus.activity', function()
 		{
 			Activity.detected()
 		})
 	
-		$(document).on('keydown', function()
+		$(document).on('keydown.activity', function()
 		{
 			Activity.detected()
 		})
 	
-		$(document).on('mousedown', function()
+		$(document).on('mousedown.activity', function()
 		{
 			Activity.detected()
 		})
 	
-		$(document).on('mousemove', function()
+		$(document).on('mousemove.activity', function()
 		{
 			Activity.detected()
 		})
 	
-		$(window).on('scroll', function()
+		$(window).on('scroll.activity', function()
 		{
 			Activity.detected()
 		})

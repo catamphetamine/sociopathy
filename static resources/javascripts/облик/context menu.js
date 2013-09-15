@@ -4,7 +4,7 @@ var Context_menu = new Class
 	
 	options: {},
 	
-	namespace: '.' + $.unique_namespace(),
+	namespace: '.context_menu_' + $.unique_namespace(),
 	
 	initialize: function(element, options)
 	{

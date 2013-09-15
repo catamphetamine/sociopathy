@@ -18,7 +18,7 @@ var dialog_window = new Class
 	controls: [],
 	control_locks: [],
 	
-	namespace: $.unique_namespace(),
+	namespace: 'dialog_window_' + $.unique_namespace(),
 	
 	state: {},
 
@@ -83,19 +83,6 @@ var dialog_window = new Class
 			//.addClass(this.options.theme)
 			//.disableTextSelect()
 		
-		$(document).on('keydown.' + this.namespace, function(event) 
-		{
-			// close on escape key
-			if (self.options['close on escape'] && Клавиши.is('Escape', event)) 
-			{
-				if (self.is_open)
-				{
-					Клавиши.поймано('Escape', event)
-					self.cancel()
-				}
-			}
-		})
-		
 		if (this.options.veil_style)
 			this.container.css(this.options.veil_style)
 		
@@ -136,7 +123,7 @@ var dialog_window = new Class
 			})
 		}
 		
-		this.content.on('keydown', function(event) 
+		this.content.on('keydown.on_submit', function(event) 
 		{
 			// if Enter key pressed
 			if (Клавиши.is('Enter', event))
@@ -252,6 +239,20 @@ var dialog_window = new Class
 		if (options.immediately)
 			show_duration = 0
 			
+		$(document).on('keydown.' + this.namespace, function(event) 
+		{
+			// close on escape key
+			if (this.options['close on escape'] && Клавиши.is('Escape', event)) 
+			{
+				if (this.is_open)
+				{
+					Клавиши.поймано('Escape', event)
+					this.cancel()
+				}
+			}
+		}
+		.bind(this))
+		
 		this.container.fade_in(show_duration, (function()
 		{
 			dialog_window.content.find('input[type=text],textarea,select').filter(':visible:first').focus()
@@ -325,10 +326,8 @@ var dialog_window = new Class
 			if (this.options['on close'])
 				this.options['on close'].bind(this.content)()
 			
-			this.container.unbind('keypress.' + this.namespace)
-			
-			//this.content.unbind('keypress.' + this.namespace)
-			$(document).unbind('keypress.' + this.namespace)
+			this.container.unbind(this.namespace)
+			$(document).unbind(this.namespace)
 			
 			if (callback)
 				callback()

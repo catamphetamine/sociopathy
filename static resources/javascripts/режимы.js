@@ -620,7 +620,7 @@ $(document).on('page_initialized', function()
 	if (!first_time_page_loading)
 		return
 	
-	$(document).on('keydown', function(event) 
+	$(document).on('keydown.mode_switcher', function(event) 
 	{
 		Режим.режимы.forEach(function(режим)
 		{

@@ -2,11 +2,9 @@ var Messages = new Class
 ({
 	Implements: [Options],
 	
-	Binds: ['on_load', 'check_composed_message_height', 'new_messages_notification', 'dismiss_new_messages_notifications'],
+	Binds: ['on_load', 'check_composed_message_height', 'new_messages_notification', 'dismiss_new_messages_notifications', 'unload'],
 
 	messages_to_add: [],
-	
-	new_messages: [],
 	
 	away_users: {},
 	
@@ -73,6 +71,12 @@ var Messages = new Class
 		this.options.send_message = this.options.send_message.bind(this)
 		
 		this.initialize_loaders()
+		
+		page.when_unloaded(function()
+		{
+			this.unload()
+		}
+		.bind(this))
 	},
 	
 	unload: function()
@@ -407,9 +411,9 @@ var Messages = new Class
 			if (!Focus.focused)
 				return
 			
-			//console.log('read and unwatch')
+			//console.log('read')
 			
-			//this.options.прокрутчик.unwatch(message)
+			// не unwatch, потому что watch-ится прокрутка страниц
 			
 			if (this.options.on_message_bottom_appears)
 				this.options.on_message_bottom_appears(_id)
@@ -450,7 +454,7 @@ var Messages = new Class
 			return compose_message.outerHeight()
 		})
 		
-		this.options.прокрутчик.watch(message)
+		page.watch(message)
 	},
 	
 	add_message: function(data)
@@ -516,6 +520,7 @@ var Messages = new Class
 				
 				delta_height += message.height()
 	
+				page.unwatch(message)
 				message.remove()
 				this.loader.removed_message_from_top()
 				

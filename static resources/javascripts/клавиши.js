@@ -365,11 +365,11 @@ var Клавиши =
 			throw 'Too much character keys. Only one allowed.'
 		
 		var key = keys[0]
-			
+		
 		if (key.length === 1)				
 			if (shift)
 				key = key.toUpperCase()
-				
+		
 		return this.has(key, code)
 		
 		/*
@@ -546,7 +546,7 @@ var Клавиши =
 	}
 }
 
-$(document).on('keydown', function(event)
+$(document).on('keydown.keys', function(event)
 {
 	if (Клавиши.disabled)
 	{

@@ -63,15 +63,6 @@ function выйти()
 			кнопка_входа
 		)
 		
-		/*
-		$(document).on('keydown', function(event)
-		{
-			if (Клавиши.поймано(Настройки.Клавиши.Вход, event))
-				if (!пользователь)
-					enter_window.open()
-		})
-		*/
-		
 		$('.enter').on('click', function(event)
 		{
 			event.preventDefault()

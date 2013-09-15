@@ -189,7 +189,7 @@ Visual_editor.implement
 	{
 		var visual_editor = this
 		
-		$(document).on('keydown', function(event)
+		$(document).on('keydown.global_hotkey', function(event)
 		{
 			if (event.target instanceof HTMLInputElement
 				|| event.target instanceof HTMLTextAreaElement)
@@ -254,7 +254,7 @@ Visual_editor.implement
 		var visual_editor = this
 		var editor = this.editor
 		
-		editor.on('keydown', function(event)
+		editor.on('keydown.editor_special_keys', function(event)
 		{
 			if (!visual_editor.can_edit())
 				return
@@ -309,7 +309,7 @@ Visual_editor.implement
 		var visual_editor = this
 		var editor = this.editor
 		
-		editor.on('keydown', function(event)
+		editor.on('keydown.editor_characters', function(event)
 		{
 			if (Клавиши.поймано(Настройки.Клавиши.Писарь.Разрывный_пробел, event))
 			{
@@ -431,11 +431,12 @@ Visual_editor.implement
 		
 		// if you start loading the page, and then alt+tab,
 		// and then alt+tab after it's loaded, no keypress event fires
-		$(document).on('focused', function()
-		{
+		// (should unbind when unloading)
+		//$(document).on('focused', function()
+		//{
 			//if (!editor.was_content_changed())
 			//	editor.focus()
-		})
+		//})
 	}
 })
 

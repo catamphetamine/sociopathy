@@ -680,6 +680,18 @@ var Page = new Class
 		{
 			this.destroy()
 		})
+	
+		//console.log('Unwatch elements on page unload')
+		//console.log(this.watched_elements)
+		
+		var watched_element
+		while (watched_element = this.watched_elements.shift())
+		{
+			page.unwatch(watched_element)
+		}
+		
+		//console.log('Left watched elements:')
+		//console.log(прокрутчик.elements.map(function(element) { return element.node() }))
 	},
 	
 	context_menu: function(element, options)
@@ -769,6 +781,31 @@ var Page = new Class
 		})
 	},
 	
+	watched_elements: [],
+	
+	watch: function(element)
+	{
+		if (element instanceof jQuery)
+			element = element.node()
+	
+		if (this.watched_elements.has(element))
+			return
+		
+		this.watched_elements.add(element)
+		
+		прокрутчик.watch(element)
+	},
+	
+	unwatch: function(element)
+	{
+		if (element instanceof jQuery)
+			element = element.node()
+	
+		this.watched_elements.remove(element)
+		
+		прокрутчик.unwatch(element)
+	},
+	
 	on: function(element, event, action, options)
 	{
 		if (typeof element === 'string')
@@ -786,7 +823,7 @@ var Page = new Class
 		
 		if (!event.contains('.'))
 		{
-			namespace = $.unique_namespace()
+			namespace = 'page_' + this.id + '_' + $.unique_namespace()
 			event += '.' + namespace
 		}
 		

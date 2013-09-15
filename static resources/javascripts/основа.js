@@ -157,8 +157,6 @@ var scripts =
 	'configuration',
 	
 	'надоснова',
-		
-	'здесь или не здесь',
 	
 	'inter tab communication',
 	

@@ -7,7 +7,7 @@ var Dragger = new Class
 		come_back_after_drop: true
 	},
 	
-	namespace: '.' + $.unique_namespace(),
+	namespace: '.dragger_' + $.unique_namespace(),
 	
 	plugins: [],
 	

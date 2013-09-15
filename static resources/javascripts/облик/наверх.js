@@ -34,7 +34,7 @@ $(document).on('panel_loaded', function()
 		//jump_to_top.fade_out(0.2)
 	}
 	
-	jump_to_top.on('mousedown', function()
+	jump_to_top.on('mousedown.jump_to_top', function()
 	{
 		if (jump_to_top .data('previous_scroll_position'))
 		{
@@ -55,7 +55,7 @@ $(document).on('panel_loaded', function()
 		прокрутчик.scroll_to(0)
 	})
 	
-	jump_to_top.on('mouseenter', function()
+	jump_to_top.on('mouseenter.jump_to_top', function()
 	{
 		jump_to_top.data('inside', true)
 	
@@ -71,7 +71,7 @@ $(document).on('panel_loaded', function()
 		show()
 	})
 	
-	jump_to_top.on('mouseleave', function()
+	jump_to_top.on('mouseleave.jump_to_top', function()
 	{
 		jump_to_top.data('inside', false)
 	
@@ -80,7 +80,7 @@ $(document).on('panel_loaded', function()
 	
 	var panel_height = $('#panel').height()
 	
-	$(document).on('scroll', function()
+	$(document).on('scroll.jump_to_top', function()
 	{
 		var scrolled = прокрутчик.scrolled()
 		

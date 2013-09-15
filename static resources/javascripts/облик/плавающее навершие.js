@@ -14,7 +14,7 @@
 				
 			case 'unload':
 				var container = this.parent()
-				прокрутчик.unwatch(container)
+				page.unwatch(container)
 			
 			default:
 				return create_floating_top_bar.bind(this)()
@@ -48,7 +48,7 @@
 			$this.trigger('unfloats')
 		})
 		
-		прокрутчик.watch(container, 0)
+		page.watch(container)
 	}
 	
 	function show_floating_top_bar(options)

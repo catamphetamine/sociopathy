@@ -10,9 +10,9 @@ var Scroller = new Class
 	{
 		var process_scroll = this.process_scroll.bind(this)
 		
-		$(window).on('scroll', process_scroll)
+		$(window).on('scroll.scroller', process_scroll)
 		
-		$(document).on('focused', function()
+		$(document).on('focused.scroller', function()
 		{
 			//console.log('Window focused. Processing pseudo scroll')
 			process_scroll({ first_time: true })
@@ -33,6 +33,9 @@ var Scroller = new Class
 	
 	watch: function(element, options)
 	{
+		if (!(element instanceof jQuery))
+			element = $(element)
+	
 		if (this.watching(element))
 			return //console.log('already watching')
 		
@@ -45,10 +48,16 @@ var Scroller = new Class
 		
 		element.data('first_time_with_scroller', true)
 		this.check_for_events(element)
+		
+		//console.log('Watched elements:')
+		//console.log(this.elements.map(function(element) { return element.node() }))
 	},
 	
 	unwatch: function(element)
 	{
+		if (!(element instanceof jQuery))
+			element = $(element)
+	
 		if (this.collect_unwatched)
 			return this.unwatched.add(element)
 	

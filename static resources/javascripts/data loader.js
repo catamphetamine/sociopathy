@@ -360,13 +360,13 @@ var Scroll_loader = new Class
 			event.stopPropagation()
 		})
 		
-		прокрутчик.watch(this.options.scroll_detector)
+		page.watch(this.options.scroll_detector)
 	},
 	
 	deactivate: function()
 	{
 		this.options.scroll_detector.unbind('.scroller').hide()
-		прокрутчик.unwatch(this.options.scroll_detector)
+		page.unwatch(this.options.scroll_detector)
 	}
 })
 

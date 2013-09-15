@@ -1,6 +1,6 @@
 var Inter_tab_communication = new Class
 ({
-	namespace: $.unique_namespace(),
+	namespace: 'cross_tab_communication_' + $.unique_namespace(),
 	
 	initialize: function(key, on_change)
 	{
