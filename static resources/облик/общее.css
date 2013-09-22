@@ -696,6 +696,8 @@ body[mode="правка"] .rich_formatting a
 		{
 			font-family: Bliss Pro;
 			font-style: italic;
+			
+			display: table-cell;
 		}
 		
 		.author

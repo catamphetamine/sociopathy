@@ -39,28 +39,42 @@
 				
 				color: #3f3f3f;
 			}
+			
+			#detected_browser
+			{
+				display: none;
+			}
 		</style>
 	
-		<!--
-		<script src="/javascripts/jquery/jquery.js"></script>
-		<script src="/javascripts/jquery/jquery.tmpl.js"></script>
-		-->
+		<script src="/javascripts/bowser.js"></script>
 
 		<script>
-			var show_error = function(error)
+			var Errors =
 			{
-				if (error === 'Bad Gateway')
-					error = 'Нет связи с сервером'
+				Generic: 'Ошибка',
+				No_connection: 'Нет связи с сервером'
+			}
+			
+			function set_error(error)
+			{
+				error = error || Errors.Generic
 					
 				var find = function(selector)
 				{
 					return document.querySelector(selector)
 				}
 				
-				if (error)
-					find('#error > div').firstChild.nodeValue = error
+				find('#error > div').firstChild.nodeValue = error
 					
 				find('#error').style.display = 'block'
+			}
+		
+			var show_error = function(error)
+			{
+				if (error === 'Bad Gateway')
+					error = Errors.No_connection
+				
+				set_error(error)
 			}
 			
 			function ajax(options)
@@ -223,11 +237,12 @@
 	</head>
 
 	<body>
-		<div id="error"><div>Нет связи с сервером</div></div>
+		<!-- don't remove the whitespace -->
+		<div id="error"><div> </div></div>
 		
 		<div id="unsupported_browser">
 			<div>
-				Ваш обозреватель (мы определили, что это <span class="browser">...</span>) не поддерживается нашей сетью.
+				Ваш обозреватель <span id="detected_browser">(мы определили, что это <span class="browser">...</span>)</span> не поддерживается нашей сетью.
 				<br/>
 				<br/>
 				Можете воспользоваться <a href='http://chrome.google.com'>Google Chrome</a>'ом или <a href='https://www.mozilla.org/firefox/'>FireFox</a>'ом
@@ -235,40 +250,43 @@
 		</div>
 	</body>
 	
-	<script>	
+	<script>
+		// check for erroneous element id variable autopopulation
 		var unsupported_browser
 
 		function check_browser()
 		{
-			var isOpera = !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
-			// Opera 8.0+ (UA detection to detect Blink/v8-powered Opera)
-			var isFirefox = typeof InstallTrigger !== 'undefined';   // Firefox 1.0+
-			var isSafari = Object.prototype.toString.call(window.HTMLElement).indexOf('Constructor') > 0;
-			// At least Safari 3+: "[object HTMLElementConstructor]"
-			var isChrome = !!window.chrome && !isOpera;              // Chrome 1+
-			var isIE = /*@cc_on!@*/false || document.documentMode;   // At least IE6
-
-			//if (isIE)
-			//	unsupported_browser = 'Internet Explorer'
-
-			//if (isSafari)
-			//	unsupported_browser = 'Safari'
-
-			//if (isOpera)
-			//	unsupported_browser = 'Opera'
-			
 			function unsupported_browser_error(browser)
 			{
-				document.getElementById('unsupported_browser').getElementsByClassName('browser')[0].firstChild.nodeValue = browser
+				if (browser !== true)
+				{
+					document.getElementById('unsupported_browser').getElementsByClassName('browser')[0].firstChild.nodeValue = browser
+					
+					document.getElementById('detected_browser').style.display = 'block'
+				}
 
 				document.getElementById('unsupported_browser').style.display = 'block'
 			}
 
+			// browsers which autopopulate variables with elements with the same ids are not allowed
 			if (unsupported_browser)
 			{
-				if (isSafari && typeof unsupported_browser !== 'string')
+				if (bowser.safari)
 					unsupported_browser = 'Safari'
-					
+				else if (bowser.chrome)
+					unsupported_browser = 'Chrome'
+				else if (bowser.mozilla)
+					unsupported_browser = 'Fire Fox'
+				else if (bowser.opera)
+					unsupported_browser = 'Opera'
+				else if (bowser.msie)
+					unsupported_browser = 'Internet Explorer'
+				else
+					unsupported_browser = true
+			}
+				
+			if (unsupported_browser)
+			{
 				unsupported_browser_error(unsupported_browser)
 			}
 		}
@@ -377,52 +395,45 @@
 		
 		function webpage_loading_error(error)
 		{
-			var find = function(selector)
-			{
-				return document.querySelector(selector)
-			}
-			
-			if (error)
-				find('#error > div').firstChild.nodeValue = error
-				
-			find('#error').style.display = 'block'
+			set_error(error)
 		}
 	</script>
 	
 	<script>
-		ajax
-		({
-			url: '/приложение/initialize',
-			success: function(data)
-			{
-				window.initialization_data = data.initialization_data
-				window.user_data = data.user_data
-				
-				Version = data.site_version
-				
-				Configuration.Optimize = data.optimize
-
-				if (data.development)
+		if (!unsupported_browser)
+			ajax
+			({
+				url: '/приложение/initialize',
+				success: function(data)
 				{
-					window.development_mode = true
-					Configuration.Optimize = false
-				}
-				
-				window.run_scripts = function()
+					window.initialization_data = data.initialization_data
+					window.user_data = data.user_data
+					
+					Version = data.site_version
+					
+					Configuration.Optimize = data.optimize
+	
+					if (data.development)
+					{
+						window.development_mode = true
+						Configuration.Optimize = false
+					}
+					
+					window.run_scripts = function()
+					{
+						insert_script('/javascripts/основа')	
+					}
+					
+					if (Configuration.Optimize)
+						insert_script('/javascripts/load statics')
+					else
+						window.run_scripts()
+				},
+				error: function()
 				{
-					insert_script('/javascripts/основа')	
+					console.error('Ошибка при получении настроек сайта')
+					show_error('Нет связи с сервером')
 				}
-				
-				if (Configuration.Optimize)
-					insert_script('/javascripts/load statics')
-				else
-					window.run_scripts()
-			},
-			error: function()
-			{
-				console.error('Ошибка при получении настроек сайта')
-				show_error('Нет связи с сервером')
-			}
-		})
+			})
 	</script>
 </html>

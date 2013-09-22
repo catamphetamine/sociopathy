@@ -50,4 +50,15 @@ http.get '/initialize', (ввод, вывод) ->
 	вывод.send(data)
 	
 http.get '/проверить ссылку', (ввод, вывод) ->
-	вывод.send('верная ссылка': проверить_ссылку(ввод.данные.url))
+	options = require('url').parse(ввод.данные.url)
+	
+	options.method = 'HEAD'
+	
+	request = require('http').request options, (response) ->
+		вывод.send('рабочая ссылка': yes, status: response.statusCode)
+	
+	request.on 'error', (error) ->
+		console.log('Http request failed: ' + error.message)
+		вывод.send('рабочая ссылка': no)
+		
+	request.end()

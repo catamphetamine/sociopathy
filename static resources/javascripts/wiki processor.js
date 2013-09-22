@@ -1407,6 +1407,14 @@ var Smart_parser = new (new Class
 		}
 	},
 	
+	проверить_ссылку: function(url, callback)
+	{
+		Ajax.get('/проверить ссылку', { url: url }).ok(function(data)
+		{
+			callback(data['рабочая ссылка'])
+		})
+	},
+	
 	ссылка_на_картинку: function(url, callback)
 	{
 		get_image_size(url, callback)

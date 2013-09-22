@@ -179,12 +179,15 @@
 		margin-left: 4 * @user_icon_size / 7;
 	}
 	
-	#compose_message > article, .compose_message > article
+	#compose_message, .compose_message
 	{
-		padding-left: @author_column_left_padding + @author_column_width + @inter_column_padding;
-		padding-right: @inter_column_padding + @time_column_width + @time_column_padding + @inter_column_padding;
-		
-		min-height: @messaging_font_line_height + 2 * @paragraph_margin;
+		> article
+		{
+			padding-left: @author_column_left_padding + @author_column_width + @inter_column_padding;
+			padding-right: @inter_column_padding + @time_column_width + @time_column_padding + @inter_column_padding;
+			
+			min-height: @messaging_font_line_height + 2 * @paragraph_margin;
+		}
 	}
 	
 	.scroll_down_to_new_messages
