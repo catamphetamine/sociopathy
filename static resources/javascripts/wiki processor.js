@@ -617,12 +617,17 @@ Wiki_processor = new (new Class
 			callback(to())
 		}
 	
+		/*
 		function can_contain_hyperlinks()
 		{
 			return text.contains('http://') || text.contains('https://') || text.contains('ftp://')
 		}
 		
 		if (!options.parse || !can_contain_hyperlinks())
+			return just_append_text()
+		*/
+		
+		if (!options.parse)
 			return just_append_text()
 	
 		function append(what, separator)
@@ -681,80 +686,83 @@ Wiki_processor = new (new Class
 		
 		//console.log(fragments_and_separators)
 		
-		var countdown = Countdown(fragments_and_separators.length, function()
+		Sequential_countdown(fragments_and_separators, function(next)
+		{
+			Smart_parser.is_a_link(this.fragment, function(is_a_link)
+			{
+				if (!is_a_link)
+				{
+					pure_text_blocks.add(this)
+					return next()
+				}
+				
+				if (is_a_link !== true)
+					this.fragment = is_a_link
+				
+				append_pure_text()
+				
+				Smart_parser.ссылка_на_картинку(this.fragment, (function(result)
+				{
+					if (!result.error)
+					{
+						var tag = Object.key(Wiki_processor.Syntax.картинка.translation)
+						
+						var width = Wiki_processor.Syntax.картинка.translation[tag].ширина
+						var height = Wiki_processor.Syntax.картинка.translation[tag].высота
+						
+						var picture = $('<' + tag + '/>')
+						
+						picture.attr(width, result.width)
+						picture.attr(height, result.height)
+						
+						picture.text(decodeURI(this.fragment))
+							
+						append(picture.node(), this.separator)
+						return next()
+					}
+					
+					if (Smart_parser.ссылка_на_видео_на_youtube(this.fragment)
+					    && to().tagName.toLowerCase() === 'paragraph')
+					{
+						var tag = 'youtube'
+						
+						var video = $('<' + tag + '/>')
+						video.html(Youtube.Video.id(this.fragment))
+							
+						video.insert_after(to())
+						target = $('<paragraph/>').appendTo(to().parentNode).node()
+						
+						return next()
+					}
+					
+					if (Smart_parser.ссылка_на_видео_на_vimeo(this.fragment)
+					    && to().tagName.toLowerCase() === 'paragraph')
+					{
+						var tag = 'vimeo'
+						
+						var video = $('<' + tag + '/>')
+						video.html(Vimeo.Video.id(this.fragment))
+							
+						video.insert_after(to())
+						target = $('<paragraph/>').appendTo(to().parentNode).node()
+						
+						return next()
+					}
+				
+					var link = Smart_parser.просто_ссылка(this.fragment)
+						
+					append(link.node(), this.separator)
+					
+					return next()
+				})
+				.bind(this))
+			}
+			.bind(this))
+		},
+		function()
 		{
 			append_pure_text()
 			callback(to())
-		})
-		
-		function is_pure_text_block(block)
-		{
-			pure_text_blocks.add(block)
-			countdown()
-		}
-		
-		fragments_and_separators.for_each(function()
-		{
-			if (!Smart_parser.is_a_link(this.fragment))
-				return is_pure_text_block(this)
-		
-			append_pure_text()
-			
-			Smart_parser.ссылка_на_картинку(this.fragment, (function(result)
-			{
-				if (!result.error)
-				{
-					var tag = Object.key(Wiki_processor.Syntax.картинка.translation)
-					
-					var width = Wiki_processor.Syntax.картинка.translation[tag].ширина
-					var height = Wiki_processor.Syntax.картинка.translation[tag].высота
-					
-					var picture = $('<' + tag + '/>')
-					
-					picture.attr(width, result.width)
-					picture.attr(height, result.height)
-					
-					picture.text(decodeURI(this.fragment))
-						
-					append(picture.node(), this.separator)
-					return countdown()
-				}
-				
-				if (Smart_parser.ссылка_на_видео_на_youtube(this.fragment)
-				    && to().tagName.toLowerCase() === 'paragraph')
-				{
-					var tag = 'youtube'
-					
-					var video = $('<' + tag + '/>')
-					video.html(Youtube.Video.id(this.fragment))
-						
-					video.insert_after(to())
-					target = $('<paragraph/>').appendTo(to().parentNode).node()
-					
-					return countdown()
-				}
-				
-				if (Smart_parser.ссылка_на_видео_на_vimeo(this.fragment)
-				    && to().tagName.toLowerCase() === 'paragraph')
-				{
-					var tag = 'vimeo'
-					
-					var video = $('<' + tag + '/>')
-					video.html(Vimeo.Video.id(this.fragment))
-						
-					video.insert_after(to())
-					target = $('<paragraph/>').appendTo(to().parentNode).node()
-					
-					return countdown()
-				}
-			
-				var link = Smart_parser.просто_ссылка(this.fragment)
-					
-				append(link.node(), this.separator)
-				
-				return countdown()
-			})
-			.bind(this))
 		})
 	},
 	
@@ -1389,26 +1397,42 @@ Wiki_processor.Syntax =
 
 var Smart_parser = new (new Class
 ({
-	is_a_link: function(text)
+	is_a_link: function(text, callback)
 	{
-		if (!text.contains('http://') && !text.contains('https://') && !text.contains('ftp://'))
-			return false
+		var protocols = ['http', 'https', 'ftp']
 		
-		var uri = Uri.parse(text)
+		// if the text doesn't start with a protocol
+		function is_protocol(text)
+		{
+			return !protocols
+				.map(function(protocol) { return protocol + '://' })
+				.filter(function(protocol) { return text.starts_with(protocol) })
+				.is_empty()
+		}
+		
+		if (!is_protocol(text))
+		{
+			if (Dns.can_be_url(text))
+				return callback(Uri.assemble(Uri.parse(text)))
 			
-		if (uri.protocol === 'ftp')
-		{
-			return true
+			/*	
+			if (text.has('/') || text.trim_character('.').has('.'))
+			{
+				return this.проверить_ссылку(text, callback)
+			}
+			*/
+			
+			return callback(false)
 		}
-		else if (uri.protocol === 'http' || uri.protocol === 'https')
-		{
-			//if (проверить ссылку)
-			return true
-		}
+		
+		return callback(true)
 	},
 	
 	проверить_ссылку: function(url, callback)
 	{
+		if (!url.starts_with('http'))
+			return callback(true)
+		
 		Ajax.get('/проверить ссылку', { url: url }).ok(function(data)
 		{
 			callback(data['рабочая ссылка'])
@@ -1417,6 +1441,11 @@ var Smart_parser = new (new Class
 	
 	ссылка_на_картинку: function(url, callback)
 	{
+		var image_file_extensions = ['png', 'jpg', 'gif']
+		
+		if (image_file_extensions.filter(function(extension) { return url.ends_with('.' + extension) }).is_empty())
+			return callback({ error: true })
+		
 		get_image_size(url, callback)
 	},
 	

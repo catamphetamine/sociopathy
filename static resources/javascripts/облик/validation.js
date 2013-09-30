@@ -247,7 +247,13 @@ Validation.наглядный_писарь.ссылка = function(value, callba
 	if (!value)
 		return callback({ error: 'Введите адрес ссылки' })
 		
-	callback()
+	Smart_parser.проверить_ссылку(value, function(valid)
+	{
+		if (!valid)
+			return callback({ error: 'Ссылка недоступна' })
+		
+		callback()
+	})
 }
 
 Validation.наглядный_писарь.аудиозапись =

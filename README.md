@@ -27,9 +27,8 @@ It's not your facebook at all.
 I wanna see it in action
 =============
 
-Some screenshots are available in the "screenshots" folder.
+Go to sociopathy.info
 
-A screencast will be made when I finish adding some features.
 
 Is it multilanguage?
 =============

@@ -225,6 +225,7 @@ var Messages = new Class
 					else
 					{
 						message.addClass('new_author')
+						message.addClass('author_end')
 						
 						if (next_new_author_in_time.hasClass('odd'))
 							message.addClass('even')
@@ -254,11 +255,18 @@ var Messages = new Class
 					//	return
 				
 					var previous_new_author_in_time = messages.options.container.find('> li.new_author:last')
-				
+					var previous_in_time = messages.options.container.find('> li:last')
+					
 					if (previous_new_author_in_time.exists() && previous_new_author_in_time.attr('author') === message.attr('author'))
 					{
 						message.find('> .author').children().remove()
 						message.find('> .message').css('padding-top', 0)
+						
+						if (previous_in_time.exists())
+						{
+							previous_in_time.removeClass('author_end')
+							message.addClass('author_end')
+						}
 						
 						if (previous_new_author_in_time.hasClass('odd'))
 							message.addClass('odd')
@@ -268,6 +276,7 @@ var Messages = new Class
 					else
 					{
 						message.addClass('new_author')
+						message.addClass('author_end')
 						
 						if (previous_new_author_in_time.hasClass('odd'))
 							message.addClass('even')
@@ -275,7 +284,6 @@ var Messages = new Class
 							message.addClass('odd')
 					}
 						
-					var previous_in_time = messages.options.container.find('> li:last')
 					if (previous_in_time.exists())
 					{
 						var time = (message.find('.when').attr('date') - previous_in_time.find('.when').attr('date')) / 1000
@@ -516,7 +524,10 @@ var Messages = new Class
 				var next = message.next()
 				
 				if (next.find('> .author').is_empty())
+				{
 					next.find('> .author').replaceWith(message.find('> .author'))
+					next.addClass('new_author')
+				}
 				
 				delta_height += message.height()
 	

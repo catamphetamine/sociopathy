@@ -20,7 +20,8 @@
 @bottom_padding: 0px;
 @user_icon_margin: 5px;
 
-@paragraph_margin: 5px;
+@paragraph_margin: 7px;
+@paragraph_margin_amendment: 2px;
 
 .breadcrumbs
 {
@@ -62,6 +63,19 @@
 	{
 		> li
 		{
+			
+			margin-top: -@paragraph_margin;
+			
+			&.new_author
+			{
+				margin-top: 0;
+			}
+						
+			&.author_end
+			{
+				margin-bottom: 0;
+			}
+			
 			&.a_little_later
 			{
 				margin-top: 12px;
@@ -92,7 +106,12 @@
 				margin-top: 100px;
 			}
 			
-			&.a_little_later, &.some_time_later, &.later, &.more_later, &.reasonably_later, &.much_later
+			&.a_little_later,
+			&.some_time_later,
+			&.later,
+			&.more_later,
+			&.reasonably_later,
+			&.much_later
 			{
 				&:first-child
 				{
@@ -107,10 +126,29 @@
 					white-space: pre-wrap;
 					word-wrap: break-word;
 					
-					p
+					> p
 					{
 						text-indent: 0;
 					}
+				}
+			}
+			
+			> .when
+			{
+				display: none;
+			}
+			
+			&.new_author,
+			&.a_little_later,
+			&.some_time_later,
+			&.later,
+			&.more_later,
+			&.reasonably_later,
+			&.much_later
+			{
+				> .when
+				{
+					display: block;
 				}
 			}
 		}
@@ -186,7 +224,10 @@
 			padding-left: @author_column_left_padding + @author_column_width + @inter_column_padding;
 			padding-right: @inter_column_padding + @time_column_width + @time_column_padding + @inter_column_padding;
 			
-			min-height: @messaging_font_line_height + 2 * @paragraph_margin;
+			min-height: @messaging_font_line_height;
+			
+			margin-top: @paragraph_margin;
+			margin-bottom: @paragraph_margin;
 		}
 	}
 	
@@ -367,7 +408,7 @@
 {
 	font-family: @messaging_font;
 	font-size: @messaging_font_size;
-	line-height: @messaging_font_line_height;
+	line-height: @messaging_font_line_height - 2 * @paragraph_margin_amendment;
 	
 	> p
 	{
@@ -380,8 +421,8 @@
 	{
 		margin: 0;
 		
-		padding-top: @paragraph_margin;
-		padding-bottom: @paragraph_margin;
+		margin-top: @paragraph_margin;
+		margin-bottom: @paragraph_margin;
 	}
 	
 	> p:first-child
@@ -392,6 +433,31 @@
 	{
 		padding: 0;
 		margin-top: 6px;
+	}
+	
+	.video_player
+	{
+		margin-top: 28px;
+	}
+}
+
+.messages_framework
+{
+	ul.messages_container
+	{
+		> li
+		{
+			&:first-child
+			{
+				.messages_rich_formatting
+				{
+					.video_player:first-child
+					{
+						margin-top: 8px !important;
+					}
+				}
+			}
+		}
 	}
 }
 

@@ -1790,6 +1790,19 @@ function Countdown(count, callback)
 	}
 }
 
+function Sequential_countdown(array, action, finish)
+{
+	var next = function()
+	{
+		if (array.is_empty())
+			return finish()
+		
+		action.bind(array.shift())(next)
+	}
+	
+	next()
+}
+
 function trim_element(element)
 {
 	function is_br(node)

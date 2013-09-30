@@ -39,7 +39,7 @@ var Vimeo =
 	{
 		id: function(url)
 		{
-			var regExp = /http(s)?:\/\/(www\.)?vimeo.com\/(\d+)($|\/)/
+			var regExp = /http(s)?:\/\/(www\.)?vimeo.com\/(\d+)(\/)?(#.*)?/
 			
 			var match = url.match(regExp)
 			

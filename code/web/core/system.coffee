@@ -59,6 +59,7 @@ http.get '/проверить ссылку', (ввод, вывод) ->
 	
 	request.on 'error', (error) ->
 		console.log('Http request failed: ' + error.message)
+		console.log('@@@@@@@@@@@@@@@@@@@@@@@')
 		вывод.send('рабочая ссылка': no)
 		
 	request.end()

@@ -313,6 +313,14 @@ Array.prototype.for_each = function(action)
 	})
 }
 
+Array.prototype.for_each_async = function(countdown, action)
+{
+	Array.prototype.forEach.bind(this)(function(element, index)
+	{
+		action.bind(element)(countdown(index), element, index)
+	})
+}
+
 Array.for_each = function(array, action)
 {
 	var i = 0
@@ -527,4 +535,9 @@ String.prototype.cut_in_the_end = function(what)
 		return this
 		
 	return this.substring(0, this.length - what.length)
+}
+
+String.prototype.trim_character = function(character)
+{
+	return this.replace(new RegExp('^[' + RegExp.escape(character) + ']+|[' + RegExp.escape(character) + ']+$', 'g'), '')
 }

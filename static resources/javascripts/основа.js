@@ -64,6 +64,10 @@ var scripts =
 
 	'context',
 	
+	'punycode',
+	
+	'dns',
+	
 	/*
 	{'на страницах':
 	[
@@ -252,6 +256,7 @@ var insert_scripts = script_insertion(scripts, '/javascripts', function()
 var styles =
 [
 	'общее',
+	'rich formatting',
 	'messages',
 	
 	{кнопки:
