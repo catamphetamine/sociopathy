@@ -77,7 +77,7 @@ function hotkey(name, options, action)
 			
 	$(document)[method]('keydown.hotkey', function(event)
 	{
-		console.log('checking for hotkey «' + hotkey + '»')
+		debug.output('checking for hotkey «' + hotkey + '»')
 		
 		if (Клавиши.is(hotkey, event))
 		{

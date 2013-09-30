@@ -541,3 +541,14 @@ String.prototype.trim_character = function(character)
 {
 	return this.replace(new RegExp('^[' + RegExp.escape(character) + ']+|[' + RegExp.escape(character) + ']+$', 'g'), '')
 }
+
+var debug =
+{
+	enabled: false,
+	
+	output: function(text)
+	{
+		if (this.enabled)
+			console.log(text)
+	}
+}

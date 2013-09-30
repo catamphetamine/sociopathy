@@ -664,13 +664,14 @@ Wiki_processor = new (new Class
 			return node
 		}
 		
-		var fragments = text.split(/(\s)/)
+		// whitespace, or any of "?!),:;…", or "." and a whitespace, or "." in the end
+		var fragments = text.split(/(\s|[\?\!\),:;…]+|(?:\.\s)|(?:\.$))/)
 		var fragments_and_separators = []
 		
 		var i = 0
 		while (i < fragments.length)
 		{
-			var fragment = fragments[i]
+			var fragment = fragments[i] || ''
 			var separator = fragments[i + 1]
 		
 			if (fragment.trim().length === 0)

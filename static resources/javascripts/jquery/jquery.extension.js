@@ -14,57 +14,6 @@ function object_info(object)
 	return info
 }
 
-// miscellaneous
-
-function debug(message)
-{
-	alert(message)
-}
-
-// error
-
-function custom_error(message, details)
-{
-	this.message = message
-	this.details = details
-}
-
-// return the value of the attribute, if it exists
-
-function safely_get_attribute(source, name, variable)
-{
-	var value = source.attr(name)
-	
-	if (value)
-		return value
-		
-	return variable
-}
-
-// set the variable to the value of the source variable, if it exists
-
-function safely_get(source, default_value)
-{
-	if (source)
-		return source
-
-	return default_value
-}
-
-// generic
-
-function get_number(variable)
-{
-	if (typeof variable == "number")
-		return variable
-}
-
-function get_function(variable)
-{
-	if (typeof variable == "function")
-		return variable
-}
-
 function cookie(name, value)
 {
 	$.cookie(name, value, { path: '/', expires: { toUTCString: function() { 'max-age' } }})
@@ -954,10 +903,10 @@ function cookie(name, value)
 					var action = parameters[1]
 					parameters[1] = function()
 					{
-						console.log('--------------')
-						console.log('on «' + event + '» for')
-						console.log(this)
-						console.log('--------------')
+						debug.output('--------------')
+						debug.output('on «' + event + '» for')
+						debug.output(this)
+						debug.output('--------------')
 				
 						return action.apply(this, arguments)
 					}
@@ -965,10 +914,10 @@ function cookie(name, value)
 			}
 			
 			/*
-			console.log('--------------')
-			console.log('Bound: on «' + event + '» for')
-			console.log(this.node())
-			console.log('--------------')
+			debug.output('--------------')
+			debug.output('Bound: on «' + event + '» for')
+			debug.output(this.node())
+			debug.output('--------------')
 			*/
 			
 			return old_on.apply(this, parameters)
