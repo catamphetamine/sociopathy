@@ -665,14 +665,12 @@ Wiki_processor = new (new Class
 		}
 		
 		/*
-		// при таком тримминге инлайновые ссылки получаются с \n и пробелы по их бокам съедаются
+		// при любом тримминге инлайновые ссылки получаются в отдельных text'ах и пробелы по их бокам съедаются
 		text = text
 			.split('\n')
 			.map(function(line) { return line.trim() })
 			.join('\n')
 		*/
-		
-		text = text.trim()
 		
 		// whitespace, or any of "?!),:;…", or "." and a whitespace, or "." in the end
 		var fragments = text.split(/(\s|[\?\!\),:;…]+|(?:\.\s)|(?:\.$))/)

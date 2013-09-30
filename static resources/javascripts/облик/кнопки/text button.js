@@ -26,7 +26,8 @@
 		else
 			element = selector_or_element
 
-		element.attr('type', this.options.type)
+		if (!element.attr('type'))
+			element.attr('type', this.options.type)
 		
 		element.css
 		({
