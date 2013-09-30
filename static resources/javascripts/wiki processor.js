@@ -664,21 +664,22 @@ Wiki_processor = new (new Class
 			return node
 		}
 		
+		text = text
+			.split('\n')
+			.map(function(line) { return line.trim() })
+			.join('\n')
+		
 		// whitespace, or any of "?!),:;…", or "." and a whitespace, or "." in the end
 		var fragments = text.split(/(\s|[\?\!\),:;…]+|(?:\.\s)|(?:\.$))/)
 		var fragments_and_separators = []
+		
+		//console.log(fragments)
 		
 		var i = 0
 		while (i < fragments.length)
 		{
 			var fragment = fragments[i] || ''
 			var separator = fragments[i + 1]
-		
-			if (fragment.trim().length === 0)
-			{
-				i += 2
-				continue
-			}
 		
 			fragments_and_separators.push({ fragment: fragment, separator: separator })
 			fragments.remove_at(i + 1)
@@ -689,6 +690,12 @@ Wiki_processor = new (new Class
 		
 		Sequential_countdown(fragments_and_separators, function(next)
 		{
+			if (this.fragment.is_empty())
+			{
+				pure_text_blocks.add(this)
+				return next()
+			}
+			
 			Smart_parser.is_a_link(this.fragment, function(is_a_link)
 			{
 				if (!is_a_link)
