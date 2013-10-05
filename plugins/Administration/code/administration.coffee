@@ -91,6 +91,8 @@ http.post '/сеть/управление/хранилище/изменить', 
 	человек = db('people')._.find_one({ имя: 'Дождь со Снегом' })
 	второй_человек = db('people')._.find_one({ имя: 'Анна Каренина' })
 
+	хранилище.create_collection('mail')
+	
 	вывод.send {}
 
 # Database Altering Script
@@ -202,6 +204,8 @@ http.post '/хранилище/создать', (ввод, вывод) ->
 	#хранилище.create_collection('drafts', [[[['пользователь', 1], ['что', 1]], no], [[['пользователь', 1], ['заметка', 1]], yes]])
 	
 	# готово
+
+	хранилище.create_collection('mail')
 	
 	console.log('* Done')
 		

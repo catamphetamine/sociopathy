@@ -23,7 +23,7 @@ var Step_by_step_dialog_window = new Class
 	
 	process_template: function()
 	{
-		var template = $.tmpl('пошаговое окошко', {})
+		var template = $.render('пошаговое окошко', {})
 		
 		template = $('<div/>').append(template)
 		

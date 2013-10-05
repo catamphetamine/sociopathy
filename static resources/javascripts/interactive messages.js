@@ -727,7 +727,7 @@ var Interactive_messages = function(options)
 		var container = $('<li user="' + user._id + '"></li>')
 		container.addClass('online')
 		
-		var icon = $.tmpl('user icon', Object.x_over_y(user, { smaller: true, interactive: true }))
+		var icon = $.render('user icon', Object.x_over_y(user, { smaller: true, interactive: true }))
 		
 		if (user._id !== пользователь._id)
 		{

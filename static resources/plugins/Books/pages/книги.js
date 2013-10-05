@@ -230,7 +230,7 @@
 				
 				page.Ajax.get('/сеть/книга', { _id: _id }).ok(function(data)
 				{
-					var book = $.tmpl('книга в списке книг', data.книга)
+					var book = $.render('книга в списке книг', data.книга)
 					
 					book = $('<li/>').attr('_id', data.книга._id).append(book)
 					
@@ -292,7 +292,7 @@
 			{
 				var item = page.books.find('> [_id="' + this._id + '"]')
 				
-				$.tmpl(template, this).appendTo(item.empty())
+				$.render(template, this).appendTo(item.empty())
 				
 				if (this.обложка)
 					item.data('обложка', this.обложка)

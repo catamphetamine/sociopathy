@@ -408,12 +408,15 @@ Visual_editor.implement
 				var text = $('<span/>')
 				text.addClass('text')
 				
+				var from_selection
+				
 				if (editor.selection.exists() && editor.selection.is_valid())
 				{
 					text.text(editor.selection.text())
 					editor.selection.cut()
+					from_selection = true
 				}
-				else		
+				else
 					visual_editor.hint(text, 'Текст выдержки')
 					
 				//text.text('It is said that if you know your enemies and know yourself, you will not be imperiled in a hundred battles; if you do not know your enemies but do know yourself, you will win one and lose one; if you do not know your enemies nor yourself, you will be imperiled in every single battle.'.trim_trailing_comma())
@@ -427,12 +430,17 @@ Visual_editor.implement
 				
 				author.appendTo(citation)
 				
-				return callback(editor.insert(citation, { break_container: true }))
-			},
-			
-			on_success: function(citation)
-			{
-				editor.caret.move_to(citation)
+				var citation = editor.insert(citation, { break_container: true })
+				
+				editor.caret.move_to(function()
+				{
+					if (!from_selection)
+						return citation.node().firstChild
+					else
+						return citation.node().firstChild.nextSibling
+				}())
+				
+				return callback(citation)
 			}
 		}
 		

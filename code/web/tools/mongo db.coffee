@@ -58,7 +58,13 @@ global.db = (collection) ->
 		
 		mongo.save.fiberize(mongo)(data, options)
 		
-	api.remove = mongo.remove.fiberize(mongo)
+	api.insert = api.save
+	
+	api.remove = (object) ->
+		if object._id?
+			return mongo.remove.fiberize(mongo)(_id: object._id)
+		return mongo.remove.fiberize(mongo)(object)
+		
 	api.drop = mongo.drop.fiberize(mongo)
 	api.index = mongo.ensureIndex.fiberize(mongo)
 	

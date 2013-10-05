@@ -260,7 +260,7 @@ var Either_way_loading = new Class
 	{
 		this.setOptions(options)
 		
-		var loader_markup = $.tmpl('either way loading', {})
+		var loader_markup = $.render('either way loading', {})
 		
 		this.options.container = page.get(this.options.container)
 		
@@ -378,7 +378,7 @@ var Either_way_loading = new Class
 		
 		function create_item_from_template(data)
 		{
-			var item = $.tmpl(options.template, data)
+			var item = $.render(options.template, data)
 			
 			if (!item.is('li'))
 				item = $('<li/>').append(item)

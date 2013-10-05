@@ -100,7 +100,7 @@ var вставить_содержимое
 		if (Configuration.Optimize && Optimization.Кусочки[кусочек])
 		{
 			$.compile_template('кусочки/' + кусочек, Optimization.Кусочки[кусочек])
-			 $('body').append($.tmpl('кусочки/' + кусочек, данные))
+			 $('body').append($.render('кусочки/' + кусочек, данные))
 			 return возврат()
 		}
 		
@@ -286,7 +286,7 @@ var вставить_содержимое
 				if (!options.куда)
 					options.куда = Page.element
 					
-				options.куда.append($.tmpl(шаблон, данные))
+				options.куда.append($.render(шаблон, данные))
 				возврат()
 			}
 			

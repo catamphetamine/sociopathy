@@ -376,13 +376,9 @@ global.prepare_messages = (options) ->
 			
 			data = { name: отправитель.имя, message: сообщение.simplified }
 			письмо = Translator.text(message_key, data)
-			
-			try
-				#console.log(кому: кому, тема: общение.название, сообщение: письмо)
-				почта.письмо(кому: кому, тема: общение.название, сообщение: письмо)
-			catch error
-				console.log('Mail delivery failed')
-				console.log(error)
+		
+			#console.log(кому: кому, тема: общение.название, сообщение: письмо)
+			почта.письмо_на_отправку(кому: кому, тема: общение.название, сообщение: письмо)
 		
 		возврат()
 

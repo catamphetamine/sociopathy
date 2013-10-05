@@ -75,6 +75,16 @@ var Editor = new Class
 		})
 	},
 
+	empty: function()
+	{
+		this.content.empty()
+	},
+
+	is_empty: function()
+	{
+		this.content.is_empty()
+	},
+	
 	/*	
 	reload_content: function()
 	{
@@ -253,6 +263,12 @@ var Editor = new Class
 			
 			if (container)
 			{
+				//if ($.browser.mozilla)
+				//{
+					if (this.is_empty() && what.trim() === '')
+						return
+				//}
+				
 				this.insert_text(what, options)
 			
 				if ($.browser.webkit)

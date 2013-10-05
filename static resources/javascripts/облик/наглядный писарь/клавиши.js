@@ -206,8 +206,10 @@ Visual_editor.implement
 			
 			event.preventDefault()
 			event.stopPropagation()
+			event.stopImmediatePropagation()
 			
 			$(document).trigger('show_visual_editor')
+			
 			//visual_editor.shown = true
 		})
 	},

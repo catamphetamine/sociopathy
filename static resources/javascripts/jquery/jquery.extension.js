@@ -923,4 +923,24 @@ function cookie(name, value)
 			return old_on.apply(this, parameters)
 		}
 	}
+	
+	$.render = function(template, data)
+	{
+		try
+		{
+			var result = $.tmpl(template, data)
+			
+			if (result === template)
+				throw "Error"
+			
+			return result
+		}
+		catch (error)
+		{
+			console.log('Couldn\'t render template «' + template + '» with data')
+			console.log(data)
+			console.error(error)
+			throw error
+		}
+	}
 })()

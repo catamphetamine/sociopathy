@@ -234,3 +234,26 @@ Function.prototype.delay = (delay) ->
 Object.for_each = (object, action) ->
 	for key, value of object
 		action.bind(value)(key, value)
+		
+Function.prototype.ticking = (period, bind, parameters) ->
+	running = true
+	timeout_id = null
+	
+	func = this
+	periodical = ->
+		if func() == false
+			return
+		
+		if running
+			next()
+	
+	next = ->
+		timeout_id = periodical.delay(period, bind, parameters)
+	
+	periodical()
+	
+	stop = ->
+		clearTimeout(timeout_id)
+		running = false
+	
+	return { stop: stop }

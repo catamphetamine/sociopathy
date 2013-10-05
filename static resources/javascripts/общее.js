@@ -281,7 +281,7 @@ var title = (function()
 
 function breadcrumbs(path, on_ok, on_error)
 {
-	$('.breadcrumbs_container').append($.tmpl('breadcrumbs', { path: path }))
+	$('.breadcrumbs_container').append($.render('breadcrumbs', { path: path }))
 }
 
 // чтобы не было ошибок по консоли в обозревателе

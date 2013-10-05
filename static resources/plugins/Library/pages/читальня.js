@@ -145,7 +145,7 @@
 	
 	function add_category()
 	{
-		var category = $('<li/>').append($.tmpl('раздел читальни (правка)', { название: 'Название раздела' }))
+		var category = $('<li/>').append($.render('раздел читальни (правка)', { название: 'Название раздела' }))
 		category.appendTo(page.categories)
 		
 		uploadable_icon(category)
@@ -373,7 +373,7 @@
 				else
 					раздел = data.разделы[_id]
 				
-				var category = $.tmpl(template, раздел)
+				var category = $.render(template, раздел)
 				
 				category.appendTo(this)
 				
@@ -391,7 +391,7 @@
 			{
 				var _id = $(this).attr('_id')
 			
-				$.tmpl(template, data.заметки[_id]).appendTo(this)
+				$.render(template, data.заметки[_id]).appendTo(this)
 			})
 		}
 	}

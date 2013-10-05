@@ -501,7 +501,7 @@ var Data_templater = new Class
 		{
 			options = options || global_options
 			
-			var item = $.tmpl(options.template, data)
+			var item = $.render(options.template, data)
 				
 			if (options.table)
 			{

@@ -34,7 +34,7 @@ var Messages = new Class
 	{
 		data.когда_примерно = неточное_время(data.когда, { blank_if_just_now: true })
 		
-		var message = $.tmpl('сообщение общения', data)
+		var message = $.render('сообщение общения', data)
 		
 		if (data.новое)
 			message.addClass('new')
@@ -341,7 +341,7 @@ var Messages = new Class
 	render: function(data)
 	{
 		if (this.options.template)
-			return $.tmpl(this.options.template, data)
+			return $.render(this.options.template, data)
 		
 		var message = this.create_message_element(data)
 		this.options.decorate_message(message, data)

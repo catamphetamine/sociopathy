@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-Now=$(date +"%d.%m.%Y")
+Now=$(date +"%Y.%m.%d")
 Archive="database_($Now).tar.gz"
 #
 cd ~

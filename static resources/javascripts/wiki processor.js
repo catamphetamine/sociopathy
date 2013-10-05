@@ -672,8 +672,8 @@ Wiki_processor = new (new Class
 			.join('\n')
 		*/
 		
-		// whitespace, or any of "?!),:;…", or "." and a whitespace, or "." in the end
-		var fragments = text.split(/(\s|[\?\!\),:;…]+|(?:\.\s)|(?:\.$))/)
+		// whitespace, or any of "?!),;…", or ":" and a whitespace, or "." and a whitespace, or "." in the end
+		var fragments = text.split(/(\s|[\?\!\),;…]+|(?:\:\s)|(?:\.\s)|(?:\.$))/)
 		var fragments_and_separators = []
 		
 		//console.log(fragments)
@@ -689,10 +689,12 @@ Wiki_processor = new (new Class
 			i++
 		}
 		
-		//console.log(fragments_and_separators)
+		//console.log(fragments_and_separators.clone())
 		
 		Sequential_countdown(fragments_and_separators, function(next)
 		{
+			//console.log(this.fragment)
+			
 			if (this.fragment.is_empty())
 			{
 				pure_text_blocks.add(this)
@@ -1454,7 +1456,7 @@ var Smart_parser = new (new Class
 	{
 		var image_file_extensions = ['png', 'jpg', 'gif']
 		
-		if (image_file_extensions.filter(function(extension) { return url.ends_with('.' + extension) }).is_empty())
+		if (image_file_extensions.filter(function(extension) { return url.toLowerCase().ends_with('.' + extension) }).is_empty())
 			return callback({ error: true })
 		
 		get_image_size(url, callback)
