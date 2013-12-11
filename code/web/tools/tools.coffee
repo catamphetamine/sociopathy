@@ -276,7 +276,7 @@ file_system = require 'fs'
 				
 		options.после_query(после, query)
 			
-	batch = collection._.find(query, query_options)
+	batch = collection.find(query, query_options)
 	
 	if batch.пусто()
 		куда[свойство] = batch
@@ -294,7 +294,7 @@ file_system = require 'fs'
 	
 	query_options = Object.x_over_y(parameters, { limit: 1, sort: parameters.sort })
 	
-	more = collection._.find(more_query, query_options)
+	more = collection.find(more_query, query_options)
 	
 	if more? && !more.пусто()
 		куда['есть ещё?'] = yes

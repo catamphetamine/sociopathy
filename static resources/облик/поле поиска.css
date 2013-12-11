@@ -32,7 +32,7 @@
 	text-shadow: 0 1px 0 white;
 	background-color: #ffffff;
 
-	input[type="text"]
+	input[type="search"]
 	{
 		display: inline-block;
 		margin-top: 2px;

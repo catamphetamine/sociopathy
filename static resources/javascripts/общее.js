@@ -218,11 +218,9 @@ $(function()
 {
 	var body = $('body')
 
-	if($.browser.mozilla)
+	if (bowser.mozilla)
 		body.addClass('firefox')
-	else if($.browser.opera)
-		body.addClass('opera')
-	else if($.browser.webkit)
+	else if (bowser.webkit)
 		body.addClass('webkit')
 })
 

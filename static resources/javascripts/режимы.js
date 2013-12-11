@@ -163,7 +163,7 @@ var Режим = (function()
 		
 		if (режим === 'правка')
 		{
-			if ($.browser.mozilla)
+			if (bowser.mozilla)
 				Editor.deselect()
 	
 			$('[editable=true]').removeAttr('contenteditable')

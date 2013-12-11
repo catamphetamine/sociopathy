@@ -4,7 +4,7 @@
 global.ошибка = (data) ->
 	ошибка(data)
 	try
-		db('errors')._.save(data)
+		db('errors').add(data)
 	catch error
 		console.log('* Failed to log the error into the database:')
 

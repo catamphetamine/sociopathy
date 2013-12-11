@@ -26,7 +26,7 @@ function initialize_search_bar()
 {
 	var container = $('#search')
 	var $clear_button = container.find('> span[type="button"]')
-	var input = container.find('> input[type="text"]')
+	var input = container.find('> input[type="search"]')
 
 	input.on('keyup', function()
 	{

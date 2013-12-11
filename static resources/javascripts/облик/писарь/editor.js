@@ -263,7 +263,7 @@ var Editor = new Class
 			
 			if (container)
 			{
-				//if ($.browser.mozilla)
+				//if (bowser.mozilla)
 				//{
 					if (this.is_empty() && what.trim() === '')
 						return
@@ -271,7 +271,7 @@ var Editor = new Class
 				
 				this.insert_text(what, options)
 			
-				if ($.browser.webkit)
+				if (bowser.webkit)
 				{
 					if (!Dom_tools.is_text_node(container.node().firstChild))
 						if ($(container.node().firstChild).is('br'))
@@ -326,7 +326,7 @@ var Editor = new Class
 				this.checkpoint()
 				var element = this.unmark()
 				
-				if ($.browser.webkit)
+				if (bowser.webkit)
 				{
 					if (element.parent().node() === this.content.node())
 					{

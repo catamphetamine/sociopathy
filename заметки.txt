@@ -1,13 +1,21 @@
+
+в иконках ставить количество непрочитанных (не сообщений, а диалогов)
+
+проверить: 
+// если message_read - удалять все notification-ы, которые для этого общения (message и вид общения)
+
+// message read после отправки - только если предыдущее прочитано
+
+уведомление по почте - только если это первое непрочитанное
+
+
+"// chrome bug"
+
+
+
 возможность комментировать разделы и заметки
 
-в фаерфоксе пробел не уходит
-в фаерфоксе когда жмёшь пробел - он переносится в писарь (убирать его там)
-
-при добавлении в беседу - тоже слать email
-
 когда загружаешь сообщения, и их больше, чем total - запросить новый total.
-
-message read после отправки - только если предыдущее прочитано
 
 если отошёл - то сохранять это на сервере, чтобы когда другой зашёл - в who is online выдалось бы сразу, что отошёл
 
@@ -51,38 +59,8 @@ https://github.com/mathjax/MathJax/issues/513
 
 
 
-
-рассылать уведомления о сообщениях по почте:
-
-если есть уведомление, писать его в mail_notifications
-
-параллельно пользователю по эфиру слать "следить за присутствием": 
-если keydown или mousemove или click - считается присутствием, и отправляется на сервер по эфиру (каждую минуту), 
-где в mail_notifications пишется { 'в курсе': now }
-
-если "есть сейчас на сайте", в mail_notifications пишется { 'в курсе': now } (и потом кулдаун на минуту)
-
-если прочитано - удалять из mail_notifications
-
-каждую минуту проверять mail_notifications:
-
-если возраст >= 5 минут, и не 'в курсе', то слать на почту уведомление (все в одном письме), и удалять из mail_notifications
-если возраст 'в курсе' >= сутки, то слать на почту уведомление (все в одном письме), и удалять из mail_notifications
-
-
-
-
-
-
-
-в письме вставлять ссылку на беседу
-письмо делать в виде html, чтобы была прямо аватарка, сообщение и все дела
-письмо слать только если offline
-чтобы слалось также самое первое сообщение, если добавили в беседу
-
-уведомление по почте - только если это первое непрочитанное
-
-
+прописывать не в nginx.conf, а линковать в sites-enabled
+ 
 
 
 
@@ -129,6 +107,9 @@ Inter_tab_communication.on('убрать_уведомление', function(data)
 
 
 
+
+// письмо с уведомлением о сообщении делать в виде html, чтобы была прямо аватарка, сообщение и все дела
+// в письме вставлять ссылку на беседу
 
 
 // ctrl + колесо вверх - увеличивает масштаб фотки (макс 100%), оставляя точку указателя на месте (расширяя от неё)
@@ -976,3 +957,77 @@ memcache
 // добавить drag_over для книг
 
 при поиске книги, если она уже есть в data_store.edited - брать данные оттуда
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+blur:
+
+http://jsfiddle.net/SvH6w/2057/
+
+<div id="myDiv">
+    Normal
+    <div id="color">
+        Blurred
+    </div>
+</div>
+<p>Hover the picture</p>
+
+#color
+{
+    width: 100px;
+    height: 25px;
+	
+	margin-top: 15px;
+	padding: 10px;
+	
+    background-color: lightblue;
+    
+	-webkit-transition: all 0.3s ease-in-out;
+	-moz-transition: all 0.3s ease-in-out;
+	-o-transition: all 0.3s ease-in-out;
+	-ms-transition: all 0.3s ease-in-out;
+	transition: all 0.3s ease-in-out;
+}
+
+#color:hover
+{
+    -webkit-filter: blur(1px);
+    -moz-filter: blur(1px);
+    -o-filter: blur(1px);
+    -ms-filter: blur(1px);
+    filter: blur(1px);
+    
+	-webkit-transition: all 0.3s ease-in-out;
+	-moz-transition: all 0.3s ease-in-out;
+	-o-transition: all 0.3s ease-in-out;
+	-ms-transition: all 0.3s ease-in-out;
+	transition: all 0.3s ease-in-out;
+}
+
+
+
+
+запостить картинок
+
+http://cs9448.vk.me/u3059822/-6/y_f446a512.jpg
+http://cs419716.vk.me/v419716014/824e/ajNH2D2qV7E.jpg
+http://cs303503.vk.me/v303503598/598a/ASIxn3SvtUQ.jpg
+http://cs411121.vk.me/v411121598/5207/hxeJNNqEs_s.jpg
+http://cs416817.vk.me/v416817777/a9d2/hfBL0yZ5nyw.jpg
+http://cs315516.vk.me/v315516791/3113/48SdFbs7sOQ.jpg

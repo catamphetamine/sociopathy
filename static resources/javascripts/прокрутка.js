@@ -290,9 +290,9 @@ var Scroller = new Class
 	scroll_to_position: function(y)
 	{
 		var scroller
-		if ($.browser.webkit)
+		if (bowser.webkit)
 			scroller = $('body')
-		else if ($.browser.mozilla)
+		else if (bowser.mozilla)
 			scroller = $('html')
 		//else
 		//	throw 'Unsupported browser'
@@ -349,9 +349,9 @@ var Scroller = new Class
 		options = options || {}
 	
 		var scroller
-		if ($.browser.webkit)
+		if (bowser.webkit)
 			scroller = $('body')
-		else if ($.browser.mozilla)
+		else if (bowser.mozilla)
 			scroller = $('html')
 		else
 			scroller = $('html')

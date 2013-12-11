@@ -1,6 +1,6 @@
 global.messages_api = (options) ->
 	show_from = (environment, возврат) ->
-		session = db('people_sessions')._.find_one({ пользователь: environment.пользователь._id })
+		session = db('people_sessions').get(пользователь: environment.пользователь._id)
 		
 		return возврат() if not session?
 		return возврат(null, options.latest_read(session, environment))
@@ -13,11 +13,11 @@ global.messages_api = (options) ->
 			collection: options.messages_collection
 		
 		if options.сообщения_чего?
-			сообщения_чего = options.сообщения_чего.do(ввод)
+			сообщения_чего = options.сообщения_чего(ввод)
 			environment.сообщения_чего = сообщения_чего
 		
 		if options.authorize?
-			options.authorize.do(environment)
+			options.authorize(environment)
 		
 		if not ввод.данные.после?
 			if not ввод.данные.с_начала?
@@ -37,13 +37,13 @@ global.messages_api = (options) ->
 		
 		if ввод.данные.первый_раз?
 			if options.extra_get?
-				options.extra_get.do($, environment)
+				options.extra_get($, environment)
 				
 			if result.data.пусто()
 				$.всего = 0
 				$.пропущено = 0
 			else
-				$.всего = db(options.messages_collection)._.count(loading_options.query)
+				$.всего = db(options.messages_collection).count(loading_options.query)
 			
 				сравнение_id = null
 				
@@ -55,14 +55,14 @@ global.messages_api = (options) ->
 				_id_query = {}
 				_id_query[сравнение_id] = result.data[0]._id
 				
-				$.пропущено = db(options.messages_collection)._.count(Object.x_over_y(loading_options.query, { _id: _id_query }))
+				$.пропущено = db(options.messages_collection).count(Object.x_over_y(loading_options.query, { _id: _id_query }))
 			
 			if options.создатель?
 				if environment.сообщения_чего?
-					$.создатель = options.создатель.do(environment.сообщения_чего._id)
+					$.создатель = options.создатель(environment.сообщения_чего._id)
 	
 		if options.mark_new?
-			options.mark_new.do($.сообщения, environment)
+			options.mark_new($.сообщения, environment)
 		
 		if ввод.данные.первый_раз?
 			$.environment =
@@ -79,7 +79,7 @@ global.messages_api = (options) ->
 			_id = db(options.collection).id(ввод.данные._id)
 			добавляемый = db('people').id(ввод.данные.пользователь)
 			
-			result = options.добавить_в_общение.do(_id, добавляемый, пользователь)
+			result = options.добавить_в_общение(_id, добавляемый, пользователь)
 			
 			if result? && result.уже_участвует?
 				return вывод.send { уже_участвует: yes }
@@ -97,18 +97,18 @@ global.messages_api = (options) ->
 			else
 				удаляемый = db('people').id(ввод.данные.пользователь)
 			
-			db(options.collection)._.update({ _id: db(options.collection).id(_id) }, { $pull: { участники: удаляемый._id } })
+			db(options.collection).update({ _id: db(options.collection).id(_id) }, { $pull: { участники: удаляемый._id } })
 			
 			if сам_себя
 				set = {}
 				set['сам_вышел_из_общений.' + options.path({ сообщения_чего: { _id: _id } })] = yes
 				
-				db('people_sessions')._.update({ пользователь: удаляемый._id }, { $set: set })
+				db('people_sessions').update({ пользователь: удаляемый._id }, { $set: set })
 					
 			unset = {}
 			unset['последние_сообщения.' + options.path({ сообщения_чего: { _id: _id } })] = yes
 			
-			db('people_sessions')._.update({ пользователь: удаляемый._id }, { $unset: unset })
+			db('people_sessions').update({ пользователь: удаляемый._id }, { $unset: unset })
 			
 			уведомления = новости.уведомления(удаляемый)
 			

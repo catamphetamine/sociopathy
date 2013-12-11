@@ -1,4 +1,5 @@
 .bundle
+dump.rdb
 logs/*.log
 configuration/windows/configuration.private.coffee
 code/scala/classes/*

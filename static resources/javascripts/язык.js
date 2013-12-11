@@ -165,6 +165,18 @@ String.prototype.contains = function(what)
 
 String.prototype.has = String.prototype.contains
 
+String.prototype.has_any_of = function(what)
+{
+	var i = 0
+	while (i < what.length)
+	{
+		if (this.has(what[i]))
+			return true
+			
+		i++
+	}
+}
+
 String.prototype.collapse_lines = function()
 {
 	return this.replace(/\n/g, '')

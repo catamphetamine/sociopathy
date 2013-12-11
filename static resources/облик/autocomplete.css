@@ -13,7 +13,7 @@
 		display: none;
 	}
 	
-	> input[type="text"]
+	> input[type="search"]
 	{
 		background-image: url('/картинки/навершие/поиск/magnifier.png');
 		background-repeat: no-repeat;
@@ -84,7 +84,7 @@
 	
 	&.invalid
 	{
-		> input[type="text"]
+		> input[type="search"]
 		{
 			border-color: #a50000;
 		}

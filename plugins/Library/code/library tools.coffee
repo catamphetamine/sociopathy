@@ -1,10 +1,10 @@
 читальня = {}
 
 читальня.delete_category_recursive = (_id, пользователь, возврат) ->
-	for подраздел in db('library_categories')._.find({ надраздел: _id })
+	for подраздел in db('library_categories').find({ надраздел: _id })
 		читальня.delete_category_recursive(подраздел, пользователь)
 
-	for заметка in db('library_articles')._.find({ раздел: _id })
+	for заметка in db('library_articles').find({ раздел: _id })
 		читальня.delete_article(заметка, пользователь)
 	
 	читальня.delete_category(_id, пользователь)
@@ -16,19 +16,19 @@
 	if _id._id?
 		раздел = _id
 	else
-		раздел = db('library_categories')._.find_one({ _id: _id })
+		раздел = db('library_categories').get(_id)
 	
-	пути = db('library_paths')._.find({ раздел: _id })
+	пути = db('library_paths').find({ раздел: _id })
 	
 	system_trash('раздел читальни', { раздел: раздел, пути: пути }, пользователь)
 	
-	db('library_paths')._.remove({ раздел: _id })
-	db('library_categories')._.remove({ _id: _id })
+	db('library_paths').remove({ раздел: _id })
+	db('library_categories').remove({ _id: _id })
 			
 # пути разделов
 
 читальня.путь_к_разделу = (_id) ->
-	пути = db('library_paths')._.find({ раздел: _id }, { limit: 1, sort: [['_id', -1]] })
+	пути = db('library_paths').find({ раздел: _id }, { limit: 1, sort: [['_id', -1]] })
 			
 	if пути.пусто()
 		throw 'Не найден путь к разделу'
@@ -55,13 +55,13 @@
 	return читальня.путь_к_разделу(parent) + '/' + путь
 			
 читальня.записать_путь_к_разделу = (раздел, путь) ->
-	db('library_paths')._.remove({ путь: путь }, { safe: yes })
-	return db('library_paths')._.save({ раздел: раздел, путь: путь }, { safe: yes })
+	db('library_paths').remove({ путь: путь }, { safe: yes })
+	return db('library_paths').add({ раздел: раздел, путь: путь }, { safe: yes })
 
 # пути заметок
 
 читальня.путь_к_заметке = (_id) ->
-	пути = db('library_paths')._.find({ заметка: _id }, { limit: 1, sort: [['_id', -1]] })
+	пути = db('library_paths').find({ заметка: _id }, { limit: 1, sort: [['_id', -1]] })
 			
 	if пути.пусто()
 		throw 'Не найден путь к заметке'
@@ -81,24 +81,24 @@
 	return читальня.путь_к_разделу(заметка.раздел) + '/' + путь
 			
 читальня.записать_путь_к_заметке = (заметка, путь) ->
-	db('library_paths')._.remove({ путь: путь }, { safe: yes })
-	return  db('library_paths')._.save({ заметка: заметка, путь: путь }, { safe: yes })
+	db('library_paths').remove({ путь: путь }, { safe: yes })
+	return  db('library_paths').add({ заметка: заметка, путь: путь }, { safe: yes })
 
 #
 
 читальня.обновить_пути = (раздел) ->
 	путь = читальня.создать_путь_к_разделу(раздел, раздел.надраздел)
 			
-	for подраздел in db('library_categories')._.find({ надраздел: раздел._id })
+	for подраздел in db('library_categories').find({ надраздел: раздел._id })
 		читальня.обновить_пути(подраздел)
 
-	for заметка in db('library_articles')._.find({ раздел: раздел._id })
+	for заметка in db('library_articles').find({ раздел: раздел._id })
 		читальня.создать_путь_к_заметке(заметка)
 			
 	return путь
 			
 читальня.rename_category = (раздел) ->
-	db('library_categories')._.update({ _id: раздел._id }, { $set: { название: раздел.название } }, { safe: yes })
+	db('library_categories').update({ _id: раздел._id }, { $set: { название: раздел.название } }, { safe: yes })
 	читальня.обновить_пути(раздел)
 			
 читальня.delete_article = (_id, пользователь) ->
@@ -109,14 +109,14 @@
 		_id = _id._id
 		
 	if not заметка?
-		заметка = db('library_articles')._.find_one({ _id: _id })
+		заметка = db('library_articles').get(_id)
 			
-	пути = db('library_paths')._.find({ заметка: _id })
+	пути = db('library_paths').find({ заметка: _id })
 	
 	system_trash('заметка читальни', { заметка: заметка, пути: пути }, пользователь)
 			
-	db('library_paths')._.remove({ заметка: _id })
-	db('library_articles')._.remove({ _id: _id })
+	db('library_paths').remove({ заметка: _id })
+	db('library_articles').remove({ _id: _id })
 			
 #читальня.escape_path = (path) ->
 #	return path.split('/').map((part) -> снасти.escape_id(part)).join('/')

@@ -478,7 +478,7 @@ function cookie(name, value)
 		if (options.fully)
 		{
 			var amendment = 0
-			if ($.browser.mozilla)
+			if (bowser.mozilla)
 				amendment = 1
 				
 			element = document.elementFromPoint(offset.left, offset.top - scroll_top + height - 1 - amendment)

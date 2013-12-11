@@ -759,7 +759,7 @@ var Messages = new Class
 		// если список сообщений кончается ниже верхней границы области ввода сообщения - не прокручивать
 		// поправка на пиксель для firefox
 		var amendment = 0
-		if ($.browser.mozilla)
+		if (bowser.mozilla)
 			amendment = 1
 		
 		if (this.compose_message.displayed())

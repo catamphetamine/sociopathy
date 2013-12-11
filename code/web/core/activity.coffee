@@ -24,19 +24,19 @@ Activity.monitor = (_id, когда_был_здесь) ->
 			@когда_был_здесь_в_последний_раз = @когда_был_здесь
 			
 			# { w: 0 } = write concern "off"
-			db('people_sessions').update({ пользователь: _id }, { $set: { 'когда был здесь': когда_был_здесь }}, { w: 0 }) #, online: yes
+			db('people_sessions')._.update({ пользователь: _id }, { $set: { 'когда был здесь': когда_был_здесь }}, { w: 0 }) #, online: yes
 		
 			check_for_expiration = ->
 				fiber ->
-					#console.log('check_for_expiration: ' + db('people')._.find_one(_id).имя)
+					#console.log('check_for_expiration: ' + db('people').get(_id).имя)
 					
-					session = db('people_sessions')._.find_one({ пользователь: _id })
+					session = db('people_sessions').get({ пользователь: _id })
 		
 					когда_был_здесь_в_последний_раз = session['когда был здесь']
 		
 					if когда_был_здесь_в_последний_раз?
 						if когда_был_здесь_в_последний_раз.getTime() == когда_был_здесь.getTime()
-							#console.log(db('people')._.find_one(_id).имя + ' is offline')
+							#console.log(db('people').get(_id).имя + ' is offline')
 							эфир.offline(_id)
 							#notifier.offline(_id)
 									
@@ -53,7 +53,7 @@ Activity.monitor = (_id, когда_был_здесь) ->
 	activity.update_and_reschedule()
 
 fiber ->
-	for session in db('people_sessions')._.find()
+	for session in db('people_sessions').find()
 		if session['когда был здесь']?
 			Activity.monitor(session.пользователь, session['когда был здесь'])
 		

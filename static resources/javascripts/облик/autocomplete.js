@@ -304,6 +304,10 @@
 			{
 				return data
 			},
+			input:
+			{
+				type: 'search'
+			},
 			required: true,
 			results_viewer: results_viewer
 		},
@@ -320,7 +324,7 @@
 				.appendTo(this.container)
 			
 			this.input = $('<input/>')
-				.attr('type', 'text')
+				.attr('type', this.options.input.type)
 				.addClass('field')
 				.appendTo(this.container)
 			

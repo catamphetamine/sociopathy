@@ -133,7 +133,7 @@
 			
 			прокрутчик.scroll_by(tools_height)
 
-			if ($.browser.mozilla)
+			if (bowser.mozilla)
 				visual_editor.editor.content.focus()
 			
 			visual_editor.editor.caret.move_to(visual_editor.editor.content.find('> *:first'))

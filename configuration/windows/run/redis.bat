@@ -1,6 +1,6 @@
 @echo off
 
-set DIRECTORY=d:\work\redis
+set DIRECTORY=c:\work\redis
 
 rem cd %DIRECTORY%
 call %DIRECTORY%\redis-server configuration\windows\redis.conf

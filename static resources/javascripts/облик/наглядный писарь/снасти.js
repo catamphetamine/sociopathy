@@ -269,7 +269,7 @@ Visual_editor.implement
 					throw new Error('Выделите текст')
 				}
 
-				return callback(editor.selection.wrap($('<b/>')))
+				return callback(editor.selection.wrap($('<strong/>')))
 			},
 			
 			on_success: function(element)
@@ -294,7 +294,7 @@ Visual_editor.implement
 					throw new Error('Выделите текст')
 				}
 								
-				return callback(editor.selection.wrap($('<i/>')))
+				return callback(editor.selection.wrap($('<em/>')))
 			},
 			
 			on_success: function(element)
@@ -373,7 +373,7 @@ Visual_editor.implement
 				//this.activate(link)
 				
 				// иначе в хроме будет курсор в начале, но как бы перед самой ссылкой
-				if ($.browser.webkit)
+				if (bowser.webkit)
 					return editor.caret.move_to(link, 1)
 				
 				editor.caret.move_to(link)
@@ -405,7 +405,7 @@ Visual_editor.implement
 				var citation = $('<div/>')
 				citation.addClass('citation')
 				
-				var text = $('<span/>')
+				var text = $('<q/>')
 				text.addClass('text')
 				
 				var from_selection
@@ -787,7 +787,7 @@ Visual_editor.implement
 				element = editor.insert(element)
 			
 				// иначе в хроме будет курсор в начале, но как бы перед самим элементом
-				if ($.browser.webkit)
+				if (bowser.webkit)
 					return editor.caret.move_to(element, 1)
 				
 				return editor.caret.move_to(element)
@@ -824,7 +824,7 @@ Visual_editor.implement
 				element = editor.insert(element)
 			
 				// иначе в хроме будет курсор в начале, но как бы перед самим элементом
-				if ($.browser.webkit)
+				if (bowser.webkit)
 					return editor.caret.move_to(element, 1)
 				
 				return editor.caret.move_to(element)
@@ -861,7 +861,7 @@ Visual_editor.implement
 				element = editor.insert(element, { break_container: true })
 			
 				// иначе в хроме будет курсор в начале, но как бы перед самим элементом
-				if ($.browser.webkit)
+				if (bowser.webkit)
 					return editor.caret.move_to(element, 1)
 				
 				return editor.caret.move_to(element)	
@@ -1211,7 +1211,7 @@ Visual_editor.implement
 			var on_success = tool.on_success || $.noop
 			tool.on_success = function(result)
 			{
-				if ($.browser.mozilla)
+				if (bowser.mozilla)
 					editor.content.focus()
 					
 				on_success.bind(tool)(result)
@@ -1223,7 +1223,7 @@ Visual_editor.implement
 				{
 					info(error.message)
 					
-					//if ($.browser.mozilla)
+					//if (bowser.mozilla)
 						//editor.content.focus()
 				}
 			}
@@ -1324,7 +1324,7 @@ Visual_editor.implement
 			
 			tool.restore_caret = function()
 			{
-				if ($.browser.mozilla)
+				if (bowser.mozilla)
 					editor.content.focus()
 				
 				editor.caret.set(this.caret)

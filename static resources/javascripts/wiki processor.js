@@ -670,24 +670,47 @@ Wiki_processor = new (new Class
 			.split('\n')
 			.map(function(line) { return line.trim() })
 			.join('\n')
+			
+		триммить можно только абзацы
 		*/
 		
-		// whitespace, or any of "?!),;…", or ":" and a whitespace, or "." and a whitespace, or "." in the end
-		var fragments = text.split(/(\s|[\?\!\),;…]+|(?:\:\s)|(?:\.\s)|(?:\.$))/)
 		var fragments_and_separators = []
 		
-		//console.log(fragments)
-		
-		var i = 0
-		while (i < fragments.length)
+		function walk_fragments(fragments, action)
 		{
-			var fragment = fragments[i] || ''
-			var separator = fragments[i + 1]
-		
-			fragments_and_separators.push({ fragment: fragment, separator: separator })
-			fragments.remove_at(i + 1)
-			i++
+			var i = 0
+			while (i < fragments.length)
+			{
+				var fragment = fragments[i] || ''
+				var separator = fragments[i + 1] || ''
+			
+				if (fragment || separator)
+					action(fragment, separator)
+			
+				fragments.remove_at(i + 1)
+				i++
+			}
 		}
+		
+		var fragments = text.split(/(\s)/)
+		
+		walk_fragments(fragments, function(fragment, separator)
+		{
+			if (Smart_parser.is_a_link(fragment))
+				return fragments_and_separators.push({ fragment: fragment, separator: separator })
+			
+			var subfragments = (fragment + separator).split(/(\s|(?:[\?\!\),;\.\:…]+(?:\s|$)))/)
+			
+			walk_fragments(subfragments, function(fragment, separator)
+			{
+				fragments_and_separators.push({ fragment: fragment, separator: separator })
+			})
+		})
+		
+		// whitespace, or any of "?!),;…", or ":" and a whitespace, or "." and a whitespace, or "." in the end
+		//var fragments = text.split(/([\?\!\),;…]+|(?:\:\s)|(?:\.\s)|(?:\.$))/)
+		
+		//console.log(fragments)
 		
 		//console.log(fragments_and_separators.clone())
 		
@@ -947,7 +970,7 @@ Wiki_processor.Syntax =
 	{
 		translation: 'text',
 		selector: '.citation > .text',
-		html_tag: 'div',
+		html_tag: 'q',
 		
 		decorate: function(from, to)
 		{
@@ -997,15 +1020,15 @@ Wiki_processor.Syntax =
 	жирный:
 	{
 		translation: 'bold',
-		selector: 'b',
-		html_tag: 'b',
+		selector: 'strong',
+		html_tag: 'strong',
 		content_required: true
 	},
 	курсив:
 	{
 		translation: 'italic',
-		selector: 'i',
-		html_tag: 'i',
+		selector: 'em',
+		html_tag: 'em',
 		content_required: true
 	},
 	список:
@@ -1412,6 +1435,14 @@ var Smart_parser = new (new Class
 ({
 	is_a_link: function(text, callback)
 	{
+		function result(value)
+		{
+			if (callback)
+				return callback(value)
+				
+			return value
+		}
+	
 		var protocols = ['http', 'https', 'ftp']
 		
 		// if the text doesn't start with a protocol
@@ -1423,22 +1454,20 @@ var Smart_parser = new (new Class
 				.is_empty()
 		}
 		
-		if (!is_protocol(text))
-		{
-			if (Dns.can_be_url(text))
-				return callback(Uri.assemble(Uri.parse(text)))
-			
-			/*	
-			if (text.has('/') || text.trim_character('.').has('.'))
-			{
-				return this.проверить_ссылку(text, callback)
-			}
-			*/
-			
-			return callback(false)
-		}
+		if (is_protocol(text))
+			return result(true)
 		
-		return callback(true)
+		if (Dns.can_be_url(text))
+			return result(Uri.assemble(Uri.parse(text)))
+		
+		/*	
+		if (text.has('/') || text.trim_character('.').has('.'))
+		{
+			return this.проверить_ссылку(text, callback)
+		}
+		*/
+		
+		return result(false)
 	},
 	
 	проверить_ссылку: function(url, callback)
@@ -1456,7 +1485,9 @@ var Smart_parser = new (new Class
 	{
 		var image_file_extensions = ['png', 'jpg', 'gif']
 		
-		if (image_file_extensions.filter(function(extension) { return url.toLowerCase().ends_with('.' + extension) }).is_empty())
+		var simplified_url = Uri.assemble(Uri.parse(url.toLowerCase()).no_parameters())
+		
+		if (image_file_extensions.filter(function(extension) { return simplified_url.ends_with('.' + extension) }).is_empty())
 			return callback({ error: true })
 		
 		get_image_size(url, callback)

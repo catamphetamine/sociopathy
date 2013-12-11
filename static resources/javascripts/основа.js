@@ -22,24 +22,20 @@ var scripts =
 	[
 		'jquery.tmpl',
 		'jquery.disable.text.select',
-		'jquery.color',
 		'jquery.animate-shadow',
 		'jquery.tools',
 		'jquery-full-house',
 		'jquery.easing.min.1.3',
 		'jquery.i18n',
 		'jquery.glow',
-		'jquery.color.min',
 		'jquery.mousewheel',
 		'jquery.hoverattribute',
 		'jquery.text-shadow',
-		'jquery.background.position.x.y',
-//		'jquery-ui', // Draggable
+		'jquery.background.position.x.y'
 	]},
 	
 	{mootools:
 	[
-		//'mootools-core-1.4.5-full-nocompat',
 		'more',
 	]},
 	

@@ -77,6 +77,13 @@ var Uri =
 			return Uri.assemble(this)
 		}
 		
+		result.no_parameters = function()
+		{
+			this.parameters = {}
+			
+			return this
+		}
+		
 		return result
 	},
 	

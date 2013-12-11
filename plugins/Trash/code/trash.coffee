@@ -10,7 +10,7 @@ http.get '/сеть/мусорка', (ввод, вывод, пользовате
 http.post '/сеть/мусорка/восстановить', (ввод, вывод, пользователь) ->
 	_id = db('system_trash').id(ввод.данные._id)
 	
-	trash = db('system_trash')._.find_one(_id)
+	trash = db('system_trash').get(_id)
 	
 	switch trash.что
 		when 'раздел читальни'
@@ -29,4 +29,4 @@ global.system_trash = (что, data, пользователь) ->
 	
 	мусор.данные = data
 	
-	db('system_trash')._.save(мусор)
+	db('system_trash').add(мусор)

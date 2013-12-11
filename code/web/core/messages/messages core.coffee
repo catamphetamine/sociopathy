@@ -1,5 +1,3 @@
-#require 'coffee-trace'
-
 global.prepare_messages = (options) ->
 	options.collection = options.id
 
@@ -35,7 +33,7 @@ global.prepare_messages = (options) ->
 			последние_сообщения = []
 		
 			for общение in общения
-				последние_сообщения.add(db(options.messages_collection)._.find({ общение: общение._id }, { sort: [['_id', -1]], limit: 1 }))
+				последние_сообщения.add(db(options.messages_collection).find({ общение: общение._id }, { sort: [['_id', -1]], limit: 1 }))
 				
 			сообщения = []
 			for array in последние_сообщения
@@ -55,7 +53,7 @@ global.prepare_messages = (options) ->
 				пользователь: пользователь
 			
 			if options.authorize?
-				options.authorize.do(environment)
+				options.authorize(environment)
 			
 			непрочитанные = ->
 				session = пользовательское.session(пользователь)
@@ -81,7 +79,7 @@ global.prepare_messages = (options) ->
 					if последние_прочитанные_сообщения[_id] + '' != сообщение + ''
 						непрочитанные.add(db(options.collection).id(_id))
 				
-				return db(options.collection)._.find({ _id: { $in: непрочитанные }}, { sort: [['обновлено_по_порядку', -1]] })
+				return db(options.collection).find({ _id: { $in: непрочитанные }}, { sort: [['обновлено_по_порядку', -1]] })
 			
 			$ = {}
 			
@@ -119,7 +117,7 @@ global.prepare_messages = (options) ->
 	options.data_uri = '/сеть/' + options.общение + '/сообщения'
 
 	save = options.save
-	options.save = (сообщение, environment, возврат) ->
+	options.save = (сообщение, environment) ->
 		data =
 			отправитель: environment.пользователь._id
 			сообщение: сообщение
@@ -128,15 +126,15 @@ global.prepare_messages = (options) ->
 		if options.общение_во_множественном_числе?
 			data.общение = environment.сообщения_чего._id
 				
-		сообщение = db(options.messages_collection)._.save(data)
+		сообщение = db(options.messages_collection).add(data)
 				
 		if options.общение_во_множественном_числе?
-			db(options.collection)._.update({ _id: environment.сообщения_чего._id }, { $set: { обновлено: data.когда,  обновлено_по_порядку: data.когда.getTime() + data.общение } })
+			db(options.collection).update({ _id: environment.сообщения_чего._id }, { $set: { обновлено: data.когда,  обновлено_по_порядку: data.когда.getTime() + data.общение } })
 
 		if save?
 			save(сообщение, environment)
 		
-		возврат(null, сообщение)
+		return сообщение
 	
 	if options.общение_во_множественном_числе?
 		options.сообщения_чего_from_string = (сообщения_чего) ->
@@ -145,40 +143,38 @@ global.prepare_messages = (options) ->
 			сообщения_чего._id = db(options.collection).id(сообщения_чего._id)
 			return сообщения_чего
 		
-		options.создатель = (_id, возврат) ->
+		options.создатель = (_id) ->
 			if typeof _id == 'string'
 				_id = db(options.id).id(_id)
 			
-			сообщения = db(options.messages_collection)._.find({ общение: _id }, { sort: [['_id', 1]], limit: 1 })
+			сообщения = db(options.messages_collection).find({ общение: _id }, { sort: [['_id', 1]], limit: 1 })
 					
 			if сообщения.пусто()
 				throw "Не удалось проверить авторство"
 						
-			возврат(null, сообщения[0].отправитель)
+			return сообщения[0].отправитель
 
 		if options.private?
 			options.notified_users = (общение) -> общение.участники
 				
-			options.authorize = (environment, возврат) ->
-				общение = хранилище.collection(options.collection)._.find_one({ _id: environment.сообщения_чего._id })
+			options.authorize = (environment) ->
+				общение = хранилище.collection(options.collection).get(environment.сообщения_чего._id)
 						
 				if not общение.участники?
 					throw 'communication.private.not participating'
 				
 				if not общение.участники.map((_id) -> _id + '').has(environment.пользователь._id + '')
 					throw 'communication.private.not participating'
-				
-				возврат()
 						
-			options.добавить_в_общение = (_id, добавляемый, пользователь, возврат) ->
-				общение = db(options.collection)._.find_one({ _id: _id })
+			options.добавить_в_общение = (_id, добавляемый, пользователь) ->
+				общение = db(options.collection).get(_id)
 						
 				нет_прав = yes
 			
 				if общение.участники?
 					for участник in общение.участники
 						if участник + '' == добавляемый + ''
-							return возврат(null, { уже_участвует: yes })
+							return { уже_участвует: yes }
 						if участник + '' == пользователь._id + ''
 							нет_прав = no
 							
@@ -194,20 +190,20 @@ global.prepare_messages = (options) ->
 				if нет_прав
 					throw "Вы не участник этого общения, и поэтому \n не можете добавлять в неё людей"
 	
-				db(options.collection)._.update({ _id: _id }, { $addToSet: { участники: добавляемый } })
+				db(options.collection).update({ _id: _id }, { $addToSet: { участники: добавляемый } })
 				
 				# если сам удалялся раньше - затереть это
 				
 				unset = {}
 				unset['сам_вышел_из_общений.' + options.path({ сообщения_чего: { _id: _id } })] = yes
 				
-				db('people_sessions')._.update({ пользователь: добавляемый }, { $unset: unset })
+				db('people_sessions').update({ пользователь: добавляемый }, { $unset: unset })
 				
 				# теперь обновить новости
 				
 				query = { общение: _id }
 					
-				latest_messages = db(options.messages_collection)._.find(query, { limit: 1, sort: [['_id', -1]] })
+				latest_messages = db(options.messages_collection).find(query, { limit: 1, sort: [['_id', -1]] })
 		
 				latest_message_id = latest_messages.map((message) -> message._id.toString())[0]
 				
@@ -228,51 +224,70 @@ global.prepare_messages = (options) ->
 					set = {}
 					set['последние_сообщения.' + options.path({ сообщения_чего: { _id: _id } })] = latest_message_id
 					
-					db('people_sessions')._.update({ пользователь: добавляемый }, { $set: set })
+					db('people_sessions').update({ пользователь: добавляемый }, { $set: set })
 					
-				возврат()
+					###
+					if not сам_себя
+						user = пользовательское.взять.fiberize()(добавляемый, { полностью: yes })
+						отправитель = пользователь
+						
+						кому = user.имя + ' <' + user.почта + '>'
+									
+						message_key = 'mail.communication.added'
+						
+						data = { name: отправитель.имя, общение: options.общение, название: общение.название }
+						письмо = Translator.text(message_key, data)
 					
-			options.creation_extra = (_id, пользователь, ввод, возврат) ->
+						#console.log(кому: кому, тема: общение.название, сообщение: письмо)
+						почта.письмо_на_отправку(кому: кому, тема: общение.название, сообщение: письмо)
+					###
+					
+			options.creation_extra = (_id, пользователь, ввод) ->
 				кому = ввод.данные.кому
 				
 				if not кому?
-					return возврат()
+					return
 				
-				options.добавить_в_общение.do(_id, db('people').id(кому), пользователь)
-				возврат()
+				options.добавить_в_общение(_id, db('people').id(кому), пользователь)
 
-		options.сообщения_чего = (ввод, возврат) ->
+		options.сообщения_чего = (ввод) ->
 			сообщения_чего = null
 		
 			if ввод.данные._id?
-				сообщения_чего = db(options.collection)._.find_one({ _id: db(options.collection).id(ввод.данные._id) })
+				сообщения_чего = db(options.collection).get(ввод.данные._id)
 			else
-				сообщения_чего = db(options.collection)._.find_one({ id: ввод.данные.id })
+				сообщения_чего = db(options.collection).get(id: ввод.данные.id)
 	
 			result = Object.выбрать(['_id', 'название'], сообщения_чего)
 			if options.сообщения_чего_extra?
 				options.сообщения_чего_extra(result, сообщения_чего)
 			
-			возврат(null, result)
+			return result
 					
-		extra_get = (data, environment, возврат) ->
+		extra_get = (data, environment) ->
 			if options.private?
 				data.участники = environment.сообщения_чего.участники
-			возврат()
 					
-		options.extra_get = (data, environment, возврат) ->
+		options.extra_get = (data, environment) ->
 			data.название = environment.сообщения_чего.название
 			data._id = environment.сообщения_чего._id
 			
 			if extra_get?
-				extra_get.do(data, environment)
-				
-			возврат()
+				extra_get(data, environment)
 					
 	options.latest_read = (session, environment) ->
 		return Object.path(session, 'последние_прочитанные_сообщения.' + options.path(environment))
 
-	options.message_read = (_id, environment, возврат) ->
+	options.is_message_read = (_id, environment) ->
+		path = 'последние_прочитанные_сообщения.' + options.path(environment)
+
+		query = { пользователь: environment.пользователь._id }
+		
+		query[path] = { $gte: _id }
+			
+		return db('people_sessions').get(query)?
+
+	options.message_read = (_id, environment) ->
 		path = 'последние_прочитанные_сообщения.' + options.path(environment)
 
 		query = { пользователь: environment.пользователь._id }
@@ -291,18 +306,16 @@ global.prepare_messages = (options) ->
 		actions = $set: {}
 		actions.$set[path] = _id
 		
-		db('people_sessions')._.update(query, actions)
-		
-		возврат()
+		db('people_sessions').update(query, actions)
 				
-	options.notify = (сообщение, environment, возврат) ->
+	options.notify = (сообщение, environment) ->
 		_id = сообщение._id
 
 		notify_users = []
 	
 		общение = null
 		if environment.сообщения_чего?
-			общение = db(options.collection)._.find_one({ _id: environment.сообщения_чего._id })
+			общение = db(options.collection).get(environment.сообщения_чего._id)
 		
 		if options.общение_во_множественном_числе?
 			query = {}
@@ -324,9 +337,9 @@ global.prepare_messages = (options) ->
 			setter = {}
 			setter['последние_сообщения.' + options.path(environment)] = _id
 			
-			db('people_sessions')._.update(query, { $set: setter }, { multi: yes })
+			db('people_sessions').update(query, { $set: setter }, { multi: yes })
 			
-			notify_users = notify_users.map((_id) -> _id.toString()).filter((_id) -> _id != environment.пользователь._id + '')
+			notify_users = notify_users.filter((_id) -> _id + '' != environment.пользователь._id + '')
 		else
 			if not options.info_collection?
 				options.info_collection = options.collection + '_info'
@@ -337,7 +350,7 @@ global.prepare_messages = (options) ->
 			query.$or.add({ последнее_сообщение: { $exists: 0 } })
 			query.$or.add({ последнее_сообщение: { $lt: _id } })
 			
-			db(options.info_collection)._.update(query, { $set: { последнее_сообщение: _id } })
+			db(options.info_collection).update(query, { $set: { последнее_сообщение: _id } })
 		
 		data =
 			сообщение: _id.toString()
@@ -350,6 +363,8 @@ global.prepare_messages = (options) ->
 		
 		if not notify_users.пусто()
 			for пользователь in notify_users
+				пользователь = пользователь.toString()
+				
 				criteria =
 					type: options.общение
 					пользователь: пользователь
@@ -367,23 +382,22 @@ global.prepare_messages = (options) ->
 		
 		# if this is a private communication of two people
 		if общение && notify_users.length == 1
-			user = пользовательское.взять.fiberize()(notify_users[0], { полностью: yes })
 			отправитель = environment.пользователь
-			
-			кому = user.имя + ' <' + user.почта + '>'
-			
-			message_key = 'mail.communication.new message'
-			
 			data = { name: отправитель.имя, message: сообщение.simplified }
-			письмо = Translator.text(message_key, data)
-		
-			#console.log(кому: кому, тема: общение.название, сообщение: письмо)
-			почта.письмо_на_отправку(кому: кому, тема: общение.название, сообщение: письмо)
-		
-		возврат()
+			
+			текст = Translator.text('mail.communication.new message', data)
+			письмо = почта.письмо(notify_users[0], environment.пользователь, общение.название, текст)
+			
+			общение =
+				вид: options.общение
+			
+			if environment.сообщения_чего?
+				общение.id = environment.сообщения_чего._id
+					
+			db('notifications').add(кому: notify_users[0], общение: общение, сообщение: сообщение._id, письмо: письмо)
 
-	options.mark_new = (сообщения, environment, возврат) ->
-		session = db('people_sessions')._.find_one({ пользователь: environment.пользователь._id })
+	options.mark_new = (сообщения, environment) ->
+		session = db('people_sessions').get(пользователь: environment.пользователь._id)
 		
 		path = 'последние_прочитанные_сообщения.' + options.path(environment)
 		latest_read = Object.path(session, path)
@@ -391,10 +405,8 @@ global.prepare_messages = (options) ->
 		if not latest_read?
 			for сообщение in сообщения
 				сообщение.новое = yes
-			return возврат()
+			return
 			
 		for сообщение in сообщения
 			if сообщение._id + '' > latest_read + ''
 				сообщение.новое = yes
-		
-		возврат()

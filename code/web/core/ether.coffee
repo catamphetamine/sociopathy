@@ -209,6 +209,12 @@ api.общение_по_id = (collection, id) ->
 		соединение.emit 'поехали'
 		соединение.emit 'version', Options.Version
 
+api.есть_ли_с_пользователем = (user_id) ->
+	for id, connection of соединения
+		if connection.пользователь?
+			if connection.пользователь._id + '' == user_id + ''
+				return yes
+				
 api.offline = (пользователь) ->
 	for id, listener of listeners
 		listener.offline(пользователь)

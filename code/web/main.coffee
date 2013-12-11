@@ -79,6 +79,8 @@ fiber ->
 		global.either_way_loading = require './tools/either way loading'
 		
 		global.Activity = require './core/activity'
+		
+		require './core/notification'
 
 		global.application_tools = require('./connect/express')()
 		
@@ -93,7 +95,7 @@ fiber ->
 		global.image_magick = require 'imagemagick'
 		global.image_magick.convert.path = Options.ImageMagick.Convert.Path
 		
-		global.почта = require './tools/email'
+		global.почта = require './core/mailer'
 		
 		global.messages = require './core/messages/messages'
 		

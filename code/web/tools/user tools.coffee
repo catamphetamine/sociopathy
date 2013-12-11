@@ -51,7 +51,7 @@ exports.не_он = (_id, ввод, вывод) ->
 	return no
 	
 exports.опознать = (тайный_ключ, возврат) ->
-	данные = db('people_private_keys')._.find_one({ 'тайный ключ': тайный_ключ })
+	данные = db('people_private_keys').get('тайный ключ': тайный_ключ)
 			
 	if not данные?
 		throw 'пользователь не опознан по ' + тайный_ключ
@@ -65,7 +65,7 @@ exports.тайный_ключ = (_id, возврат) ->
 	if typeof _id == 'string'
 		_id = db('people').id(_id)
 		
-	тайный_ключ = db('people_private_keys')._.find_one({ пользователь: _id })
+	тайный_ключ = db('people_private_keys').get(пользователь: _id)
 			
 	возврат(null, тайный_ключ['тайный ключ'])
 
@@ -121,9 +121,9 @@ exports.взять = (_id, настройки, возврат) ->
 	result = null
 	
 	if single
-		result = db('people')._.find_one(example)
+		result = db('people').get(example)
 	else
-		result = db('people')._.find(example, options)
+		result = db('people').get(example, options)
 	
 	if not result?
 		return возврат()
@@ -226,8 +226,8 @@ exports.данные_пользователя = (ввод, вывод) ->
 		else
 			throw 'user.not authenticated'
 
-	пользователь = db('people')._.find_one({ _id: ввод.пользователь._id })
-	session = db('people_sessions')._.find_one({ пользователь: пользователь._id })
+	пользователь = db('people').get(ввод.пользователь._id)
+	session = db('people_sessions').get(пользователь: пользователь._id)
 	
 	$ = {}
 		
@@ -248,29 +248,29 @@ exports.session = (пользователь) ->
 	if пользователь._id?
 		_id = пользователь._id
 		
-	return db('people_sessions')._.find_one({ пользователь: _id })
+	return db('people_sessions').get(пользователь: _id)
 
 exports.создать = (человек) ->
 	
 	человек['когда пришёл'] = new Date()
 	
 	проверка = (id) ->
-		found = db('people')._.find_one({ id: id })
+		found = db('people').get(id: id)
 		return not found?
 	
 	человек.id = снасти.generate_unique_id(человек.имя, проверка)
 			
-	пользователь = db('people')._.save(человек)
+	пользователь = db('people').add(человек)
 
 	тайный_ключ = пользовательское.сделать_тайный_ключ(пользователь)
 	
-	db('people_private_keys')._.save({ пользователь: пользователь._id, 'тайный ключ': тайный_ключ })
+	db('people_private_keys').add({ пользователь: пользователь._id, 'тайный ключ': тайный_ключ })
 
-	db('circles')._.save({ пользователь: пользователь._id, круг: 'Основной', члены: [] })
+	db('circles').add({ пользователь: пользователь._id, круг: 'Основной', члены: [] })
 
-	db('people_sessions')._.save({ пользователь: пользователь._id })
+	db('people_sessions').add({ пользователь: пользователь._id })
 
-	db('news')._.save({ что: 'прописка', пользователь: пользователь._id, когда: new Date() })
+	db('news').add({ что: 'прописка', пользователь: пользователь._id, когда: new Date() })
 	
 	return пользователь
 
@@ -279,7 +279,7 @@ exports.в_сети_ли = (_id, возврат) ->
 	if typeof _id == 'string'
 		_id = db('people').id(_id)
 		
-	session = db('people_sessions')._.find_one({ пользователь: _id })
+	session = db('people_sessions').get({ пользователь: _id })
 	if not session.online?
 		return возврат(null, no)
 	возврат(null, session.online)

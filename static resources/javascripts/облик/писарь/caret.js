@@ -174,7 +174,7 @@ Editor.Caret = new Class
 		//if (!element.nodeValue)
 		//	element.nodeValue = ' '
 			
-		if ($.browser.webkit)
+		if (bowser.webkit)
 		{
 			//if (!options.to_the_end)
 			//	offset = offset + 1
@@ -229,7 +229,7 @@ Editor.Caret = new Class
 		var offset = this.offset(caret)
 		
 		// chrome bug
-		if ($.browser.webkit)
+		if (bowser.webkit)
 			offset--
 		
 		if (offset !== 0)
@@ -256,7 +256,7 @@ Editor.Caret = new Class
 		if (this.offset(caret) < range.endOffset)
 		{
 			// chrome bug
-			if ($.browser.chrome &&
+			if (bowser.webkit &&
 				this.offset(caret) + 1 === range.endOffset)
 			{
 				// then skip
@@ -280,7 +280,7 @@ Editor.Caret = new Class
 			
 			var container = caret.startContainer
 			
-			if ($.browser.msie)
+			if (bowser.msie)
 			{
 				if (container.childNodes.length === 1)
 				{
@@ -326,7 +326,7 @@ Editor.Caret = new Class
 	
 	position: function(container, offset)
 	{
-		if ($.browser.webkit)
+		if (bowser.webkit)
 			return this.create(container, offset)
 		
 		var caret = this.get()
@@ -480,7 +480,7 @@ Editor.Caret = new Class
 		if (!caret)
 			return
 
-		if ($.browser.mozilla)
+		if (bowser.mozilla)
 			this.editor.content.focus()
 		
 		this.editor.caret.set(caret)

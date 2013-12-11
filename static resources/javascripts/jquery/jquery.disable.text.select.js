@@ -17,7 +17,7 @@
  * - jQuery (John Resig, http://www.jquery.com/)
  **/
 (function($) {
-    if ($.browser.mozilla) {
+    if (bowser.mozilla) {
         $.fn.disableTextSelect = function() {
             return this.each(function() {
                 $(this).css({
@@ -32,7 +32,7 @@
                 });
             });
         };
-    } else if ($.browser.msie) {
+    } else if (bowser.msie) {
         $.fn.disableTextSelect = function() {
             return this.each(function() {
                 $(this).bind('selectstart.disableTextSelect', function() {

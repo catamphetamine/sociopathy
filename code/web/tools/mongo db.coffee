@@ -6,7 +6,7 @@ global.db = (collection) ->
 	
 	api = {}
 	
-	api.find_one = (query, options) ->
+	api.get = (query, options) ->
 		query = query || {}
 		options = options || {}
 		
@@ -35,7 +35,7 @@ global.db = (collection) ->
 		
 		object = mongo.find(query, options)
 		object.toArray.fiberize(object)()
-
+	
 	api.update = (query, data, options) ->
 		query = query || {}
 		data = data || {}
@@ -59,17 +59,23 @@ global.db = (collection) ->
 		mongo.save.fiberize(mongo)(data, options)
 		
 	api.insert = api.save
+	api.add = api.insert
 	
 	api.remove = (object) ->
 		if object._id?
 			return mongo.remove.fiberize(mongo)(_id: object._id)
 		return mongo.remove.fiberize(mongo)(object)
+
+	api.delete = api.remove
 		
 	api.drop = mongo.drop.fiberize(mongo)
 	api.index = mongo.ensureIndex.fiberize(mongo)
 	
-	mongo._ = api
-	mongo
+	api.id = mongo.id.bind(mongo)
+	
+	api._ = mongo
+	
+	return api
 
 mongoskin.SkinCollection.prototype.exists = ->
 	db = @skinDb
@@ -95,7 +101,7 @@ exports.open = (options) ->
 			options = { indexes: options }
 				
 		#try
-		#	db(name)._.drop()
+		#	db(name).drop()
 		#catch ошибка
 		#	if ошибка.message != 'ns not found'
 		#		console.error ошибка
@@ -105,6 +111,6 @@ exports.open = (options) ->
 	
 		if options.indexes?
 			for pair in options.indexes
-				global.db(name)._.index(pair[0], pair[1])
+				global.db(name).index(pair[0], pair[1])
 
 	return store

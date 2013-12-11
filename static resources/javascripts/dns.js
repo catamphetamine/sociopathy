@@ -343,7 +343,7 @@ var Dns =
 		
 		return !Domain_zones.filter(function(zone)
 		{
-			return text.ends_with('.' + zone)
+			return text.ends_with('.' + zone) && !text.has_any_of(',:;\'"`~!@#$%^&*()-_=+<>?')
 		})
 		.is_empty()
 	}

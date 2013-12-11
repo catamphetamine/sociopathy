@@ -36,7 +36,7 @@ module.exports = (ввод, options) ->
 	$.sort = sort
 	
 	if options.total? && not ввод.данные.всего?
-		$.всего = db(options.collection)._.count(options.query)
+		$.всего = db(options.collection).count(options.query)
 	
 	check_for_earlier_elements = no
 	
@@ -46,7 +46,7 @@ module.exports = (ввод, options) ->
 	
 	if not с? && not после?
 		skip = ввод.данные.пропустить || 0
-		$.data = db(options.collection)._.find(options.query, { limit: сколько, sort: [['_id', sort]], skip: skip })
+		$.data = db(options.collection).find(options.query, { limit: сколько, sort: [['_id', sort]], skip: skip })
 	else
 		сравнение_id = null
 		
@@ -70,7 +70,7 @@ module.exports = (ввод, options) ->
 		
 		id_criteria[сравнение_id] = boundary
 			
-		$.data = db(options.collection)._.find(Object.merge_recursive({ _id: id_criteria }, options.query), { limit: сколько, sort: [['_id', sort]] })
+		$.data = db(options.collection).find(Object.merge_recursive({ _id: id_criteria }, options.query), { limit: сколько, sort: [['_id', sort]] })
 
 	# check for more		
 	if $.data.length >= сколько
@@ -84,7 +84,7 @@ module.exports = (ввод, options) ->
 		more_id_criteria = {}
 		more_id_criteria[сравнение_id] = $.data[$.data.length - 1]._id
 		
-		more = db(options.collection)._.find(Object.merge_recursive({ _id: more_id_criteria }, options.query), { limit: 1, sort: [['_id', sort]] })
+		more = db(options.collection).find(Object.merge_recursive({ _id: more_id_criteria }, options.query), { limit: 1, sort: [['_id', sort]] })
 	
 		$['есть ещё?'] = more? && not more.пусто()
 
@@ -100,7 +100,7 @@ module.exports = (ввод, options) ->
 		earlier_id_criteria = {}
 		earlier_id_criteria[сравнение_id] = $.data[0]._id
 		
-		earlier = db(options.collection)._.find(Object.merge_recursive({ _id: earlier_id_criteria }, options.query), { limit: 1, sort: [['_id', sort]] })
+		earlier = db(options.collection).find(Object.merge_recursive({ _id: earlier_id_criteria }, options.query), { limit: 1, sort: [['_id', sort]] })
 
 		$['есть ли предыдущие?'] = !earlier.пусто()
 				

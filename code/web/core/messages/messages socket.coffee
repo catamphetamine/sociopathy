@@ -8,7 +8,17 @@ global.prepare_messages_socket = (options) ->
 			if typeof _id == 'string'
 				_id = collection.id(_id)
 				
-			options.message_read.do(_id, environment)
+			options.message_read(_id, environment)
+			
+			общение =
+				вид: options.общение
+			
+			if environment.сообщения_чего?
+				общение.id = environment.сообщения_чего._id
+				
+			notification = db('notifications').get(кому: environment.пользователь._id, общение: общение)
+			if notification? && _id + '' >= notification.сообщение + ''
+				db('notifications').delete(notification)
 			
 		сообщения_чего = (чего) ->
 			if not options.сообщения_чего_from_string?
@@ -34,7 +44,7 @@ global.prepare_messages_socket = (options) ->
 						
 				connect: ->
 					if options.authorize?
-						options.authorize.do(environment)
+						options.authorize(environment)
 				
 					@on 'кто здесь?', =>
 						who_is_connected = connected.hgetall.fiberize(connected)(connected_data_source())
@@ -51,10 +61,10 @@ global.prepare_messages_socket = (options) ->
 						
 						query = options.these_messages_query({ _id: { $gte: collection.id(с_какого._id) } }, environment)
 						
-						if collection._.count(query) > Max_lost_messages
+						if collection.count(query) > Max_lost_messages
 							throw 'Слишком много сообщений пропущено'
 						 
-						сообщения = collection._.find(query, { sort: [['_id', 1]] })
+						сообщения = collection.find(query, { sort: [['_id', 1]] })
 						
 						пользовательское.подставить.do(сообщения, 'отправитель')
 						
@@ -76,28 +86,31 @@ global.prepare_messages_socket = (options) ->
 					@on 'сообщение', (data) =>
 						сообщение = data.сообщение
 					
-						сообщение = options.save.do(сообщение, environment)
+						сообщение = options.save(сообщение, environment)
 						
 						сообщение.simplified = data.simplified
-						
-						message_read(сообщение._id, environment)
-						
-						if options.subscribe?
-							options.subscribe.do(environment)
-						
-						options.notify.do(сообщение, environment)
-								
+														
 						данные_сообщения =
 							_id: сообщение._id.toString()
 							отправитель: пользовательское.поля(пользователь)
 							сообщение: сообщение.сообщение
 							когда: сообщение.когда
 							
-						предыдущие_сообщения = db(options.messages_collection)._.find(options.these_messages_query({ _id: { $lt: сообщение._id } }, environment), { limit: 1, sort: [['_id', -1]] })
-							
-						if not предыдущие_сообщения.пусто()
-							данные_сообщения.предыдущее = предыдущие_сообщения[0]._id.toString()
+						# определить предыдущее сообщение можно только после вставки этого, потому что параллельность
+						предыдущее_сообщение = db(options.messages_collection).find(options.these_messages_query({ _id: { $lt: сообщение._id } }, environment), { limit: 1, sort: [['_id', -1]] })
 						
+						if not предыдущее_сообщение.пусто()
+							данные_сообщения.предыдущее = предыдущее_сообщение[0]._id.toString()
+							if options.is_message_read(предыдущее_сообщение[0]._id, environment)
+								message_read(сообщение._id, environment)
+
+						# после message_read
+						
+						if options.subscribe?
+							options.subscribe.do(environment)
+						
+						options.notify(сообщение, environment)
+							
 						@emit('сообщение', данные_сообщения)
 						@broadcast('сообщение', данные_сообщения)
 																			

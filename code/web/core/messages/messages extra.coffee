@@ -9,12 +9,12 @@ global.messages_tools = (options) ->
 		http.post '/сеть/' + url + '/сообщения/правка', (ввод, вывод, пользователь) ->
 			for data in JSON.parse(ввод.данные.messages)
 				if options.update?
-					options.update.do(data._id, пользователь._id, data.content)
+					options.update(data._id, пользователь._id, data.content)
 				else
 					_id = db(initial_options.messages_collection).id(data._id)
-					db(initial_options.messages_collection)._.update({ _id: _id, отправитель: пользователь._id }, { $set: { сообщение: data.content } })
+					db(initial_options.messages_collection).update({ _id: _id, отправитель: пользователь._id }, { $set: { сообщение: data.content } })
 
-					message = db(initial_options.messages_collection)._.find_one({ _id: _id })
+					message = db(initial_options.messages_collection).get(_id)
 
 					data = { _id: data._id, сообщение: data.content }
 					if message?
@@ -28,13 +28,13 @@ global.messages_tools = (options) ->
 		http.delete '/сеть/' + url + '/подписка', (ввод, вывод, пользователь) ->
 			_id = ввод.данные._id
 			
-			db(options.id)._.update({ _id: db(options.id).id(_id) }, { $pull: { подписчики: пользователь._id } })
+			db(options.id).update({ _id: db(options.id).id(_id) }, { $pull: { подписчики: пользователь._id } })
 					
 			set_id = 'последние_сообщения.' + options.path({ сообщения_чего: { _id: _id } })
 			unset = {}
 			unset[set_id] = yes
 			
-			db('people_sessions')._.update({ пользователь: пользователь._id }, { $unset: unset })
+			db('people_sessions').update({ пользователь: пользователь._id }, { $unset: unset })
 					
 			уведомления = новости.уведомления(пользователь)
 			
@@ -46,12 +46,12 @@ global.messages_tools = (options) ->
 			_id = ввод.данные._id
 			название = ввод.данные.название.trim()
 			
-			создатель = options.создатель.do(_id)
+			создатель = options.создатель(_id)
 		
 			if создатель + '' != пользователь._id + ''
 				throw "Вы не создатель этого общения, и не можете его переименовать"
 			
-			db(options.id)._.update({ _id: db(options.id).id(_id) }, { $set: { название: название } })
+			db(options.id).update({ _id: db(options.id).id(_id) }, { $set: { название: название } })
 			
 			эфир.отправить(options.общение, 'переназвано', { _id: _id, как: название })
 			вывод.send {}
@@ -65,7 +65,7 @@ global.messages_tools = (options) ->
 				пользователь: пользователь
 				
 			проверка = (id) ->
-				found = db(options.id)._.find_one({ id: id })
+				found = db(options.id).get(id: id)
 				return not found?
 						
 			id = снасти.generate_unique_id(название, проверка)
@@ -75,16 +75,16 @@ global.messages_tools = (options) ->
 			if append?
 				append(values, environment)
 			
-			общение = db(options.collection)._.save(values)
+			общение = db(options.collection).save(values)
 			
 			environment.сообщения_чего = { _id: общение._id }
 			
-			сообщение = options.save.do(сообщение, environment)
+			сообщение = options.save(сообщение, environment)
 		
-			options.message_read.do(сообщение._id, environment)
+			options.message_read(сообщение._id, environment)
 								
 			if options.creation_extra?
-				options.creation_extra.do(общение._id, пользователь, ввод)
+				options.creation_extra(общение._id, пользователь, ввод)
 			
 			вывод.send { id: id }
 
