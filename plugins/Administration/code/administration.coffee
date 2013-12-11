@@ -98,9 +98,7 @@ http.post '/сеть/управление/хранилище/изменить', 
 http.get '/сеть/управление/хранилище/изменить', (ввод, вывод, пользователь) ->
 	пользовательское.проверить_полномочия('управляющий', пользователь)
 	
-
-	хранилище.create_collection('notifications', [['кому', yes], ['общение.id', no], ['общение.вид', no]])
-	хранилище.create_collection('mail')
+	хранилище.create_collection('notifications', [['кому', no], ['общение.id', no], ['общение.вид', no]])
 	
 	вывод.send {}
 
@@ -215,7 +213,7 @@ http.post '/хранилище/создать', (ввод, вывод) ->
 		
 	console.log('* Notifications')
 	
-	хранилище.create_collection('notifications', [['кому', yes], ['общение.id', no], ['общение.вид', no]])
+	хранилище.create_collection('notifications', [['кому', no], ['общение.id', no], ['общение.вид', no]])
 	
 	# готово
 	

@@ -265,7 +265,7 @@ api.отправить_одному_соединению = (group, name, data, o
 					connection.emit(group + ':' + name, data)
 					return возврат(null, yes)
 				
-		console.error('No connections for user: ' + options.кому)
+		#console.error('No connections for user: ' + options.кому)
 		return возврат(null, no)
 
 	else if options.кроме?

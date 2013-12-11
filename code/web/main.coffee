@@ -77,10 +77,6 @@ fiber ->
 		global.хранилище.create = global.хранилище.createCollection.fiberize(global.хранилище)
 		
 		global.either_way_loading = require './tools/either way loading'
-		
-		global.Activity = require './core/activity'
-		
-		require './core/notification'
 
 		global.application_tools = require('./connect/express')()
 		
@@ -97,8 +93,6 @@ fiber ->
 		
 		global.почта = require './core/mailer'
 		
-		global.messages = require './core/messages/messages'
-		
 		global.session = require './session'
 		
 		#global.почта.письмо(кому: 'Николай Кучумов <kuchumovn@gmail.com>', тема: 'Test', сообщение: 'Проверка {{связи}}', данные: { связи: 'связи' })
@@ -106,8 +100,16 @@ fiber ->
 		require './upload server'
 		
 		require './core/system'
-		require './core/user'
 		require './core/ether'
+
+		global.messages = require './core/messages/messages'
+		
+		global.Activity = require './core/activity'
+		
+		require './core/notification'
+		
+		require './core/user'
+
 		require './core/drafts'
 		require './core/news'
 		

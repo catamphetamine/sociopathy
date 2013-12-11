@@ -7,9 +7,9 @@ api = {}
 api.письмо_на_отправку = (письмо) ->
 	db('mail').insert(письмо)
 
-api.письмо = (письмо) ->	
+api.отправить_письмо = (письмо) ->
 	message =
-		from: Options.Mail.From #'Sender Name <sender@example.com>'
+		from: Options.Mail.Send.From #'Sender Name <sender@example.com>'
 		to: письмо.кому #'"Receiver Name" <nodemailer@disposebox.com>'
 		subject: письмо.тема #'Nodemailer is unicode friendly ✔'
 		#headers: { 'X-Laziness-level': 1000 }
@@ -20,7 +20,7 @@ api.письмо = (письмо) ->
 	transport.sendMail.do(message)
 	#console.log('Message sent successfully!')
 
-api.письмо = (кому, от_кого, тема, текст) ->
+api.письмо = (кому, от_кого, тема, сообщение) ->
 	if кому._id?
 		кому = кому._id
 		
@@ -37,9 +37,9 @@ module.exports = api
 доставить_письма = ->
 	for письмо in db('mail').find()
 		try
-			api.письмо(письмо)
+			api.отправить_письмо(письмо)
 			db('mail').remove(письмо)
 		catch error
 			console.error('Failed to deliver the message')
-		
-доставить_письма.ticking(1000)
+
+доставить_письма.ticking(Options.Mail.Send.Frequency * 1000)

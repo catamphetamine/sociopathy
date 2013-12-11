@@ -16,9 +16,8 @@ global.prepare_messages_socket = (options) ->
 			if environment.сообщения_чего?
 				общение.id = environment.сообщения_чего._id
 				
-			notification = db('notifications').get(кому: environment.пользователь._id, общение: общение)
-			if notification? && _id + '' >= notification.сообщение + ''
-				db('notifications').delete(notification)
+			console.log(кому: environment.пользователь._id, общение: общение, сообщение: { $lte: _id })
+			db('notifications').remove(кому: environment.пользователь._id, общение: общение, сообщение: { $lte: _id })
 			
 		сообщения_чего = (чего) ->
 			if not options.сообщения_чего_from_string?

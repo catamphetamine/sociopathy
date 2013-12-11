@@ -158,7 +158,7 @@ global.prepare_messages = (options) ->
 			options.notified_users = (общение) -> общение.участники
 				
 			options.authorize = (environment) ->
-				общение = хранилище.collection(options.collection).get(environment.сообщения_чего._id)
+				общение = db(options.collection).get(environment.сообщения_чего._id)
 						
 				if not общение.участники?
 					throw 'communication.private.not participating'

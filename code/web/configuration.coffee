@@ -48,7 +48,9 @@ module.exports =
 				Width: 100
 				Height: 150
 	Mail:
-		From: 'Sociopathy <news@sociopathy.info>'
+		Send:
+			From: 'Sociopathy <news@sociopathy.info>'
+			Frequency: 10 # in seconds
 	Invites: yes
 	Plugins: ['Library', 'People', 'Help', 'News', 'Chat', 'Talks', 'Discussions', 'Bookshelf', 'Settings', 'Trash', 'Administration', 'Errors', 'Picture albums', 'Video albums'] # 'Diary', 'Journal', 'Books', 'Circles'
 	Optimize: yes
