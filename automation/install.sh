@@ -222,30 +222,7 @@ sed --in-place "s/{configuration_name}/$configuration_name/g" $stop_script
 #
 # now you need to tell NginX to include your enginex.conf file from you configuration folder
 #
-# 1) open the /etc/nginx/nginx.conf file
-# 2) find the following line: "include /etc/nginx/sites-enabled/*;"
-# 3) insert line "include /home/sociopathy/repository/configuration/[your configuration name]/enginex.conf;" before the previoiusly found line
-#
-# for the sed command explanation read
-# http://stackoverflow.com/questions/6739258/how-do-i-add-a-line-of-text-to-the-middle-of-a-file-using-bash
-#
-
-nginx_configuration=/etc/nginx/nginx.conf
-
-# currently not working
-nginx_configuration_already_patched=
-
-if grep --quiet sociopathy $nginx_configuration; then
-	nginx_configuration_already_patched=yes
-fi
-
-if [[ "$nginx_configuration_already_patched" == "" ]]; then
-echo $sociopathy_user_password | sudo sed --in-place "H;\${x;s/include \/etc\/nginx\/sites-enabled\/\*;\n/include \"\/home\/sociopathy\/repository\/configuration\/$configuration_name\/enginex.conf\";\n\t\
-&/;p;}" $nginx_configuration
-else
-	echo "NginX configuration already patched"
-fi
-
+ln --symbolic "/home/sociopathy/repository/configuration/$configuration_name/enginex.conf" "/etc/nginx/sites-enabled/sociopathy.$configuration_name.conf"
 #
 # to add NginX to autostart see
 # http://www.discoded.com/2012/05/22/autostart-nginx-under-ubuntu-linux/
