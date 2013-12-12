@@ -98,10 +98,10 @@ function проверить_ссылку_на_раздел(url, options, callbac
 	if (url.indexOf(here) === 0)
 		return callback({ error: 'Нельзя перенести раздел в его же подраздел' })
 
-	if (!url.starts_with('/читальня'))
-		return callback({ error: 'Это не адрес раздела читальни' })
+	if (!url.starts_with(text('pages.library.url')))
+		return callback({ error: 'Это не адрес раздела архива' })
 	
-	var путь = url.substring('/читальня'.length)
+	var путь = url.substring(text('pages.library.url').length)
 	
 	var form = this
 	
@@ -145,7 +145,7 @@ Validation.читальня =
 	
 	ссылка_на_раздел_для_заметки: function(url, callback)
 	{
-		проверить_ссылку_на_раздел.bind(this)(url, { ошибка_если_корень: 'Нельзя переносить заметки в корень читальни' }, callback)
+		проверить_ссылку_на_раздел.bind(this)(url, { ошибка_если_корень: 'Нельзя переносить заметки в корень архива' }, callback)
 	}
 }
 

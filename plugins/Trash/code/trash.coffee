@@ -13,9 +13,9 @@ http.post '/сеть/мусорка/восстановить', (ввод, выв
 	trash = db('system_trash').get(_id)
 	
 	switch trash.что
-		when 'раздел читальни'
+		when 'раздел архива'
 			console.log('')
-		when 'заметка читальни'
+		when 'заметка архива'
 			console.log('')
 		when 'книга'
 			console.log('')

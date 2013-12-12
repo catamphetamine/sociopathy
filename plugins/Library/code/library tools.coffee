@@ -20,7 +20,7 @@
 	
 	пути = db('library_paths').find({ раздел: _id })
 	
-	system_trash('раздел читальни', { раздел: раздел, пути: пути }, пользователь)
+	system_trash('раздел архива', { раздел: раздел, пути: пути }, пользователь)
 	
 	db('library_paths').remove({ раздел: _id })
 	db('library_categories').remove({ _id: _id })
@@ -113,7 +113,7 @@
 			
 	пути = db('library_paths').find({ заметка: _id })
 	
-	system_trash('заметка читальни', { заметка: заметка, пути: пути }, пользователь)
+	system_trash('заметка архива', { заметка: заметка, пути: пути }, пользователь)
 			
 	db('library_paths').remove({ заметка: _id })
 	db('library_articles').remove({ _id: _id })

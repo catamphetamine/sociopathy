@@ -6,7 +6,7 @@
 	{
 		if (!page.data.раздел)
 		{
-			return page_error('Нельзя создавать заметки в корне читальни')
+			return page_error('Нельзя создавать заметки в корне архива')
 			//return error()
 		}
 		
@@ -32,7 +32,7 @@
 				})
 				.ok(function(data)
 				{
-					go_to('/читальня/' + data.путь)
+					go_to(text('pages.library.url') + '/' + data.путь)
 				})
 			})
 		}

@@ -3,9 +3,9 @@
 	{
 		"library":
 		{
-			"url": "/читальня",
+			"url": "/архив",
 			
-			"title": "Читальня",
+			"title": "Архив",
 			
 			"section not found": "Раздела «{query}» не найдено",
 			"section or article not found": "Раздела или заметки «{query}» не найдено",
@@ -22,7 +22,7 @@
 			
 			"new article":
 			{
-				"url section": "читальня/заметка",
+				"url section": "архив/заметка",
 				
 				"title": "Написать заметку",
 				

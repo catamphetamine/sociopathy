@@ -6,7 +6,7 @@ Sociopathy
    
 http://sociopathy.info
    
-So what's different?
+What's different?
 =============
 
 It's a social network with a built-in wikipedia, so it suits perfectly for groups of people who want to communicate and share some knowledge.

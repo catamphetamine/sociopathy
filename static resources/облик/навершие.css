@@ -63,7 +63,7 @@ nav, #panel
 	margin: 0;
 	padding: 0;
 
-	> li[link="/читальня"]
+	> li[picture="/plugins/Library/icon/читальня"]
 	{
 		margin-right: 16px;
 	}
