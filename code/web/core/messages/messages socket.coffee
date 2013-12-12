@@ -16,7 +16,6 @@ global.prepare_messages_socket = (options) ->
 			if environment.сообщения_чего?
 				общение.id = environment.сообщения_чего._id
 				
-			console.log(кому: environment.пользователь._id, общение: общение, сообщение: { $lte: _id })
 			db('notifications').remove(кому: environment.пользователь._id, общение: общение, сообщение: { $lte: _id })
 			
 		сообщения_чего = (чего) ->
@@ -99,16 +98,19 @@ global.prepare_messages_socket = (options) ->
 						предыдущее_сообщение = db(options.messages_collection).find(options.these_messages_query({ _id: { $lt: сообщение._id } }, environment), { limit: 1, sort: [['_id', -1]] })
 						
 						if not предыдущее_сообщение.пусто()
-							данные_сообщения.предыдущее = предыдущее_сообщение[0]._id.toString()
-							if options.is_message_read(предыдущее_сообщение[0]._id, environment)
+							предыдущее_сообщение = предыдущее_сообщение[0]
+							данные_сообщения.предыдущее = предыдущее_сообщение._id.toString()
+							if options.is_message_read(предыдущее_сообщение._id, environment)
 								message_read(сообщение._id, environment)
+						else
+							предыдущее_сообщение = null
 
 						# после message_read
 						
 						if options.subscribe?
 							options.subscribe.do(environment)
 						
-						options.notify(сообщение, environment)
+						options.notify(сообщение, environment, { предыдущее_сообщение: предыдущее_сообщение })
 							
 						@emit('сообщение', данные_сообщения)
 						@broadcast('сообщение', данные_сообщения)

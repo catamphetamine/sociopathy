@@ -276,6 +276,13 @@ global.prepare_messages = (options) ->
 				extra_get(data, environment)
 					
 	options.latest_read = (session, environment) ->
+		if not environment?
+			environment = session
+			session = пользовательское.session(environment.пользователь)
+			
+		if not session.последние_прочитанные_сообщения? && session._id?
+			session = пользовательское.session(session)
+		
 		return Object.path(session, 'последние_прочитанные_сообщения.' + options.path(environment))
 
 	options.is_message_read = (_id, environment) ->
@@ -308,7 +315,7 @@ global.prepare_messages = (options) ->
 		
 		db('people_sessions').update(query, actions)
 				
-	options.notify = (сообщение, environment) ->
+	options.notify = (сообщение, environment, прочее) ->
 		_id = сообщение._id
 
 		notify_users = []
@@ -382,19 +389,27 @@ global.prepare_messages = (options) ->
 		
 		# if this is a private communication of two people
 		if общение && notify_users.length == 1
-			отправитель = environment.пользователь
-			data = { name: отправитель.имя, message: сообщение.simplified }
+			собеседник = пользовательское.взять.fiberize()(notify_users[0])
 			
-			текст = Translator.text('mail.communication.new message', data)
-			письмо = почта.письмо(notify_users[0], environment.пользователь, общение.название, текст)
-			
-			общение =
-				вид: options.общение
-			
-			if environment.сообщения_чего?
-				общение.id = environment.сообщения_чего._id
+			# если это первое непрочитанное сообщение
+			if прочее.предыдущее_сообщение?
+				console.log(options.latest_read(собеседник, environment))
+				console.log(прочее.предыдущее_сообщение._id)
+				if options.latest_read(собеседник, environment) + '' == прочее.предыдущее_сообщение._id + ''
+					# можно уведомить получателя
+					отправитель = environment.пользователь
+					data = { name: отправитель.имя, message: сообщение.simplified }
 					
-			db('notifications').add(кому: notify_users[0], общение: общение, сообщение: сообщение._id, письмо: письмо)
+					текст = Translator.text('mail.communication.new message', data)
+					письмо = почта.письмо(собеседник, environment.пользователь, общение.название, текст)
+					
+					общение =
+						вид: options.общение
+					
+					if environment.сообщения_чего?
+						общение.id = environment.сообщения_чего._id
+					
+					db('notifications').add(кому: собеседник._id, общение: общение, сообщение: сообщение._id, письмо: письмо)
 
 	options.mark_new = (сообщения, environment) ->
 		session = db('people_sessions').get(пользователь: environment.пользователь._id)

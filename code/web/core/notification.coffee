@@ -21,8 +21,8 @@ Open_tab_activity_timeout = 30 * 60
 			send = true
 
 		if send
-			console.log('Scheduling notification email')
-			console.log(уведомление.письмо)
+			#console.log('Scheduling notification email')
+			#console.log(уведомление.письмо)
 			почта.письмо_на_отправку(уведомление.письмо)
 			db('notifications').remove(уведомление)
 		
