@@ -1,0 +1,628 @@
+@import "/облик/вспомогательный.less";
+
+.visual_editor_tools_container
+{
+	position: relative;
+
+	/*
+	min-height: 2 * @visual_editor_tools_panel_height;
+	max-height: 2 * @visual_editor_tools_panel_height;
+	
+	overflow: hidden;
+	*/
+}
+
+.visual_editor_tools
+{
+	width: 100%;
+		
+	display: none;
+
+	/*
+	position: absolute;
+	top: 0;
+	left: 0;
+	*/
+	
+	ul
+	{
+		width: 100%;
+	
+		background-color: #3f3f3f;
+		color: #efefef;
+	
+		padding-left: 10px;
+		padding-right: 10px;
+		
+		margin: 0;
+		
+		text-align: center;
+		
+		min-height: @visual_editor_tools_panel_height;
+		max-height: @visual_editor_tools_panel_height;
+
+		overflow: hidden;
+		
+		li
+		{
+			display: inline-block;
+			
+			position: relative;
+			
+			font-size: 20px;
+			
+			margin-left: 15px;
+			margin-right: 15px;
+			
+			cursor: pointer;
+			
+			&.disabled
+			{
+				cursor: default !important;
+				opacity: 0.5;
+			}
+		}
+	}
+
+	&.sticky
+	{
+		position: fixed;
+		width: 100%;
+		margin: 0;
+	}
+	
+	ul.additional_tools
+	{
+		/*position: absolute;*/
+		position: relative;
+		top: -@visual_editor_tools_panel_height;
+		margin-bottom: -@visual_editor_tools_panel_height;
+		left: 0;
+	}
+	
+	.additional_tools_container
+	{
+		position: relative;
+		z-index: 0;
+		
+		overflow: hidden;
+	}
+		
+	ul.main_tools
+	{
+		position: relative;
+		z-index: 1;
+	}
+}
+
+/* sociopathy styling */
+
+.visual_editor_tools
+{
+	ul
+	{
+		li
+		{
+			.css_transition(200ms);
+			
+			@hover_glow_color: #00659d;
+			@hover_text_color: #ffffff;
+			
+			@active_glow_color: #00659d;
+			@active_text_color: #ebf8ff;
+			
+			margin-left: 10px;
+			margin-right: 10px;
+			
+			&:hover
+			{
+				color: @hover_text_color !important;
+				border-color: @hover_text_color !important;
+				text-shadow: 0px 0px 20px @hover_glow_color;
+			}
+			
+			&.disabled:hover
+			{
+				text-shadow: none;
+			}
+			
+			&:active
+			{
+				color: @active_text_color !important;
+				border-color: @active_text_color !important;
+				text-shadow: 0px 0px 20px @active_glow_color;
+			}
+		}
+	}
+}
+
+.visual_editor_tools
+{
+	ul.main_tools
+	{
+		li
+		{
+			top: -11px;
+			
+			&.text_align_left, &.text_align_center, &.text_align_right, &.text_align_justify
+			{
+				top: -1px;
+			
+				margin-left: 0px;
+				margin-right: 0px;
+				
+				&.text_align_justify
+				{
+					margin-right: 15px;
+				}
+				
+				 > *
+				 {
+					width: 34px;
+					height: 34px;
+				 }
+			}
+			
+			&.text_align_justify
+			{
+				margin-right: 7px;
+			}
+			
+			&.text_align_left > *
+			{
+				background-image: url('/картинки/писарь/снасти/кнопки/выравнивание содержимого влево.png?version=2');
+			}
+			
+			&.text_align_center > *
+			{
+				background-image: url('/картинки/писарь/снасти/кнопки/выравнивание содержимого по середине.png?version=2');
+			}
+			
+			&.text_align_right > *
+			{
+				background-image: url('/картинки/писарь/снасти/кнопки/выравнивание содержимого вправо.png?version=2');
+			}
+			
+			&.text_align_justify > *
+			{
+				background-image: url('/картинки/писарь/снасти/кнопки/выравнивание содержимого по ширине.png?version=2');
+			}
+			
+			&.heading
+			{
+				font-family: @headings_font;
+			}
+			
+			&.subheading
+			{
+				top: -12px;
+			
+				font-family: @headings_font;
+				font-weight: bold;
+				font-size: 21px;
+				line-height: 20px;
+
+				border-bottom-style: solid;
+				border-bottom-width: 1px;
+				border-bottom-color: #afafaf;
+			}
+			
+			&.paragraph
+			{
+				font-family: @textual_font;
+			}
+			
+			&.bold
+			{
+				font-weight: bold;
+			}
+			
+			&.italic
+			{
+				font-style: italic;
+			}
+			
+			&.link
+			{
+				font-family: @labels_font;
+				.hyperlink();
+				color: white;
+				border-color: white;
+			}
+			
+			&.citation
+			{
+				font-style: italic;
+			}
+			
+			&.citation:before
+			{
+				content: '«';
+			}
+			
+			&.citation:after
+			{
+				content: '»';
+			}
+			
+			&.list
+			{
+				top: -1px;
+				
+				margin-left: 5px;
+				margin-right: 5px;
+				
+				> *
+				{
+					background-image: url('/картинки/писарь/снасти/кнопки/список.png?version=2');
+					width: 34px;
+					height: 34px;
+				}
+			}
+			
+			&.picture
+			{
+				top: 0px;
+				
+				margin-left: 5px;
+				margin-right: 5px;
+
+				> *
+				{
+					background-image: url('/картинки/писарь/снасти/кнопки/картинка.png?version=2');
+					width: 36px;
+					height: 36px;
+				}
+			}
+						
+			&.video
+			{
+				top: -1px;
+				
+				margin-left: 5px;
+				margin-right: 5px;
+			
+				> *
+				{
+					background-image: url('/картинки/писарь/снасти/кнопки/видео.png?version=2');
+					width: 36px;
+					height: 36px;
+				}
+			}
+			
+			&.undo, &.redo
+			{
+				top: -3px;
+			
+				> *
+				{
+					width: 32px;
+					height: 32px;
+					
+					-webkit-transition: all 200ms ease-in-out;
+					-moz-transition: all 200ms ease-in-out;
+				}
+			}
+	
+			&.undo > *
+			{
+				background-image: url('/картинки/писарь/снасти/кнопки/undo.png?version=2');
+			}
+			
+			&.undo > *.disabled, &.redo > *.disabled
+			{
+				cursor: default !important;
+			}
+	
+			&.redo > *
+			{
+				background-image: url('/картинки/писарь/снасти/кнопки/redo.png?version=2');
+			}
+			
+			&.undo
+			{
+				margin-right: 0;
+			}
+			
+			&.redo
+			{
+				margin-left: 0;
+			}
+		}
+	}
+	
+	ul.additional_tools
+	{
+		li
+		{
+			top: -10px;
+			
+			&.code, &.multiline_code, &.source
+			{
+				> code
+				{
+					background: none;
+					border: 0;
+				}
+			}
+						
+			&.subscript sub, &.superscript sup
+			{
+				font-size: 16px;
+			}
+			
+			&.audio
+			{
+				top: -1px;
+				
+				> *
+				{
+					background-image: url('/картинки/писарь/снасти/кнопки/аудиозапись.png?version=2');
+					width: 36px;
+					height: 36px;
+				}
+			}
+		}
+	}
+	
+	.more_less_container
+	{
+		float: right;
+		position: relative;
+		top: -43px;
+		margin-bottom: -43px;
+	}
+	
+	.more, .less
+	{
+		position: relative;
+		
+		right: 12px;
+		top: 10px;
+		
+		z-index: 1;
+		
+		width: 30px;
+		height: 30px;
+		
+		cursor: pointer;
+	}
+	
+	.more
+	{
+		background-image: url('/картинки/писарь/снасти/кнопки/показать всё.png?version=2');
+	}
+
+	.less
+	{
+		display: none;
+		background-image: url('/картинки/писарь/снасти/кнопки/скрыть разширенное.png?version=2');
+	}
+}
+
+.firefox .visual_editor_tools .subscript sub
+{
+	position: relative;
+	top: -8px;
+}
+
+.webkit .visual_editor_tools .subscript sub
+{
+	position: relative;
+	top: -2px;
+}
+
+.webkit .visual_editor_tools .superscript sup
+{
+	position: relative;
+	top: -2px;
+}
+
+.visual_editor_hyperlink_window
+{
+	.icon
+	{
+		width: 128px;
+		height: 128px;
+
+		background-image: url('/картинки/писарь/снасти/ссылка.png');
+	}
+}
+
+.visual_editor_image_source_window
+{	
+	input[name="url"]
+	{
+		width: 570px;
+	}
+	
+	.icon
+	{
+		width: 128px;
+		height: 128px;
+
+		background-image: url('/картинки/писарь/снасти/картинка.png');
+		
+		padding-right: 46px;
+	}
+	
+	.float
+	{
+		> [value="left"], > [value="none"], > [value="right"]
+		{
+			display: inline-block;
+			
+			width: 180px;
+			height: 120px;
+			
+			margin-left: 20px;
+			margin-right: 20px;
+			
+			margin-top: 20px;
+		}
+		
+		> [value="left"]
+		{
+			margin-left: 0;
+			
+			background-image: url('/картинки/писарь/снасти/обтекание картинки текстом/картинка слева.png');
+		}
+		
+		> [value="none"]
+		{
+			background-image: url('/картинки/писарь/снасти/обтекание картинки текстом/картинка как обычно.png');
+		}
+		
+		> [value="right"]
+		{
+			margin-left: 0;
+			
+			background-image: url('/картинки/писарь/снасти/обтекание картинки текстом/картинка справа.png');
+		}
+	}
+}
+
+.visual_editor_formula_window
+{
+	.icon
+	{
+		width: 128px;
+		height: 128px;
+
+		background-image: url('/картинки/писарь/снасти/формула.png');
+		
+		margin-top: 0;
+	}
+	
+	textarea[name="formula"]
+	{
+		height: 110px;
+		width: 440px;
+	}
+	
+	.display
+	{
+		> [value="inline"], > [value="block"]
+		{
+			display: inline-block;
+			
+			width: 220px;
+			height: 100px;
+			
+			margin-left: 20px;
+			margin-right: 20px;
+			
+			margin-top: 20px;
+		}
+		
+		> [value="inline"]
+		{
+			margin-left: 0;
+			
+			background-image: url('/картинки/писарь/снасти/обтекание формулы текстом/формула в строке.png');
+		}
+		
+		> [value="block"]
+		{
+			margin-left: 0;
+			
+			background-image: url('/картинки/писарь/снасти/обтекание формулы текстом/формула вне строки.png');
+		}
+	}
+}
+
+.visual_editor_video_window
+{
+	.icon
+	{
+		width: 128px;
+		height: 128px;
+
+		background-image: url('/картинки/писарь/снасти/видео.png');
+		
+		margin-top: -4px !important;
+	}
+	
+	.main_content form input[type="text"]
+	{
+		width: 550px;
+	}
+}
+
+.visual_editor_audio_window
+{
+	.icon
+	{
+		width: 128px;
+		height: 128px;
+
+		margin-left: 5px;
+		padding-right: 50px;
+
+		background-image: url('/картинки/писарь/снасти/аудио.png');
+	}
+	
+	.main_content form input[type="text"]
+	{
+		width: 550px;
+	}
+	
+	form
+	{
+		> label
+		{
+			margin-top: 46px;
+		}
+		
+		> label[for="url"]
+		{
+			margin-top: 0;
+		}
+	}
+}
+
+.visual_editor_edit_source_window
+{
+	.icon
+	{
+		width: 128px;
+		height: 128px;
+
+		background-image: url('/картинки/писарь/снасти/html.png');
+		
+		padding-left: 10px;
+		padding-right: 0px;
+	}
+	
+	.main_content
+	{
+		padding: 0px !important;
+		
+		> form
+		{
+			padding: 0 !important;
+			
+			&, .xml_editor, textarea[type="text"]
+			{
+				width: 100%;
+				height: 100%;
+			}
+			
+			textarea[type="text"]
+			{
+				margin-top: 0;
+				padding: 0;
+				border: 0;
+			}
+		}
+	}
+}
+
+article[contenteditable=true] [type=hyperlink],
+article[contenteditable=true] [type=picture],
+article[contenteditable=true] [type=formula],
+article[contenteditable=true] [type=audio],
+article[contenteditable=true] [type=video]
+{
+	cursor: pointer;
+}

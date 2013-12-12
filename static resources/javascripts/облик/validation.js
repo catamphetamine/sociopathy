@@ -187,9 +187,9 @@ Validation.вход =
 	}
 }
 
-Validation.наглядный_писарь = {}
+Validation.писарь = {}
 
-Validation.наглядный_писарь.видео = function(value, callback)
+Validation.писарь.видео = function(value, callback)
 {
 	if (!value)
 		return callback({ error: 'Вставьте ссылку на видео' })
@@ -200,7 +200,7 @@ Validation.наглядный_писарь.видео = function(value, callback
 	callback()
 }
 
-Validation.наглядный_писарь.source = function(value, callback)
+Validation.писарь.source = function(value, callback)
 {
 	try
 	{
@@ -220,7 +220,7 @@ Validation.наглядный_писарь.source = function(value, callback)
 	callback()
 }
 
-Validation.наглядный_писарь.формула = function(value, callback)
+Validation.писарь.формула = function(value, callback)
 {
 	if (!value)
 		return callback({ error: 'Введите код формулы в формате TeX' })
@@ -228,7 +228,7 @@ Validation.наглядный_писарь.формула = function(value, call
 	callback()
 }
 
-Validation.наглядный_писарь.картинка = function(url, callback)
+Validation.писарь.картинка = function(url, callback)
 {
 	if (!url)
 		return callback({ error: 'Введите адрес картинки' })
@@ -242,7 +242,7 @@ Validation.наглядный_писарь.картинка = function(url, call
 	})
 }
 				
-Validation.наглядный_писарь.ссылка = function(value, callback)
+Validation.писарь.ссылка = function(value, callback)
 {
 	if (!value)
 		return callback({ error: 'Введите адрес ссылки' })
@@ -256,7 +256,7 @@ Validation.наглядный_писарь.ссылка = function(value, callba
 	})
 }
 
-Validation.наглядный_писарь.аудиозапись =
+Validation.писарь.аудиозапись =
 {
 	ссылка: function(value, callback)
 	{

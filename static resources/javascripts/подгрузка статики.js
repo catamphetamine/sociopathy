@@ -11,7 +11,7 @@ var вставить_содержимое
 		'simple value dialog window',
 		'unsupported browser popup',
 		'навершие',
-		'наглядный писарь',
+		'писарь',
 		'нижняя панель режима правки',
 		'окошко входа',
 		'unsaved changes'
