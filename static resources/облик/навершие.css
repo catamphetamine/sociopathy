@@ -167,6 +167,37 @@ a.image
 	}
 }
 
+#panel_menu
+{
+	.notification_couter
+	{
+		display: none;
+	
+		position: absolute;
+		z-index: 1;
+		
+		right: 1px;
+		bottom: 1px;
+			
+		width: 14px;
+		height: 14px;
+	
+		border-radius: 999px;
+		
+		opacity: 0.9;
+		
+		background-color: #e7043e;
+		color: white;
+		
+		font-size: 12px;
+		font-style: normal;
+		font-family: Helvetica;
+		line-height: 15px;
+		
+		text-align: center;
+	}
+}
+
 #panel_menu > li > .loading
 {
 	width: 16px;

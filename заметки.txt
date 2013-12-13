@@ -7,14 +7,6 @@ Custom UI
 
 
 
-убрать ctrl alt
-
-Действия
-СоздатьCtrl, Alt, N
-ДобавитьCtrl, Alt, A
-УдалитьCtrl, Alt, Backspace (сделать Delete)
-
-
 
 
 
@@ -31,6 +23,7 @@ Custom UI
 
 
 
+"li > .notification_counter"
 
 в иконках ставить количество непрочитанных (не сообщений, а диалогов):
 
@@ -42,7 +35,22 @@ Custom UI
 
 
 
+
 возможность комментировать разделы и заметки
+
+
+
+
+
+
+
+убрать ctrl alt
+
+Действия
+Создать Ctrl, Alt, N
+Добавить Ctrl, Alt, A
+Удалить Ctrl, Alt, Backspace (сделать Delete)
+
 
 
 

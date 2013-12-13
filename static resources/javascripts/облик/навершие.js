@@ -359,6 +359,8 @@ function prepare_panel_icons()
 			
 			state_icon.insert_after(раздел)
 		})
+		
+		раздел.append('<div class="notification_couter"></div>')
 	})
 }
 
