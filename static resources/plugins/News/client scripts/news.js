@@ -31,10 +31,17 @@
 				
 			this.новости.push(data._id)
 			
+			Новости.update_news_counter(this)
+			
 			if (indicate)
 			{
 				news_indication.on()
 			}
+		},
+		
+		panel_item: function()
+		{
+			return news_indication.panel_item
 		},
 		
 		read: function(что)
@@ -47,6 +54,11 @@
 				news_indication.off()
 				
 			return true
+		},
+		
+		news_count: function()
+		{
+			return Object.size(this.новости)
 		},
 		
 		anything_new: function()

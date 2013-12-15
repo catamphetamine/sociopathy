@@ -242,7 +242,7 @@ var вставить_содержимое
 						{
 							if (typeof this.icon === 'object')
 								if (!this.icon.private)
-									add_top_panel_button.bind(this)(this)
+									add_top_panel_button.bind(this)()
 						})
 						
 						callback()

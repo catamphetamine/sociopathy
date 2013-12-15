@@ -30,8 +30,7 @@ var scripts =
 		'jquery.glow',
 		'jquery.mousewheel',
 		'jquery.hoverattribute',
-		'jquery.text-shadow',
-		'jquery.background.position.x.y'
+		'jquery.text-shadow'
 	]},
 	
 	{mootools:

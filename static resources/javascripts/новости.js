@@ -50,12 +50,53 @@ var Новости = new (new Class
 		this.есть_новости = false	
 	},
 	
+	update_news_counter: function(news_logic)
+	{
+		if (!news_logic.news_count)
+			return
+	
+		var Fade_in_duration = 0.2
+		var Fade_out_duration = 0.4
+
+		var Style_classes =
+		[
+			{ boundary: 100, style: 'three_digits' },
+			{ boundary: 10, style: 'two_digits' },
+			{ boundary: 0, style: 'one_digit' }
+		]
+			
+		var news_count = news_logic.news_count()
+	
+		var counter = news_logic.panel_item().find('> .notification_counter')
+		
+		if (news_count <= 1)
+			return counter.fade_out(Fade_out_duration)
+	
+		var found = false
+		
+		Style_classes.for_each(function()
+		{
+			if (!found && news_count >= this.boundary)
+			{
+				counter.addClass(this.style)
+				found = true
+			}
+			else
+			{
+				counter.removeClass(this.style)
+			}
+		})
+		
+		counter.text(news_count)
+		counter.fade_in(Fade_in_duration)
+	},
+	
 	общение: function(options, последнее_сообщение)
 	{
 		if (!последнее_сообщение)
 			return
 		
-		последнее_сообщение = последнее_сообщение + ''
+		последнее_сообщение += ''
 		
 		var show_bubble = false
 		
@@ -87,17 +128,21 @@ var Новости = new (new Class
 				return
 		}
 		
+		var news_logic = this.news[options.communication_id]
+		
 		var indicate = false
-		if (!this.news[options.communication_id].anything_new())
+		if (!news_logic.anything_new())
 			indicate = true
 		
-		this.news[options.communication_id].new_message(options.общение, последнее_сообщение)
+		news_logic.new_message(options.общение, последнее_сообщение)
+
+		this.update_news_counter(news_logic)
 		
 		if (indicate)
 		{
 			options.indication()
 			
-			if (!this.news[options.communication_id].not_important)
+			if (!news_logic.not_important)
 				this.появились_новости()			
 		}
 		
@@ -141,10 +186,15 @@ var Новости = new (new Class
 		Object.for_each(this.news, function()
 		{
 			if (!found)
+			{
 				found = this.read(что)
+					
+				if (found)
+					Новости.update_news_counter(this)
+			}
 		})
 		
-		// should we notify about news
+		// should we notify about news at all (tab icon, etc)
 		var anything_new = false
 		Object.for_each(this.news, function()
 		{
@@ -158,9 +208,7 @@ var Новости = new (new Class
 		})
 		
 		if (!anything_new)
-		{
 			this.ничего_нового()
-		}
 	}
 }))()
 

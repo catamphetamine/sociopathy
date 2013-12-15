@@ -169,9 +169,10 @@ a.image
 
 #panel_menu
 {
-	.notification_couter
+	.notification_counter
 	{
 		display: none;
+		opacity: 0;
 	
 		position: absolute;
 		z-index: 1;
@@ -184,9 +185,7 @@ a.image
 	
 		border-radius: 999px;
 		
-		opacity: 0.9;
-		
-		background-color: #e7043e;
+		background-color: #9d425a;
 		color: white;
 		
 		font-size: 12px;
@@ -195,6 +194,20 @@ a.image
 		line-height: 15px;
 		
 		text-align: center;
+				
+		border-width: 1px;
+		border-color: #7c2127;
+		border-style: solid;
+		
+		&.two_digits
+		{
+			width: 20px;
+		}
+		
+		&.three_digits
+		{
+			width: 28px;
+		}
 	}
 }
 

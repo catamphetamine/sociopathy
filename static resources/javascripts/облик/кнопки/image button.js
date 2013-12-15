@@ -79,8 +79,7 @@ var image_button = new Class
 			
 			"background-repeat": "no-repeat",
 			"background-color": "transparent",
-			"background_position_x": 'left',
-			"background_position_y": 'top',
+			"background-position": 'left top',
 			"background-image": this.get_image_path()
 		})
 		
@@ -121,7 +120,7 @@ var image_button = new Class
 	
 			"background-repeat": "no-repeat",
 			"background-color": "transparent",
-			"background_position_y": "-" + options.skin_top_offset + "px",
+			"background-position": "left -" + options.skin_top_offset + "px",
 			"background-image": this.get_image_path()
 		})
 

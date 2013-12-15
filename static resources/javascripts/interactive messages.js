@@ -593,6 +593,8 @@ var Interactive_messages = function(options)
 			
 			connection.on('сообщение', function(сообщение)
 			{
+				messages.not_typing(сообщение.отправитель.имя)
+				
 				parse_date(сообщение, 'когда')
 				
 				if (сообщение.отправитель._id != пользователь._id)
@@ -683,8 +685,10 @@ var Interactive_messages = function(options)
 		return temporary.join(', ') + ' и ' + last + ' пишут'
 	}
 	
-	function refresh_typing_text()
+	function refresh_typing_text(options)
 	{
+		options = options || {}
+		
 		var text = get_typing_text(who_is_typing)
 		
 		if (text)
@@ -693,7 +697,20 @@ var Interactive_messages = function(options)
 			return messages.typing_info.text(text)
 		}
 		
+		if (options.dismiss_immediately)
+			return messages.typing_info.parent().hide().fade_out(0)
+		
 		messages.typing_info.parent().fade_out(0.5)
+	}
+	
+	var not_typing_function = function(имя, options)
+	{
+		return function()
+		{
+			who_is_typing.remove(имя)
+			delete not_typing_timers[имя]
+			refresh_typing_text(options)
+		}
 	}
 	
 	messages.typing = function(имя)
@@ -704,15 +721,17 @@ var Interactive_messages = function(options)
 		if (not_typing_timers[имя])
 			clearTimeout(not_typing_timers[имя])
 			
-		not_typing_timers[имя] = (function()
-		{
-			who_is_typing.remove(имя)
-			delete not_typing_timers[имя]
-			refresh_typing_text()
-		})
-		.delay(1000)
+		not_typing_timers[имя] = not_typing_function(имя).delay(1000)
 		
 		refresh_typing_text()
+	}
+	
+	messages.not_typing = function(имя)
+	{
+		not_typing_function(имя, { dismiss_immediately: true })()
+		
+		if (not_typing_timers[имя])
+			clearTimeout(not_typing_timers[имя])
 	}
 
 	messages.внести_пользователя_в_список_вверху = function(user, options)

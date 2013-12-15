@@ -75,81 +75,77 @@ var Panel = new Class
 		var panel = this
 	
 		// for every panel menu item
-		$("#" + this.options.menu_id + " > li").each(function()
+		$('#' + this.options.menu_id + ' > li').each(function()
 		{
-			var $menu_item = $(this)
-			
-			// initialize variables
-			var picture = $menu_item.attr("picture")
-			var link = $menu_item.attr("link")
-			
-			if (!picture)
-				return
-
-			var title = picture
-			if ($menu_item.attr('title'))
-			{
-				title = $menu_item.attr('title')
-				$menu_item.removeAttr('title')
-			}
-
-			// place the panel menu item
-			var $hyperlink = $('<a/>')
-			$hyperlink.addClass('image')
-			$hyperlink.prependTo($menu_item)
-
-			if (link)
-				$hyperlink.attr('href', link)
-			
-			// activate panel menu item fading
-			var button = new image_button
-			(
-				$hyperlink, 
-				{
-					skin: 'url(\'' + picture + '.png' + '?version=' + Icons_version + '\')',
-					width: panel.icon_size,
-					height: panel.icon_size
-				}
-			)
-			
-			button.setOptions
-			({
-				'ready frame fade in duration': 0.3,
-				'ready frame fade out duration': 0.3,
+			var menu_item = $(this)
 				
-				'pushed frame fade in duration': 0.3,
-				'pushed frame fade out duration': 0.3,
+			menu_item.wrapInner('<a/>')
+			
+			hyperlink = $(menu_item.children()[0])
+			hyperlink.attr('href', menu_item.attr('link'))
+			
+			// for every state
+			hyperlink.find('> [state]').each(function()
+			{
+				var state = $(this)
+				
+				// initialize variables
+				var picture = state.attr('picture')
+				
+				if (!picture)
+					return
 	
-				'pushed frame fade in easing': 'swing',
-				'pushed frame fade out easing': 'swing'
-			})
-			
-			panel.buttons[title] = button
-			
-			if ($menu_item.attr('hidden'))
-				$menu_item.hide()
+				var title = picture
+				if (state.attr('title'))
+					title = state.attr('title')
 				
-			var id = title
-			if (id.indexOf(' (') >= 0)
-				id = id.substring(0, id.indexOf(' ('))
-			
-			button.element.css
-			({
-				position: 'absolute'
-			})
-			
-			if (id !== title)
-			{
-				button.element.css
+				// activate panel menu item fading
+				var button = new image_button
+				(
+					state, 
+					{
+						skin: 'url(\'' + picture + '.png' + '?version=' + Icons_version + '\')',
+						width: panel.icon_size,
+						height: panel.icon_size
+					}
+				)
+				
+				button.setOptions
 				({
-					'z-index': -1,
-					opacity: 0
+					'ready frame fade in duration': 0.3,
+					'ready frame fade out duration': 0.3,
+					
+					'pushed frame fade in duration': 0.3,
+					'pushed frame fade out duration': 0.3,
+		
+					'pushed frame fade in easing': 'swing',
+					'pushed frame fade out easing': 'swing'
 				})
-			
-				button.element.appendTo(panel.buttons[id].element.parent().node())
-			}
-			else
-				button.element.attr('always_shown', true)
+				
+				panel.buttons[title] = button
+				
+				var id = title
+				if (id.indexOf(' (') >= 0)
+					id = id.substring(0, id.indexOf(' ('))
+				
+				state.css
+				({
+					position: 'absolute'
+				})
+				
+				if (state.attr('secondary'))
+				{
+					state.removeAttr('secondary')
+				
+					state.css
+					({
+						'z-index': -1,
+						opacity: 0
+					})
+				}
+				else
+					state.attr('always_shown', true)
+			})
 		})
 	},
 	
@@ -158,6 +154,11 @@ var Panel = new Class
 	{
 		this.activate_buttons(this.options.images_path)
 	
+		$('#' + this.options.menu_id + ' > li > a').each(function()
+		{
+			$(this).append('<div class="notification_counter"/>')
+		})
+		
 		if (пользователь)
 		{	
 			var loading_indicator = $('#panel_menu > li > .loading')
@@ -279,7 +280,7 @@ var Panel = new Class
 			var to_show = get_button_to_show()
 			var to_hide = get_button_to_hide()
 			
-			to_show.parent().children().each(function()
+			to_show.parent().find('> [state]').each(function()
 			{
 				if (this === to_show.node() || this === to_hide.node())
 					return
@@ -327,11 +328,13 @@ var Panel = new Class
 				.fade_in(options.fade_in_duration)
 		}
 		
-		return { on: on, off: off }
+		var idle_icon = this.buttons[options.type]
+		
+		return { on: on, off: off, panel_item: idle_icon.element.parent() }
 	}
 })
 
-function prepare_panel_icons()
+function finish_initializing_panel_icons()
 {
 	$('#panel_menu').find('> li').each(function()
 	{
@@ -347,24 +350,34 @@ function prepare_panel_icons()
 			раздел.removeAttr('unreadable')
 			states = ['выбрано', 'непрочитанные', 'выбрано и непрочитанные']
 		}
+		
+		var idle_icon = $('<div/>')
 			
+		//idle_icon.attr('link', раздел.attr('link'))
+		idle_icon.attr('picture', раздел.attr('picture') )
+		idle_icon.attr('title', раздел.attr('title'))
+		idle_icon.attr('state', 'idle')
+		
+		idle_icon.appendTo(раздел)
+		
 		states.for_each(function()
 		{
-			var state_icon = $('<li/>')
+			var state_icon = $('<div/>')
 			
-			state_icon.attr('hidden', 'true')
-			state_icon.attr('link', раздел.attr('link'))
+			state_icon.attr('secondary', true)
+			//state_icon.attr('link', раздел.attr('link'))
 			state_icon.attr('picture', раздел.attr('picture') + ' (' + this + ')')
 			state_icon.attr('title', раздел.attr('title') + ' (' + this + ')')
+			state_icon.attr('state', this)
 			
-			state_icon.insert_after(раздел)
+			state_icon.appendTo(раздел)
 		})
 		
-		раздел.append('<div class="notification_couter"></div>')
+		раздел.removeAttr('picture')
 	})
 }
 
-function add_top_panel_button(plugin)
+function add_top_panel_button()
 {
 	if (!this.icon)
 		return
@@ -393,8 +406,7 @@ function add_top_panel_button(plugin)
 		.attr('order', this.icon.order)
 		//.text(text(this.title))
 		
-	if (plugin)
-		icon.attr('title', plugin.title)
+	icon.attr('title', this.title)
 		
 	if (this.icon.unreadable)
 		icon.attr('unreadable', true)

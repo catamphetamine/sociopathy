@@ -418,8 +418,6 @@ var button = new Class
 			this.fade_out('idle')
 			this.fade_in('ready') 
 		}
-		else 
-			this.fade_in('ready') 
 	},
 	
 	on_roll_out: function() 
@@ -433,8 +431,6 @@ var button = new Class
 			this.fade_out('ready')
 			this.fade_in('idle') 
 		}
-		else
-			this.fade_out('ready') 
 	},
 	
 	on_lock: function() 

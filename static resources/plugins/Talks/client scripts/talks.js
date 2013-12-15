@@ -141,6 +141,16 @@
 			this.беседы[communication] = new_message
 		},
 		
+		news_count: function()
+		{
+			return Object.size(this.беседы)
+		},
+		
+		panel_item: function()
+		{
+			return news_indication.panel_item
+		},
+		
 		звуковое_оповещение: function(чего)
 		{
 			if (чего === 'беседа')

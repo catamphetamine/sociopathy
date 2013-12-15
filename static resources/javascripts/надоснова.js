@@ -143,7 +143,7 @@ $(document).on('page_initialized', function()
 				$('#panel .enter').remove()
 			}
 			
-			prepare_panel_icons()
+			finish_initializing_panel_icons()
 		
 			panel = new Panel()
 			
