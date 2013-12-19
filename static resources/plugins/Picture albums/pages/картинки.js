@@ -41,6 +41,7 @@
 				return data.альбомы
 			}
 		}))
+		.show()
 	
 		$(window).on_page('resize.albums', center_albums_list)
 	}

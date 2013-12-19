@@ -42,7 +42,8 @@
 				
 				return data.альбом.видео
 			}
-			}))
+		}))
+		.show()
 		
 		$(window).on_page('resize.videos', center_videos_list)
 	}

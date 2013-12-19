@@ -4,82 +4,54 @@
 	
 	Режим.пообещать('правка')
 	
-	var messages
-	
 	var unedited_talk_title
+	
+	page.messages = Interactive_messages
+	({
+		info:
+		{
+			что: 'беседа',
+			общение: function() { return page.data.общение._id }
+		},
+		data_source:
+		{
+			url: '/приложение/сеть/беседа/сообщения',
+			parameters: { id: page.data.общение.id }
+		},
+		on_raw_first_time_data: function(data)
+		{
+			//console.log(data)
+			title(data.название)
+			
+			page.data.общение._id = data._id
+			
+			unedited_talk_title = data.название
+			
+			page.data.создатель_ли = пользователь._id === data.создатель
+		},
+		//show_editor: true,
+		edit_path: 'беседы',
+		on_message_bottom_appears: function(_id)
+		{
+			Новости.прочитано({ беседа: page.data.общение._id, сообщение: _id })
+		},
+		connection:
+		{
+			away_aware_elements:
+			[
+				'#talk > li[author="{id}"] > .author'
+			]
+		},
+		save_changes: save_title,
+		discard_changes: function() { page.get('.breadcrumbs > :last').text(unedited_talk_title) }
+	})
 	
 	page.load = function()
 	{
+		page.messages.options.container = page.talk
+		page.messages.start()
+		
 		page.подсказка('добавление в беседу', 'Для того, чтобы добавить человека в беседу, выберите действие «Добавить человека в беседу» (клавиша «' + Настройки.Клавиши.Показать_действия + '»)')
-		
-		messages = Interactive_messages
-		({
-			info:
-			{
-				что: 'беседа',
-				общение: function() { return page.data.общение._id }
-			},
-			data_source:
-			{
-				url: '/приложение/сеть/беседа/сообщения',
-				parameters: { id: page.data.общение.id }
-			},
-			on_first_time_data: function(data)
-			{
-				//console.log(data)
-				title(data.название)
-				
-				page.data.общение._id = data._id
-				page.talk.attr('_id', data._id)
-				
-				breadcrumbs
-				([
-					{ title: text('pages.talks.title'), link: link_to('talks') },
-					{ title: data.название, link: link_to('talk', page.data.общение.id) }
-				])
-				
-				unedited_talk_title = data.название
-				
-				page.data.создатель_ли = пользователь._id === data.создатель
-				if (page.data.создатель_ли)
-				{
-					page.get('.breadcrumbs > :last').attr('editable', true)
-				}
-		
-				data.участники.for_each(function()
-				{
-					if (пользователь._id === this + '')
-						page.data.участник_ли = true
-				})
-				
-				if (page.data.участник_ли)
-				{
-					can_add_person_to_talk()
-				}
-			},
-			more_link: $('.messages_framework > .older > a'),
-			container: page.talk,
-			//show_editor: true,
-			edit_path: 'беседы',
-			on_load: talk_loaded,
-			on_message_bottom_appears: function(_id)
-			{
-				Новости.прочитано({ беседа: page.data.общение._id, сообщение: _id })
-			},
-			on_message_data: function(data)
-			{
-				Эфир.следить_за_пользователем(data.отправитель)
-			},
-			connection:
-			{
-				away_aware_elements:
-				[
-					'#talk > li[author="{id}"] > .author'
-				]
-			},
-			save_changes: save_title,
-			discard_changes: function() { page.get('.breadcrumbs > :last').text(unedited_talk_title) }
-		})
 		
 		$(document).on_page('talk_renamed', function(event, data)
 		{
@@ -89,17 +61,34 @@
 				title(data.как)
 			}
 		})
-		
-		messages.load()
+	}
+	
+	page.preload = function(finished)
+	{	
+		page.messages.preload(finished)
 	}
 	
 	page.unload = function()
 	{
-		messages.unload()
+		page.messages.unload()
 	}
-		
-	function talk_loaded()
+	
+	page.messages.options.on_load = function()
 	{
+		page.talk.attr('_id', page.data.общение._id)
+			
+		breadcrumbs
+		([
+			{ title: text('pages.talks.title'), link: link_to('talks') },
+			{ title: data.название, link: link_to('talk', page.data.общение.id) }
+		])
+		
+		if (page.data.создатель_ли)
+		{
+			page.get('.breadcrumbs > :last').attr('editable', true)
+		}
+
+		can_add_person_to_talk()
 	}
 
 	function save_title(loading)

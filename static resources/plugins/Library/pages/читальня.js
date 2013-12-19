@@ -29,6 +29,38 @@
 		category.data('uploader', uploader)
 	}
 	
+	page.data_loader = new  Data_loader
+	({
+		url: '/приложение/читальня/раздел',
+		parameters: { _id: page.data.раздел },
+		get_data: function(data)
+		{
+			title(data.раздел.название)
+			
+			page.data.разделы = data.раздел.подразделы
+			page.data.заметки = data.раздел.заметки
+			
+			по_порядку(data.раздел.подразделы)
+			по_порядку(data.раздел.заметки)
+			
+			if (data.раздел.заметки.пусто() && data.раздел.подразделы.пусто())
+				page.data.empty = true
+	
+			return data.раздел
+		},
+		done: function()
+		{
+			page.content_ready()
+			
+			center_categories_list()
+		}
+	})
+
+	page.preload = function(finish)
+	{
+		page.data_loader.preload(finish)
+	}
+	
 	page.load = function()
 	{
 		if (!page.data.раздел)
@@ -40,6 +72,9 @@
 		page.подсказка('правка разделов читальни', 'Вы можете создавать, удалять, переименовывать и переупорядочивать разделы, перейдя в <a href=\'/помощь/режимы#Режим правки\'>«режим правки»</a> (клавиша «' + Настройки.Клавиши.Режимы.Правка + '»)')
 
 		page.подсказка('перенос разделов и заметок читальни', 'Вы можете перенести раздел (или заметку), нажав на нём (или на ней) правой кнопкой мыши и выбрав действие «Перенести». Появится окно переноса с полем ввода названия раздела-назначения. \n * Для переноса раздела в корень архива можете ввести в этом поле слово «Корень»')
+		
+		if (page.data.empty)	
+			page.get('.main_content > .empty').show()
 			
 		//insert_search_bar_into($('#panel'))
 		
@@ -77,33 +112,8 @@
 					}
 				}
 			},
-			new  Data_loader
-			({
-				url: '/приложение/читальня/раздел',
-				parameters: { _id: page.data.раздел },
-				get_data: function(data)
-				{
-					title(data.раздел.название)
-					
-					page.data.разделы = data.раздел.подразделы
-					page.data.заметки = data.раздел.заметки
-					
-					по_порядку(data.раздел.подразделы)
-					по_порядку(data.раздел.заметки)
-					
-					if (data.раздел.заметки.пусто() && data.раздел.подразделы.пусто())
-						page.get('.main_content > .empty').show()
-			
-					return data.раздел
-				},
-				before_done: categories_loaded,
-				done: function()
-				{
-					page.content_ready()
-					
-					center_categories_list()
-				}
-			}))
+			page.data_loader)
+			.show()
 		
 			$(window).on_page('resize.library', center_categories_list)
 		}
@@ -161,7 +171,7 @@
 		page.category_dragger.refresh()
 	}
 	
-	function categories_loaded()
+	page.data_loader.options.before_done = function()
 	{
 		new text_button('.main_content > .add > .button').does(add_category)
 		

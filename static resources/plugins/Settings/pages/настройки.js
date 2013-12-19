@@ -12,6 +12,11 @@ title(text('pages.settings.title'));
 	var No_email_text
 	var No_language_text
 	
+	page.data_loader = new Data_loader
+	({
+		url: '/приложение/сеть/пользователь/настройки'
+	})
+	
 	page.load = function()
 	{
 		page.подсказка('изменение настроек', 'Вы можете изменить настройки, перейдя в <a href=\'/помощь/режимы#Режим правки\'>«режим правки»</a> (клавиша «' + Настройки.Клавиши.Режимы.Правка + '»)')
@@ -20,15 +25,22 @@ title(text('pages.settings.title'));
 		No_language_text = page.language.find('.name').text()
 	
 		var conditional = initialize_conditional($('.main_conditional'), { immediate: true })
-		
-		load_content
+			
+		new Data_templater
 		({
-			url: '/приложение/сеть/пользователь/настройки',
-			done: settings_loaded,
+			render: function() {},
+			show: function() {},
+			loader: page.data_loader
 		})
+		.show()
 	}
 	
-	function settings_loaded(настройки)
+	page.preload = function(finish)
+	{
+		page.data_loader.preload(finish)
+	}
+	
+	page.data_loader.options.before_done = function(настройки)
 	{
 		page.data.настройки = настройки[0]
 		

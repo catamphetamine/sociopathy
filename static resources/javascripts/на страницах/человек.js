@@ -53,34 +53,40 @@
 			conditional: conditional,
 			single: true
 		},
-		new  Data_loader
-		({
-			url: '/человек',
-			parameters: { id: page.data.пользователь_сети.id, подробно: true },
-			get_data: function(data)
-			{
-				if (data['когда был здесь'])
-					parse_date(data, 'когда был здесь')
-					
-				if (data['время рождения'])
-					parse_date(data, 'время рождения')
+		page.data_loader)
+		.show()
+	}
+	
+	page.data_loader = new  Data_loader
+	({
+		url: '/человек',
+		parameters: { id: page.data.пользователь_сети.id, подробно: true },
+		get_data: function(data)
+		{
+			if (data['когда был здесь'])
+				parse_date(data, 'когда был здесь')
+				
+			if (data['время рождения'])
+				parse_date(data, 'время рождения')
 
-				page.data.пользователь_сети = data
+			page.data.пользователь_сети = data
+			
+			if (is_my_profile())
+			{
+				if (!data.avatar_version)
+					page.подсказка('загрузка картинки', 'Вы можете загрузить себе аватар, перейдя в <a href=\'/помощь/режимы#Режим правки\'>«режим правки»</a> (клавиша «' + Настройки.Клавиши.Режимы.Правка + '»), и нажав на маленькую картинку с совой')
 				
-				if (is_my_profile())
-				{
-					if (!data.avatar_version)
-						page.подсказка('загрузка картинки', 'Вы можете загрузить себе аватар, перейдя в <a href=\'/помощь/режимы#Режим правки\'>«режим правки»</a> (клавиша «' + Настройки.Клавиши.Режимы.Правка + '»), и нажав на маленькую картинку с совой')
-					
-					page.подсказка('правка личных данных', 'Вы можете дополнить или изменить данные о себе, перейдя в <a href=\'/помощь/режимы#Режим правки\'>«режим правки»</a> (клавиша «' + Настройки.Клавиши.Режимы.Правка + '»)')
-				}
-				
-				data.with_online_status = true
-				return data
-			},
-			before_done: before_id_card_shown,
-			done: id_card_loaded
-		}))
+				page.подсказка('правка личных данных', 'Вы можете дополнить или изменить данные о себе, перейдя в <a href=\'/помощь/режимы#Режим правки\'>«режим правки»</a> (клавиша «' + Настройки.Клавиши.Режимы.Правка + '»)')
+			}
+			
+			data.with_online_status = true
+			return data
+		}
+	})
+	
+	page.preload = function(finish)
+	{
+		page.data_loader.preload(finish)
 	}
 	
 	page.unload = function()
@@ -90,7 +96,7 @@
 	var когда_был_здесь
 	var offline = false
 	
-	function before_id_card_shown()
+	page.data_loader.options.before_done = function()
 	{
 		title(page.data.пользователь_сети.имя)
 
@@ -206,7 +212,7 @@
 		})
 	}
 	
-	function id_card_loaded()
+	page.data_loader.options.done = function()
 	{
 		page.avatar = id_card.find('.picture')
 		

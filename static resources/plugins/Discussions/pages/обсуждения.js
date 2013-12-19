@@ -11,6 +11,55 @@
 	
 	page.data.подписан_на_обсуждения = []
 	
+	page.data_loader = new Scroll_loader
+	({
+		url: '/сеть/обсуждения',
+		batch_size: 12,
+		get_item_locator: function(data)
+		{
+			return data.обновлено_по_порядку
+		},
+		before_done_more: function() { ajaxify_internal_links(page.discussions) },
+		done: page.content_ready,
+		before_output: function(elements)
+		{
+			elements.for_each(function()
+			{
+				var discussion = $(this)
+				
+				if (Новости.news['Discussions'].обсуждения[discussion.attr('_id')])
+					discussion.addClass('new')
+			})
+		},
+		data: function(data)
+		{
+			parse_dates(data.обсуждения, 'создано')
+	
+			data.обсуждения.for_each(function()
+			{
+				var обсуждение = this
+				
+				this.подписчики = this.подписчики || []
+				
+				if (this.подписчики.contains(пользователь._id))
+				{
+					обсуждение.подписан = true
+					
+					page.data.подписан_на_обсуждения.add(обсуждение._id)
+				}
+				
+				if (this.последнее_сообщение)
+				{
+					parse_date(this.последнее_сообщение, 'когда')
+					this.последнее_сообщение.когда_примерно = неточное_время(this.последнее_сообщение.когда, {  blank_if_just_now: true })
+				}
+			})
+			
+			return data.обсуждения
+		},
+		hidden: true
+	})
+	
 	page.load = function()
 	{
 		page.подсказка('создание обсуждения', 'Вы можете завести новое обсуждение, выбрав действие «Начать новое обсуждение» (клавиша «' + Настройки.Клавиши.Показать_действия + '»)')
@@ -40,63 +89,24 @@
 				discussion.find('.title').text(data.как)
 		})
 		
+		//page.data_loader.options.scroll_detector = page.get('#scroll_detector')
+		page.data_loader.initialize_scrolling()
+		
 		new Data_templater
 		({
 			template: 'обсуждение в списке обсуждений',
 			to: page.discussions,
-			loader: new  Data_loader
-			({
-				url: '/сеть/обсуждения',
-				batch_size: 12,
-				get_item_locator: function(data)
-				{
-					return data.обновлено_по_порядку
-				},
-				scroll_detector: page.get('#scroll_detector'),
-				before_done: discussions_loaded,
-				before_done_more: function() { ajaxify_internal_links(page.discussions) },
-				done: page.content_ready,
-				before_output: function(elements)
-				{
-					elements.for_each(function()
-					{
-						var discussion = $(this)
-						
-						if (Новости.news['Discussions'].обсуждения[discussion.attr('_id')])
-							discussion.addClass('new')
-					})
-				},
-				data: function(data)
-				{
-					parse_dates(data.обсуждения, 'создано')
-			
-					data.обсуждения.for_each(function()
-					{
-						var обсуждение = this
-						
-						this.подписчики = this.подписчики || []
-						
-						if (this.подписчики.contains(пользователь._id))
-						{
-							обсуждение.подписан = true
-							
-							page.data.подписан_на_обсуждения.add(обсуждение._id)
-						}
-						
-						if (this.последнее_сообщение)
-						{
-							parse_date(this.последнее_сообщение, 'когда')
-							this.последнее_сообщение.когда_примерно = неточное_время(this.последнее_сообщение.когда, {  blank_if_just_now: true })
-						}
-					})
-					
-					return data.обсуждения
-				}
-			})
+			loader: page.data_loader
 		})
+		.show()	
 	}
 	
-	function discussions_loaded(elements)
+	page.preload = function(finished)
+	{
+		page.data_loader.preload(finished)
+	}
+	
+	page.data_loader.before_done = function(elements)
 	{
 		if (elements.is_empty())
 		{

@@ -16,6 +16,37 @@
 		return page.title.text(title)
 	}
 	
+	page.data_loader = new Data_loader
+	({
+		url: '/читальня/заметка',
+		parameters: { _id: page.data.заметка },
+		get_data: function(data)
+		{
+			title(data.заметка.название)
+		   
+			page.Data_store.unmodified_data =
+			{
+				название: data.заметка.название,
+				содержимое: data.заметка.содержимое
+			}
+			
+			page.data.версия = data.заметка.версия
+			
+			page.data.заметка = data.заметка
+			
+			return data.заметка
+		},
+		done: function()
+		{
+			page.content_ready()
+		}
+	})
+	
+	page.preload = function(finish)
+	{
+		page.data_loader.preload(finish)
+	}
+	
 	page.load = function()
 	{
 		page.подсказка('правка заметки', 'Вы можете править эту заметку, перейдя в <a href=\'/помощь/режимы#Режим правки\'>«режим правки»</a> (клавиша «' + Настройки.Клавиши.Режимы.Правка + '»)')
@@ -40,40 +71,13 @@
 		
 		page.title.attr('editable', true)
 				
-		load_content
+		new Data_templater
 		({
-			url: '/читальня/заметка',
-			parameters: { _id: page.data.заметка },
-			get_data: function(data)
-			{
-				title(data.заметка.название)
-			   
-				page.Data_store.unmodified_data =
-				{
-					название: data.заметка.название,
-					содержимое: data.заметка.содержимое
-				}
-				
-				page.data.версия = data.заметка.версия
-				
-				set_title(data.заметка.название)
-				
-				page.get('article > section').html(Wiki_processor.decorate(data.заметка.содержимое,
-				{
-					process_element: function(decorated, wiki)
-					{
-						decorated.attr('author', wiki.attr('author'))
-					}
-				}))
-		
-				return data.заметка
-			},
-			before_done: article_loaded,
-			done: function()
-			{
-				page.content_ready()
-			}
+			render: function() {},
+			show: function() {},
+			loader: page.data_loader
 		})
+		.show()
 	}
 	
 	page.unload = function()
@@ -168,8 +172,18 @@
 		*/
 	}
 	
-	function article_loaded()
+	page.data_loader.options.before_done = function()
 	{
+		set_title(page.data.заметка.название)
+			
+		page.get('article > section').html(Wiki_processor.decorate(page.data.заметка.содержимое,
+		{
+			process_element: function(decorated, wiki)
+			{
+				decorated.attr('author', wiki.attr('author'))
+			}
+		}))
+
 		postprocess_rich_content(page.get('article > section'))
 		
 		initialize_editor()

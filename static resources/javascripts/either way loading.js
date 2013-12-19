@@ -1,8 +1,3 @@
-var either_way_loading = function(options)
-{
-	return new Either_way_loading(options)
-}
-
 var Pagination = new Class
 ({
 	Implements: [Options],
@@ -11,7 +6,8 @@ var Pagination = new Class
 	
 	options:
 	{
-		fade_duration: 0.2
+		fade_duration: 0.2,
+		show: true
 	},
 	
 	initialize: function(options)
@@ -253,13 +249,153 @@ var Either_way_loading = new Class
 		}
 	},
 	
-	first_batch: true,
 	first_output: true,
 		
 	initialize: function(options)
 	{
 		this.setOptions(options)
 		
+		// загрузчик внизу
+		
+		var either_way = this
+		
+		this.bottom_loader = new Scroll_loader(Object.x_over_y(this.common_loader_options(),
+		{
+			skip_pages: this.options.страница,
+			parameters: this.options.data.parameters,
+			get_data: function(data)
+			{
+				if (this.первый_раз)
+					if (either_way.options.data.on_pre_first_data)
+						either_way.options.data.on_pre_first_data(data)
+						
+				data = either_way.on_data(data, this)
+				
+				if (data.is_empty())
+					return []
+			
+				var loader = this
+				var amendment = 1
+				data.for_each(function()
+				{
+					this.страница = loader.get_current_page(amendment)
+					amendment++
+				})
+				
+				if (either_way.resetted)
+					either_way.options.container.empty()
+					
+				return data
+			},
+			loaded: function(data)
+			{
+				if (!this.bottom_loader.первый_раз)
+					return
+					
+				this.pagination.set_total(data.всего)
+				
+				if (data.пропущено)
+				{
+					this.top_loader.set_skipped_before(data.пропущено)
+					this.bottom_loader.set_skipped_before(data.пропущено)
+				}
+					
+				if (this.options.data.on_first_batch)
+					this.options.data.on_first_batch(data)
+	
+				this.pagination.set_page(this.bottom_loader.get_current_page())
+				
+				if (data['есть ли предыдущие?'])
+				{
+					this.previous_block.visible()
+					this.previous_link.fade_in(this.options.previous_link.fade_in)
+					this.top_loader.activate()
+					
+					if (data.пропущено > this.options.Skip_for_pagination)
+						this.pagination.show()					
+				}
+			
+				this.top_loader.первый_раз = false
+			}
+			.bind(this),
+			before_output: function(elements)
+			{
+				if (this.options.data.before_output)
+					this.options.data.before_output(elements)
+			
+				if (this.options.data.is_in_the_end)
+					this.options.data.is_in_the_end(!this.есть_ли_ещё)
+			
+				if (this.resetted)
+				{
+					this.resetted = false
+					this.options.container.fade_in(this.options.fade_in)
+				}
+			
+				if (!this.top_loader.latest)
+				{
+					this.top_loader.latest = this.bottom_loader.earliest
+					this.options.container.fade_in(this.options.fade_in)
+				}
+				
+				this.previous_conditional.callback()	
+			}
+			.bind(this),
+			after_output: function(elements)
+			{
+				this.after_output(elements, { first: true })
+				
+				if (this.first_output)
+				{
+					this.first_output = false
+					
+					if (this.options.data.on_first_output)
+						this.options.data.on_first_output()
+				}
+				
+				//if (this.options.progress_bar)
+				//	update_progress_bar()
+				
+				ajaxify_internal_links(page.content)
+			}
+			.bind(this),
+			finished: function()
+			{
+				//if (this.options.progress_bar)
+				//	update_progress_bar()
+					
+				if (this.options.data.finished)
+					this.options.data.finished()
+			}
+			.bind(this),
+			hidden: true
+		}))
+		
+		if (this.options.show)
+			this.show()
+	},
+	
+	common_loader_options: function()
+	{
+		var common_loader_options =
+		{
+			url: this.options.data.url,
+			latest_first: this.options.data.latest_first,
+			batch_size: this.options.data.batch_size,
+			editable: this.options.editable,
+			before_output_async: this.options.data.before_output_async
+		}
+		
+		return common_loader_options
+	},
+	
+	preload: function(finished)
+	{
+		this.bottom_loader.preload(finished)
+	},
+	
+	show: function()
+	{
 		var loader_markup = $.render('either way loading', {})
 		
 		this.options.container = page.get(this.options.container)
@@ -275,7 +411,7 @@ var Either_way_loading = new Class
 		this.previous_block = page.get('.previous_conditional')
 		
 		var main_conditional = initialize_conditional(page.get('.main_conditional'))
-		var previous_conditional = initialize_conditional(this.previous_block)
+		this.previous_conditional = initialize_conditional(this.previous_block)
 		
 		this.previous_block.prependTo(ok_block)
 	
@@ -300,19 +436,10 @@ var Either_way_loading = new Class
 			this.pagination.show()
 		}
 		
-		var common_loader_options =
-		{
-			url: this.options.data.url,
-			latest_first: this.options.data.latest_first,
-			batch_size: this.options.data.batch_size,
-			editable: this.options.editable,
-			before_output_async: this.options.data.before_output_async
-		}
-		
 		var either_way = this
 		options = this.options
 			
-		this.top_loader = new Batch_loader(Object.x_over_y(common_loader_options,
+		this.top_loader = new Batch_loader(Object.x_over_y(this.common_loader_options(),
 		{
 			skip_pages: skip_pages + 1,
 			reverse: true,
@@ -457,102 +584,12 @@ var Either_way_loading = new Class
 			container: this.options.container,
 			render: function(data) { return render_item(data) },
 			show: function(element) { prepend_item(element) },
-			conditional: previous_conditional,
-			load_data_immediately: false
+			conditional: this.previous_conditional
 		},
 		this.top_loader)
 		
-		// загрузчик внизу
-		
-		this.bottom_loader = new Scroll_loader(Object.x_over_y(common_loader_options,
-		{
-			skip_pages: skip_pages,
-			parameters: options.data.parameters,
-			get_data: function(data)
-			{
-				if (this.no_data_yet())
-				{
-					if (data['есть ли предыдущие?'])
-					{
-						either_way.previous_block.visible()
-						either_way.previous_link.fade_in(either_way.options.previous_link.fade_in)
-						either_way.top_loader.activate()
-						
-						if (data.пропущено > either_way.options.Skip_for_pagination)
-							either_way.pagination.show()					
-					}
-				
-					either_way.top_loader.первый_раз = false
-				}
-				
-				data = either_way.on_data(data, this)
-				
-				if (data.is_empty())
-					return []
-			
-				var loader = this
-				var amendment = 1
-				data.for_each(function()
-				{
-					this.страница = loader.get_current_page(amendment)
-					amendment++
-				})
-				
-				if (either_way.resetted)
-				{
-					options.container.empty()
-				}
-				
-				return data
-			},
-			before_output: function(elements)
-			{
-				if (options.data.before_output)
-					options.data.before_output(elements)
-			
-				if (options.data.is_in_the_end)
-					options.data.is_in_the_end(!this.есть_ли_ещё)
-			
-				if (either_way.resetted)
-				{
-					either_way.resetted = false
-					options.container.fade_in(either_way.options.fade_in)
-				}
-			
-				if (!either_way.top_loader.latest)
-				{
-					either_way.top_loader.latest = either_way.bottom_loader.earliest
-					options.container.fade_in(either_way.options.fade_in)
-				}
-				
-				previous_conditional.callback()	
-			},
-			after_output: function(elements)
-			{
-				either_way.after_output(elements, { first: true })
-				
-				if (either_way.first_output)
-				{
-					either_way.first_output = false
-					
-					if (options.data.on_first_output)
-						options.data.on_first_output()
-				}
-				
-				//if (options.progress_bar)
-				//	update_progress_bar()
-				
-				ajaxify_internal_links(page.content)
-			},
-			finished: function()
-			{
-				//if (options.progress_bar)
-				//	update_progress_bar()
-					
-				if (options.data.finished)
-					options.data.finished()
-			}
-		}))
+		//this.bottom_loader.options.scroll_detector = page.get('#scroll_detector')
+		this.bottom_loader.initialize_scrolling()
 		
 		new Data_templater
 		({
@@ -562,6 +599,7 @@ var Either_way_loading = new Class
 			conditional: main_conditional
 		},
 		this.bottom_loader)
+		.show()
 		
 		/*
 		if (options.progress_bar)
@@ -668,25 +706,7 @@ var Either_way_loading = new Class
 	},
 	
 	on_data: function(data, loader)
-	{
-		if (this.first_batch)
-		{
-			this.pagination.set_total(data.всего)
-			
-			if (data.пропущено)
-			{
-				this.top_loader.set_skipped_before(data.пропущено)
-				this.bottom_loader.set_skipped_before(data.пропущено)
-			}
-				
-			if (this.options.data.on_first_batch)
-				this.options.data.on_first_batch(data)
-
-			this.pagination.set_page(loader.get_current_page())
-			
-			this.first_batch = false
-		}
-		
+	{	
 		data = data[this.options.data.name]
 			
 		if (this.options.data.loaded)

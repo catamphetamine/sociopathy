@@ -29,6 +29,7 @@ title(text('pages.circles.title'));
 				return круги
 			}
 		}))
+		.show()
 	}
 	
 	function circles_loaded()

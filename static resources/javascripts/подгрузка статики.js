@@ -281,7 +281,7 @@ var вставить_содержимое
 			
 		var вставить = function(шаблон)
 		{
-			var after = function()
+			var insert = function()
 			{
 				if (!options.куда)
 					options.куда = Page.element
@@ -291,9 +291,9 @@ var вставить_содержимое
 			}
 			
 			if (options.before)
-				options.before(after)
-			else
-				after()
+				return options.before(insert)
+			
+			insert()
 		}
 		
 		function finish(template)

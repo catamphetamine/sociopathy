@@ -71,39 +71,47 @@
 		
 		function показать_сводку()
 		{
-			page.Ajax.get('/сеть/управление/сводка')
-			.ok(function(data)
+			if (!stats_loaded)
 			{
-				if (!stats_loaded)
+				Object.for_each(page.data.stats, function(key)
 				{
-					Object.for_each(data.stats, function(key)
-					{
-						var title = $('<span/>').addClass('title').text(text('pages.administration.stats.' + key))
-						var value = $('<span/>').addClass('value')
-						
-						var item = $('<li/>').attr('key', key)
-						
-						title.appendTo(item)
-						value.appendTo(item)
-						
-						item.appendTo(page.stats)
-					})
-				}
-				
-				Object.for_each(data.stats, function(key)
-				{
-					page.stats.find('> [key="' + key + '"] > .value').text(this)
+					var title = $('<span/>').addClass('title').text(text('pages.administration.stats.' + key))
+					var value = $('<span/>').addClass('value')
+					
+					var item = $('<li/>').attr('key', key)
+					
+					title.appendTo(item)
+					value.appendTo(item)
+					
+					item.appendTo(page.stats)
 				})
-				
-				if (!stats_loaded)
-				{
-					page.content_ready()
-					stats_loaded = true
-				}
+			}
+			
+			Object.for_each(page.data.stats, function(key)
+			{
+				page.stats.find('> [key="' + key + '"] > .value').text(this)
 			})
+			
+			if (!stats_loaded)
+			{
+				stats_loaded = true
+			}
 		}
 		
 		показать_сводку()
 		//page.ticking(показать_сводку, 2 * 1000)
+		
+		page.content_ready()
+	}
+	
+	page.preload = function(finish)
+	{
+		page.Ajax.get('/сеть/управление/сводка')
+		.ok(function(data)
+		{
+			page.data.stats = data.stats
+			
+			finish()
+		})
 	}
 })()

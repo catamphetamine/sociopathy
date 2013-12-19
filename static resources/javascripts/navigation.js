@@ -92,6 +92,7 @@ var next_page_data
 				
 			var finish_it = do_navigate_to_page(url, options)
 			
+			// "do_navigate_to_page" can return "true" to break into the page loading process
 			if (typeof finish_it === 'function')
 				finish_it()
 		}
@@ -145,7 +146,7 @@ var next_page_data
 			
 			$(document).trigger('page_unloaded')
 		
-			Page.element.empty()
+			//Page.element.empty()
 		}
 		
 		if (предыдущая_страница)
@@ -197,7 +198,7 @@ var next_page_data
 					
 				вставить_содержимое_страницы(finish)
 			}
-			
+		
 			if (!first_time_page_loading)
 				loading_page(do_proceed)
 			else
@@ -218,58 +219,65 @@ var next_page_data
 	
 	function вставить_содержимое_страницы(возврат)
 	{
-		function теперь_вставить_содержимое_страницы(template_path)
-		{
-			вставить_содержимое(template_path + '.html', page.data.данные_для_страницы,
-			{
-				on_error: function()
-				{
-					Страница.эта('страница не найдена')
-					вставить_содержимое_страницы(возврат)
-				},
-				before: вставить_стиль_и_javascript
-			},
-			возврат)
-		}
-		
+		var path = '/страницы/' + Страница.эта()
 		var plugin = страницы_плагинов[Страница.эта()]
 		
 		if (plugin)
+			path = '/plugins/' + plugin + '/pages/' + Страница.эта().substring(plugin.length + 1)
+			
+		вставить_содержимое(path + '.html', page.data.данные_для_страницы,
 		{
-			теперь_вставить_содержимое_страницы('/plugins/' + plugin + '/pages/' + Страница.эта().substring(plugin.length + 1))
-		}
-		else // if (страница !== '_wait_')
-		{
-			теперь_вставить_содержимое_страницы('/страницы/' + Страница.эта())
-		}
+			on_error: function()
+			{
+				Страница.эта('страница не найдена')
+				вставить_содержимое_страницы(возврат)
+			},
+			before: function(proceed)
+			{
+				вставить_javascript(function()
+				{
+					page.preload(function()
+					{
+						Page.element.empty()
+						вставить_стиль()
+						proceed()
+					})
+				})
+			}
+		},
+		возврат)
 	}
 	
-	function вставить_стиль_и_javascript(callback)
+	function вставить_javascript(callback)
 	{
 		if (first_time_page_loading)
-		{
-			insert_style(get_page_less_style_link())
 			return insert_script(get_page_javascript_link(), callback)
-		}
 		
-		if (Страница.эта() !== предыдущая_страница)
-		{
-			console.log(old_page_stylesheet_link)
-			
-			if (Configuration.Optimize)
-				$('head').find('> style[for="' + old_page_stylesheet_link + '"]').remove()
-			else
-				Less.unload_style(old_page_stylesheet_link)
-				
-			insert_style(get_page_less_style_link())
-		}
-		
+		// delete previous page javascript
 		if (Configuration.Optimize)
 			$('head').find('> script[for="' + old_page_javascript_link + '"]').remove()
 		else
 			$('head').find('> script[src="' + old_page_javascript_link + '"]').remove()
 		
 		insert_script(get_page_javascript_link(), callback)
+	}
+	
+	function вставить_стиль()
+	{
+		if (first_time_page_loading)
+			return insert_style(get_page_less_style_link())
+	
+		if (Страница.эта() === предыдущая_страница)
+			return
+
+		// delete previous page stylesheet
+		
+		if (Configuration.Optimize)
+			Dom_tools.remove(head.querySelector('> style[for="' + old_page_stylesheet_link + '"]'))
+		else
+			Less.unload_style(old_page_stylesheet_link)
+			
+		insert_style(get_page_less_style_link())
 	}
 	
 	function get_page_javascript_link(название_страницы)

@@ -170,8 +170,12 @@ var scripts =
 	
 	'focus',
 	
-	'messages',
-	'interactive messages',
+	{'messages':
+	[
+		'messages',
+		'interactive messages',
+		'channeling'
+	]},
 	
 	'data loader',
 	'either way loading',

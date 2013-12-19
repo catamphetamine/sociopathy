@@ -77,6 +77,7 @@
 				return { shelves: shelves }
 			}
 		}))
+		.show()
 	}
 	
 	function books_loaded()

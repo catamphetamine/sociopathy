@@ -200,6 +200,7 @@ var Page = new Class
 	
 	event_handlers: [],
 	
+	preload: function(callback) { callback() },
 	load: $.noop,
 	unload: $.noop,
 	
@@ -586,7 +587,7 @@ var Page = new Class
 		this.ticking(update_intelligent_dates, 60 * 1000)
 
 		this.queries.empty()
-					
+		
 		this.load()
 		
 		Режим.initialize_page()
@@ -849,7 +850,7 @@ var Page = new Class
 	
 	either_way_loading: function(options)
 	{
-		var loader = either_way_loading(options)
+		var loader = new Either_way_loading(options)
 		this.destroyables.push(loader)
 		return loader
 	},

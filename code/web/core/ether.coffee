@@ -156,7 +156,7 @@ api.общение_по_id = (collection, id) ->
 				throw 'communication type not defined: ' + id.type
 		
 			environment = data.environment
-				
+			
 			environment.пользователь = user
 			
 			общение = общение(environment)

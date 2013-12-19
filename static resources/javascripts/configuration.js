@@ -26,8 +26,8 @@ Configuration = Object.x_over_y(Configuration,
 	},
 	Loading_screen:
 	{
-		Fade_in: 0.1,
-		Fade_out: 0.1
+		Fade_in: 0.0,
+		Fade_out: 0.0
 	},
 	Activity:
 	{

@@ -37,88 +37,98 @@
 			if (talk.exists())
 				talk.find('.title').text(data.как)
 		})
-	
+		
+		//page.data_loader.options.scroll_detector = page.get('#scroll_detector')
+		page.data_loader.initialize_scrolling()
+		
 		new Data_templater
 		({
 			template: 'беседа в списке бесед',
 			to: page.talks,
-			loader: new  Scroll_loader
-			({
-				url: '/сеть/беседы',
-				batch_size: 12,
-				get_item_locator: function(data)
-				{
-					return data.обновлено_по_порядку
-				},
-				scroll_detector: page.get('#scroll_detector'),
-				before_done: talks_loaded,
-				before_done_more: function() { ajaxify_internal_links(page.talks) },
-				done: page.content_ready,
-				before_output: function(elements)
-				{
-					elements.for_each(function()
-					{
-						var talk = $(this)
-						
-						if (Новости.news['Talks'].беседы[talk.attr('_id')])
-							talk.addClass('new')
-							
-						talk.find('.cancel_unparticipation').on('click', function(event)
-						{
-							event.preventDefault()
-							
-							page.Ajax.put('/сеть/беседы/участие',
-							{
-								_id: talk.attr('_id'),
-								пользователь: пользователь._id
-							})
-							.ok(function()
-							{
-								page.refresh()
-							})
-							.ошибка(function(ошибка)
-							{
-								error(ошибка)
-							})
-						})
-							
-						create_context_menu(talk)
-					})
-				},
-				data: function(data)
-				{
-					parse_dates(data.беседы, 'создана')
-					
-					data.беседы.for_each(function()
-					{
-						var беседа = this
-						
-						this.участники = this.участники || []
-						
-						this.участники.filter(function(участник)
-						{
-							return участник._id === пользователь._id
-						})
-						
-						this.участники.each(function()
-						{
-							беседа.участник = true
-						})
-						
-						if (this.последнее_сообщение)
-						{
-							parse_date(this.последнее_сообщение, 'когда')
-							this.последнее_сообщение.когда_примерно = неточное_время(this.последнее_сообщение.когда, { blank_if_just_now: true })
-						}
-					})
-					
-					return data.беседы
-				}
-			})
+			loader: page.data_loader
 		})
+		.show()
 	}
 	
-	function talks_loaded(elements)
+	page.data_loader = new Scroll_loader
+	({
+		url: '/сеть/беседы',
+		batch_size: 12,
+		get_item_locator: function(data)
+		{
+			return data.обновлено_по_порядку
+		},
+		before_done_more: function() { ajaxify_internal_links(page.talks) },
+		done: page.content_ready,
+		before_output: function(elements)
+		{
+			elements.for_each(function()
+			{
+				var talk = $(this)
+				
+				if (Новости.news['Talks'].беседы[talk.attr('_id')])
+					talk.addClass('new')
+					
+				talk.find('.cancel_unparticipation').on('click', function(event)
+				{
+					event.preventDefault()
+					
+					page.Ajax.put('/сеть/беседы/участие',
+					{
+						_id: talk.attr('_id'),
+						пользователь: пользователь._id
+					})
+					.ok(function()
+					{
+						page.refresh()
+					})
+					.ошибка(function(ошибка)
+					{
+						error(ошибка)
+					})
+				})
+					
+				create_context_menu(talk)
+			})
+		},
+		data: function(data)
+		{
+			parse_dates(data.беседы, 'создана')
+			
+			data.беседы.for_each(function()
+			{
+				var беседа = this
+				
+				this.участники = this.участники || []
+				
+				this.участники.filter(function(участник)
+				{
+					return участник._id === пользователь._id
+				})
+				
+				this.участники.each(function()
+				{
+					беседа.участник = true
+				})
+				
+				if (this.последнее_сообщение)
+				{
+					parse_date(this.последнее_сообщение, 'когда')
+					this.последнее_сообщение.когда_примерно = неточное_время(this.последнее_сообщение.когда, { blank_if_just_now: true })
+				}
+			})
+			
+			return data.беседы
+		},
+		hidden: true
+	})
+	
+	page.preload = function(finished)
+	{
+		page.data_loader.preload(finished)
+	}
+	
+	page.data_loader.before_done = function(elements)
 	{
 		if (elements.is_empty())
 		{

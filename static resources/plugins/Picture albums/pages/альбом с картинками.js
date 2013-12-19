@@ -43,6 +43,7 @@
 				return data.альбом.картинки
 			}
 		}))
+		.show()
 	
 		$(window).on_page('resize.pictures', center_pictures_list)
 	}
