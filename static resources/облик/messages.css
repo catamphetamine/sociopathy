@@ -528,7 +528,7 @@ body.jump_to_top_mouse_over
 			margin-left: -10px;
 			padding-left: 10px;
 	
-			.css_transition(500ms, background-color);
+			.css_transition(100ms, background-color);
 			
 			border-width: 1px;
 			border-style: solid;
@@ -538,6 +538,8 @@ body.jump_to_top_mouse_over
 			{
 				background-color: #F0FBFF;
 				box-shadow: 0 0 4px #F0FBFF;
+				
+				.css_transition(500ms, background-color);
 			}
 			
 			> a

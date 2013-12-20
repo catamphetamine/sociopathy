@@ -16,7 +16,7 @@
 		return page.title.text(title)
 	}
 	
-	page.data_loader = new Data_loader
+	page.load_data(new Data_loader
 	({
 		url: '/читальня/заметка',
 		parameters: { _id: page.data.заметка },
@@ -35,16 +35,13 @@
 			page.data.заметка = data.заметка
 			
 			return data.заметка
-		},
-		done: function()
-		{
-			page.content_ready()
 		}
-	})
+	}))
 	
-	page.preload = function(finish)
+	page.data_templater_options = 
 	{
-		page.data_loader.preload(finish)
+		render: function() {},
+		show: function() {},
 	}
 	
 	page.load = function()
@@ -54,7 +51,9 @@
 		function get_breadcrumbs()
 		{
 			var link = text('pages.library.url')
-			var crumbs = [{ title: text('pages.library.title'), link: link }]
+			
+			//var crumbs = [{ title: text('pages.library.title'), link: link }]
+			var crumbs = []
 			
 			page.data.путь_к_заметке.split('/').forEach(function(раздел_или_заметка)
 			{
@@ -70,14 +69,37 @@
 		page.title = page.get('.breadcrumbs > span:last')
 		
 		page.title.attr('editable', true)
-				
-		new Data_templater
-		({
-			render: function() {},
-			show: function() {},
-			loader: page.data_loader
-		})
-		.show()
+		
+		set_title(page.data.заметка.название)
+		
+		page.get('article > section').html(Wiki_processor.decorate(page.data.заметка.содержимое,
+		{
+			process_element: function(decorated, wiki)
+			{
+				decorated.attr('author', wiki.attr('author'))
+			}
+		}))
+
+		postprocess_rich_content(page.get('article > section'))
+		
+		initialize_editor()
+		
+		Режим.разрешить('правка')
+		
+		function delete_article()
+		{
+			if (!confirm('Удалить эту заметку в корзину?\nСейчас пока не сделано восстановление из корзины, поэтому мы спрашиваем.'))
+				return
+
+			page.Ajax.delete('/сеть/читальня/заметка',
+			{
+				_id: page.data.заметка
+			})
+			.ok(function(data)
+			{
+				go_to(text('pages.library.url') + '/' + data.путь_к_разделу)
+			})
+		}
 	}
 	
 	page.unload = function()
@@ -170,40 +192,6 @@
 			}
 		})
 		*/
-	}
-	
-	page.data_loader.options.before_done = function()
-	{
-		set_title(page.data.заметка.название)
-			
-		page.get('article > section').html(Wiki_processor.decorate(page.data.заметка.содержимое,
-		{
-			process_element: function(decorated, wiki)
-			{
-				decorated.attr('author', wiki.attr('author'))
-			}
-		}))
-
-		postprocess_rich_content(page.get('article > section'))
-		
-		initialize_editor()
-		
-		Режим.разрешить('правка')
-		
-		function delete_article()
-		{
-			if (!confirm('Удалить эту заметку в корзину?\nСейчас пока не сделано восстановление из корзины, поэтому мы спрашиваем.'))
-				return
-
-			page.Ajax.delete('/сеть/читальня/заметка',
-			{
-				_id: page.data.заметка
-			})
-			.ok(function(data)
-			{
-				go_to(text('pages.library.url') + '/' + data.путь_к_разделу)
-			})
-		}
 	}
 	
 	page.Data_store.collect_edited = function()

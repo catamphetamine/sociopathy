@@ -225,7 +225,7 @@
 			$(document).unbind(namespace)
 			picture.unbind(namespace)
 			picture.fade_out(0)
-			$('body').removeClass('no_scrollbar')
+			$(body).removeClass('no_scrollbar')
 		}
 		
 		function show_picture()
@@ -233,7 +233,7 @@
 			//scroll_navigation.activate(picture.find('.previous'))
 			//scroll_navigation.activate(picture.find('.next'))
 			
-			$('body').addClass('no_scrollbar')
+			$(body).addClass('no_scrollbar')
 			picture.fade_in(0, function() { picture.focus() })
 		
 			$(document).on_page('keydown' + namespace, function(event) 

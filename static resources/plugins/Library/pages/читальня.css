@@ -17,20 +17,24 @@
 		
 		> .add
 		{
+			display: none;
+			
 			text-align: center;
-			margin-top: 20px;
+			
+			margin-top: -37px;
+			margin-bottom: -12px;
 		}
-		
-		> .move
+	}
+}
+
+#content.root_section
+{
+	.main_content
+	{
+		> .add
 		{
-			text-align: center;
-			margin-top: 40px;
-		}
-		
-		> .new_article
-		{
-			text-align: center;
-			margin-top: 40px;
+			margin-top: -7px;
+			margin-bottom: 0;
 		}
 	}
 }
@@ -51,7 +55,7 @@
 		display: inline-block;
 		position: relative;
 		
-		margin-top: 15px;
+		margin-top: 7px;
 		
 		list-style: none;
 		text-indent: 0;
@@ -264,8 +268,8 @@ body[mode="правка"]
 
 .search_container
 {	
-	margin-top: -6px;
-	margin-bottom: -6px;
+	margin-top: -8px;
+	margin-bottom: 0px;
 
 	text-align: center;
 }

@@ -37,20 +37,9 @@
 			if (talk.exists())
 				talk.find('.title').text(data.как)
 		})
-		
-		//page.data_loader.options.scroll_detector = page.get('#scroll_detector')
-		page.data_loader.initialize_scrolling()
-		
-		new Data_templater
-		({
-			template: 'беседа в списке бесед',
-			to: page.talks,
-			loader: page.data_loader
-		})
-		.show()
 	}
 	
-	page.data_loader = new Scroll_loader
+	page.load_data
 	({
 		url: '/сеть/беседы',
 		batch_size: 12,
@@ -58,8 +47,6 @@
 		{
 			return data.обновлено_по_порядку
 		},
-		before_done_more: function() { ajaxify_internal_links(page.talks) },
-		done: page.content_ready,
 		before_output: function(elements)
 		{
 			elements.for_each(function()
@@ -87,8 +74,6 @@
 						error(ошибка)
 					})
 				})
-					
-				create_context_menu(talk)
 			})
 		},
 		data: function(data)
@@ -119,16 +104,10 @@
 			})
 			
 			return data.беседы
-		},
-		hidden: true
+		}
 	})
 	
-	page.preload = function(finished)
-	{
-		page.data_loader.preload(finished)
-	}
-	
-	page.data_loader.before_done = function(elements)
+	page.before_output_data(function(elements)
 	{
 		if (elements.is_empty())
 		{
@@ -137,31 +116,47 @@
 		}
 		
 	//	Режим.разрешить('правка')
+	})
+	
+	page.data_template = 'беседа в списке бесед'
+	page.data_container = 'talks'
+	
+	function create_context_menus()
+	{
+		page.talks.children().each(function()
+		{
+			create_context_menu($(this))
+		})
 	}
 	
 	function create_context_menu(talk)
 	{
-		var menu = {}
-		
-		menu[text('pages.talks.talk.leave')] = function()
-		{
-			page.Ajax.delete('/сеть/беседы/участие',
-			{
-				_id: talk.attr('_id')
-			})
-			.ok(function()
-			{
-				talk.find('> .left').show()
-				talk.find('> a').remove()
-				talk.find('> .leave').hide()
-			})
-			.ошибка(function(ошибка)
-			{
-				error(ошибка)
-			})
-		}
-		
-		talk.context_menu(menu)
+		var menu = talk.context_menu
+		({
+			items:
+			[
+				{
+					title: text('pages.talks.talk.leave'),
+					action: function()
+					{
+						page.Ajax.delete('/сеть/беседы/участие',
+						{
+							_id: talk.attr('_id')
+						})
+						.ok(function()
+						{
+							talk.find('> .left').show()
+							talk.find('> a').remove()
+							talk.find('> .leave').hide()
+						})
+						.ошибка(function(ошибка)
+						{
+							error(ошибка)
+						})
+					}
+				}
+			]
+		})
 	}
 	
 	page.Data_store.режим('обычный',
@@ -177,6 +172,11 @@
 		destroy: function()
 		{
 			//page.talks.find('> li').empty()
+		},
+		
+		context_menus: function()
+		{
+			create_context_menus()
 		}
 	})
 	

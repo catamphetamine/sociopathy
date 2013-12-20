@@ -4,7 +4,9 @@
 	
 	Режим.пообещать('правка')
 	
-	page.messages = Interactive_messages
+	page.query('.chat', 'chat')
+	
+	page.load_messages
 	({
 		info:
 		{
@@ -29,22 +31,6 @@
 			]
 		}
 	})
-		
-	page.load = function()
-	{
-		page.messages.options.container = $('.chat')
-		page.messages.start()
-	}
 	
-	page.preload = function(finished)
-	{	
-		page.messages.preload(finished)
-	}
-	
-	page.unload = function()
-	{
-		page.messages.unload()
-	}
-		
-	page.messages.options.on_load = $.noop
+	page.messages_container = 'chat'
 })()

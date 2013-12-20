@@ -127,7 +127,7 @@ function activate_popup(options)
 			
 	function show()
 	{
-		popup.appendTo('body')
+		popup.appendTo(body)
 		var offset = popup_container.offset()
 		
 		popup.move_to

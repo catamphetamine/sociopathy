@@ -62,7 +62,7 @@ var Context_menu = new Class
 		this.menu.addClass('popup_panel_container')
 		this.menu.list.addClass('popup_panel')
 		
-		this.menu.hide().appendTo('body')
+		this.menu.hide().appendTo(body)
 		
 		var width = this.menu.outerWidth()
 		var height = this.menu.outerHeight()
@@ -93,7 +93,7 @@ var Context_menu = new Class
 			
 			this.options.selectable_element.addClass('selected')
 			
-			$('body').on('mousedown' + this.namespace, (function()
+			$(body).on('mousedown' + this.namespace, (function()
 			{
 				console.log('mousedown!')
 			
@@ -101,7 +101,7 @@ var Context_menu = new Class
 			
 				this.options.selectable_element.removeClass('selected')
 				
-				$('body').unbind('mousedown' + this.namespace)
+				$(body).unbind('mousedown' + this.namespace)
 			})
 			.bind(this))
 		})
@@ -112,7 +112,7 @@ var Context_menu = new Class
 	{
 		this.element.unbind(this.namespace)
 		this.options.selectable_element.removeClass('selected')
-		$('body').unbind(this.namespace)
+		$(body).unbind(this.namespace)
 		this.menu.remove()
 	}
 })

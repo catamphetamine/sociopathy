@@ -260,7 +260,7 @@ var Message =
 		message.on('click', close_popup)
 		message.on('contextmenu', close_popup)
 		
-		message_container.append(message).appendTo('body')
+		message_container.append(message).appendTo(body)
 		message_container.css('top', top)
 
 		var opacity = message.css('opacity')

@@ -310,7 +310,6 @@ var Messages = new Class
 				}
 			},
 			editable: true, 
-			container: messages.options.container,
 			error: 'Не удалось загрузить список сообщений',
 			с_номерами_страниц: true,
 			set_url: false,
@@ -616,6 +615,8 @@ var Messages = new Class
 	{
 		var messages = this
 		
+		this.loader.options.container = this.options.container
+			
 		if (this.visual_editor)
 		{
 			this.visual_editor.activate()
@@ -748,9 +749,9 @@ var Messages = new Class
 	{
 		this.visual_editor.hide_tools()
 		
-		$('body').focus()
+		$(body).focus()
 			
-		this.compose_message.fadeOut()
+		this.compose_message.hide()
 	},
 
 	show_editor: function()
@@ -761,7 +762,7 @@ var Messages = new Class
 		
 		page.ticking(this.check_composed_message_height, 500)
 		
-		this.compose_message.fadeIn()
+		this.compose_message.show()
 		
 		this.visual_editor.focus()
 	},

@@ -15,7 +15,7 @@ function simple_value_dialog_window(options)
 		element.removeAttr('id', options.id)
 	*/
 		
-	element.appendTo('body')
+	element.appendTo(body)
 	element.attr('title', options.title)
 
 	var form = element.find('form').eq(0)

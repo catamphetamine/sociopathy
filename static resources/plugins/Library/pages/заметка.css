@@ -16,14 +16,17 @@ body[mode="правка"] #content
 	
 	article
 	{
-		margin-top: 60px;
-		
 		> section
 		{
 			font-family: @textual_font;
 		
 			font-size: @textual_font_size;
 			line-height: @textual_font_line_height;
+			
+			> h2:first-child
+			{
+				margin-top: 60px;
+			}
 		}
 		
 		h1, > section

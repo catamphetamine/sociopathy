@@ -191,8 +191,6 @@ $(document).on('panel_loaded', function()
 		{
 			эфир.is_ready = true
 			
-			$('#panel .loading').removeClass('shown')
-			
 			if (reconnected)
 			{
 				Эфир.общения.for_each(function()
@@ -206,9 +204,6 @@ $(document).on('panel_loaded', function()
 			
 			if (!reconnected)
 				start_activity_monitor()
-			
-			if (first_time_page_loading)
-				$(document).trigger('ether_is_online')
 		})
 		
 		эфир.on('error', function(ошибка)
@@ -302,6 +297,14 @@ $(document).on('panel_loaded', function()
 			Новости.звуковое_оповещение(data.чего)
 		})
 		
+		function ether_initialized()
+		{
+			$('#panel .loading').removeClass('shown')
+			
+			if (first_time_page_loading)
+				$(document).trigger('ether_is_online')
+		}
+		
 		on('новости', 'уведомления', function(data)
 		{
 			Новости.сброс()
@@ -310,6 +313,8 @@ $(document).on('panel_loaded', function()
 			{
 				this.notifications(data)
 			})
+			
+			ether_initialized()
 		})
 		
 		on('пользователь', 'смена имени', function(имя)

@@ -3,7 +3,7 @@ var Youtube =
 	load_pictures: function(where)
 	{
 		if (!where)
-			where = $('body')
+			where = $(body)
 			
 		where.find('.youtube_video_picture').each(function()
 		{

@@ -836,7 +836,7 @@ Wiki_processor = new (new Class
 		//console.log('*** html ***')
 		//console.log(html)
 		
-		$(html).appendTo('body')
+		$(html).appendTo(body)
 		
 		//console.log('*** parsing html ***')
 		
@@ -847,7 +847,7 @@ Wiki_processor = new (new Class
 			//console.log('*** wiki ***')
 			//console.log(same_wiki)
 			
-			$('<pre/>').text(same_wiki).appendTo('body')
+			$('<pre/>').text(same_wiki).appendTo(body)
 			
 			if (same_wiki != wiki)
 				throw 'Wiki processor malfunction'

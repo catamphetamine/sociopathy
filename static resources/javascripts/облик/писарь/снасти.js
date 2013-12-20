@@ -88,7 +88,7 @@ Visual_editor.implement
 		var editor = this.editor
 	
 		var original = $('.visual_editor_tools')
-		var tools = original.clone().appendTo('body')
+		var tools = original.clone().appendTo(body)
 		this.tools_element = tools
 	
 		var Tools = {}

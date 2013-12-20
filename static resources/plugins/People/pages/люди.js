@@ -4,7 +4,7 @@ title(text('pages.people.title'));
 {
 	page.query('#id_cards', 'people')
 	
-	page.data.loader = page.either_way_loading
+	page.load_data_either_way
 	({
 		путь: text('pages.people.url'),
 		с_номерами_страниц: true,
@@ -57,27 +57,15 @@ title(text('pages.people.title'));
 		},
 		template: 'личная карточка',
 		страница: page.data.номер_страницы,
-		//page: page,
 		error: 'Не удалось загрузить список людей',
-		progress_bar: true,
-		show: false
+		progress_bar: true
 	})
 	
-	page.preload = function(finish)
-	{
-		page.data.loader.preload(finish)
-	}
+	page.data_container = 'people'
 	
 	page.load = function()
 	{
-		page.data.loader.options.container = page.people
-		page.data.loader.show()
-	
 		$(window).on_page('resize', center_people_list)
-	}
-	
-	page.unload = function()
-	{
 	}
 	
 	function center_people_list()
@@ -94,7 +82,7 @@ title(text('pages.people.title'));
 		{
 			choice: function(_id)
 			{
-				page.data.loader.destroy()
+				page.data_loader.destroy()
 		
 				go_to(text('pages.people.url') + '/' + this.id)
 			},

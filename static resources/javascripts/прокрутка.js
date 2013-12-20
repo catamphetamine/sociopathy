@@ -291,7 +291,7 @@ var Scroller = new Class
 	{
 		var scroller
 		if (bowser.webkit)
-			scroller = $('body')
+			scroller = $(body)
 		else if (bowser.mozilla)
 			scroller = $('html')
 		//else
@@ -339,6 +339,11 @@ var Scroller = new Class
 		this.scroll_to_y($(document).height() - $(window).height())
 	},
 	
+	scroll_to_top: function()
+	{
+		$(window).scrollTop(0)
+	},
+	
 	scroll_by: function(how_much)
 	{
 		$(window).scrollTop($(window).scrollTop() + how_much)
@@ -350,7 +355,7 @@ var Scroller = new Class
 	
 		var scroller
 		if (bowser.webkit)
-			scroller = $('body')
+			scroller = $(body)
 		else if (bowser.mozilla)
 			scroller = $('html')
 		else

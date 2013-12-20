@@ -129,7 +129,7 @@ var Dragger = new Class
 			top: this.clicked_at.top
 		}
 		
-		$('body').on('mouseup' + this.namespace, (function(event)
+		$(body).on('mouseup' + this.namespace, (function(event)
 		{
 			this.drop()
 		})
@@ -137,7 +137,7 @@ var Dragger = new Class
 		
 		this.dragged_element = element
 		
-		$('body').on('mousemove' + this.namespace, (function(event)
+		$(body).on('mousemove' + this.namespace, (function(event)
 		{
 			var delta_left = event.pageX - this.clicked_at.left
 			var delta_top = event.pageY - this.clicked_at.top
@@ -209,7 +209,7 @@ var Dragger = new Class
 		this.dragged_element.addClass('dropped')
 		this.dragged_element.removeClass('dragged')
 		
-		$('body').unbind(this.namespace)
+		$(body).unbind(this.namespace)
 	},
 	
 	refresh: function()
@@ -243,7 +243,7 @@ var Dragger = new Class
 		{
 			this.clean_up()
 			
-			$('body').unbind(this.namespace)
+			$(body).unbind(this.namespace)
 			
 			this.plugins.for_each(function()
 			{

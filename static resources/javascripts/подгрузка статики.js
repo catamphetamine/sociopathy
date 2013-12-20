@@ -100,11 +100,11 @@ var вставить_содержимое
 		if (Configuration.Optimize && Optimization.Кусочки[кусочек])
 		{
 			$.compile_template('кусочки/' + кусочек, Optimization.Кусочки[кусочек])
-			 $('body').append($.render('кусочки/' + кусочек, данные))
+			$.render('кусочки/' + кусочек, данные).appendTo(body)
 			 return возврат()
 		}
 		
-		вставить_содержимое('/страницы/кусочки/' + кусочек + '.html', данные, { куда: $('body') }, возврат)
+		вставить_содержимое('/страницы/кусочки/' + кусочек + '.html', данные, { куда: body }, возврат)
 	}
 	
 	function вставить_кусочки(возврат)
@@ -284,9 +284,9 @@ var вставить_содержимое
 			var insert = function()
 			{
 				if (!options.куда)
-					options.куда = Page.element
+					options.куда = Page.element.node()
 					
-				options.куда.append($.render(шаблон, данные))
+				$.render(шаблон, данные).appendTo(options.куда)
 				возврат()
 			}
 			

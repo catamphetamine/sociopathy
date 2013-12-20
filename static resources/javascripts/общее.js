@@ -85,7 +85,7 @@ function loading_page(options, callback)
 	if (options.immediate)
 		fade_in_for = 0
 	
-	$('body').addClass('loading')
+	$(body).addClass('loading')
 	
 	loading_screen.fade_in(fade_in_for, callback)
 }
@@ -114,13 +114,13 @@ function hide_page_loading_screen()
 		loading_screen.find('.loading').stop_animator().fade_out(0)
 	})
 	
-	$('body').removeClass('loading')
-	$('body').removeClass('first_time_loading')
+	$(body).removeClass('loading')
+	$(body).removeClass('first_time_loading')
 }
 
 function web_page_still_loading()
 {
-	return $('body').hasClass('loading')
+	return $(body).hasClass('loading')
 }
 
 $(function()
@@ -216,7 +216,7 @@ $(document).on('page_initialized', function()
 
 $(function()
 {
-	var body = $('body')
+	var body = $(body)
 
 	if (bowser.mozilla)
 		body.addClass('firefox')
@@ -244,11 +244,11 @@ $(function()
 {
 	if (navigator.userAgent.indexOf("Mac") >= 0)
 	{
-		$('body').addClass('osx')
+		$(body).addClass('osx')
 	}
 	else if (navigator.userAgent.indexOf("Windows") >= 0)
 	{
-		$('body').addClass('windows')
+		$(body).addClass('windows')
 	}
 })
 
@@ -285,33 +285,6 @@ function breadcrumbs(path, on_ok, on_error)
 // чтобы не было ошибок по консоли в обозревателе
 if (!console)
 	console = { log: function() {} }
-
-// body background css transitions didn't work
-function initialize_body_edit_mode_effects()
-{
-	var initial_background_color = $('body').css('background-color')
-	
-	var dummy_div = $('<div/>').hide().appendTo('body').addClass('body_edit_mode')
-	
-	var background_fade_time = dummy_div.transition_duration() * 1000
-	var edit_mode_background_color = dummy_div.css('background-color')
-	
-	Режим.при_переходе({ в: 'правка' }, function()
-	{
-		$('body').stop(true, false).animate({ 'background-color': edit_mode_background_color }, background_fade_time)
-		$('body').stop(true, false).css({ 'background-color': edit_mode_background_color })
-	})
-
-	$(document).on_page('смена_режима', function(event, из, в)
-	{
-		if (из === 'правка')
-		{
-			$('body').stop(true, false).animate({ 'background-color': initial_background_color }, background_fade_time)
-		}
-	})
-	
-	dummy_div.remove()
-}
 
 var history_stacked = false
 
@@ -1473,7 +1446,7 @@ function is_internal_url(url)
 function ajaxify_internal_links(where)
 {
 	if (!where)
-		where = $('body')
+		where = $(body)
 		
 	where.find('a').each(function()
 	{

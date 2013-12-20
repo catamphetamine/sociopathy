@@ -4,12 +4,10 @@
 	
 	page.query('#news', 'news')
 	
-	page.data_loader = new  Scroll_loader
+	page.load_data
 	({
 		url: '/сеть/новости',
 		batch_size: 10,
-		done: page.content_ready,
-		before_done_more: function() { ajaxify_internal_links(page.news) },
 		get_data: function(data)
 		{
 			parse_dates(data.новости, 'когда')
@@ -20,34 +18,21 @@
 			})
 			
 			return data.новости
-		},
-		hidden: true
+		}
 	})
+	
+	page.data_template = 'новость'
+	page.data_container = 'news'
 	
 	page.load = function()
 	{
-		//page.data_loader.options.scroll_detector = page.get('#scroll_detector')
-		page.data_loader.initialize_scrolling()
-		
-		new Data_templater
-		({
-			template: 'новость',
-			container: page.news,
-			loader: page.data_loader
-		})
-		.show()
 	}
 	
-	page.preload = function(finish)
-	{
-		page.data_loader.preload(finish)
-	}
-	
-	page.data_loader.options.before_done = function()
+	page.before_output_data(function()
 	{
 		Youtube.load_pictures(page.news)
 		Vimeo.load_pictures(page.news)
 		
 	//	Режим.разрешить('правка')
-	}
+	})
 })()

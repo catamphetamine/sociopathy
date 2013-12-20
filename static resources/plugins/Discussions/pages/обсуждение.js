@@ -5,7 +5,7 @@
 	
 	var unedited_discussion_title
 
-	page.messages = Interactive_messages
+	page.load_messages
 	({
 		info:
 		{
@@ -45,11 +45,10 @@
 		discard_changes: function() { page.get('.breadcrumbs > :last').text(unedited_discussion_title) }
 	})
 	
+	page.messages_container = 'discussion'
+	
 	page.load = function()
 	{
-		page.messages.options.container = page.discussion
-		page.messages.start()
-
 		$(document).on_page('discussion_renamed', function(event, data)
 		{
 			if ($('#discussion').attr('_id') === data._id)
@@ -58,16 +57,6 @@
 				title(data.как)
 			}
 		})
-	}
-	
-	page.preload = function(finished)
-	{	
-		page.messages.preload(finished)
-	}
-	
-	page.unload = function()
-	{
-		page.messages.unload()
 	}
 	
 	page.messages.options.on_load = function()

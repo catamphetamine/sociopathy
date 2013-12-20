@@ -120,7 +120,7 @@ var loading_indicator = new (function()
 				{
 					loader.start_animation()
 					loader.content.fade_in(3.0)
-					$('body').addClass('blurred')
+					$(body).addClass('blurred')
 				})
 				
 				return loading
@@ -135,7 +135,7 @@ var loading_indicator = new (function()
 					loader.content.fade_out(0)
 					loader.stop_animation()
 				})
-				$('body').removeClass('blurred')
+				$(body).removeClass('blurred')
 				Клавиши.enable()
 			}
 		}

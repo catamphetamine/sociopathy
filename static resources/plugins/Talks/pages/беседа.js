@@ -6,7 +6,7 @@
 	
 	var unedited_talk_title
 	
-	page.messages = Interactive_messages
+	page.load_messages
 	({
 		info:
 		{
@@ -29,7 +29,6 @@
 			
 			page.data.создатель_ли = пользователь._id === data.создатель
 		},
-		//show_editor: true,
 		edit_path: 'беседы',
 		on_message_bottom_appears: function(_id)
 		{
@@ -46,11 +45,10 @@
 		discard_changes: function() { page.get('.breadcrumbs > :last').text(unedited_talk_title) }
 	})
 	
+	page.messages_container = 'talk'
+	
 	page.load = function()
 	{
-		page.messages.options.container = page.talk
-		page.messages.start()
-		
 		page.подсказка('добавление в беседу', 'Для того, чтобы добавить человека в беседу, выберите действие «Добавить человека в беседу» (клавиша «' + Настройки.Клавиши.Показать_действия + '»)')
 		
 		$(document).on_page('talk_renamed', function(event, data)
@@ -61,16 +59,6 @@
 				title(data.как)
 			}
 		})
-	}
-	
-	page.preload = function(finished)
-	{	
-		page.messages.preload(finished)
-	}
-	
-	page.unload = function()
-	{
-		page.messages.unload()
 	}
 	
 	page.messages.options.on_load = function()

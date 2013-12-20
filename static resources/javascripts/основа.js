@@ -43,7 +43,15 @@ var scripts =
 	
 	'uri',
 	
-	'страница',
+	{постраничность:
+	[
+		'path',
+		'страница',
+		'actions',
+		'data store',
+		'data loading',
+		'tools'
+	]},
 	
 	'dom tools',
 	'клавиши',
@@ -473,7 +481,7 @@ function do_insert_initial_scripts()
 	{
 		extra_markup('основа (head)', $('head'), function()
 		{
-			extra_markup('основа (body)', $('body'), function()
+			extra_markup('основа (body)', $(body), function()
 			{
 				insert_styles(styles, '/облик')
 				

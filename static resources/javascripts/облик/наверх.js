@@ -23,14 +23,14 @@ $(document).on('panel_loaded', function()
 	function show()
 	{
 		jump_to_top.addClass('mouse_over')
-		$('body').addClass('jump_to_top_mouse_over')
+		$(body).addClass('jump_to_top_mouse_over')
 		//jump_to_top.fade_in(0.2, { maximum_opacity: 0.5 })
 	}
 	
 	function hide()
 	{
 		jump_to_top.removeClass('mouse_over')
-		$('body').removeClass('jump_to_top_mouse_over')
+		$(body).removeClass('jump_to_top_mouse_over')
 		//jump_to_top.fade_out(0.2)
 	}
 	

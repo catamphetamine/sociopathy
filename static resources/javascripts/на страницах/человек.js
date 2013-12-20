@@ -4,6 +4,7 @@
 	var content
 
 	page.query('.photo', 'photo')
+	page.query('#id_card', 'id_card')
 	
 	Режим.пообещать('правка')
 
@@ -13,6 +14,27 @@
 			return
 		
 		return пользователь._id === page.data.пользователь_сети._id
+	}
+	
+	page.data_templater_options = function()
+	{
+		// убрать этот conditional потом.
+		// для этого нормально обрабатывать ошибку "пользователь не найден"
+		var conditional = initialize_conditional($('.main_conditional'), { immediate: true })
+		conditional.on_error(function()
+		{
+			page.content_ready()
+		})
+		
+		var options =
+		{
+			template: 'личная карточка',
+			to: page.id_card,
+			conditional: conditional,
+			single: true
+		}
+		
+		return options
 	}
 	
 	page.load = function()
@@ -37,24 +59,6 @@
 				}
 			}
 		})
-	
-		// убрать этот conditional потом.
-		// для этого нормально обрабатывать ошибку "пользователь не найден"
-		var conditional = initialize_conditional($('.main_conditional'), { immediate: true })
-		conditional.on_error(function()
-		{
-			page.content_ready()
-		})
-		
-		new Data_templater
-		({
-			template: 'личная карточка',
-			container: id_card,
-			conditional: conditional,
-			single: true
-		},
-		page.data_loader)
-		.show()
 	}
 	
 	page.data_loader = new  Data_loader
@@ -84,19 +88,10 @@
 		}
 	})
 	
-	page.preload = function(finish)
-	{
-		page.data_loader.preload(finish)
-	}
-	
-	page.unload = function()
-	{
-	}
-	
 	var когда_был_здесь
 	var offline = false
 	
-	page.data_loader.options.before_done = function()
+	page.data_loader.options.before_output = function()
 	{
 		title(page.data.пользователь_сети.имя)
 
@@ -271,8 +266,6 @@
 	
 	function initialize_edit_mode_effects()
 	{
-		initialize_body_edit_mode_effects()
-	
 		//var highlight_color = '#44adcb'
 		
 		Режим.при_переходе({ в: 'правка' }, function()

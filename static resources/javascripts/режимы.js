@@ -46,7 +46,7 @@ var Режим = (function()
 		else
 		{
 			режим = 'обычный'
-			$('body').attr('mode', режим)
+			body.setAttribute('mode', режим)
 		}
 		
 		проверки_перехода = []
@@ -173,19 +173,19 @@ var Режим = (function()
 			$('[mode=' + режим + ']').each(function()
 			{
 				if (this.tagName.toLowerCase() !== 'body')
-					$(this).fade_out(0)
+					$(this).hide()
 			})
 			
 		$('[mode=' + mode + ']').each(function(element)
 			{
 				if (this.tagName.toLowerCase() !== 'body')
-					$(this).fade_in(0.1)
+					$(this).show()
 			})
 		
 		var описание_режима = найти_описание_режима(mode)
 		описание_режима.перейти(режим)
 		
-		$('body').attr('mode', описание_режима.название)
+		body.setAttribute('mode', описание_режима.название)
 		
 		$(document).trigger('смена_режима', [режим, mode, options])
 	
@@ -319,7 +319,7 @@ var Режим = (function()
 		режимы.forEach(function(описание_режима)
 		{
 			if (описание_режима.название !==  режим)
-				$('[mode=' + описание_режима.название + ']').fade_out(0)
+				$('[mode=' + описание_режима.название + ']').hide()
 		})
 	}
 	
@@ -364,7 +364,7 @@ var Режим = (function()
 			save_changes_button.unlock()
 		})
 		
-		$('body').removeClass('with_actions_on_bottom')
+		$(body).removeClass('with_actions_on_bottom')
 		
 		unbind_edit_mode_key_listeners()
 	}
@@ -379,7 +379,7 @@ var Режим = (function()
 			cancel_changes_button.unlock()
 		})
 		
-		$('body').removeClass('with_actions_on_bottom')
+		$(body).removeClass('with_actions_on_bottom')
 		
 		unbind_edit_mode_key_listeners()
 	}
@@ -400,7 +400,7 @@ var Режим = (function()
 		}
 	
 		actions = $('.edit_mode_actions').clone().addClass('destroyable')
-		actions.appendTo($('body')).move_out_downwards().disableTextSelect()
+		actions.appendTo($(body)).move_out_downwards().disableTextSelect()
 		
 		var actions_height = actions.outerHeight()
 		$('footer').height(0)
@@ -430,7 +430,7 @@ var Режим = (function()
 				
 				$('footer').height(actions_height)
 				
-				$('body').addClass('with_actions_on_bottom')
+				$(body).addClass('with_actions_on_bottom')
 				
 				page.unsaved_changes = true
 				

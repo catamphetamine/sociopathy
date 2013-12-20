@@ -41,18 +41,18 @@ var Batch_loader = new Class
 	options:
 	{
 		get_data: loader_get_data,
-		finished: function() {},
-		loaded: function(data) {},
-		done: function() {},
-		done_more: function() {},
+		finished: $.noop,
+		loaded: $.noop,
+		done: $.noop,
+		done_more: $.noop,
 		before_output_async: function(elements, callback) { callback() },
-		after_output: function() {},
-		before_done: function() {},
-		before_done_more: function() {},
+		after_output: $.noop,
+		before_done: $.noop,
+		before_done_more: $.noop,
 		get_item_locator: function(object) { return object._id },
 		reverse: false,
 		Ajax: Ajax,
-		each: function() {},
+		each: $.noop,
 		skipped_before: 0
 	},
 	
@@ -72,7 +72,7 @@ var Batch_loader = new Class
 		this.options.url = correct_data_url(this.options.url)
 		
 		if (page)
-			if (!this.options.Ajax)
+			if (!options.Ajax)
 				this.options.Ajax = page.Ajax
 			
 		if (this.options.skip_pages)
@@ -84,6 +84,8 @@ var Batch_loader = new Class
 		this.set_skipped_before(0)
 		this.counter = 0
 		this.pages_loaded = 0
+		this.первый_раз = true
+		delete this.будет_уже_не_первый_раз
 		delete this.latest
 		this.deactivate()
 	},
@@ -96,6 +98,12 @@ var Batch_loader = new Class
 	get_current_page: function(amendment)
 	{
 		amendment = amendment || 0
+		
+		/*
+		console.log('skipped before: ' + this.options.skipped_before)
+		console.log('counter: ' + this.counter)
+		console.log('amendment: ' + amendment)
+		*/
 		
 		return Math.ceil((this.options.skipped_before + this.counter + amendment) / this.options.batch_size)
 	},
@@ -231,7 +239,7 @@ var Batch_loader = new Class
 		
 		options = options || {}
 		
-		if (this.options.editable)
+		if (this.options.editable && !this.preloaded)
 			this.заморозка = Режим.заморозить_переходы()
 		
 		if (this.первый_раз && this.preloaded)
@@ -315,10 +323,10 @@ var Batch_loader = new Class
 				if (loader.есть_ли_ещё)
 					loader.activate()
 					
-				if (this.заморозка)
+				if (loader.заморозка)
 				{
-					this.заморозка.разморозить()
-					delete this.заморозка
+					loader.заморозка.разморозить()
+					delete loader.заморозка
 				}
 			})
 		})
@@ -417,11 +425,11 @@ var Data_loader = new Class
 	options:
 	{
 		get_data: loader_get_data,
-		done: function() {},
-		render: function() {},
-		show: function() {},
-		before_done: function() {},
-		each: function() {},
+		done: $.noop,
+		render: $.noop,
+		show: $.noop,
+		before_done: $.noop,
+		each: $.noop,
 		Ajax: Ajax
 	},
 	
@@ -435,7 +443,7 @@ var Data_loader = new Class
 			this.options.callback = this.options.conditional.callback
 		
 		if (page)
-			if (!this.options.Ajax)
+			if (!options.Ajax)
 				this.options.Ajax = page.Ajax
 	},
 

@@ -12,10 +12,10 @@ title(text('pages.settings.title'));
 	var No_email_text
 	var No_language_text
 	
-	page.data_loader = new Data_loader
+	page.load_data(new Data_loader
 	({
 		url: '/приложение/сеть/пользователь/настройки'
-	})
+	}))
 	
 	page.load = function()
 	{
@@ -23,21 +23,12 @@ title(text('pages.settings.title'));
 	
 		No_email_text = page.email.text()
 		No_language_text = page.language.find('.name').text()
-	
-		var conditional = initialize_conditional($('.main_conditional'), { immediate: true })
-			
-		new Data_templater
-		({
-			render: function() {},
-			show: function() {},
-			loader: page.data_loader
-		})
-		.show()
 	}
 	
-	page.preload = function(finish)
+	page.data_templater_options =
 	{
-		page.data_loader.preload(finish)
+		render: function() {},
+		show: function() {}
 	}
 	
 	page.data_loader.options.before_done = function(настройки)
@@ -57,13 +48,6 @@ title(text('pages.settings.title'));
 		{
 			page.data.старая_почта = get_email()
 		})
-	
-		initialize_edit_mode_effects()	
-	}
-	
-	function initialize_edit_mode_effects()
-	{
-		initialize_body_edit_mode_effects()
 	}
 	
 	function get_email()
@@ -71,7 +55,6 @@ title(text('pages.settings.title'));
 		var mail = page.email.text()
 		if (mail !== No_email_text)
 			return mail
-		return
 	}
 	
 	function whats_the_language()
@@ -91,6 +74,7 @@ title(text('pages.settings.title'));
 			var category = $(this)
 		
 			var directory = новые_клавиши
+			
 			if (category.attr('path') != "Прочее")
 			{
 				новые_клавиши[category.attr('path')] = {}
@@ -396,7 +380,7 @@ title(text('pages.settings.title'));
 				text = get_language(whats_the_language()).name
 			page.language.append($('<div/>').addClass('name').text(text))
 			
-			this.destroy_mode('обычный')
+			this.destroy_mode({ mode: 'обычный' })
 		}
 	})
 	

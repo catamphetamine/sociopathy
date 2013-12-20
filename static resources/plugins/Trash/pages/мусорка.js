@@ -4,7 +4,7 @@
 
 	page.query('.trash', 'trash')
 	
-	page.data_loader = new Scroll_loader
+	page.load_data
 	({
 		url: '/приложение/сеть/мусорка',
 		batch_size: 10,
@@ -26,25 +26,15 @@
 			})
 			
 			return data.trash
-		},
-		before_done_more: function() { ajaxify_internal_links(page.trash) },
-		done: page.content_ready,
-		hidden: true
+		}
 	})
 	
-	page.preload = function(finish)
+	page.data_container = 'trash'
+
+	page.data_templater_options = function()
 	{
-		page.data_loader.preload(finish)
-	}
-	
-	page.load = function()
-	{
-		page.подсказка('мусорка', 'Это общая мусорка. Все общие удалённые данные попадают сюда. Если данные были удалени по ошибке, их можно отсюда восстановить')
-	
-		page.data_loader.initialize_scrolling()
-		
-		new Data_templater
-		({
+		var options =
+		{
 			template: 'содержимое мусорки',
 			to: page.trash,
 			table: true,
@@ -77,10 +67,15 @@
 						}
 					]
 				})
-			},
-			loader: page.data_loader
-		})
-		.show()
+			}
+		}
+		
+		return options
+	}
+		
+	page.load = function()
+	{
+		page.подсказка('мусорка', 'Это общая мусорка. Все общие удалённые данные попадают сюда. Если данные были удалени по ошибке, их можно отсюда восстановить')
 	}
 	
 	page.data_loader.options.before_done = function(содержимое)

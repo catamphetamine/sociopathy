@@ -455,5 +455,10 @@ var Dom_tools =
 		}
 		
 		return false
+	},
+	
+	remove_class: function(element, style_class)
+	{
+		element.className.replace(new RegExp('\b' + RegExp.escape(style_class) + '\b'), '')
 	}
 }

@@ -17,9 +17,6 @@
 			window.Optimization.Scripts = {}
 			window.Optimization.Plugins.Scripts = {}
 			
-			var body = document.querySelectorAll('body')[0]
-			var head = document.querySelectorAll('head')[0]
-			
 			var scripts = find('html > head > script')
 			
 			var i = 0

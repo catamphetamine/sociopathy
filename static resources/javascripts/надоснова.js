@@ -30,7 +30,7 @@ $(document).on('page_content_ready', function()
 	activate_anchors()
 	ajaxify_internal_links(Page.element)
 	
-	page.Data_store.initialize(function(data)
+	page.Data_store.initialize_store(function(data)
 	{
 		hide_page_loading_screen()
 	})

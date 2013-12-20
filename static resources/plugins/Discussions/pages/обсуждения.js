@@ -11,7 +11,7 @@
 	
 	page.data.подписан_на_обсуждения = []
 	
-	page.data_loader = new Scroll_loader
+	page.load_data
 	({
 		url: '/сеть/обсуждения',
 		batch_size: 12,
@@ -19,8 +19,6 @@
 		{
 			return data.обновлено_по_порядку
 		},
-		before_done_more: function() { ajaxify_internal_links(page.discussions) },
-		done: page.content_ready,
 		before_output: function(elements)
 		{
 			elements.for_each(function()
@@ -56,8 +54,7 @@
 			})
 			
 			return data.обсуждения
-		},
-		hidden: true
+		}
 	})
 	
 	page.load = function()
@@ -88,25 +85,9 @@
 			if (discussion.exists())
 				discussion.find('.title').text(data.как)
 		})
-		
-		//page.data_loader.options.scroll_detector = page.get('#scroll_detector')
-		page.data_loader.initialize_scrolling()
-		
-		new Data_templater
-		({
-			template: 'обсуждение в списке обсуждений',
-			to: page.discussions,
-			loader: page.data_loader
-		})
-		.show()	
 	}
 	
-	page.preload = function(finished)
-	{
-		page.data_loader.preload(finished)
-	}
-	
-	page.data_loader.before_done = function(elements)
+	page.before_output_data(function(elements)
 	{
 		if (elements.is_empty())
 		{
@@ -115,7 +96,10 @@
 		}
 		
 	//	Режим.разрешить('правка')
-	}
+	})
+	
+	page.data_template = 'обсуждение в списке обсуждений'
+	page.data_container = 'discussions'
 	
 	function create_context_menu(discussion)
 	{

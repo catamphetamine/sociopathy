@@ -4,7 +4,7 @@
 
 	page.query('.errors', 'errors')
 	
-	page.data_loader = new Scroll_loader
+	page.load_data
 	({
 		url: '/приложение/сеть/ошибки',
 		batch_size: 10,
@@ -17,31 +17,26 @@
 			})
 			
 			return data.ошибки
-		},
-		before_done_more: function() { ajaxify_internal_links(page.errors) },
-		done: page.content_ready,
-		hidden: true
+		}
 	})
-	
-	page.preload = function(finish)
-	{
-		page.data_loader.preload(finish)
-	}
 	
 	page.load = function()
 	{
 		page.подсказка('ошибки', 'Здесь показываются ошибки, которые происходят у всех пользователей сети')
+	}
 	
-		page.data_loader.initialize_scrolling()
-		
-		new Data_templater
-		({
+	page.data_container = 'errors'
+	
+	page.data_templater_options = function()
+	{
+		var options =
+		{
 			template: 'ошибки',
 			to: page.errors,
-			table: true,
-			loader: page.data_loader
-		})
-		.show()
+			table: true
+		}
+		
+		return options
 	}
 	
 	page.data_loader.options.before_done = function(содержимое)

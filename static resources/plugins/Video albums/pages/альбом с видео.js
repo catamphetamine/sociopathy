@@ -213,7 +213,7 @@
 			$(document).unbind(namespace)
 			video.unbind(namespace)
 			video.fade_out(0)
-			$('body').removeClass('no_scrollbar')
+			$(body).removeClass('no_scrollbar')
 			container.empty()
 		}
 		
@@ -222,7 +222,7 @@
 			//scroll_navigation.activate(video.find('.previous'))
 			//scroll_navigation.activate(video.find('.next'))
 			
-			$('body').addClass('no_scrollbar')
+			$(body).addClass('no_scrollbar')
 			video.fade_in(0.3, function() { video.focus() })
 		
 			$(document).on_page('keydown' + namespace, function(event) 

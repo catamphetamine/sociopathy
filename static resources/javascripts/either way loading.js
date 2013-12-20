@@ -7,7 +7,7 @@ var Pagination = new Class
 	options:
 	{
 		fade_duration: 0.2,
-		show: true
+		can_be_shown: true
 	},
 	
 	initialize: function(options)
@@ -141,14 +141,15 @@ var Pagination = new Class
 	
 	set_page: function(page)
 	{
+		console.log('Set page ' + page)
+		console.log('Total pages ' + this.pages)
+		
 		if (this.page === page)
 			return
 		
 		this.page = page
 		
 		this.position_current_sector()
-		
-		//console.log('Set page ' + page)
 		
 		if (this.page === this.pages)
 			this.hide()
@@ -195,14 +196,21 @@ var Pagination = new Class
 	
 	hide: function()
 	{
+		console.log('Hide pagination')
+		
 		this.shown = false
 		this.pagination.fade_out(this.options.fade_duration)
 	},
 	
 	show: function()
 	{
+		console.log('Show pagination')
+	
 		if (this.shown)
 			return
+			
+		if (!this.options.can_be_shown)
+			return // console.log('can not be shown')
 		
 		if (this.pages === 1)
 			return
@@ -266,9 +274,25 @@ var Either_way_loading = new Class
 			get_data: function(data)
 			{
 				if (this.первый_раз)
-					if (either_way.options.data.on_pre_first_data)
-						either_way.options.data.on_pre_first_data(data)
+				{
+					(function()
+					{
+						this.initial_data = data
 						
+						if (data.пропущено)
+						{
+							this.top_loader.set_skipped_before(data.пропущено)
+							this.bottom_loader.set_skipped_before(data.пропущено)
+						}
+					
+						this.top_loader.первый_раз = false
+						
+						if (this.options.data.on_pre_first_data)
+							this.options.data.on_pre_first_data(data)
+					})
+					.bind(either_way)()
+				}
+				
 				data = either_way.on_data(data, this)
 				
 				if (data.is_empty())
@@ -282,40 +306,35 @@ var Either_way_loading = new Class
 					amendment++
 				})
 				
-				if (either_way.resetted)
-					either_way.options.container.empty()
-					
 				return data
 			},
-			loaded: function(data)
+			loaded: function(data_list)
 			{
-				if (!this.bottom_loader.первый_раз)
-					return
-					
-				this.pagination.set_total(data.всего)
-				
-				if (data.пропущено)
+				if (this.bottom_loader.первый_раз)
 				{
-					this.top_loader.set_skipped_before(data.пропущено)
-					this.bottom_loader.set_skipped_before(data.пропущено)
-				}
+					var data = this.initial_data
+					delete this.initial_data
 					
-				if (this.options.data.on_first_batch)
-					this.options.data.on_first_batch(data)
-	
-				this.pagination.set_page(this.bottom_loader.get_current_page())
+					if (data['есть ли предыдущие?'])
+					{
+						this.previous_block.visible()
+						this.previous_link.fade_in(this.options.previous_link.fade_in)
+						this.top_loader.activate()
+						
+						if (data.пропущено > this.options.Skip_for_pagination)
+							this.pagination.options.can_be_shown = true
+					}
+						
+					this.pagination.set_total(data.всего)
+					
+					this.pagination.set_page(this.bottom_loader.get_current_page())
+						
+					if (this.options.data.on_first_batch)
+						this.options.data.on_first_batch(data)
+				}
 				
-				if (data['есть ли предыдущие?'])
-				{
-					this.previous_block.visible()
-					this.previous_link.fade_in(this.options.previous_link.fade_in)
-					this.top_loader.activate()
-					
-					if (data.пропущено > this.options.Skip_for_pagination)
-						this.pagination.show()					
-				}
-			
-				this.top_loader.первый_раз = false
+				if (this.resetted)
+					this.options.container.empty()
 			}
 			.bind(this),
 			before_output: function(elements)
@@ -371,77 +390,9 @@ var Either_way_loading = new Class
 			hidden: true
 		}))
 		
-		if (this.options.show)
-			this.show()
-	},
-	
-	common_loader_options: function()
-	{
-		var common_loader_options =
-		{
-			url: this.options.data.url,
-			latest_first: this.options.data.latest_first,
-			batch_size: this.options.data.batch_size,
-			editable: this.options.editable,
-			before_output_async: this.options.data.before_output_async
-		}
-		
-		return common_loader_options
-	},
-	
-	preload: function(finished)
-	{
-		this.bottom_loader.preload(finished)
-	},
-	
-	show: function()
-	{
-		var loader_markup = $.render('either way loading', {})
-		
-		this.options.container = page.get(this.options.container)
-		
-		this.options.container.before(loader_markup)
-		
-		options = this.options
-		
-		var ok_block = page.get('.main_conditional > [type=ok]')
-		
-		ok_block.find('> [type="placeholder"]').replaceWith(options.container)
-		
-		this.previous_block = page.get('.previous_conditional')
-		
-		var main_conditional = initialize_conditional(page.get('.main_conditional'))
-		this.previous_conditional = initialize_conditional(this.previous_block)
-		
-		this.previous_block.prependTo(ok_block)
-	
-		page.get('[type="error"], [type="loading_more_error"]').text(options.error || "Во время загрузки данных произошла ошибка")
-		
-		this.pagination = new Pagination
-		({
-			per_page: this.options.data.batch_size,
-			go_to_page: this.go_to_page.bind(this)
-		})
-		
-		var previous_link = this.previous_block.find('.previous > a')
-		this.previous_link = previous_link
-		
-		this.reset()
-		
-		var skip_pages = this.options.страница
-		
-		if (skip_pages)
-		{
-			this.pagination.skip_pages(skip_pages)
-			this.pagination.show()
-		}
-		
-		var either_way = this
-		options = this.options
-			
 		this.top_loader = new Batch_loader(Object.x_over_y(this.common_loader_options(),
 		{
-			skip_pages: skip_pages + 1,
+			skip_pages: this.options.страница + 1,
 			reverse: true,
 			parameters: function()
 			{
@@ -478,7 +429,7 @@ var Either_way_loading = new Class
 				ajaxify_internal_links(page.content)
 				
 				if (this.есть_ли_ещё)
-					previous_link.fade_in(either_way.options.previous_link.fade_in)
+					either_way.previous_link.fade_in(either_way.options.previous_link.fade_in)
 			
 				elements.reverse()
 				either_way.after_output(elements, {})
@@ -486,51 +437,121 @@ var Either_way_loading = new Class
 			},
 			finished: function()
 			{
-				previous_link.hide()
+				this.previous_link.hide()
 			}
+			.bind(this)
 		}))
 		
 		this.top_loader.activate = function()
 		{
-			previous_link.fade_in(0)
-			previous_link.on('click', either_way.show_previous.bind(either_way))
-			previous_link.removeClass('inactive')
+			this.previous_link.fade_in(0)
+			this.previous_link.on('click', this.show_previous.bind(this))
+			this.previous_link.removeClass('inactive')
 		}
+		.bind(this)
 		
 		this.top_loader.deactivate = function()
 		{
-			previous_link.unbind()
-			previous_link.addClass('inactive')
+			this.previous_link.unbind()
+			this.previous_link.addClass('inactive')
+		}
+		.bind(this)
+		
+		if (this.options.show)
+			this.show()
+	},
+	
+	common_loader_options: function()
+	{
+		var common_loader_options =
+		{
+			url: this.options.data.url,
+			latest_first: this.options.data.latest_first,
+			batch_size: this.options.data.batch_size,
+			editable: this.options.editable,
+			before_output_async: this.options.data.before_output_async
 		}
 		
-		function create_item_from_template(data)
+		return common_loader_options
+	},
+	
+	preload: function(finished)
+	{
+		this.bottom_loader.preload(finished)
+	},
+	
+	show: function()
+	{
+		var either_way = this
+		
+		var loader_markup = $.render('either way loading', {})
+		
+		this.options.container = page.get(this.options.container)
+		
+		this.options.container.before(loader_markup)
+		
+		var ok_block = page.get('.main_conditional > [type=ok]')
+		
+		ok_block.find('> [type="placeholder"]').replaceWith(this.options.container)
+		
+		this.previous_block = page.get('.previous_conditional')
+		
+		var main_conditional = initialize_conditional(page.get('.main_conditional'))
+		this.previous_conditional = initialize_conditional(this.previous_block)
+		
+		this.previous_block.prependTo(ok_block)
+	
+		page.get('[type="error"], [type="loading_more_error"]').text(this.options.error || "Во время загрузки данных произошла ошибка")
+		
+		this.pagination = new Pagination
+		({
+			per_page: this.options.data.batch_size,
+			go_to_page: this.go_to_page.bind(this)
+		})
+		
+		this.previous_link = this.previous_block.find('.previous > a')
+		
+		this.reset()
+		
+		if (this.options.страница)
 		{
-			var item = $.render(options.template, data)
+			this.pagination.skip_pages(this.options.страница)
+			this.pagination.show()
+		}
+			
+		var create_item_from_template = function(data)
+		{
+			var item = $.render(this.options.template, data)
 			
 			if (!item.is('li'))
 				item = $('<li/>').append(item)
 				
 			return item
 		}
+		.bind(this)
 		
-		function prepend_item(item)
+		var prepend_item = function(item)
 		{
-			if (options.data.prepend)
-				return options.data.prepend(item)
+			if (this.options.data.prepend)
+				return this.options.data.prepend(item)
 			
-			options.container.prepend(item)
+			this.options.container.prepend(item)
 		}
+		.bind(this)
 		
-		function append_item(item)
+		var append_item = function(item)
 		{
-			if (options.data.append)
-				return options.data.append(item)
+			if (this.options.data.append)
+				return this.options.data.append(item)
 			
-			options.container.append(item)
+			this.options.container.append(item)
 		}
+		.bind(this)
 		
 		function activate_page_scrolling(data, element)
 		{
+			//console.log('activate_page_scrolling for page ' + data.страница)
+		
 			element.on('appears_on_bottom.scroller', function(event)
 			{
 				/*
@@ -556,27 +577,28 @@ var Either_way_loading = new Class
 			})
 		}
 		
-		function render_item(data)
+		var render_item = function(data)
 		{
 			var item
 			
-			if (options.data.render)
-				item = options.data.render(data)
+			if (this.options.data.render)
+				item = this.options.data.render(data)
 			else
 				item = create_item_from_template(data)
 		
 			if (!item)
 				return
 			
-			if (options.с_номерами_страниц)
+			if (this.options.с_номерами_страниц)
 				activate_page_scrolling(data, item)
 						
 			var postprocessed_item
-			if (options.data.postprocess_item)
-				postprocessed_item = options.data.postprocess_item.bind(item)(data)
+			if (this.options.data.postprocess_item)
+				postprocessed_item = this.options.data.postprocess_item.bind(item)(data)
 			
 			return postprocessed_item || item
 		}
+		.bind(this)
 		
 		new Data_templater
 		({
@@ -593,7 +615,7 @@ var Either_way_loading = new Class
 		
 		new Data_templater
 		({
-			container: options.container,
+			container: this.options.container,
 			render: function(data) { return render_item(data) },
 			show: function(element) { append_item(element) },
 			conditional: main_conditional
@@ -602,10 +624,10 @@ var Either_way_loading = new Class
 		.show()
 		
 		/*
-		if (options.progress_bar)
+		if (this.options.progress_bar)
 		{
 			progress_bar = $('.vertical_progress_bar').show()
-			progress_bar.appendTo('body')
+			progress_bar.appendTo(body)
 		}
 		
 		var progress
@@ -616,7 +638,7 @@ var Either_way_loading = new Class
 			{
 				if (!skipped)
 					if (skip_pages)
-						skipped = skip_pages * options.data.batch_size
+						skipped = skip_pages * either_way.options.data.batch_size
 				
 				progress = new Progress
 				({
@@ -650,11 +672,14 @@ var Either_way_loading = new Class
 	
 	go_to_page: function(page)
 	{
+		console.log('Go to page ' + page)
+	
 		if (this.options.data.on_go_to_page)
 			this.options.data.on_go_to_page(page)
 	
 		this.resetted = true
 	
+		this.reset_loaders()
 		this.reset()
 		
 		this.pagination.set_page(page)
@@ -670,6 +695,8 @@ var Either_way_loading = new Class
 	
 	set_page_number: function(number)
 	{
+		console.log('Set page number ' + number)
+	
 		if (this.options.set_url !== false)
 		{
 			if (number > 1)
@@ -681,9 +708,20 @@ var Either_way_loading = new Class
 		this.pagination.set_page(number)
 	},
 	
+	reset_loaders: function()
+	{
+		if (this.top_loader)
+			this.top_loader.reset()
+			
+		if (this.bottom_loader)
+			this.bottom_loader.reset()
+	},
+	
 	reset: function()
 	{
 		this.pagination.reset()
+		
+		прокрутчик.scroll_to_top()
 		
 		this.options.container.children().each(function()
 		{
@@ -694,12 +732,6 @@ var Either_way_loading = new Class
 			this.previous_block.invisible()
 		
 		this.previous_link.fade_out(this.options.previous_link.fade_out)
-		
-		if (this.top_loader)
-			this.top_loader.reset()
-			
-		if (this.bottom_loader)
-			this.bottom_loader.reset()
 		
 		if (this.resetted)
 			this.options.container.fade_out(this.options.fade_out)
