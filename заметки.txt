@@ -35,6 +35,10 @@ navigation controller, в нём - table view
 
 
 
+
+вычленить decorate в отдельный decorator
+simplify - оформить как decorator
+
 перенести генерацию html'я заметок и сообщений на сервер
 
 

@@ -1438,11 +1438,6 @@ function is_external_internal_url(url)
 	}
 }
 
-function is_internal_url(url)
-{
-	return url.starts_with('/')
-}
-
 function ajaxify_internal_links(where)
 {
 	if (!where)

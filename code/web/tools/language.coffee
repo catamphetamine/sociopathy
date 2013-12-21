@@ -42,7 +42,15 @@ String.prototype.to_unix_file_name = ->
 		throw 'Invalid Unix file name: ' + @
 	@replace(/\//g, encodeURIComponent('/'))
 	#.replace(/\|/g, encodeURIComponent('|')).replace(/;/g, encodeURIComponent(';'))
+
+Object.key = (object) ->
+	the_key = null
 	
+	for key, value of object
+		the_key = key
+	
+	return the_key
+
 Object.merge_recursive = (obj1, obj2) ->
 	for ключ, значение of obj2
 		#if obj2.hasOwnProperty(ключ)

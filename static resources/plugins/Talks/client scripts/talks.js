@@ -101,7 +101,7 @@
 				(function() { message.removeClass('new') }).delay(500)
 			}
 			
-			message.find('.content').html(Wiki_processor.decorate(data.сообщение))
+			message.find('.content').html(Markup.decorate(data.сообщение))
 			
 			postprocess_rich_content(message)
 		}

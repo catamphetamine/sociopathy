@@ -148,7 +148,7 @@ var Новости = new (new Class
 		
 		if (show_bubble)
 		{
-			var text = Wiki_processor.simplify(options.text)
+			var text = Markup.simplify(options.text)
 			
 			text = text.just_one_line()
 			

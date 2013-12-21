@@ -72,7 +72,7 @@
 		
 		set_title(page.data.заметка.название)
 		
-		page.get('article > section').html(Wiki_processor.decorate(page.data.заметка.содержимое,
+		page.get('article > section').html(Markup.decorate(page.data.заметка.содержимое,
 		{
 			process_element: function(decorated, wiki)
 			{
@@ -196,7 +196,7 @@
 	
 	page.Data_store.collect_edited = function()
 	{
-		var content = Wiki_processor.parse_and_validate(visual_editor.editor.html(),
+		var content = Markup.parse_and_validate(visual_editor.editor.html(),
 		{
 			/*process_element: function(wiki, decorated)
 			{
@@ -267,7 +267,7 @@
 				}
 				
 				set_title(data.название)
-				visual_editor.editor.set_content(Wiki_processor.decorate(data.содержимое))
+				visual_editor.editor.set_content(Markup.decorate(data.содержимое))
 				*/
 			}
 		})
@@ -301,7 +301,7 @@
 			
 			Режим.обычный()
 			
-			visual_editor.editor.load_content(Wiki_processor.decorate(page.Data_store.unmodified_data.content))
+			visual_editor.editor.load_content(Markup.decorate(page.Data_store.unmodified_data.content))
 			
 			postprocess_rich_content(visual_editor.editor.get_content())
 			

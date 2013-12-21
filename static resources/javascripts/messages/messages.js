@@ -667,14 +667,14 @@ var Messages = new Class
 				finish(false)
 			}
 			
-			Wiki_processor.parse_and_validate(html, function(message)
+			Markup.parse_and_validate(html, function(message)
 			{
 				//console.log('Send message: ' + message)
 				
 				if (!message)
 					return failed()
 				
-				var simplified = Wiki_processor.simplify(message)
+				var simplified = Markup.simplify(message)
 				
 				if (messages.options.send_message(message, { simplified: simplified }) === false)
 					return failed()

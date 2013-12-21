@@ -10,8 +10,11 @@ require './tools/language'
 
 global.mode = 'development'
 
+global.client_code_path = (path) ->
+	return global.Root_folder + '/static resources/javascripts/' + path + '.js'
+
 global.require_client_code = (path) ->
-	require __dirname + '/../../static resources/javascripts/' + path + '.js'
+	require global.client_code_path(path)
 
 get_launch_options = ->
 	index = process.argv.indexOf('options')
@@ -92,7 +95,8 @@ fiber ->
 		global.image_magick.convert.path = Options.ImageMagick.Convert.Path
 		
 		global.почта = require './core/mailer'
-		
+		require './core/markup'
+
 		global.session = require './session'
 		
 		#global.почта.письмо(кому: 'Николай Кучумов <kuchumovn@gmail.com>', тема: 'Test', сообщение: 'Проверка {{связи}}', данные: { связи: 'связи' })

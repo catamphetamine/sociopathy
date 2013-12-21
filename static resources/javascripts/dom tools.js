@@ -386,8 +386,9 @@ var Dom =
 	
 	normalize: function(element)
 	{
-		if (element instanceof jQuery)
-			element = element[0]
+		if (window.jQuery)
+			if (element instanceof jQuery)
+				element = element[0]
 			
 		return element
 	},

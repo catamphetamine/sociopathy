@@ -541,7 +541,7 @@ var Interactive_messages = function(options)
 			
 			edited_messages.for_each(function()
 			{
-				Wiki_processor.parse_and_validate(this.content, (function(content)
+				Markup.parse_and_validate(this.content, (function(content)
 				{
 				      this.content = content
 				      countdown()

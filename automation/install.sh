@@ -138,6 +138,7 @@ cd repository
 npm install forever
 npm install mongodb
 npm install socket.io-client@0.9.16
+npm install domjs
 cd ~
 #
 # maybe redirect all the logs to this folder

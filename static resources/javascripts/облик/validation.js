@@ -204,7 +204,7 @@ Validation.писарь.source = function(value, callback)
 {
 	try
 	{
-		Wiki_processor.validate(value)
+		Markup.validate(value)
 	}
 	catch (error)
 	{

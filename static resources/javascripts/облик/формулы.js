@@ -81,18 +81,3 @@ function refresh_formulae(options, callback)
 	}
 	*/
 }
-
-function delimit_formula(formula, type)
-{
-	switch (type)
-	{
-		case 'inline':
-			return '\\(' + formula + '\\)'
-		
-		case 'block':
-			return '\\[' + formula + '\\]'
-		
-		default:
-			return formula
-	}
-}

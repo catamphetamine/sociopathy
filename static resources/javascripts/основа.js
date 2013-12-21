@@ -172,7 +172,7 @@ var scripts =
 	'youtube',
 	'vimeo',
 	
-	'wiki processor',
+	'markup',
 	
 	'socket.io',
 	
@@ -248,11 +248,11 @@ function script_insertion(all_scripts, root_path, finished)
 	return insert_scripts
 }
 
-var Wiki_processor
+var Markup
 
 var insert_scripts = script_insertion(scripts, '/javascripts', function()
 {
-	Wiki_processor = window.Wiki_processor
+	Markup = window.Markup
 
 	// к этому времени jQuery уже подгружен
 	$(document).trigger('scripts_loaded')
