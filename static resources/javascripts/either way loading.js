@@ -141,8 +141,8 @@ var Pagination = new Class
 	
 	set_page: function(page)
 	{
-		console.log('Set page ' + page)
-		console.log('Total pages ' + this.pages)
+		//console.log('Set page ' + page)
+		//console.log('Total pages ' + this.pages)
 		
 		if (this.page === page)
 			return
@@ -150,6 +150,9 @@ var Pagination = new Class
 		this.page = page
 		
 		this.position_current_sector()
+		
+		if (this.page === 0)
+			return
 		
 		if (this.page === this.pages)
 			this.hide()
@@ -196,7 +199,7 @@ var Pagination = new Class
 	
 	hide: function()
 	{
-		console.log('Hide pagination')
+		//console.log('Hide pagination')
 		
 		this.shown = false
 		this.pagination.fade_out(this.options.fade_duration)
@@ -204,7 +207,7 @@ var Pagination = new Class
 	
 	show: function()
 	{
-		console.log('Show pagination')
+		//console.log('Show pagination')
 	
 		if (this.shown)
 			return
@@ -695,7 +698,7 @@ var Either_way_loading = new Class
 	
 	set_page_number: function(number)
 	{
-		console.log('Set page number ' + number)
+		//console.log('Set page number ' + number)
 	
 		if (this.options.set_url !== false)
 		{

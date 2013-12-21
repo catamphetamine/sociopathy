@@ -84,18 +84,18 @@ Visual_editor.implement
 			},
 			'p': function(container)
 			{
-				var trim_paragraph = trim_element
+				var trim_paragraph = Dom.trim_element
 				
 				if (this.editor.caret.is_in_the_beginning_of_container())
 				{
 					visual_editor.new_paragraph({ before: true })
-					return trim_paragraph(container)
+					return trim_paragraph(container.node())
 				}
 				
 				if (this.editor.caret.is_in_the_end_of_container())
 				{
 					visual_editor.new_paragraph()
-					return trim_paragraph(container)
+					return trim_paragraph(container.node())
 				}
 				
 				this.editor.insert_html('</p><p ' + this.editor.get_marker_html() + '>')

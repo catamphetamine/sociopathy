@@ -83,18 +83,18 @@ Wiki_processor = new (new Class
 	{
 		xml = this.translate(xml.trim())
 		
-		var result = $.validate_xml(xml)
+		var result = Dom.validate_xml(xml)
 		
 		if (!result)
 			return
 		
 		if (!result.cause)
 		{
-			var document = $(result)
+			var document = result
 			
-			var inner_paragraph = document.find('paragraph paragraph')
-			if (inner_paragraph.exists())
-				throw { ошибка: 'Нарушено форматирование текста: абзац внутри абзаца', explanation: inner_paragraph.outer_html() , verbose: true }
+			var inner_paragraph = document.querySelector('paragraph paragraph')
+			if (inner_paragraph)
+				throw { ошибка: 'Нарушено форматирование текста: абзац внутри абзаца', explanation: Dom.outer_html(inner_paragraph) , verbose: true }
 			
 			return
 		}
@@ -127,7 +127,10 @@ Wiki_processor = new (new Class
 			
 			//console.log('Simplifying: ' + xml)
 			
-			xml = $('<wiki/>').html(xml).node()
+			var wiki = document.createElement('wiki')
+			wiki.innerHTML = xml
+			
+			xml = wiki
 		}
 		
 		var processor = this
@@ -149,29 +152,15 @@ Wiki_processor = new (new Class
 		//console.log('simplify_node')
 		//console.log(node)
 		
-		var element
-		if (!Dom_tools.is_text_node(node))
-			element = $(node)
-	
 		var syntax
-		if (element)
+		if (!Dom.is_text_node(node))
 			syntax = processor.get_syntax_by_translation(node.tagName.toLowerCase())
-			
-		//console.log('element')
-		//console.log(element)
 		
-		/*
-		if (Dom_tools.is_text_node(node))
-			console.log(node)
-		else
-			console.log(element.outer_html())
-		*/
-			
 		//console.log('syntax')
 		//console.log(syntax)
 		
 		if (!syntax)
-			return Dom_tools.to_text(node)
+			return Dom.text(node)
 	
 		//console.log('syntax found')
 		
@@ -183,14 +172,14 @@ Wiki_processor = new (new Class
 		var simplified
 		if (syntax.simplified)
 		{
-			simplified = syntax.simplify(element, { is_last: node.parentNode.lastChild === node })
+			simplified = syntax.simplify(node, { is_last: node.parentNode.lastChild === node })
 		}
 		else if (is_root_node)
 		{
 			simplified = ''
 		}
 		else
-			simplified = element.text()
+			simplified = Dom.text(node)
 		
 		if (is_root_node)
 		{
@@ -201,25 +190,15 @@ Wiki_processor = new (new Class
 		//console.log('simplified')
 		//console.log(simplified)
 		
-		//if (options.process_element)
-		//	options.process_element(html_element, element)
-		
-		//html_element.attr('author', element.attr('author'))
-		
-		//if (syntax.activate)
-		//	syntax.activate(html_element)
-		
 		if (syntax.break_simplification)
 			return simplified
 		
-		//console.log(html_element)
 		//console.log('process children')
 		//console.log(node.childNodes)
 		
 		Array.for_each(node.childNodes, function()
 		{
 			//console.log(this)
-			//console.log(html_element.node())
 			
 			simplified += processor.simplify_node(this, options)
 		})
@@ -241,18 +220,22 @@ Wiki_processor = new (new Class
 			xml = this.translate(xml)
 			
 			//console.log(xml)
-			xml = $('<wiki/>').html(xml).node()
+			
+			var wiki = document.createElement('wiki')
+			wiki.innerHTML = xml
+			
+			xml = wiki
 		}
 		
 		var processor = this
-		var output = $('<xml/>')
+		var output = document.createElement('xml')
 		
 		Array.for_each(xml.childNodes, function()
 		{
-			processor.decorate_node(this, output.node(), options)
+			processor.decorate_node(this, output, options)
 		})
 		
-		return output.html()
+		return output.innerHTML
 	},
 			
 	decorate_node: function(node, target, options)
@@ -268,16 +251,9 @@ Wiki_processor = new (new Class
 		//console.log('target')
 		//console.log(target)
 		
-		var element
-		if (!Dom_tools.is_text_node(node))
-			element = $(node)
-	
 		var syntax
-		if (element)
+		if (!Dom.is_text_node(node))
 			syntax = processor.get_syntax_by_translation(node.tagName.toLowerCase())
-			
-		//console.log('element')
-		//console.log(element)
 			
 		//console.log('syntax')
 		//console.log(syntax)
@@ -287,31 +263,25 @@ Wiki_processor = new (new Class
 			if (target.tagName.toLowerCase() === 'xml')
 				return
 			
-			return Dom_tools.append_text(Dom_tools.to_text(node), target)
+			return Dom.append_text(Dom.text(node), target)
 		}
 	
 		//console.log('syntax found')
 		
-		var html_element
+		var html_node
 		if (syntax.html_tag)
 		{
-			html_element = $('<' + syntax.html_tag + '/>')
+			html_node = document.createElement(syntax.html_tag)
 			if (syntax.decorate)
-				syntax.decorate(element, html_element)
+				syntax.decorate(node, html_node)
 		}
 		else
-			html_element = syntax.decorate(element)
+			html_node = syntax.decorate(node)
 		
-		target = $(target)
+		if (options.process_node)
+			options.process_node(html_node, node)
 		
-		if (options.process_element)
-			options.process_element(html_element, element)
-		
-		//html_element.attr('author', element.attr('author'))
-		html_element.appendTo(target)
-		
-		//if (syntax.activate)
-		//	syntax.activate(html_element)
+		target.appendChild(html_node)
 		
 		if (syntax.break_decoration)
 			return
@@ -322,7 +292,7 @@ Wiki_processor = new (new Class
 		
 		Array.for_each(node.childNodes, function()
 		{
-			processor.decorate_node(this, html_element.node(), options)
+			processor.decorate_node(this, html_node, options)
 		})
 		
 		//console.log('finished processing children')
@@ -379,24 +349,28 @@ Wiki_processor = new (new Class
 		options = options || {}
 		
 		if (typeof(xml) === 'string')
-			xml = $('<xml/>').html(xml)
-		
-		//xml.find('.hint').remove()
-		xml = xml.node()
+		{
+			//console.log(xml)
+			
+			var xml_node = document.createElement('xml')
+			xml_node.innerHTML = xml
+			
+			xml = xml_node
+		}
 		
 		var processor = this
-		var output = $('<wiki/>')
+		var output = document.createElement('wiki')
 		
 		function finish()
 		{
-			output.find('paragraph').each(function()
+			Array.for_each(output.querySelectorAll('paragraph'), function()
 			{
-				var paragraph = $(this)
+				var paragraph = this
 				
-				trim_element(paragraph)
+				Dom.trim_element(paragraph)
 				
-				if (paragraph.is_empty())
-					paragraph.remove()
+				if (Dom.is_empty(paragraph))
+					Dom.remove(paragraph)
 			})
 			
 			var xml = output.html()
@@ -446,7 +420,7 @@ Wiki_processor = new (new Class
 		{
 			Array.for_each(xml.childNodes, function()
 			{
-				processor.parse_node(this, output.node(), options, callback)
+				processor.parse_node(this, output, options, callback)
 			})
 		}
 		
@@ -486,21 +460,18 @@ Wiki_processor = new (new Class
 		//console.log('target')
 		//console.log(target)
 		
-		var element
-		if (!Dom_tools.is_text_node(node))
-		{
-			element = $(node)
-			
-			if (element.is('br')) // && element.parent().is('p'))
-				return finished()
-		}
-	
 		var syntax
-		if (element)
-			syntax = processor.find_syntax_for(element)
 		
-		//console.log('element')
-		//console.log(element)
+		if (!Dom.is_text_node(node))
+		{
+			if (Dom_tools(node.is('br')))
+				return finished()
+				
+			syntax = processor.find_syntax_for(node)
+		}
+		
+		//console.log('node')
+		//console.log(node)
 			
 		//console.log('syntax')
 		//console.log(syntax)
@@ -520,34 +491,34 @@ Wiki_processor = new (new Class
 				return target.tagName && target.tagName.toLowerCase() === translation
 			}
 			
-			return this.append_text(Dom_tools.to_text(node), target, { parse: is('абзац') || is('автор') || is('текст') }, callback)
+			return this.append_text(Dom.text(node), target, { parse: is('абзац') || is('автор') || is('текст') }, callback)
 		}
 	
 		if (syntax.is_dummy)
-			if (syntax.is_dummy(element))
+			if (syntax.is_dummy(node))
 				return finished()
 		
-		var wiki_element
+		var tag
 		if (!syntax.translation)
-			wiki_element = $('<' + syntax.tag + '/>')
+			tag = syntax.tag
 		else if (typeof syntax.translation === 'string')
-			wiki_element = $('<' + syntax.translation + '/>')
+			tag = syntax.translation
 		else
-			wiki_element = $('<' + Object.key(syntax.translation) + '/>')
+			tag = Object.key(syntax.translation)
+		
+		var wiki_element = document.createElement(tag)
 			
 		if (syntax.parse)
-			syntax.parse(element, wiki_element)
-		
-		target = $(target)
+			syntax.parse(node, wiki_element)
 		
 		if (options.process_element)
-			options.process_element(wiki_element, element)
+			options.process_element(wiki_element, node)
 		
 		if (syntax.content_required)
-			if (element.is_empty())
+			if (Dom.is_empty(node))
 				return finished()
 		
-		wiki_element.appendTo(target)
+		target.appendChild(wiki_element)
 		
 		if (syntax.break_parsing)
 			return finished()
@@ -558,7 +529,7 @@ Wiki_processor = new (new Class
 		
 		function finish()
 		{
-			trim_element(wiki_element)
+			Dom.trim_element(wiki_element)
 			
 			if (syntax.finish)
 				syntax.finish(wiki_element)
@@ -566,11 +537,11 @@ Wiki_processor = new (new Class
 		
 		function iterate(callback)
 		{
-			var wiki_node = wiki_element.node()
+			var wiki_node = wiki_element
 			
 			Array.for_each(node.childNodes, function()
 			{
-				processor.parse_node(this, wiki_node, element, function(result)
+				processor.parse_node(this, wiki_node, node, function(result)
 				{
 					if (result)
 						wiki_node = result
@@ -609,11 +580,11 @@ Wiki_processor = new (new Class
 		
 		// если не парсить текст "умным" образом, то просто текст будет
 		if (!callback)
-			return Dom_tools.append_text(text, to())
+			return Dom.append_text(text, to())
 			
 		function just_append_text()
 		{
-			Dom_tools.append_text(text, to())
+			Dom.append_text(text, to())
 			callback(to())
 		}
 	
@@ -633,12 +604,12 @@ Wiki_processor = new (new Class
 		function append(what, separator)
 		{
 			if (typeof what === 'string')
-				Dom_tools.append_text(what, to())
+				Dom.append_text(what, to())
 			else
 				to().appendChild(what)
 			
 			if (typeof separator !== 'undefined')
-				Dom_tools.append_text(separator, to())
+				Dom.append_text(separator, to())
 		}
 		
 		var pure_text_blocks = []
@@ -746,48 +717,52 @@ Wiki_processor = new (new Class
 						var width = Wiki_processor.Syntax.картинка.translation[tag].ширина
 						var height = Wiki_processor.Syntax.картинка.translation[tag].высота
 						
-						var picture = $('<' + tag + '/>')
+						var picture = document.createElement(tag)
 						
-						picture.attr(width, result.width)
-						picture.attr(height, result.height)
+						picture.setAttribute(width, result.width)
+						picture.setAttribute(height, result.height)
 						
-						picture.text(decodeURI(this.fragment))
+						Dom.text(picture, decodeURI(this.fragment))
 							
-						append(picture.node(), this.separator)
+						append(picture, this.separator)
 						return next()
 					}
 					
 					if (Smart_parser.ссылка_на_видео_на_youtube(this.fragment)
-					    && to().tagName.toLowerCase() === 'paragraph')
+					    && Dom.is(to(), 'paragraph'))
 					{
 						var tag = 'youtube'
 						
-						var video = $('<' + tag + '/>')
-						video.html(Youtube.Video.id(this.fragment))
+						var video = document.createElement(tag)
+						video.innerHTML = Youtube.Video.id(this.fragment)
 							
-						video.insert_after(to())
-						target = $('<paragraph/>').appendTo(to().parentNode).node()
+						Dom.insert_x_after_y(video, to())
+						
+						target = document.createElement('paragraph')
+						to().parentNode.appendChild(target)
 						
 						return next()
 					}
 					
 					if (Smart_parser.ссылка_на_видео_на_vimeo(this.fragment)
-					    && to().tagName.toLowerCase() === 'paragraph')
+					     && Dom.is(to(), 'paragraph'))
 					{
 						var tag = 'vimeo'
 						
-						var video = $('<' + tag + '/>')
-						video.html(Vimeo.Video.id(this.fragment))
+						var video = document.createElement(tag)
+						video.innerHTML = Vimeo.Video.id(this.fragment)
 							
-						video.insert_after(to())
-						target = $('<paragraph/>').appendTo(to().parentNode).node()
+						Dom.insert_x_after_y(video, to())
+						
+						target = document.createElement('paragraph')
+						to().parentNode.appendChild(target)
 						
 						return next()
 					}
 				
 					var link = Smart_parser.просто_ссылка(this.fragment)
 						
-					append(link.node(), this.separator)
+					append(link, this.separator)
 					
 					return next()
 				})
@@ -836,7 +811,7 @@ Wiki_processor = new (new Class
 		//console.log('*** html ***')
 		//console.log(html)
 		
-		$(html).appendTo(body)
+		body.appendChild(html)
 		
 		//console.log('*** parsing html ***')
 		
@@ -847,7 +822,8 @@ Wiki_processor = new (new Class
 			//console.log('*** wiki ***')
 			//console.log(same_wiki)
 			
-			$('<pre/>').text(same_wiki).appendTo(body)
+			var pre = document.createElement('pre')
+			body.appendChild(Dom.text(pre, same_wiki))
 			
 			if (same_wiki != wiki)
 				throw 'Wiki processor malfunction'
@@ -886,14 +862,14 @@ Wiki_processor.Syntax =
 		
 		is_dummy: function(element)
 		{
-			if (element.hasClass('hint'))
+			if (element.classList.contains('hint'))
 				return true
 		},
 		
 		decorate: function(from, to)
 		{
 			var alignment
-			switch (from.attr('alignment'))
+			switch (from.getAttribute('alignment'))
 			{
 				case 'влево':
 					alignment = 'left'
@@ -913,7 +889,7 @@ Wiki_processor.Syntax =
 			}
 			
 			if (alignment)
-				to.css('text-align', alignment)
+				to.style.textAlign = alignment
 			
 			return to
 		},
@@ -921,7 +897,7 @@ Wiki_processor.Syntax =
 		parse: function(from, to)
 		{
 			var выравнивание
-			switch (from.css('text-align'))
+			switch (from.style.textAlign)
 			{
 				case 'left':
 					выравнивание = 'влево'
@@ -941,7 +917,7 @@ Wiki_processor.Syntax =
 			}
 			
 			if (выравнивание)
-				to.attr('alignment', выравнивание)
+				to.setAttribute('alignment', выравнивание)
 			
 			return to
 		}
@@ -954,16 +930,18 @@ Wiki_processor.Syntax =
 		
 		is_dummy: function(element)
 		{
-			if (element.find('> .text').hasClass('hint'))
+			var text = element.querySelector('> .text')
+				
+			if (text.classList.contains('hint'))
 				return true
 			
-			if (element.find('> .text').is_empty())
+			if (Dom.is_empty(text))
 				return true
 		},
 	
 		decorate: function(from, to)
 		{
-			return to.addClass('citation')
+			return to.classList.add('citation')
 		}
 	},
 	текст:
@@ -974,7 +952,7 @@ Wiki_processor.Syntax =
 		
 		decorate: function(from, to)
 		{
-			return to.addClass('text')
+			return to.classList.add('text')
 		}
 	},
 	автор:
@@ -987,21 +965,21 @@ Wiki_processor.Syntax =
 	
 		simplify: function(from)
 		{
-			return ' (' + from.text() + ')'
+			return ' (' + Dom.text(from) + ')'
 		},
 		
 		is_dummy: function(element)
 		{
-			if (element.hasClass('hint'))
+			if (element.classList.contains('hint'))
 				return true
 			
-			if (element.is_empty())
+			if (Dom.is_empty(element))
 				return true
 		},
 		
 		decorate: function(from, to)
 		{
-			return to.addClass('author')
+			return to.classList.add('author')
 		}
 	},
 	заголовок_2:
@@ -1013,7 +991,7 @@ Wiki_processor.Syntax =
 		
 		is_dummy: function(element)
 		{
-			if (element.hasClass('hint'))
+			if (element.classList.contains('hint'))
 				return true
 		}
 	},
@@ -1039,7 +1017,7 @@ Wiki_processor.Syntax =
 		
 		is_dummy: function(element)
 		{
-			if ($(element.node().firstChild).hasClass('hint'))
+			if (element.firstChild.classList.contains('hint'))
 				return true
 		}
 	},
@@ -1052,16 +1030,16 @@ Wiki_processor.Syntax =
 		
 		is_dummy: function(element)
 		{
-			if (element.hasClass('hint'))
+			if (element.classList.contains('hint'))
 				return true
 			
-			if (element.html().trim() === '')
+			if (element.innerHTML.trim() === '')
 				return true
 		},
 		
 		simplify: function(from, info)
 		{
-			var text = from.text()
+			var text = Dom.text(from)
 			
 			if (!info.is_last)
 				text += ', '
@@ -1084,37 +1062,34 @@ Wiki_processor.Syntax =
 		
 		is_dummy: function(element)
 		{
-			if (element.hasClass('hint'))
+			if (element.classList.contains('hint'))
 				return true
 			
-			if (element.html().trim() === '')
+			if (element.innerHTML.trim() === '')
 				return true
 		},
 		
 		decorate: function(from, to)
 		{
-			var url = from.attr('at')
+			var url = from.getAttribute('at')
 			
-			to.attr
-			({
-				type: 'hyperlink',
-				href: url
-			})
+			to.setAttribute('type', 'hyperlink')
+			to.setAttribute('href', url)
 			
 			if (!is_internal_url(url))
-				to.attr('target', '_blank')
+				to.setAttribute('target', '_blank')
 			
 			return to
 		},
 		
 		parse: function(from, to)
 		{
-			var url = decodeURI(from.attr('href'))
+			var url = decodeURI(from.getAttribute('href'))
 			
 			if (is_external_internal_url(url))
 				url = is_external_internal_url(url)
 				
-			to.attr('at', url)
+			to.setAttribute('at', url)
 			
 			return to
 		}
@@ -1145,7 +1120,7 @@ Wiki_processor.Syntax =
 		decorate: function(from, to)
 		{
 			var float
-			switch (from.attr('float'))
+			switch (from.getAttribute('float'))
 			{
 				case 'слева':
 					float = 'left'
@@ -1160,27 +1135,23 @@ Wiki_processor.Syntax =
 					break
 			}
 			
-			to.css('float', float)
+			to.style.float = float
 			
-			return to.attr
-			({
-				src: from.html(),
-				width: from.attr('width'),
-				height: from.attr('height'),
-				type: 'picture'
-			})
+			to.setAttribute('src', from.innerHTML)
+			to.setAttribute('width', from.getAttribute('width'))
+			to.setAttribute('height', from.getAttribute('height'))
+			to.setAttribute('type', 'picture')
+			
+			return to
 		},
 		
 		parse: function(from, to)
 		{
-			to.attr
-			({
-				width: from.attr('width'),
-				height: from.attr('height')
-			})
+			to.setAttribute('width', from.getAttribute('width'))
+			to.setAttribute('height', from.getAttribute('height'))
 			
 			var положение
-			switch (from.css('float'))
+			switch (from.style.float)
 			{
 				case 'left':
 					положение = 'слева'
@@ -1195,9 +1166,11 @@ Wiki_processor.Syntax =
 					break
 			}
 			
-			to.attr('float', положение)
+			to.setAttribute('float', положение)
 			
-			return to.html(from.attr('src'))
+			to.innerHTML = from.getAttribute('src')
+			
+			return to
 		}
 	},
 	формула:
@@ -1225,34 +1198,33 @@ Wiki_processor.Syntax =
 		
 		decorate: function(from, to)
 		{
-			to.addClass('tex')
+			to.classList.add('tex')
 			
-			if (from.attr('display') === 'в строке')
+			if (from.getAttribute('display') === 'в строке')
 			{
-				to.html(delimit_formula(from.html(), 'inline'))
-				to.css('display', 'inline')
+				to.innerHTML = delimit_formula(from.innerHTML, 'inline')
+				to.style.display = 'inline'
 			}
 			else
 			{
-				to.html(delimit_formula(from.html(), 'block'))
-				to.css('display', 'block')
+				to.innerHTML = delimit_formula(from.innerHTML, 'block')
+				to.style.display = 'block'
 			}
 			
-			return to.attr
-			({
-				type: 'formula',
-				formula: from.html()
-			})
+			to.setAttribute('type', 'formula')
+			to.setAttribute('formula', from.innerHTML)
+			
+			return to
 		},
 		
 		parse: function(from, to)
 		{
-			to.html(from.attr('formula'))
+			to.innerHTML = from.getAttribute('formula')
 			
-			if (from.css('display') === 'inline')
-				to.attr('display', 'в строке')
+			if (from.style.display === 'inline')
+				to.setAttribute('display', 'в строке')
 			else
-				to.attr('display', 'вне строки')
+				to.setAttribute('display', 'вне строки')
 			
 			return to
 		}
@@ -1266,7 +1238,7 @@ Wiki_processor.Syntax =
 		
 		is_dummy: function(element)
 		{
-			if (element.hasClass('hint'))
+			if (element.classList.contains('hint'))
 				return true
 		}
 	},
@@ -1279,7 +1251,7 @@ Wiki_processor.Syntax =
 		
 		is_dummy: function(element)
 		{
-			if (element.hasClass('hint'))
+			if (element.classList.contains('hint'))
 				return true
 		}
 	},
@@ -1292,7 +1264,7 @@ Wiki_processor.Syntax =
 		
 		is_dummy: function(element)
 		{
-			if (element.hasClass('hint'))
+			if (element.classList.contains('hint'))
 				return true
 		}
 	},
@@ -1305,7 +1277,7 @@ Wiki_processor.Syntax =
 		
 		is_dummy: function(element)
 		{
-			if (element.hasClass('hint'))
+			if (element.classList.contains('hint'))
 				return true
 		}
 	},
@@ -1337,11 +1309,11 @@ Wiki_processor.Syntax =
 		
 		decorate: function(from, to)
 		{
-			var url = from.text()
-			to.addClass('audio_player')
-			var link = to.audio_player('link', { url: url, title: from.attr('title') })
-			link.appendTo(to)
-			to.attr('type', 'audio')
+			var url = Dom.text(from)
+			to.classList.add('audio_player')
+			var link = to.audio_player('link', { url: url, title: from.getAttribute('title') })
+			to.appendChild(link)
+			to.setAttribute('type', 'audio')
 		},
 		
 		break_parsing: true,
@@ -1349,8 +1321,9 @@ Wiki_processor.Syntax =
 		
 		parse: function(from, to)
 		{
-			to.attr('title', from.audio_player('title'))
-			return to.text(from.audio_player('url'))
+			to.setAttribute('title', from.audio_player('title'))
+			Dom.text(to, text(from.audio_player('url')))
+			return to
 		}
 	},
 	youtube:
@@ -1359,8 +1332,15 @@ Wiki_processor.Syntax =
 		
 		decorate: function(from)
 		{
-			var video_player = $('<div/>').addClass('video_player').attr('hosting', 'youtube')
-			video_player.html($(Youtube.Video.embed_code(from.html())).attr('type', 'video'))
+			var video_player = document.createElement('div')
+			
+			video_player.classList.add('video_player')
+			
+			video_player.setAttribute('hosting', 'youtube')
+			
+			video_player.innerHTML = Youtube.Video.embed_code(from.innerHTML)
+			video_player.firstChild.setAttribute('type', 'video')
+			
 			return video_player
 		},
 		
@@ -1378,9 +1358,9 @@ Wiki_processor.Syntax =
 		{
 			var url = 'http://www.youtube.com/embed/'
 			
-			var iframe = from.find('> iframe')
+			var iframe = from.querySelector('> iframe')
 			
-			var src = iframe.attr('src')
+			var src = iframe.getAttribute('src')
 			if (!src.starts_with(url))
 				throw 'Invalid youtube video source: ' + src
 			
@@ -1388,7 +1368,8 @@ Wiki_processor.Syntax =
 			if (id.has('?'))
 				id = id.substring(0, id.indexOf('?'))
 			
-			return to.html(id)
+			to.innerHTML = id
+			return to
 		}
 	},
 	vimeo:
@@ -1397,8 +1378,15 @@ Wiki_processor.Syntax =
 		
 		decorate: function(from)
 		{
-			var video_player = $('<div/>').addClass('video_player').attr('hosting', 'vimeo')
-			video_player.html($(Vimeo.Video.embed_code(from.html())).attr('type', 'video'))
+			var video_player = document.createElement('div')
+			
+			video_player.classList.add('video_player')
+			
+			video_player.setAttribute('hosting', 'vimeo')
+			
+			video_player.innerHTML = Vimeo.Video.embed_code(from.innerHTML)
+			video_player.firstChild.setAttribute('type', 'video')
+			
 			return video_player
 		},
 		
@@ -1416,9 +1404,9 @@ Wiki_processor.Syntax =
 		{
 			var url = 'http://player.vimeo.com/video/'
 			
-			var iframe = from.find('> iframe')
+			var iframe = from.querySelector('> iframe')
 			
-			var src = iframe.attr('src')
+			var src = iframe.getAttribute('src')
 			if (!src.starts_with(url))
 				throw 'Invalid vimeo video source: ' + src
 			
@@ -1426,7 +1414,8 @@ Wiki_processor.Syntax =
 			if (id.has('?'))
 				id = id.substring(0, id.indexOf('?'))
 			
-			return to.html(id)
+			to.innerHTML = id
+			return to
 		}
 	}
 }
@@ -1515,15 +1504,15 @@ var Smart_parser = new (new Class
 		if (is_external_internal_url(url))
 			url = is_external_internal_url(url)
 		
-		var link = $('<' + tag + '/>')
-		link.attr(at, url)
+		var link = document.createElement(tag)
+		link.setAttribute(at, url)
 		
 		var uri = Uri.assemble(Uri.parse(url), { omit_common_protocols: true })
 		
 		uri = uri.cut_in_the_start('www.')
 		uri = uri.cut_in_the_end('/')
 		
-		link.text(uri)
+		Dom.text(link, uri)
 		
 		return link
 	}

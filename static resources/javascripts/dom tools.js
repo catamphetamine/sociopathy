@@ -164,8 +164,7 @@ var Dom_tools =
 		if (Dom_tools.is_text_node(node))
 			return node.nodeValue
 		
-		return $(node).text()
-		//return $(node).outer_html()
+		return node.innerText || node.textContent
 	},
 	
 	insert_x_after_y: function (x, y)
@@ -419,14 +418,17 @@ var Dom_tools =
 	
 	text: function(element, text, options)
 	{
+		if (!text)
+			return this.to_text(element)
+	
 		options = options || {}
 		
 		text = document.createTextNode(text)
 		
-		if (options.before)
-			element.insertBefore(text, options.before)
-		else
+		if (!options.before)
 			element.appendChild(text)
+		else
+			element.insertBefore(text, options.before)
 		
 		return text
 	},
@@ -457,8 +459,189 @@ var Dom_tools =
 		return false
 	},
 	
+	add_class: function(element, style_class)
+	{
+		element.classList.add(style_class)
+	},
+	
 	remove_class: function(element, style_class)
 	{
-		element.className.replace(new RegExp('\b' + RegExp.escape(style_class) + '\b'), '')
+		element.classList.remove(style_class)
+		//element.className.replace(new RegExp('\b' + RegExp.escape(style_class) + '\b'), '')
+	},
+	
+	has_class: function(element, style_class)
+	{
+		return element.classList.contains(style_class)
+	},
+	
+	// div.classList.toggle("visible")
+	
+	is_empty: function(node)
+	{
+		// if it has no child nodes
+		if (node.childNodes.length === 0)
+			return true
+	
+		// if the only child is text, and it's empty
+		if (node.innerHTML.trim() === '')
+			return true
+	},
+	
+	is: function(element, tag)
+	{
+		if (tag.contains('.') || tag.contains(' ') || tag.contains('>'))
+			throw 'Just tag names are supported'
+			
+		return this.tag(element) === tag
+	},
+	
+	tag: function(element)
+	{
+		return element.tagName.toLowerCase()
+	},
+	
+	insert_x_after_y: function(x, y)
+	{
+		y.parentNode.insertBefore(x, y.nextSibling)
+	},
+	
+	insert_x_before_y: function(x, y)
+	{
+		y.parentNode.insertBefore(x, y)
+	},
+	
+	trim_element: function(element)
+	{
+		function is_br(node)
+		{
+			return !Dom_tools.is_text_node(node) && Dom_tools.is(node, 'br')
+		}
+		
+		function remove(node)
+		{
+			element.removeChild(node)
+		}
+		
+		function remove_brs(generator)
+		{
+			var node = element[generator]
+			
+			if (is_br(node))
+			{
+				remove(node)
+				remove_brs(generator)
+			}
+		}
+		
+		function remove_whitespace_characters(generator, trimmer)
+		{
+			var node = element[generator]
+			
+			if (!Dom_tools.is_text_node(node))
+				return
+			
+			if (node.nodeValue.is_empty())
+				return
+			
+			trimmer(node, trimmer)
+		}
+		
+		if (element.childNodes.length === 0)
+			return
+		
+		// delete all leading <br/>s
+		remove_brs('firstChild')
+		
+		// delete all leading whitespace characters
+		
+		remove_whitespace_characters('firstChild', function(node, itself)
+		{
+			if (/\s/.test(node.nodeValue.first()))
+			{
+				node.nodeValue = node.nodeValue.substring(1)
+				return itself(node, itself)
+			}
+		})
+		
+		// delete all trailing <br/>s
+		remove_brs('lastChild')
+		
+		// delete all trailing whitespace characters
+		
+		remove_whitespace_characters('lastChild', function(node, itself)
+		{
+			if (/\s/.test(node.nodeValue.last()))
+			{
+				node.nodeValue = node.nodeValue.substring(0, node.nodeValue.length - 1)
+				return itself(node, itself)
+			}
+		})
+	},
+	
+	validate_xml_core: function(xml)
+	{
+		// code for Mozilla, Firefox, Opera, etc.
+		if (document.implementation.createDocument)
+		{
+			var parser = new DOMParser()
+			
+			//xml = '<!DOCTYPE P [<!ENTITY nbsp "&#xA0;">]>' + '\n\n' + xml
+			
+			var xml_document = parser.parseFromString(xml, "text/xml")
+			
+			if (xml_document.getElementsByTagName("parsererror").length > 0)
+			{
+				var error = xml_document.getElementsByTagName("parsererror")[0]
+				
+				//console.log('error:')
+				//console.log(error)
+				
+				var summary = ""
+				
+				function collect_xml_validation_errors(node)
+				{
+					if (node.nodeName == "h3")
+						return
+					
+					if (node.nodeName == "#text")
+						summary += node.nodeValue + "\n"
+					
+					var i = 0
+					while (i < node.childNodes.length)
+					{
+						collect_xml_validation_errors(node.childNodes[i])
+						i++
+					}
+				}
+				
+				collect_xml_validation_errors(error)
+				
+				throw summary.trim()
+			}
+			
+			return xml_document
+		}
+	},
+	
+	validate_xml: function(xml)
+	{
+		try
+		{
+			var document = this.validate_xml_core('<html>' + xml + '</html>')
+	
+			var text_node = Dom_tools.child_text_node(document.firstChild)
+			
+			if (text_node && text_node.nodeValue.trim())
+				return { cause: 'text node in root', explanation: text_node.nodeValue }
+				
+			return document
+		}
+		catch (error)
+		{
+			return { cause: error }
+		}
 	}
 }
+
+var Dom = Dom_tools
