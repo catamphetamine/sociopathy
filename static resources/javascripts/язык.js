@@ -401,6 +401,21 @@ Array.prototype._map = function(action)
 	return array
 }
 
+Array.map = function(array, mapper)
+{
+	var result = []
+	
+	var i = 0
+	while (i < array.length)
+	{
+		result[i] = mapper.bind(array[i])()
+		
+		i++
+	}
+	
+	return result
+}
+
 Object.path = function(object, path)
 {
 	path.split('.').forEach(function(key)

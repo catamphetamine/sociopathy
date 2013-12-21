@@ -1007,7 +1007,11 @@ Visual_editor.implement
 			button: new image_button(tools.find('.audio > *')),
 			
 			type_attribute: 'audio',
-			activation_element: function(element) { return element.audio_player('title_element') },
+			activation_element: function(element)
+			{
+				if (element.node())
+					return $(Audio_player.title_element(element.node()))
+			},
 			
 			initialize: function()
 			{
@@ -1043,7 +1047,7 @@ Visual_editor.implement
 						
 						var audio = $('<div/>').addClass('audio_player')
 						
-						var file = audio.audio_player('link', { url: data.url, title: data.title })
+						var file = Audio_player.link({ url: data.url, title: data.title })
 						file.appendTo(audio)
 										
 						tool.mark_type(audio)
@@ -1088,7 +1092,7 @@ Visual_editor.implement
 			
 			on_success: function(element)
 			{
-				element.audio_player()
+				Audio_player.show(element)
 				
 				activate_all_toolable_elements()
 			},
@@ -1097,7 +1101,7 @@ Visual_editor.implement
 			{
 				var clicked = $(event.target)
 				
-				if (clicked.audio_player('is_control'))
+				if (Audio_player.is_control(clicked.node()))
 				{
 					return
 				}
@@ -1107,8 +1111,8 @@ Visual_editor.implement
 				
 				var player = clicked.find_parent('.audio_player')
 				
-				var url = player.audio_player('url')
-				var title = player.audio_player('title')
+				var url = Audio_player.url(player.node())
+				var title = Audio_player.title(player.node())
 				
 				var url = decodeURI(url)
 				Tools.Audio.open_dialog_window({ url: url, title: title }, { element: player })
@@ -1258,18 +1262,20 @@ Visual_editor.implement
 				if (!this.type_attribute)
 					return
 				
-				var element = editor.content.find('[type="' + this.type_attribute + '"]')
+				var elements = editor.content.node().querySelectorAll('[type="' + this.type_attribute + '"]')
+				
+				var tool = this
 				
 				if (this.activation_element)
-					element = this.activation_element(element)
-					
-				this.activate(element)
+					elements = Array.map(elements, function() { return tool.activation_element(this) })
+				
+				this.activate_elements(elements)
 			}
 			
 			tool.activate = function(selector)
 			{
 				if (typeof(selector) !== 'string')
-					return this.activate_element(selector)
+					return this.activate_elements(selector)
 		
 				var tool = this
 				editor.on_event(selector, 'click.visual_editor', function(event)
@@ -1278,21 +1284,18 @@ Visual_editor.implement
 				})
 			}
 			
-			// may not work as 'live'
-			tool.activate_element = function(element)
+			tool.activate_elements = function(elements)
 			{
-				/*
-				Object.for_each(visual_editor.Tools, function(key, tool)
-				{
-					tools.activate_all()
-				})
-				return
-				*/
-				
 				var tool = this
-				element.on('click.visual_editor', function(event)
+				
+				// NodeList
+				Array.for_each(elements, function()
 				{
-					return tool.on_element_click.bind(this)(event)
+					var element = $(this)
+					element.on('click.visual_editor', function(event)
+					{
+						return tool.on_element_click.bind(element)(event)
+					})
 				})
 			}
 			
@@ -1683,10 +1686,10 @@ Visual_editor.tool_helpers =
 		{
 			where.empty()
 			
-			var file = where.audio_player('link', { url: data.url, title: data.title })
+			var file = Audio_player.link({ url: data.url, title: data.title })
 			file.appendTo(where)
 			
-			where.audio_player()
+			Audio_player.show(where)
 		}
 	}
 }

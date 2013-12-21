@@ -250,8 +250,8 @@ var Either_way_loading = new Class
 	{
 		Skip_for_pagination: 80,
 	
-		fade_in: 0.1,
-		fade_out: 0.1,
+		fade_in: 0.0,
+		fade_out: 0.0,
 		
 		previous_link:
 		{
@@ -337,7 +337,10 @@ var Either_way_loading = new Class
 				}
 				
 				if (this.resetted)
+				{
+					this.resetted = false
 					this.options.container.empty()
+				}
 			}
 			.bind(this),
 			before_output: function(elements)
@@ -348,16 +351,10 @@ var Either_way_loading = new Class
 				if (this.options.data.is_in_the_end)
 					this.options.data.is_in_the_end(!this.есть_ли_ещё)
 			
-				if (this.resetted)
-				{
-					this.resetted = false
-					this.options.container.fade_in(this.options.fade_in)
-				}
-			
 				if (!this.top_loader.latest)
 				{
 					this.top_loader.latest = this.bottom_loader.earliest
-					this.options.container.fade_in(this.options.fade_in)
+					//this.options.container.fade_in(this.options.fade_in)
 				}
 				
 				this.previous_conditional.callback()	
@@ -736,8 +733,8 @@ var Either_way_loading = new Class
 		
 		this.previous_link.fade_out(this.options.previous_link.fade_out)
 		
-		if (this.resetted)
-			this.options.container.fade_out(this.options.fade_out)
+		//if (this.resetted)
+		//	this.options.container.fade_out(this.options.fade_out)
 	},
 	
 	on_data: function(data, loader)

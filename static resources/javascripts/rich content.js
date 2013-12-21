@@ -14,7 +14,7 @@ function postprocess_rich_content(content, callback)
 		{
 			this.find('> .audio_player').each(function()
 			{
-				$(this).audio_player()
+				Audio_player.show($(this))
 			})
 		})
 		
@@ -26,7 +26,7 @@ function postprocess_rich_content(content, callback)
 			
 	content.find('> .audio_player').each(function()
 	{
-		$(this).audio_player()
+		Audio_player.show($(this))
 	})
 	
 	refresh_formulae({ where: content }, callback)
@@ -139,7 +139,7 @@ function postprocess_rich_content(content, callback)
 			if (!clicked.find_parent('[contenteditable=true]').exists())
 				return
 			
-			if (clicked.audio_player('is_control'))
+			if (Audio_player.is_control(clicked.node()))
 				return
 			
 			event.preventDefault()
@@ -152,22 +152,25 @@ function postprocess_rich_content(content, callback)
 				ok: function(data)
 				{
 					Visual_editor.tool_helpers.Audio.refresh_player(element, data)
-					element.audio_player('title_element').on('click.in_place_editing', function(event)
+					$(Audio_player.title_element(element.node())).on('click.in_place_editing', function(event)
 					{
 						audio_click_handler($(this), event)
 					})
 				}
 			})
 			
-			window.form.field('url').val(decodeURI(element.audio_player('url')))
-			window.form.field('title').val(element.audio_player('title'))
+			window.form.field('url').val(decodeURI(Audio_player.url(element.node())))
+			window.form.field('title').val(Audio_player.title(element.node()))
 			
 			window.open()
 		}
 		
-		container.find('[type="audio"]').audio_player('title_element').on('click.in_place_editing', function(event)
+		Array.for_each(container.node().querySelectorAll('[type="audio"]'), function()
 		{
-			audio_click_handler($(this), event)
+			this.on('click.in_place_editing', function(event)
+			{
+				audio_click_handler($(this), event)
+			})
 		})
 	})
 	

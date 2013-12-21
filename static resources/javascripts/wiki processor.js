@@ -1310,9 +1310,11 @@ Wiki_processor.Syntax =
 		decorate: function(from, to)
 		{
 			var url = Dom.text(from)
-			to.classList.add('audio_player')
-			var link = to.audio_player('link', { url: url, title: from.getAttribute('title') })
+			
+			var link = Audio_player.link({ url: url, title: from.getAttribute('title') })
 			to.appendChild(link)
+			
+			to.classList.add('audio_player')
 			to.setAttribute('type', 'audio')
 		},
 		
@@ -1321,8 +1323,8 @@ Wiki_processor.Syntax =
 		
 		parse: function(from, to)
 		{
-			to.setAttribute('title', from.audio_player('title'))
-			Dom.text(to, text(from.audio_player('url')))
+			to.setAttribute('title', Audio_player.title(from))
+			Dom.text(to, text(Audio_player.url(from)))
 			return to
 		}
 	},
@@ -1548,3 +1550,48 @@ test_hyperlink_parser('Blah blah blah http://google.ru/banana blah blah', 'Blah 
 test_hyperlink_parser('Blah blah blah https://google.ru/banana blah blah', 'Blah blah blah <hyperlink at="https://google.ru/banana">https://google.ru/banana</hyperlink> blah blah')
 test_hyperlink_parser('Blah blah blah ftp://google.ru/banana blah blah', 'Blah blah blah <hyperlink at="ftp://google.ru/banana">ftp://google.ru/banana</hyperlink> blah blah')
 */
+
+var Audio_player =
+{
+	url: function(element)
+	{
+		return element.querySelector('.jouele-download').getAttribute('href')
+	},
+			
+	title: function(element)
+	{
+		return Dom.text(element.querySelector('.jouele-name'))
+	},
+	
+	title_element: function(element)
+	{
+		return element.querySelector('.jouele-name')
+	},
+	
+	is_control: function(element)
+	{
+		return element.find_parent('.jouele-play-control').exists()
+	},
+			
+	link: function(options)
+	{
+		// при правке этого кода - править также в wiki processor
+		var link = document.createElement('a')
+		link.classList.add('jouele')
+		link.setAttribute('href', options.url)
+		Dom.text(link, options.title)
+		return link
+	},
+			
+	show: function(element)
+	{
+		if (!element.hasClass('audio_player'))
+		{
+			console.log('Not an audio player:')
+			console.log(element)
+			throw 'Not an audio player'
+		}
+		
+		element.jouele()
+	}
+}
