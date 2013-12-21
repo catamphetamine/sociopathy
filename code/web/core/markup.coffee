@@ -1,3 +1,7 @@
+# Since generating markup is processor intensive, it should not be done in node.js
+# It should be moved to the scala application, for example
+# The code below is a temporary solution
+
 jsdom = require('jsdom').jsdom
 
 scripts = ['mootools/core', 'язык', 'dom tools', 'markup', 'youtube', 'vimeo']
