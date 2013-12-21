@@ -273,7 +273,7 @@ var Editor = new Class
 			
 				if (bowser.webkit)
 				{
-					if (!Dom_tools.is_text_node(container.node().firstChild))
+					if (!Dom.is_text_node(container.node().firstChild))
 						if ($(container.node().firstChild).is('br'))
 							$(container.node().firstChild).remove()
 				}
@@ -308,7 +308,7 @@ var Editor = new Class
 				if (options.replace)
 				{
 					var node = caret_position.node
-					Dom_tools.replace(node, what.node())
+					Dom.replace(node, what.node())
 					
 					this.sanitize()
 					
@@ -377,20 +377,20 @@ var Editor = new Class
 			return
 		}
 		
-		if (!Dom_tools.is_text_node(container))
+		if (!Dom.is_text_node(container))
 		{
 			var offset = caret_offset
 				
 			var text_container = container.childNodes[offset]
 			
-			if (!text_container || !Dom_tools.is_text_node(text_container))
+			if (!text_container || !Dom.is_text_node(text_container))
 			{
 				var options = {}
 				
 				if (text_container)
 					options.before = text_container
 				
-				text_container = Dom_tools.text(container, inserted_text, options)
+				text_container = Dom.text(container, inserted_text, options)
 				return this.caret.create(text_container, inserted_text.length)
 			}
 			
@@ -433,13 +433,13 @@ var Editor = new Class
 			var i = 0
 			while (i < caret_position.offset)
 			{
-				inner_html.before += Dom_tools.outer_html(container.childNodes[i])
+				inner_html.before += Dom.outer_html(container.childNodes[i])
 				i++
 			}
 			
 			while (i < container.childNodes.length)
 			{
-				inner_html.after += Dom_tools.outer_html(container.childNodes[i])
+				inner_html.after += Dom.outer_html(container.childNodes[i])
 				i++
 			}
 		}
@@ -484,7 +484,7 @@ var Editor = new Class
 		
 		var outer_html = { before: '', after: '' }
 		if (parent)
-			outer_html = Dom_tools.html_before_and_after(container)
+			outer_html = Dom.html_before_and_after(container)
 		
 		html = outer_html.before +
 			inner_html.before +
@@ -493,7 +493,7 @@ var Editor = new Class
 			outer_html.after
 			
 		if (!node_chain.is_empty())
-			Dom_tools.inject_html(html, node_chain)
+			Dom.inject_html(html, node_chain)
 		else
 			container.innerHTML = html
 	
@@ -557,7 +557,7 @@ var Editor = new Class
 			
 			if (this.childNodes.length === 1)
 			{
-				if (Dom_tools.is_text_node(this.firstChild))
+				if (Dom.is_text_node(this.firstChild))
 					if (this.firstChild.nodeValue.trim() == '')
 						return $(this).remove()
 			}

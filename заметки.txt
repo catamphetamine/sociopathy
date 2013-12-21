@@ -8,7 +8,7 @@ Custom UI
 
 в болталке:
 
-collection view
+table view, в нём - web view
 
 раньше - потянуть и отпустить (загрузчик)
 ниже - endless scroll
@@ -20,6 +20,8 @@ navigation controller, в нём - collection view, и две секции:
 
 список разделов - список, иконки генерить обычные и для ретины
 список заметок - просто список
+
+заметка - web view
 
 в беседах и обсуждениях:
 

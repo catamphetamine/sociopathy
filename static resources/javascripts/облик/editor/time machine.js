@@ -113,8 +113,8 @@ Editor.Time_machine = new Class
 			snapshot.caret =
 			{
 				offset: caret_position.offset,
-				node_backtrack: Dom_tools.get_node_backtrack(caret_position.node, editor.content[0]),
-				get_container: function() { return Dom_tools.get_node_by_backtrack(this.node_backtrack.clone(), editor.content[0]) }
+				node_backtrack: Dom.get_node_backtrack(caret_position.node, editor.content[0]),
+				get_container: function() { return Dom.get_node_by_backtrack(this.node_backtrack.clone(), editor.content[0]) }
 			}
 		}
 		

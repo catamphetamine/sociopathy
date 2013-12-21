@@ -280,7 +280,7 @@ var Visual_editor = new Class
 		if (container_tag.tagName.toLowerCase() === 'li')
 			return this.on_breaking_space(container_tag.parentNode)
 			
-		var text_node = Dom_tools.append_text_next_to(container_tag, ' ')
+		var text_node = Dom.append_text_next_to(container_tag, ' ')
 		this.editor.caret.position(text_node, 1)
 	},
 	
@@ -316,10 +316,10 @@ var Visual_editor = new Class
 		
 		var new_paragraph = this.create_paragraph()
 		
-		var current_paragraph = Dom_tools.find_parent_by_tag(container, 'p')
+		var current_paragraph = Dom.find_parent_by_tag(container, 'p')
 		
 		if (!current_paragraph)
-			current_paragraph = Dom_tools.uppest_before(container, this.editor.content[0])
+			current_paragraph = Dom.uppest_before(container, this.editor.content[0])
 		
 		if (current_paragraph)
 		{

@@ -1,4 +1,4 @@
-var Dom_tools =
+var Dom =
 {
 	is_first_element: function(child, parent)
 	{
@@ -30,12 +30,12 @@ var Dom_tools =
 		node = this.normalize(node)
 		
 		console.log(node)
-		var text_node = Dom_tools.down_to_text_node(node)
+		var text_node = Dom.down_to_text_node(node)
 			
 		if (text_node)
 			return text_node
 			
-		text_node = Dom_tools.find_next_text_node(node, till)
+		text_node = Dom.find_next_text_node(node, till)
 			
 		if (text_node)
 			return text_node
@@ -150,7 +150,7 @@ var Dom_tools =
 		return node
 		
 		/*
-		var text_node = Dom_tools.child_text_node(to)
+		var text_node = Dom.child_text_node(to)
 		
 		if (!text_node)
 			return to.appendChild(document.createTextNode(text))
@@ -161,7 +161,7 @@ var Dom_tools =
 	
 	to_text: function(node)
 	{
-		if (Dom_tools.is_text_node(node))
+		if (Dom.is_text_node(node))
 			return node.nodeValue
 		
 		return node.innerText || node.textContent
@@ -283,7 +283,7 @@ var Dom_tools =
 	
 	inject_html: function(injected_html, node_chain)
 	{
-		node_chain[0].innerHTML = Dom_tools.get_inner_html_with_injection(injected_html, node_chain)
+		node_chain[0].innerHTML = Dom.get_inner_html_with_injection(injected_html, node_chain)
 	},
 	
 	html_before_and_after: function(node)
@@ -308,9 +308,9 @@ var Dom_tools =
 			}
 			
 			if (!found)
-				html.before += Dom_tools.outer_html(child_node)
+				html.before += Dom.outer_html(child_node)
 			else
-				html.after += Dom_tools.outer_html(child_node)
+				html.after += Dom.outer_html(child_node)
 			
 			index++
 		}
@@ -331,11 +331,11 @@ var Dom_tools =
 	
 		var html = this.html_before_and_after(child)
 	
-		var boundary_html = Dom_tools.boundary_html(child)
+		var boundary_html = Dom.boundary_html(child)
 			
 		return html.before +
 			boundary_html.opening + 
-			Dom_tools.get_inner_html_with_injection(injected_html, node_chain, chain_index + 1) +
+			Dom.get_inner_html_with_injection(injected_html, node_chain, chain_index + 1) +
 			boundary_html.closing +
 			html.after
 	},
@@ -515,7 +515,7 @@ var Dom_tools =
 	{
 		function is_br(node)
 		{
-			return !Dom_tools.is_text_node(node) && Dom_tools.is(node, 'br')
+			return !Dom.is_text_node(node) && Dom.is(node, 'br')
 		}
 		
 		function remove(node)
@@ -538,7 +538,7 @@ var Dom_tools =
 		{
 			var node = element[generator]
 			
-			if (!Dom_tools.is_text_node(node))
+			if (!Dom.is_text_node(node))
 				return
 			
 			if (node.nodeValue.is_empty())
@@ -630,7 +630,7 @@ var Dom_tools =
 		{
 			var document = this.validate_xml_core('<html>' + xml + '</html>')
 	
-			var text_node = Dom_tools.child_text_node(document.firstChild)
+			var text_node = Dom.child_text_node(document.firstChild)
 			
 			if (text_node && text_node.nodeValue.trim())
 				return { cause: 'text node in root', explanation: text_node.nodeValue }
@@ -644,4 +644,4 @@ var Dom_tools =
 	}
 }
 
-var Dom = Dom_tools
+var Dom_tools = Dom

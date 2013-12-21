@@ -684,7 +684,7 @@ Visual_editor.implement
 					
 				var add_whitespace = function()
 				{
-					var text = Dom_tools.append_text_next_to(element, ' ')
+					var text = Dom.append_text_next_to(element, ' ')
 					editor.caret.move_to(text)
 				}
 				
@@ -777,7 +777,7 @@ Visual_editor.implement
 					
 					element = editor.insert(element)
 						
-					var text = Dom_tools.append_text_next_to(element, ' ')
+					var text = Dom.append_text_next_to(element, ' ')
 					editor.caret.move_to_the_end(text)
 					
 					return
@@ -814,7 +814,7 @@ Visual_editor.implement
 					
 					element = editor.insert(element)
 						
-					var text = Dom_tools.append_text_next_to(element, ' ')
+					var text = Dom.append_text_next_to(element, ' ')
 					editor.caret.move_to_the_end(text)
 					
 					return
@@ -851,7 +851,7 @@ Visual_editor.implement
 					
 					element = editor.insert(element, { break_container: true })
 						
-					var text = Dom_tools.append_text_next_to(element, ' ')
+					var text = Dom.append_text_next_to(element, ' ')
 					editor.caret.move_to_the_end(text)
 					
 					return

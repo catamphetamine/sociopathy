@@ -35,7 +35,7 @@ Editor.Caret = new Class
 	{
 		var container = this.node()
 		
-		if (!Dom_tools.is_text_node(container))
+		if (!Dom.is_text_node(container))
 		{
 			if (!filter || filter && $(container).is(filter))
 				return $(container)
@@ -51,7 +51,7 @@ Editor.Caret = new Class
 	
 	really_textual_container: function()
 	{
-		return Dom_tools.down_to_text_node(this.node())
+		return Dom.down_to_text_node(this.node())
 	},
 	
 	caret_position: function()
@@ -66,7 +66,7 @@ Editor.Caret = new Class
 		var defaults = function()
 		{
 			offset = 0
-			node = Dom_tools.down_to_text_node(editor.content)
+			node = Dom.down_to_text_node(editor.content)
 			
 			if (node)
 			{
@@ -101,7 +101,7 @@ Editor.Caret = new Class
 		
 		if (node)
 		{
-			if (Dom_tools.is_text_node(node))
+			if (Dom.is_text_node(node))
 				container = $(node.parentNode)
 			else
 				container = $(node)
@@ -121,7 +121,7 @@ Editor.Caret = new Class
 			container: container,
 			node: node,
 			offset: offset,
-			textual: Dom_tools.is_text_node(node)
+			textual: Dom.is_text_node(node)
 		}
 		
 		return result
@@ -137,15 +137,15 @@ Editor.Caret = new Class
 		
 		options = options || {}
 		
-		the_element = Dom_tools.normalize(the_element)
+		the_element = Dom.normalize(the_element)
 		var element = the_element
 	
 		if (!offset)
 			offset = 0
 		
 		/*
-		if (!Dom_tools.is_text_node(element))
-			element = Dom_tools.find_text_node(element, this.editor.content)
+		if (!Dom.is_text_node(element))
+			element = Dom.find_text_node(element, this.editor.content)
 		
 		if (!element)
 		{
@@ -156,7 +156,7 @@ Editor.Caret = new Class
 		
 		if (options.to_the_end)
 		{
-			if (Dom_tools.is_text_node(element))
+			if (Dom.is_text_node(element))
 				offset = element.nodeValue.length
 			else
 				offset = element.childNodes.length
@@ -164,9 +164,9 @@ Editor.Caret = new Class
 		
 		if (options.after)
 		{
-			if (!Dom_tools.is_text_node(element))
+			if (!Dom.is_text_node(element))
 			{
-				offset = Dom_tools.get_child_index(element) + 1
+				offset = Dom.get_child_index(element) + 1
 				element = element.parentNode
 			}
 		}
@@ -223,7 +223,7 @@ Editor.Caret = new Class
 
 		var container = this.container(filter).node()
 		
-		if (!Dom_tools.is_first_element(caret.startContainer, container))
+		if (!Dom.is_first_element(caret.startContainer, container))
 			return false
 		
 		var offset = this.offset(caret)
@@ -247,11 +247,11 @@ Editor.Caret = new Class
 
 		var container = this.container(filter).node()
 			
-		if (!Dom_tools.is_last_element(caret.startContainer, container))
+		if (!Dom.is_last_element(caret.startContainer, container))
 			return false
 			
 		var range = caret.cloneRange()
-		range.selectNodeContents(Dom_tools.get_last_descendant(container))
+		range.selectNodeContents(Dom.get_last_descendant(container))
 		
 		if (this.offset(caret) < range.endOffset)
 		{
@@ -284,7 +284,7 @@ Editor.Caret = new Class
 			{
 				if (container.childNodes.length === 1)
 				{
-					if (Dom_tools.is_text_node(container.firstChild))
+					if (Dom.is_text_node(container.firstChild))
 						container = container.firstChild
 				}
 			}
@@ -307,7 +307,7 @@ Editor.Caret = new Class
 		if (!container)
 			container = this.editor.content
 			
-		container = Dom_tools.normalize(container)
+		container = Dom.normalize(container)
 			
 		if (!offset)
 			offset = 0
@@ -334,7 +334,7 @@ Editor.Caret = new Class
 		if (!caret)
 			return this.create(container, offset)
 			
-		if (Dom_tools.is_text_node(container))
+		if (Dom.is_text_node(container))
 		{
 			caret.setStart(container, offset)
 			return this.editor.collapse(caret)
@@ -364,7 +364,7 @@ Editor.Caret = new Class
 	/*
 	position_after: function(element)
 	{
-		element = Dom_tools.normalize(element)
+		element = Dom.normalize(element)
 
 		var range = this.editor.create_range()
 		range.setStartAfter(element)
@@ -382,7 +382,7 @@ Editor.Caret = new Class
 		var container = caret_position.node
 		var offset = caret_position.offset
 		
-		if (!Dom_tools.is_text_node(container))
+		if (!Dom.is_text_node(container))
 			throw 'Unpredicted scenario in function insert_html'
 		
 		var text = container.nodeValue
@@ -406,7 +406,7 @@ Editor.Caret = new Class
 	
 	move_to_the_next_element: function(relative_element, till)
 	{
-		var next = Dom_tools.find_next_text_node(relative_element, till)
+		var next = Dom.find_next_text_node(relative_element, till)
 		
 		if (next && next.parentNode !== this.editor.content.node())
 		{
@@ -425,9 +425,9 @@ Editor.Caret = new Class
 	
 	move_to_the_end: function(element)
 	{
-		element = Dom_tools.normalize(element)
+		element = Dom.normalize(element)
 		
-		if (Dom_tools.is_text_node(element))
+		if (Dom.is_text_node(element))
 			return this.position(element, element.nodeValue.length)
 			
 		if (!element.childNodes.length)
@@ -441,7 +441,7 @@ Editor.Caret = new Class
 	{
 		var node = this.node()
 		
-		if (!Dom_tools.is_text_node(node))
+		if (!Dom.is_text_node(node))
 			return
 		
 		return node.nodeValue.substring(0, this.offset())

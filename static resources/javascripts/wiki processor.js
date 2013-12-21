@@ -464,7 +464,7 @@ Wiki_processor = new (new Class
 		
 		if (!Dom.is_text_node(node))
 		{
-			if (Dom_tools(node.is('br')))
+			if (Dom_tools.is(node, 'br'))
 				return finished()
 				
 			syntax = processor.find_syntax_for(node)

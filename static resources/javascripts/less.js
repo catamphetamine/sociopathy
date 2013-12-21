@@ -6848,8 +6848,8 @@ function get_sheet_id(title, href)
 
 Less.unload_style = function(link)
 {
-	Dom_tools.remove(head.querySelector('style[id="' + Less.id(link) + '"]'))
-	Dom_tools.remove(head.querySelector('link[href="' + link + '"]'))
+	Dom.remove(head.querySelector('style[id="' + Less.id(link) + '"]'))
+	Dom.remove(head.querySelector('link[href="' + link + '"]'))
 }
 
 Less.load_style = function(link, callback)

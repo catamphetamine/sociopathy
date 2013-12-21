@@ -271,7 +271,7 @@ $ (function () {
 		{
 			// если это был клик для выделения текста - не запускать проигрывание
 			var selection = window.getSelection().getRangeAt(0)
-			if (!selection.collapsed && Dom_tools.is_descendant_of(selection.commonAncestorContainer, $container.node()))
+			if (!selection.collapsed && Dom.is_descendant_of(selection.commonAncestorContainer, $container.node()))
 				return
 			
 			if (the_player.data().jPlayer.status.paused)
