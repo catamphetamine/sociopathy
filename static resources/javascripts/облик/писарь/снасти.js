@@ -1150,7 +1150,7 @@ Visual_editor.implement
 					},
 					ok: function(xml)
 					{
-						editor.load_content(Markup.decorate(xml))
+						editor.load_content(Markup.decorate(xml, { syntax: 'html' }))
 						postprocess_rich_content(editor.content)
 						tool.on_success() //this.xml_editor.getValue())))
 					},
@@ -1173,7 +1173,7 @@ Visual_editor.implement
 				if (editor.selection.exists() && editor.selection.is_valid())
 					throw new Error('Снимите выделение')
 				
-				Markup.parse(editor.get_content().html(), (function(source)
+				Markup.parse(editor.get_content().html(), { syntax: 'html' }, (function(source)
 				{
 					this.open_dialog_window({ source: source })
 					

@@ -489,12 +489,32 @@ var Dom =
 			return true
 	},
 	
-	is: function(element, tag)
+	is: function(element, selector, search_from)
 	{
-		if (tag.contains('.') || tag.contains(' ') || tag.contains('>'))
-			throw 'Just tag names are supported'
-			
-		return this.tag(element) === tag
+		// if just a tag name
+		if (selector.match(/^[a-z0-9]+$/))
+			return this.tag(element) === selector
+		
+		if (!element.parentNode)
+			return
+		
+		if (!search_from)
+			search_from = element.parentNode
+		
+		var selected = search_from.querySelectorAll(selector)
+		
+		var i = 0
+		while (i < selected.length)
+		{
+			if (selected[i] === element)
+				return true
+				
+			i++
+		}
+		
+		// if the next upper 'search from' node isn't 'html'
+		if (search_from.parentNode && search_from.parentNode.parentNode)
+			return this.is(element, selector, search_from.parentNode)
 	},
 	
 	tag: function(element)

@@ -19,7 +19,7 @@
 	
 		visual_editor.submit = function()
 		{
-			Markup.parse_and_validate(visual_editor.editor.html(), function(content)
+			Markup.parse_and_validate(visual_editor.editor.html(), { syntax: 'html' }, function(content)
 			{			
 				if (!content)
 					return

@@ -74,10 +74,13 @@
 		
 		page.get('article > section').html(Markup.decorate(page.data.заметка.содержимое,
 		{
+			syntax: 'html',
+			
 			process_element: function(decorated, wiki)
 			{
 				decorated.attr('author', wiki.attr('author'))
 			}
+			
 		}))
 
 		postprocess_rich_content(page.get('article > section'))
@@ -196,13 +199,7 @@
 	
 	page.Data_store.collect_edited = function()
 	{
-		var content = Markup.parse_and_validate(visual_editor.editor.html(),
-		{
-			/*process_element: function(wiki, decorated)
-			{
-				wiki.attr('author', decorated.attr('author') || пользователь._id)
-			}*/
-		})
+		var content = Markup.parse_and_validate(visual_editor.editor.html(), { syntax: 'html' })
 		
 		var data =
 		{
@@ -267,7 +264,7 @@
 				}
 				
 				set_title(data.название)
-				visual_editor.editor.set_content(Markup.decorate(data.содержимое))
+				visual_editor.editor.set_content(Markup.decorate(data.содержимое, { syntax: 'html' }))
 				*/
 			}
 		})
@@ -301,7 +298,7 @@
 			
 			Режим.обычный()
 			
-			visual_editor.editor.load_content(Markup.decorate(page.Data_store.unmodified_data.content))
+			visual_editor.editor.load_content(Markup.decorate(page.Data_store.unmodified_data.content, { syntax: 'html' }))
 			
 			postprocess_rich_content(visual_editor.editor.get_content())
 			

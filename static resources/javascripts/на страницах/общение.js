@@ -34,7 +34,7 @@
 			if (!title)
 				return info(text('pages.new communication.title is absent'))
 			
-			Markup.parse_and_validate(visual_editor.editor.html(), function(message)
+			Markup.parse_and_validate(visual_editor.editor.html(), { syntax: 'html' }, function(message)
 			{
 				if (!message)
 					return info(text('pages.new communication.message is absent'))

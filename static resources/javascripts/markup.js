@@ -1,22 +1,19 @@
-Markup = new (new Class
-({
-	find_syntax_for: function(element)
+Markup = 
+{
+	find_syntax_for: function(element, syntax_type)
 	{
 		var found
 		
-		Object.for_each(this.Syntax, function(key, syntax)
+		Object.for_each(this.Syntax[syntax_type], function(key, syntax)
 		{
-			if (element.is(syntax.selector))
-			{
-				found = syntax
-				found.tag = key
-			}
+			if (Dom.is(element, syntax.selector))
+				found = key
 		})
 		
 		return found
 	},
 	
-	get_syntax_by_translation: function(translation)
+	get_syntax_by_translation: function(translation, syntax_type)
 	{
 		var found
 		
@@ -27,19 +24,29 @@ Markup = new (new Class
 				if (typeof this.translation === 'string')
 				{
 					if (this.translation === translation)
-						found = this
+						found = key
 				}
 				else
 				{
 					if (Object.key(this.translation) === translation)
-						found = this
+					{
+						found = key
+					}
 				}
 			}
 			else if (key === translation)
-				found = this
+			{
+				found = key
+			}
 		})
-				
-		return found
+		
+		if (!found)
+			return
+		
+		if (syntax_type)
+			return this.Syntax[syntax_type][found]
+			
+		return this.Syntax[found]
 	},
 	
 	translate: function(xml)
@@ -212,6 +219,9 @@ Markup = new (new Class
 	{
 		options = options || {}
 		
+		if (!options.syntax)
+			throw 'Syntax is required'
+		
 		if (!xml)
 			return ''
 		
@@ -243,8 +253,6 @@ Markup = new (new Class
 		//if (this.timer < new Date().getTime())
 		//	return
 		
-		var processor = this
-		
 		//console.log('decorate_node')
 		//console.log(node)
 		
@@ -253,7 +261,7 @@ Markup = new (new Class
 		
 		var syntax
 		if (!Dom.is_text_node(node))
-			syntax = processor.get_syntax_by_translation(node.tagName.toLowerCase())
+			syntax = this.get_syntax_by_translation(node.tagName.toLowerCase(), options.syntax)
 			
 		//console.log('syntax')
 		//console.log(syntax)
@@ -268,20 +276,20 @@ Markup = new (new Class
 	
 		//console.log('syntax found')
 		
-		var html_node
-		if (syntax.html_tag)
+		var decorated_node
+		if (syntax.tag)
 		{
-			html_node = document.createElement(syntax.html_tag)
+			decorated_node = document.createElement(syntax.tag)
 			if (syntax.decorate)
-				syntax.decorate(node, html_node)
+				syntax.decorate(node, decorated_node)
 		}
 		else
-			html_node = syntax.decorate(node)
+			decorated_node = syntax.decorate(node)
 		
 		if (options.process_node)
-			options.process_node(html_node, node)
+			options.process_node(decorated_node, node)
 		
-		target.appendChild(html_node)
+		target.appendChild(decorated_node)
 		
 		if (syntax.break_decoration)
 			return
@@ -290,9 +298,11 @@ Markup = new (new Class
 		//console.log('process children')
 		//console.log(node.childNodes)
 		
+		var processor = this
+		
 		Array.for_each(node.childNodes, function()
 		{
-			processor.decorate_node(this, html_node, options)
+			processor.decorate_node(this, decorated_node, options)
 		})
 		
 		//console.log('finished processing children')
@@ -348,6 +358,9 @@ Markup = new (new Class
 		
 		options = options || {}
 		
+		if (!options.syntax)
+			throw 'Syntax is required'
+		
 		if (typeof(xml) === 'string')
 		{
 			//console.log(xml)
@@ -373,7 +386,7 @@ Markup = new (new Class
 					Dom.remove(paragraph)
 			})
 			
-			var xml = output.html()
+			var xml = output.innerHTML
 				
 	//		xml = xml.replace_all('<br>', '\n')
 	//		xml = xml.replace_all('<br/>', '\n')
@@ -381,7 +394,7 @@ Markup = new (new Class
 			//xml = xml.replace_all('&lt;br&gt;', '')
 			//xml = xml.replace_all('&lt;br/&gt;', '')
 		
-			Object.for_each(this.Syntax, function(tag, syntax)
+			Object.for_each(Markup.Syntax[options.syntax], function(tag, syntax)
 			{
 				var translation = syntax.translation
 				
@@ -460,6 +473,7 @@ Markup = new (new Class
 		//console.log('target')
 		//console.log(target)
 		
+		var syntax_key
 		var syntax
 		
 		if (!Dom.is_text_node(node))
@@ -467,7 +481,8 @@ Markup = new (new Class
 			if (Dom_tools.is(node, 'br'))
 				return finished()
 				
-			syntax = processor.find_syntax_for(node)
+			syntax_key = processor.find_syntax_for(node, options.syntax)
+			syntax = this.Syntax[syntax_key]
 		}
 		
 		//console.log('node')
@@ -475,7 +490,7 @@ Markup = new (new Class
 			
 		//console.log('syntax')
 		//console.log(syntax)
-		
+			
 		if (!syntax)
 		{
 			if (target.tagName.toLowerCase() === 'wiki')
@@ -483,7 +498,7 @@ Markup = new (new Class
 			
 			function is(element)
 			{
-				var translation = Markup.Syntax[element].translation
+				var translation = Markup.Syntax[options.syntax][element].translation
 				
 				if (typeof translation === 'object')
 					translation = Object.key(translation)
@@ -500,7 +515,7 @@ Markup = new (new Class
 		
 		var tag
 		if (!syntax.translation)
-			tag = syntax.tag
+			tag = syntax_key
 		else if (typeof syntax.translation === 'string')
 			tag = syntax.translation
 		else
@@ -541,7 +556,7 @@ Markup = new (new Class
 			
 			Array.for_each(node.childNodes, function()
 			{
-				processor.parse_node(this, wiki_node, node, function(result)
+				processor.parse_node(this, wiki_node, options, function(result)
 				{
 					if (result)
 						wiki_node = result
@@ -712,10 +727,11 @@ Markup = new (new Class
 				{
 					if (!result.error)
 					{
-						var tag = Object.key(Markup.Syntax.картинка.translation)
+						var translation = Markup.Syntax.картинка.translation
+						var tag = Object.key(translation)
 						
-						var width = Markup.Syntax.картинка.translation[tag].ширина
-						var height = Markup.Syntax.картинка.translation[tag].высота
+						var width = translation[tag].ширина
+						var height = translation[tag].высота
 						
 						var picture = document.createElement(tag)
 						
@@ -829,24 +845,12 @@ Markup = new (new Class
 				throw 'Markup malfunction'
 		})
 	}
-}))
+}
 
 //Markup.timer = new Date().getTime() + 5000
 
 Markup.Syntax =
 {
-	default:
-	{
-		decorate: function(from, to)
-		{
-			return to
-		},
-		
-		parse: function(from, to)
-		{
-			return to
-		}
-	},
 	абзац:
 	{
 		translation:
@@ -855,9 +859,165 @@ Markup.Syntax =
 			{
 				выравнивание: 'alignment'
 			}
+		}
+	},
+	выдержка:
+	{
+		translation: 'citation'
+	},
+	текст:
+	{
+		translation: 'text'
+	},
+	автор:
+	{
+		translation: 'author',
+		
+		simplify: function(from)
+		{
+			return ' (' + Dom.text(from) + ')'
+		}
+	},
+	заголовок_2:
+	{
+		translation: 'header_2'
+	},
+	жирный:
+	{
+		translation: 'bold'
+	},
+	курсив:
+	{
+		translation: 'italic'
+	},
+	список:
+	{
+		translation: 'list'
+	},
+	пункт:
+	{
+		translation: 'item',
+		
+		simplify: function(from, info)
+		{
+			var text = Dom.text(from)
+			
+			if (!info.is_last)
+				text += ', '
+				
+			return text
+		}
+	},
+	ссылка:
+	{
+		translation:
+		{
+			'hyperlink':
+			{
+				на: 'at'
+			}
+		}
+	},
+	картинка:
+	{
+		translation:
+		{
+			'picture':
+			{
+				ширина: 'width',
+				высота: 'height',
+				положение: 'float'
+			}
 		},
+		
+		break_simplification: true,
+		
+		simplify: function(from)
+		{
+			return '(картинка)'
+		}
+	},
+	формула:
+	{
+		translation:
+		{
+			'formula':
+			{
+				положение: 'display'
+			}
+		},
+		
+		break_simplification: true,
+		
+		simplify: function(from)
+		{
+			return '(формула)'
+		}
+	},
+	снизу:
+	{
+		translation: 'subscript'
+	},
+	сверху:
+	{
+		translation: 'superscript'
+	},
+	код:
+	{
+		translation: 'code'
+	},
+	многострочный_код:
+	{
+		translation: 'multiline_code'
+	},
+	перевод_строки:
+	{
+		translation: 'break_line'
+	},
+	audio:
+	{
+		translation:
+		{
+			'audio':
+			{
+				название: 'title'
+			}
+		},
+		
+		break_simplification: true,
+		
+		simplify: function(from, info)
+		{
+			return '(аудиозапись)'
+		}
+	},
+	youtube:
+	{
+		break_simplification: true,
+		
+		simplify: function(from, info)
+		{
+			return '(видеозапись)'
+		}
+	},
+	vimeo:
+	{
+		break_simplification: true,
+		
+		simplify: function(from, info)
+		{
+			return '(видеозапись)'
+		}
+	}
+}
+
+Markup.Syntax.html =
+{
+	абзац:
+	{
 		selector: 'p',
-		html_tag: 'p',
+		tag: 'p',
+		
 		content_required: true,
 		
 		is_dummy: function(element)
@@ -924,14 +1084,13 @@ Markup.Syntax =
 	},
 	выдержка:
 	{
-		translation: 'citation',
 		selector: 'div.citation',
-		html_tag: 'div',
+		tag: 'div',
 		
 		is_dummy: function(element)
 		{
 			var text = element.querySelector('> .text')
-				
+			
 			if (text.classList.contains('hint'))
 				return true
 			
@@ -946,9 +1105,8 @@ Markup.Syntax =
 	},
 	текст:
 	{
-		translation: 'text',
 		selector: '.citation > .text',
-		html_tag: 'q',
+		tag: 'q',
 		
 		decorate: function(from, to)
 		{
@@ -957,9 +1115,8 @@ Markup.Syntax =
 	},
 	автор:
 	{
-		translation: 'author',
 		selector: '.citation > .author',
-		html_tag: 'div',
+		tag: 'div',
 	
 		//break_parsing: true,
 	
@@ -984,9 +1141,9 @@ Markup.Syntax =
 	},
 	заголовок_2:
 	{
-		translation: 'header_2',
 		selector: 'h2',
-		html_tag: 'h2',
+		tag: 'h2',
+		
 		content_required: true,
 		
 		is_dummy: function(element)
@@ -997,23 +1154,22 @@ Markup.Syntax =
 	},
 	жирный:
 	{
-		translation: 'bold',
 		selector: 'strong',
-		html_tag: 'strong',
+		tag: 'strong',
+		
 		content_required: true
 	},
 	курсив:
 	{
-		translation: 'italic',
 		selector: 'em',
-		html_tag: 'em',
+		tag: 'em',
+		
 		content_required: true
 	},
 	список:
 	{
-		translation: 'list',
 		selector: 'ul',
-		html_tag: 'ul',
+		tag: 'ul',
 		
 		is_dummy: function(element)
 		{
@@ -1023,9 +1179,9 @@ Markup.Syntax =
 	},
 	пункт:
 	{
-		translation: 'item',
 		selector: 'li',
-		html_tag: 'li',
+		tag: 'li',
+		
 		content_required: true,
 		
 		is_dummy: function(element)
@@ -1049,15 +1205,9 @@ Markup.Syntax =
 	},
 	ссылка:
 	{
-		translation:
-		{
-			'hyperlink':
-			{
-				на: 'at'
-			}
-		},
 		selector: 'a[type="hyperlink"]',
-		html_tag: 'a',
+		tag: 'a',
+		
 		content_required: true,
 		
 		is_dummy: function(element)
@@ -1096,25 +1246,9 @@ Markup.Syntax =
 	},
 	картинка:
 	{
-		translation:
-		{
-			'picture':
-			{
-				ширина: 'width',
-				высота: 'height',
-				положение: 'float'
-			}
-		},
 		selector: 'img[type="picture"]',
-		html_tag: 'img',
-		
-		break_simplification: true,
-		
-		simplify: function(from)
-		{
-			return '(картинка)'
-		},
-		
+		tag: 'img',
+	
 		break_decoration: true,
 		
 		decorate: function(from, to)
@@ -1175,23 +1309,8 @@ Markup.Syntax =
 	},
 	формула:
 	{
-		translation:
-		{
-			'formula':
-			{
-				положение: 'display'
-			}
-		},
 		selector: '.tex[type="formula"]',
-		//html_tag: 'div',
-		html_tag: 'span',
-		
-		break_simplification: true,
-		
-		simplify: function(from)
-		{
-			return '(формула)'
-		},
+		tag: 'span',
 		
 		break_decoration: true,
 		break_parsing: true,
@@ -1231,9 +1350,9 @@ Markup.Syntax =
 	},
 	снизу:
 	{
-		translation: 'subscript',
 		selector: 'sub',
-		html_tag: 'sub',
+		tag: 'sub',
+		
 		content_required: true,
 		
 		is_dummy: function(element)
@@ -1244,9 +1363,9 @@ Markup.Syntax =
 	},
 	сверху:
 	{
-		translation: 'superscript',
 		selector: 'sup',
-		html_tag: 'sup',
+		tag: 'sup',
+		
 		content_required: true,
 		
 		is_dummy: function(element)
@@ -1257,9 +1376,9 @@ Markup.Syntax =
 	},
 	код:
 	{
-		translation: 'code',
 		selector: 'code',
-		html_tag: 'code',
+		tag: 'code',
+		
 		content_required: true,
 		
 		is_dummy: function(element)
@@ -1270,9 +1389,9 @@ Markup.Syntax =
 	},
 	многострочный_код:
 	{
-		translation: 'multiline_code',
 		selector: 'pre',
-		html_tag: 'pre',
+		tag: 'pre',
+		
 		content_required: true,
 		
 		is_dummy: function(element)
@@ -1283,29 +1402,13 @@ Markup.Syntax =
 	},
 	перевод_строки:
 	{
-		translation: 'break_line',
 		selector: 'br',
-		html_tag: 'br'
+		tag: 'br'
 	},
 	audio:
 	{
-		translation:
-		{
-			'audio':
-			{
-				название: 'title'
-			}
-		},
-		
 		selector: 'div.audio_player',
-		html_tag: 'div',
-		
-		break_simplification: true,
-		
-		simplify: function(from, info)
-		{
-			return '(аудиозапись)'
-		},
+		tag: 'div',
 		
 		decorate: function(from, to)
 		{
@@ -1346,13 +1449,6 @@ Markup.Syntax =
 			return video_player
 		},
 		
-		break_simplification: true,
-		
-		simplify: function(from, info)
-		{
-			return '(видеозапись)'
-		},
-		
 		break_parsing: true,
 		break_decoration: true,
 		
@@ -1390,13 +1486,6 @@ Markup.Syntax =
 			video_player.firstChild.setAttribute('type', 'video')
 			
 			return video_player
-		},
-		
-		break_simplification: true,
-		
-		simplify: function(from, info)
-		{
-			return '(видеозапись)'
 		},
 		
 		break_parsing: true,
@@ -1524,6 +1613,7 @@ var Smart_parser = new (new Class
 //Markup.validate(xml)
 
 //alert(Markup.parse('<p></p><div class="audio_player"><a href="test">abc</a></div><p></p>'))
+//alert(Markup.parse('<p>123</p>', { syntax: 'html' }))
 
 /*
 function test_hyperlink_parser(text, expected_result)

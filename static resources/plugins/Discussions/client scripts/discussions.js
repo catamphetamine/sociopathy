@@ -77,7 +77,7 @@
 				(function() { message.removeClass('new') }).delay(500)
 			}
 			
-			message.find('.content').html(Markup.decorate(data.сообщение))
+			message.find('.content').html(Markup.decorate(data.сообщение, { syntax: 'html' }))
 			
 			postprocess_rich_content(message)
 		}

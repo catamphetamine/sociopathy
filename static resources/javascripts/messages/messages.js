@@ -38,6 +38,8 @@ var Messages = new Class
 	{
 		data.когда_примерно = неточное_время(data.когда, { blank_if_just_now: true })
 		
+		data.сообщение = Markup.decorate(data.сообщение, { syntax: 'html' })
+		
 		var message = $.render('сообщение общения', data)
 		
 		if (data.новое)
@@ -667,7 +669,7 @@ var Messages = new Class
 				finish(false)
 			}
 			
-			Markup.parse_and_validate(html, function(message)
+			Markup.parse_and_validate(html, { syntax: 'html' }, function(message)
 			{
 				//console.log('Send message: ' + message)
 				

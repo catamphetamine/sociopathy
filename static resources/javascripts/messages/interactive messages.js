@@ -541,7 +541,7 @@ var Interactive_messages = function(options)
 			
 			edited_messages.for_each(function()
 			{
-				Markup.parse_and_validate(this.content, (function(content)
+				Markup.parse_and_validate(this.content, { syntax: 'html' }, (function(content)
 				{
 				      this.content = content
 				      countdown()
