@@ -482,7 +482,7 @@ Markup =
 				return finished()
 				
 			syntax_key = processor.find_syntax_for(node, options.syntax)
-			syntax = this.Syntax[syntax_key]
+			syntax = this.Syntax[options.syntax][syntax_key]
 		}
 		
 		//console.log('node')
@@ -522,7 +522,7 @@ Markup =
 			tag = Object.key(syntax.translation)
 		
 		var wiki_element = document.createElement(tag)
-			
+		
 		if (syntax.parse)
 			syntax.parse(node, wiki_element)
 		

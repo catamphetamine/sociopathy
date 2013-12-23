@@ -36,13 +36,10 @@ navigation controller, в нём - table view
 
 
 
-вычленить и скомпилировать стиль rich content, чтобы вставлять его потом в выдаваемый html
-+ шрифты
 
+ios uiwebview contenteditable:
 
-
-
-
+http://stackoverflow.com/questions/9835956/show-keyboard-in-contenteditable-uiwebview-programmatically
 
 
 
@@ -80,6 +77,7 @@ navigation controller, в нём - table view
 
 
 
+если выделить первую часть готового текста, сделать её ссылкой, потом нажать пробел - появится пробел, но при сохранении - исчезнет
 
 заголовок_2 -> подзаголовок
 

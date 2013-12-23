@@ -5,9 +5,9 @@ function postprocess_rich_content(content, callback)
 		if (content.пусто())
 			return callback()
 		
-		if (!content[0].is('.rich_formatting'))
+		if (!content[0].is('.markup'))
 		{
-			content = content._map(function() { return this.find('.rich_formatting') })
+			content = content._map(function() { return this.find('.markup') })
 		}
 		
 		content.for_each(function()
@@ -21,8 +21,8 @@ function postprocess_rich_content(content, callback)
 		return refresh_formulae({ where: content }, callback)
 	}
 	
-	if (!content.is('.rich_formatting'))
-		content = content.find('.rich_formatting')
+	if (!content.is('.markup'))
+		content = content.find('.markup')
 			
 	content.find('> .audio_player').each(function()
 	{

@@ -241,13 +241,13 @@ function add_message_channeling_capabilities(messages, interactive_messages_opti
 		
 		connection.on('смотрит', function(пользователь)
 		{
-			delete away_users[пользователь._id]
+			delete messages.away_users[пользователь._id]
 			set_status(пользователь._id, 'смотрит')
 		})
 		
 		connection.on('не смотрит', function(пользователь)
 		{
-			away_users[пользователь._id] = true
+			messages.away_users[пользователь._id] = true
 			set_status(пользователь._id, 'не смотрит')
 		})
 		

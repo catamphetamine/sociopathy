@@ -404,7 +404,7 @@
 	}
 }
 
-.messages_rich_formatting
+.messages_markup
 {
 	font-family: @messaging_font;
 	font-size: @messaging_font_size;
@@ -449,7 +449,7 @@
 		{
 			&:first-child
 			{
-				.messages_rich_formatting
+				.messages_markup
 				{
 					.video_player:first-child
 					{

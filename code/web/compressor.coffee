@@ -23,6 +23,11 @@ javascript_minifier = (value) ->
 
 version_path = statics + '/compressed/version.txt'
 
+css_path = statics + '/облик'
+	
+global.read_css = (style) ->
+	css_minifier(disk_tools.read(css_path + '/' + style + '.css'))
+
 # not finished yet
 generate_everything = ->
 	$ = '<html>'
@@ -52,7 +57,6 @@ generate_everything = ->
 	
 	##################
 
-	css_path = statics + '/облик'
 	css = disk_tools.list_files(css_path, { type: 'css' })
 	
 	#css = css.filter((css) -> !css.starts_with('страницы/'))
@@ -63,7 +67,7 @@ generate_everything = ->
 	# ещё нужно будет подгружать файлы .less и заставлять Less использовать именно подгруженные, когда include()
 	
 	for style in css
-		$ += '<style for="' + style + '">' + css_minifier(disk_tools.read(css_path + '/' + style + '.css')) + '</style>'
+		$ += '<style for="' + style + '">' + global.read_css(style) + '</style>'
 		
 	##################
 

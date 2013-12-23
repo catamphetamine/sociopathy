@@ -1,0 +1,96 @@
+@import "/облик/вспомогательный.less";
+
+.markup
+{
+	font-family: @textual_font;
+	font-size: @textual_font_size;
+	line-height: @textual_font_line_height;
+	
+	h1
+	{
+		margin-top: 30px;
+		margin-bottom: 58px;
+	}
+	
+	p
+	{
+		min-height: @textual_font_line_height;
+	}
+	
+	.citation
+	{
+		padding-left: 46px;
+	
+		.author
+		{
+			font-size: 27px;
+			line-height: 40px;
+		}
+	}
+	
+	.tex
+	{
+		margin-bottom: 30px;
+	}
+	
+	.video_player
+	{
+		margin-bottom: 28px;
+	}
+	
+	p
+	{
+		text-indent: @paragraph_indent;
+	}
+	
+	ul li
+	{
+		text-indent: 10px;
+	}
+
+	a:hover
+	{
+		.hyperlink();
+	}
+
+	h1
+	{
+		font-size: 50px;
+	}
+
+	h2
+	{
+		font-size: 40px;
+		
+		margin-top: 50px;
+		margin-bottom: 50px;
+	}
+	
+	a.reference
+	{
+		font-family: @labels_font;
+	}
+	
+	.references
+	{
+		li
+		{
+			margin-bottom: 20px;
+		}
+	}
+	
+	[type="video"]
+	{
+		.beautiful_shadow_3(0px, 0px, 16px, 10px, 4px, 0.1);
+	}
+	
+	[type="picture"]
+	{
+		.beautiful_shadow_3(0px, 0px, 8px, 3px, 4px, 0.1);
+	}
+	
+	.video_player
+	{
+		margin-top: 8px;
+	}
+}

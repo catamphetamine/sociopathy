@@ -1,11 +1,5 @@
-@import "/облик/вспомогательный.less";
-
-.rich_formatting
+.markup
 {
-	font-family: @textual_font;
-	font-size: @textual_font_size;
-	line-height: @textual_font_line_height;
-
 	white-space: pre-wrap;
 	
 	.hint
@@ -25,15 +19,11 @@
 	
 	h1
 	{
-		margin-top: 30px;
-		margin-bottom: 58px;
 	}
 	
 	p
 	{
 		clear: both;
-		
-		min-height: @textual_font_line_height;
 	}
 	
 	p:first-child
@@ -48,8 +38,6 @@
 	
 	.citation
 	{
-		padding-left: 46px;
-	
 		&:after
 		{
 			content: "";
@@ -82,81 +70,49 @@
 			overflow: hidden;
 			text-overflow: ellipsis;
 			max-width: 60%;
-			
-			font-size: 27px;
-			line-height: 40px;
 		}
 	}
 	
 	.tex
 	{
-		/* display: inline-block; */
-		
-		margin-bottom: 30px;
 	}
 	
 	.video_player
 	{
 		text-align: center;
-		margin-bottom: 28px;
 	}
 	
 	p
 	{
-		text-indent: @paragraph_indent;
-		/* text-align: justify; */
-		
 		> *
 		{
 			text-indent: 0;
 		}
 	}
 	
-	ul li
+	ul > li
 	{
-		text-indent: 10px;
 		list-style-type: disc;
 	}
 
 	a
 	{
-		/*
-		color: inherit;
-		border-bottom-width: 0;
-		*/
-	}
-
-	a:hover
-	{
-		.hyperlink();
-		
-		/*
-		-webkit-transition: color .25s linear;
-		-moz-transition: color .25s linear;
-		transition: color .25s linear;
-		*/
 	}
 
 	h1
 	{
-		font-size: 50px;
 	}
 
 	h2
 	{
-		font-size: 40px;
-
 		border-bottom-width: 1px;
 		border-bottom-color: #7f7f7f;
 		border-bottom-style: solid;
-		
-		margin-top: 50px;
-		margin-bottom: 50px;
 	}
 	
 	a.reference
 	{
-		font-family: @labels_font;
+		font-family: "Whitney";
 	}
 	
 	.references
@@ -166,12 +122,8 @@
 		
 		li
 		{
-			margin-bottom: 20px;
-			
 			a
 			{
-				.hyperlink;
-				
 				display: inline-block;
 			}
 		}
@@ -199,8 +151,6 @@
 		background-color: black;
 		
 		border-radius: 4px;
-
-		.beautiful_shadow_3(0px, 0px, 16px, 10px, 4px, 0.1);
 	}
 	
 	[type="picture"]
@@ -210,8 +160,6 @@
 		border-width: 1px;
 		
 		border-radius: 4px;
-		
-		.beautiful_shadow_3(0px, 0px, 8px, 3px, 4px, 0.1);
 	}
 
 	[type="picture"]
@@ -221,6 +169,5 @@
 	
 	.video_player
 	{
-		margin-top: 8px;
 	}
 }

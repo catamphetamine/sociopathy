@@ -262,9 +262,17 @@ var insert_scripts = script_insertion(scripts, '/javascripts', function()
 
 var styles =
 [
+	'начертания',
 	'общее',
-	'rich formatting',
+	'общее desktop',
 	'messages',
+	
+	{markup:
+	[
+		'markup formatting',
+		'desktop markup formatting',
+		'mobile markup formatting'
+	]},
 	
 	{кнопки:
 	[

@@ -5,8 +5,6 @@ var Interactive_messages = function(options)
 	var Who_is_connected_bar_fade_in_duration = 0.8
 	var Who_is_connected_bar_fade_out_duration = 0.5
 	
-	var away_users = {}
-	
 	page.подсказка('написание сообщения', 'Для того, чтобы написать сообщение, нажмите клавишу <a href=\'/сеть/настройки\'>«' + Настройки.Клавиши.Писарь.Показать + '»</a>, и внизу появится поле ввода сообщения. Для отправки сообщения нажмите клавиши «Ctrl + Enter».')
 	page.подсказка('правка сообщений', 'Вы можете править свои сообщения, перейдя в <a href=\'/помощь/режимы#Режим правки\'>«режим правки»</a> (клавиша «' + Настройки.Клавиши.Режимы.Правка + '»)')
 
@@ -25,7 +23,7 @@ var Interactive_messages = function(options)
 			
 			message.find('> .content').find('a').attr('target', '_blank')
 			
-			if (away_users[data.отправитель._id])
+			if (messages.away_users[data.отправитель._id])
 				message.find('> .author').addClass('is_away')
 			
 			if (data.отправитель._id !== пользователь._id)
@@ -77,7 +75,7 @@ var Interactive_messages = function(options)
 		},
 		decorate_message: function(message, data)
 		{
-			if (away_users[data.отправитель._id])
+			if (messages.away_users[data.отправитель._id])
 				message.find('> .author').addClass('is_away')
 		},
 		send_message: function(message, options)
@@ -155,6 +153,8 @@ var Interactive_messages = function(options)
 			}
 		}
 	})
+	
+	messages.away_users = {}
 	
 	messages.options.connection = options.connection
 	

@@ -29,7 +29,7 @@
 	
 	> .compose_message
 	{
-		.rich_formatting
+		.markup
 		{
 			margin-left: 100px;
 		}

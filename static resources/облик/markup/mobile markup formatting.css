@@ -1,0 +1,11 @@
+.markup
+{
+	font-family: "Warnock Pro";
+	font-size: 14pt;
+	line-height: 20pt;
+	
+	p
+	{
+		text-indent: 1em;
+	}
+}

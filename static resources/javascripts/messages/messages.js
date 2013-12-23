@@ -6,8 +6,6 @@ var Messages = new Class
 
 	messages_to_add: [],
 	
-	away_users: {},
-	
 	finished_loading: false,
 	
 	options:
