@@ -27,7 +27,7 @@ It's not your facebook at all.
 I wanna see it in action
 =============
 
-Go to sociopathy.info
+Go to http://kuchumovn.no-ip.biz/
 
 
 Is it multilanguage?
