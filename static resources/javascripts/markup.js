@@ -1089,7 +1089,7 @@ Markup.Syntax.html =
 		
 		is_dummy: function(element)
 		{
-			var text = element.querySelector('> .text')
+			var text = element.querySelector('.text')
 			
 			if (text.classList.contains('hint'))
 				return true
@@ -1456,7 +1456,7 @@ Markup.Syntax.html =
 		{
 			var url = 'http://www.youtube.com/embed/'
 			
-			var iframe = from.querySelector('> iframe')
+			var iframe = from.querySelector('iframe')
 			
 			var src = iframe.getAttribute('src')
 			if (!src.starts_with(url))
@@ -1495,7 +1495,7 @@ Markup.Syntax.html =
 		{
 			var url = 'http://player.vimeo.com/video/'
 			
-			var iframe = from.querySelector('> iframe')
+			var iframe = from.querySelector('iframe')
 			
 			var src = iframe.getAttribute('src')
 			if (!src.starts_with(url))

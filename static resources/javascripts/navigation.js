@@ -273,7 +273,7 @@ var next_page_data
 		// delete previous page stylesheet
 		
 		if (Configuration.Optimize)
-			Dom.remove(head.querySelector('> style[for="' + old_page_stylesheet_link + '"]'))
+			Dom.remove(head.querySelector('style[for="' + old_page_stylesheet_link + '"]'))
 		else
 			Less.unload_style(old_page_stylesheet_link)
 			
