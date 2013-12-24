@@ -665,4 +665,20 @@ var Dom =
 	}
 }
 
-var Dom_tools = Dom
+HTMLElement.prototype.empty = function()
+{
+	while (this.hasChildNodes())
+		this.removeChild(this.lastChild)
+}
+
+HTMLDocument.prototype.id = HTMLDocument.prototype.getElementById
+
+HTMLElement.prototype.append = HTMLElement.prototype.appendChild
+
+HTMLElement.prototype.prepend = function(node)
+{
+	if (!this.firstChild)
+		return this.append(node)
+		
+	this.insertBefore(node, this.firstChild)
+}

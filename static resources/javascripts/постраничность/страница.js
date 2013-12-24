@@ -120,6 +120,8 @@ var Page = new Class
 			delete page.data.scrolled_before_refresh
 		}
 		
+		document.getElementById('previous_page').empty()
+		
 		$(document).trigger('page_content_ready')
 	},
 	

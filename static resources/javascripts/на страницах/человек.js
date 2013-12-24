@@ -18,19 +18,10 @@
 	
 	page.data_templater_options = function()
 	{
-		// убрать этот conditional потом.
-		// для этого нормально обрабатывать ошибку "пользователь не найден"
-		var conditional = initialize_conditional($('.main_conditional'), { immediate: true })
-		conditional.on_error(function()
-		{
-			page.content_ready()
-		})
-		
 		var options =
 		{
 			template: 'личная карточка',
 			to: page.id_card,
-			conditional: conditional,
 			single: true
 		}
 		
@@ -85,6 +76,16 @@
 			
 			data.with_online_status = true
 			return data
+		},
+		error: function(text, error)
+		{
+			if (error.key === 'user not found')
+			{
+				page.content.empty()
+				$('<div/>').text(error.текст).addClass('not_found').appendTo(page.content)
+				page.content_ready()
+				return false
+			}
 		}
 	})
 	
@@ -234,6 +235,8 @@
 			return
 		}
 	
+		page.photo.visible()
+		
 		var image = $('<img/>')
 		image.attr('src', '/загруженное/люди/' + page.data.пользователь_сети.id + '/фотография.jpg' + '?version=' + page.data.пользователь_сети.photo_version)
 	

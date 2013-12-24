@@ -45,6 +45,26 @@ http://stackoverflow.com/questions/9835956/show-keyboard-in-contenteditable-uiwe
 
 
 
+
+убрать conditional'ы
+
+скриншотить предыдущую страницу перед выводом следующей (чтобы не было мигания при смене страниц)
+
+
+
+
+
+document.body.addEventListener("paste", function(e) 
+{
+	var text = event.clipboardData.getData("text/plain")
+})
+
+
+
+сделать автоматическую загрузку скопированного изображения (скриншота)
+http://habrahabr.ru/company/cackle/blog/201190/
+
+
 	
 
 прочитанность сообщений:

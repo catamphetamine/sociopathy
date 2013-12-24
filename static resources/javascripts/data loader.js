@@ -430,6 +430,12 @@ var Data_loader = new Class
 		show: $.noop,
 		before_done: $.noop,
 		each: $.noop,
+		callback: function(error, action)
+		{
+			if (!error)
+				action()
+		},
+		loading_more: $.noop,
 		Ajax: Ajax
 	},
 	
@@ -452,8 +458,13 @@ var Data_loader = new Class
 		var loader = this
 		
 		this.options.Ajax.get(this.options.url, data_loader_parameters(this.options.parameters))
-		.ошибка(function(ошибка)
+		.ошибка(function(text, ошибка)
 		{
+			if (loader.options.error)
+				loader.options.error(text, ошибка)
+			//	if (loader.options.error(text, ошибка) === false)
+			//		return callback()
+					
 			callback(ошибка)
 		})
 		.ok(function(data)
@@ -555,17 +566,25 @@ var Data_templater = new Class
 		if (!options.container)
 			options.container = options.to
 			
+		// убрать потом этот conditional
+		
 		if (!options.conditional)
-			options.conditional = initialize_conditional(page.get('.main_conditional'), { immediate: true })
+		{
+			var main_conditional = page.get('.main_conditional')
+			if (main_conditional.exists())
+				options.conditional = initialize_conditional(page.get('.main_conditional'), { immediate: true })
+		}	
+		
+		var conditional = options.conditional
+		if (conditional && conditional.constructor === jQuery)
+			conditional = initialize_conditional(options.conditional)
+		
+		// убрать потом этот conditional
 		
 		if (page)
 			options.Ajax = options.Ajax || page.Ajax
 
 		options.Ajax = options.Ajax || Ajax
-	
-		var conditional = options.conditional
-		if (conditional.constructor === jQuery)
-			conditional = initialize_conditional(options.conditional)
 			
 		if (!options.postprocess_item)
 			options.postprocess_item = $.noop
@@ -668,8 +687,11 @@ var Data_templater = new Class
 		
 		loader.options.Ajax = options.Ajax
 		
-		loader.options.callback = conditional.callback
-		loader.options.loading_more = conditional.loading_more
+		if (conditional)
+		{
+			loader.options.callback = conditional.callback
+			loader.options.loading_more = conditional.loading_more
+		}
 		
 		if (options.before_done)
 			loader.options.before_done = options.before_done

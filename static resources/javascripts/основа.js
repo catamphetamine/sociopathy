@@ -1,5 +1,5 @@
-var head = document.getElementsByTagName('head')[0]
-var body = document.getElementsByTagName('body')[0]
+var head = document.head
+var body = document.body
 
 // insert scripts
 
@@ -37,6 +37,8 @@ var scripts =
 	[
 		'more',
 	]},
+	
+	'ajax',
 	
 	//'язык',
 	'date',
@@ -201,7 +203,7 @@ var scripts =
 	
 	'режимы',
 	
-	'rich content'
+	'interactive markup'
 ]
 
 function script_insertion(all_scripts, root_path, finished)

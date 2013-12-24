@@ -238,9 +238,28 @@ var next_page_data
 				{
 					page.preload(function()
 					{
-						Page.element.empty()
-						вставить_стиль()
-						proceed()
+						var finish = function()
+						{
+							Page.element.empty()
+							вставить_стиль()
+							proceed()
+						}
+						
+						finish()
+						 
+						/*
+						if (first_time_page_loading)
+							return finish()
+						
+						html2canvas(Page.element.node(),
+						{
+							onrendered: function(previous_page_screenshot)
+							{
+								document.id('previous_page').prepend(previous_page_screenshot)
+								finish()
+							}
+						})
+						*/
 					})
 				})
 			}

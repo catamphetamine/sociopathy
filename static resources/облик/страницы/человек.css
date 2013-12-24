@@ -1,14 +1,7 @@
 @import "/облик/вспомогательный.less";
 
-.main_conditional
+#content
 {
-	[type=loading], [type=error]
-	{
-		text-align: center;
-		margin-bottom: 50px;
-		margin-top: 250px;
-	}
-	
 	.main_info_centerer
 	{
 		text-align: center;
@@ -101,114 +94,103 @@
 #content
 {
 	margin-bottom: 30px;
-
-	> .error
-	{
-		text-align: center;
-		margin-bottom: 50px;
-		margin-top: 250px;
-	}
+	text-align: center;
 	
-	.main_conditional > div
+	> .miscellaneous
 	{
-		text-align: center;
+		text-align: left;
+		white-space: nowrap;
 		
-		> .miscellaneous
+		background-color: #ffffff;
+		box-shadow: 0 0 20px white;
+		
+		padding: 40px;
+		
+		margin-top: 40px;
+		margin-bottom: 40px;
+		
+		margin-left: auto;
+		margin-right: auto;
+		display: inline-block;
+		
+		border-radius: 10px;
+		
+		.minor_info
 		{
-			text-align: left;
-			white-space: nowrap;
+			width: 900px;
 			
-			background-color: #ffffff;
-			box-shadow: 0 0 20px white;
-			
-			padding: 40px;
-			
-			margin-top: 40px;
-			margin-bottom: 40px;
-			
-			margin-left: auto;
-			margin-right: auto;
 			display: inline-block;
+			vertical-align: top;
 			
-			border-radius: 10px;
+			margin: 0;
 			
-			.minor_info
+			> .add
 			{
-				width: 900px;
+				display: none;
 				
-				display: inline-block;
-				vertical-align: top;
+				text-align: center;
 				
-				margin: 0;
-				
-				> .add
-				{
-					display: none;
-					
-					text-align: center;
-					
-					margin-bottom: 40px;
-				}
-				
-				.info
-				{
-					margin-bottom: 40px;
-			
-					font-size: 26px;
-					
-					&:last-child
-					{
-						margin-bottom: 0;
-					}
-				
-					dt
-					{
-						display: block;
-						color: #7D7B7B;
-					}
-					
-					dd
-					{
-						display: block;
-						margin-left: 20px;
-					}
-				}
-				
-				.left, .right
-				{
-					width: 50%;
-					overflow: hidden;
-					text-overflow: ellipsis;
-				}
-				
-				.left
-				{
-					float: left;
-				}
-				
-				.right
-				{
-					float: right;
-				}
+				margin-bottom: 40px;
 			}
-		
-			.links
+			
+			.info
 			{
-				display: inline-block;
-				vertical-align: top;
-				
-				margin-left: 60px;
-				
-				color: #7D7B7B;
+				margin-bottom: 40px;
+		
 				font-size: 26px;
 				
-				ul
+				&:last-child
 				{
-					margin-top: 0;
-					padding-left: 20px;
-	
-					list-style-type: none;
+					margin-bottom: 0;
 				}
+			
+				dt
+				{
+					display: block;
+					color: #7D7B7B;
+				}
+				
+				dd
+				{
+					display: block;
+					margin-left: 20px;
+				}
+			}
+			
+			.left, .right
+			{
+				width: 50%;
+				overflow: hidden;
+				text-overflow: ellipsis;
+			}
+			
+			.left
+			{
+				float: left;
+			}
+			
+			.right
+			{
+				float: right;
+			}
+		}
+	
+		.links
+		{
+			display: inline-block;
+			vertical-align: top;
+			
+			margin-left: 60px;
+			
+			color: #7D7B7B;
+			font-size: 26px;
+			
+			ul
+			{
+				margin-top: 0;
+				padding-left: 20px;
+	
+				list-style-type: none;
 			}
 		}
 	}
@@ -218,82 +200,96 @@ body[mode="правка"]
 {
 	#content
 	{
-		.main_content
+		.business_card
 		{
-			.business_card
+			.picture
 			{
-				.picture
-				{
-					cursor: pointer;
-			
-					.css_transition_duration(200ms);
-					
-					&.drag_over
-					{
-						.beautiful_shadow_5 (0, 0, 6px, 12px, 16px, 20px, 30px, 0.15, 0, 72, 105);
-					}
-				}
-			}
-			
-			.photo
-			{
+				cursor: pointer;
+		
 				.css_transition_duration(200ms);
 				
 				&.drag_over
 				{
-					.beautiful_shadow_5 (0, 0, 10px, 15px, 20px, 40px, 60px, 0.25, 0, 72, 105);
+					.beautiful_shadow_5 (0, 0, 6px, 12px, 16px, 20px, 30px, 0.15, 0, 72, 105);
 				}
-				
-				img
-				{
-					cursor: pointer;
-				}
+			}
+		}
+		
+		.photo
+		{
+			.css_transition_duration(200ms);
+			
+			&.drag_over
+			{
+				.beautiful_shadow_5 (0, 0, 10px, 15px, 20px, 40px, 60px, 0.25, 0, 72, 105);
 			}
 			
-			> .miscellaneous
+			img
 			{
+				cursor: pointer;
 			}
+		}
+		
+		> .miscellaneous
+		{
 		}
 	}
 }
 
-.business_card .picture_uploading_screen
+#content
 {
-	> span
+	.business_card .picture_uploading_screen
 	{
-		font-size: 18px;
-		margin-top: -9px;
-		letter-spacing: 0;
+		> span
+		{
+			font-size: 18px;
+			margin-top: -9px;
+			letter-spacing: 0;
+		}
 	}
-}
-
-.photo
-{
-	position: relative;
-	display: inline-block;
 	
-	margin-top: 80px;
-	
-	border-radius: 10px;
-					
-	> img, > .picture_uploading_screen
+	.photo
 	{
-		border-width: 1px;
-		border-style: solid;
+		position: relative;
+		display: inline-block;
+		
+		visibility: hidden;
+		
+		margin-top: 80px;
 		
 		border-radius: 10px;
+						
+		> img, > .picture_uploading_screen
+		{
+			border-width: 1px;
+			border-style: solid;
+			
+			border-radius: 10px;
+		}
+		
+		> img
+		{
+			border-color: #afafaf;
+			
+			.beautiful_shadow_3(0, 0, 4px, 6px, 10px, 0.1);
+		}
+	}
+					
+	.upload_new_photo
+	{
+		position: absolute;
+		visibility: hidden;
 	}
 	
-	> img
+	.error
 	{
-		border-color: #afafaf;
-		
-		.beautiful_shadow_3(0, 0, 4px, 6px, 10px, 0.1);
+		color: #9c4646;
 	}
-}
-				
-.upload_new_photo
-{
-	position: absolute;
-	visibility: hidden;
+	
+	.not_found
+	{
+		color: #3f3f3f;
+		
+		margin-top: 100px;
+	}
 }
