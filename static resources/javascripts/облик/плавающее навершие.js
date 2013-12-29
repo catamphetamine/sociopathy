@@ -26,8 +26,10 @@
 		var $this = this
 		var container = this.parent()
 		
-		container.on('disappears_on_top.scroller', function(event, options)
+		container.on('disappears_on_top.scroller', function(event)
 		{
+			var options = event.data
+			
 			if (options && options.first_time)
 				return
 			

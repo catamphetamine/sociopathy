@@ -1,0 +1,67 @@
+@font-face
+{
+	font-family: "DINPro";
+	src: url('/начертания/DINPro-Regular.otf') format("opentype"),
+		url('/начертания/ttf/DINPro-Regular.ttf') format("truetype");
+}
+
+@font-face
+{
+	font-family: "DIN Round";
+	src: url('/начертания/din round regular.otf') format("opentype"),
+		url('/начертания/ttf/din round regular.ttf') format("truetype");
+}
+
+@font-face
+{
+	font-family: "Helvetica";
+	font-weight: 500;
+	src: url('/начертания/HelveticaNeueCyr-Medium.otf') format("opentype"),
+		url('/начертания/ttf/HelveticaNeueCyr-Medium.ttf') format("truetype");
+}
+
+@font-face
+{
+	font-family: "Helvetica";
+	src: url('/начертания/HelveticaNeueCyr-Roman.otf') format("opentype"),
+		url('/начертания/ttf/HelveticaNeueCyr-Roman.ttf') format("truetype");
+}
+
+@font-face
+{
+	font-family: "Helvetica";
+	src: url('/начертания/HelveticaNeueCyr-Bold.otf') format("opentype"),
+		url('/начертания/ttf/HelveticaNeueCyr-Bold.ttf') format("truetype");
+	font-weight: bold;
+}
+
+@font-face
+{
+	font-family: "Helvetica";
+	src: url('/начертания/HelveticaNeueCyr-Italic.otf') format("opentype"),
+		url('/начертания/ttf/HelveticaNeueCyr-Italic.ttf') format("truetype");
+	font-style: italic;
+}
+
+@font-face
+{
+	font-family: "Messe Univers";
+	src: url('/начертания/MesseUnivers-Regular.otf') format("opentype"),
+		url('/начертания/ttf/MesseUnivers-Regular.ttf') format("truetype");
+}
+
+@font-face
+{
+	font-family: "Messe Univers";
+	src: url('/начертания/MesseUnivers-Bold.otf') format("opentype"),
+		url('/начертания/ttf/MesseUnivers-Bold.ttf') format("truetype");
+	font-weight: bold;
+}
+
+@font-face
+{
+	font-family: "Messe Univers";
+	src: url('/начертания/MesseUnivers-LightItalic.otf') format("opentype"),
+		url('/начертания/ttf/MesseUnivers-LightItalic.ttf') format("truetype");
+	font-style: italic;
+}

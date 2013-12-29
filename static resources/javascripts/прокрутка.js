@@ -10,22 +10,20 @@ var Scroller = new Class
 	{
 		var process_scroll = this.process_scroll.bind(this)
 		
-		$(window).on('scroll.scroller', process_scroll)
+		window.on('scroll', process_scroll)
 		
-		$(document).on('focused.scroller', function()
+		document.on('focused', function()
 		{
 			//console.log('Window focused. Processing pseudo scroll')
 			process_scroll({ first_time: true })
 		})
-		
-		//$(window).on('resize', this.reset.bind(this))
 	},
 	
 	watching: function(element)
 	{
 		var filtered = this.elements.filter(function(an_element)
 		{
-			return an_element.node() === element.node()
+			return an_element === element
 		})
 		
 		return !filtered.is_empty()
@@ -33,8 +31,7 @@ var Scroller = new Class
 	
 	watch: function(element, options)
 	{
-		if (!(element instanceof jQuery))
-			element = $(element)
+		element = Dom.normalize(element)
 	
 		if (this.watching(element))
 			return //console.log('already watching')
@@ -46,7 +43,7 @@ var Scroller = new Class
 		else
 			this.elements.push(element)
 		
-		element.data('first_time_with_scroller', true)
+		element.dataset.first_time_with_scroller = true
 		this.check_for_events(element)
 		
 		//console.log('Watched elements:')
@@ -55,8 +52,7 @@ var Scroller = new Class
 	
 	unwatch: function(element)
 	{
-		if (!(element instanceof jQuery))
-			element = $(element)
+		element = Dom.normalize(element)
 	
 		if (this.collect_unwatched)
 			return this.unwatched.add(element)
@@ -64,7 +60,7 @@ var Scroller = new Class
 		var i = 0
 		while (i < this.elements.length)
 		{
-			if (this.elements[i].node() === element.node())
+			if (this.elements[i] === element)
 			{
 				return this.elements.remove_at(i)
 				//return this.unwatch(element)
@@ -105,19 +101,19 @@ var Scroller = new Class
 		
 		options = options || {}
 	
-		if (!element.css('display') || element.css('display') === 'none')
+		if (!element.style.display || element.style.display === 'none')
 			return
 	
-		var top_offset_in_window = element.offset().top - $(window).scrollTop()
+		var top_offset_in_window = element.offsetTop - this.scrolled()
 		
-		var first_time = element.data('first_time_with_scroller')
+		var first_time = element.dataset.first_time_with_scroller
 		if (first_time)
-			element.data('first_time_with_scroller', false)
+			element.dataset.first_time_with_scroller = false
 			
 		first_time = first_time || options.first_time
 		
-		var previous_top_offset_in_window = element.data('top_offset_in_window')
-		element.data('top_offset_in_window', top_offset_in_window)
+		var previous_top_offset_in_window = element.dataset.top_offset_in_window
+		element.dataset.top_offset_in_window = top_offset_in_window
 		
 		var delta = top_offset_in_window - previous_top_offset_in_window
 		
@@ -132,11 +128,13 @@ var Scroller = new Class
 		if (!first_time && delta === 0)
 			return
 		
-		var window_height = $(window).height()
+		var window_height = window.height()
 		
-		var get_bottom_margin = element.data('прокрутчик.get_bottom_margin')
+		var get_bottom_margin = element.dataset.custom_bottom_margin
 		if (get_bottom_margin)
 		{
+			get_bottom_margin = $(element).data('прокрутчик.get_bottom_margin')
+		
 			window_height -= get_bottom_margin()
 			if (window_height < 0)
 				return
@@ -145,7 +143,7 @@ var Scroller = new Class
 		//console.log('window_height')
 		//console.log(window_height)
 		
-		var height = element.height()
+		var height = element.clientHeight
 		
 		var top_is_visible = top_offset_in_window >= 0 && top_offset_in_window < window_height
 		var bottom_is_visible = top_offset_in_window + height >= 0 && top_offset_in_window + height < window_height
@@ -237,7 +235,7 @@ var Scroller = new Class
 		
 		function appears_on_bottom()
 		{
-			element.trigger('appears_on_bottom', window_height - top_offset_in_window)
+			element.trigger('appears_on_bottom') // , window_height - top_offset_in_window
 		}
 		
 		if (first_time)
@@ -284,20 +282,15 @@ var Scroller = new Class
 	
 	scrolled: function()
 	{
-		return $(window).scrollTop()
+		if (typeof window.scrollY !== 'undefined')
+			return window.scrollY
+			
+		return window.pageYOffset
 	},
 	
 	scroll_to_position: function(y)
 	{
-		var scroller
-		if (bowser.webkit)
-			scroller = $(body)
-		else if (bowser.mozilla)
-			scroller = $('html')
-		//else
-		//	throw 'Unsupported browser'
-			
-		scroller.scrollTop(y)
+		window.scrollTo(0, y)
 	},
 	
 	scroll_to: function(element, options, callback)
@@ -326,8 +319,8 @@ var Scroller = new Class
 			y += element.outerHeight(true)
 		}
 		
-		var document_height = parseInt($(document).height())
-		var window_height = parseInt($(window).height())
+		var document_height = parseInt(document.height)
+		var window_height = parseInt(window.height())
 		if (y + window_height > document_height)
 			y = document_height - window_height
 	
@@ -336,17 +329,17 @@ var Scroller = new Class
 	
 	scroll_to_bottom: function()
 	{
-		this.scroll_to_y($(document).height() - $(window).height())
+		this.scroll_to_y(document.height - window.height())
 	},
 	
 	scroll_to_top: function()
 	{
-		$(window).scrollTop(0)
+		this.scroll_to(0)
 	},
 	
 	scroll_by: function(how_much)
 	{
-		$(window).scrollTop($(window).scrollTop() + how_much)
+		window.scrollBy(0, how_much)
 	},
 	
 	scroll_to_y: function(y, options, callback)
@@ -355,15 +348,11 @@ var Scroller = new Class
 	
 		var scroller
 		if (bowser.webkit)
-			scroller = $(body)
-		else if (bowser.mozilla)
-			scroller = $('html')
+			scroller = $body
 		else
-			scroller = $('html')
+			scroller = $html
 			
 		//	throw 'Unsupported browser'
-			
-		var namespace = '.scroller_' + new Date().getTime()
 		
 		var finalized = false
 		var finished = function()
@@ -377,20 +366,22 @@ var Scroller = new Class
 				callback()
 		}
 		
-		options.duration = options.duration || this.scroll_duration(Math.abs($(window).scrollTop() - y))
+		options.duration = options.duration || this.scroll_duration(Math.abs(this.scrolled() - y))
 		
-		scroller.animate({ scrollTop: y + 'px' }, options.duration, 'easeInOutCubic', function()
-		{
-			$(document).unbind(namespace)
-			finished()
-		})
-		
-		$(document).on('wheel' + namespace, function(event)
+		var scroll_animation_stopper = function(event)
 		{
 			// clear queue, dont jump to end
 			scroller.stop(true, false)
 			
-			$(document).unbind(namespace)
+			window.removeEventListener('scroll', scroll_animation_stopper)
+			finished()
+		}
+		
+		window.on('scroll', scroll_animation_stopper)
+		
+		scroller.animate({ scrollTop: y + 'px' }, options.duration, 'easeInOutCubic', function()
+		{
+			window.removeEventListener('scroll', scroll_animation_stopper)
 			finished()
 		})
 	},
@@ -409,14 +400,14 @@ var Scroller = new Class
 	
 	in_the_end: function()
 	{
-		return $(window).scrollTop() + $(window).height() === $(document).height()
+		return this.scrolled() + window.height() === document.height
 	},
 	
 	to_the_end: function()
 	{
-		var scroll_to = $(document).height() - $(window).height()
+		var scroll_to = document.height - window.height()
 		if (scroll_to > 0)
-			$(window).scrollTop(scroll_to)
+			this.scroll_to(scroll_to)
 	}
 })
 

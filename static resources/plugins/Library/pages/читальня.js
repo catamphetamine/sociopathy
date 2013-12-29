@@ -47,12 +47,6 @@
 				page.data.empty = true
 	
 			return data.раздел
-		},
-		done: function()
-		{
-			page.content_ready()
-			
-			center_categories_list()
 		}
 	}))
 	
@@ -151,6 +145,7 @@
 	
 	page.data_loader.options.done = function()
 	{
+		center_categories_list()
 		$(window).on_page('resize.library', center_categories_list)
 		
 		page.content_ready()
@@ -363,7 +358,7 @@
 	
 	function center_categories_list()
 	{
-		center_list($('#categories'), { space: $('#content'), item_width: 300, side_margin: 32 })
+		center_list($('#categories'), { space: page.content, item_width: 300, side_margin: 32 })
 	}
 
 	var populate_categories = function(template)

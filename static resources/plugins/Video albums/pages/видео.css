@@ -1,81 +1,81 @@
 @import "/облик/вспомогательный.less";
 
-#content
+.video_albums_plugin_video_albums_page
 {
 	margin-top: 60px;
-}
-
-#albums
-{
-	list-style-type: none;
-	padding: 0;
 	
-	position: relative;
-
-	> li
+	#albums
 	{
-		display: inline-block;
-		
+		list-style-type: none;
 		padding: 0;
 		
-		margin: 60px;
+		position: relative;
 	
-		> *
+		> li
 		{
-			float: left;
-		}
-	
-		.album
-		{
-			position: relative;
 			display: inline-block;
+			
+			padding: 0;
+			
+			margin: 60px;
 		
-			border-radius: 8px;
-			
-			.beautiful_shadow_5(0px, 3px, 20px, 12px, 2px, 8px, 4px, 0.2);
-			
-			overflow: hidden;
-			
-			&, > .cover
+			> *
 			{
-				width: 706px;
-				height: 400px;
+				float: left;
 			}
-			
-			/* fix rounded corners bug in web kit */
-			
-			> .cover
+		
+			.album
 			{
-				&, > img
+				position: relative;
+				display: inline-block;
+			
+				border-radius: 8px;
+				
+				.beautiful_shadow_5(0px, 3px, 20px, 12px, 2px, 8px, 4px, 0.2);
+				
+				overflow: hidden;
+				
+				&, > .cover
 				{
-					border-radius: 8px;
+					width: 706px;
+					height: 400px;
 				}
-			}
-			
-			> .title
-			{				
-				border-bottom-left-radius: 8px;
-				border-bottom-right-radius: 8px;
-			}
-			
-			> .title
-			{
-				position: absolute;
-				bottom: 0;
 				
-				width: 100%;
+				/* fix rounded corners bug in web kit */
 				
-				font-size: 36px;
-				color: white;
-				background-color: black;
-				opacity: 0.85;
+				> .cover
+				{
+					&, > img
+					{
+						border-radius: 8px;
+					}
+				}
 				
-				padding-left: 18px;
-				padding-right: 18px;
-				padding-top: 10px;
-				padding-bottom: 8px;
+				> .title
+				{				
+					border-bottom-left-radius: 8px;
+					border-bottom-right-radius: 8px;
+				}
 				
-				.include_padding_in_width();
+				> .title
+				{
+					position: absolute;
+					bottom: 0;
+					
+					width: 100%;
+					
+					font-size: 36px;
+					color: white;
+					background-color: black;
+					opacity: 0.85;
+					
+					padding-left: 18px;
+					padding-right: 18px;
+					padding-top: 10px;
+					padding-bottom: 8px;
+					
+					.include_padding_in_width();
+				}
 			}
 		}
 	}

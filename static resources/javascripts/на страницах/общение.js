@@ -15,7 +15,7 @@
 		
 		page.подсказка('отправка нового общения', 'После того, как вы заполните название и текст, нажимите клавиши «Ctrl + Enter»')
 
-		var visual_editor = new Visual_editor('#content > .compose_message > article')
+		var visual_editor = new Visual_editor(page.content.find(' > .compose_message > article'))
 
 		Клавиши.on(page.get('form .title'), 'Enter', function()
 		{

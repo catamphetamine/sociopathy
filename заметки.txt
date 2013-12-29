@@ -1,8 +1,188 @@
 sociopathy:
 
 RestKit
+https://github.com/AFNetworking/AFNetworking/
 Custom UI
 сохранять мб что-нибудь в SQLite
+многопоточность
+
+в архиве - шрифт warnock pro
+
+
+
+math jax:
+
+<script type="text/x-mathjax-config">
+    // <![CDATA[
+    MathJax.Hub.Config({ 
+        TeX: {extensions: ["AMSmath.js", "AMSsymbols.js"]},     
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX", "output/HTML-CSS"],
+        showProcessingMessages : false,
+        messageStyle : "none" ,    
+        showMathMenu: false ,
+        tex2jax: {
+            processEnvironments: true,
+            inlineMath: [ ['$','$'], ["\(","\)"] ],
+            displayMath: [ ['$$','$$'], ["\[","\]"] ],
+            preview : "none",
+            processEscapes: true
+        },
+        "HTML-CSS": { linebreaks: { automatic:true, width: "latex-container"} }
+    });
+    // ]]>
+</script>
+<script type="text/javascript" src="https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+
+
+
+
+on scroll:
+
+throttle, 250 ms
+
+переписать on scroll без jquery
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+кешировать аватары, фотки:
+http://habrahabr.ru/post/179349/
+
+
+- (BOOL) application:(UIApplication*) application didFinishLaunchingWithOptions: (NSDictionary*) launchOptions 
+{
+    NSURLCache *URLCache = [[NSURLCache alloc] initWithMemoryCapacity: 4 * 1024 * 1024 
+                                                         diskCapacity: 20 * 1024 * 1024 
+                                                             diskPath:nil];
+    [NSURLCache setSharedURLCache:URLCache];
+}
+
+- (NSCachedURLResponse*) connection: (NSURLConnection*) connection 
+willCacheResponse: (NSCachedURLResponse*) cachedResponse
+{
+	protocol = http, https
+	
+	url starts with "site.com"
+	
+	if location ~ ^/(compressed|international|javascripts|plugins|звуки|картинки|начертания|облик|страницы|загруженное)/ {
+		return cachedResponse;
+		
+	return nil;
+}
+
+
+
+
+
+
+@interface LoginViewController : UIViewController {
+    UIImageView* logoView;
+}
+
+	
+// self.imageView.contentMode = UIViewContentModeScaleAspectFit
+	
+// add placeholder image
+UIImage *placeholderImage = [UIImage imageNamed:@"placeholder.png"];
+cell.imageView.image = placeholderImage;
+
+
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+
+    // Create Circle View
+    UIImageView logo = 
+
+    // Create Circle Layer
+    CircleLayer *circle_layer = [[CircleLayer alloc] init];
+    circle_layer.needsDisplayOnBoundsChange = YES;
+    circle_layer.frame = circle_view.bounds;
+    [circle_view.layer addSublayer:circle_layer];
+
+    // Enable Auto Layout
+    [circle_view setTranslatesAutoresizingMaskIntoConstraints:NO];
+
+    [self.view addSubview:circle_view];
+
+    // Center Vertically
+    NSLayoutConstraint *centerYConstraint =
+    [NSLayoutConstraint constraintWithItem:circle_view
+                attribute:NSLayoutAttributeCenterY
+                relatedBy:NSLayoutRelationEqual
+                   toItem:self.view
+                attribute:NSLayoutAttributeCenterY
+               multiplier:1.0
+                 constant:0.0];
+    [self.view addConstraint:centerYConstraint];
+
+    // Center Horizontally
+    NSLayoutConstraint *centerXConstraint =
+    [NSLayoutConstraint constraintWithItem:circle_view
+                attribute:NSLayoutAttributeCenterX
+                relatedBy:NSLayoutRelationEqual
+                   toItem:self.view
+                attribute:NSLayoutAttributeCenterX
+               multiplier:1.0
+                 constant:0.0];
+    [self.view addConstraint:centerXConstraint];
+}
+
+
+
+
+
+
+
+в landscape - прятать лого
+проследить, чтобы на показ клавиатуры отвечало адекватно в обоих случаях
+
+
+
+
+https://github.com/rs/SDWebImage
+
+
+#import <SDWebImage/UIImageView+WebCache.h>
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    static NSString *MyIdentifier = @"MyIdentifier";
+
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:MyIdentifier];
+
+    if (cell == nil)
+    {
+        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
+                                       reuseIdentifier:MyIdentifier] autorelease];
+    }
+
+    // Here we use the new provided setImageWithURL: method to load the web image
+    [cell.imageView setImageWithURL:[NSURL URLWithString:@"http://www.domain.com/path/to/image.jpg"]
+                   placeholderImage:[UIImage imageNamed:@"placeholder.png"]];
+
+    cell.textLabel.text = @"My Text";
+    return cell;
+}
+
+
+
+
+
+	
+	
+
 
 четыре таба: болталка, беседы, обсуждения, архив
 
@@ -31,6 +211,13 @@ navigation controller, в нём - table view
 при долгом нажатии на беседу - контекстное меню "выйти из беседы"
 
 
+
+
+
+
+
+
+вычленить стиль мобильных в один закомпрешенный файл
 
 
 
@@ -82,6 +269,9 @@ http://habrahabr.ru/company/cackle/blog/201190/
 
 
 
+убрать page.preload (закомментировать кое-где мб)
+
+
 
 
 
@@ -95,7 +285,7 @@ http://habrahabr.ru/company/cackle/blog/201190/
 
 
 
-
+при unwatch'е элемента нужно unbind'ить всех его слушателей типа 'appears_on_bottom
 
 если выделить первую часть готового текста, сделать её ссылкой, потом нажать пробел - появится пробел, но при сохранении - исчезнет
 

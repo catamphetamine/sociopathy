@@ -1,15 +1,8 @@
 @import "/облик/вспомогательный.less";
 
 @article_side_padding: 80px;
-
-/*
-body[mode="правка"] #content
-{
-	margin-bottom: 150px;
-}
-*/
 	
-#content
+.library_plugin_article_page
 {
 	margin-top: @standard_breadcrumbs_top_margin;
 	margin-bottom: 60px;
@@ -19,7 +12,6 @@ body[mode="правка"] #content
 		> section
 		{
 			font-family: @textual_font;
-		
 			font-size: @textual_font_size;
 			line-height: @textual_font_line_height;
 			
@@ -35,46 +27,31 @@ body[mode="правка"] #content
 			padding-right: @article_side_padding;
 		}
 	}
-}
-
-#article_edit_mode_actions
-{
-}
-
-#article_edit_mode_actions, #article_edit_mode_actions_placeholder
-{
-	height: 66px;
-	overflow: hidden;
-}
-
-.visual_editor_tools_container
-{
-	/* margin-top: 30px; */
-}
-
-.delete_article, .move_article
-{
-	text-align: center;
-}
-
-.move_article
-{
-	margin-top: 10px;
-	margin-bottom: 10px;
-}
-
-.delete_article
-{
-	margin-bottom: 30px;
-}
-
-.move_article_window
-{
-	form
+	
+	.delete_article, .move_article
 	{
-		input[name="where"]
+		text-align: center;
+	}
+	
+	.move_article
+	{
+		margin-top: 10px;
+		margin-bottom: 10px;
+	}
+	
+	.delete_article
+	{
+		margin-bottom: 30px;
+	}
+	
+	.move_article_window
+	{
+		form
 		{
-			width: 660px !important;
+			input[name="where"]
+			{
+				width: 660px !important;
+			}
 		}
 	}
 }

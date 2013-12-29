@@ -8,10 +8,11 @@ var page_data
 
 var next_page_data
 
+var old_page_stylesheet_link
+
 ;(function()
 {	
 	var old_page_javascript_link
-	var old_page_stylesheet_link
 	
 	var предыдущая_страница
 	
@@ -107,13 +108,20 @@ var next_page_data
 		}
 	}
 	
+	var navigation_took_place
+	
 	function do_navigate_to_page(url, options)
 	{
 		if (!проверить_доступ(url))
 			return
 		
 		navigating = true
-				
+		
+		if (navigation_took_place)
+			first_time_page_loading = false
+		else
+			navigation_took_place = true
+			
 		предыдущая_страница = Страница.эта()
 		
 		new_page_data = {}
@@ -145,8 +153,16 @@ var next_page_data
 			page.full_unload()
 			
 			$(document).trigger('page_unloaded')
-		
-			//Page.element.empty()
+			
+			// delete previous page javascript
+			var script_selector
+			
+			if (Configuration.Optimize)
+				script_selector = 'script[for="' + old_page_javascript_link + '"]'
+			else
+				script_selector = 'script[src="' + old_page_javascript_link + '"]'
+			
+			document.querySelector('head > ' + script_selector).remove()
 		}
 		
 		if (предыдущая_страница)
@@ -177,7 +193,7 @@ var next_page_data
 			{
 				var finish = function()
 				{
-					page.content = $('#content')
+					page.content = page.element.find('> section')
 					$('*').unbind('.page')
 					
 					if (options.state)
@@ -190,7 +206,7 @@ var next_page_data
 				{
 					var error = $('<div/>').addClass('error')
 					error.append(ошибка_на_экране(ошибка))
-					Page.element.empty().append(error)
+					page.element.empty().append(error)
 					
 					page.needs_to_load_content = false
 					return finish()
@@ -224,9 +240,12 @@ var next_page_data
 		
 		if (plugin)
 			path = '/plugins/' + plugin + '/pages/' + Страница.эта().substring(plugin.length + 1)
+		
+		page.element = $('#page_being_loaded')
 			
 		вставить_содержимое(path + '.html', page.data.данные_для_страницы,
 		{
+			куда: page.element,
 			on_error: function()
 			{
 				Страница.эта('страница не найдена')
@@ -240,7 +259,6 @@ var next_page_data
 					{
 						var finish = function()
 						{
-							Page.element.empty()
 							вставить_стиль()
 							proceed()
 						}
@@ -251,7 +269,7 @@ var next_page_data
 						if (first_time_page_loading)
 							return finish()
 						
-						html2canvas(Page.element.node(),
+						html2canvas(page.element.node(),
 						{
 							onrendered: function(previous_page_screenshot)
 							{
@@ -272,12 +290,6 @@ var next_page_data
 		if (first_time_page_loading)
 			return insert_script(get_page_javascript_link(), callback)
 		
-		// delete previous page javascript
-		if (Configuration.Optimize)
-			$('head').find('> script[for="' + old_page_javascript_link + '"]').remove()
-		else
-			$('head').find('> script[src="' + old_page_javascript_link + '"]').remove()
-		
 		insert_script(get_page_javascript_link(), callback)
 	}
 	
@@ -287,14 +299,10 @@ var next_page_data
 			return insert_style(get_page_less_style_link())
 	
 		if (Страница.эта() === предыдущая_страница)
+		{
+			page.same_page = true
 			return
-
-		// delete previous page stylesheet
-		
-		if (Configuration.Optimize)
-			Dom.remove(head.querySelector('style[for="' + old_page_stylesheet_link + '"]'))
-		else
-			Less.unload_style(old_page_stylesheet_link)
+		}
 			
 		insert_style(get_page_less_style_link())
 	}

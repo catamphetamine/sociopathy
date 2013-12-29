@@ -9,8 +9,6 @@ $(document).on('scripts_loaded', function()
 {
 	loading_page({ immediate: true })
 
-	Page.element = $('#page')
-	
 	подгрузить_статику(function(ошибка)
 	{
 		if (ошибка)
@@ -28,10 +26,26 @@ $(document).on('scripts_loaded', function()
 $(document).on('page_content_ready', function()
 {
 	activate_anchors()
-	ajaxify_internal_links(Page.element)
+	ajaxify_internal_links(page.element)
 	
 	page.Data_store.initialize_store(function(data)
 	{
+		var real_page_element = $('#page')
+	
+		real_page_element.empty()
+		
+		// delete previous page stylesheet
+		if (!first_time_page_loading && !page.same_page)
+		{
+			if (Configuration.Optimize)
+				Dom.remove(head.querySelector('style[for="' + old_page_stylesheet_link + '"]'))
+			else
+				Less.unload_style(old_page_stylesheet_link)
+		}
+			
+		page.element.children().appendTo(real_page_element)
+		page.element = real_page_element
+		
 		hide_page_loading_screen()
 	})
 })
@@ -102,7 +116,7 @@ $(document).on('page_initialized', function()
 				$('#logo').show()
 			}
 		}
-		
+				
 		page.full_load(function()
 		{
 			ajaxify_internal_links()
@@ -114,13 +128,15 @@ $(document).on('page_initialized', function()
 			$(document).on_page_once('page_content_ready', function()
 			{
 				if (page.data.scroll_to)
-					$(window).scrollTop(page.data.scroll_to)
-				else
+					прокрутчик.scroll_to(page.data.scroll_to)
+				else if (get_hash())
 					go_to_anchor()
+				else
+					прокрутчик.scroll_to_top()
 			})
 
 			if (first_time_page_loading)
-				$('#loading_screen').removeClass('first_time_page_loading')
+				document.id('loading_screen').classList.remove('first_time_page_loading')
 			
 			page_initialized()
 			

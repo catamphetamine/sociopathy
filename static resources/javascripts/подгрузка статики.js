@@ -283,9 +283,6 @@ var вставить_содержимое
 		{
 			var insert = function()
 			{
-				if (!options.куда)
-					options.куда = Page.element.node()
-					
 				$.render(шаблон, данные).appendTo(options.куда)
 				возврат()
 			}

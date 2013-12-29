@@ -392,7 +392,7 @@ var Scroll_loader = new Class
 		
 		this.options.scroll_detector.show()
 		
-		this.options.scroll_detector.on('appears_on_bottom.scroller', function(event)
+		this.options.scroll_detector.node().on('appears_on_bottom', function(event)
 		{
 			if (loader.disabled())
 				return info(text('loader.either way.can\'t load more while in edit mode'))
@@ -411,7 +411,7 @@ var Scroll_loader = new Class
 		if (!this.active)
 			return
 			
-		this.options.scroll_detector.unbind('.scroller').hide()
+		this.options.scroll_detector.hide()
 		page.unwatch(this.options.scroll_detector)
 		
 		this.active = false

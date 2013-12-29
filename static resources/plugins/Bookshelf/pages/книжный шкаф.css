@@ -1,6 +1,7 @@
 @import "/облик/вспомогательный.less";
 @import "/облик/css3.less";
 
+/*
 #page_content_block
 {
 	[type=loading], [type=error]
@@ -15,8 +16,9 @@
 		text-align: center;
 	}
 }
+*/
 
-#content
+.bookshelf_plugin_bookshelf_page
 {
 	padding-bottom: 100px;
 	margin-top: 60px;
@@ -49,277 +51,272 @@
 			}
 		}
 	}
-}
-
-.book_info
-{
-	position: absolute;
-	z-index: 2;
-		
-	.info
+	
+	.book_info
 	{
-		line-height: 43px;
-		font-size: 30px;
-		
-		text-align: center;
-		
-		.author, .title
+		position: absolute;
+		z-index: 2;
+			
+		.info
 		{
-			&::selection
+			line-height: 43px;
+			font-size: 30px;
+			
+			text-align: center;
+			
+			.author, .title
 			{
-				color: black;
-				background-color: white;
-				text-shadow: white 1px 1px 4px;
-			}		
-		}
-		
-		.author
-		{
-			display: block;
-		}
-		
-		.title
-		{
-			&:before
-			{
-				content: '«';
+				&::selection
+				{
+					color: black;
+					background-color: white;
+					text-shadow: white 1px 1px 4px;
+				}		
 			}
 			
-			&:after
+			.author
 			{
-				content: '»';
+				display: block;
+			}
+			
+			.title
+			{
+				&:before
+				{
+					content: '«';
+				}
+				
+				&:after
+				{
+					content: '»';
+				}
 			}
 		}
 	}
-}
-
-.bookshelf
-{
-	display: inline-block;
-	font-size: 0;
 	
-	.beautiful_shadow_4(0px, 10px, 5px, 14px, 26px, 42px, 0.10);
-	
-	.middle
-	{
-		position: relative;
-	}
-	
-	.top_border, .bottom_border
-	{
-		background-image: url('/plugins/Bookshelf/pictures/книжный шкаф/пологая доска.png');
-		height: 13px;
-	}
-
-	.left_border, .right_border
-	{
-		background-image: url('/plugins/Bookshelf/pictures/книжный шкаф/отвесная доска.png');
-		width: 13px;
-		height: 100%;
-		position: absolute;
-	}
-	
-	.inner
-	{
-		margin-left: 13px;
-		margin-right: 13px;
-	}
-	
-	.inner, .left_border, .right_border
+	.bookshelf
 	{
 		display: inline-block;
-	}
-	
-	.right_border
-	{
-		right: 0;
-	}
-	
-	.shelf
-	{
-		white-space: nowrap;
-		position: relative;
+		font-size: 0;
 		
-		.left, .center, .right
+		.beautiful_shadow_4(0px, 10px, 5px, 14px, 26px, 42px, 0.10);
+		
+		.middle
 		{
-			height: 180px;
+			position: relative;
+		}
+		
+		.top_border, .bottom_border
+		{
+			background-image: url('/plugins/Bookshelf/pictures/книжный шкаф/пологая доска.png');
+			height: 13px;
+		}
+	
+		.left_border, .right_border
+		{
+			background-image: url('/plugins/Bookshelf/pictures/книжный шкаф/отвесная доска.png');
+			width: 13px;
+			height: 100%;
+			position: absolute;
+		}
+		
+		.inner
+		{
+			margin-left: 13px;
+			margin-right: 13px;
+		}
+		
+		.inner, .left_border, .right_border
+		{
 			display: inline-block;
 		}
 		
-		.left, .right
+		.right_border
 		{
-			width: 320px;
-			background-image: url('/plugins/Bookshelf/pictures/книжный шкаф/левая сторона полки.png');
+			right: 0;
 		}
 		
-		.right
+		.shelf
 		{
-			.scale(-1, 1);
-		}
-		
-		.center
-		{
-			width: 319px;
-			background-image: url('/plugins/Bookshelf/pictures/книжный шкаф/середина полки.png');
-		}
-		
-		.books
-		{
-			position: absolute;
-			bottom: 6px;
-			
-			padding-left: 20px;
-			padding-right: 20px;
-			
 			white-space: nowrap;
+			position: relative;
 			
-			.include_padding_in_width();
-			
-			width: 100%;
-			text-align: center;	
-			
-			.book_place
+			.left, .center, .right
 			{
+				height: 180px;
 				display: inline-block;
-				position: relative;
-				
-				width: 152px;
-				text-align: center;
+			}
 			
-				.book.selected
-				{
-					.beautiful_shadow_5 (0, 0, 10px, 15px, 20px, 40px, 60px, 1, 255, 200, 0);
-					
-					.css_transition_duration(100ms);
-				}
-		
-				.book
+			.left, .right
+			{
+				width: 320px;
+				background-image: url('/plugins/Bookshelf/pictures/книжный шкаф/левая сторона полки.png');
+			}
+			
+			.right
+			{
+				.scale(-1, 1);
+			}
+			
+			.center
+			{
+				width: 319px;
+				background-image: url('/plugins/Bookshelf/pictures/книжный шкаф/середина полки.png');
+			}
+			
+			.books
+			{
+				position: absolute;
+				bottom: 6px;
+				
+				padding-left: 20px;
+				padding-right: 20px;
+				
+				white-space: nowrap;
+				
+				.include_padding_in_width();
+				
+				width: 100%;
+				text-align: center;	
+				
+				.book_place
 				{
 					display: inline-block;
 					position: relative;
 					
-					> a
+					width: 152px;
+					text-align: center;
+				
+					.book.selected
 					{
-						display: block;
-					}
+						.beautiful_shadow_5 (0, 0, 10px, 15px, 20px, 40px, 60px, 1, 255, 200, 0);
 						
-					.icon
+						.css_transition_duration(100ms);
+					}
+			
+					.book
 					{
+						display: inline-block;
 						position: relative;
-						z-index: 1;
-						bottom: 0;
-					
-						.shadow(0px, 0px, 14px, 1.0);
-					}
-					
-					.author, .title
-					{
-						white-space: normal;
-					
-						position: absolute;
-						z-index: 2;
 						
-						text-align: center;
-						
-						overflow: hidden;
-					}
-					
-					.author
-					{
-						width: 70px;
-						height: 16px;
-						
-						bottom: 22px;
-						left: 18px;
-						
-						font-family: DINPro;
-						
-						> *
+						> a
 						{
-							margin: auto;
+							display: block;
 						}
-					}
-					
-					.title
-					{
-						width: 63px;
-						height: 42px;
-						
-						top: 34px;
-						left: 22px;
-						
-						font-family: Times New Roman;
-						
-						> *
-						{
-							white-space: normal;
-						}
-					}
-					
-					&.no_icon
-					{
+							
 						.icon
 						{
-							width: 100px;
-							height: 150px;
-							
-							background-image: url('/plugins/Bookshelf/pictures/книжный шкаф/книга без обложки.png');
+							position: relative;
+							z-index: 1;
+							bottom: 0;
+						
+							.shadow(0px, 0px, 14px, 1.0);
 						}
-					}
-					
-					.bottom_shadow
-					{
-						background-image: url('/plugins/Bookshelf/pictures/книжный шкаф/тень от книги на подставке.png');
-						height: 10px;
-	
-						width: 110%;
-						left: -5%;
 						
-						background-size: 100% 10px;
+						.author, .title
+						{
+							white-space: normal;
 						
-						opacity: 0.5;
+							position: absolute;
+							z-index: 2;
+							
+							text-align: center;
+							
+							overflow: hidden;
+						}
 						
-						position: absolute;
-						bottom: -4px;
-						z-index: 0;
+						.author
+						{
+							width: 70px;
+							height: 16px;
+							
+							bottom: 22px;
+							left: 18px;
+							
+							font-family: DINPro;
+							
+							> *
+							{
+								margin: auto;
+							}
+						}
+						
+						.title
+						{
+							width: 63px;
+							height: 42px;
+							
+							top: 34px;
+							left: 22px;
+							
+							font-family: Times New Roman;
+							
+							> *
+							{
+								white-space: normal;
+							}
+						}
+						
+						&.no_icon
+						{
+							.icon
+							{
+								width: 100px;
+								height: 150px;
+								
+								background-image: url('/plugins/Bookshelf/pictures/книжный шкаф/книга без обложки.png');
+							}
+						}
+						
+						.bottom_shadow
+						{
+							background-image: url('/plugins/Bookshelf/pictures/книжный шкаф/тень от книги на подставке.png');
+							height: 10px;
+		
+							width: 110%;
+							left: -5%;
+							
+							background-size: 100% 10px;
+							
+							opacity: 0.5;
+							
+							position: absolute;
+							bottom: -4px;
+							z-index: 0;
+						}
 					}
 				}
 			}
 		}
+		
+		.shelf_divider
+		{
+			white-space: nowrap;
+			
+			.left, .center, .right
+			{
+				height: 13px;
+				display: inline-block;
+			}
+			
+			.left, .right
+			{
+				width: 320px;
+				background-image: url('/plugins/Bookshelf/pictures/книжный шкаф/левый торец полки.png');
+			}
+			
+			.right
+			{
+				.scale(-1, 1);
+			}
+			
+			.center
+			{
+				width: 319px;
+				background-image: url('/plugins/Bookshelf/pictures/книжный шкаф/торец полки.png');
+			}
+		}
 	}
-	
-	.shelf_divider
-	{
-		white-space: nowrap;
-		
-		.left, .center, .right
-		{
-			height: 13px;
-			display: inline-block;
-		}
-		
-		.left, .right
-		{
-			width: 320px;
-			background-image: url('/plugins/Bookshelf/pictures/книжный шкаф/левый торец полки.png');
-		}
-		
-		.right
-		{
-			.scale(-1, 1);
-		}
-		
-		.center
-		{
-			width: 319px;
-			background-image: url('/plugins/Bookshelf/pictures/книжный шкаф/торец полки.png');
-		}
-	}
-}
-
-body[mode="правка"] .book
-{
-	/* cursor: pointer !important; */
 }
 
 .context_menu

@@ -845,3 +845,6 @@ function cookie(name, value)
 		}
 	}
 })()
+
+window.$html = $('html')
+window.$body = $(body)

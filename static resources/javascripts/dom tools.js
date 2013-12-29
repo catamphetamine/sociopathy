@@ -682,3 +682,39 @@ HTMLElement.prototype.prepend = function(node)
 		
 	this.insertBefore(node, this.firstChild)
 }
+
+HTMLElement.prototype.remove = function()
+{
+	this.parentNode.removeChild(this)
+}
+
+window.height = function()
+{
+	return this.innerHeight
+}
+
+HTMLElement.prototype.trigger = function(event, data)
+{
+	if (!data)
+		return this.dispatchEvent(new Event(event))
+		
+	this.dispatchEvent(new CustomEvent(event, { 'data': data }))
+}
+
+EventTarget.prototype.on = EventTarget.prototype.addEventListener
+EventTarget.prototype.off = EventTarget.prototype.removeEventListener
+
+/*
+HTMLElement.prototype.height = function()
+{
+	return this.offsetHeight
+	
+	// clientHeight
+	//
+	
+	elmHeight = document.defaultView.getComputedStyle(elm, '').getPropertyValue('height');
+        elmMargin = parseInt(document.defaultView.getComputedStyle(elm, '').getPropertyValue('margin-top')) + parseInt(document.defaultView.getComputedStyle(elm, '').getPropertyValue('margin-bottom')) + "px";
+	
+    return (elmHeight+elmMargin);
+}
+*/

@@ -1,7 +1,7 @@
 @import "/облик/вспомогательный.less";
 @import "/облик/author_content_date.less";
 
-#content
+.news_plugin_news_page
 {
 	margin-top: 40px;
 	padding-bottom: 40px;
@@ -12,84 +12,84 @@
 		margin-right: 80px;
 		margin-bottom: 60px;
 	}
-}
-
-#news
-{
-	/*
-	margin-top: 50px;
-	margin-left: 50px;
-	*/
 	
-	> li
+	#news
 	{
 		/*
-		margin-top: 40px;
-		margin-bottom: 40px;
+		margin-top: 50px;
+		margin-left: 50px;
 		*/
 		
-		.content_wrapper
+		> li
 		{
-			> .content
+			/*
+			margin-top: 40px;
+			margin-bottom: 40px;
+			*/
+			
+			.content_wrapper
 			{
-				> .video_uploaded
+				> .content
 				{
-					img
+					> .video_uploaded
 					{
-						display: inline-block;
-				
-						margin-top: 20px;
-						margin-bottom: 20px;
-						
-						background-color: black;
-						color: white;
-						text-align: center;
-						
-						width: 640px;
-						height: 360px;
-						
-						overflow: hidden;
-						
-						.beautiful_shadow_5(0px, 3px, 20px, 12px, 2px, 8px, 4px, 0.2);
-						border-radius: 10px;
-						
-						border-style: solid;
-						border-color: #7f7f7f;
-						border-width: 1px;
-					}
-				}
-				
-				> .picture_uploaded
-				{
-					img
-					{
-						display: inline-block;
-						
-						margin-top: 20px;
-						margin-bottom: 20px;
+						img
+						{
+							display: inline-block;
 					
-						width: 400px;
-						height: 267px;
+							margin-top: 20px;
+							margin-bottom: 20px;
+							
+							background-color: black;
+							color: white;
+							text-align: center;
+							
+							width: 640px;
+							height: 360px;
+							
+							overflow: hidden;
+							
+							.beautiful_shadow_5(0px, 3px, 20px, 12px, 2px, 8px, 4px, 0.2);
+							border-radius: 10px;
+							
+							border-style: solid;
+							border-color: #7f7f7f;
+							border-width: 1px;
+						}
+					}
+					
+					> .picture_uploaded
+					{
+						img
+						{
+							display: inline-block;
+							
+							margin-top: 20px;
+							margin-bottom: 20px;
 						
-						border-radius: 8px;
-						
-						.beautiful_shadow_5(0px, 3px, 20px, 12px, 2px, 8px, 4px, 0.2);
+							width: 400px;
+							height: 267px;
+							
+							border-radius: 8px;
+							
+							.beautiful_shadow_5(0px, 3px, 20px, 12px, 2px, 8px, 4px, 0.2);
+						}
 					}
 				}
 			}
 		}
 	}
-}
-
-.author_content_date
-{
-	> li:nth-child(even)
+	
+	.author_content_date
 	{
-		background-color: #f7f7f7;
+		> li:nth-child(even)
+		{
+			background-color: #f7f7f7;
+		}
 	}
-}
-
-.markup
-{
-	white-space: normal;
+	
+	.markup
+	{
+		white-space: normal;
+	}
 }

@@ -1,6 +1,6 @@
 @import "/облик/вспомогательный.less";
 
-#content
+.picture_albums_plugin_picture_album_page
 {
 	margin-top: 60px;
 
@@ -123,34 +123,34 @@
 			}
 		}
 	}
-}
-
-.progress_bar
-{
-	position: absolute;
-	top: 0px;
 	
-	width: 100%;
-	text-align: center;
-	
-	font-size: 0;
-	
-	.bar
+	.progress_bar
 	{
-		background-color: #2f2f2f;
-	
-		&, .progress
-		{
-			height: 8px;
-			
-			border-top-right-radius: 4px;
-			border-bottom-right-radius: 4px;
-		}
+		position: absolute;
+		top: 0px;
 		
-		.progress
+		width: 100%;
+		text-align: center;
+		
+		font-size: 0;
+		
+		.bar
 		{
-			background-color: #4f4f4f;
-			.css_transition(width, 500ms);
+			background-color: #2f2f2f;
+		
+			&, .progress
+			{
+				height: 8px;
+				
+				border-top-right-radius: 4px;
+				border-bottom-right-radius: 4px;
+			}
+			
+			.progress
+			{
+				background-color: #4f4f4f;
+				.css_transition(width, 500ms);
+			}
 		}
 	}
 }

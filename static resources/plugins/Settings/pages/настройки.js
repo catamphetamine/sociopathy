@@ -38,8 +38,6 @@ title(text('pages.settings.title'));
 		подготовить_режим_правки()
 		
 		Режим.разрешить('правка')
-		
-		page.content_ready()
 	}
 	
 	function подготовить_режим_правки()

@@ -15,6 +15,7 @@ html
 body 
 {
 	min-height: 100%;
+	overflow-x: hidden;
 	overflow-y: scroll;
 }
 
@@ -65,7 +66,7 @@ html *::selection, html *::-moz-selection, html *::-webkit-selection
 	font-size: 45px;	
 }
 
-#content
+#page > section
 {
 	/* min-height: 100%; */
 	z-index: 100;
@@ -73,7 +74,7 @@ html *::selection, html *::-moz-selection, html *::-webkit-selection
 	/* overflow: auto; */
 }
 
-* html #content 
+* html #page > section
 {
 	height: 100%;	
 }
@@ -133,15 +134,6 @@ input[type="search"]::-webkit-search-cancel-button
 .multiline_text
 {
 	line-height: 48px;
-}
-
-html, #content, #background_stretcher
-{
-	/*
-	background-color: #f2f2f2;
-	background: -webkit-gradient(radial, 60% 10%, 10, 60% 10%, 1500, from(#ffffff), to(#e5e4e4));
-	background-image: -moz-radial-gradient(60% 10% 45deg, circle farthest-side, #ffffff 0%, #e5e4e4 100%);
-	*/
 }
 
 #background_stretcher
@@ -958,7 +950,8 @@ body[mode="правка"] .markup a
 	display: block;
 }
 
-#content.help
+/* probably shouldn't be here */
+section.help
 {
 	p
 	{
@@ -1062,7 +1055,7 @@ label.in-place_input_label
 	text-align: center;
 }
 
-#content
+#page > section
 {
 	.main_content
 	{
@@ -1560,4 +1553,12 @@ table.three_columns
 			}
 		}
 	}
+}
+
+#page_being_loaded
+{
+	height: 0;
+	
+	overflow-x: hidden;
+	overflow-y: scroll;
 }

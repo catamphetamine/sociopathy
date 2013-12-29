@@ -1,4 +1,4 @@
-#content
+.circles_plugin_circles_page
 {
 	margin-top: 80px;
 	padding-bottom: 50px;
@@ -10,39 +10,39 @@
 		margin-left: 120px;
 		margin-right: 120px;	
 	}
-}
-
-#circles
-{
-	margin-top: 50px;
-	margin-left: 50px;
 	
-	list-style-type: none;
-	
-	> li
+	#circles
 	{
-		display: inline-block;
+		margin-top: 50px;
+		margin-left: 50px;
 		
-		ul.members
+		list-style-type: none;
+		
+		> li
 		{
-			list-style-type: none;
+			display: inline-block;
 			
-			> li
+			ul.members
 			{
-				display: block;
+				list-style-type: none;
 				
-				margin-bottom: 8px;
-				
-				> .name
+				> li
 				{
-					position: relative;
-					top: -13px;
-					margin-left: 8px;
-				}
-				
-				&.empty
-				{
-					color: #7f7f7f;
+					display: block;
+					
+					margin-bottom: 8px;
+					
+					> .name
+					{
+						position: relative;
+						top: -13px;
+						margin-left: 8px;
+					}
+					
+					&.empty
+					{
+						color: #7f7f7f;
+					}
 				}
 			}
 		}

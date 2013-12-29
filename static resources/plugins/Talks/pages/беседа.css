@@ -1,34 +1,37 @@
-.add_user_to_talk_window
+.talks_plugin_talk_page
 {
-	.icon
+	.add_user_to_talk_window
 	{
-		display: none;
-	}
-	
-	form
-	{
-		> .autocomplete
+		.icon
 		{
-			margin-top: 10px;
-			
-			> input[type="search"]
+			display: none;
+		}
+		
+		form
+		{
+			> .autocomplete
 			{
-				margin-top: 0;
-			}
-			
-			> ul > li, .selected_result
-			{
-				padding-top: 10px;
+				margin-top: 10px;
 				
-				> .name
+				> input[type="search"]
 				{
-					display: inline-block;
-					vertical-align: top;
+					margin-top: 0;
+				}
+				
+				> ul > li, .selected_result
+				{
+					padding-top: 10px;
 					
-					margin-top: 6px;
-					margin-left: 14px;
-					
-					white-space: nowrap;
+					> .name
+					{
+						display: inline-block;
+						vertical-align: top;
+						
+						margin-top: 6px;
+						margin-left: 14px;
+						
+						white-space: nowrap;
+					}
 				}
 			}
 		}

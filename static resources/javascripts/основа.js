@@ -174,7 +174,12 @@ var scripts =
 	'youtube',
 	'vimeo',
 	
-	'markup',
+	{'markup':
+	[
+		'markup',
+		'markup syntax',
+		'markup html syntax'
+	]},
 	
 	'socket.io',
 	
@@ -265,9 +270,10 @@ var insert_scripts = script_insertion(scripts, '/javascripts', function()
 var styles =
 [
 	'начертания',
+	'начертания desktop',
+	
 	'общее',
 	'общее desktop',
-	'messages',
 	
 	{markup:
 	[
@@ -275,6 +281,8 @@ var styles =
 		'desktop markup formatting',
 		'mobile markup formatting'
 	]},
+	
+	'messages',
 	
 	{кнопки:
 	[
@@ -311,7 +319,7 @@ var styles =
 ]
 
 function insert_style(path)
-{
+{		
 	if (path.indexOf('/') !== 0)
 		path = '/облик/' + path
 	

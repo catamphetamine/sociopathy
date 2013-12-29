@@ -731,7 +731,7 @@ var Either_way_loading = new Class
 		if (!this.top_loader)
 			this.previous_block.invisible()
 		
-		this.previous_link.fade_out(this.options.previous_link.fade_out)
+		this.previous_link.hide() //.fade_out(this.options.previous_link.fade_out)
 		
 		//if (this.resetted)
 		//	this.options.container.fade_out(this.options.fade_out)

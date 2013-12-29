@@ -1,6 +1,6 @@
 @import "/облик/вспомогательный.less";
 
-#content
+.library_plugin_section_page
 {
 	padding-top: @standard_breadcrumbs_top_margin;
 	margin-bottom: 30px;
@@ -25,31 +25,28 @@
 			margin-bottom: -12px;
 		}
 	}
-}
-
-#content.root_section
-{
-	.main_content
+	
+	&.root_section
 	{
-		> .add
+		.main_content
 		{
-			margin-top: -7px;
-			margin-bottom: 0;
+			> .add
+			{
+				margin-top: -7px;
+				margin-bottom: 0;
+			}
 		}
 	}
-}
-
-.breadcrumbs_container
-{
-	.breadcrumbs
+	
+	.breadcrumbs_container
 	{
-		margin: 0;
-		padding: 0;
+		.breadcrumbs
+		{
+			margin: 0;
+			padding: 0;
+		}
 	}
-}
 
-.reading
-{
 	ul#categories
 	{
 		display: inline-block;
@@ -175,7 +172,7 @@
 			}
 		}
 	}
-
+	
 	#articles
 	{
 		list-style-type: none;
@@ -198,131 +195,134 @@
 			margin-bottom: 16px;
 		}
 	}
-}
-
-.breadcrumbs
-{
-	margin-left: 80px;
-	margin-bottom: 20px;
+	
+	.breadcrumbs
+	{
+		margin-left: 80px;
+		margin-bottom: 20px;
+	}
+	
+	.move_category_window
+	{
+		form
+		{
+			> .autocomplete
+			{
+				margin-top: 10px;
+				
+				> input[type="search"]
+				{
+					margin-top: 0;
+				}
+			}
+		}
+	}
+	
+	#categories > li
+	{
+		 .picture_uploading_screen
+		{	
+			> span
+			{
+				font-size: 28px;
+				margin-top: -14px;
+				letter-spacing: normal;
+			}
+		}
+	}
+	
+	.search_container
+	{	
+		margin-top: -8px;
+		margin-bottom: 0px;
+	
+		text-align: center;
+	}
+	
+	.search_container > .search, .move_category_window .autocomplete
+	{
+		> ul
+		{
+			> li
+			{
+				> .icon
+				{
+					display: inline-block;
+					
+					width: 57px;
+					height: 38px;
+					
+					margin-right: 14px;
+					
+					vertical-align: middle;
+								
+					border-style: solid;
+					border-color: #9f9f9f;
+					border-width: 1px;
+					
+					.beautiful_shadow_3(0px, 0px, 8px, 3px, 4px, 0.05);
+				}
+				
+				> .title
+				{
+					display: inline-block;
+					vertical-align: middle;
+				}
+			}
+		}
+	}
+	
+	.empty
+	{
+		color: #4f4f4f;
+	}
+	
+	#articles
+	{
+		a
+		{
+			color: black;
+			
+			.css_transition(120ms, color);
+			
+			&:hover
+			{
+				color: @link_color;
+			}
+		}
+	}
 }
 
 body[mode="правка"]
 {
-	#categories > li
+	.library_plugin_section_page
 	{
-		.no_shadow();
-		
-		.css_transition_property(width, margin-left, margin-right);
-		.css_transition_duration(300ms);
+		#categories > li
+		{
+			.no_shadow();
 			
-		.title > span
-		{
-			cursor: text !important;
-		}
-	
-		.title:hover > span
-		{
-			background-color: #ffffff;
-		}
-		
-		.title:active > span
-		{
-			background-color: #ffffff;
-		}
-	}
-	
-	#articles > li
-	{
-		cursor: url('/картинки/cursor/hand.png') 0 0, auto;
-	}
-}
-
-.move_category_window
-{
-	form
-	{
-		> .autocomplete
-		{
-			margin-top: 10px;
-			
-			> input[type="search"]
+			.css_transition_property(width, margin-left, margin-right);
+			.css_transition_duration(300ms);
+				
+			.title > span
 			{
-				margin-top: 0;
+				cursor: text !important;
 			}
-		}
-	}
-}
-
-#categories > li
-{
-	 .picture_uploading_screen
-	{	
-		> span
-		{
-			font-size: 28px;
-			margin-top: -14px;
-			letter-spacing: normal;
-		}
-	}
-}
-
-.search_container
-{	
-	margin-top: -8px;
-	margin-bottom: 0px;
-
-	text-align: center;
-}
-
-.search_container > .search, .move_category_window .autocomplete
-{
-	> ul
-	{
-		> li
-		{
-			> .icon
+		
+			.title:hover > span
 			{
-				display: inline-block;
-				
-				width: 57px;
-				height: 38px;
-				
-				margin-right: 14px;
-				
-				vertical-align: middle;
-							
-				border-style: solid;
-				border-color: #9f9f9f;
-				border-width: 1px;
-				
-				.beautiful_shadow_3(0px, 0px, 8px, 3px, 4px, 0.05);
+				background-color: #ffffff;
 			}
 			
-			> .title
+			.title:active > span
 			{
-				display: inline-block;
-				vertical-align: middle;
+				background-color: #ffffff;
 			}
 		}
-	}
-}
-
-.empty
-{
-	color: #4f4f4f;
-}
-
-#articles
-{
-	a
-	{
-		color: black;
 		
-		.css_transition(120ms, color);
-		
-		&:hover
+		#articles > li
 		{
-			color: @link_color;
+			cursor: url('/картинки/cursor/hand.png') 0 0, auto;
 		}
 	}
 }

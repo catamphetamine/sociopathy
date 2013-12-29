@@ -10,7 +10,7 @@
 			//return error()
 		}
 		
-		var visual_editor = new Visual_editor('#content > .compose_message > article')
+		var visual_editor = new Visual_editor(page.content.find(' > .compose_message > article'))
 		
 		var hint = $('<p/>').appendTo(visual_editor.editor.content)
 		visual_editor.hint(hint, ' ')

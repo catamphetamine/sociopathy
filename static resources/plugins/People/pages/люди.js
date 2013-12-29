@@ -73,7 +73,7 @@ title(text('pages.people.title'));
 		if (!page.id_card_width)
 			return
 			
-		center_list(page.people, { space: $('#content'), item_width: page.id_card_width, side_margin: page.id_card_side_margin })
+		center_list(page.people, { space: page.content, item_width: page.id_card_width, side_margin: page.id_card_side_margin })
 	}
 	
 	function initialize_search()

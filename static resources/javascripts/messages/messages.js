@@ -461,6 +461,7 @@ var Messages = new Class
 		message.on('bottom_appears', handler)
 		message.on('fully_visible', handler)
 		
+		message.node().dataset.custom_bottom_margin = true
 		message.data('прокрутчик.get_bottom_margin', function()
 		{
 			var compose_message = $('#compose_message')

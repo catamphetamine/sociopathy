@@ -1176,8 +1176,6 @@ Visual_editor.implement
 				Markup.parse(editor.get_content().html(), { syntax: 'html' }, (function(source)
 				{
 					this.open_dialog_window({ source: source })
-					
-					//this.dialog_window.content.appendTo('#page')
 	
 					this.dialog_window.xml_editor = CodeMirror.fromTextArea(this.dialog_window.content.find('textarea').node(),
 					{

@@ -4,7 +4,7 @@
 
 jsdom = require('jsdom').jsdom
 
-scripts = ['mootools/core', 'язык', 'dom tools', 'markup', 'youtube', 'vimeo']
+scripts = ['mootools/core', 'язык', 'dom tools', 'markup/markup', 'markup/markup syntax', 'markup/markup html syntax', 'youtube', 'vimeo']
 
 scripts = scripts.map((path) -> global.disk_tools.read(global.client_code_path(path)))
 

@@ -1,40 +1,34 @@
 @import "/облик/вспомогательный.less";
 
-#content
+.chat_plugin_chat_page
 {
 	.main_content
 	{
 		margin-top: 0px;
 	}
-}
-
-ul.chat
-{
-	/* margin: 0, т.к. в яваскрипте это подразумевается (на этом работает прокрутка) */
 	
-	/*
-	> li.even
+	ul.chat
 	{
-		background-color: #f6f6f6;
-	
-		&.new
+		/* margin: 0, т.к. в яваскрипте это подразумевается (на этом работает прокрутка) */
+		
+		/*
+		> li.even
 		{
-			background-color: #ececec;
+			background-color: #f6f6f6;
+		
+			&.new
+			{
+				background-color: #ececec;
+			}
+		}
+		*/
+	}
+	
+	.main_conditional
+	{
+		[type=loading], [type=error]
+		{
+			margin-top: 172px;
 		}
 	}
-	*/
-}
-
-.main_conditional
-{
-	[type=loading], [type=error]
-	{
-		margin-top: 172px;
-	}
-}
-
-body
-{
-	overflow-x: hidden;
-	overflow-y: scroll;
 }

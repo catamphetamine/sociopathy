@@ -1,7 +1,10 @@
 @import "/облик/вспомогательный.less";
 
-#content
+.user_page
 {
+	margin-bottom: 30px;
+	text-align: center;
+	
 	.main_info_centerer
 	{
 		text-align: center;
@@ -89,12 +92,6 @@
 			}
 		}
 	}
-}
-
-#content
-{
-	margin-bottom: 30px;
-	text-align: center;
 	
 	> .miscellaneous
 	{
@@ -194,50 +191,7 @@
 			}
 		}
 	}
-}
-
-body[mode="правка"]
-{
-	#content
-	{
-		.business_card
-		{
-			.picture
-			{
-				cursor: pointer;
-		
-				.css_transition_duration(200ms);
-				
-				&.drag_over
-				{
-					.beautiful_shadow_5 (0, 0, 6px, 12px, 16px, 20px, 30px, 0.15, 0, 72, 105);
-				}
-			}
-		}
-		
-		.photo
-		{
-			.css_transition_duration(200ms);
-			
-			&.drag_over
-			{
-				.beautiful_shadow_5 (0, 0, 10px, 15px, 20px, 40px, 60px, 0.25, 0, 72, 105);
-			}
-			
-			img
-			{
-				cursor: pointer;
-			}
-		}
-		
-		> .miscellaneous
-		{
-		}
-	}
-}
-
-#content
-{
+	
 	.business_card .picture_uploading_screen
 	{
 		> span
@@ -291,5 +245,45 @@ body[mode="правка"]
 		color: #3f3f3f;
 		
 		margin-top: 100px;
+	}
+}
+
+body[mode="правка"]
+{
+	.user_page
+	{
+		.business_card
+		{
+			.picture
+			{
+				cursor: pointer;
+		
+				.css_transition_duration(200ms);
+				
+				&.drag_over
+				{
+					.beautiful_shadow_5 (0, 0, 6px, 12px, 16px, 20px, 30px, 0.15, 0, 72, 105);
+				}
+			}
+		}
+		
+		.photo
+		{
+			.css_transition_duration(200ms);
+			
+			&.drag_over
+			{
+				.beautiful_shadow_5 (0, 0, 10px, 15px, 20px, 40px, 60px, 0.25, 0, 72, 105);
+			}
+			
+			img
+			{
+				cursor: pointer;
+			}
+		}
+		
+		> .miscellaneous
+		{
+		}
 	}
 }

@@ -95,9 +95,6 @@ function loading_page(options, callback)
  */
 function page_initialized()
 {
-	if (first_time_page_loading)
-		first_time_page_loading = false
-		
 	if (!page.needs_to_load_content)
 	{
 		page.content_ready()
@@ -216,12 +213,10 @@ $(document).on('page_initialized', function()
 
 $(function()
 {
-	var body = $(body)
-
 	if (bowser.mozilla)
-		body.addClass('firefox')
+		body.classList.add('firefox')
 	else if (bowser.webkit)
-		body.addClass('webkit')
+		body.classList.add('webkit')
 })
 
 function путь_страницы(url)

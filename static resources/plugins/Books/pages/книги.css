@@ -1,6 +1,6 @@
 @import "/облик/вспомогательный.less";
 
-#content
+.books_plugin_books_page
 {
 	margin-top: 80px;
 	padding-bottom: 50px;
@@ -115,58 +115,64 @@
 		text-align: center;
 		margin-bottom: 100px;
 	}
-}
-
-.add_book_dialog_window
-{
-	.main_content
-	{
-		width: 840px;
-		
-		.buttons
-		{
-			padding-right: 30px;
-		}
-		
-		form
-		{
-			input[type="text"]
-			{
-				width: 840px;
-				display: block;
-				margin-top: 10px;
-			}
-			
-			label[for="title"]
-			{
-				margin-top: 0;
-			}
-			
-			label[for="author"]
-			{
-				margin-top: 30px;
-			}
-		}
-		
-		.icon
-		{
-			display: none;
-		}
-	}
-}
-
-.search_container
-{
-	text-align: center;
-	margin-bottom: 80px;
 	
-	> .search
+	.add_book_dialog_window
 	{
-		width: 50%;
+		.main_content
+		{
+			width: 840px;
+			
+			.buttons
+			{
+				padding-right: 30px;
+			}
+			
+			form
+			{
+				input[type="text"]
+				{
+					width: 840px;
+					display: block;
+					margin-top: 10px;
+				}
+				
+				label[for="title"]
+				{
+					margin-top: 0;
+				}
+				
+				label[for="author"]
+				{
+					margin-top: 30px;
+				}
+			}
+			
+			.icon
+			{
+				display: none;
+			}
+		}
+	}
+	
+	.search_container
+	{
+		text-align: center;
+		margin-bottom: 80px;
+		
+		> .search
+		{
+			width: 50%;
+		}
 	}
 }
 
-body[mode="правка"] #books .cover .cover_image
-{
-	cursor: pointer;
+body[mode="правка"]
+{	
+	.books_plugin_books_page
+	{
+		#books .cover .cover_image
+		{
+			cursor: pointer;
+		}
+	}
 }

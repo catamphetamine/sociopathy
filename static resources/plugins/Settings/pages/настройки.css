@@ -1,185 +1,188 @@
 @import "/облик/вспомогательный.less";
 
-#content
+.settings_plugin_settings_page
 {
 	margin-top: 50px;
 	margin-bottom: 50px;
 	
 	margin-left: 50px;
 	margin-right: 50px;
-}
-
-.email_icon
-{
-	display: inline-block;
 	
-	position: relative;
-	top: 2px;
-	
-	margin-right: 8px;
-	
-	width: 26px;
-	height: 20px;
-	
-	background-image: url('/plugins/Settings/pictures/почта.png');
-}
-
-.email_block
-{
-	display: inline-block;
-	
-	border-radius: 10px;
-	padding: 5px;
-	
-	padding-left: 26px;
-	padding-right: 22px;
-	
-	margin-top: 0px;
-	
-	background-color: white;
-	box-shadow: 0 0 20px white;
-}
-
-.language_block
-{
-	display: inline-block;
-	display: none;
-	
-	border-radius: 10px;
-	padding: 5px;
-	
-	padding-left: 16px;
-	padding-right: 12px;
-	
-	margin-left: 10px;
-	
-	margin-top: 60px;
-	
-	background-color: white;
-	box-shadow: 0 0 20px white;
-	
-	line-height: 62px;
-	
-	.label, .language
+	.email_icon
 	{
 		display: inline-block;
-		vertical-align: middle;
+		
+		position: relative;
+		top: 2px;
+		
+		margin-right: 8px;
+		
+		width: 26px;
+		height: 20px;
+		
+		background-image: url('/plugins/Settings/pictures/почта.png');
 	}
 	
-	.language
+	.email_block
 	{
-		margin-left: 15px;
+		display: inline-block;
 		
-		.id
-		{
-			display: none;
-		}
+		border-radius: 10px;
+		padding: 5px;
 		
-		.name
+		padding-left: 26px;
+		padding-right: 22px;
+		
+		margin-top: 0px;
+		
+		background-color: white;
+		box-shadow: 0 0 20px white;
+	}
+	
+	.language_block
+	{
+		display: inline-block;
+		display: none;
+		
+		border-radius: 10px;
+		padding: 5px;
+		
+		padding-left: 16px;
+		padding-right: 12px;
+		
+		margin-left: 10px;
+		
+		margin-top: 60px;
+		
+		background-color: white;
+		box-shadow: 0 0 20px white;
+		
+		line-height: 62px;
+		
+		.label, .language
 		{
 			display: inline-block;
+			vertical-align: middle;
 		}
 		
-		select
+		.language
 		{
-			margin-left: -5px;
+			margin-left: 15px;
 			
-			margin-top: 10px;
-			margin-bottom: 10px;
-			margin-right: 5px;
-		}
-	}
-}
-
-.shortcuts
-{
-	margin-top: 40px;
-	margin-bottom: 60px;
-	
-	border-radius: 10px;
-	
-	background-color: white;
-	box-shadow: 0 0 20px white;
-	
-	border-radius: 10px;
-	padding: 20px;
-	
-	padding-top: 14px;
-	padding-bottom: 14px;
-	
-	padding-left: 80px;
-	
-	> .title
-	{
-		margin-left: -50px;
-	}
-	
-	> ul:last-child
-	{
-		margin-bottom: 10px;
-	}
-	
-	> ul
-	{
-		list-style-type: none;
-		margin-bottom: 40px;
-		
-		> li
-		{
-			> label
+			.id
+			{
+				display: none;
+			}
+			
+			.name
 			{
 				display: inline-block;
-				width: 440px;
 			}
 			
-			> span
+			select
 			{
+				margin-left: -5px;
+				
+				margin-top: 10px;
+				margin-bottom: 10px;
+				margin-right: 5px;
 			}
+		}
+	}
+	
+	.shortcuts
+	{
+		margin-top: 40px;
+		margin-bottom: 60px;
+		
+		border-radius: 10px;
+		
+		background-color: white;
+		box-shadow: 0 0 20px white;
+		
+		border-radius: 10px;
+		padding: 20px;
+		
+		padding-top: 14px;
+		padding-bottom: 14px;
+		
+		padding-left: 80px;
+		
+		> .title
+		{
+			margin-left: -50px;
+		}
+		
+		> ul:last-child
+		{
+			margin-bottom: 10px;
+		}
+		
+		> ul
+		{
+			list-style-type: none;
+			margin-bottom: 40px;
 			
-			&.space_before
+			> li
 			{
-				margin-top: 36px;
-			}
-			
-			&.space_after
-			{
-				margin-bottom: 36px;
+				> label
+				{
+					display: inline-block;
+					width: 440px;
+				}
+				
+				> span
+				{
+				}
+				
+				&.space_before
+				{
+					margin-top: 36px;
+				}
+				
+				&.space_after
+				{
+					margin-bottom: 36px;
+				}
 			}
 		}
 	}
 }
 
-body[mode="правка"] #content
+body[mode="правка"]
 {
-	.shortcut_path
+	.settings_plugin_settings_page
 	{
-		cursor: pointer;
-		
-		&:hover
+		.shortcut_path
 		{
-			.hyperlink;
-		}
-		
-		&.press_any_key_combination
-		{
+			cursor: pointer;
+			
 			&:hover
 			{
-				color: black;
-			}
-		
-			@-webkit-keyframes glow
-			{
-					from { color: inherit; }
-					to { color: @link_color; }
-			}
-		
-			@keyframes glow
-			{
-					from { color: inherit; }
-					to { color: @link_color; }
+				.hyperlink;
 			}
 			
-			.animation(glow, 0.7s);
+			&.press_any_key_combination
+			{
+				&:hover
+				{
+					color: black;
+				}
+			
+				@-webkit-keyframes glow
+				{
+						from { color: inherit; }
+						to { color: @link_color; }
+				}
+			
+				@keyframes glow
+				{
+						from { color: inherit; }
+						to { color: @link_color; }
+				}
+				
+				.animation(glow, 0.7s);
+			}
 		}
 	}
 }
