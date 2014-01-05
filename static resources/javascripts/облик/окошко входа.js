@@ -102,12 +102,12 @@ function выйти()
 		{
 			loading.hide()
 			
-			if (ошибка == 'log in.error.user not found')
+			if (ошибка == 'user not found')
 				поле_имени.focus()
-			if (ошибка == 'log in.error.incorrect password')
+			else if (ошибка == 'wrong password')
 				поле_пароля.focus()
 			
-			error(text(ошибка))
+			error(text('log in.error.' + ошибка))
 				
 			кнопка_входа.unlock({ force: true })
 		})

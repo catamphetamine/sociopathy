@@ -11,11 +11,13 @@ http.post '/вход', (ввод, вывод) ->
 	
 	пользователь = пользовательское.взять.do({ имя: ввод.данные.имя }, { полностью: yes })
 
+	#console.log ввод.данные
+	
 	if not пользователь?
-		пользователь = пользовательское.взять.do({ имя: new RegExp('^' + RegExp.escape(ввод.данные.имя) + '$', 'i') }, { полностью: yes })[0]
+		пользователь = пользовательское.взять.do({ имя: new RegExp('^' + RegExp.escape(ввод.данные.имя) + '$', 'i') }, { полностью: yes })
 
 		if not пользователь?
-			throw 'log in.error.user not found'
+			throw 'user not found'
 			
 	session = db('people_sessions').get(пользователь: пользователь._id)
 		
@@ -49,7 +51,7 @@ http.post '/вход', (ввод, вывод) ->
 		throw 'Возможно вы пытаетесь взломать пароль. Попробуйте позже.'
 		
 	if не_вошёл?
-		throw 'log in.error.incorrect password'
+		throw 'wrong password'
 	
 	db('people_sessions').update({ пользователь: пользователь._id }, { $unset: { последний_неудавшийся_вход: yes } })
 	

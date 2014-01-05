@@ -701,20 +701,8 @@ HTMLElement.prototype.trigger = function(event, data)
 	this.dispatchEvent(new CustomEvent(event, { 'data': data }))
 }
 
-EventTarget.prototype.on = EventTarget.prototype.addEventListener
-EventTarget.prototype.off = EventTarget.prototype.removeEventListener
-
-/*
-HTMLElement.prototype.height = function()
+if (window.EventTarget)
 {
-	return this.offsetHeight
-	
-	// clientHeight
-	//
-	
-	elmHeight = document.defaultView.getComputedStyle(elm, '').getPropertyValue('height');
-        elmMargin = parseInt(document.defaultView.getComputedStyle(elm, '').getPropertyValue('margin-top')) + parseInt(document.defaultView.getComputedStyle(elm, '').getPropertyValue('margin-bottom')) + "px";
-	
-    return (elmHeight+elmMargin);
+	EventTarget.prototype.on = EventTarget.prototype.addEventListener
+	EventTarget.prototype.off = EventTarget.prototype.removeEventListener
 }
-*/
