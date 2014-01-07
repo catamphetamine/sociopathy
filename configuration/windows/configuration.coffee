@@ -1,4 +1,4 @@
-Upload_server_file_path = 'd:/work/sociopathy/загруженное'
+Upload_server_file_path = 'c:/work/sociopathy/загруженное'
 
 module.exports =
 	Upload_server:

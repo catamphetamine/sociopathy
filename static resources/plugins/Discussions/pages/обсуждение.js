@@ -66,7 +66,7 @@
 		breadcrumbs
 		([
 			{ title: text('pages.discussions.title'), link: link_to('discussions') },
-			{ title: data.название, link: link_to('discussion', page.data.общение.id) }
+			{ title: unedited_discussion_title, link: link_to('discussion', page.data.общение.id) }
 		])
 		
 		if (page.data.создатель_ли)

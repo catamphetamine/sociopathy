@@ -5,12 +5,15 @@
 .library_plugin_article_page
 {
 	margin-top: @standard_breadcrumbs_top_margin;
+
 	margin-bottom: 60px;
 	
 	article
 	{
 		> section
 		{
+			margin-top: 50px;
+	
 			font-family: @textual_font;
 			font-size: @textual_font_size;
 			line-height: @textual_font_line_height;

@@ -17,7 +17,7 @@ upload_file = (ввод, возврат) ->
 
 upload_image = (ввод, вывод, настройки) ->
 	file = upload_file.do(ввод)
-	test = global.resize.do(file.path, file.path, настройки)
+	global.resize.do(file.path, file.path, настройки)
 	снасти.переименовать.do(file.path, снасти.имя_файла(file.path) + '.jpg')
 	адрес = file.path.to_unix_path().replace(Options.Upload_server.File_path, Options.Upload_server.File_url) + '.jpg'
 	вывод.send({ имя: снасти.имя_файла(file.path), адрес: адрес })

@@ -13,8 +13,8 @@
 	{
 		var uploader = new Picture_uploader
 		({
-			max_size: 0.5,
-			max_size_text: '500 килобайтов',
+			max_size: 1,
+			max_size_text: '1 мегабайта',
 			url: '/сеть/читальня/раздел/картинка',
 			element: category,
 			namespace: 'режим_правка',
