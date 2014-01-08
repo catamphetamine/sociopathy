@@ -1,3 +1,23 @@
+Markup.Options =
+{
+	Picture:
+	{
+		iPhone:
+		{
+			max_width: 280
+		}
+	},
+	
+	Video_player:
+	{
+		iPhone:
+		{
+			width: 280,
+			height: 158
+		}
+	}
+}
+
 Markup.Syntax.html =
 {
 	абзац:
@@ -259,8 +279,23 @@ Markup.Syntax.html =
 			to.style.float = float
 			
 			to.setAttribute('src', from.innerHTML)
-			to.setAttribute('width', from.getAttribute('width'))
-			to.setAttribute('height', from.getAttribute('height'))
+			
+			var width = from.getAttribute('width')
+			var height = from.getAttribute('height')
+			
+			if (window.device === 'iPhone')
+			{
+				if (width > Markup.Options.Picture.iPhone.max_width)
+				{
+					var factor = Markup.Options.Picture.iPhone.max_width / width;
+					
+					width = Markup.Options.Picture.iPhone.max_width
+					height *= factor
+				}
+			}
+			
+			to.setAttribute('width', width)
+			to.setAttribute('height', height)
 			to.setAttribute('type', 'picture')
 			
 			return to
@@ -430,7 +465,15 @@ Markup.Syntax.html =
 			
 			video_player.setAttribute('hosting', 'youtube')
 			
-			video_player.innerHTML = Youtube.Video.embed_code(from.innerHTML)
+			options = {}
+			
+			if (window.device === 'iPhone')
+			{
+				options.width = Markup.Options.Video_player.iPhone.width
+				options.height = Markup.Options.Video_player.iPhone.height
+			}
+			
+			video_player.innerHTML = Youtube.Video.embed_code(from.innerHTML, options)
 			video_player.firstChild.setAttribute('type', 'video')
 			
 			return video_player
@@ -469,7 +512,15 @@ Markup.Syntax.html =
 			
 			video_player.setAttribute('hosting', 'vimeo')
 			
-			video_player.innerHTML = Vimeo.Video.embed_code(from.innerHTML)
+			options = {}
+			
+			if (window.device === 'iPhone')
+			{
+				options.width = Markup.Options.Video_player.iPhone.width
+				options.height = Markup.Options.Video_player.iPhone.height
+			}
+			
+			video_player.innerHTML = Vimeo.Video.embed_code(from.innerHTML, options)
 			video_player.firstChild.setAttribute('type', 'video')
 			
 			return video_player

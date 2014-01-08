@@ -6,12 +6,12 @@ jsdom = require('jsdom').jsdom
 
 scripts = ['mootools/core', 'язык', 'dom tools', 'markup/markup', 'markup/markup syntax', 'markup/markup html syntax', 'youtube', 'vimeo']
 
-scripts = scripts.map((path) -> global.disk_tools.read(global.client_code_path(path)))
+scripts = scripts.map((path) -> global.disk_tools.read(client_code_path(path)))
 
 # adds element.classList property
-scripts.add(global.disk_tools.read(__dirname + '/../tools/jsdom/class list.js'))
+scripts.add(disk_tools.read(__dirname + '/../tools/jsdom/class list.js'))
 
-styles = ['начертания', 'общее', 'markup/markup formatting', 'markup/mobile markup formatting']
+styles = ['начертания', 'общее', 'markup/markup formatting', 'markup/mobile markup formatting', '../plugins/Library/styles/mobile/заметка']
 styles = styles.map((style) -> read_css(style))
 
 options =
@@ -38,13 +38,15 @@ options =
 			markup = заметка.содержимое
 			
 			syntax = ввод.данные.разметка
+			device = ввод.headers['mobile-device']
 			
 			switch syntax
 				when 'html'
+					window.device = device
 					markup = window.Markup.decorate(markup, { syntax: 'html' })
 					#window.close()
 					
-					html = '<html><head><style>' + styles + '</style></head><body class="markup">' + markup + '</body></html>' 
+					html = '<html><head><style>' + styles.join('\n') + '</style></head><body class="markup ' + device + '">' + markup + '</body></html>' 
 					
 					вывод.set('Content-Type', 'text/html')
 					вывод.send(html)
