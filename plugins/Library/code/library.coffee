@@ -91,8 +91,19 @@ http.get '/читальня/заметка', (ввод, вывод) ->
 	if not заметка?
 		throw "Заметка не найдена"
 	
-	вывод.send(заметка: заметка)
+	syntax = ввод.данные.разметка
+	device = ввод.данные.device
+	
+	switch syntax
+		when 'html'
+			markup = Markup.decorate(заметка.содержимое, { syntax: 'html', device: device })
 			
+			html = '<html><head><style>' + Markup_styles.join('\n') + '</style></head><body class="markup ' + device + '">' + markup + '</body></html>' 
+			
+			заметка.содержимое = html
+			
+	вывод.send(заметка: заметка)
+	
 http.get "/раздел или заметка", (ввод, вывод) ->
 	раздел_или_заметка = db('library_paths').get(путь: ввод.данные.путь) # library_tools.escape_path(ввод.данные.путь) })
 			
@@ -204,7 +215,13 @@ http.post '/сеть/читальня/раздел', (ввод, вывод, по
 			временное_название: раздел.icon
 			место: '/читальня/разделы/' + раздел._id
 			название: 'обложка'
-			extra_sizes: { 'крошечная обложка': { crop: yes, ширина: Options.Library.Category.Icon.Tiny.Width, высота: Options.Library.Category.Icon.Tiny.Height } }
+			extra_sizes:
+				'крошечная обложка':
+					crop: yes
+					ширина: Options.Library.Category.Icon.Tiny.Width
+					высота: Options.Library.Category.Icon.Tiny.Height
+					формат: 'png'
+					retina: yes
 	
 		finish_picture_upload(options)
 		

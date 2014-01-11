@@ -276,15 +276,17 @@ Markup =
 	
 		//console.log('syntax found')
 		
+		var node_decoration_options = { device: options.device }
+		
 		var decorated_node
 		if (syntax.tag)
 		{
 			decorated_node = document.createElement(syntax.tag)
 			if (syntax.decorate)
-				syntax.decorate(node, decorated_node)
+				syntax.decorate(node, decorated_node, node_decoration_options)
 		}
 		else
-			decorated_node = syntax.decorate(node)
+			decorated_node = syntax.decorate(node, node_decoration_options)
 		
 		if (options.process_node)
 			options.process_node(decorated_node, node)

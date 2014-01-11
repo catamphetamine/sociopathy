@@ -114,13 +114,21 @@ http.put '/сеть/человек/картинка', (ввод, вывод, п�
 		extra_sizes:
 			'маленькая':
 				размер: Options.User.Picture.Small.Size
+				формат: 'png'
+				retina: yes
 			'мелкая':
 				размер: Options.User.Picture.Smaller.Size
+				формат: 'png'
+				retina: yes
 			'чуть меньше':
 				размер: Options.User.Picture.A_bit_smaller.Size
+				формат: 'png'
+				retina: yes
 			'крошечная':
 				ширина: Options.User.Picture.Tiny.Width
 				высота: Options.User.Picture.Tiny.Height
+				формат: 'png'
+				retina: yes
 	
 	finish_picture_upload(options)
 			

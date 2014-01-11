@@ -16,10 +16,12 @@ upload_file = (ввод, возврат) ->
 	возврат(null, file)
 
 upload_image = (ввод, вывод, настройки) ->
+	настройки.формат = настройки.формат || 'jpg'
+	
 	file = upload_file.do(ввод)
 	global.resize.do(file.path, file.path, настройки)
-	снасти.переименовать.do(file.path, снасти.имя_файла(file.path) + '.jpg')
-	адрес = file.path.to_unix_path().replace(Options.Upload_server.File_path, Options.Upload_server.File_url) + '.jpg'
+	снасти.переименовать.do(file.path, снасти.имя_файла(file.path) + '.' + настройки.формат)
+	адрес = file.path.to_unix_path().replace(Options.Upload_server.File_path, Options.Upload_server.File_url) + '.' + настройки.формат
 	вывод.send({ имя: снасти.имя_файла(file.path), адрес: адрес })
 
 actions = {}
@@ -109,14 +111,29 @@ global.resize = (что, во_что, настройки, возврат) ->
 	image_magick.resize(options, возврат) #(error, output, errors_output) ->
 	
 global.finish_picture_upload = (options) ->
+	options.формат = options.формат || 'jpg'
+
 	временное_название = options.временное_название.to_unix_file_name()
-	путь = Options.Upload_server.Temporary_file_path + '/' + временное_название + '.jpg'
+	путь = Options.Upload_server.Temporary_file_path + '/' + временное_название + '.' + options.формат
 
 	место = Options.Upload_server.File_path + options.место
 	снасти.создать_путь.do(место)
 	
 	if options.extra_sizes?
+		# add retina extra sizes
 		for name, sizing of options.extra_sizes
-			resize.do(путь, место + '/' + name + '.jpg', sizing)
+			if sizing.retina?
+				delete sizing.retina
+				double_size = Object.clone(sizing)
+				if double_size.размер?
+					double_size.размер *= 2
+				else
+					double_size.ширина *= 2
+					double_size.высота *= 2
+				options.extra_sizes[name + '@2x'] = double_size
 			
-	снасти.переместить_и_переименовать.do(путь, { место: место, имя: options.название + '.jpg' })
+		for name, sizing of options.extra_sizes
+			формат = sizing.формат || options.формат
+			resize.do(путь, место + '/' + name + '.' + формат, sizing)
+			
+	снасти.переместить_и_переименовать.do(путь, { место: место, имя: options.название + '.' + options.формат })

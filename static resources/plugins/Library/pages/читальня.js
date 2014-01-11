@@ -233,7 +233,7 @@
 						{
 							var icon = $('<div/>')
 								.addClass('icon')
-								.css('background-image', 'url("/загруженное/читальня/разделы/' + раздел._id + '/крошечная обложка.jpg?version=' + раздел.icon_version + '")')
+								.css('background-image', 'url("/загруженное/читальня/разделы/' + раздел._id + '/крошечная обложка.png?version=' + раздел.icon_version + '")')
 								.appendTo(this)
 						}
 						
@@ -785,7 +785,7 @@
 				{
 					var icon = $('<div/>')
 						.addClass('icon')
-						.css('background-image', 'url("/загруженное/читальня/разделы/' + data._id + '/крошечная обложка.jpg?version=' + data.icon_version + '")')
+						.css('background-image', 'url("/загруженное/читальня/разделы/' + data._id + '/крошечная обложка.png?version=' + data.icon_version + '")')
 						.appendTo(this)
 				}
 				

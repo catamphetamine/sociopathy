@@ -72,6 +72,18 @@ global.messages_api = (options) ->
 		for сообщение in $.сообщения
 			сообщение._id = сообщение._id.toString()
 			
+		syntax = ввод.данные.разметка
+		device = ввод.данные.device
+		
+		switch syntax
+			when 'html'
+				for сообщение in $.сообщения
+					markup = Markup.decorate(сообщение.сообщение, { syntax: 'html', device: device })
+					
+					html = '<html><head><style>' + Markup_styles.join('\n') + '</style></head><body class="markup ' + device + '">' + markup + '</body></html>' 
+					
+					сообщение.сообщение = html
+				
 		вывод.send $
 				
 	if options.private?

@@ -258,7 +258,7 @@ Markup.Syntax.html =
 	
 		break_decoration: true,
 		
-		decorate: function(from, to)
+		decorate: function(from, to, decoration_options)
 		{
 			var float
 			switch (from.getAttribute('float'))
@@ -283,7 +283,7 @@ Markup.Syntax.html =
 			var width = from.getAttribute('width')
 			var height = from.getAttribute('height')
 			
-			if (window.device === 'iPhone')
+			if (decoration_options.device === 'iPhone')
 			{
 				if (width > Markup.Options.Picture.iPhone.max_width)
 				{
@@ -457,7 +457,7 @@ Markup.Syntax.html =
 	{
 		selector: '.video_player[hosting="youtube"]',
 		
-		decorate: function(from)
+		decorate: function(from, decoration_options)
 		{
 			var video_player = document.createElement('div')
 			
@@ -467,7 +467,7 @@ Markup.Syntax.html =
 			
 			options = {}
 			
-			if (window.device === 'iPhone')
+			if (decoration_options.device === 'iPhone')
 			{
 				options.width = Markup.Options.Video_player.iPhone.width
 				options.height = Markup.Options.Video_player.iPhone.height
@@ -504,7 +504,7 @@ Markup.Syntax.html =
 	{
 		selector: '.video_player[hosting="vimeo"]',
 		
-		decorate: function(from)
+		decorate: function(from, decoration_options)
 		{
 			var video_player = document.createElement('div')
 			
@@ -514,7 +514,7 @@ Markup.Syntax.html =
 			
 			options = {}
 			
-			if (window.device === 'iPhone')
+			if (decoration_options.device === 'iPhone')
 			{
 				options.width = Markup.Options.Video_player.iPhone.width
 				options.height = Markup.Options.Video_player.iPhone.height

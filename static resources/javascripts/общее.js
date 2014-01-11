@@ -1637,7 +1637,7 @@ function users_autocomplete(element, options)
 			{
 				var icon = $('<div/>')
 					.addClass('icon')
-					.css('background-image', 'url("/загруженное/люди/' + человек.id + '/картинка/мелкая.jpg?version=' + человек.avatar_version + '")')
+					.css('background-image', 'url("/загруженное/люди/' + человек.id + '/картинка/мелкая.png?version=' + человек.avatar_version + '")')
 					.appendTo(this)
 			}
 			
