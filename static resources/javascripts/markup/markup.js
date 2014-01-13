@@ -477,6 +477,7 @@ Markup =
 		
 		var syntax_key
 		var syntax
+		var translation
 		
 		if (!Dom.is_text_node(node))
 		{
@@ -485,6 +486,7 @@ Markup =
 				
 			syntax_key = processor.find_syntax_for(node, options.syntax)
 			syntax = this.Syntax[options.syntax][syntax_key]
+			translation = this.Syntax[syntax_key].translation
 		}
 		
 		//console.log('node')
@@ -500,7 +502,7 @@ Markup =
 			
 			function is(element)
 			{
-				var translation = Markup.Syntax[options.syntax][element].translation
+				var translation = Markup.Syntax[element].translation
 				
 				if (typeof translation === 'object')
 					translation = Object.key(translation)
@@ -516,12 +518,12 @@ Markup =
 				return finished()
 		
 		var tag
-		if (!syntax.translation)
+		if (!translation)
 			tag = syntax_key
-		else if (typeof syntax.translation === 'string')
-			tag = syntax.translation
+		else if (typeof translation === 'string')
+			tag = translation
 		else
-			tag = Object.key(syntax.translation)
+			tag = Object.key(translation)
 		
 		var wiki_element = document.createElement(tag)
 		

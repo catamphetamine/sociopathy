@@ -1668,6 +1668,8 @@ Visual_editor.tool_helpers =
 			{
 				loading.hide()
 				
+					alert(size.width)
+					
 				if (size.error)
 				{
 					error('Не удалось загрузить картинку. Можете попробовать ещё раз.')
