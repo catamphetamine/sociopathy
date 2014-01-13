@@ -1,4 +1,9 @@
 .markup
 {
-	/* font-family: "Warnock Pro"; */
+	padding: 6pt;
+
+	p
+	{
+		/*text-indent: 1em;*/
+	}
 }

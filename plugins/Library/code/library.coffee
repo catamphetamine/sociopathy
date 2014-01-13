@@ -98,7 +98,9 @@ http.get '/читальня/заметка', (ввод, вывод) ->
 		when 'html'
 			markup = Markup.decorate(заметка.содержимое, { syntax: 'html', tuning: { device: device } })
 			
-			html = '<html><head><style>' + Markup_styles.join('\n') + '</style></head><body class="markup ' + device + '">' + markup + '</body></html>' 
+			article_style = read_css('../plugins/Library/styles/mobile/заметка')
+
+			html = '<html><head><style>' + Markup_styles.join('\n')  + '\n' + article_style + '</style></head><body class="markup ' + device + '">' + markup + '</body></html>' 
 			
 			заметка.содержимое = html
 			

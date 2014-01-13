@@ -80,8 +80,10 @@ global.messages_api = (options) ->
 			when 'html'
 				for сообщение in $.сообщения
 					markup = Markup.decorate(сообщение.сообщение, { syntax: 'html', tuning: { device: device, view: view } })
-					
-					html = '<html><head><style>' + Markup_styles.join('\n') + '</style></head><body class="markup ' + device + '">' + markup + '</body></html>' 
+							
+					messages_style = read_css('markup/messages mobile markup')
+		
+					html = '<html><head><style>' + Markup_styles.join('\n')  + '\n' + messages_style + '</style></head><body class="markup ' + device + '">' + markup + '</body></html>' 
 					
 					сообщение.сообщение = html
 				
