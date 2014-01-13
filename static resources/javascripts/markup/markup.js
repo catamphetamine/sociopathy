@@ -276,7 +276,7 @@ Markup =
 	
 		//console.log('syntax found')
 		
-		var node_decoration_options = { device: options.device }
+		var node_decoration_options = options.tuning || {}
 		
 		var decorated_node
 		if (syntax.tag)

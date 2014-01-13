@@ -96,7 +96,7 @@ http.get '/читальня/заметка', (ввод, вывод) ->
 	
 	switch syntax
 		when 'html'
-			markup = Markup.decorate(заметка.содержимое, { syntax: 'html', device: device })
+			markup = Markup.decorate(заметка.содержимое, { syntax: 'html', tuning: { device: device } })
 			
 			html = '<html><head><style>' + Markup_styles.join('\n') + '</style></head><body class="markup ' + device + '">' + markup + '</body></html>' 
 			

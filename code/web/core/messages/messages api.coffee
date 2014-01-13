@@ -74,11 +74,12 @@ global.messages_api = (options) ->
 			
 		syntax = ввод.данные.разметка
 		device = ввод.данные.device
+		view = ввод.данные.view
 		
 		switch syntax
 			when 'html'
 				for сообщение in $.сообщения
-					markup = Markup.decorate(сообщение.сообщение, { syntax: 'html', device: device })
+					markup = Markup.decorate(сообщение.сообщение, { syntax: 'html', tuning: { device: device, view: view } })
 					
 					html = '<html><head><style>' + Markup_styles.join('\n') + '</style></head><body class="markup ' + device + '">' + markup + '</body></html>' 
 					

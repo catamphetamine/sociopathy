@@ -11,7 +11,9 @@ scripts = scripts.map((path) -> global.disk_tools.read(client_code_path(path)))
 # adds element.classList property
 scripts.add(disk_tools.read(__dirname + '/../tools/jsdom/class list.js'))
 
-styles = ['начертания', 'общее', 'markup/markup formatting', 'markup/mobile markup formatting', '../plugins/Library/styles/mobile/заметка']
+#'начертания',
+#, '../plugins/Library/styles/mobile/заметка'
+styles = ['общее', 'markup/markup formatting', 'markup/mobile markup formatting']
 styles = styles.map((style) -> read_css(style))
 
 global.Markup_styles = styles

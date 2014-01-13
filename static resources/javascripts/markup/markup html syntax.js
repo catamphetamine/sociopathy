@@ -4,7 +4,12 @@ Markup.Options =
 	{
 		iPhone:
 		{
-			max_width: 280
+			max_width: 280,
+			
+			chat:
+			{
+				max_width: 202
+			}
 		}
 	},
 	
@@ -12,8 +17,14 @@ Markup.Options =
 	{
 		iPhone:
 		{
-			width: 280,
-			height: 158
+			width: 280, // 320
+			height: 158, // 180
+			
+			chat:
+			{
+				width: 202,
+				height: 114
+			}
 		}
 	}
 }
@@ -283,14 +294,21 @@ Markup.Syntax.html =
 			var width = from.getAttribute('width')
 			var height = from.getAttribute('height')
 			
-			if (decoration_options.device === 'iPhone')
+			if (decoration_options.device)
 			{
-				if (width > Markup.Options.Picture.iPhone.max_width)
+				var measurements = Markup.Options.Picture[decoration_options.device]
+				if (measurements)
 				{
-					var factor = Markup.Options.Picture.iPhone.max_width / width;
-					
-					width = Markup.Options.Picture.iPhone.max_width
-					height *= factor
+					if (decoration_options.view)
+						measurements = measurements[decoration_options.view]
+						
+					if (width > measurements.max_width)
+					{
+						var factor = measurements.max_width / width;
+						
+						width = measurements.max_width
+						height *= factor
+					}
 				}
 			}
 			
@@ -467,10 +485,17 @@ Markup.Syntax.html =
 			
 			options = {}
 			
-			if (decoration_options.device === 'iPhone')
+			if (decoration_options.device)
 			{
-				options.width = Markup.Options.Video_player.iPhone.width
-				options.height = Markup.Options.Video_player.iPhone.height
+				var measurements = Markup.Options.Video_player[decoration_options.device]
+				if (measurements)
+				{
+					if (decoration_options.view)
+						measurements = measurements[decoration_options.view]
+						
+					options.width = measurements.width
+					options.height = measurements.height
+				}
 			}
 			
 			video_player.innerHTML = Youtube.Video.embed_code(from.innerHTML, options)
@@ -514,10 +539,17 @@ Markup.Syntax.html =
 			
 			options = {}
 			
-			if (decoration_options.device === 'iPhone')
+			if (decoration_options.device)
 			{
-				options.width = Markup.Options.Video_player.iPhone.width
-				options.height = Markup.Options.Video_player.iPhone.height
+				var measurements = Markup.Options.Video_player[decoration_options.device]
+				if (measurements)
+				{
+					if (decoration_options.view)
+						measurements = measurements[decoration_options.view]
+						
+					options.width = measurements.width
+					options.height = measurements.height
+				}
 			}
 			
 			video_player.innerHTML = Vimeo.Video.embed_code(from.innerHTML, options)
