@@ -7,7 +7,9 @@ Sociopathy
 Can I see a demo?
 =============
 
-Yes, here: 
+Yes, you can view it here: http://youtu.be/cmpTj1Tmfv8
+
+Also you can access my testing website here: http://kuchumovn.no-ip.biz/
 
 What's different?
 =============
@@ -25,13 +27,6 @@ It retains all the good old things from good old web 1.0 uniting them all under 
 
 
 It's not your facebook at all.
-
-
-I wanna see it in action
-=============
-
-Go to http://kuchumovn.no-ip.biz/
-
 
 Is it multilanguage?
 =============
