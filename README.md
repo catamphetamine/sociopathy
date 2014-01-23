@@ -1,8 +1,8 @@
 Sociopathy
 
-   a different social network
+   a social network
 
-   необычная социальная сеть
+   социальная сеть
 
 Can I see a demo?
 =============

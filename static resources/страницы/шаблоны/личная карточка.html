@@ -10,7 +10,7 @@
 		<!-- avatar -->
 		<div class="picture">
 			<div>
-				<img {{if !$data.avatar_version}} style="display: none" {{/if}} class="real_picture" {{if $data.avatar_version}} src="/загруженное/люди/${id}/картинка/большая.jpg?version=${avatar_version}" {{/if}}/>
+				<img class="real_picture" src={{if $data.avatar_version}}"/загруженное/люди/${id}/картинка/большая.jpg?version=${avatar_version}" {{else}}"/картинки/business card/картинка по умолчанию.jpg" {{/if}}/>
 			</div>
 		</div>
 	</section>

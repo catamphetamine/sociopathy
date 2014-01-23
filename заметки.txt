@@ -287,35 +287,139 @@ http://habrahabr.ru/company/cackle/blog/201190/
 
 
 
+структуру папок переделать:
+(везде _id)
+
+архив
+пользователи -> картинки, альбомы
+временное
+
+
+
+
 в болталке не показывается полоска внизу, типа скроллинг по сообщениям
 
 
 
 
+UX, Usability
+java
+javascript
+скрипты (мб игровые)
 
 
-1 логинится в браузере
-идёт в архив
-ходит, читает
 
-2 логинится в айфоне: 
+var RedisStore = require('socket.io/lib/stores/redis')
+, redis  = require('socket.io/node_modules/redis')
+, pub    = redis.createClient()
+, sub    = redis.createClient()
+, client = redis.createClient();
+io.set('store', new RedisStore({ 
 
-сначала без имени, потом без пароля.
-потом с неверным именем длинным, и переворачивает.
-сначала имя вводит, потом в лендскейп, потом встаёт на пароль, всё поднимается, портрет, лендскейп, вводит, готово, логинится.
-идёт в архив
-ходит, читает
-
-1:
-в папке Gaming создаёт папку XCOM, с картинкой
-в папке Dota правит Test, вставляя картинку excel saga
-
-2 заходит и видит изменения
-заходит в чат, переворачивается в лендскейп, листает, смотрит видео
-
-1 заходит в чат и пишет там "мы следим за вами" и картинку анб пото следом
+  redisPub : pub
+  , redisSub : sub
+  , redisClient : client
+}));
 
 
+
+
+
+Здравствуйте.
+Не имею аккаунта в AppStore; если вам понадобятся примеры написанного кода, то можете посмотреть здесь:
+https://github.com/kuchumovn/wheely-ios-test
+https://github.com/kuchumovn/sociopathy.ios
+
+
+
+
+
+
+AFNetworking
+
+ARC, GCD, blocks, push уведомления, keychains, JSON/XML, сокеты, SSL
+хорошее знание Си, умение работать с сишными библиотеками в obj-c проекта
+опыт разработки от 2х лет
+знание sqlite, понимание ее особенностей и принципиальных отличий от mysql
+умение работать с большими объемами данных, оптимизация процессов синхронизации информации
+знание IMAP/SMTP, понимание SOAP, работа с Exchange сервером через EWS
+понимание SIP, работы с высоко нагруженными сервисами обнаружения и присутствия
+хорошее понимание модели и принципов взаимодействия клиент-сервер
+многопоточное программирование в iOS, работа с очередями (в том числе отложенные очереди с кэшированием)
+общее понимание о защите информации и алгоритмов хэширования и шифрования в iOS
+есть собственные приложения в AppStore
+есть приложения, сделанные за заказ
+технический английский для чтения документации
+
+
+
+
+
+
+
+
+
+перенести всё из whenServerResponds в serverResponds
+
+
+
+
+Core Animation
+Core Location
+MapKit
+
+	
+
+создавать индикатор программно
+убрать отступы
+
+animateWithDuration layoutIfNeeded для текста
+
+
+
+активатор
+офис
+xcom
+korra
+
+
+
+
+iOS 5: storyboards
+iOS 6: collection views, state preservation, auto layout
+iOS 7: NSURLSession, TextKit, Multitasking, UIKit Dynamics, Custom View Controller Transitions, JavaScriptCore, MapKit (3d, tint), Core Location
+
+
+
+
+
+
+http://www.objc.io/issue-5/getting-to-know-textkit.html
+
+
+
+
+quartz ios tutorial
+core animation tutorial
+Core Data tutorial
+gcd
+ios version differences developer
+breakpoints (back from exception)
+memory leaks
+
+
+
+
+
+
+
+
+// изначально в архиве иконка папки появляется, пока картинка не подгрузилась - делать пустоту
+
+
+
+user session security:
+http://habrahabr.ru/company/dsec/blog/209042/
 
 
 
