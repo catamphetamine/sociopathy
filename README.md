@@ -9,8 +9,6 @@ Can I see a demo?
 
 Yes, you can view it here: http://youtu.be/cmpTj1Tmfv8
 
-Also you can access my testing website here: http://kuchumovn.no-ip.biz/
-
 What's different?
 =============
 
